@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>基本技巧</title>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+<p id="title">基本技巧</p>
+
+<h1>  1．如果可能尽量使用接口来编程 </h1>
+<p>.NET框架包括类和接口，在编写程序的时候，你可能知道正在用.NET的哪个类。然而，在这种情况下如果你用.NET支持的接口而不是它的类来编程时，代码会变得更加稳定、可用性会更高。请分析下面的代码： </p>
+<pre class="code" data-type="csharp">private void LoadList (object [] items, ListBox l) 
+{ 
+	for (int i = 0; i < items.Length;i++) 
+		l.Items.Add (items[i].ToString ()); 
+} </pre>
+<p>这个函数从一个可为任何对象的数组中加载ListBox，这段代码被限定为只能使用数组。假想过些时候你发现那些对象存在数据库中，或别的集合中。那么你需要修改程序来使用不同的集合类型。如果你用ICollection接口来写那段程序，你就不用修改那段程序了，对于任何实现ICollection接口的类型它都能很好的工作: </p>
+<pre class="code" data-type="csharp">private void LoadList (ICollection items,ListBox l) 
+{ 
+	foreach (object o in items) 
+		l.Items.Add (o.ToString ()); 
+}</pre>
+<p>ICollection被数组和所有System.Collection中的集合实现。此外，多维数组也支持ICollection接口。如果那还不够的话，数据库.NET类同样支持ICollection接口。用接口写的这个函数不用需改就可以才许多中情况下使用。 </p>
+<h1>2. 使用属性代替原始数据 </h1>
+<p>因为属性已经成为语言本身的元素，所以声明数据元素时它的作用域等级没有必要大于private。因为代码本身会把属性看成数据元素，你并没有失去使用简单数据类型的便利性 。相反它会使你的代码更加灵活功能更加强大。属性使你的数据元素封装性更好。属性可以让你使用lazy evaluation来返回数据。lazy evaluation的意思是当用户请求时才计算它的值，而不是一直保留着它。 </p>
+<p>最后，属性可以是virtual也可以是abstract。你也可以在接口中定义属性。 </p>
+<p>这里还有维护方面的因素应当注意：尽管操作两者的方法是一样的，但是你把一个数据元素变成属性，那么原先客户端的程序便不能访问服务端的新版本程序了。实际上对于在Web service中你想实现序列化的值你可以把它们变成属性来使用： </p>
+<pre class="code" data-type="csharp">private int TheMonth = 0; 
+
+[XmlAttribute ("Month")] 
+public int Month 
+{ 
+	get 
+	{ 
+		return TheMonth; 
+	} 
+	set 
+	{
+		TheMonth = value; 
+	} 
+}</pre>
+<p>简单通过属性就可以使你的所有数据元素私有化。 </p>
+<h1>3. 在Producer/Consumer 的Idiom中使用Delegate </h1>
+<p>当你生成一个实现producer idiom类的时候，使用deletate来通知consumer。这种方法相对于用接口更加灵活。Delegate是多点传送的，所以不用加额外的代码你就何以支持多用户。相对于用接口这样做可使类之间的耦合性降低。 </p>
+<p>下面的类处理键盘输入并把它传给所有的registered listeners： </p>
+<pre class="code" data-type="csharp">public class KeyboardProcessor 
+{ 
+	private OnGetLine theFunc = null; 
+
+	public OnGetLine OnGetLineCallback 
+	{ 
+		get 
+		{ 
+			return theFunc; 
+		} 
+		set 
+		{ 
+			theFunc = value; 
+		} 
+	} 
+
+	public void Run ()
+	{ 
+		// Read input. 
+		// If there is any listeners, publish: 
+		string s; 
+		do 
+		{ 
+			s = Console.ReadLine (); 
+			if (s.Length == 0) 
+				break; 
+			if (theFunc != null)
+			{ 
+				System.Delegate [] funcs =theFunc.GetInvocationList(); 
+				foreach (OnGetLine f in funcs) 
+				{ 
+					try 
+					{ 
+						f (s); 
+					} catch (Exception e) 
+					{ 
+						Console.WriteLine ( "Caught Exception: {0}", e.Message); 
+					} 
+				} 
+			} 
+		} while (true); 
+	} 
+}</pre>
+<p>任何数目的listeners都可注册到producer，它们所要做的只是提供一个特定的函数：deletate。 </p>
+<h1>4. 注意初始化顺序 </h1>
+<p>C＃中对于一些变量声明加入了initializer的概念。它们在构造函数之前被执行，实际上变量在基类的构造函数执行前之前被初始化。 </p>
+<p>所以，在初始化变量的时候不要用基类中的数据，因为它们还没有被构造。</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp; </p>
+
+</body>
+</html>

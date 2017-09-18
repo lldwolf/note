@@ -1,0 +1,47 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+About the extended attribute system tables</TITLE>
+</HEAD>
+<BODY>
+<A NAME="X-ref298232540"></A><h1>About the extended attribute system tables</h1>
+<A NAME="TI8229"></A><p>InfoMaker stores information you provide for a database table
+(such as the text to use for labels and headings for the columns,
+validation rules, display formats, and edit styles) in system tables
+in your database. These system tables are called the <strong>extended
+attribute system tables</strong>. These tables contain all the information
+related to the extended attributes for the tables and columns in
+the database. These extended attributes are used in reports.</p>
+<A NAME="TI8230"></A><h4>The system tables</h4>
+<A NAME="TI8231"></A><p>There are five extended attribute system tables:</p>
+<A NAME="TI8232"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI8233"></A>Table</th>
+<th align="left" valign=bottom><A NAME="TI8234"></A>Contains information about</th>
+</tr>
+<tr><td valign=top><A NAME="TI8235"></A>PBCatTbl</td>
+<td valign=top><A NAME="TI8236"></A>Tables in the database</td>
+</tr>
+<tr><td valign=top><A NAME="TI8237"></A>PBCatCol</td>
+<td valign=top><A NAME="TI8238"></A>Columns in the database</td>
+</tr>
+<tr><td valign=top><A NAME="TI8239"></A>PBCatFmt</td>
+<td valign=top><A NAME="TI8240"></A>Display formats</td>
+</tr>
+<tr><td valign=top><A NAME="TI8241"></A>PBCatVld</td>
+<td valign=top><A NAME="TI8242"></A>Validation rules</td>
+</tr>
+<tr><td valign=top><A NAME="TI8243"></A>PBCatEdt</td>
+<td valign=top><A NAME="TI8244"></A>Edit styles</td>
+</tr>
+</table>
+<A NAME="TI8245"></A><h4>What to do with the tables</h4>
+<A NAME="TI8246"></A><p>You can open and look at these tables in the Database painter
+just like other tables. You might want to create a report of the
+extended attribute information used in your database by building
+a report whose data source is the extended attribute system
+tables.</p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Caution</span> <A NAME="TI8247"></A>You should not change the values in the extended attribute
+system tables. InfoMaker maintains this information automatically
+whenever you change information for a table or column in the Database
+painter.</p>
+

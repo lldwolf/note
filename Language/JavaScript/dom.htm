@@ -1,0 +1,98 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<title>DOM</title>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+<p id="title">DOM</p>
+
+<h1>动态控制表格 </h1>
+<pre>&lt;html&gt;
+&lt;head&gt;
+&lt;title&gt; Test Page &lt;/title&gt;
+&lt;script type=&quot;text/javascript&quot; src=&quot;prototype.js&quot;&gt;&lt;/script&gt;
+&lt;/head&gt;
+
+&lt;body&gt;
+&lt;table border=&quot;1&quot; width=&quot;500&quot;&gt;
+&lt;tbody id=&quot;tb1&quot;&gt;
+	&lt;tr id=&quot;tr1&quot;&gt;
+		&lt;td width=&quot;50%&quot;&gt;1&lt;/td&gt;
+		&lt;td widht=&quot;50%&quot;&gt;&amp;nbsp;&lt;/td&gt;
+	&lt;/tr&gt;
+	&lt;tr id=&quot;tr2&quot;&gt;
+		&lt;td bgcolor=&quot;red&quot;&gt;2&lt;/td&gt;
+		&lt;td&gt;&amp;nbsp;&lt;/td&gt;
+	&lt;/tr&gt;
+	&lt;tr id=&quot;tr3&quot;&gt;
+		&lt;td&gt;3&lt;/td&gt;
+		&lt;td&gt;&amp;nbsp;&lt;/td&gt;
+	&lt;/tr&gt;
+&lt;tbody&gt;
+&lt;/table&gt;
+&lt;form name=&quot;form1&quot;&gt;
+&lt;input type=&quot;button&quot; value=&quot;test&quot; onclick=&quot;test()&quot; /&gt;
+&lt;/form&gt;
+&lt;script type=&quot;text/javascript&quot;&gt; 
+
+function test()
+{
+  var frm = document.form1;
+  var tb = document.getElementById(&quot;tb1&quot;);	//获取表格对象
+  var trs = tb.getElementsByTagName(&quot;tr&quot;);		//获取所有的&lt;tr&gt;
+  var del_tr = trs[1];		//设定删除第2行
+  var tr = tb.removeChild(del_tr);	//删除第2行
+  var new1 = document.createElement(&quot;tr&quot;);	//新建一行
+  tb.appendChild(new1);
+  var new_td1 = document.createElement(&quot;td&quot;);	//在新建行中添加单元格
+  new_td1.style.color = &quot;blue&quot;;		//新建行的第1个单元格字体设为蓝色
+  new_td1.setAttribute(&quot;align&quot;, &quot;center&quot;);	//新建行的第1个单元格的对齐方式设为居中
+  new_td1.innerHTML = &quot;aa&quot;;		//新建行第1个单元格内容
+  new1.appendChild(new_td1);
+  var new_td2 = document.createElement(&quot;td&quot;);	//添加第2个单元格
+  new_td2.innerHTML = &quot;&amp;nbsp;&quot;;
+  new_td2.style.backgroundColor = &quot;red&quot;;	//设定背景色为红色
+  new1.appendChild(new_td2);
+  tb.appendChild(new1);	
+}
+&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+<p>注意：在上例中，我在获取所有的&lt;tr&gt;标签时，使用了getElementsByTagName方法，而没用使用childNodes属性，这是因为childNodes的下标的含义在IE和MF中不同，MF使用DOM规范，childNodes中会插入空白文本节点。一般可以通过node.getElementsByTagName()来回避这个问题。</p>
+<h1>在XML中定位 </h1>
+<p>本例使用DOM技术在XML中进行定位</p>
+<pre>&lt;HTML&gt;
+&lt;HEAD&gt;
+&lt;TITLE&gt; Test Page &lt;/TITLE&gt;
+&lt;/HEAD&gt;
+
+&lt;BODY&gt;
+&lt;xml id=&quot;xml1&quot;&gt;
+	&lt;components&gt;
+		&lt;component cmpnt_id=&quot;1&quot; cmpnt_name=&quot;FE1001&quot; /&gt;
+		&lt;component cmpnt_id=&quot;2&quot; cmpnt_name=&quot;FE1002&quot; /&gt;
+	&lt;/components&gt;
+&lt;/xml&gt;
+&lt;form name=&quot;form1&quot;&gt;
+&lt;input type=&quot;button&quot; value=&quot;test&quot; onclick=&quot;test()&quot; /&gt;
+&lt;/form&gt;
+&lt;script type=&quot;text/javascript&quot;&gt; 
+
+function test()
+{
+	var xml1 = document.getElementById(&quot;xml1&quot;);
+	var node_components = xml1.getElementsByTagName(&quot;components&quot;)[0];
+	node_components = node_components.getElementsByTagName(&quot;component&quot;);
+	var node_component = node_components[1];
+	alert(node_component.getAttribute(&quot;cmpnt_name&quot;));}
+
+&lt;/script&gt;
+&lt;/BODY&gt;
+&lt;/HTML&gt;</pre>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+
+</body>
+</html>

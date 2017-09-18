@@ -1,0 +1,49 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+Installing the executable application and supporting files</TITLE>
+</HEAD>
+<BODY>
+<A NAME="BABCDEAE"></A><h1>Installing the executable application and supporting files</h1>
+<A NAME="TI5561"></A><p>When you install your application on a user's machine,
+make sure you include any supporting files, such as dynamic libraries,
+resources such as BMP and ICO files, online Help files, and initialization
+files.</p>
+<A NAME="TI5562"></A><h2>Modifying the application's initialization
+file</h2>
+<A NAME="TI5563"></A><p>In your application's initialization file, remove
+your name from the line that reads:	<pre>UserID=<i>YourID</i></pre>
+</p>
+<A NAME="TI5564"></A><p>An InfoMaker application's initialization file specifies
+the data source that is used by the reports and forms that were
+included in the application. When InfoMaker generated the initialization
+file, it included your User ID. When users run your application,
+they will be prompted to supply their user ID and password if:<A NAME="TI5565"></A>
+<ul>
+<li class=fi>Your data source is not an ODBC data source</li>
+<li class=ds>Your data source is an ODBC data source and the
+user ID and password are not in the application's initialization
+file
+</li>
+</ul>
+</p>
+<A NAME="CFHCJDAG"></A><h2>Deploying ActiveX controls</h2>
+<A NAME="TI5566"></A><p>If your application uses ActiveX controls, OLE controls, or
+OCX controls you must:<A NAME="TI5567"></A>
+<ul>
+<li class=fi>Deploy the control files with your application</li>
+<li class=ds>Make sure each control is registered</li>
+<li class=ds>Make sure required files are in the target computer's
+system directory
+</li>
+</ul>
+</p>
+<A NAME="TI5568"></A><p>If your application uses a control that is not self-registering,
+your setup program needs to register it manually on each user's
+computer. To find out whether a control is self-registering, see
+the documentation provided with the control. Depending on the development
+and deployment platforms and the controls you are deploying, you
+may need to copy additional DLLs or license files to the WINDOWS
+or WINNT system directories on the target computer.</p>
+

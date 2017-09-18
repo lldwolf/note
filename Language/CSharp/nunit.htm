@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+	<title>使用NUnit在.Net编程中进行单元测试</title>
+	<script type="text/javascript" src="../../mylib/js/css.js"></script>
+	<style>
+		.distinct
+		{
+			font-weight: bold;
+		}
+	</style>
+</head>
+
+<body>
+	<p id="title">使用NUnit在.Net编程中进行单元测试
+	</p>
+
+	<h1>概述</h1>
+	<p>什么是单元测试：</p>
+	<p>在程序设计过程中会有许多种测试，单元只是其中的一种，单元测试并不能保证程序是完美无缺的，但是在所有的测试中，单元测试是第一个环节，也是最重要的一个环节。单元测试是一种由程序员自行测试的工作。简单点说，单元测试就是测试代码撰写者依据其所设想的方式执行是否产生了预期的结果。关于单元测试的重要性已经有许多文章做了很多深入的分析，这里就不再赘述。</p>
+	<p>NUnit是一个为Net准备的自动化单元测试框架，它的作用就是帮助你方便的完成单元测试工作，同鼎鼎有名的JUnit一样，都是xUnit家族的成员。它的下载地址是：<a href="http://www.nunit.org/">http://www.nunit.org/</a>。 </p>
+	<p>我现在使用的版本是 2.6.4。对于某些不允许自己安装软件的公司，可以下载源码自己编译。不需要奢望成功编译整个 solution。我们只需要编译 nunit-console &amp; nunit-gui &amp; nunit-agent 这几个 project 即可。
+	</p>
+	<p class="note">如果你的项目是基于 x86 平台的，需将 Nunit 的平台也设为 x86 进行编译</p>
+	<h1>第一个例子</h1>
+	<p>一个简单的售票系统，类名Ticket,有一个只读的int型公共的属性，名称是Amount，还有两个方法，一个是名称是Sell，功能是将Amount减去一，表示卖掉了一张票，当然，票可不能为负数，如果是的话，抛出一个异常说明原因。另一个是Add，它有一个int型的参数，功能是将这个参数的值加到Amount中去。 </p>
+	<p>首先，我们将NUnit提供的要nunit.framework.dll文件引入到工程中，并创建一个名为TicketTest的类：</p>
+	<pre class="code" data-type="csharp">using NUnit.Framework;
+
+[TestFixture]
+public class TicketTest
+{
+	[Test]
+	public void Add()
+	{
+		Ticket ticket = new Ticket();
+		ticket.Add(100);
+		Assertion.AssertEquals(100, ticket.Amount);
+	}
+}</pre>
+	<p>注意，其中的[TestFixture]和[Test]两个Attribute为NUnit所规定必须要添加的，这样，测试框架就可以知道哪些类或者方法需要进行测试。</p>
+	<p>我们在Add方法中定义了一个ticket对象，并给他加了100张票，然后就可以使用：</p>
+	<p>Assertion.AssertEquals(100, ticket.Amount);</p>
+	<p>来测试ticket的Amount属性是否确实为100。</p>
+	<p>接下来，我们再向TicketTest中添加一个测试Sell的方法：</p>
+	<pre class="code" data-type="csharp">[Test]
+public void Sell()
+{
+	Ticket ticket = new Ticket();
+	ticket.Add(100);
+	ticket.Sell();
+	ticket.Sell();
+	ticket.Sell();
+	Assertion.AssertEquals(97, ticket.Amount);
+}</pre>
+	<p>这里，我们先加了100张票之后就一口气卖掉了3张，然后看看我们是否还剩下97张票。</p>
+	<p>好了，这两个方法的测试已经做完了，我们来看一下测试的结果，根据要求，我们写了如下代码：</p>
+	<pre class="code" data-type="csharp">public class Ticket
+{
+	private int amount;
+	public int Amount
+	{
+		get
+		{
+			return amount;
+		}
+	}
+
+	public void Add(int num)
+	{
+	}
+
+	public void Sell()
+	{
+	}
+}</pre>
+	<p>注意这段代码只是为了完成类的结构，方法的实现暂时先空着。然后将这段代码编译成一个dll动态连接库文件：UnitTest.dll。</p>
+	<p>我们运行NUnit的图形测试工具，打开我们编译好的dll文件，点&quot;Run&quot;按纽，就可以看到如下画面：</p>
+	<p>
+		<img src="images/nunit_1.jpg" width="547" height="507"></p>
+	<p>很醒目红色，表示测试并没有成功，不过这个是在我们的预料之中的。</p>
+	<p>接下来，我们向刚才的Ticket类中完成我们的Add方法实现代码：</p>
+	<pre class="code" data-type="csharp">public void Add(int num)
+{
+	amount += num;
+}</pre>
+	<p>保存，重新编译。</p>
+	<p>切换到NUnit，再点Run，可以看到：</p>
+	<p>
+		<img src="images/nunit_2.jpg" width="547" height="507"></p>
+	<p>Add方法已经变成绿色了，再接着将Sell方法也完成：</p>
+	<pre class="code" data-type="csharp">public void Sell()
+{
+	amount -= 1;
+}</pre>
+	<p>再来测试，结果就变成：</p>
+	<p>
+		<img src="images/nunit_3.jpg" width="547" height="507"></p>
+	<p>啊，总算变成美丽的绿色了</p>
+	<p>那么可以交任务了吗？等等，别急，还有个异常没测试呢，如果我们的Amount小于0的话，就会产生异常，那么，异常怎么测试呢？请接着看。</p>
+	<p>测试异常：</p>
+	<p>还是跟上面一样，先写出测试代码：</p>
+	<pre class="code" data-type="csharp">[Test]
+[ExpectedException(typeof(Exception))]
+public void ExcpetionTesting()
+{
+	Ticket ticket = new Ticket();
+	ticket.Add(3);
+	ticket.Sell();
+	ticket.Sell();
+	ticket.Sell();
+	ticket.Sell();
+}</pre>
+	<p>其中，[ExpectedException(typeof(Exception))]表示我们希望能捕获到发生的异常，如果没有捕获到异常，则表示测试失败。</p>
+	<p>后面的代码很好理解，我们加了三张票，却卖了四张出去，这可不是炒股，以后没办法平仓的。 ：）</p>
+	<p>编译运行，我们看到以下的测试画面：</p>
+	<p>
+		<img src="images/nunit_4.jpg" width="547" height="507"></p>
+	<p>在Ticket类中，我们修改一下Sell方法，让它变成：</p>
+	<pre class="code" data-type="csharp">public void Sell()
+{
+	if(amount - 1 < 0)
+		throw new Exception(&quot;Amount不能为0&quot;);
+	amount -= 1;
+}</pre>
+	<p>编译，再测试，结果如下：</p>
+	<p>
+		<img src="images/nunit_5.jpg" width="547" height="507"></p>
+	<p>好了，到了这里就算完成我们的单元测试之旅了，大家对如何在C#中进行单元测试一定已经有了一个基本的认识。另外，NUnit并不是只针对C#，事实上，你可以在任何.Net语言中使用NUnit来测试你的单元，方法都一样。</p>
+	<p>总结：</p>
+	<p>单元测试看上去虽然有点麻烦，但是它为程序员提供了一个安全的观点，让程序员对自己的程序更加有信心，在减少开发后期进行频繁Debug所耗费时间的同时也为应用软件提供了第一道安全防护网，因此，单元测试是提高开发效率和软件品质的一个重要的手段。<br>
+		利用NUnit, 我们可以在.Net编程过程中非常方便的进行单元测试，它图形化的界面和简单而强大的测试框架为我们提供了一个非常舒适而有趣的测试环境，能够让程序员觉得进行单元测试并不枯燥乏味，习惯后甚至还能成为一种乐趣。</p>
+	<h1>NUnit 使用</h1>
+	<h2>Attribute</h2>
+	<table style="width: 800px">
+		<tr>
+			<th>Attribute</th>
+			<th>说明</th>
+		</tr>
+		<tr>
+			<td>TestFixtureSetUp</td>
+			<td>在所有的 Case 启动前执行</td>
+		</tr>
+		<tr>
+			<td>TestFixtureTearDown</td>
+			<td>在所有的 Case 结束后执行</td>
+		</tr>
+		<tr>
+			<td>SetUp</td>
+			<td>在每一个 Case 启动前执行</td>
+		</tr>
+		<tr>
+			<td>TearDow</td>
+			<td>在每一个 Case 结束后执行</td>
+		</tr>
+	</table>
+	<h2>Debug by NUnit</h2>
+	<p>在 Visual Studio 中使用菜单  Debug &rarr; Attach to Process (Alt + DP) 如下图所示选中 nunit-agent-86.exe 即可</p>
+	<img alt="" src="images/nunit_debug.png" />
+	<h2>使用 NUnit 项目文件及配置文件</h2>
+	<p>NUnit 项目文件的扩展名为 *.nunit，默认情况下，它会加载具有相同文件名的 *.config 文件作为其配置文件。</p>
+	<p>除了组织测试用例外，使用项目文件的一个重要原因就是模拟加载应用程序的 app.config 文件。例如，复制一份 app.config 为 NunitProject.config，则 NUnitProject 将会加载和 app.config 相同的内容</p>
+	<p class="emphasis">配置文件示例</p>
+	<pre class="code" data-type="xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; ?&gt;
+&lt;configuration&gt;
+	&lt;appSettings&gt;
+		&lt;add key=&quot;Key1&quot; value=&quot;Value1&quot; /&gt;
+	&lt;/appSettings&gt;
+&lt;/configuration&gt;</pre>
+	<p class="emphasis">示例程序</p>
+	<pre class="code" data-type="csharp">
+// Source Code
+public class ConfigurationInfo
+{
+	public string GetConfigItem(string key)
+	{
+		return ConfigurationManager.AppSettings[key];
+	}
+}
+
+// Unit Test Code
+[TestFixture]
+public class ConfigurationTest
+{
+	[Test]
+	public void TestConfiguration()
+	{
+		ConfigurationInfo conf = new ConfigurationInfo();
+		string value = conf.GetConfigItem("Key1");
+		Console.WriteLine(string.Format("Key1: {0}", value));
+		Assert.AreEqual(value, "Value1");
+	}
+}</pre>
+	<h2>集成 log4net</h2>
+	<p>如果使用 log4net 作为日志工具，需在 NUnit Test Case 中手工加载</p>
+	<pre class="code" data-type="csharp">private static log4net.ILog log = log4net.LogManager
+			.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
+[TestFixtureSetUp]
+public void Initialize()
+{
+	log4net.Config.XmlConfigurator.Configure();
+}</pre>
+	<p>通常情况下，应用中只会配 File Appender，为了方便，我会经常加配上 Console Appender</p>
+	<pre class="code" data-type="xml">&lt;appender name=&quot;ConsoleAppender&quot; type=&quot;log4net.Appender.ConsoleAppender&quot;&gt;
+	&lt;layout type=&quot;log4net.Layout.PatternLayout&quot;&gt;
+		&lt;conversionPattern value=&quot;%date %-5level %logger - %message%newline&quot; /&gt;
+	&lt;/layout&gt;
+&lt;/appender&gt;
+&lt;root&gt;
+	&lt;level value=&quot;DEBUG&quot; /&gt;
+	&lt;appender-ref ref=&quot;GeneralFileAppender&quot; /&gt;
+	<span class="emphasis">&lt;appender-ref ref=&quot;ConsoleAppender&quot; /&gt;</span>
+&lt;/root&gt;</pre>
+	<h1>NUnit Console</h1>
+	<h2>基本用法</h2>
+	<p>在某些需要自动化脚本的情况下，需要使用 nunit-console.exe 来以命令行方式执行脚本，命令格式为</p>
+	<p class="distinct">测试 Assembly</p>
+	<pre>nunit-console-x86.exe nunit_project.dll /noshadow</pre>
+	<p class="distinct">测试 NUnit 项目</p>
+	<pre>nunit-console-x86.exe nunit_project.nunit /noshadow</pre>
+	<p class="distinct">测试 Visual Studio 项目</p>
+	<pre>nunit-console nunit.tests.csproj /config:Release</pre>
+	<p class="distinct">测试多个 Assembly</p>
+	<pre>nunit-console assembly1.dll assembly2.dll assembly3.dll</pre>
+	<p class="note">不支持多个 VS project，也不支持 VS project 和 Aseembly 的混合</p>
+	<h2>参数</h2>
+	<table style="width: 1000px">
+		<tr>
+			<th style="width: 150px">参数</th>
+			<th>说明</th>
+		</tr>
+		<tr>
+			<td>/fixture</td>
+			<td>指定运行哪个测试类，例如
+				<pre>nunit-console /fixture:NUnit.Tests.AssertionTests nunit.tests.dll</pre>
+			</td>
+		</tr>
+		<tr>
+			<td>/include, /exclude</td>
+			<td>配合使用 Category Attribute，可以指定运行的 Category
+				<pre>nunit-console myassembly.dll /include:BaseLine
+nunit-console myassembly.dll /exclude:Database</pre>
+				但不能同时使用这两个参数
+			</td>
+		</tr>
+		<tr>
+			<td>/err, /out</td>
+			<td>重定向输出
+				<pre> nunit-console nunit.tests.dll /out:TestResult.txt
+nunit-console nunit.tests.dll /err:StdErr.txt</pre>
+			</td>
+		</tr>
+		<tr>
+			<td>/xml</td>
+			<td>指定输出文件的文件名
+				<pre>nunit-console /xml:console-test.xml nunit.tests.dll</pre>
+			</td>
+		</tr>
+		<tr>
+			<td>/transform</td>
+			<td>将测试结果由XML转换为打印格式，该参数指定转换模板。NUnit 提供默认的转换模板 Results.xsd 和 Summary.xslt。
+				<pre>nunit-console /transform:myTransform.xslt nunit.tests.dll</pre>
+			</td>
+		</tr>
+		<tr>
+			<td>/config</td>
+			<td>在使用 VS Project 时指定编译选项为 Debug 或 Release
+				<pre>nunit-console nunit.tests.csproj /config:Release</pre>
+			</td>
+		</tr>
+		<tr>
+			<td>/noshadow</td>
+			<td>不对要测试的 Assembly 进行影拷贝（shadow copy），可提高运行性能</td>
+		</tr>
+		<tr>
+			<td>/thread</td>
+			<td>新开一个线程来运行测试用例</td>
+		</tr>
+		<tr>
+			<td>/wait</td>
+			<td>退出测试时需要用户输入确认</td>
+		</tr>
+		<tr>
+			<td>/xmlconsole</td>
+			<td>输出原始的 XML 测试结果</td>
+		</tr>
+		<tr>
+			<td>/nologo </td>
+			<td>不打印 NUnit 的版权信息</td>
+		</tr>
+		<tr>
+			<td>/help 或 /?</td>
+			<td>打印帮助信息</td>
+		</tr>
+	</table>
+	<h1>特殊情况</h1>
+	<h2>App.Config</h2>
+	<p>如果要测试的程序依赖 app.config，有如下两种解决方案： </p>
+	<ul>
+		<li>针对 .nunit 项目文件写一个 config 文件，例如，A.nunit 对应 A.config。然后将需要的 config 内容复制进来</li>
+		<li>为测试项目建立 app.config 文件，例如，TestA.csproj 将会编译生成 TestA.dll.config</li>
+	</ul>
+	<h2>当前路径</h2>
+	<p>经常我们使用以下方式来获取应用程序的当前路径</p>
+	<pre class="code" data-type="csharp">string currentPath = System.IO.Path.GetDirectoryName(Application.ExecutablePath);</pre>
+	<p>但如果使用 NUnit，则会返回 NUnit 所在的路径</p>
+	<p>可以改用以下代码来获取应用程序路径（考虑到有子目录情况）</p>
+	<pre class="code" data-type="csharp">public static string CURRENT_DIRECTORY
+{
+	get
+	{
+		string path = Path.GetDirectoryName(AppDomain.CurrentDomain.BaseDirectory);
+
+		while (!File.Exists(Path.Combine(path, "Gollf.exe")))
+		{
+			path = Directory.GetParent(path).FullName;
+		}
+
+		return path;
+	}
+}</pre>
+
+	<h2>WPF</h2>
+	<p>如果需要测试 WPF Window/UserControl，需要将测试用例或测试类加上 RequiresSTA Attribute，不然会抛出异常:</p>
+	<pre>System.InvalidOperationException : The calling thread must be STA, because many UI components require this.</pre>
+	<p>另外，我在使用一些第三方WPF控件时（例如 DevExpress），在使用 NUnit 时会抛出找不到 System.Windows.Interactivity.dll 的错误，可用如下方法解决</p>
+	<pre class="code" data-type="csharp">
+AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
+
+private Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
+{
+	if (args.Name.Contains("System.Windows.Interactivity"))
+	{
+		try
+		{
+			var assembly = Assembly.LoadFrom("System.Windows.Interactivity.dll");
+			return assembly;
+		}
+		catch (Exception e)
+		{
+			Console.WriteLine(e.ToString());
+		}
+
+	}
+	return null;
+}</pre>
+	<h2>解决 Popup 问题</h2>
+	<p>在桌面应用中我们经常使用一些信息提示框，但有了这个就不能进行自动化测试。</p>
+	<p>要解决这个问题，我一般使用抢占式注入的方式。这个需要对程序进行改造，使用面向接口编程的方式</p>
+	<h3>自己实现</h3>
+	<pre class="code" data-type="csharp">// 接口定义
+	public interface IMessageService
+	{
+		void Info(string message);
+	}
+
+	// 正常实现
+	public class MessageService : IMessageService
+	{
+		public void Info(string message)
+		{
+			MessageBox.Show(message, "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+		}
+	}
+
+	// For Unit Test
+	public class TestMessageService : IMessageService
+	{
+		public void Info(string message)
+		{
+			Console.WriteLine(message);
+		}
+	}
+
+	// 工厂类
+	public static class InterfaceFactory
+	{
+		private static Dictionary&lt;Type, object&gt; interfaceFactory;
+
+		static InterfaceFactory()
+		{
+			interfaceFactory = new Dictionary&lt;Type, object&gt;();
+		}
+
+		public static object GetInterface(Type t)
+		{
+			if (interfaceFactory.ContainsKey(t))
+			{
+				return interfaceFactory[t];
+			}
+			else
+			{
+				return null;
+			}
+		}
+
+		public static void AddInterface(Type t, object instance)
+		{
+			interfaceFactory[t] = instance;
+		}
+	}</pre>
+	<p>对于正常的代码，使用方式如下</p>
+	<pre class="code" data-type="csharp">private static IMessageService messageService = null;
+
+static MessageHelper()
+{
+	if (InterfaceFactory.GetInterface(typeof(IMessageService)) == null)
+	{
+		InterfaceFactory.AddInterface(typeof(IMessageService), MessageService.Instance);
+	}
+
+	messageService = InterfaceFactory.GetInterface(typeof(IMessageService)) as IMessageService;
+}
+
+public static void Info(string info)
+{
+	messageService.Info(info);
+}</pre>
+	<p>对于 Unit Test，只需要提前注入需要的接口即可（抢坑）</p>
+	<pre class="code" data-type="csharp">Gollf.CommonUtil.InterfaceFactory.AddInterface(typeof(IMessageService), new TestMessageService());</pre>
+	<h3>NInject实现</h3>
+	<p>上述行为可以用 NInject 实现如下</p>
+	<pre class="code" data-type="csharp">// 服务类
+public static class ServiceFactory
+{
+	public static Ninject.IKernel MyKernel = new Ninject.StandardKernel(new BusinessModule());
+
+	public static IMessageService GetMessageService()
+	{
+		return MyKernel.Get&lt;IMessageService&gt;();
+	}
+}
+
+// 正常使用
+ServiceFactory.GetMessageService().Info("Hello, world.");
+
+// Unit Test 抢坑
+ServiceFactory.MyKernel = new StandardKernel(new TestModule());	</pre>
+	<h1>NUnit 测试问题及解决</h1>
+	<h2>XamlParseException</h2>
+	<pre>DealSystem.UnitTest.UITest.SummaryForm.SummaryFormTest.OpenDealTest:
+System.Windows.Markup.XamlParseException : 'The invocation of the constructor on type 'Gollf.Infrastructure.ControlLibraryForWPF.CommonWPFComponents.GollfTextBlock' that matches the specified binding constraints threw an exception.' Line number '507' and line position '10'.
+  ----> System.IO.FileNotFoundException : Could not find file 'Gollf.Infrastructure.ControlLibraryForWPF.resources'.</pre>
+	<p>对于该异常，我发现是相同的DLL存在多个目录中，NUnit 试图在错误的位置引用该DLL。</p>
+	<h2>Resource Load Fail</h2>
+	<pre>Gollf.UnitTest.EMCT.UITest.PipelineFormTest.PipelineTest:
+System.Exception : The component 'Gollf.EMCT.Controls.GSFPipelineSummaryUserControl' does not have a resource identified by the URI '/Gollf.EMCT;component/controls/gsfpipelinesummaryusercontrol.xaml'.
+
+The component does not have a resource identified by the URI </pre>
+	<p>通过对 AppDomain.CurrentDomain.AssemblyResolve 事件，我发现系统在试图载入 Gollf.EMCT.resources。当然，我的系统中根本没这个文件。但后来发现不是这个原因。</p>
+	<p>原先 AppDomain.CurrentDomain.AssemblyResolve 事件中有这么一段</p>
+	<pre class="code" data-type="csharp">if (args.Name.Contains("Gollf.Infrastructure.ControlLibraryForWPF"))
+{
+	try
+	{
+		log.Warn("Loading Gollf.Infrastructure.ControlLibraryForWPF.dll manually.");
+		var assembly = Assembly.LoadFrom("Gollf.Infrastructure.ControlLibraryForWPF.dll");
+		return assembly;
+	}
+	catch (Exception e)
+	{
+		Console.WriteLine(e.ToString());
+	}
+}</pre>
+	<p>Gollf.Infrastructure.ControlLibraryForWPF.dll 也存在于多个目录中，手工载入的目录和需要的不一致。我把代码删掉就好了。</p>
+	<h2>线程冲突</h2>
+	<pre>Gollf.UnitTest.EMCT.UITest.PipelineFormTest (TestFixtureSetUp):
+SetUp : System.Windows.Markup.XamlParseException : 'The invocation of the constructor on type 'Gollf.EMCT.Controls.DocumentRepo' that matches the specified binding constraints threw an exception.' Line number '55' and line position '26'.
+  ----> System.Reflection.TargetInvocationException : Exception has been thrown by the target of an invocation.
+  ----> System.InvalidOperationException : The calling thread cannot access this object because a different thread owns it.</pre>
+	<p>有两个原因引起了这个问题，第一个如下代码，需要删除</p>
+	<pre class="code" data-type="csharp">if (System.Windows.Application.Current == null)
+{
+	Console.WriteLine("Create new Application object.");
+	new System.Windows.Application();
+}
+
+if (SynchronizationContext.Current == null)
+{
+	Console.WriteLine("Create new SynchronizationContext object.");
+	SynchronizationContext.SetSynchronizationContext(new SynchronizationContext());
+}</pre>
+	<p>另外一个原因是 NUnit 会为每个 UnitTest Assmbly 创建一个线程来运行测试。不同模块（GSF/EMCT） MvvmLight Message 使用了一个共同组件，导致 EMCT 发的消息 GSF 也会收到，正常情况下没事因为两个模块运行在同一个主线程中。但在 NUnit 中使用了不同的线程，就出错了。
+	</p>
+	<p>我使用了如下代码来解除注册</p>
+	<pre class="code" data-type="csharp">//Unregister all message handler
+Messenger.Default.Unregister(this.busyIndicator);
+Messenger.Default.Unregister(this.docLayOutPanel);</pre>
+	
+</body>
+</html>

@@ -1,0 +1,30 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>系统对象</title>
+<script language="javascript" src="css.js"></script>
+</head>
+
+<body>
+<h1>第N章 系统对象</h1>
+<hr />
+<h2>N.1 获取数据库中所有的表</h2>
+<pre>SELECT *
+FROM MSysObjects
+WHERE [Flags]=0 AND [Type]=1</pre>
+<p>当我读取ACCESS里的系统表MSysObjects时，出现：不能读取记录；在 'MSysObjects' 上没有读取数据权限。的提示，而这个语句是可以直接在ACCESS查询器里使用的，不知为何，网游一翻，找到解决方法，不过还好，按这样的设置后以后这个数据库就可以读取这个表了。</p>
+<p>操作过程：</p>
+<p>默认的情况是admin对MSysObjects没有任何权限！包括查询</p>
+<p>打开您的ACCESS数据库，然后</p>
+<p>工具 -&gt; 选项 -&gt; 视图 -&gt; 隐藏对象、系统对象<br />
+  前面的勾选上。</p>
+<p>工具 -&gt; 安全 -&gt; 用户与组的权限<br />
+  在对象名称中选定 MSysObjects ，然后权限中设置其权限。</p>
+<p>OK，现在可以试一试了，以后这个数据库就可以直接读取MSysObjects表了。</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<script language="javascript" src="index.js"></script>
+</body>
+</html>

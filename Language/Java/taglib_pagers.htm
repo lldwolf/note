@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>分页标签库Pagers</title>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+<p id="title">分页标签库Pager</p>
+
+<h1>N.1 简介 </h1>
+<p>使用Pagers标签库可以实现分页功能。</p>
+<p><a href="download/pager-taglib-2.0.war">本地下载地址</a></p>
+<p><a href="http://jsptags.com/tags/navigation/pager/index.jsp">开发者主页</a></p>
+<p><a href="PagersHelp.htm">原始帮助文件</a></p>
+<h1>N.2 用法</h1>
+<p>JSP中动态生成表格的代码一般如下所示：</p>
+<pre>&lt;table&gt;
+&lt;%
+	for(int i = 0; i &lt; 行数; i++)
+	{
+%&gt;
+	&lt;tr&gt;
+		&lt;td&gt;内容&lt;/td&gt;
+	&lt;/tr&gt;
+&lt;%
+	}
+%&gt;
+&lt;/table&gt;</pre>
+<p>在本章中我使用pg作为Pager标签库的前缀。</p>
+<p>如果要使用Pager标签库进行分页处理的话，需要使用&lt;pg:pager&gt;标签将&lt;table&gt;包括在内，然后在内部使用一系列的Pager标签表示上一页、下一页等控制按钮。常用的控制标签如下表所示：</p>
+<table width="90%"  border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <th width="30%">标签</th>
+    <th width="70%">说明</th>
+  </tr>
+  <tr>
+    <td>pager</td>
+    <td>主标签，包括整个动态表格</td>
+  </tr>
+  <tr>
+    <td>first</td>
+    <td>第一页</td>
+  </tr>
+  <tr>
+    <td>skip</td>
+    <td>页面跳转</td>
+  </tr>
+  <tr>
+    <td>prev</td>
+    <td>上一页</td>
+  </tr>
+  <tr>
+    <td>pages</td>
+    <td>页码</td>
+  </tr>
+  <tr>
+    <td>next</td>
+    <td>下一页</td>
+  </tr>
+  <tr>
+    <td>last</td>
+    <td>最后一页</td>
+  </tr>
+</table>
+<p>下面是一个例子，源代码如下所示：</p>
+<pre><a href="#get_page_data">&lt;%
+	Vector&lt;String[]&gt; v = (Vector&lt;String[]&gt;)request.getAttribute(&quot;table_list&quot;);
+	int maxPageItems = 25;
+	String url = &quot;/INtools/Db/ListTable.action&quot;;
+	int item_count = v.size();
+	int page_count = item_count % maxPageItems == 0 ? item_count / maxPageItems : item_count / maxPageItems + 1;
+%&gt;
+</a>&lt;form id=&quot;form1&quot; name=&quot;form1&quot; method=&quot;post&quot; action=&quot;&quot;&gt;
+<a href="#pager">&lt;pg:pager
+    items=&quot;&lt;%= item_count %&gt;&quot;
+    url=&quot;&lt;%= url %&gt;&quot;
+    index=&quot;center&quot;
+    maxPageItems=&quot;&lt;%= maxPageItems %&gt;&quot;
+    maxIndexPages=&quot;10&quot;
+    isOffset=&quot;true&quot;
+    export=&quot;offset,currentPageNumber=pageNumber&quot;
+    scope=&quot;request&quot;&gt;
+</a>&lt;table border=&quot;1&quot; cellspacing=&quot;0&quot; cellpadding=&quot;3&quot; bordercolordark=&quot;#ffffff&quot;
+							bordercolorlight=&quot;#000066&quot; width='100%' bgcolor=&quot;#76a6c7&quot;&gt;
+	&lt;tr class=&quot;table_desc&quot;&gt;
+		&lt;td colspan=&quot;3&quot;&gt;后台表集合&lt;/td&gt;
+	&lt;/tr&gt;
+	&lt;tr class=&quot;table_title&quot;&gt;
+		&lt;td width=&quot;33%&quot;&gt;表名&lt;/td&gt;
+		&lt;td width=&quot;33%&quot;&gt;所属模块&lt;/td&gt;
+		&lt;td width=&quot;34%&quot;&gt;操作&lt;/td&gt;
+	&lt;/tr&gt;
+&lt;%
+	for(int iRow = offset.intValue(), l = Math.min(iRow + maxPageItems, v.size()); iRow &lt; l; iRow++)
+	{
+		String[] row_data = v.get(iRow);
+		String table_name = row_data[0];
+		String module_name = row_data[1];
+		String table_id = row_data[2];
+		String bgcolor = iRow % 2 == 0 ? &quot;#f4fbff&quot; : &quot;#FFFFDD&quot;;
+%&gt;										
+	&lt;pg:item&gt;
+	&lt;tr bgcolor=&quot;&lt;%=bgcolor%&gt;&quot; class=&quot;table_data&quot;&gt;
+		&lt;td align=&quot;left&quot;&gt;&lt;%=table_name%&gt;&lt;/td&gt;
+		&lt;td align=&quot;left&quot;&gt;&lt;%=module_name%&gt;&lt;/td&gt;
+		&lt;td align=&quot;center&quot;&gt;
+			&lt;input type=&quot;button&quot; value=&quot;修改&quot; /&gt;&amp;nbsp;
+			&lt;input type=&quot;button&quot; value=&quot;删除&quot; /&gt;
+		&lt;/td&gt;
+	&lt;/tr&gt;
+	&lt;/pg:item&gt;
+&lt;%
+	}
+%&gt;										
+	&lt;tr class=&quot;table_page_break&quot;&gt;
+		&lt;td colspan=&quot;3&quot;&gt;
+			记录数: &lt;%= item_count %&gt;&amp;nbsp;
+			页数：&lt;%= page_count %&gt;&amp;nbsp;
+			&lt;pg:first export=&quot;firstPageUrl=pageUrl&quot; unless=&quot;current&quot;&gt;
+				&lt;a href=&quot;&lt;%= firstPageUrl %&gt;&quot;&gt;|&amp;lt;&lt;/a&gt;
+			&lt;/pg:first&gt;
+			&lt;pg:skip export=&quot;skipBackPageUrl=pageUrl&quot; pages=&quot;&lt;%= -10 %&gt;&quot;&gt;
+				&lt;a href=&quot;&lt;%= skipBackPageUrl %&gt;&quot;&gt;&amp;lt;&amp;lt;&amp;lt;&lt;/a&gt;
+			&lt;/pg:skip&gt;
+			&lt;pg:prev export=&quot;prevPageUrl=pageUrl&quot;&gt;
+				&lt;a href=&quot;&lt;%= prevPageUrl %&gt;&quot;&gt;&amp;lt;&amp;lt;&lt;/a&gt;
+			&lt;/pg:prev&gt;
+			&lt;pg:pages&gt;&lt;%
+			  if (pageNumber == currentPageNumber) {
+				%&gt; &lt;b&gt;&lt;%= pageNumber %&gt;&lt;/b&gt; &lt;%
+			  } else {
+				%&gt; &lt;a href=&quot;&lt;%= pageUrl %&gt;&quot;&gt;&lt;%= pageNumber %&gt;&lt;/a&gt; &lt;%
+			  }
+			%&gt;&lt;/pg:pages&gt;
+			&lt;pg:next export=&quot;nextPageUrl=pageUrl&quot;&gt;
+				&lt;a href=&quot;&lt;%= nextPageUrl %&gt;&quot;&gt;&amp;gt;&amp;gt;&lt;/a&gt;
+			&lt;/pg:next&gt;
+			&lt;pg:skip export=&quot;skipForwardPageUrl=pageUrl&quot; pages=&quot;&lt;%= 10 %&gt;&quot;&gt;
+				&lt;a href=&quot;&lt;%= skipForwardPageUrl %&gt;&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/a&gt;
+			&lt;/pg:skip&gt;
+			&lt;pg:last export=&quot;lastPageUrl=pageUrl&quot; unless=&quot;current&quot;&gt;
+				&lt;a href=&quot;&lt;%= lastPageUrl %&gt;&quot;&gt;&amp;gt;|&lt;/a&gt;
+			&lt;/pg:last&gt;
+			&lt;input type=&quot;text&quot; size=&quot;4&quot; name=&quot;page_no&quot; id=&quot;page_no&quot; /&gt;
+			&lt;input type=&quot;button&quot; value=&quot;go&quot; onclick=&quot;goto_page_no()&quot; /&gt;
+		&lt;/td&gt;
+	&lt;/tr&gt;
+	&lt;tr class=&quot;table_button_row&quot;&gt;
+		&lt;td colspan=&quot;3&quot;&gt;
+			&lt;input type=&quot;button&quot; value=&quot;确定&quot; class=&quot;form_button&quot; /&gt;
+		&lt;/td&gt;
+	&lt;/tr&gt;
+&lt;/table&gt;
+&lt;/pg:pager&gt;
+&lt;/form&gt;
+&lt;script type=&quot;text/javascript&quot;&gt;
+
+function goto_page_no()
+{
+	var em_page_no = document.all[&quot;page_no&quot;];	
+	var page_no = parseInt(em_page_no.value);
+	var offset = &lt;%= maxPageItems %&gt; * (page_no - 1);
+	document.location.href = &quot;&lt;%= url %&gt;?pager.offset=&quot; + offset;
+}
+
+&lt;/script&gt;</pre>
+<p>分页效果如下图所示：</p>
+<p><img src="images/pager_result.jpg" width="559" height="38" /></p>
+<h2>获取数据</h2>
+<p>该段代码用于获取显示的页面数据，在此做了如下设定，取得的显示数据的格式为Vector&lt;String[]&gt;，每页显示25行记录，获取页数据时需要重新执行查询，其处理操作为/INtools/Db/ListTable.action，这里我使用了struts框架，这表示一个servlet处理类，也可以是一个JSP文件。并进行了页数计算。</p>
+<h2>pager标签</h2>
+<ul>
+	<li>items：表示记录数</li>
+	<li>url：表示获取数据时的处理程序</li>
+	<li>index：页码的显示方式，可以为center、forward、half-full</li>
+	<li>maxPageItems：每页显示的记录数</li>
+	<li>maxIndexPages：显示的页码数</li>
+	<li>isOffset；</li>
+	<li>export：将pager标签支持的变量导出，</li>
+	<li></li>
+	<li></li>
+</ul>
+<h1>N.3 技巧</h1>
+<p>如果要实现如下功能：</p>
+<ul>
+  <li>指定跳转到某页</li>
+  <li>生成分页内容时需要参数TableName</li>
+</ul>
+<p>可写入如下代码：</p>
+<pre>&lt;form id=&quot;form1&quot; name=&quot;form1&quot; method=&quot;get&quot; action=&quot;...&quot;&gt;
+...
+	&lt;pg:param name=&quot;TableName&quot; value=&quot;&lt;%= search_table_name %&gt;&quot; /&gt;
+	&lt;input type=&quot;hidden&quot; name=&quot;TableName&quot; id=&quot;TableName&quot; value=&quot;&lt;%= search_table_name %&gt;&quot; /&gt;
+	&lt;input type=&quot;hidden&quot; name=&quot;pager.offset&quot; /&gt;
+	&lt;input type=&quot;button&quot; value=&quot;go&quot; onclick=&quot;goto_page_no()&quot; /&gt;
+...
+&lt;/form&gt;
+
+&lt;script type=&quot;text/javascript&quot;&gt;
+
+function goto_page_no()
+{
+	var offset = 记录偏移值;
+	var frm = document.form1;
+	frm.elements[&quot;pager.offset&quot;].value = offset;
+	frm.submit();
+}
+
+&lt;/script&gt;</pre>
+<p>其中&lt;pg:param&gt;是用于点击页码翻页时提供查询参数，如果打开生成后的源代码，会发现所有的翻页标记(&lt;a&gt;)都加了一个参数TableName，而&lt;input type=&quot;hidden&quot; name=&quot;TableName&quot; /&gt;则用于指定跳转页时提供查询参数，&lt;input type=&quot;hidden&quot; name=&quot;pager.offset&quot; /&gt;则用于提供指定跳转页时的记录偏移量，其名称格式为“[pager].[pg:pager标签的export属性中的offset表示法]”。</p>
+<p>值得注意的是，此处的&lt;form&gt;需要使用“get”方式，如果使用“post”方式，使用跳转按钮提交的“TableName”参数会翻倍，例如，第一次为“a”，第二次则为“a,a”。</p>
+<p>&nbsp;</p>
+
+</body>
+</html>

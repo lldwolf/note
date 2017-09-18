@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<title>PDF处理类——iTextSharp</title>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+<p id="title">PDF处理类——iTextSharp</p>
+
+<h1>下载及安装</h1>
+<h2>下载</h2>
+<p>下载地址：</p>
+<p><a href="downloads/itextsharp-3.0.10.zip">类库源代码</a></p>
+<p><a href="downloads/itextsharp.dll">类库二进制文件</a></p>
+<p><a href="downloads/iTextSharp.tutorial.01.zip">示例</a></p>
+<h2>安装</h2>
+<p>引用itextsharp.dll</p>
+<h1>第一个例子</h1>
+<p>这里提供一个函数，将DataTable的内容导出到PDF中</p>
+<pre class="code" data-type="csharp">using System.Data;
+using System.IO;
+
+using iTextSharp.text;
+using iTextSharp.text.pdf;
+
+private void DataTableToPdf(DataTable table, string FileName)
+{
+	// step 1: creation of a document-object
+	Document document = new Document();
+	try 
+	{
+		// step 2:
+		// we create a writer that listens to the document and directs a PDF-stream to a file
+		PdfWriter.GetInstance(document, new FileStream(FileName, FileMode.Create));
+		// step 3: we open the document
+		document.Open();
+		// step 4: we create a table and add it to the document
+		Table aTable = new Table(table.Columns.Count, table.Rows.Count + 1);    // 列，行
+				
+		//导出列头
+		for(int col = 0; col < table.Columns.Count; col++)
+		{
+			aTable.AddCell(table.Columns[col].Caption);
+		}
+
+		//导出内容
+		for(int row = 0; row < table.Rows.Count; row++)
+		{
+			for(int col = 0; col < table.Columns.Count; col++)
+			{
+				aTable.AddCell(table.Rows[row][col].ToString().Trim());
+			}
+		}
+
+		document.Add(aTable);           
+	}
+
+	catch(DocumentException de) 
+	{
+		MessageBox.Show(de.Message);
+	}
+	catch(IOException ioe) 
+	{
+		MessageBox.Show(ioe.Message);
+	}
+	// step 5: we close the document
+	document.Close();
+}</pre>
+<p>&nbsp; </p>
+<p>&nbsp;</p>
+
+</body>
+</html>

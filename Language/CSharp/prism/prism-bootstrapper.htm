@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+	<script type="text/javascript" src="../../../mylib/js/css.js"></script>
+	<title>Title</title>
+</head>
+
+<body>
+	<p id="title">Bootstrapper</p>
+	<h1>Overview</h1>
+	<p>Bootstrapper 中定义了需要实现的3个核心对象</p>
+	<ul>
+		<li>ILoggerFacade</li>
+		<li>IModuleCatalog</li>
+		<li>Shell</li>
+	</ul>
+	<p>还有需要实现的几个抽象方法, 但通过 MEF 或 Unity，我们可以使用这两个框架的实现</p>
+	<ul>
+		<li>ConfigureServiceLocator</li>
+		<li>CreateShell</li>
+		<li>Run</li>
+	</ul>
+	<pre class="code" data-type="csharp" data-collapsed="true" title="Bootstrapper Defination">// Summary:
+//     Base class that provides a basic bootstrapping sequence and hooks that specific
+//     implementations can override
+//
+// Remarks:
+//     This class must be overridden to provide application specific configuration.
+public abstract class Bootstrapper
+{
+	protected Bootstrapper();
+
+	// Summary:
+	//     Gets the Microsoft.Practices.Prism.Logging.ILoggerFacade for the application.
+	protected ILoggerFacade Logger { get; set; }
+	//
+	// Summary:
+	//     Gets the default Microsoft.Practices.Prism.Modularity.IModuleCatalog for
+	//     the application.
+	protected IModuleCatalog ModuleCatalog { get; set; }
+	//
+	// Summary:
+	//     Gets the shell user interface
+	protected DependencyObject Shell { get; set; }
+
+	// Summary:
+	//     Configures the Microsoft.Practices.Prism.Regions.IRegionBehaviorFactory.
+	//     This will be the list of default behaviors that will be added to a region.
+	protected virtual IRegionBehaviorFactory ConfigureDefaultRegionBehaviors();
+	//
+	// Summary:
+	//     Configures the Microsoft.Practices.Prism.Modularity.IModuleCatalog used by
+	//     Prism.
+	protected virtual void ConfigureModuleCatalog();
+	//
+	// Summary:
+	//     Configures the default region adapter mappings to use in the application,
+	//     in order to adapt UI controls defined in XAML to use a region and register
+	//     it automatically.  May be overwritten in a derived class to add specific
+	//     mappings required by the application.
+	//
+	// Returns:
+	//     The Microsoft.Practices.Prism.Regions.RegionAdapterMappings instance containing
+	//     all the mappings.
+	protected virtual RegionAdapterMappings ConfigureRegionAdapterMappings();
+	//
+	// Summary:
+	//     Configures the LocatorProvider for the Microsoft.Practices.ServiceLocation.ServiceLocator.
+	protected abstract void ConfigureServiceLocator();
+	//
+	// Summary:
+	//     Create the Microsoft.Practices.Prism.Logging.ILoggerFacade used by the bootstrapper.
+	//
+	// Remarks:
+	//     The base implementation returns a new TextLogger.
+	protected virtual ILoggerFacade CreateLogger();
+	//
+	// Summary:
+	//     Creates the Microsoft.Practices.Prism.Modularity.IModuleCatalog used by Prism.
+	//
+	// Remarks:
+	//     The base implementation returns a new ModuleCatalog.
+	protected virtual IModuleCatalog CreateModuleCatalog();
+	//
+	// Summary:
+	//     Creates the shell or main window of the application.
+	//
+	// Returns:
+	//     The shell of the application.
+	//
+	// Remarks:
+	//     If the returned instance is a System.Windows.DependencyObject, the Microsoft.Practices.Prism.Bootstrapper
+	//     will attach the default Microsoft.Practices.Prism.Regions.IRegionManager
+	//     of the application in its Microsoft.Practices.Prism.Regions.RegionManager.RegionManagerProperty
+	//     attached property in order to be able to add regions by using the Microsoft.Practices.Prism.Regions.RegionManager.RegionNameProperty
+	//     attached property from XAML.
+	protected abstract DependencyObject CreateShell();
+	//
+	// Summary:
+	//     Initializes the modules. May be overwritten in a derived class to use a custom
+	//     Modules Catalog
+	protected virtual void InitializeModules();
+	//
+	// Summary:
+	//     Initializes the shell.
+	protected virtual void InitializeShell();
+	//
+	// Summary:
+	//     Registers the System.Types of the Exceptions that are not considered root
+	//     exceptions by the Microsoft.Practices.Prism.ExceptionExtensions.
+	protected virtual void RegisterFrameworkExceptionTypes();
+	//
+	// Summary:
+	//     Runs the bootstrapper process.
+	public void Run();
+	//
+	// Summary:
+	//     Run the bootstrapper process.
+	//
+	// Parameters:
+	//   runWithDefaultConfiguration:
+	//     If true, registers default Prism Library services in the container. This
+	//     is the default behavior.
+	public abstract void Run(bool runWithDefaultConfiguration);
+}</pre>
+</body>
+</html>

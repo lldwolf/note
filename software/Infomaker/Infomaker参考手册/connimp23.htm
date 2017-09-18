@@ -1,0 +1,253 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+Informix</TITLE>
+</HEAD>
+<BODY>
+<A NAME="X-ref292018095"></A><h1>Informix</h1>
+<A NAME="TI537"></A><p>This section describes how to use the native Informix database
+interfaces in InfoMaker.</p>
+<A NAME="CCJDAIBD"></A><h2>Supported versions for Informix</h2>
+<A NAME="TI538"></A><p>You can access the following Informix databases using the
+native Informix database interfaces:<A NAME="TI539"></A>
+<ul>
+<li class=fi>Informix Dynamic Server</li>
+<li class=ds>Informix-OnLine and Informix-SEVersions 7.x and
+9.x
+</li>
+</ul>
+</p>
+<A NAME="TI540"></A><p>InfoMaker provides two Informix database interfaces. These
+interfaces require different versions of the Informix client software
+and use different DLLs:</p>
+<A NAME="TI541"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI542"></A>Interface</th>
+<th align="left" valign=bottom><A NAME="TI543"></A>Client software</th>
+<th align="left" valign=bottom><A NAME="TI544"></A>DLL</th>
+</tr>
+<tr><td valign=top><A NAME="TI545"></A>INFORMIX IN7</td>
+<td valign=top><A NAME="TI546"></A>Informix-Connect v7.2</td>
+<td valign=top><A NAME="TI547"></A>PBIN780.DLL</td>
+</tr>
+<tr><td valign=top><A NAME="TI548"></A>INFORMIX IN9</td>
+<td valign=top><A NAME="TI549"></A>Informix-Connect v9.1</td>
+<td valign=top><A NAME="TI550"></A>PBIN980.DLL</td>
+</tr>
+</table>
+<A NAME="TI551"></A><h2>Supported Informix data types</h2>
+<A NAME="TI552"></A><p>The Informix database interfaces support the following Informix
+data types in reports and forms.</p>
+<A NAME="TI553"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><td valign=top><A NAME="TI554"></A>Byte (a maximum
+of 231 bytes)</td>
+<td valign=top><A NAME="TI555"></A>Integer (4 bytes)</td>
+</tr>
+<tr><td valign=top><A NAME="TI556"></A>Character (1
+to 32,511 bytes)</td>
+<td valign=top><A NAME="TI557"></A>Money</td>
+</tr>
+<tr><td valign=top><A NAME="TI558"></A>Date</td>
+<td valign=top><A NAME="TI559"></A>Real</td>
+</tr>
+<tr><td valign=top><A NAME="TI560"></A>DateTime</td>
+<td valign=top><A NAME="TI561"></A>Serial</td>
+</tr>
+<tr><td valign=top><A NAME="TI562"></A>Decimal</td>
+<td valign=top><A NAME="TI563"></A>SmallInt (2 bytes)</td>
+</tr>
+<tr><td valign=top><A NAME="TI564"></A>Float</td>
+<td valign=top><A NAME="TI565"></A>Text (a maximum of 231 bytes)</td>
+</tr>
+<tr><td valign=top><A NAME="TI566"></A>Interval</td>
+<td valign=top><A NAME="TI567"></A>VarChar (1 to 255 bytes)</td>
+</tr>
+</table>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Exceptions</span> <A NAME="TI568"></A>Byte, text, and VarChar data types are not supported in Informix
+SE.</p>
+<A NAME="TI569"></A><h3>Informix DateTime data type</h3>
+<A NAME="TI570"></A><p>The DateTime data type is a contiguous sequence of boxes.
+Each box represents a component of time that you want to record.
+The syntax is:</p>
+<A NAME="TI571"></A><p><pre><b>DATETIME</b> <i>largest_qualifier</i> <b>TO</b> <i>smallest_qualifier</i></pre>
+</p>
+<A NAME="TI572"></A><p>InfoMaker defaults to Year TO Fraction(5).</p>
+<A NAME="TI573"></A><p>For a list of qualifiers, see your Informix
+documentation.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To create your own variation of the DateTime data
+type:</p>
+<ol><li class=fi>
+In the Database painter, create a table
+with a DateTime column.<br><br>
+For instructions on creating a table, see
+the <i>InfoMaker User's Guide</i>
+.<br><br></li>
+<li class=ds>
+In the Columns view, select Pending Syntax from
+the Objects or popup menu. <br><br>
+The Columns view displays the pending changes to the table
+definition. These changes execute only when you click the Save button
+to save the table definition.<br><br></li>
+<li class=ds>
+Select Copy from the Edit or popup menu.<br><br>
+<i>or</i>
+<br><br>
+Click the Copy button.<br><br>
+The SQL syntax (or the portion you selected) is copied to
+the clipboard.<br><br></li>
+<li class=ds>
+In the ISQL view, modify the DateTime syntax and
+execute the CREATE TABLE statement.<br><br>
+For instructions on using the ISQL view, see
+the <i>InfoMaker User's Guide</i>
+.<br><br></li></ol>
+<br><A NAME="TI574"></A><h3>Informix Time data type</h3>
+<A NAME="TI575"></A><p>The Informix database interfaces also support a time data
+type. The time data type is a subset of the DateTime data type.
+The time data type uses only the time qualifier boxes.</p>
+<A NAME="TI576"></A><h3>Informix Interval data type</h3>
+<A NAME="TI577"></A><p>The interval data type is one value or a sequence of values
+that represent a component of time. The syntax is:</p>
+<A NAME="TI578"></A><p><pre><b>INTERVAL</b> <i>largest_qualifier</i> <b>TO</b> <i>smallest_qualifier</i></pre>
+</p>
+<A NAME="TI579"></A><p>InfoMaker defaults to Day(3) TO Day.</p>
+<A NAME="TI580"></A><p>For more about interval data types, see your
+Informix documentation.</p>
+<A NAME="TI581"></A><h2>Basic software components for Informix</h2>
+<A NAME="TI582"></A><p>The following diagram shows the basic software components
+required to access an Informix database using the native Informix
+database interfaces.</p>
+<br><img src="images/Cnw5infx.gif">
+<A NAME="TI583"></A><h2>Preparing to use the Informix database</h2>
+<A NAME="TI584"></A><p>Before you define the database interface and connect to an
+Informix database in InfoMaker, follow these steps to prepare the
+database for use: <A NAME="TI585"></A>
+<ol>
+</li>
+<li class=ds>Install and configure the required
+database server, network, and client software.</li>
+<li class=ds>Install the native INFORMIX IN7 or IN9 database
+interface.</li>
+<li class=ds>Verify that you can connect to the Informix server
+and database outside InfoMaker.
+</li>
+</ol>
+</p>
+<A NAME="TI586"></A><h4>Step 1: install and configure the database server</h4>
+<A NAME="TI587"></A><p>You must install and configure the required database server,
+network, and client software for Informix. </p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To install and configure the required database
+server, network, and client software:</p>
+<ol><li class=fi>
+Make sure the Informix database server
+software and database network software is installed and running
+on the server specified in your database profile.<br><br>
+You must obtain the database server and database network software
+from Informix.<br><br>
+For installation instructions, see your Informix
+documentation.<br><br></li>
+<li class=ds>
+Install the required Informix client software
+on each client computer on which InfoMaker is installed.<br><br></li>
+<li class=ds><b>If you are using the IN7 interface</b>   Install Informix-Connect Version 7.2.x (or Informix-Connect for
+the C language) and run the SetNet32 utility to configure the client
+registry settings.</p>
+</li>
+<li class=ds><b>If you are using the IN9 interface</b>   Install Informix-Connect Version 9.1.x (or Informix-Connect for
+the C language) and run the SetNet32 utility to configure the client
+registry settings.</p>
+
+You must obtain the Informix client software from Informix.
+Make sure the version of the client software you install supports <i>all</i>
+ of
+the following:<A NAME="TI588"></A>
+<ul>
+<li class=fi>The operating
+system running on the client computer</li>
+<li class=ds>The version of the database that you want to access</li>
+<li class=ds>The version of InfoMaker that you are running
+</li>
+</ul>
+<br><br>
+For installation instructions, see your Informix
+documentation.<br><br></li>
+<li class=ds>
+Make sure the Informix client software is properly
+configured so that you can connect to the Informix database server
+at your site.<br><br>
+For example, when you install Informix-Connect Version 9.1.x
+client software on your computer, it automatically creates the correct configuration
+file on your computer.<br><br>
+The configuration file contains default parameters that define
+your network configuration, network protocol, and environment variables.
+If you omit these values from the database profile when you define
+the native Informix database interface, they default to the values
+specified in your configuration file.<br><br>
+For instructions on setting up the Informix
+configuration file, see your Informix documentation.<br><br></li>
+<li class=ds>
+If required by your operating system, make sure
+the directory containing the Informix client software is in your
+system path.<br><br></li></ol>
+<br><A NAME="TI589"></A><h4>Step 2: install the database interface</h4>
+<A NAME="TI590"></A><p>When prompted to do so by the InfoMaker Setup program, select
+the appropriate native Informix database interface.</p>
+<A NAME="TI591"></A><p>For installation instructions, see the <i>InfoMaker
+User's Guide</i>
+.</p>
+<A NAME="TI592"></A><h4>Step 3: verify the connection</h4>
+<A NAME="TI593"></A><p>Make sure you can connect to the Informix server and database
+you want to access from outside InfoMaker.</p>
+<A NAME="TI594"></A><p>To verify the connection, use any Windows-based utility (such
+as the Informix ILOGIN.EXE program) that connects to the database.
+When connecting, be sure to specify the same parameters you plan
+to use in your InfoMaker database profile to access the database.</p>
+<A NAME="TI595"></A><p>For instructions on using ILOGIN.EXE, see
+your Informix documentation.</p>
+<A NAME="TI596"></A><h2>Defining the Informix database interface</h2>
+<A NAME="TI597"></A><p>To define a connection through an Informix database interface,
+you must create a database profile by supplying values for at least
+the basic connection parameters in the Database Profile Setup -
+Informix IN7 or Database Profile Setup - Informix IN9 dialog box.
+You can then select this profile at any time to connect to your
+database in the development environment.</p>
+<A NAME="TI598"></A><p>For information on how to define a database profile, see <A HREF="connimp5.htm#X-ref289075262">"Using database profiles"</A>. </p>
+<A NAME="TI599"></A><h3>Specifying the server name </h3>
+<A NAME="TI600"></A><p>When you specify the server name value, you <i>must</i>
+ use
+the following format to connect to the database through the Informix
+interface:</p>
+<A NAME="TI601"></A><p><pre><i>host_name</i>@<i>server_name</i></pre>
+</p>
+<A NAME="TI602"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI603"></A>Parameter</th>
+<th align="left" valign=bottom><A NAME="TI604"></A>Description</th>
+</tr>
+<tr><td valign=top><A NAME="TI605"></A><i>host_name</i></td>
+<td valign=top><A NAME="TI606"></A>The name of the host computer running
+the Informix database server. This corresponds to the Informix HOSTNAME environment
+variable</td>
+</tr>
+<tr><td valign=top><A NAME="TI607"></A><i>server_name</i></td>
+<td valign=top><A NAME="TI608"></A>The name of the server containing the
+Informix database. This corresponds to the Informix SERVER environment variable</td>
+</tr>
+</table>
+<A NAME="TI609"></A><p>For example, to use the INFORMIX IN7 interface to connect
+to an Informix database server named <i>server01</i>
+ running
+on a host machine named <i>sales</i>
+, do the following:<A NAME="TI610"></A>
+<ul>
+<li class=fi><b>In a database profile</b>   Type the host name (<i>sales</i>
+) in the Host
+Name box and the server name (<i>server01</i>
+) in
+the Server box on the Connection tab in the Database Profile Setup
+- INFORMIX IN7 dialog box. InfoMaker saves this server name as <i>sales@server01</i>
+ in
+the database profile entry in the system registry.
+</li>
+</ul>
+</p>
+<A NAME="TI611"></A><h2>What to do next</h2>
+<A NAME="TI612"></A><p>For instructions on connecting to the database,
+see <A HREF="connimp32.htm#CCJBAGDB">"Connecting to a database"</A>.</p>
+

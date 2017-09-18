@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+	<title>C#.net使用手册</title>
+	<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+	<p id="title">FTP</p>
+
+	<h1>常用功能 </h1>
+	<h2>获取文件列表</h2>
+	<pre class="code" data-type="csharp">private const int CACHE_SIZE = 10 * 1024;
+
+public static List&lt;string&gt; GetFileList(string FTPAddress, string username, string password)
+{
+	List&lt;string&gt; files = new List&lt;string&gt;();
+
+	try
+	{
+		//Create FTP request
+		FtpWebRequest request = FtpWebRequest.Create(FTPAddress) as FtpWebRequest;
+
+		request.Method = WebRequestMethods.Ftp.ListDirectory;
+		request.Credentials = new NetworkCredential(username, password);
+		request.UsePassive = true;
+		request.UseBinary = true;
+		request.KeepAlive = false;
+
+		//Read the server's response
+		FtpWebResponse response = request.GetResponse() as FtpWebResponse;
+		Stream responseStream = response.GetResponseStream();
+		StreamReader reader = new StreamReader(responseStream);
+
+		while (!reader.EndOfStream)
+		{
+			files.Add(reader.ReadLine());
+		}
+
+		//Clean-up
+		reader.Close();
+		responseStream.Close(); //redundant
+		response.Close();
+	}
+	catch (Exception ex)
+	{
+		throw new Exception(&quot;There was an error connecting to the FTP Server&quot;, ex);
+	}
+
+	return files;
+}</pre>
+	<p>使用范例</p>
+	<pre class="code" data-type="csharp">List&lt;string&gt; fileList = FTPHelper.GetFileList(
+	"ftp://ftpserver.net" + &quot;//&quot; + "home/userid/temp",
+	userId,
+	password);</pre>
+	<h2>下载文件</h2>
+	<pre class="code" data-type="csharp">private const int CACHE_SIZE = 10 * 1024;
+
+public static void DownloadFile(string FTPAddress, string srcFile, string username, string password, string targetFile)
+{
+	byte[] downloadedData = new byte[0];
+
+	try
+	{
+		//Create FTP request
+		//Note: format is ftp://server.com/file.ext
+		FtpWebRequest request = FtpWebRequest.Create(FTPAddress + &quot;/&quot; + srcFile) as FtpWebRequest;
+
+		//Get the file size first (for progress bar)
+		request.Method = WebRequestMethods.Ftp.GetFileSize;
+		request.Credentials = new NetworkCredential(username, password);
+		request.UsePassive = true;
+		request.UseBinary = true;
+		request.KeepAlive = true; //don't close the connection
+
+		int dataLength = (int)request.GetResponse().ContentLength;
+
+		//Now get the actual data
+		request = FtpWebRequest.Create(FTPAddress + &quot;/&quot; + srcFile) as FtpWebRequest;
+		request.Method = WebRequestMethods.Ftp.DownloadFile;
+		request.Credentials = new NetworkCredential(username, password);
+		request.UsePassive = true;
+		request.UseBinary = true;
+		request.KeepAlive = false; //close the connection when done
+
+		//Streams
+		FtpWebResponse response = request.GetResponse() as FtpWebResponse;
+		Stream reader = response.GetResponseStream();
+
+		//Download to memory
+		//Note: adjust the streams here to download directly to the hard drive
+		MemoryStream memStream = new MemoryStream();
+		byte[] buffer = new byte[CACHE_SIZE]; //downloads in chuncks
+
+		while (true)
+		{
+			//Try to read the data
+			int bytesRead = reader.Read(buffer, 0, buffer.Length);
+
+			if (bytesRead == 0)
+			{
+				break;
+			}
+			else
+			{
+				//Write the downloaded data
+				memStream.Write(buffer, 0, bytesRead);
+			}
+		}
+
+		//Convert the downloaded stream to a byte array
+		downloadedData = memStream.ToArray();
+
+		//Clean up
+		reader.Close();
+		memStream.Close();
+		response.Close();
+	}
+	catch (Exception ex)
+	{
+		throw new Exception(&quot;There was an error connecting to the FTP Server.&quot;, ex);
+	}
+
+	FileStream newFile = new FileStream(targetFile, FileMode.OpenOrCreate, FileAccess.Write);
+	newFile.Write(downloadedData, 0, downloadedData.Length);
+	newFile.Close();
+}</pre>
+	<p>使用范例</p>
+	<pre class="code" data-type="csharp">FTPHelper.DownloadFile(
+	"ftp://ftpserver.net" + &quot;//&quot; + "home/userid/temp",
+	"1.txt",
+	userId,
+	password,
+	@"c:\temp\1.txt");</pre>
+	<h2>上传文件</h2>
+	<pre class="code" data-type="csharp">public static void UploaddFile(string FTPAddress, string targetFile, string username, string password, string srcFile)
+{
+	byte[] uploadedData = new byte[0];
+
+	try
+	{
+		//Create FTP request
+		//Note: format is ftp://server.com/file.ext
+		FtpWebRequest request = FtpWebRequest.Create(FTPAddress + &quot;/&quot; + targetFile) as FtpWebRequest;
+		request.Method = WebRequestMethods.Ftp.UploadFile;
+		request.Credentials = new NetworkCredential(username, password);
+		request.UsePassive = true;
+		request.UseBinary = true;
+		request.KeepAlive = false; //close the connection when done
+
+		FileStream stream = File.OpenRead(srcFile);
+		byte[] buffer = new byte[stream.Length];
+		stream.Read(buffer, 0, buffer.Length);
+		stream.Close();
+
+		Stream reqStream = request.GetRequestStream();
+		reqStream.Write(buffer, 0, buffer.Length);
+		reqStream.Close();
+	}
+	catch (Exception ex)
+	{
+		throw new Exception(&quot;There was an error connecting to the FTP Server.&quot;, ex);
+	}
+}</pre>
+	<p>使用范例</p>
+	<pre class="code" data-type="csharp">FTPHelper.UploadFile(
+	"ftp://ftpserver.net" + &quot;//&quot; + "home/userid/temp",
+	"1.txt",
+	userId,
+	password,
+	@"c:\temp\1.txt");</pre>
+	<pre class="code" data-type="csharp"></pre>
+	<h1>示例</h1>
+	<p><a href="demo/FTPTest.zip">下载</a></p>
+	<p>&nbsp;</p>
+
+</body>
+</html>

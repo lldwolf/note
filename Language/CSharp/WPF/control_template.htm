@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+	<script type="text/javascript" src="../../../mylib/js/css.js"></script>
+	<title>C#.net使用手册</title>
+</head>
+<body>
+	<p id="title">Control Template</p>
+
+	<h1>Logical Tree（逻辑树） 和 Visual Tree （可视树）</h1>
+
+	<p>Logical Tree 是 Visual Tree 的简化形式，只包含了 Visual Tree 的可视部分，而系统使用的组件则被隐藏。</p>
+	<h2>简单示例</h2>
+	<h3>设计视图</h3>
+	<img alt="" src="images/logical_tree_visual_tree_sample.png" />
+	<h3>Logical Tree 示例</h3>
+	<img alt="" src="images/logical_tree_sample.png" />
+	<h3>Visual Tree 示例</h3>
+	<img alt="" src="images/visual_tree_sample.png" />
+
+
+	<p>
+		<pre class="code" data-type="csharp" data-collapsed="true" title="TreeItem.cs">using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace WpfDemo.ControlTemplate
+{
+	public class TreeItem
+	{
+		public TreeItem()
+		{
+			this.Children = new List&lt;TreeItem&gt;();
+		}
+
+		public string Name { get; set; }
+		public List&lt;TreeItem&gt; Children { get; private set; }
+	}
+}</pre>
+	</p>
+
+	<p>
+		<pre class="code" data-type="xml" data-collapsed="true" title="ViualTreeAndLogicalTreeWindow.xaml">&lt;Window x:Class=&quot;WpfDemo.ControlTemplate.ViualTreeAndLogicalTreeWindow&quot;
+		xmlns=&quot;http://schemas.microsoft.com/winfx/2006/xaml/presentation&quot;
+		xmlns:x=&quot;http://schemas.microsoft.com/winfx/2006/xaml&quot;
+		Title=&quot;Logical Tree &amp;amp; Visual Tree&quot;
+		Height=&quot;300&quot;
+		Width=&quot;300&quot;&gt;
+	&lt;StackPanel&gt;
+		&lt;Button x:Name=&quot;btnLogicalTree&quot; Click=&quot;btnLogicalTree_Click&quot;&gt;Logical Tree&lt;/Button&gt;
+		&lt;Button x:Name=&quot;btnVisualTree&quot; Click=&quot;btnVisualTree_Click&quot;&gt;Visual Tree&lt;/Button&gt;
+	&lt;/StackPanel&gt;
+&lt;/Window&gt;</pre>
+	</p>
+
+	<p>
+		<pre class="code" data-type="csharp" data-collapsed="true" title="ViualTreeAndLogicalTreeWindow.xaml.cs">using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Shapes;
+using System.Collections;
+
+namespace WpfDemo.ControlTemplate
+{
+	/// &lt;summary&gt;
+	/// Interaction logic for ViualTreeAndLogicalTreeWindow.xaml
+	/// &lt;/summary&gt;
+	public partial class ViualTreeAndLogicalTreeWindow : Window
+	{
+		public ViualTreeAndLogicalTreeWindow()
+		{
+			InitializeComponent();
+		}
+
+		private void btnLogicalTree_Click(object sender, RoutedEventArgs e)
+		{
+			List&lt;TreeItem&gt; items = new List&lt;TreeItem&gt;();
+			items.Add(this.GetLogicalTree(null, this));
+
+			TreeWindows window = new TreeWindows(items);
+			window.ShowDialog();
+		}
+
+		private void btnVisualTree_Click(object sender, RoutedEventArgs e)
+		{
+			List&lt;TreeItem&gt; items = new List&lt;TreeItem&gt;();
+			items.Add(this.GetVisualTree(null, this));
+
+			TreeWindows window = new TreeWindows(items);
+			window.ShowDialog();
+		}
+
+		private TreeItem GetLogicalTree(TreeItem parentItem, object control)
+		{
+			TreeItem item = new TreeItem();
+			item.Name = control.GetType().Name + &quot;: &quot; + Convert.ToString(control);
+
+			TreeItem rootItem = parentItem;
+			if (parentItem == null)
+			{
+				rootItem = item;
+			}
+			else
+			{
+				rootItem.Children.Add(item);
+			}
+
+			if (control is DependencyObject)
+			{
+				IEnumerable childen = LogicalTreeHelper.GetChildren(control as DependencyObject);
+				foreach (var child in childen)
+				{
+					GetLogicalTree(item, child);
+				}
+			}
+
+			return rootItem;
+		}
+
+		private TreeItem GetVisualTree(TreeItem parentItem, object control)
+		{
+			TreeItem item = new TreeItem();
+			item.Name = control.GetType().Name + &quot;: &quot; + Convert.ToString(control);
+
+			TreeItem rootItem = parentItem;
+			if (parentItem == null)
+			{
+				rootItem = item;
+			}
+			else
+			{
+				rootItem.Children.Add(item);
+			}
+
+			if (control is DependencyObject)
+			{
+				for (int i = 0; i &lt; VisualTreeHelper.GetChildrenCount(control as DependencyObject); i++)
+				{
+					GetVisualTree(item, VisualTreeHelper.GetChild(control as DependencyObject, i));
+
+				}
+			}
+
+			return rootItem;
+		}
+	}
+}</pre>
+	</p>
+
+	<p>
+		<pre class="code" data-type="xml" data-collapsed="true" title="TreeWindows.xaml">&lt;Window x:Class=&quot;WpfDemo.ControlTemplate.TreeWindows&quot;
+		xmlns=&quot;http://schemas.microsoft.com/winfx/2006/xaml/presentation&quot;
+		xmlns:x=&quot;http://schemas.microsoft.com/winfx/2006/xaml&quot;
+		xmlns:local=&quot;clr-namespace:WpfDemo.ControlTemplate&quot;
+		Title=&quot;TreeWindows&quot;
+		Height=&quot;300&quot;
+		Width=&quot;300&quot;&gt;
+	&lt;DockPanel&gt;
+		&lt;DockPanel.Resources&gt;
+			&lt;HierarchicalDataTemplate x:Key=&quot;treeDataTemplate&quot;
+									  DataType=&quot;{x:Type local:TreeItem}&quot;
+									  ItemsSource=&quot;{Binding Path=Children}&quot;&gt;
+				&lt;StackPanel Orientation=&quot;Horizontal&quot;
+							Margin=&quot;0,2,0,2&quot;&gt;
+					&lt;TextBlock Text=&quot;{Binding Path=Name}&quot; /&gt;
+				&lt;/StackPanel&gt;
+			&lt;/HierarchicalDataTemplate&gt;
+		&lt;/DockPanel.Resources&gt;
+		&lt;TreeView x:Name=&quot;treeView&quot;
+				  ItemTemplate=&quot;{StaticResource ResourceKey=treeDataTemplate}&quot;&gt;
+		&lt;/TreeView&gt;
+
+	&lt;/DockPanel&gt;
+&lt;/Window&gt;</pre>
+	</p>
+
+	<p>
+		<pre class="code" data-type="csharp" data-collapsed="true" title="TreeWindows.xaml.cs">using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Shapes;
+
+namespace WpfDemo.ControlTemplate
+{
+	/// &lt;summary&gt;
+	/// Interaction logic for TreeWindows.xaml
+	/// &lt;/summary&gt;
+	public partial class TreeWindows : Window
+	{
+		public TreeWindows()
+		{
+			InitializeComponent();
+		}
+
+		public TreeWindows(List&lt;TreeItem&gt; items)
+			: this()
+		{
+			this.treeView.ItemsSource = items;
+		}
+	}
+}</pre>
+	</p>
+	<h1>使用代码查看 Control Template XAML</h1>
+	<p>该代码常用于在弹出控件，例如 ComboBox 等，查看其 Template 的原生内容</p>
+	<pre class="code" data-type="csharp">string xaml = System.Windows.Markup.XamlWriter.Save(this.PopupContentContainerTemplate);</pre>
+</body>
+</html>

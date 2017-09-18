@@ -1,0 +1,50 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+Time</TITLE>
+</HEAD>
+<BODY>
+<A NAME="CAIBABHG"></A><A NAME="TI8051"></A><h1>Time</h1>
+<A NAME="TI8052"></A><p>
+<FORM>
+<INPUT
+ TYPE = "BUTTON"
+ VALUE = "Examples"
+ onClick = "window.location = 'imugp247.htm#EX99';">
+</FORM>
+</p>
+<h3>Description</h3><A NAME="TI8053"></A><p>Converts a string to a time data type.</p>
+
+<h3>Syntax</h3><pre><b>Time</b> ( <i>string</i> )</pre>
+<A NAME="TI8054"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI8055"></A>Argument</th>
+<th align="left" valign=bottom><A NAME="TI8056"></A>Description</th>
+</tr>
+<tr><td valign=top><A NAME="TI8057"></A><i>string</i></td>
+<td valign=top><A NAME="TI8058"></A>A string containing a valid time (such
+as 8 am or 10:25) that you want returned as a
+time data type. Only the hour is required; you do not have to include
+the minutes, seconds, or microseconds of the time or am or pm.
+The default value for minutes and seconds is 00 and for microseconds
+is 000000. am or pm is determined automatically</td>
+</tr>
+</table>
+
+<h3>Return Values</h3><A NAME="TI8059"></A><p>Time. Returns the time in <i>string</i> as a
+time data type. If <i>string</i> does not contain a
+valid time, Time returns 00:00:00.</p>
+
+<A NAME="EX99"></A><h3>Examples</h3><A NAME="TI8060"></A><p>This expression returns the time data type for 45
+seconds before midnight (23:59:15):<pre><i>Time</i> ("23:59:15")</pre>
+</p>
+<A NAME="TI8061"></A><p>This expression for a computed field returns the
+value in the time_received column as a value of type time
+if time_received is not the empty string. Otherwise, it
+returns 00:00:00:<pre>If(time_received = "" ,00:00:00, <i><br> Time</i> (time_received))</pre>
+</p>
+<A NAME="TI8062"></A><p>This example is similar to the previous one, except
+that it returns 00:00:00 if time_received contains a NULL
+value:<pre>If(IsNull(time_received), 00:00:00, <br> <i>Time</i> (time_received))</pre>
+</p>
+
+

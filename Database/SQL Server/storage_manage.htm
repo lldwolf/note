@@ -1,0 +1,97 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<script language="javascript" src="css.js"></script>
+<title>存储管理</title>
+</head>
+
+<body>
+<h1>第N章 存储管理</h1>
+<hr>
+<h2>N.1 维护数据库的文件</h2>
+<h3>N.1.1 添加文件组</h3>
+<pre>alter database iou add filegroup TJDG_dev</pre>
+<h3>N.1.2 删除文件组</h3>
+<pre>alter database iou remove filegroup TJDG_dev </pre>
+<p><img src="images/note.jpg" width="20" height="20">注意：只有文件组中不包含文件时才可以删除。</p>
+<h3>N.1.3 添加文件</h3>
+<pre>alter database iou add file<br>	(name = TJDG_dev,<br>	filename = 'D:\Program Files\Microsoft SQL Server\MSSQL\data\_d.dbTJDG.DB',<br>	size = 20MB,<br>	maxsize = UNLIMITED,<br>	filegrowth = 10%) to filegroup TJDG_dev </pre>
+<h3>N.1.4 删除文件</h3>
+<pre>alter database iou remove file TJDG_dev </pre>
+<h3>N.1.5 在指定文件上创建表及索引</h3>
+<pre>--在指定文件上创建表
+create table test_table(a int not null) on tjdg_dev 
+
+--在指定文件上创建索引
+alter table test_table add primary key(a) on tjdg_ind</pre>
+<h2>N.4 收缩数据库大小 </h2>
+<p>数据库在执行某些操作后（包括导库或一些变态的update语句），数据库存储文件大小会大增,主要是数据日志文件变大，可用如下方法给数据库减肥：</p>
+<pre>--压缩日志及数据库文件大小
+
+/*--特别注意
+	请按步骤进行,未进行前面的步骤,请不要做后面的步骤
+	否则可能损坏你的数据库.
+--*/
+
+1.清空日志
+	DUMP  TRANSACTION  库名  WITH  NO_LOG    
+
+2.截断事务日志：
+	BACKUP LOG 数据库名 WITH NO_LOG
+
+3.收缩数据库文件(如果不压缩,数据库的文件不会减小
+	企业管理器--右键你要压缩的数据库--所有任务--收缩数据库--收缩文件
+		--选择日志文件--在收缩方式里选择收缩至XXM,这里会给出一个允许收缩到的最小M数,直接输入这个数,确定就可以了
+		--选择数据文件--在收缩方式里选择收缩至XXM,这里会给出一个允许收缩到的最小M数,直接输入这个数,确定就可以了
+
+	也可以用SQL语句来完成
+	--收缩数据库
+	DBCC SHRINKDATABASE(数据库名)
+	
+	--收缩指定数据文件,1是文件号,可以通过这个语句查询到:select * from sysfiles
+	DBCC SHRINKFILE(1)
+
+4.为了最大化的缩小日志文件(如果是sql 7.0,这步只能在查询分析器中进行)
+	a.分离数据库:
+		企业管理器--服务器--数据库--右键--分离数据库
+
+	b.在我的电脑中删除LOG文件
+
+	c.附加数据库:
+		企业管理器--服务器--数据库--右键--附加数据库
+
+	此法将生成新的LOG，大小只有500多K
+
+	或用代码： 
+	下面的示例分离 pubs，然后将 pubs 中的一个文件附加到当前服务器。
+	
+	a.分离
+	EXEC sp_detach_db @dbname = 'pubs'
+
+	b.删除日志文件
+	
+	c.再附加
+	EXEC sp_attach_single_file_db @dbname = 'pubs', 
+	   @physname = 'c:\Program Files\Microsoft SQL Server\MSSQL\Data\pubs.mdf'
+
+5.为了以后能自动收缩,做如下设置:
+	企业管理器--服务器--右键数据库--属性--选项--选择"自动收缩"
+	
+	--SQL语句设置方式:
+	EXEC sp_dboption '数据库名', 'autoshrink', 'TRUE'	
+
+6.如果想以后不让它日志增长得太大
+	企业管理器--服务器--右键数据库--属性--事务日志
+		--将文件增长限制为xM(x是你允许的最大数据文件大小)
+
+	--SQL语句的设置方式:
+	alter database 数据库名 modify file(name=逻辑文件名,maxsize=20)
+
+</pre>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<script language="javascript" src="index.js"></script>
+</body>
+</html>

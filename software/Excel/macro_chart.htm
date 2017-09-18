@@ -1,0 +1,70 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>操作图表</title>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+<h1>第N章 操作图表</h1>
+<hr />
+<h2>N.1 基本操作</h2>
+<p>插入图表时，一般使用的是Charts.Add方法，它返回一个Excel.Chart对象，可通过 Sheet.ChartObjects(索引号).Chart来获取Excel.Chart对象，索引号可为数字或图表名称。</p>
+<p>Chart对象不提供对高度和宽度的调整，因此如果要设置图表的宽度和设度，需要使用Shape对象，这里需要解释一下，Chart同时也是一个Shape对象，可使用Chart的名称在Shapes数组中进行索引。但是有一点是需要特别注意，那就是Chart刚生成时，其状态并不是Worksheet中的图表对象，而是一个单独的Chart Sheet，通过设置Chart.Location属性将其转为Worksheet中的图表对象后，其名称就变了，可用如下代码来获取图表名称及对应的Shape：</p>
+<pre>Dim sChartName As String
+Dim oShape as Excel.Shape
+sChartName = Sheet1.ChartObjects(Sheet1.ChartObjects.Count).Name
+Set oShape = Sheet1.Shapes(sChartName)</pre>
+<p>因为刚生成的图表肯定是Worksheet中ChartObjects数组中的最后一个嘛。下面是一个插入图表的完整例子：</p>
+<pre>Dim oChart As Excel.Chart
+Dim oShape As Excel.Shape
+Dim sChartName As String
+
+Set oChart = Charts.Add
+ActiveChart.ChartType = xlLineMarkers
+ActiveChart.SetSourceData Source:=Sheets(&quot;Sheet1&quot;).Range(&quot;C5:&quot; &amp; GetColNo(iEndCol) &amp; iDataRow2), PlotBy _
+    :=xlRows
+ActiveChart.SeriesCollection(1).XValues = &quot;=Sheet1!R4C3:R4C&quot; &amp; iEndCol
+For iRow = 5 To iDataRow2
+   ActiveChart.SeriesCollection(iRow - 4).Name = &quot;=Sheet1!R&quot; &amp; iRow &amp; &quot;C1&quot;
+Next iRow
+ActiveChart.Location Where:=xlLocationAsObject, Name:=&quot;Sheet1&quot;
+
+With ActiveChart
+    .HasTitle = True
+    .ChartTitle.Characters.Text = &quot;AMS monthly report&quot;
+End With
+
+sChartName = Sheet1.ChartObjects(Sheet1.ChartObjects.Count).Name
+Set oShape = Sheet1.Shapes(sChartName)
+With oShape
+    .Width = Sheet1.Cells(1, iEndCol + 1).Left
+    .Height = 168
+    .Top = Sheet1.Cells(iDataRow2 + 3, 1).Top
+    .Left = 0
+End With</pre>
+<h2>N.2 图表的组成</h2>
+<p><img src="img/chart.jpg" width="569" height="319" /></p>
+<p>1：绘图区（Plot Area）</p>
+<p>2：图例（Legend）</p>
+<p>3：X轴、分类轴（Category Axes）</p>
+<p>4：Y轴、数据轴（Value Axes）</p>
+<p>5：标题（Title）</p>
+<h2>N.3 设置数据源</h2>
+<h2>N.4 设置坐标轴 </h2>
+<h2>N.5 设置图表标题 </h2>
+<h2>N.6 设置图表的类型</h2>
+<p>是单独的Chart Sheet还是嵌入其它Worksheet。</p>
+<h2>N.7 设置绘图区</h2>
+<p>绘图区是指显示代表数据的几何图形的区域，也就是那些折线、点、柱之类的图例绘图区，是图表的主要部分。可使用Chart.PlotArea访问。</p>
+<p>可通过对PlotArea属性的设置更改PlotArea的宽度、高度和坐标。</p>
+<p>对于使用数据透视表生成的图表，其PlotArea的属性为只读，只有将透视表删除，方可设置其属性。</p>
+<h2>N.6 设置图例</h2>
+<p>可通过Chart.Legend访问图例。设置其高度、宽度等属性。</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+
+</body>
+</html>

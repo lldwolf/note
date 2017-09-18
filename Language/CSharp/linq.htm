@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+    <script type="text/javascript" src="../../mylib/js/css.js"></script>
+    <title>LINQ Expression</title>
+</head>
+
+<body>
+    <p id="title">LINQ Expression</p>
+
+    <h1>基本用法</h1>
+    <h2>语法</h2>
+    <pre class="code" data-type="csharp" data-collapsed="true" title="查看代码">//无参
+ Func&lt;bool&gt; f = () => true;	//返回true
+
+ //单参
+ Func&lt;string, bool&gt; f = s =&gt; s.Length == 5;
+
+ //多参
+ Func&lt;int, int, bool&gt; compareFunc = (i1, i2) =&gt; i1 == i2;
+
+ //多行Code
+ Func&lt;bool&gt; f = () =&gt; { return true; }; 
+
+ //Method
+ Action&lt;string&gt; m1 = s =&gt; Console.WriteLine(s);</pre>
+    <h2>匿名方法的替代</h2>
+    <p>在.net framework 2.0时代，我们使用delegate实现匿名方法，如下所示，返回List&lt;string&gt;中长度大于5的字符串:</p>
+    <p><b>传统delegate方式：</b></p>
+    <pre class="code" data-type="csharp">list.FindAll(delegate(string str) { return str.Length > 5; });</pre>
+    <p><b>LINQ Lambda表达式方式</b></p>
+    <pre class="code" data-type="csharp">list.FindAll(str => str.Length > 5);</pre>
+    <h2>Func 与 Action</h2>
+    <p>Func&lt;in T, out TResult&gt; 范型类，.net 3.5 引入，用于实现有返回值函数的动态实现。最多支持16个输入参数。</p>
+    <p>Action&lt;in T&gt; 范型类，.net 2.0 引入，用于实现无返回值函数的动态实现。最多支持16个输入参数。</p>
+    <p>Func 示例：</p>
+    <pre class="code" data-type="csharp">//声明一个动态函数，返回两个字符串的长度和
+Func&lt;string, string, int&gt; ss = (s1, s2) => { return s1.Length + s2.Length; };
+Console.WriteLine(ss("ab", "ddddd"));</pre>
+    <p>Action 示例</p>
+    <pre class="code" data-type="csharp">Action&lt;int&gt; action = i => { Console.WriteLine("The number is {0}", i); };
+action(100);</pre>
+    <h1>List 的默认扩充</h1>
+    <h2>成员方法扩充</h2>
+    <table style="width: 95%">
+        <tr>
+            <th>Express</th>
+            <th>Code Sample</th>
+            <th>Comments</th>
+        </tr>
+        <tr>
+            <td>Count</td>
+            <td>
+                <pre class="code" data-type="csharp">List&lt;string&gt; testList = new List&lt;string&gt;();
+for (int i = 0; i &lt; 10; i++)
+	testList.Add(:item : + i);
+
+Console.WriteLine(testList.Count(obj =&gt; obj.Contains(:1:)));</pre>
+            </td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>Exists</td>
+            <td>
+                <pre class="code" data-type="csharp">List&lt;string&gt; testList = new List&lt;string&gt;();
+Console.WriteLine(testList.Exists(str =&gt; str == :abc:));</pre>
+            </td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>First</td>
+            <td>
+                <pre class="code" data-type="csharp">List&lt;string&gt; testList = new List&lt;string&gt;();
+for (int i = 0; i &lt; 10; i++)
+	testList.Add(:item : + i);
+
+Console.WriteLine(testList.First(obj =&gt; obj.Contains(:item:)));</pre>
+            </td>
+            <td>If no match item, InvalidOperationException will raise.</td>
+        </tr>
+        <tr>
+            <td>FirstOrDefault</td>
+            <td>
+                <pre class="code" data-type="csharp">List&lt;string&gt; testList = new List&lt;string&gt;();
+for (int i = 0; i &lt; 10; i++)
+	testList.Add(:item : + i);
+
+Console.WriteLine(testList.FirstOrDefault(obj =&gt; obj.Contains(:item:)));</pre>
+            </td>
+            <td>If no match, the default value will return. For ex. 
+        <ul>
+            <li>default value for value type</li>
+            <li>null for reference type</li>
+        </ul>
+            </td>
+        </tr>
+        <tr>
+            <td>Single</td>
+            <td>
+                <pre class="code" data-type="csharp">List&lt;string&gt; testList = new List&lt;string&gt;();
+for (int i = 0; i &lt; 10; i++)
+	testList.Add(:item : + i);
+
+Console.WriteLine(testList.Single(obj =&gt; obj.Contains(:1:)));</pre>
+            </td>
+            <td>If no match item, InvalidOperationException will raise.</td>
+        </tr>
+        <tr>
+            <td>Where</td>
+            <td>
+                <pre class="code" data-type="csharp">List&lt;string&gt; testList = new List&lt;string&gt;();
+for (int i = 0; i &lt; 10; i++)
+	testList.Add(:item : + i);
+
+List&lt;string&gt; selectedList = testList.Where(obj =&gt; obj.Contains(:item:)).ToList();
+Console.WriteLine(selectedList.Count);</pre>
+            </td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+    </table>
+    <h2>自定义表达式</h2>
+    <table style="width: 95%">
+        <tr>
+            <th>Express</th>
+            <th>Code Sample</th>
+            <th>Comments</th>
+        </tr>
+        <tr>
+            <td>multi from</td>
+            <td>
+                <pre class="code" data-type="csharp">List&lt;string&gt; list1 = new List&lt;string&gt;();
+string[] list2 = new string[10];
+
+for (int i = 0; i &lt; 10; i++)
+{
+	list1.Add(:item : + i);
+	list2[i] = :item : + i % 5;
+}
+
+List&lt;string&gt; list = (from str1 in list1
+		from str2 in list2
+		where str1 == str2
+		select str1).ToList().Distinct().ToList();
+Console.WriteLine(list.Count);</pre>
+            </td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>let 子句
+            </td>
+            <td>
+                <pre class="code" data-type="csharp">List&lt;string&gt; testList = new List&lt;string&gt;();
+for (int i = 0; i &lt; 10; i++)
+    testList.Add(:item : + i);
+
+var list = from str in testList
+           let length = str.Length
+           select new { Name = str, Length = length };
+
+foreach (var item in list)
+{
+    Console.WriteLine(item.Name + ::: + item.Length);
+}</pre>
+            </td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>group...by 子句</td>
+            <td>
+                <pre class="code" data-type="csharp">List&lt;Tuple&lt;int, int&gt;&gt; list = new List&lt;Tuple&lt;int, int&gt;&gt;();
+list.Add(new Tuple&lt;int, int&gt;(2012, 1000));
+list.Add(new Tuple&lt;int, int&gt;(2012, 2000));
+list.Add(new Tuple&lt;int, int&gt;(2013, 2000));
+list.Add(new Tuple&lt;int, int&gt;(2013, 3000));
+
+var summary = from s in list
+              group s by s.Item1 into group1
+              select new
+                  {
+                      Year = group1.Key,
+                      Value = group1.Sum(item =&gt; item.Item2)
+                  };
+
+foreach (var item in summary)
+{
+    Console.WriteLine(item.Year + &quot;: &quot; + item.Value);
+}</pre>
+            </td>
+        </tr>
+    </table>
+    <h1>表达式树</h1>
+    <h2>Expression 类</h2>
+    <p>Expression 类定义于 System.Linq.Expressions 空间</p>
+    <p>从代码运行的角度，Expression 类可以认为是 Delegate 类的编译前对象，例如下面的代码：</p>
+    <pre class="code" data-type="csharp">Expression&lt;Func&lt;string&gt;&gt; expression = () =&gt; :Hellow World:;
+Func&lt;string&gt; func = expression.Compile();</pre>
+    <h2>Expression 列表</h2>
+    <table style="width: 95%">
+        <tbody>
+            <tr>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Expression</th>
+                <th>Representation</th>
+            </tr>
+            <tr>
+                <td>BinaryExpression</td>
+                <td>使用二元操作符的表示式</td>
+                <td>
+                    <pre class="code" data-type="csharp">System.Linq.Expressions.BinaryExpression binaryExpression =
+    System.Linq.Expressions.Expression.MakeBinary(
+        System.Linq.Expressions.ExpressionType.Subtract,
+        System.Linq.Expressions.Expression.Constant(53),
+        System.Linq.Expressions.Expression.Constant(14));
+
+Console.WriteLine(binaryExpression.ToString());</pre>
+                </td>
+                <td>(53 - 14)</td>
+            </tr>
+            <tr>
+                <td>BlockExpression</td>
+                <td>Expression的序列，可包括多个顺序执行的 Expression</td>
+                <td>
+                    <pre class="code" data-type="csharp">// Add the following directive to your file: 
+// using System.Linq.Expressions;   
+
+// The block expression allows for executing several expressions sequentually. 
+// When the block expression is executed, 
+// it returns the value of the last expression in the sequence.
+BlockExpression blockExpr = Expression.Block(
+    Expression.Call(
+        null,
+        typeof(Console).GetMethod(:Write:, new Type[] { typeof(String) }),
+        Expression.Constant(:Hello :)
+       ),
+    Expression.Call(
+        null,
+        typeof(Console).GetMethod(:WriteLine:, new Type[] { typeof(String) }),
+        Expression.Constant(:World!:)
+        ),
+    Expression.Constant(42)
+);
+
+Console.WriteLine(:The result of executing the expression tree::);
+// The following statement first creates an expression tree, 
+// then compiles it, and then executes it.            
+var result = Expression.Lambda&lt;Func&lt;int&gt;&gt;(blockExpr).Compile()();
+
+// Print out the expressions from the block expression.
+Console.WriteLine(:The expressions from the block expression::);
+foreach (var expr in blockExpr.Expressions)
+    Console.WriteLine(expr.ToString());
+
+// Print out the result of the tree execution.
+Console.WriteLine(:The return value of the block expression::);
+Console.WriteLine(result);</pre>
+                </td>
+                <td>
+                    <pre class="code" data-type="csharp">// This code example produces the following output: 
+// 
+// The result of executing the expression tree: 
+// Hello World! 
+
+// The expressions from the block expression: 
+// Write("Hello ")
+// WriteLine("World!")
+// 42 
+
+// The return value of the block expression: 
+// 42
+</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>ConditionalExpression</td>
+                <td>带有条件判断的表达式</td>
+                <td>
+                    <pre class="code" data-type="csharp">int num = 100;
+
+// This expression represents a conditional operation.  
+// It evaluates the test (first expression) and 
+// executes the iftrue block (second argument) if the test evaluates to true,  
+// or the iffalse block (third argument) if the test evaluates to false.
+Expression conditionExpr = Expression.Condition(
+                           Expression.Constant(num &gt; 10),
+                           Expression.Constant(:num is greater than 10:),
+                           Expression.Constant(:num is smaller than 10:)
+                         );
+
+// Print out the expression.
+Console.WriteLine(conditionExpr.ToString());
+
+// The following statement first creates an expression tree, 
+// then compiles it, and then executes it.       
+Console.WriteLine(
+    Expression.Lambda&lt;Func&lt;string&gt;&gt;(conditionExpr).Compile()());</pre>
+                </td>
+                <td>
+                    <pre class="code" data-type="csharp">// This code example produces the following output: 
+// 
+// IIF(:True:, :num is greater than 10:, :num is smaller than 10:)
+// num is greater than 10</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>ConstantExpression</td>
+                <td>常量</td>
+                <td>
+                    <pre class="code" data-type="csharp">// This expression represents a Constant value.
+Expression constantExpr = Expression.Constant(5.5);
+
+// Print out the expression.
+Console.WriteLine(constantExpr.ToString());
+
+// You can also use variables. 
+double num = 3.5;
+constantExpr = Expression.Constant(num);
+Console.WriteLine(constantExpr.ToString());</pre>
+                </td>
+                <td>
+                    <pre class="code" data-type="csharp">// This code example produces the following output: 
+// 
+// 5.5 
+// 3.5</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>DefaultExpression</td>
+                <td>默认值</td>
+                <td>
+                    <pre class="code" data-type="csharp">// This expression represents the default value of a type 
+// (0 for integer, null for a string, etc.)
+Expression defaultExpr = Expression.Default(
+                            typeof(byte)
+                        );
+
+// Print out the expression.
+Console.WriteLine(defaultExpr.ToString());
+
+// The following statement first creates an expression tree, 
+// then compiles it, and then executes it.
+Console.WriteLine(
+    Expression.Lambda&lt;Func&lt;byte&gt;&gt;(defaultExpr).Compile()());</pre>
+                </td>
+                <td>
+                    <pre class="code" data-type="csharp">// This code example produces the following output: 
+// 
+// default(Byte) 
+// 0</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>DynamicExpression</td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>GotoExpression</td>
+                <td>无条件跳转，包括 return, break, continue</td>
+                <td>
+                    <pre class="code" data-type="csharp">// A label expression of the void type that is the target for the GotoExpression.
+LabelTarget returnTarget = Expression.Label();
+
+// This block contains a GotoExpression. 
+// It transfers execution to a label expression that is initialized with the same LabelTarget as the GotoExpression. 
+// The types of the GotoExpression, label expression, and LabelTarget must match.
+BlockExpression blockExpr =
+    Expression.Block(
+        Expression.Call(typeof(Console).GetMethod(:WriteLine:, new Type[] { typeof(string) }), Expression.Constant(:GoTo:)),
+        Expression.Goto(returnTarget),
+        Expression.Call(typeof(Console).GetMethod(:WriteLine:, new Type[] { typeof(string) }), Expression.Constant(:Other Work:)),
+        Expression.Label(returnTarget)
+    );
+
+// The following statement first creates an expression tree, 
+// then compiles it, and then runs it.
+Expression.Lambda&lt;Action&gt;(blockExpr).Compile()();</pre>
+                </td>
+                <td>
+                    <pre class="code" data-type="csharp">// This code example produces the following output: 
+// 
+// GoTo 
+
+// "Other Work" is not printed because 
+// the GoTo expression transfers execution from Expression.GoTo(returnTarget) 
+// to Expression.Label(returnTarget).</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>IndexExpression</td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>InvocationExpression</td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>LabelExpression</td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>LambdaExpression</td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>ListInitExpression</td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>LoopExpression</td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>MemberExpression</td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>MemberInitExpression</td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>MethodCallExpression</td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>NewArrayExpression</td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>NewExpression</td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>ParameterExpression</td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>RuntimeVariablesExpression</td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>SwitchExpression</td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>TryExpression</td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>TypeBinaryExpression</td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>UnaryExpression</td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h1>示例</h1>
+    <h2>读取给定对象的属性值</h2>
+    <pre class="code" data-type="csharp" data-collapsed="true" title="示例代码">using System;
+using System.Reflection;
+using System.Linq.Expressions;
+
+namespace ConsoleApplication1
+{
+	class Program
+	{
+		static void Main(string[] args)
+		{
+			Person p1 = new Person() { Name = :Lindong: };
+			Person p2 = new Person() { Name = :Han, Shuohao: };
+
+			Func&lt;Person, string&gt; r1 = ReadProperty1&lt;Person&gt;(:Name:);
+			Console.WriteLine(r1(p1));
+			Console.WriteLine(r1(p2));
+
+			Func&lt;object, string&gt; r2 = ReadProperty2(typeof(Person), :Name:);
+			Console.WriteLine(r2(p1));
+			Console.WriteLine(r2(p2));
+
+			Func&lt;Person, string&gt; r3 = ReadProperty3&lt;Person&gt;(:Name:);
+			Console.WriteLine(r3(p1));
+			Console.WriteLine(r3(p2));
+
+			Console.Read();
+		}
+
+		//return obj.Name
+		private static Func&lt;T, string&gt; ReadProperty1&lt;T&gt;(string propName)
+		{
+			ParameterExpression paramExp = Expression.Parameter(typeof(T), :obj:);
+			MemberExpression propExp = Expression.Property(paramExp, propName);
+			Expression&lt;Func&lt;T, string&gt;&gt; lambda = Expression.Lambda&lt;Func&lt;T, string&gt;&gt;(propExp, paramExp);
+			Func&lt;T, string&gt; runnable = lambda.Compile();
+			
+			return runnable;
+		}
+
+		//return (Person)obj.Name
+		private static Func&lt;object, string&gt; ReadProperty2(Type t, string propName)
+		{
+			ParameterExpression paramExp = Expression.Parameter(typeof(object), :obj:);
+			UnaryExpression convertExp = Expression.Convert(paramExp, t);
+			MemberExpression propExp = Expression.Property(convertExp, propName);
+			Expression&lt;Func&lt;object, string&gt;&gt; lambda = Expression.Lambda&lt;Func&lt;object, string&gt;&gt;(propExp, paramExp);
+			Func&lt;object, string&gt; runnable = lambda.Compile();
+			return runnable;
+		}
+
+		//return Convert.ToString(obj.Name)
+		private static Func&lt;T, string&gt; ReadProperty3&lt;T&gt;(string propName)
+		{
+			ParameterExpression paramExp = Expression.Parameter(typeof(T), :obj:);
+			MemberExpression propExp = Expression.Property(paramExp, propName);
+
+			//如果对于某个给定的方法名只有一个匹配项，我们可以使用下面这个重载
+			//public static MethodCallExpression Call(
+			//    Type type,
+			//    string methodName,
+			//    Type[] typeArguments,
+			//    params Expression[] arguments
+			//)
+			//但这里需要静态生成 MethodInfo 是因为 System.Convert 有多个 ToString 重载
+			//这样使用 Call(Type, String, Type[], Expression[]) 会抛出 InvalidOperationException
+			MethodInfo convertMethod = typeof(System.Convert).GetMethod(:ToString:, new Type[] { typeof(object) });
+			MethodCallExpression callExp = Expression.Call(convertMethod, propExp);
+			Expression&lt;Func&lt;T, string&gt;&gt; lambda = Expression.Lambda&lt;Func&lt;T, string&gt;&gt;(callExp, paramExp);
+			Func&lt;T, string&gt; runnable = lambda.Compile();
+			return runnable;
+		}
+	}
+
+	class Person
+	{
+		public string Name { get; set; }
+	}
+}</pre>
+
+</body>
+</html>

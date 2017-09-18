@@ -1,0 +1,23 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<title>存储管理</title>
+<script language="javascript" src="css.js"></script>
+</head>
+
+<body>
+<h1>第N章 存储管理</h1>
+<h2>N.1 表空间的物理文件位置</h2>
+<p>存储在<a href="sys_table_analysis.htm#dba_data_files">sys.dba_data_files</a>中</p>
+<h2>N.2 创建表空间</h2>
+<pre>CREATE TABLESPACE "表空间名" 
+    LOGGING 
+    DATAFILE '全路径' SIZE 80M 
+    EXTENT MANAGEMENT LOCAL SEGMENT SPACE MANAGEMENT  AUTO </pre>
+<p>文件名以.ora为后缀</p>
+<p>&nbsp;</p>
+<script language="javascript" src="index.js"></script>
+</body>
+</html>

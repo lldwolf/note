@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+    <script type="text/javascript" src="../../mylib/js/css.js"></script>
+    <title>Java 练习题 - String.format 拼接字符串</title>
+</head>
+
+<body>
+    <p id="title">Java 练习题 - String.format 拼接字符串</p>
+    <h1>要求</h1>
+    <p>使用 String.format 拼接字符串</p>
+    <h1>示例代码</h1>
+    <pre class="code" data-type="java">String str = String.format("Hello, %s", "Lindong");</pre>
+    <h1>使用的转换符</h1>
+    <table style="width: 90%">
+        <tr>
+            <th>转换符</th>
+            <th>说明</th>
+            <th>示例</th>
+        </tr>
+        <tr>
+            <td>%s</td>
+            <td>字符串</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>%c</td>
+            <td>字符</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>%b</td>
+            <td>布尔</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>%d</td>
+            <td>整数(10进制)</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>%x</td>
+            <td>整数(16进制)</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>%o</td>
+            <td>整数(8进制)</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>%f</td>
+            <td>浮点数</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>%a</td>
+            <td>浮点数(16进制)</td>
+            <td>FF.35AE</td>
+        </tr>
+        <tr>
+            <td>%e</td>
+            <td>科学计数法</td>
+            <td>9.38e+5</td>
+        </tr>
+        <tr>
+            <td>%g</td>
+            <td>通用浮点类型(%f 和 %e 中较短的)</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>%h</td>
+            <td>散列码</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>%%</td>
+            <td>打印百分号</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>%n</td>
+            <td>打印换行符</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>%tx</td>
+            <td>日期与时间为型, x 表示不同的日期与时间转换符</td>
+            <td></td>
+        </tr>
+    </table>
+    <p>日期与时间的转换符 x 说明如下:</p>
+    <table style="width: 90%">
+        <tr>
+            <th>转换符</th>
+            <th>说明</th>
+            <th>示例</th>
+        </tr>
+        <tr>
+            <td>c</td>
+            <td>完整信息</td>
+            <td>星期六 十月 27 14:21:20 CST 2007</td>
+        </tr>
+        <tr>
+            <td>F</td>
+            <td>年-月-日</td>
+            <td>2017-2-28</td>
+        </tr>
+        <tr>
+            <td>D</td>
+            <td>月/日/年</td>
+            <td>2/28/2017</td>
+        </tr>
+        <tr>
+            <td>r</td>
+            <td>HH:MM:SS PM (12 小时制)</td>
+            <td>02:25:51 PM</td>
+        </tr>
+        <tr>
+            <td>T</td>
+            <td>HH:MM:SS (24 小时制)</td>
+            <td>14:25:51</td>
+        </tr>
+        <tr>
+            <td>R</td>
+            <td>HH:MM (24 小时制)</td>
+            <td>14:25</td>
+        </tr>
+        <tr>
+            <td>b or h</td>
+            <td>月份简称</td>
+            <td>Oct</td>
+        </tr>
+        <tr>
+            <td>B</td>
+            <td>月份全称</td>
+            <td>October</td>
+        </tr>
+        <tr>
+            <td>a</td>
+            <td>星期简称</td>
+            <td>Sat</td>
+        </tr>
+        <tr>
+            <td>A</td>
+            <td>星期全称</td>
+            <td>Saturday</td>
+        </tr>
+        <tr>
+            <td>C</td>
+            <td>年的前两位数字</td>
+            <td>20</td>
+        </tr>
+        <tr>
+            <td>y</td>
+            <td>年的后两位数字</td>
+            <td>17</td>
+        </tr>
+        <tr>
+            <td>Y</td>
+            <td>4位数字的年份</td>
+            <td>2017</td>
+        </tr>
+        <tr>
+            <td>j</td>
+            <td>一年中的第几天</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>m</td>
+            <td>两位数字的月份</td>
+            <td>02</td>
+        </tr>
+        <tr>
+            <td>d</td>
+            <td>两位数字的日</td>
+            <td>09</td>
+        </tr>
+        <tr>
+            <td>e</td>
+            <td>月份的日</td>
+            <td>9</td>
+        </tr>
+        <tr>
+            <td>H</td>
+            <td>2位数的24小时制的小时(补0)</td>
+            <td>05</td>
+        </tr>
+        <tr>
+            <td>I</td>
+            <td>2位数的12小时制的小时(补0)</td>
+            <td>05</td>
+        </tr>
+        <tr>
+            <td>k</td>
+            <td>2位数的24小时制的小时(不补0)</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>l</td>
+            <td>2位数的12小时制的小时(不补0)</td>
+            <td>05</td>
+        </tr>
+        <tr>
+            <td>M</td>
+            <td>2位数分钟(补0)</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>S</td>
+            <td>2位数秒(补0)</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>L</td>
+            <td>3位数毫秒(补0)</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>p</td>
+            <td>小写字母上午/下午标记</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>z</td>
+            <td>相对于 GMT 的时区偏移量</td>
+            <td>+0800</td>
+        </tr>
+        <tr>
+            <td>Z</td>
+            <td>时区缩写字符串</td>
+            <td>CST</td>
+        </tr>
+        <tr>
+            <td>s</td>
+            <td>1970-1-1 到现在经过的秒数</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>S</td>
+            <td>1970-1-1 到现在经过的毫秒数</td>
+            <td></td>
+        </tr>
+    </table>
+</body>
+</html>

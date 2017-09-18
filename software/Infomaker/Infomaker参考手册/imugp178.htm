@@ -1,0 +1,65 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+Fill</TITLE>
+</HEAD>
+<BODY>
+<A NAME="CAIDIECJ"></A><A NAME="TI6667"></A><h1>Fill</h1>
+<A NAME="TI6668"></A><p>
+<FORM>
+<INPUT
+ TYPE = "BUTTON"
+ VALUE = "Examples"
+ onClick = "window.location = 'imugp178.htm#EX30';">
+<INPUT
+  TYPE = "BUTTON"
+ VALUE = "See also"
+ onClick = "window.location = 'imugp178.htm#SA30';">
+</FORM>
+</p>
+<h3>Description</h3><A NAME="TI6669"></A><p>Builds a string of the specified length by repeating the specified
+characters until the result string is long enough.</p>
+
+<h3>Syntax</h3><pre><b>Fill</b> ( <i>chars</i>, <i>n</i> )</pre>
+<A NAME="TI6670"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI6671"></A>Argument</th>
+<th align="left" valign=bottom><A NAME="TI6672"></A>Description</th>
+</tr>
+<tr><td valign=top><A NAME="TI6673"></A><i>chars</i></td>
+<td valign=top><A NAME="TI6674"></A>A string whose value will be repeated
+to fill the return string</td>
+</tr>
+<tr><td valign=top><A NAME="TI6675"></A><i>n</i></td>
+<td valign=top><A NAME="TI6676"></A>A long whose value is the length of the
+string you want returned</td>
+</tr>
+</table>
+
+<h3>Return Values</h3><A NAME="TI6677"></A><p>String. Returns a string <i>n</i> characters
+long filled with repetitions of the characters in the argument <i>chars</i>.
+If the argument <i>chars</i> has more than <i>n</i> characters,
+the first <i>n</i> characters of <i>chars</i> are
+used to fill the return string. If the argument <i>chars</i> has
+fewer than <i>n</i> characters, the characters in <i>chars</i> are repeated
+until the return string has <i>n</i> characters.</p>
+
+<h3>Usage</h3><A NAME="TI6678"></A><p>Fill is used to create a line or other special effect. For
+example, asterisks repeated in a printed report can fill an amount
+line, or hyphens can simulate a total line in a screen display.</p>
+
+<A NAME="EX30"></A><h3>Examples</h3><A NAME="TI6679"></A><p>This expression returns a string containing 35 stars:<pre><i>Fill</i> ("*", 35)</pre>
+</p>
+<A NAME="TI6680"></A><p>This expression returns the string -+-+-+-:<pre><i>Fill</i> ("-+", 7)</pre>
+</p>
+<A NAME="TI6681"></A><p>This expression returns 10 tildes (~):<pre><i>Fill</i> ("~", 10)</pre>
+</p>
+
+<A NAME="SA30"></A><h3>See Also</h3><A NAME="TI6682"></A><p><A NAME="TI6683"></A>
+<ul>
+<li class=fi><A HREF="imugp240.htm#CAICCDHE">Space</A></li>
+<li class=ds> 
+</li>
+</ul>
+</p>
+
+

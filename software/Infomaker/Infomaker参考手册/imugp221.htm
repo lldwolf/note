@@ -1,0 +1,73 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+Pos</TITLE>
+</HEAD>
+<BODY>
+<A NAME="CAIBADFC"></A><A NAME="TI7494"></A><h1>Pos</h1>
+<A NAME="TI7495"></A><p>
+<FORM>
+<INPUT
+ TYPE = "BUTTON"
+ VALUE = "Examples"
+ onClick = "window.location = 'imugp221.htm#EX73';">
+<INPUT
+  TYPE = "BUTTON"
+ VALUE = "See also"
+ onClick = "window.location = 'imugp221.htm#SA73';">
+</FORM>
+</p>
+<h3>Description</h3><A NAME="TI7496"></A><p>Finds one string within another string.</p>
+
+<h3>Syntax</h3><pre><b>Pos</b> ( <i>string1</i>, <i>string2</i> {, <i>start</i> } )</pre>
+<A NAME="TI7497"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI7498"></A>Argument</th>
+<th align="left" valign=bottom><A NAME="TI7499"></A>Description</th>
+</tr>
+<tr><td valign=top><A NAME="TI7500"></A><i>string1</i></td>
+<td valign=top><A NAME="TI7501"></A>The string in which you want to find <i>string2</i></td>
+</tr>
+<tr><td valign=top><A NAME="TI7502"></A><i>string2</i></td>
+<td valign=top><A NAME="TI7503"></A>The string you want to find in <i>string1</i></td>
+</tr>
+<tr><td valign=top><A NAME="TI7504"></A><i>start</i>  (optional)</td>
+<td valign=top><A NAME="TI7505"></A>A long indicating where the search will
+begin in <i>string</i>. The default is 1</td>
+</tr>
+</table>
+
+<h3>Return Values</h3><A NAME="TI7506"></A><p>Long. Returns a long whose value is the starting position
+of the first occurrence of <i>string2</i> in <i>string1</i> <i>after</i> the
+position specified in <i>start</i>. If <i>string2</i> is
+not found in <i>string1</i> or if <i>start</i> is
+not within <i>string1</i>, Pos returns 0.</p>
+
+<h3>Usage</h3><A NAME="TI7507"></A><p>The Pos function is case sensitive.</p>
+
+<A NAME="EX73"></A><h3>Examples</h3><A NAME="TI7508"></A><p>This expression returns the position of the letter <i>a</i>
+ in
+the value of the last_name column:<pre><i>Pos</i> (last_name, "a")</pre>
+</p>
+<A NAME="TI7509"></A><p>This expression returns 6:<pre><i>Pos</i> ("BABE RUTH", "RU")</pre>
+</p>
+<A NAME="TI7510"></A><p>This expression returns 1:<pre><i>Pos</i> ("BABE RUTH", "B")</pre>
+</p>
+<A NAME="TI7511"></A><p>This expression returns 0 (because the case does
+not match):<pre><i>Pos</i> ("BABE RUTH", "be")</pre>
+</p>
+<A NAME="TI7512"></A><p>This expression returns 0 (because it starts searching
+at position 5, after the occurrence of BE):<pre><i>Pos</i> ("BABE RUTH", "BE", 5)</pre>
+</p>
+
+<A NAME="SA73"></A><h3>See Also</h3><A NAME="TI7513"></A><p><A NAME="TI7514"></A>
+<ul>
+<li class=fi><A HREF="imugp195.htm#BACCFEEB">LastPos</A></li>
+<li class=ds><A HREF="imugp196.htm#CAIBIGEB">Left</A></li>
+<li class=ds><A HREF="imugp207.htm#CAIDEEGG">Mid</A></li>
+<li class=ds><A HREF="imugp230.htm#CAICGEFD">Right</A></li>
+<li class=ds>
+</li>
+</ul>
+</p>
+
+

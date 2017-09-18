@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+	<script type="text/javascript" src="../../mylib/js/css.js"></script>
+	<title>WinForm 常见问题</title>
+</head>
+
+<body>
+	<p id="title">WinForm 常见问题</p>
+	<h1>IDE 相关问题</h1>
+	<h2>打不开设计界面</h2>
+	<p>检查以下注意项及解决方案:</p>
+	<ul>
+		<li><p>是否有默认的无参构造函数</p></li>
+		<li>
+			<p>在构造函数， Load 事件函数及子控件的构造函数， Load 事件中是否存在运行时逻辑，例如需读取本地配置文件，连接数据库等。</p>
+			<p>如果存在此类逻辑，需加入如下语句，保证此类逻辑在设计期无效</p>
+			<pre class="code" data-type="csharp">if (this.GetService(typeof(System.ComponentModel.Design.IDesignerHost)) != null
+	 || System.ComponentModel.LicenseManager.UsageMode == System.ComponentModel.LicenseUsageMode.Designtime)
+	return;</pre>
+		</li>
+		<li>
+			<p>检查 .designer.cs 文件，是否存在自定义属性的自动赋值，并因此触发了运行时逻辑。</p>
+			<p>如果存在此类属性，删掉自动生成的代码，并在属性定义前加上如下 Attribute</p>
+			<pre class="code" data-type="csharp">[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden), Browsable(false)]</pre>
+		</li>
+		<li><p>删除所有的输出文件，重新编译</p></li>
+	</ul>
+</body>
+</html>

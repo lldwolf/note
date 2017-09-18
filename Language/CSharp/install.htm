@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<title>安装.net framework</title>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+<p id="title">安装.net framework</p>
+
+<h1>命令行方式安装</h1>
+<p>在命令行方式下安装有如下参数：</p>
+<p>/Q -- 无提示安装方式</p>
+<p>/T:&lt;完整路径&gt; -- 指定临时工作文件夹</p>
+<p>/C -- 与T并用，权将文件解开到指定文件夹</p>
+<p>/C:&lt;cmd&gt; -- 忽略作者定义的安装命令，即解压后执行命令&lt;cmd&gt;</p>
+<p>另有语法</p>
+<pre class="code" data-type="csharp">dotnetfx [/q:a] [/c:"Install [/l][/q]"]</pre>
+<p>其中</p>
+<table style="width:90%" >
+  <tr>
+    <th width="20%">选项</th>
+    <th width="80%">解释</th>
+  </tr>
+  <tr>
+    <td>/l</td>
+    <td>在%temp%目录中创建安装日志文件netfx.log，若安装出错则写入错误码</td>
+  </tr>
+  <tr>
+    <td>/q</td>
+    <td>在安装过程中不出现任何提示，也不会出现安装界面，必须同时指示选项/q:a</td>
+  </tr>
+</table>
+<p>使用如下命令行安装则在安装过程中不出现任何提示和界面：</p>
+<pre class="code" data-type="csharp">dotnetfx /q:a /c:&quot;install /q&quot;</pre>
+<h1>安装错误码</h1>
+<TABLE class=data>
+  <TBODY>
+    <TR vAlign=top>
+      <TH class=data align=left width="25%">Error</TH>
+      <TH class=data align=left width="75%">Description</TH>
+    </TR>
+    <TR vAlign=top>
+      <TD class=data width="25%">8192</TD>
+      <TD class=data width="75%"><B>Reboot is required.</B>
+          <P>A computer reboot is required following the installation of Windows Installer.</P></TD>
+    </TR>
+    <TR vAlign=top>
+      <TD class=data width="25%">4096</TD>
+      <TD class=data width="75%"><B>Improper usage/invalid parameters.</B>
+          <P>Either the syntax used to specify parameters to Dotnetfx.exe is incorrect, or the parameters are invalid.</P></TD>
+    </TR>
+    <TR vAlign=top>
+      <TD class=data width="25%">4097</TD>
+      <TD class=data width="75%"><B>On Windows NT, need Admin rights to (un)install.</B>
+          <P>You do not have the permissions required to install or uninstall this application. Please contact your administrator.</P></TD>
+    </TR>
+    <TR vAlign=top>
+      <TD class=data width="25%">4098</TD>
+      <TD class=data width="75%"><B>Installation of Windows Installer components failed.</B>
+          <P>The Windows Installer installation failed. As a result, the installation of Dotnetfx.exe cannot proceed.</P></TD>
+    </TR>
+    <TR vAlign=top>
+      <TD class=data width="25%">4099</TD>
+      <TD class=data width="75%"><B>Windows Installer is not installed properly on computer.</B>
+          <P>Due to the improper installation of Windows Installer, the installation of Dotnetfx.exe cannot proceed.</P></TD>
+    </TR>
+    <TR vAlign=top>
+      <TD class=data width="25%">4100</TD>
+      <TD class=data width="75%"><B>CreateMutex failed.</B>
+          <P>A fatal error occurred and the installation of Dotnetfx.exe cannot proceed.</P></TD>
+    </TR>
+    <TR vAlign=top>
+      <TD class=data width="25%">4101</TD>
+      <TD class=data width="75%"><B>Another instance of setup is already running.</B>
+          <P>If another instance of setup is running, it will be allowed to continue and the current installation cannot proceed.</P></TD>
+    </TR>
+    <TR vAlign=top>
+      <TD class=data width="25%">4104</TD>
+      <TD class=data width="75%"><B>Framework (PackageType, Version) pair is already installed.</B>
+          <P>You attempted to install a version of Dotnetfx.exe that is already installed. Installation cannot proceed.</P></TD>
+    </TR>
+    <TR vAlign=top>
+      <TD class=data width="25%">4105</TD>
+      <TD class=data width="75%"><B>Framework (PackageType, Version) pair does not exist.</B>
+          <P>You attempted to uninstall a version of Dotnetfx.exe that is not installed on the computer. Uninstallation cannot proceed.</P></TD>
+    </TR>
+    <TR vAlign=top>
+      <TD class=data width="25%">4108</TD>
+      <TD class=data width="75%"><B>Cannot read from MSI Database.</B></TD>
+    </TR>
+    <TR vAlign=top>
+      <TD class=data width="25%">4111</TD>
+      <TD class=data width="75%"><B>Cannot get Temp directory.</B></TD>
+    </TR>
+    <TR vAlign=top>
+      <TD class=data width="25%">4113</TD>
+      <TD class=data width="75%"><B>Beta NDP components detected.</B>
+          <P>A beta version of the .NET Framework was detected on the computer. You must uninstall any beta versions before attempting to install Dotnetfx.exe.</P></TD>
+    </TR>
+    <TR vAlign=top>
+      <TD class=data width="25%">4114</TD>
+      <TD class=data width="75%"><B>Cannot get System directory.</B></TD>
+    </TR>
+    <TR vAlign=top>
+      <TD class=data width="25%">8191</TD>
+      <TD class=data width="75%"><B>Setup Failure</B>—<B>unknown reason.</B>
+          <P>A fatal error occurred. The installation of Dotnetfx.exe cannot proceed.</P></TD>
+    </TR>
+  </TBODY>
+</TABLE>
+<P>During the installation of Dotnetfx.exe, Microsoft Windows Installer and the Windows operating system can also return errors. Table 3 describes the most common Windows Installer errors. For a complete list of Windows Installer errors, see the Windows Installer documentation.</P>
+<P class=label><B>Table 3. Windows Installer errors</B></P>
+<TABLE>
+    <TR vAlign=top>
+      <TH class=data width="25%">错误码</TH>
+      <TH class=data width="75%">描述</TH>
+    </TR>
+    <TR vAlign=top>
+      <TD class=data width="25%">1601</TD>
+      <TD class=data width="75%"><B>The Windows Installer service could not be accessed. Contact your support personnel to verify that the Windows Installer service is properly registered.</B></TD>
+    </TR>
+    <TR vAlign=top>
+      <TD class=data width="25%">1602</TD>
+      <TD class=data width="75%"><B>User canceled installation.</B>
+          <P>The user clicked the <B>Cancel</B> button in the user interface. Installation cannot proceed.</P></TD>
+    </TR>
+    <TR vAlign=top>
+      <TD class=data width="25%">1603</TD>
+      <TD class=data width="75%"><B>Fatal error during installation.</B>
+          <P>A fatal error occurred during the installation of Windows Installer. The installation of Dotnetfx.exe cannot proceed.</P></TD>
+    </TR>
+    <TR vAlign=top>
+      <TD class=data width="25%">1622</TD>
+      <TD class=data width="75%"><B>Error opening installation log file. Verify that the specified log file location exists and is writable.</B>
+          <P>This error is more likely to occur during uninstallation when either there is no disk space or the Windows Installer log is enabled. This error can occur during installation if sufficient space does not exist to write to the Windows Installer log, or if the log is read-only.</P></TD>
+    </TR>
+    <TR vAlign=top>
+      <TD class=data width="25%">1633</TD>
+      <TD class=data width="75%"><B>This installation package is not supported on this platform. Contact your application vendor.</B></TD>
+    </TR>
+</TABLE>
+<h1>下载地址</h1>
+<p><a href="http://www.microsoft.com/downloads/details.aspx?FamilyID=262d25e3-f589-4842-8157-034d1e7cf3a3&DisplayLang=zh-cn">.net framework 1.1</a></p>
+<p><a href="http://www.microsoft.com/downloads/details.aspx?FamilyID=0856eacb-4362-4b0d-8edd-aab15c5e04f5&DisplayLang=zh-cn">.net framework 2.0</a></p>
+<p><a href="http://www.microsoft.com/downloads/details.aspx?FamilyID=10cc340b-f857-4a14-83f5-25634c3bf043&DisplayLang=zh-cn">.net framework 3.0</a>  </p>
+<h1>错误解决</h1>
+<h2>Windows Installer 3.0</h2>
+<p>该程序为安装必备程序，不包括在VS2005安装盘中，需从微软网站下载并安装。在下载时还需要进行正版验证，不过我测试过，使用D版的Windows 2000也可以通过该测试。</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+
+</body>
+</html>

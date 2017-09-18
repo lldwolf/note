@@ -1,0 +1,127 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+Last</TITLE>
+</HEAD>
+<BODY>
+<A NAME="CAICJIGC"></A><A NAME="TI6928"></A><h1>Last</h1>
+<A NAME="TI6929"></A><p>
+<FORM>
+<INPUT
+ TYPE = "BUTTON"
+ VALUE = "Examples"
+ onClick = "window.location = 'imugp194.htm#EX46';">
+<INPUT
+  TYPE = "BUTTON"
+ VALUE = "See also"
+ onClick = "window.location = 'imugp194.htm#SA46';">
+</FORM>
+</p>
+<h3>Description</h3><A NAME="TI6930"></A><p>Gets the value in the last row in the specified column.</p>
+
+<h3>Syntax</h3><pre><b>Last</b> ( <i>column</i> { FOR <i>range</i> { DISTINCTT { <i>expres1</i> {, <i>expres2</i> {, ... } } } } } ) </pre>
+<A NAME="TI6931"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI6932"></A>Argument</th>
+<th align="left" valign=bottom><A NAME="TI6933"></A>Description</th>
+</tr>
+<tr><td valign=top><A NAME="TI6934"></A><i>column</i></td>
+<td valign=top><A NAME="TI6935"></A>The column for which you want the value
+of the last row. <i>Column</i> can be a column name
+or a column number preceded by a pound sign (#). <i>Column</i> can
+also be an expression that includes a reference to the column.</td>
+</tr>
+<tr><td valign=top><A NAME="TI6936"></A>FOR <i>range</i>  (optional)</td>
+<td valign=top><A NAME="TI6937"></A>The data that will be included when the
+value in the last row is found. For most presentation styles, values
+for <i>range</i> are:<A NAME="TI6938"></A><A NAME="TI6939"></A>
+<ul>
+<li class=fi>ALL -- (Default)
+The value in the last of all rows in <i>column</i></li>
+<li class=ds>GROUP <i>n</i> -- The value
+in the last row in <i>column</i> in the specified group.
+Specify the keyword GROUP followed by the group number: for example,
+GROUP 1</li>
+<li class=ds>PAGE -- The value in the last row in <i>column</i> on
+a page
+</li>
+</ul>
+<A NAME="TI6940"></A>For Crosstabs, specify CROSSTAB for <i>range</i>:<A NAME="TI6941"></A><A NAME="TI6942"></A>
+<ul>
+<li class=fi>CROSSTAB -- (Crosstabs
+only) The value in the last row in <i>column</i> in
+the crosstab
+</li>
+</ul>
+<A NAME="TI6943"></A>For Graph and OLE objects, specify one of the following:<A NAME="TI6944"></A><A NAME="TI6945"></A>
+<ul>
+<li class=fi>GRAPH -- (Graphs
+only) The value in the last row in <i>column</i> in the
+range specified for the Rows option</li>
+<li class=ds>OBJECT -- (OLE objects only) The value in
+the last row in <i>column</i> in the range specified
+for the Rows option
+</li>
+</ul>
+</td>
+</tr>
+<tr><td valign=top><A NAME="TI6946"></A>DISTINCT (optional)</td>
+<td valign=top><A NAME="TI6947"></A>Causes Last to consider only the distinct
+values in <i>column</i> when determining the last
+value. For a value of <i>column</i>, the first row found
+with the value is used and other rows that have the same value are
+ignored</td>
+</tr>
+<tr><td valign=top><A NAME="TI6948"></A><i>expresn</i> (optional)</td>
+<td valign=top><A NAME="TI6949"></A>One or more expressions that you want
+to evaluate to determine distinct rows. <i>Expresn</i> can
+be the name of a column, a function, or an expression</td>
+</tr>
+</table>
+
+<h3>Return Values</h3><A NAME="TI6950"></A><p>The data type of the column. Returns the value in the last
+row of <i>column</i>. If you specify <i>range</i>,
+Last returns the value of the last row in <i>column</i> in <i>range</i>.</p>
+
+<h3>Usage</h3><A NAME="TI6951"></A><p>If you specify <i>range</i>, Last determines
+the value of the last row in <i>column</i> in <i>range</i>.
+If you specify DISTINCT, Last returns the last distinct value in <i>column</i>, or
+if you specify <i>expresn</i>, the last distinct value
+in <i>column</i> where the value of <i>expresn</i> is
+distinct.</p>
+<A NAME="TI6952"></A><p>For graphs and OLE objects, you do not select the range when
+you call the function. The range has already been determined by
+the Rows setting on the Data property page (the Range property),
+and the aggregation function uses that range. Settings for Rows
+include:</p>
+<A NAME="TI6953"></A><p><A NAME="TI6954"></A>
+<ul>
+<li class=fi>For the Graph or OLE
+presentation style, Rows is always All.</li>
+<li class=ds>For Graph controls, Rows can be All, Page, or Group.</li>
+<li class=ds>For OLE controls, Rows can be All, Current Row,
+Page, or Group. The available choices depend on the layer the control
+occupies.
+</li>
+</ul>
+</p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Not in validation rules or filter expressions</span> <A NAME="TI6955"></A>You cannot use this or other aggregate functions in validation
+rules or filter expressions.</p>
+<A NAME="TI6956"></A><p>Using an aggregate function cancels the effect of setting
+Retrieve Rows As Needed in the painter. To do the aggregation, a
+DataWindow object or report always retrieves all rows.</p>
+
+<A NAME="EX46"></A><h3>Examples</h3><A NAME="TI6957"></A><p>This expression returns the last distinct value in
+the column named dept_id in group 2:<pre><i>Last</i> (dept_id for group 2 DISTINCT)</pre>
+</p>
+<A NAME="TI6958"></A><p>This expression returns the last value in the column
+named emp_id in group 2:<pre><i>Last</i> (emp_id for group 2)</pre>
+</p>
+
+<A NAME="SA46"></A><h3>See Also</h3><A NAME="TI6959"></A><p><A NAME="TI6960"></A>
+<ul>
+<li class=fi><A HREF="imugp179.htm#CAIDEIJH">First</A> 
+</li>
+</ul>
+</p>
+
+

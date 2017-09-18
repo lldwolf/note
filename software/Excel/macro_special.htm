@@ -1,0 +1,70 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>特殊宏</title>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+<h1>第N章 特殊宏</h1>
+<hr />
+<h2>N.1 破解宏口令</h2>
+<pre>Private Sub VBAPassword()
+    '你要解保护的Excel文件路径
+    Filename = Application.GetOpenFilename(&quot;Excel文件（*.xls &amp; *.xla &amp; *.xlt）,*.xls;*.xla;*.xlt&quot;, , &quot;VBA破解&quot;)
+    
+    If Dir(Filename) = &quot;&quot; Then
+        MsgBox &quot;没找到相关文件,清重新设置。&quot;
+        Exit Sub
+    Else
+        FileCopy Filename, Filename &amp; &quot;.bak&quot; '备份文件。
+    End If
+    
+    Dim GetData As String * 5
+    Open Filename For Binary As #1
+    
+    Dim CMGs As Long
+    Dim DPBo As Long
+    
+    For i = 1 To LOF(1)
+        Get #1, i, GetData
+        If GetData = &quot;CMG=&quot;&quot;&quot; Then CMGs = i
+        If GetData = &quot;[Host&quot; Then DPBo = i - 2: Exit For
+    Next
+    
+    If CMGs = 0 Then
+        MsgBox &quot;请先对VBA编码设置一个保护密码...&quot;, 32, &quot;提示&quot;
+        Exit Sub
+    End If
+    
+    If Protect = False Then
+        Dim St As String * 2
+        Dim s20 As String * 1
+        
+        '取得一个0D0A十六进制字串
+        Get #1, CMGs - 2, St
+        
+        '取得一个20十六制字串
+        Get #1, DPBo + 16, s20
+        
+        '替换加密部份机码
+        For i = CMGs To DPBo Step 2
+            Put #1, i, St
+        Next
+        
+        '加入不配对符号
+        If (DPBo - CMGs) Mod 2 &lt;&gt; 0 Then
+            Put #1, DPBo + 1, s20
+        End If
+        MsgBox &quot;文件解密成功......&quot;, 32, &quot;提示&quot;
+    End If
+    Close #1
+End Sub</pre>
+<p>新建一个Excel文件，加入该宏后运行即可</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+
+</body>
+</html>

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>我犯过的错误</title>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+<p id="title">我犯过的错误</p>
+
+<h1>无法加载对象</h1>
+<p>我当时在建立GenIndex程序时，对于LPEC和CPPE，分别由一个程序衍生而来，后来再从这两个程序中分离出公用部分，单独创建一个项目GenIndexCommon，不过其程序集仍然是GenIndex，结果在启动程序时系统提示无法加载定义在GenIndexCommon项目中类。</p>
+<p>将GenIndexCommon项目的程序集和命名空间都改为GenIndexCommon，问题解决。</p>
+<h1>检测到 ContextSwitchDeadlock 问题的解决办法！</h1>
+<p>错误信息:</p>
+<p>CLR 无法从 COM 上下文 0x1a2740 转换为 COM 上下文 0x1a28b0，这种状态已持续 60 秒。拥有目标上下文/单元的线程很有可能执行的是非泵式等待或者在不发送 Windows 消息的情况下处理一个运行时间非常长的操作。这种情况通常会影响到性能，甚至可能导致应用程序不响应或者使用的内存随时间不断累积。要避免此问题，所有单线程单元(STA)线程都应使用泵式等待基元(如 CoWaitForMultipleHandles)，并在运行时间很长的操作过程中定期发送消息。</p>
+<p>如果出现这个提示，点击在调试菜单中的异常选项，在Managed Debugging Assistants 中将ContextSwitchDeadlock后面的第一个勾给去掉就可以了。</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+
+</body>
+</html>

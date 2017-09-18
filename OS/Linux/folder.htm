@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+	<title>常用功能及命令</title>
+	<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+<body>
+	<p id="title">Linux目录架构</p>
+	<h1>linux目录架构</h1>
+	<table style="width: 90%">
+		<tr>
+			<th style="width: 25%">目录</th>
+			<th style="width: 75%">说明</th>
+		</tr>
+		<tr>
+			<td>/
+			</td>
+			<td>根目录
+			</td>
+		</tr>
+		<tr>
+			<td>/bin
+			</td>
+			<td>常用的命令 binary file 的目錄
+			</td>
+		</tr>
+		<tr>
+			<td>/boot
+			</td>
+			<td>存放系统启动时必须读取的档案，包括核心 (kernel) 在内
+			</td>
+		</tr>
+		<tr>
+			<td>&nbsp;&nbsp;&nbsp;&nbsp;/boot/grub/menu.lst
+			</td>
+			<td>GRUB设置
+			</td>
+		</tr>
+		<tr>
+			<td>&nbsp;&nbsp;&nbsp;&nbsp;/boot/vmlinuz
+			</td>
+			<td>内核
+			</td>
+		</tr>
+		<tr>
+			<td>&nbsp;&nbsp;&nbsp;&nbsp;/boot/initrd
+			</td>
+			<td>核心解壓縮所需 RAM Disk
+			</td>
+		</tr>
+		<tr>
+			<td>/dev
+			</td>
+			<td>系统周边设备
+			</td>
+		</tr>
+		<tr>
+			<td>/etc
+			</td>
+			<td>系统相关设定文件
+			</td>
+		</tr>
+		<tr>
+			<td>&nbsp;&nbsp;&nbsp;&nbsp;/etc/DIR_COLORS
+			</td>
+			<td>设定颜色
+			</td>
+		</tr>
+		<tr>
+			<td>&nbsp;&nbsp;&nbsp;&nbsp;/etc/HOSTNAME
+			</td>
+			<td>设定用户的节点名
+			</td>
+		</tr>
+		<tr>
+			<td>/etc/NETWORKING
+			</td>
+			<td>只有YES标明网络存在
+			</td>
+		</tr>
+		<tr>
+			<td>/etc/host.conf
+			</td>
+			<td>文件说明用户的系统如何查询节点名
+			</td>
+		</tr>
+		<tr>
+			<td>/etc/hosts
+			</td>
+			<td>设定用户自已的IP与名字的对应表
+			</td>
+		</tr>
+		<tr>
+			<td>/etc/hosts.allow
+			</td>
+			<td>设置允许使用inetd的机器使用
+			</td>
+		</tr>
+		<tr>
+			<td>/etc/hosts.deny
+			</td>
+			<td>设置不允许使用inetd的机器使用
+			</td>
+		</tr>
+		<tr>
+			<td>/etc/hosts.equiv
+			</td>
+			<td>设置远端机不用密码
+			</td>
+		</tr>
+		<tr>
+			<td>/etc/inetd.conf
+			</td>
+			<td>设定系统网络守护进程inetd的配置
+			</td>
+		</tr>
+		<tr>
+			<td>/etc/gateways
+			</td>
+			<td>设定路由器
+			</td>
+		</tr>
+		<tr>
+			<td>&nbsp;
+			</td>
+			<td>&nbsp;
+			</td>
+		</tr>
+	</table>
+	<p>
+		<br />
+		<br />
+		<br />
+		/etc/protocols 设定系统支持的协议<br />
+		/etc/named.boot 设定本机为名字服务器的配置文件<br />
+		/etc/sysconfig/network-scripts/ifcfg-eth0 设置IP<br />
+		/etc/resolv.conf设置DNS
+		<br />
+		/etc/X11 X Window的配置文件,xorg.conf 或 XF86Config 這兩個 X Server 的設定檔<br />
+		/etc/fstab记录开机要mount的文件系统<br />
+		/etc/inittab 设定系统启动时init进程将把系统设置成什么样的runlevel<br />
+		/etc/issue 记录用户登录前显示的信息<br />
+		/etc/group 设定用户的组名与相关信息<br />
+		/etc/passwd 帐号信息<br />
+		/etc/shadow 密码信息<br />
+		/etc/sudoers 可以sudo命令的配置文件<br />
+		/etc/securetty 设定哪些终端可以让root登录<br />
+		/etc/login.defs 所有用户登录时的缺省配置<br />
+		/etc/exports 设定NFS系统用的<br />
+		/etc/init.d/ 所有服務的預設啟動 script 都是放在這裡的，例如要啟動或者關閉<br />
+		/etc/xinetd.d/ 這就是所謂的 super daemon 管理的各項服務的設定檔目錄<br />
+		/etc/modprobe.conf 内核模块额外参数设定<br />
+		/etc/syslog.conf 日志设置文件<br />
+		/home 使用者家目录<br />
+		/lib系统会使用到的函数库<br />
+		/lib/modules kernel 的相关模块<br />
+		/var/lib/rpm rpm套件安装处
+		<br />
+		/lost+found系統不正常產生錯誤時，會將一些遺失的片段放置於此目錄下<br />
+		/mnt外设的挂载点<br />
+		/media 与/mnt类似<br />
+		/opt主机额外安装的软件<br />
+		/proc虚拟目录，是内存的映射<br />
+		/proc/version 内核版本<br />
+		/proc/sys/kernel 系统内核功能<br />
+		/root系统管理员的家目录<br />
+		/sbin系统管理员才能执行的指令<br />
+		/srv一些服務啟動之後，這些服務所需要取用的資料目錄<br />
+		/tmp一般使用者或者是正在執行的程序暫時放置檔案的地方<br />
+		/usr最大的目录，存许应用程序和文件<br />
+		/usr/X11R6： X-Window目录
+		<br />
+		/usr/src：Linux源代码<br />
+		/usr/include：系统头文件<br />
+		/usr/openwin 存放SUN的OpenWin
+		<br />
+		/usr/man 在线使用手册<br />
+		/usr/bin使用者可執行的 binary file 的目錄<br />
+		/usr/local/bin使用者可執行的 binary file 的目錄<br />
+		/usr/lib系统会使用到的函数库<br />
+		/usr/local/lib系统会使用到的函数库<br />
+		/usr/sbin系统管理员才能执行的指令<br />
+		/usr/local/sbin系统管理员才能执行的指令<br />
+		/var 日志文件<br />
+		/var/log/secure記錄登入系統存取資料的檔案，例如 pop3, ssh, telnet, ftp 等都會記錄在此檔案中<br />
+		/var/log/wtmp記錄登入者的訊息資料, last<br />
+		/var/log/messages 幾乎系統發生的錯誤訊息<br />
+		/var/log/boot.log 記錄開機或者是一些服務啟動的時候，所顯示的啟動或關閉訊息<br />
+		/var/log/maillog 紀錄郵件存取或往來( sendmail 與 pop3 )的使用者記錄<br />
+		/var/log/cron記錄 crontab 這個例行性服務的內容<br />
+		/var/log/httpd, /var/log/news, /var/log/mysqld.log, /var/log/samba, /var/log/procmail.log：<br />
+		分別是幾個不同的網路服務的記錄檔
+	</p>
+</body>
+</html>

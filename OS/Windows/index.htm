@@ -1,0 +1,148 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<title>Windows 笔记</title>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+  <h1>Windows 2000 技巧</h1>
+  <h2>技巧</h2>
+	<h3><a href="shortcut.htm">快捷键</a></h3>
+  <h2>第N部分 命令篇 </h2>
+  <h3><a href="dos.htm">第N章 DOS批处理</a></h3>
+  <h3><a href="common_cmd.htm">第N章 常用命令列表</a> </h3>
+  <h2><a href="net_cmd.htm"></a>第N部分 网络篇</h2>
+  <h3><a href="host.htm">第N章 HOST文件</a> </h3>
+  <p>&nbsp;</p>
+  <h2><a href="ime.html">第N章 输入法 </a></h2>
+  <h2><a href="service.html">第N章 Windows服务</a> </h2>
+  <h2><a href="skill.htm">第N章 小技巧</a></h2>
+  <h2><a href="security.htm">第N章 安全篇</a> </h2>
+  <h2><a href="hardware.htm">第N章 硬件篇</a></h2>
+  <h2><a href="net_cmd.htm">第N章 网络命令 </a></h2>
+  <h2><a href="blue_screen.htm">第N章 蓝屏代码</a> </h2>
+  <p><a href="#process_counter">错误：进程性能计数器已禁用</a></p>
+  <p><a href="#shut_down">关机</a></p>
+  <p><a href="#ico">因安装ACDSee导致的图标无法直接查看</a></p>
+  <p><a href="#show_desktop">&quot;显示桌面&quot; 快捷方式的恢复 </a></p>
+  <p><a href="#remote_login">多个用户同时使用远程登录登录到同一服务器</a></p>
+  <p><a href="#change_key">更改序列号</a></p>
+  <h3><a name="process_counter"></a>进程性能计数器已禁用，因此无法执行所请求的操作</h3>
+  <p>LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\PerfProc\Performance\Disable Performance Counters改为0</p>
+  <h3><a name="shut_down"></a>关机</h3>
+  <p><FONT class=fbody id=zoom>如果你用的操作系统是Windows 98，输入“rundll32.exe user.exe，exitwindows”；如果你用的操作系统是Windows 2000/XP/2003，输入“shutdown.exe -s -f -t 10 -c "主人不在，即将关机"”</FONT></p>
+  <p>shutdown.exe 的用法</p>
+  <p>Usage: shutdown [/i | /l | /s | /r | /a | /p | /h | /e] [/f]<br>
+    [/m \\computer][/t xxx][/d [p:]xx:yy [/c &quot;comment&quot;]]</p>
+  <p> 如果没有参数，显示帮助，相当于参数/?<br>
+  /? 显示帮助<br>
+  /i 显示图形界面，如果使用的话必须做为第一个参数<br>
+  /l 注销，不能与选项/m和/d共用<br>
+  /s 关机 <br>
+  /r 重启 <br>
+  /a 取消关机或重启操作，必须在关机时限前运行<br>
+  /p 关机，且不带延迟，也不带任何提示，是唯一可与/d共用的选项  <br>
+  /h 休眠，是唯一可与/f共用的选项<br>
+  /e 记录关机的原因<br>
+  /m \\computer 指定要关机的电脑<br>
+  /t xxx 设定关机前的延时，单位为秒，范围为0-600，默认为30<br>
+  /c &quot;comment&quot; 重启或关机的原因，最大为127个字符<br>
+  /f 不提醒用户直接关闭应用程序<br>
+  /d [p:]xx:yy 提供关机或重启的原因，p指示关机是计划中的（不是非法关机）<br>
+  xx 主原因号 (不大于 256)<br>
+yy 次原回号 (不大于 65536)</p>
+  <p>原因号如下：<br>
+    (E = 预期的 U = 非预期的 P = 计划的, C = 用户自定义的)<br>
+    Type Major Minor Title</p>
+  <p> U 0 0 Other (Unplanned)<br>
+    E 0 0 Other (Unplanned)<br>
+    E P 0 0 Other (Planned)<br>
+  U 0 5 Other Failure: System Unresponsive<br>
+  E 1 1 Hardware: Maintenance (Unplanned)<br>
+  E P 1 1 Hardware: Maintenance (Planned)<br>
+  E 1 2 Hardware: Installation (Unplanned)<br>
+  E P 1 2 Hardware: Installation (Planned)<br>
+  P 2 3 Operating System: Upgrade (Planned)<br>
+  E 2 4 Operating System: Reconfiguration (Unplanned)<br>
+  E P 2 4 Operating System: Reconfiguration (Planned)<br>
+  P 2 16 Operating System: Service pack (Planned)<br>
+  2 17 Operating System: Hot fix (Unplanned)<br>
+  P 2 17 Operating System: Hot fix (Planned)<br>
+  2 18 Operating System: Security fix (Unplanned)<br>
+  P 2 18 Operating System: Security fix (Planned)<br>
+  E 4 1 Application: Maintenance (Unplanned)<br>
+  E P 4 1 Application: Maintenance (Planned)<br>
+  E P 4 2 Application: Installation (Planned)<br>
+  E 4 5 Application: Unresponsive<br>
+  E 4 6 Application: Unstable<br>
+  U 5 15 System Failure: Stop error<br>
+  E 5 19 Security issue<br>
+  U 5 19 Security issue<br>
+  E P 5 19 Security issue<br>
+  E 5 20 Loss of network connectivity (Unplanned)<br>
+  U 6 11 Power Failure: Cord Unplugged<br>
+  U 6 12 Power Failure: Environment<br>
+  P 7 0 Legacy API shutdown</p>
+  <p>C:\Documents and Settings\Administrator&gt;</p>
+  <h3><br>
+    <a name="ico"></a>因安装ACDSee导致的图标无法直接查看 </h3>
+  <p>安装完ACDSee后，图标文件也变成了大眼睛图标，而不是象默认的那样可以直接使用explorer查看。解决方案如下：</p>
+  <p>打开＂ＣＭＤ控制台＂，输入以下命令：</p>
+<pre>assoc .ico=icofile
+assoc .cur=curfile
+assoc .ani=anifile</pre>
+<h3><a name="show_desktop"></a> &quot;显示桌面&quot; 快捷方式的恢复 </h3>
+<p>建立一个名为“显示桌面.SCF”的文本文件，内容如下：</p>
+<pre>[Shell]
+Command=2
+IconFile=explorer.exe,3 
+[Taskbar]
+Command=ToggleDesktop</pre>
+<p>然后把该文件拖放到“快速启动”工具栏中即可。</p>
+<p>快速启动的地址为&quot;C:\Documents and Settings\Administrator\Application Data\Microsoft\Internet Explorer\Quick Launch&quot;</p>
+<h3><a name="remote_login"></a>多个用户同时使用远程登录登录到同一服务器</h3>
+<p>1、开始-运行-mstsc，使用不同的用户名，至少能有2个连接；</p>
+<p> 2、切换为应用程序模式，能有&gt;2个连接，数量取决于你的license。</p>
+<h3><a name="change_key"></a>更改序列号</h3>
+<pre>'
+' WMI Script - ChangeVLKey.vbs
+'
+' This script changes the product key on the computer (XP SP1 SP2 2003)
+'
+' Made by zyling.
+'***************************************************************************
+
+ON ERROR RESUME NEXT
+
+Dim VOL_PROD_KEY
+if Wscript.arguments.count&lt;1 then
+VOL_PROD_KEY =InputBox(&quot;使用说明(OEM版无效)：&quot;&amp;vbCr&amp;vbCr&amp;&quot; 本脚本程序将修改当前 Windows 的序列号。请先使用算号器算出匹配当前 Windows 的序列号，复制并粘贴到下面空格中。&quot;&amp;vbCr&amp;vbCr&amp;&quot;输入序列号(默认为 XP VLK)：&quot;,&quot;Windows XP/2003 序列号更换工具&quot;,&quot;PJVCV-XCPPF-6GTKK-QXRPY-FBKGJ&quot;)
+if VOL_PROD_KEY=&quot;&quot; then
+Wscript.quit
+end if
+else
+VOL_PROD_KEY = Wscript.arguments.Item(0)
+end if
+
+VOL_PROD_KEY = Replace(VOL_PROD_KEY,&quot;-&quot;,&quot;&quot;) 'remove hyphens if any
+
+for each Obj in GetObject(&quot;winmgmts:{impersonationLevel=impersonate}&quot;).InstancesOf (&quot;win32_WindowsProductActivation&quot;)
+
+result = Obj.SetProductKey (VOL_PROD_KEY)
+
+if err = 0 then
+Wscript.echo &quot;您的 Windows CD-KEY 修改成功。请检查系统属性。&quot;
+end if
+
+if err &lt;&gt; 0 then
+Wscript.echo &quot;修改失败！请检查输入的 CD-KEY 是否与当前 Windows 版本相匹配。&quot;
+Err.Clear
+end if
+
+Next</pre>
+<p>存为*.vbs，执行即可。</p>
+</body>
+</html>

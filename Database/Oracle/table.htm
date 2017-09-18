@@ -1,0 +1,194 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<title>表</title>
+<script language="javascript" src="css.js"></script>
+</head>
+
+<body>
+<h1>第N章 表</h1>
+<hr>
+<h2><a href="#pseudo_column">N.1 伪列</a></h2>
+<h2><a href="#data_type">N.2 列数据类型 </a></h2>
+<h2><a name="pseudo_column"></a>N.1 伪列 </h2>
+<h3>N.1.1 ROWID</h3>
+<p>用来定位行地址，它包括以下信息：</p>
+<ul>
+  <li>对象号</li>
+  <li>数据块在文件中的位置</li>
+  <li>数据块中第几行（从0开始）</li>
+  <li>文件号（从1开始），与表空间相关联</li>
+</ul>
+<p>通常情况下，一个ROWID在数据库中唯一地标识一行。但通常都会有例外，如果不同表的数据行存放在同一个簇（cluster）中，也可能有相同的ROWID。</p>
+<p>ROWID伪列的数据类型为ROWID或UROWID。</p>
+<p>ROWID伪列有如下用途：</p>
+<ul>
+  <li>它是定位一个数据行的最快方法</li>
+  <li>指示数据行的物理存放信息</li>
+  <li>在同一张表内，它是唯一的</li>
+</ul>
+<p>但你不能用它来作为表的主键，因为当使用导入导出功能删除或重新插入数据时，它的值会变化。如果删掉一行，则被删行的ROWID将会被重新赋给新插入的行。</p>
+<p>你可以在select子句和where子句中使用ROWID，但它实际上并不存放于数据库中，你不能使用insert或update语句插入或修改ROWID的值。</p>
+<p>示例：</p>
+<pre>SELECT ROWID, last_name  
+FROM employees
+WHERE department_id = 20;</pre>
+<h3>N.1.2 ROWNUM</h3>
+<p>这是执行查询语句后，为结果数据的行号，从1开始。你可以使用该伪列来限制返回的结果行数，如下：</p>
+<pre>SELECT * FROM employees WHERE ROWNUM &lt; 10;</pre>
+<p>如果查询语句中有统计函数，如COUNT、SUM等，ROWNUM伪列不能在SELECT子句中使用，最好也不要在WHERE子句中使用，因为那样统计范围只是ROWNUM限定的范围。如果想在SELECT子句或WHERE子句中使用的话，请将带有统计函数的查询变为子查询，如下所示：</p>
+<pre>select rownum, loop_id, co
+from (select loop_id, count(1) as co from component group by loop_id) a;</pre>
+<p>其实ROWNUM使用时有很多限制的，我曾经看到有些程序员在制作分页程序时使用rownum做为查询条件来只返回某一页的数据，看上去的确很完美，比SQL SERVER的top关键字或者取出全部数据再只取数据集中的一部分要好得多，但这里是有一个前提条件的，那就是rownum不受order by子句的限制，假设有个表的数据如下所示：</p>
+<table width="40%" >
+  <tr>
+    <th width="50%">col1</th>
+    <th width="50%">col2</th>
+  </tr>
+  <tr>
+    <td>1</td>
+    <td>100</td>
+  </tr>
+  <tr>
+    <td>2</td>
+    <td>99</td>
+  </tr>
+  <tr>
+    <td>3</td>
+    <td>98</td>
+  </tr>
+  <tr>
+    <td>4</td>
+    <td>97</td>
+  </tr>
+  <tr>
+    <td>...</td>
+    <td>...</td>
+  </tr>
+  <tr>
+    <td>97</td>
+    <td>4</td>
+  </tr>
+  <tr>
+    <td>98</td>
+    <td>3</td>
+  </tr>
+  <tr>
+    <td>99</td>
+    <td>2</td>
+  </tr>
+  <tr>
+    <td>100</td>
+    <td>1</td>
+  </tr>
+</table>
+<p>我使用如下语句进行查询：</p>
+<pre>select * from table1 where rownum &lt;= 10 order by col2 </pre>
+<p>你会发现返回的数据col2的最小值并不是1，而是91！这是因为它是先把排序前的数据取回前10行，再对这前10行进行排序，而不是先对结果集进行排序，再取回前10行。</p>
+<h2><a name="data_type"></a>N.2 列数据类型 </h2>
+<h3>N.2.1 NUMBER </h3>
+<p>表示整数或定点小数，格式如下：</p>
+<pre>NUMBER(数字总位数，小数位数)</pre>
+<p>下面是几个常用的数值类型与number的对应关系</p>
+<table width="80%" >
+  <tr>
+    <th width="50%">类型</th>
+    <th width="50%">对应NUMBER类型</th>
+  </tr>
+  <tr>
+    <td>INTEGER</td>
+    <td>NUMBER(38)</td>
+  </tr>
+</table>
+<h3>N.2.2 FLOAT</h3>
+<p>浮点型，格式如下：</p>
+<p>FLOAT(精度)</p>
+<p>默认为126，REAL表示FLOAT(63)</p>
+<h3>N.2.3 字符串</h3>
+<p>包括类型：char、varchar2、long、nchar、nvarchar2，它们的存储长度如下表所示	</p>
+<table width="60%" >
+  <tr>
+    <th width="50%">类型</th>
+    <th width="50%">存储长度</th>
+  </tr>
+  <tr>
+    <td>varchar2</td>
+    <td>4000</td>
+  </tr>
+  <tr>
+    <td>char</td>
+    <td>2000</td>
+  </tr>
+  <tr>
+    <td>long</td>
+    <td>2G</td>
+  </tr>
+</table>
+<h4><a name="long"></a>LONG类型</h4>
+<p>LONG类型用来存储变长的字符串，最大长度为2G，与varchar2类型相似，不过varchar2的最大长度为4000，因此可用来存储暴长的文本。</p>
+<p><img src="images/note.jpg" width="20" height="20">注意：最好不要再用LONG类型了，而改用CLOB类型，因为ORACLE正在计划放弃对该类型的支持。</p>
+<p>LONG类型的使用有如下限制</p>
+<ul>
+  <li>一个表只能包含一个LONG列</li>
+  <li>不能创建带有LONG属性的对象</li>
+  <li>LONG列不能出现在where子句中，也不能有完整性约束（只能有NULL或NOT NULL约束）</li>
+  <li>不能在LONG列上做索引</li>
+  <li>函数不能返回LONG类型</li>
+  <li>你在存储过程中可以声明LONG类型，但这样会使得存储过程不能正确调用。</li>
+  <li>LONG和LONG RAW类型不能用在分布式SQL语句中</li>
+  <li>如果一个表即有LONG列又有LOB列，你不能在一个SQL语句中同时给这两个列赋上超过4000字节的值，不过可以分别用不同的SQL语句为每个列赋上超过4000字节的值。</li>
+  <li>带有LONG列的表不能存放在自增存储空间的表空间中</li>
+</ul>
+<p>LONG类型不能出列在SQL语句的下列部分：</p>
+<ul>
+  <li>GROUP BY子句、ORDER BY子句、CONNECT BY子句，带用DISTINCT关键字的SELECT语句</li>
+  <li>带有UNIQUE操作符的SQL语句</li>
+  <li>create cluster的列中</li>
+  <li><CODE>CREATE</CODE> <CODE>MATERIALIZED</CODE> <CODE>VIEW</CODE> 的cluster子句</li>
+  <li>SQL内置函数</li>
+  <li>带有GROUP BY的SELECT列表</li>
+  <li>通过UNION、INTERSECT、MINUS等操作符合并的结果集的SELECT列表</li>
+  <li><CODE>CREATE</CODE> <CODE>TABLE</CODE> ... <CODE>AS</CODE> <CODE>SELECT中的SELECT列表</CODE></li>
+  <li><CODE>ALTER</CODE> <CODE>TABLE</CODE> ... <CODE>MOVE</CODE>语句</li>
+  <li>INSERT ... SELECT ... 中的SELECT列表</li>
+</ul>
+<p>在触发器中使用LONG类型的方法如下：</p>
+<ul>
+  <li>插入LONG列的数据</li>
+  <li>如果将LONG列转换为其它类型（例如CHAR和VARCHAR2），一个LONG列可以在触发器中引用</li>
+  <li>触发器中的变量不能声明为LONG类型</li>
+  <li>:NEW和:OLD不能用来LONG列上</li>
+</ul>
+<p>你可以使用ORACLE的接口函数来获取LONG类型的部分值。</p>
+<P>可以使用 to_lob 函数将LONG类型转为CLOB类型，例如下例：</P>
+<pre>--创建带LONG列的表
+create table table1(a long);
+
+--插入测试数据
+insert into table1(a) values('aaa');
+
+--创建CLOB列的表
+create table table2(b clob);
+
+--插入CLOB列数据
+insert into table2
+select to_lob(a) from table1;</pre>
+<P><img src="images/note.jpg" width="20" height="20">注意：虽然to_lob函数可以将long类型转换为clob类型，但却不能直接这样用：</P>
+<pre>select to_lob(a) from table1</pre>
+<h3>N.2.4 DATE </h3>
+<p>日期型，与SQL Server不同，在操作DATE型时，不能以字符串来代替，而是需要使用<a href="functions.htm#to_date">to_date</a>函数来转换一下。</p>
+<h3>N.2.5 大数据类型</h3>
+<h4>N.2.5.1 BLOB</h4>
+<p>大数据量二进制数据，可用来存放图片等数据。</p>
+<h4>N.2.5.2 CLOB</h4>
+<p>大数据量文本</p>
+<h4>&nbsp;</h4>
+
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<script language="javascript" src="index.js"></script>
+</body>
+</html>

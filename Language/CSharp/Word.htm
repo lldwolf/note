@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+<title>Word的二次开发</title>
+</head>
+<body>
+<p id="title">第十章 Word的二次开发</p>
+<h1>10.1 引入Word COM库 </h1>
+<p>引用COM库“引用 Microsoft Word 9.0 Object Library”（我在此用的是Word 2000，不同的版本类库版本也不同）。</p>
+<h1>10.2 启动Word </h1>
+<div id="accordion-start-word">
+<p><a href="#">查看代码</a></p>
+<pre class="code" data-type="csharp">Word.Application wApp = new Word.ApplicationClass();
+wApp.Visible = true;</pre>
+</div>
+<h1>10.3 打开Word文档 </h1>
+<div id="accordion-open-doc">
+<p><a href="#">查看代码</a></p>
+<pre class="code" data-type="csharp">object WordFile = @"C:\test.doc";
+object ConfirmConversions = false;
+object ReadOnly = false;
+object AddToRecentFiles = false;
+object PasswordDocument = "";
+object PasswordTemplate = "";
+object Revert = false;
+object WritePasswordDocument = "";
+object WritePasswordTemplate = "";
+object Format = Word.WdOpenFormat.wdOpenFormatAuto;
+object Encoding = Missing.Value;
+object Visible = true;
+Word.Document wDoc = wApp.Documents.Open(ref WordFile, ref ConfirmConversions, ref ReadOnly, 
+	ref AddToRecentFiles, ref PasswordDocument, ref PasswordTemplate, ref Revert, 
+	ref WritePasswordDocument, ref WritePasswordTemplate, ref Format, ref Encoding, ref Visible);</pre>
+</div>
+<p>代码点评：Word的COM函数比EXCEL等要麻烦的多，因为它使用的都是引用对象，因此不能用 Missing.Value 糊弄过去，不知道微软大叔为什么在它的两个产品上采用如此不同的策略。</p>
+<h1>10.4 段落处理</h1>
+<p>下面的代码演示了连续生成多个段落</p>
+<div id="accordion-paragraph">
+<p><a href="#">查看代码</a></p>
+<pre class="code" data-type="csharp">Word.Application wApp = new Word.Application();
+wApp.Visible = true;
+Word.Document wordDoc = wApp.Documents.Add();
+
+for (int i = 0; i < 10; i++)
+{
+	Word.Paragraph paragraph = wordDoc.Paragraphs.Add();
+	Word.Range range = paragraph.Range;
+	range.Text = string.Format("Paragraph {0}", i);
+	range.InsertParagraphAfter();
+}</pre>
+</div>
+<h1>10.5 书签</h1>
+<p>在使用 Word 文档作为报表时，书签是很常用的一个功能。设想一下如下的场景：</p>
+<p>我们需要生成一张 Word 文档，文档的内容和样式是固定的，只需要在需要的位置自动填上需要的信息（想想平时填过的各种申请表）。</p>
+<p>那么，使用书签可以完美地解决这个问题。我先使用 Word 把文档做好。然后在需要填写内容的地方插入一个书签（在 Word 2007 中，在 Insert 栏中有一个很大的 Bookmark 按钮），然后在程序中在书签处用程序填写上相应的内容好了。</p>
+<div id="accordion-bookmark">
+<p><a href="#">查看代码</a></p>
+<pre class="code" data-type="csharp">Word.Document oDoc;
+//实例化 Document 对象
+Word.Range range = oDoc.Bookmarks["书签名"].Range;
+range.Text = "书签内容";</pre>
+</div>
+<h1>10.6 图片</h1>
+<p>下面的例子演示了如何在 Word 中插入图片（插入在每段开始位置）。</p>
+<div id="accordion-picture">
+<p><a href="#">查看代码</a></p>
+<pre class="code" data-type="csharp">Word.Application wApp = new Word.Application();
+wApp.Visible = true;
+Word.Document wordDoc = wApp.Documents.Add();
+
+string imageFile = @"c:\temp\1.png";
+Object oLinkToFile = false;  //default
+Object oSaveWithDocument = true;//default
+			
+for (int i = 0; i < 10; i++)
+{
+	Word.Paragraph paragraph = wordDoc.Paragraphs.Add();
+	Word.Range range = paragraph.Range;
+	Object rangeObj = range;
+	range.Text = string.Format("Paragraph {0}", i);
+	wordDoc.InlineShapes.AddPicture(imageFile, ref oLinkToFile, ref oSaveWithDocument, ref rangeObj);
+	range.InsertParagraphAfter();
+}</pre>
+</div>
+<h1>10.100 VBA</h1>
+<h2>10.100.1 示例</h2>
+<div class="demo">
+<div id="accordion-vb-sample">
+<p><a href="#">查看代码</a></p>
+<pre class="code" data-type="csharp">Sub AddTable()
+
+    Dim doc As Document
+    Dim testTable As Table
+    Dim I As Integer
+    
+    Set doc = ActiveDocument
+    
+    'clear document
+    Selection.WholeStory
+    Selection.Delete Unit:=wdCharacter, Count:=1
+    doc.PageSetup.TextColumns.SetCount (1)
+    
+    'add a table with 8 columns and 5 rows
+    Set testTable = doc.Tables.Add(Selection.Range, 8, 5, wdWord9TableBehavior, wdAutoFitFixed)
+    
+    'merge row cell
+    testTable.Rows(1).Cells.Merge
+    
+    'merge specific cell
+    testTable.Cell(2, 1).Select
+    Call Selection.MoveRight(wdCharacter, 1, wdExtend)
+    Selection.Cells.Merge
+    
+    'Set cell background
+    testTable.Rows(1).Cells.Shading.BackgroundPatternColor = wdColorSeaGreen
+    
+    'Set Cell foreground
+    testTable.Rows(1).Select
+    Selection.Font.Color = wdColorPink
+    
+    'Set cell font
+    testTable.Rows(1).Select
+    Selection.Font.Bold = True
+    Selection.Font.Size = 14
+        
+    'Set Cell value
+'    testTable.Cell(1, 1).Select
+'    Call Selection.TypeText(&quot;Table Header&quot;)
+    testTable.Cell(1, 1).Range.Text = &quot;Table Header&quot;
+    
+    'Set row height
+    testTable.Rows(1).Height = 25
+    
+    'Set cell alignment
+    testTable.Cell(1, 1).Select
+    Selection.ParagraphFormat.Alignment = wdAlignParagraphCenter
+    testTable.Cell(1, 1).VerticalAlignment = wdCellAlignVerticalCenter
+    
+    'insert line
+    Call doc.Shapes.AddLine(85#, 220, 520#, 220)
+    Call doc.Shapes.AddLine(85#, 370, 520#, 370)
+    
+    'split page to 2 columns
+    Call Selection.EndKey(wdStory)
+    For I = 0 To 60
+        Selection.TypeParagraph
+    Next I
+    Call Selection.HomeKey(wdStory)
+    Call Selection.MoveDown(wdLine, 8)
+    Call Selection.EndKey(wdStory, wdExtend)
+    Call doc.Range(Selection.Start, Selection.End).InsertBreak(wdSectionBreakContinuous)
+    Selection.Start = Selection.Start + 1
+    Call Selection.PageSetup.TextColumns.SetCount(2)
+    Selection.PageSetup.TextColumns.EvenlySpaced = True
+    Selection.PageSetup.TextColumns.LineBetween = False
+    
+    'Add paragraph
+    Dim r As Range
+    Set r = doc.Paragraphs(47).Range
+    r.Select
+    Call Selection.TypeText(&quot;DEMAND BY REGION&quot;)
+    Call Selection.HomeKey(wdLine, wdExtend)
+    Selection.Font.Bold = True
+    
+    Set r = doc.Paragraphs(84).Range
+    r.Select
+    Call Selection.TypeText(&quot;DEMAND BY REGION&quot;)
+    Call Selection.HomeKey(wdLine, wdExtend)
+    Selection.Font.Bold = True
+    
+    'Insert picture
+    Dim pic As Shape
+    Set pic = doc.Shapes.AddPicture(&quot;C:\1.jpg&quot;, False, True)
+    pic.Height = 110.9
+    pic.Width = 144
+    pic.Left = 0
+    pic.Top = 170
+    
+    Set pic = doc.Shapes.AddPicture(&quot;C:\1.jpg&quot;, False, True)
+    pic.Height = 110.9
+    pic.Width = 144
+    pic.Left = 235
+    pic.Top = 170
+'
+
+End Sub</pre>
+</div></div>
+<p>&nbsp;</p>
+
+</body>
+</html>

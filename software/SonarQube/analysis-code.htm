@@ -1,0 +1,205 @@
+﻿<!DOCTYPE html>
+<html lang="zh-cn" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta charset="utf-8" />
+	<script type="text/javascript" src="../../mylib/js/css.js"></script>
+	<title>SonarQube Note</title>
+</head>
+<body>
+	<p id="title">代码分析</p>
+	<h1>SonarQube Runner</h1>
+	<p>首先要下载 SonarQube Runner 作为 SonarQube 的客户端, 它负责在本地分析并上传代码. 官方介绍可查看<a href="http://docs.codehaus.org/display/SONAR/Installing+and+Configuring+SonarQube+Runner">http://docs.codehaus.org/display/SONAR/Installing+and+Configuring+SonarQube+Runner</a></p>
+	<h1>分析方法</h1>
+	<h2>步骤</h2>
+	<ol>
+		<li>下载并解压 SonarQube Runner, 并设置环境变量 <span style="color: blue; font-weight: bold; font-size: larger">SONAR_RUNNER_HOME</span> 指向该目录
+		</li>
+		<li>将 <span style="color: blue; font-weight: bold">&lt;SONAR_RUNNER_HOME&gt;\bin</span> 加入 Path 环境变量</li>
+		<li>进入要分析的源文件目录, 创建 sonar-project.properties 文件, 文件可参考后面的示例</li>
+		<li>修改 sonar-runner.properties, 可参考后面示例</li>
+		<li>运行 sonar-runner</li>
+	</ol>
+	<p>下面是我在 sonar-runner.bat 中的改动</p>
+	<pre>set SONAR_RUNNER_HOME=C:\software\sonar\sonar-scanner-2.5.1
+set SONAR_RUNNER=%SONAR_RUNNER_HOME%\bin\sonar-runner.bat
+set JAVA_HOME=C:\Program Files\Java\jdk1.8.0_71
+set PATH=%JAVA_HOME%\bin;%PATH%</pre>
+	<p>对于 Linux 环境，我先运行了如下命令</p>
+	<pre class="code" data-type="sh">export SONAR_RUNNER_HOME=/home/ll52957/util/sonar-runner-2.3
+export JAVA_HOME=/xenv/java/X/1.7.0_51
+export PATH=$JAVA_HOME/bin:.:$PATH
+export CLASSPATH=.:$JAVA_HOME:$JAVA_HOME/lib:$JAVA_HOME/jre/lib</pre>
+	<h2>配置文件示例</h2>
+	<h3>sonar-project.properties for Java 示例</h3>
+	<pre class="code" data-type="properties" title="sonar-project.properties for Java"># required metadata
+sonar.projectKey=gollf.backend.dsbatch
+sonar.projectName=gollf.backend.dsbatch
+sonar.projectVersion=1.0
+ 
+# optional description
+sonar.projectDescription=GOLLF Backend - Syndicate Batch
+ 
+# path to source directories (required)
+sonar.sources=src/java,../../common/src_ds/java
+ 
+# The value of the property must be the key of the language.
+sonar.language=java
+ 
+# Encoding of the source code
+sonar.sourceEncoding=UTF-8
+ 
+# Additional parameters
+sonar.my.property=value</pre>
+	<p>关键点解释如下</p>
+	<ul>
+		<li>sonar.language, 需设为 java</li>
+		<li>sonar.sources, 可指定多个项目, 之间用逗号隔开</li>
+	</ul>
+	<h3>sonar-project.properties for C# 示例</h3>
+
+
+	<pre class="code" data-type="properties" title="sonar-project.properties for C#"># required metadata
+sonar.projectKey=gollf.client
+sonar.projectName=gollf.client
+sonar.projectVersion=1.0
+ 
+# optional description
+sonar.projectDescription=GOLLF
+ 
+# path to source directories (required)
+sonar.sources=.
+ 
+# The value of the property must be the key of the language.
+sonar.language=cs
+ 
+# Encoding of the source code
+sonar.sourceEncoding=UTF-8
+ 
+# Additional parameters
+sonar.my.property=value
+
+sonar.dotnet.key.generation.strategy=safe
+
+# External tools to deactivate when the solution is not compiled
+sonar.fxcop.mode=skip
+sonar.gendarme.mode=skip
+sonar.gallio.mode=skip
+sonar.ndeps.mode=skip
+sonar.stylecop.mode=skip
+ 
+# The solution file
+sonar.dotnet.visualstudio.solution.file=GOLLF.sln
+
+# Exclude project
+sonar.skippedModules=ClosedXML,Thrift,ICSharpCode.SharpZLib
+
+# Exclude files
+sonar.exclusions=**/Reference.cs,**/*.Designer.cs</pre>
+	<p>关键点解释如下</p>
+	<ul>
+		<li>sonar.language 设为 cs, 需在 server 端安装 C# 插件支持</li>
+		<li># External tools to deactivate when the solution is not compiled 部分<br />
+			跳过外持分析工具, 默认情况下, SonarQube 将会在本地调用 .net 常用的代码检查工具, 如 FxCop, 进行分析, 并将分析结果上传. 使用这些外挂工具将会重新编译.
+			<br />
+			因此, 如果是在未安装 .net framework SDK 的电脑(例如 Linux)上进行分析时, 必须禁用所有的外挂工具, 否则将会导制编译失败
+		</li>
+		<li>sonar.dotnet.visualstudio.solution.file, 指定要分析的 solution 文件, 如果只有一个 solution 文件的话也可以不指定.</li>
+		<li>sonar.skippedModules 可设定某些项目不进行分析。但 4.3 版本后已不再支持。</li>
+		<li>4.3 版本以前，默认情况下, 自动生成的文件不会被分析, 例如 Reference.cs, *.designer.cs 等, 如果你一定需要分析一下的话, 可将 sonar.dotnet.excludeGeneratedCode 设为 false. 但 4.3 版本以后，需使用 sonar.exclusions 手工将其排除。</li>
+		<li>sonar.dotnet.key.generation.strategy: 在分析多个 solution 时，如果这些 solution 包含相同的 project name，则需使用该选项。</li>
+	</ul>
+	<h3>sonar-runner.properties</h3>
+	<pre class="code" data-type="properties" title="sonar-runner.properties 示例">#Configure here general information about the environment, such as SonarQube DB details for example
+#No information about specific project should appear here
+
+#----- Default SonarQube server
+sonar.host.url=http://localhost:9000
+
+#----- PostgreSQL
+sonar.jdbc.url=jdbc:h2:tcp://localhost:9092/sonar
+
+#----- MySQL
+#sonar.jdbc.url=jdbc:mysql://localhost:3306/sonar?useUnicode=true&amp;characterEncoding=utf8
+
+#----- Oracle
+#sonar.jdbc.url=jdbc:oracle:thin:@localhost/XE
+
+#----- Microsoft SQLServer
+#sonar.jdbc.url=jdbc:jtds:sqlserver://localhost/sonar;SelectMethod=Cursor
+
+#----- Global database settings
+#sonar.jdbc.username=sonar
+#sonar.jdbc.password=sonar
+
+#----- Default source code encoding
+#sonar.sourceEncoding=UTF-8
+
+#----- Security (when 'sonar.forceAuthentication' is set to 'true')
+#sonar.login=admin
+#sonar.password=admin
+</pre>
+	<h2>启动参数</h2>
+	<table style="width: 90%">
+		<tr>
+			<th>功能</th>
+			<th>实现</th>
+		</tr>
+		<tr>
+			<td>分析时打印详细日志</td>
+			<td>有时我们需要检查分析时的详细日志，例如查看为什么分析失败，在 sonar-runner 后添加 -X 参数即可</td>
+		</tr>
+		<tr>
+			<td>设置 Java Heap</td>
+			<td>在分析一些大项目时，有时会遇到 Heap OutOfMemory 异常，需编辑 sonar-runner 命令文件，如下所示，将最大可用内存提高到 512M （默认为256M）
+				<br />
+				<p>For Java</p>
+				<pre class="code">export SONAR_RUNNER_OPTS="-Xmx512m -XX:MaxPermSize=128m"</pre>
+				<p>For .Net</p>
+				<pre class="code">set SONAR_RUNNER_OPTS=-Xmx512m -XX:MaxPermSize=128m</pre>
+				<p>或者</p>
+				<pre>%JAVA_EXEC% <span style="font-weight:bold; color:blue">-Xmx512M</span> %SONAR_RUNNER_OPTS% -cp "%SONAR_RUNNER_HOME%\lib\sonar-runner-dist-2.4.jar" .......</pre>
+			</td>
+		</tr>
+	</table>
+	<h1>一些常见问题的解决方案</h1>
+	<table style="width: 95%">
+		<tr>
+			<th>问题</th>
+			<th>Solution</th>
+		</tr>
+		<tr>
+			<td>未在 solution 中的项目也被分析</td>
+			<td>
+				<p>在 sonar-project.properties 中手工设定要分析的项目</p>
+				<pre class="code" data-type="properties">sonar.sources=ClassLibrary1,ClassLibrary2</pre>
+			</td>
+		</tr>
+		<tr>
+			<td>如何显示测试结果（多少 Case，成功数，失败数……）</td>
+			<td>
+				<p>指定 NUnit 导出结果</p>
+				<pre class="code">set nunit_path="C:\software\dotNet\NUnit-2.6.4\bin\nunit-console-x86.exe"
+set app_path=c:\...\myproject.nunit
+set report_dir=c:\...\test_report
+%nunit_path% %app_path% /xml:%report_dir%\nunit_test_result.xml /noshadow</pre>
+				<p>在 sonar-project.properties 中手工设定要NUnit Test Result</p>
+				<pre class="code" data-type="properties">sonar.cs.nunit.reportsPaths=C:/.../nunit_test_result.xml</pre>
+			</td>
+		</tr>
+		<tr>
+			<td>如何忽略某些目录，例录 Properties 目录</td>
+			<td>
+				<p>在 sonar-project.properties 中设定如下</p>
+				<pre class="code" data-type="properties">sonar.exclusions=**/Properties/*</pre>
+			</td>
+		</tr>
+	</table>
+	<h1>异常处理</h1>
+	<h2>分析异常终止</h2>
+	<h3>原因</h3>
+	<p>如果分析异常终止，将会导制项目被锁掉，无法进行新的分析，错误信息如下：</p>
+	<pre>It looks like an analysis of 'XXXXXXXX' is already running (started less than a minute ago).</pre>
+	<h3>Solution</h3>
+	<p>到数据库中，在表 semaphores 中删掉相应的记录即可。</p>
+</body>
+</html>

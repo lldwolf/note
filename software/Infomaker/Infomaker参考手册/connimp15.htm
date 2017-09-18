@@ -1,0 +1,94 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+Preparing to use the JDBC interface</TITLE>
+</HEAD>
+<BODY>
+<A NAME="BFCDCFDD"></A><h1>Preparing to use the JDBC interface</h1>
+<A NAME="TI350"></A><p>Before you define the interface and connect to a database
+via the JDBC interface, follow these steps to prepare the database
+for use: <A NAME="TI351"></A>
+<ol>
+</li>
+<li class=ds>Configure the database
+server for its JDBC connection and install its JDBC-compliant driver
+and network software.</li>
+<li class=ds>Verify that a Java VM is installed on your machine.</li>
+<li class=ds>Use the JavaVM DBParm to tell InfoMaker what
+version of the Java VM is running on your machine. You must already
+have installed the Java VM. </li>
+<li class=ds>Install the JDBC interface.</li>
+<li class=ds>Set or verify the settings in the PATH and CLASSPATH
+environment variables and the Java tab of the System Options dialog
+box.
+</li>
+</ol>
+</p>
+<A NAME="TI352"></A><h4>Step 1: configure the database server</h4>
+<A NAME="TI353"></A><p>You must configure the database server to make JDBC connections
+as well as install the JDBC driver and network software.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To configure the database server for its JDBC
+connection:</p>
+<ol><li class=fi>
+Make sure the database server is configured
+to make JDBC connections. For configuration instructions, see your
+database vendor's documentation. <br><br></li>
+<li class=ds>
+Make sure the appropriate JDBC driver software
+is installed and running on the database server. <br><br>
+The driver vendor's documentation should provide
+the driver name, URL format, and any driver-specific properties
+you need to specify in the database profile.<br><br><p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Configuring the jConnect driver</span> <A NAME="TI354"></A>Make sure to complete the configuration steps required by
+the jConnect driver such as installing the JDBC stored procedures
+in Adaptive Server databases. Also verify that the CLASSPATH environment
+variable on your machine or the Classpaths list on the Java tab
+of the PowerBuilder System Options dialog box include an entry pointing
+to the location of the jConnect driver. For example, if you are
+using jConnect 5.2, you should include an entry similar to the following:</p>
+<A NAME="TI355"></A><b>\Program Files\Sybase\Shared\jConnect-5_2\classes\jconn2.jar</b></p>
+<A NAME="TI356"></A>For more information about configuring jConnect, see the jConnect
+for JDBC documentation. </p>
+</li>
+<li class=ds>
+Make sure the required network software (such
+as TCP/IP) is installed and running on your computer and
+is properly configured so that you can connect to the database server
+at your site.<br><br>
+You must install the network communication driver that supports
+the network protocol and operating system platform you are using. <br><br>
+For installation and configuration instructions,
+see your network or database administrator.<br><br></li></ol>
+<br><A NAME="TI357"></A><h4>Step 2: verify the Java VM</h4>
+<A NAME="TI358"></A><p>Make sure the appropriate Java Virtual Machine is installed
+and running on your client computer -- Microsoft VM for
+Java or Sun Java Runtime Environment (JRE). Both VMs are available
+free of charge from their respective vendors<A HREF="http://www.microsoft.com/java/download.htm"></A>
+ and<A HREF="http://java.sun.com/products"></A>
+.</p>
+<A NAME="TI359"></A><h4>Step 3: install the JDBC interface</h4>
+<A NAME="TI360"></A><p>When prompted to do so by the InfoMaker Setup program, select
+the appropriate JDBC interface. </p>
+<A NAME="TI361"></A><p>For instructions, see the <i>Installation
+Guide</i>
+<i></i>
+.</p>
+<A NAME="TI362"></A><h4>Step 4: set or verify the settings in the PATH
+and CLASSPATH variables</h4>
+<A NAME="TI363"></A><p>Set or verify that the settings in the PATH and CLASSPATH
+environment variables point to the appropriate,
+fully qualified file names. </p>
+<A NAME="TI364"></A><p>If you are using Java 1.1, the PATH environment variable should
+include an entry for the Sun Java VM (for example, <i>path</i>\ JDK118\bin)
+and the CLASSPATH environment variable should include an entry for
+the packages included in classes.zip (for example, <i>path</i>\ JDK118\lib\classes.zip).
+The CLASSPATH environment variable should also include an entry for the JDBC driver classes
+(such as jconn2.jar). </p>
+<A NAME="TI365"></A><p>If you are using Java 1.2 or later, you do not need to include
+the Sun Java VM packages in your CLASSPATH variable, but your PATH
+environment variable must include an entry for the Sun Java VM library,
+jvm.dll (for example, <i>path</i>\ JDK122\JRE\bin\classic).</p>
+<A NAME="TI366"></A><p>Also verify that you do not have another Java VM entry in
+the PATH and CLASSPATH environment variables, as multiple VM entries
+may cause the database connection to fail. </p>
+

@@ -1,0 +1,245 @@
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+	<script type="text/javascript" src="../../mylib/js/css.js"></script>
+	<title>Git Note</title>
+</head>
+
+<body>
+	<p id="title">客户端基本使用</p>
+	<h1>需安装软件</h1>
+	<ul>
+		<li>Git Client</li>
+		<li>Eclipse 4.3 (已集成 EGit)</li>
+	</ul>
+	<h2>初始化设置</h2>
+	<p>设置本地用户信息，设置</p>
+	<pre class="code" data-type="sh">git config --global user.name "Lindong"
+git config --global user.email lindong.liu@citi.com</pre>
+	<h1>使用场景</h1>
+	<h2>check out repository</h2>
+	<p>假设版本库为 cm99521@vm-602f-1230:/tmp/cm99521/cvs2svn-tmp/g2/gollf, 我将其 check out 到本地文件夹 c:\workspace\gollf</p>
+	<ol>
+		<li>
+			<p>在 Git Client 中键入以下命令</p>
+			<pre>cd <span style="font-style:italic">/c/workspace/gollf</span>
+
+# 默认 clone master
+$git clone cm99521@vm-602f-1230:/tmp/cm99521/cvs2svn-tmp/g2/gollf</pre>
+		</li>
+		<li>
+			<p>将项目导入 Eclipse</p>
+			<p>
+				<img alt="" src="img/egit_toolbar.png" /></p>
+			<p>选择 .git 所在的目录</p>
+		</li>
+		<li>
+			<p>将 repository 导入为 Eclipse project</p>
+			<p>在 repository 上使用右键菜单，选择 "Import Project"</p>
+			<p>
+				<img alt="" src="img/import_git_repository.png" /></p>
+			<p class="note">需要将项目路径设为本地的 repository 路径，不能使用 Eclipse 的默认路径</p>
+		</li>
+	</ol>
+	<h2>切换 branch</h2>
+	<p>将当前 branch 切换至 B1</p>
+	<h3>命令行</h3>
+	<pre class="code" data-type="sh">$git checkout B1</pre>
+	<h3>EGit plug-in</h3>
+	<p>在 Git Repository 中右键菜单 "Switch To"</p>
+	<p>
+		<img alt="" src="img/switch-branch.png" /></p>
+	<h2>查看本地改动</h2>
+	<p>假设修改一个原有的文件 tset.txt，将新增一个 test2.txt</p>
+	<p>在本地新增一个文本文件 test.txt</p>
+	<h3>命令行</h3>
+	<pre class="code" data-type="sh">$git status</pre>
+	<p>对于新增的文件将以红色高亮标出</p>
+	<p>
+		<img alt="" src="img/git-status-new-file.png" /></p>
+	<h3>图形界面</h3>
+	<p>使用 Git Client 提供的图形界面查看</p>
+	<pre class="code" data-type="sh">$git gui &</pre>
+	<p>
+		<img alt="" src="img/git-gui-update-check.png" /></p>
+	<h3>EGit plug-in</h3>
+	<p>右键菜单 "Team" &rarr; "Synchronize Workspace"</p>
+	<h3>忽略部分文件</h3>
+	<p>有时我们并不需要提交所有的文件到版本库，例如编译生成的 .class 或 .exe 之类的文件，以上例为例，如果我们不想把 .classpath 和 .project 文件放到版本库，可在同一目录下建立一个 <span style="font-weight: bold; font-style: italic">.gitignore</span> 文件，内容如下：</p>
+	<pre>.classpath
+.project</pre>
+	<p>然后再刷新一下就看到这两个文件出现在修改文件列表中了</p>
+	<p>当然你也可以将 .gitignore 加入到列表中。</p>
+	<h2>提交本地改动</h2>
+	<p>相比于其它版本控制软件，Git 多了一个暂存区的概念。Git 文件可以有如下几个状态：</p>
+	<ul>
+		<li>工作区：就是你在本地看到的文件</li>
+		<li>暂存区：准备提交到版本库的文件，也可以回滚到工作区</li>
+		<li>本地版本库：本地自己使用的版本库</li>
+		<li>远程版本库：大家共享的版本库，一旦提交则将留下永久印记，无法抹除，而其它所有的状态都是可以吃后悔药的。</li>
+		<li>Stash 区：每个 branch 独立的存储区域，凡放入该区域的文件将不检查是否更改。</li>
+	</ul>
+	<p>因此将本地改动提交需要经历如下步骤</p>
+	<ol>
+		<li>将要提交的改动文件放入暂存区</li>
+		<li>将暂存区的文件提交至本地版本库</li>
+		<li>将本地版本库推送至远程版本库</li>
+	</ol>
+	<h3>stash</h3>
+	<p>在切换到别的 branch 时，要求当前做的修改需全部提交，但有时自己的修改尚未完成，比如只时需要临时切换到别的 brarnch 改个小 bug，改完后还要切回来继续做。这时，可以选择将当前未提交的内容放入 stash 区。</p>
+	<pre class="code" data-type="sh">$git stash</pre>
+	<p>等到需要时，可使用如下命令从 stash 区恢复</p>
+	<pre class="code" data-type="sh"># 将 stash 文件恢复并清空 stash 区
+$git stash pop
+		
+# 将 stash 文件恢复并保留 stash 区
+$git stash apply</pre>
+
+	<h3>命令行</h3>
+	<pre class="code" data-type="sh"># 将文件加入暂存区，用点号 . 可表示所有文件
+$git add <span style="font-style:italic">file_name</span>
+
+# 将晳存区的文件提交至本地版本库
+$git commit -m <span style="font-style:italic">comments</span>
+
+# 将本地版本库推送至远程版本库, 例如，推送 master 至远程版本库
+$git push origin master</pre>
+	<p>上例在推送远程版本库时出现了一个 origin，这可以用 git remote 命令查看</p>
+	<pre class="code" data-type="sh">$git remote
+origin
+		
+# 查看详细信息
+$git remote -v
+origin  <span style="font-style: italic">repository</span> (fetch)
+origin  <span style="font-style: italic">repository</span> (push)
+	</pre>
+
+
+	<h3>图形界面</h3>
+	<ol>
+		<li>
+			<p>选中要放入暂存区的文件，使用菜单 "Commit" &rarr; "Stage To Commit" (快捷键 Ctrl + T)</p>
+		</li>
+		<li>
+			<p>使用菜单命令 "Commit" &rarr; "Commit" (快捷键 Ctrl + 回车) 提交，也可以用界面上的 Commit 按钮</p>
+		</li>
+	</ol>
+	<p>
+		<img alt="" src="img/git-gui-stage-commit.png" /></p>
+	<h3>EGit plug-in</h3>
+	<p>使用 Team 的子菜单来完成操作</p>
+	<p>
+		<img alt="" src="img/egit-stage-commit.png" /></p>
+	<h2>放弃修改</h2>
+	<h3>放弃工作区修改</h3>
+	<pre class="code" data-type="sh">$git checkout -- <span style="font-style: italic">file_name</span></pre>
+	<h3>将暂存区回滚至工作区</h3>
+	<pre class="code" data-type="sh">$git reset HEAD -- <span style="font-style: italic">file_name</span></pre>
+	<p>HEAD 表示最新的版本</p>
+	<h2>多人协作</h2>
+	<h3>共享 branch</h3>
+	<p>你在本地创建的 branch 只会存在于本地，如果想与其它人共同在这个 branch 上开发，需要将其推送至远程版本库</p>
+	<pre class="code" data-type="sh"># 将本地的 dev branch 推送至远程
+$git push origin dev</pre>
+	<p>如果在另一个客户端需要建立一个与远程版本库同步的 branch，使用如下命令：</p>
+	<pre class="code" data-type="sh"># 将远程的 dev branch 创建到本地
+$git checkout -b dev origin/dev</pre>
+	<p>或者也可以先创建再关联</p>
+	<pre class="code" data-type="sh"># 创建并切换到 dev branch 
+		$git checkout -b dev
+
+		# 关联远程 branch
+		$git branch --set-upstream-to dev origin/dev</pre>
+	<p>关联后会自动将远程 branch 内容更新到本地。如果</p>
+	<h2>放弃本地改动</h2>
+	<h2>Repository</h2>
+	<h3>Check out repository</h3>
+	<h3>Create branch</h3>
+	<h3>Create tag</h3>
+	<h2>File</h2>
+	<h3>Commit</h3>
+	<h3>Update</h3>
+	<h3>Overwrite</h3>
+	<h1>Other</h1>
+	<h2>常用命令列表</h2>
+	<pre class="code" data-type="sh"># 初始化
+$git init
+
+# 查看所有的 branch (git branch命令会列出所有分支，当前分支前面会标一个*号。)
+$git branch
+
+# 新建 branch
+$git branch <span style="font-style:italic">branch_name</span>
+
+# 删除 branch
+$git branch -d <span style="font-style:italic">branch_name</span>
+
+# 切换 branch
+$git checkout <span style="font-style:italic">branch_name</span>
+
+# 新建 branch 并切换至新 branch
+$git checkout -b <span style="font-style:italic">branch_name</span>
+
+# 将指定 branch 合并至当前 branch
+$git merge <span style="font-style:italic">branch_name</span>
+
+# 查看所有的 tag
+$git tag
+
+# 新建 tag
+$git tag <span style="font-style:italic">tag_name</span>
+		
+# 查看本地改动 
+$git status
+
+# file_name 支持通配符，用一个 . 可表示所有文件
+# 将本地所有改动文件标记为 stash 状态
+$git stash
+
+# 将 stash 文件恢复并清空 stash 区
+$git stash pop
+		
+# 将 stash 文件恢复并保留 stash 区
+$get stash apply
+
+# 将本地改动文件放到暂存区
+$git add <span style="font-style:italic">file_name</span>
+
+# 使用通配符将本地改动文件放到暂存区
+$git add '*.dll'
+
+# 将本地所有改动文件放到暂存区
+$git add .
+
+# 将本地删除的文件放到暂存区
+$git rm <span style="font-style:italic">file_name</span>
+
+# 将本地删除的所有文件放到暂存区
+$git rm .
+
+# 将晳存区的文件提交
+$git commit -m <span style="font-style:italic">comments</span>
+
+# 撤消本地所做修改（使用暂存区或版本库）
+$git checkout -- <span style="font-style:italic">file_name</span>
+
+# 将文件从暂存区恢复至工作区
+$git reset HEAD <span style="font-style:italic">file_name</span>
+
+# 删除文件
+$git rm <span style="font-style:italic">file_name</span>
+
+# 打开图形界面
+$git gui &
+
+# 打开图形界面
+$gitk
+$gitk --all (可以看到所有的 branch)
+	</pre>
+	<h2>通配符说明</h2>
+	<p>所有的文件定位都可以使用通配符，如下所示</p>
+	<pre class="code" data-type="sh"># 添加任意目录下以 test 开头的 xml 文件到暂存区
+$git add '*/test*.xml'</pre>
+	<p>两边的单引号可以省略，但如果文件/目录名中有空格时则需要加上</p>
+</body>
+</html>

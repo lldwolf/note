@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>DevExpress.XtraGrid.GridControl</title>
+<script type="text/javascript" src="../../../mylib/js/css.js"></script>
+
+<style type="text/css">
+.first_class {font-family:宋体; font-weight:bold; font-size:16px; text-align:center; layout-flow:vertical-ideographic}
+.second_class {font-weight: bold}
+</style>
+</head>
+
+<body>
+<p id="title">GridControl - Inner Editor</p>
+<h1>内嵌控件</h1>
+<p>内嵌控件是指嵌在单元格中的控件。通过使用内嵌控件，可以在单元各中显示更丰富的内容，以及实现更灵活的控制，例如可以点击一个单元格时出现一个下拉框，或图形选择框，等等。</p>
+<h2>添加内嵌控件</h2>
+
+<h2>内嵌控件与普通控件的关系</h2>
+<p>内嵌控件的名字通常是普通控件的名字加上RepositoryItem，我们以LookupEdit控件为例说明两者之间的关系。</p>
+<p>LookupEdit对应的内嵌控件就是RepositoryItemLookupEdit。如果注意观察一下，typeof(RepositoryItemLookupEdit)与typeof(LookupEdit.Properties)是相同的。</p>
+<p>我们可以为RepositoryItemLookupEdit控件定义事件，大多数事件都有 sender 参数指示发送对象。我们察看一下它的 Type，会发现它实际为 LookupEdit 对象，而不是 RepositoryItemLookupEdit 对象。这说明在处于编辑状态时，会以预定义的 RepositoryItemLookupEdit 为模板重新创建一个新的 LookupEdit 对象用于编辑功能。换言之，我们在事件中对 LookupEdit 进行修改，并不影响 RepositoryItemLookupEdit 的属性。以最常用的 EditValueChanged 事件为例，当单元格未触发该事件时，使用 RepositoryItemLookupEdit 的属性来完成显示，但当该事件被触发后，则是用新创建的 LookupEdit 来完成该事件相应的操作。</p>
+<p>这个特性给了我们很大的方便，下面是几个事例：</p>
+<p><b>事例一：Grid 中有两列，第一列表示省，第二列表示该省辖下的市，均使用 LookupEdit 作为输入控件。</b></p>
+<p>最合理的做法当然是选定某省后，第二列的下拉列表中直显示该省辖下的市。因此，使用全部的市作为第二列 RepositoryItemLookupEdit 的 DataSource，以确保所有的值均可正常显示。但在其 Enter 事件中，重新定义事件相应 LookupEdit 的 DataSource 为前列设定省的下辖市。</p>
+<h2>内嵌PopupContainerEdit的特殊处理</h2>
+<ol>
+    <li>在QueryPopup事件中获取当前行对象</li>
+    <li>在QueryResultValue/ClosedUp事件中判断当前行对象是否为null，若为null则需手工创建对象并加入DataSource</li>
+</ol>
+<pre>private void Form1_Load(object sender, EventArgs e)
+{
+	DataTable tb = new DataTable();
+	tb.Columns.Add(&quot;col1&quot;, typeof(string));
+	tb.Columns.Add(&quot;col2&quot;, typeof(string));
+	tb.Columns.Add(&quot;col3&quot;, typeof(string));
+	this.gridControl1.DataSource = tb;
+}
+
+DataRow EditingRow;
+
+private void repositoryItemPopupContainerEdit1_QueryPopUp(object sender, CancelEventArgs e)
+{
+	this.EditingRow = null;
+	DataRowView rowView = this.gridView1.GetRow(this.gridView1.FocusedRowHandle) as DataRowView;
+	if (rowView != null)
+		this.EditingRow = rowView.Row;
+}
+
+private void repositoryItemPopupContainerEdit1_CloseUp(object sender, DevExpress.XtraEditors.Controls.CloseUpEventArgs e)
+{
+	string txt1 = this.textEdit1.Text;
+	string txt2 = this.textEdit2.Text;
+
+	DataTable tb = this.gridControl1.DataSource as DataTable;
+	if (this.EditingRow == null)
+	{
+		DataRow newRow = tb.NewRow();
+		tb.Rows.Add(newRow);
+		this.EditingRow = newRow;
+		this.gridView1.FocusedRowHandle = this.gridView1.RowCount - 2;
+	}
+
+	this.EditingRow[&quot;col1&quot;] = txt1 + &quot;-&quot; + txt2;
+	e.AcceptValue = true;
+	e.Value = txt1 + &quot;-&quot; + txt2;
+}</pre>
+<p><a href="sample/Popup_Row_Test.zip">完整示例</a></p>
+<h2>内嵌CheckedComboBoxEdit的特殊处理</h2>
+<p>在新增行，当CheckedComboBoxEdit控件关闭时，即使没有选择任何项，仍然会在grid中添加新行。对其CloseUp事件添加如下代码可避免该问题：</p>
+<pre>private void repositoryItemCheckedComboBoxEdit1_CloseUp(object sender, DevExpress.XtraEditors.Controls.CloseUpEventArgs e)
+{
+    if (this.gridView1.GetRow(this.gridView1.FocusedRowHandle) == null && string.IsNullOrEmpty(Convert.ToString(e.Value)))
+    {
+        e.AcceptValue = false;
+    }
+}</pre>
+<script type="text/javascript" src="grid_index.js"></script>
+</body>
+</html>

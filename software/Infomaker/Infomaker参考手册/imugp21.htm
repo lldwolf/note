@@ -1,0 +1,109 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+Starting InfoMaker from the command line</TITLE>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312"></HEAD>
+<BODY>
+<A NAME="BFCBHECD"></A><h1>从命令行启动InfoMaker</h1>
+<A NAME="TI628"></A>
+<p>InfoMaker能够从命令行启动，启动后还能顺便打开下列Painter或工具之一：</p>
+<A NAME="TI629"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><td valign=top><A NAME="TI630"></A>Database painter</td>
+<td valign=top><A NAME="TI631"></A>Library painter</td>
+</tr>
+<tr><td valign=top><A NAME="TI632"></A>Data Pipeline
+painter</td>
+<td valign=top><A NAME="TI633"></A>Query painter</td>
+</tr>
+<tr><td valign=top><A NAME="TI634"></A>File Editor</td>
+<td valign=top><A NAME="TI635"></A>Report painter</td>
+</tr>
+<tr><td valign=top><A NAME="TI636"></A>Form painter</td>
+<td valign=top><A NAME="TI637"></A></td>
+</tr>
+</table>
+<A NAME="TI638"></A>
+<p>命令行语法如下：
+<pre>{ win } <i>directory</i>\im80.exe /P <i>paintername</i></pre>
+</p>
+<A NAME="TI639"></A>
+<p>参数说明：</p>
+<A NAME="TI640"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr>
+  <th align="left" valign=bottom><A NAME="TI641"></A>参数</th>
+  <th align="left" valign=bottom><A NAME="TI642"></A>描述</th>
+</tr>
+<tr><td valign=top><A NAME="TI643"></A><i>directory</i></td>
+<td valign=top><A NAME="TI644"></A>InfoMaker的路径，不过一般情况下它在系统的Path变量中，所以不用输入路径也行。</td>
+</tr>
+<tr><td valign=top><A NAME="TI645"></A><i>paintername</i></td>
+<td valign=top><A NAME="TI646"></A>要打开的Painter的名字。<A NAME="TI647"></A>这个名字得能唯一地标识出一个Painter。也不必输入完整的名字，例如，输入“q”即可打开Query Painter，输入“datab”即可打开Database Painter。如果输入完整名称，则要去掉里面的空格，例如“DataPipeline”而不是“Data Pipeline”。<A NAME="TI648"></A>大小写不敏感 。如果要打开文件编辑器，可使用参数“FI”或“fileeditor”。</td>
+</tr>
+</table>
+<A NAME="TI649"></A>
+<h4>打开对象或创建新对象</h4>
+<A NAME="TI650"></A><p>You can also add one or more of the following optional switches
+to the command line to open a specific object or create a new one. </p>
+<A NAME="TI651"></A><p><pre>{/L <i>libraryname</i>} {/O <i>objectname</i>} {/N} {/R} {/RO} {/A <i>arguments</i>}</pre>
+</p>
+<A NAME="TI652"></A><p>All of these switches must follow /P <i>paintername</i>
+,
+as shown in the examples after the tables. </p>
+<A NAME="TI653"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI654"></A>Switch</th>
+<th align="left" valign=bottom><A NAME="TI655"></A>Description</th>
+</tr>
+<tr><td valign=top><A NAME="TI656"></A>/L</td>
+<td valign=top><A NAME="TI657"></A>Identifies the library that contains
+the object you want to open</td>
+</tr>
+<tr><td valign=top><A NAME="TI658"></A>/O</td>
+<td valign=top><A NAME="TI659"></A>Identifies the object, such as a report,
+that you want to open</td>
+</tr>
+<tr><td valign=top><A NAME="TI660"></A>/N</td>
+<td valign=top><A NAME="TI661"></A>Creates a new report</td>
+</tr>
+<tr><td valign=top><A NAME="TI662"></A>/R</td>
+<td valign=top><A NAME="TI663"></A>Runs the report specified with /O
+and allows designing</td>
+</tr>
+<tr><td valign=top><A NAME="TI664"></A>/RO</td>
+<td valign=top><A NAME="TI665"></A>Runs the report specified with /O
+but does not allow designing</td>
+</tr>
+<tr><td valign=top><A NAME="TI666"></A>/A</td>
+<td valign=top><A NAME="TI667"></A>Provides retrieval arguments for the report specified
+with /O</td>
+</tr>
+</table>
+<A NAME="TI668"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI669"></A>Parameter</th>
+<th align="left" valign=bottom><A NAME="TI670"></A>Description</th>
+</tr>
+<tr><td valign=top><A NAME="TI671"></A><i>libraryname</i></td>
+<td valign=top><A NAME="TI672"></A>The name of the library that contains
+the object you want to open. The default is the library specified
+in the DefLib variable in the [PB] section of
+the InfoMaker initialization file</td>
+</tr>
+<tr><td valign=top><A NAME="TI673"></A><i>objectname</i></td>
+<td valign=top><A NAME="TI674"></A>The name of the object you want to open</td>
+</tr>
+<tr><td valign=top><A NAME="TI675"></A><i>arguments</i></td>
+<td valign=top><A NAME="TI676"></A>For a report, retrieval arguments
+for the specified report. Arguments must be in the correct order,
+separated by semicolons (;). Array argument values must be separated
+by commas (,). Decimal arrays are not supported</td>
+</tr>
+</table>
+<A NAME="TI677"></A><h4>Examples</h4>
+<A NAME="TI678"></A><p>The following examples use im8 to represent the directory
+where InfoMaker is installed.</p>
+<A NAME="TI679"></A><p>Enter this command at the Windows MS-DOS prompt to start InfoMaker and open
+the Database painter:</p>
+<A NAME="TI680"></A><p><pre>win im8\im80.exe /P datab</pre>
+</p>
+<A NAME="TI681"></A><p>Enter this command in the Windows Run dialog box to start InfoMaker and open
+the report called d_emp_report in the library
+master.pbl:</p>
+<A NAME="TI682"></A><p><pre>im8\im80.exe /P report /L master.pbl /O d_emp_report</pre>
+</p>
+

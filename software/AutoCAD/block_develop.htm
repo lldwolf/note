@@ -1,0 +1,56 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<script language="javascript" src="css.js"></script>
+<title>块操作</title>
+</head>
+
+<body>
+<h1>第N章 块操作</h1>
+<hr>
+<h2><a href="#overview">N.1 概述</a> </h2>
+<h2><a href="#new_block_def">N.2 新建块定义</a></h2>
+<h2><a href="#insert_block_ref">N.3 插入块引用图形</a></h2>
+<h2><a name="overview"></a>N.1 概述</h2>
+<p>在VBA的对象中，对应块的有两个AcadBlock和AcadBlockReference。有必要讲述一下这两个对象间的区别，它们实际上对应的是块和块引用。在平时的大多数开发中，我们一般是使用AutoCAD编辑好块，然后在使用VBA开发时将这些块插入，因此，AcadBlockReference用的远比AcadBlock要频繁，毕竟在一般情况下，我们不会使用VBA去创建块的定义。我们在对图纸上的图形元素进行检索、操作时，都是使用的AcadBlockReference对象。</p>
+<p>但AcadBlock对象用在什么地方呢。我在这里举一个例子，如果要编程实现如下功能：在图纸中检索所有带有圆圈的块。应该怎么办呢？</p>
+<p>把所有的找到的块都打碎，这当然也是一个办法，但我们还有更好的办法。</p>
+<p>每张图纸对应的AcadDocument对象有一个属性：Blocks，它里面存放着这张图纸上的所有块定义，也就是说，它是一个AcadBlock对象的集合。而AcadBlock对象有一个Item属性，可用来索引组成块的所有元素。因此，我们可以使用如下的步骤来获取在图纸上获取的一个块的内部属性：</p>
+<ol>
+  <li>获取图纸上的块引用AcadBlockReference对象</li>
+  <li>根据AcadBlockReference.Name在AcadDocument.Blocks中检索块定义AcadBlock</li>
+  <li>使用AcadBlock.Item检索块定义中的各个对象</li>
+</ol>
+<p>同样的道理，对于常规属性，在AcadBlock中对应的是AcadAttribute，在AcadBlockReference中对应的是AcadAttributeReference，但对于固定属性有所不同，无论是AcadBlock还是AcadBlockReference，都是AcadAttribute，而且还有专门的方法GetConstantAttributes来获取块的固定属性。如果用户使用过面向对象语言的话，应该想到类中定义的静态变量，这个固定属性就有点这么个意思，无论创建多少块引用，哪怕一个块引用也没建立，只要块定义已经声明了，那么这个固定属性也就已经存在了，而且只留一份拷贝。</p>
+<p>当然了，虽然情况少，但在某些情况下还是要用的，那就是使用AcadBlock来创建块的定义，你会看到它里面有一堆的 Add* 方法，有点像AcadDocument.ModelSpace的成员方法，那就是在</p>
+<h2><a name="new_block_def"></a>N.2 新建块定义</h2>
+<h3>N.2.1 新建 </h3>
+<p>AutoCAD命令: block </p>
+<p>对于使用VBA来定义块定义，需要用到AcadBlock对象，其过程如下所示：</p>
+<ol>
+  <li>定义AcadBlock变量</li>
+  <li>使用AcadDocument.Blocks.Add方法添加块定义</li>
+  <li>使用 AcadBlock.Add* 方法向块定义中添加需要的图形元素</li>
+</ol>
+<p>定义完块后，图纸上并没有任何变化，因为这只是一个块的定义，但有了这个块定义，你就可以使用AcadDocument.InsertBlock方法在图纸上插入块了。</p>
+<h3>N.2.2 复制块定义</h3>
+<p>不能在多个文档间复制粘贴对象，这是AutoCAD VBA中不可原谅的一个错误，我们能够使用AutoCAD设计界面将一个块从一个文档复制到另一个文档，却无法用程序实现，这实在让人无法接受。</p>
+<p>对于简单的块，我们可以找到一个模拟的办法来实现，主要思路是先中源文档的Blocks中获取该块的定义，然后在目标文档中重建这个块的定义，然后再插入一个AcadBlockReference对象，将源AcadBlockReference的所有属性值都复制到AcadBlockReference上。</p>
+<h2><a></a><a name="insert_block_ref"></a>N.3 插入块引用图形</h2>
+<p>AutoCAD命令：insert</p>
+<p>需使用AcadBlockReference对象，使用AcadDocument.ModelSpace.InsertBlock方法插入块引用。</p>
+<p>不知道算不算AutoCAD的Bug，在插入块引用时，需要使得操作的图纸为当前活动图纸，否则在设置属性值时，无论属性设置的对齐方式是什么，均显示为左下对齐。</p>
+<h2>N.2 块操作</h2>
+<h3>N.2.2 插入块</h3>
+<p>命令: insert </p>
+<h3>N.2.3 炸开块</h3>
+<pre>AcadBlockReference.Explode</pre>
+<p>炸开块后返回值为炸开后形成的对象数组，要注意的是，执行该操作后，原块仍然存在，如果想不停在在图纸上循环想炸开所有块的话，在炸开一个块后，要调用其delete方法将其删掉以防止重复炸开（会陷入死循环）。</p>
+<h3>N.2.4 删除不用的块参照</h3>
+<p>purge </p>
+<p>&nbsp; </p>
+<script language="javascript" src="index.js"></script>
+</body>
+</html>

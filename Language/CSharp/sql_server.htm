@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<title>SQL Server 特有操作</title>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+<p id="title">SQL Server 特有操作 </p>
+
+<h1>特殊字段</h1>
+<h2>Identity</h2>
+<p>对于SQL Server中使用的Identity类型，我们一般用作主键，问题如下，我们如何获取新建的记录的主键。</p>
+<p>测试表的结构如下所示：</p>
+<pre class="code" data-type="csharp">create table temp_table(id int identity(1,1), value varchar(10))</pre>
+<p>插入后取得插入主键的代码如下所示：</p>
+<pre class="code" data-type="csharp">SqlConnection conn = new SqlConnection(&quot;user id=sa;data source=\&quot;.\&quot;;persist security info=True;initial catalog=tempdb;password=sa;&quot;);
+string sql;
+sql = &quot;set nocount on;insert into temp_table(value) values('aa');select @@identity&quot;;
+SqlCommand cmd = new SqlCommand(sql, conn);
+conn.Open();
+int new_id = Convert.ToInt32(cmd.ExecuteScalar());
+conn.Close();</pre>
+<p>其中set nocount on语句是为了效率优化而加，加了该语句后，插入语句就不会返回结果集，即去除了“** rows affected”之类的信息。</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+
+</body>
+</html>

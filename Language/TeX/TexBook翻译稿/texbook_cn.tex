@@ -1,0 +1,171 @@
+\ifx\pdfoutput\undefined % We're not running pdftex
+\documentclass[11pt,a4paper,twoside,openany]{book}
+\else
+\documentclass[pdftex,11pt,a4paper,twoside,openany]{book}
+\usepackage{thumbpdf}
+\pdfcompresslevel=9 \fi
+\usepackage{lshort}
+\usepackage{makeidx,shortvrb,latexsym}
+\usepackage{mylayout}
+% are we in pdftex ????
+\ifx\pdfoutput\undefined % We're not running pdftex
+\usepackage[dvipdfm,
+            colorlinks,linkcolor=blue,
+            hyperindex,
+            plainpages=false,
+            CJKbookmarks]
+            {hyperref}
+\else
+%%%%%%%%%%%%%%%%%%%%%增加了CJKbookmarks选项%%%%%%%%%%%%%%%%%%%%%%%%
+\RequirePackage[CJKbookmarks,colorlinks,hyperindex,plainpages=false]{hyperref}
+\def\pdfBorderAttrs{/Border [0 0 0] } % No border arround Links
+\fi \hypersetup{pdfstartview=FitH}
+%
+% This document is ``public domain''. It may be printed and
+% distributed free of charge in its original form (including the
+% list of authors). If it is changed or if parts of it are used
+% within another document, then the author list must include
+% all the original authors AND that author (those authors) who
+% has (have) made the changes.
+%
+% Original Copyright H.Partl, E.Schlegl, and I.Hyna (1987).
+% English Version Copyright by Tobias Oetiker (1994,1995),
+%
+% ---------------------------------------------------------------------
+%
+%
+% Formats also with\textt{letterpaper} option, but the pagebreaks might not
+% fall as nicely.
+%
+% To produce a A5 booklet, use a tool like  pstops or dvitodvi
+% to  past them together in the right order. Most dvi printer drivers
+% can shrink the resulting output to fit on a A4 sheet.
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{CJK,CJKnumb,indentfirst}
+\makeatletter
+\def\@makechapterhead#1{%
+  \vspace*{50\p@}%
+  {\parindent \z@ \centering%\raggedright
+    \normalfont
+    \ifnum \c@secnumdepth >\m@ne
+      \if@mainmatter
+      \huge\bfseries\prechaptername\CJKdigits{\thechapter}\chaptername\hskip 5\p@%
+%        \par\nobreak
+%        \vskip 20\p@
+      \fi
+    \fi
+    \interlinepenalty\@M
+    \huge \bfseries #1\par\nobreak
+    \vskip 40\p@
+  }}
+\def\@makeschapterhead#1{%
+  \vspace*{50\p@}%
+  {\parindent \z@ \centering%\raggedright
+    \normalfont
+    \interlinepenalty\@M
+    \huge \bfseries  #1\par\nobreak
+    \vskip 40\p@
+  }}
+\makeatother
+\usepackage{setspace}
+\onehalfspacing
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%convert bookmarks from GBK to unicode
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\AtBeginDvi{\special{pdf:tounicode GBK-EUC-UCS2}}   % GBK -> Unicode
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\makeindex \typeout{Copyright T.Oetiker, H.Partl, E.Schlegl,
+I.Hyna}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\includeonly{overview,custom,lssym,math}
+%\sloppy
+\renewcommand\floatpagefraction{.9}
+\renewcommand\topfraction{.9}
+\renewcommand\bottomfraction{.9}
+\renewcommand\textfraction{.1}
+
+\begin{document}
+\begin{CJK*}{GBK}{com}
+\CJKtilde \CJKindent
+
+%由于在lshort载入了babel宏包，所以对词汇的重定义只能在文档中，否则被过滤。
+\newcommand\prechaptername  {\CJKchar{181}{218}}
+\renewcommand\chaptername   {\CJKchar{"0D5}{"0C2}}
+\renewcommand\contentsname  {\CJKchar{"0C4}{"0BF}\CJKchar{"0C2}{"0BC}}
+\renewcommand\abstractname  {\CJKchar{"0D5}{"0AA}\CJKchar{"0D2}{"0AA}}
+\renewcommand\listfigurename{\CJKchar{"0CD}{"0BC}\CJKchar{"0D0}{"0CE}%
+                             \CJKchar{"0C1}{"0D0}\CJKchar{"0B1}{"0ED}}
+\renewcommand\listtablename {\CJKchar{"0B1}{"0ED}\CJKchar{"0B8}{"0F1}%
+                             \CJKchar{"0C1}{"0D0}\CJKchar{"0B1}{"0ED}}
+%\renewcommand\indexname     {\CJKchar{"0CB}{"0F7}\CJKchar{"0D2}{"0FD}}
+\renewcommand\indexname     {索引}
+\renewcommand\figurename    {\CJKchar{"0CD}{"0BC}}
+\renewcommand\tablename     {\CJKchar{"0B1}{"0ED}}
+%\renewcommand\bibname       {\CJKchar{"0B2}{"0CE}\CJKchar{"0BF}{"0BC}%
+%                             \CJKchar{"0CE}{"0C4}\CJKchar{"0CF}{"0D7}}
+\renewcommand\bibname       {参考文献}
+\frontmatter
+
+% 封面开始
+\thispagestyle{empty}
+
+\flushright {\huge \bfseries ~\TeX{}~手册}
+
+\noindent\rule[-1ex]{\textwidth}{5pt}
+
+\vspace{\stretch{1.5}}
+%\vspace{8ex}
+
+\begin{minipage}{\textwidth}
+{\bfseries 原版作者：DONALD E. KNUTH}\\[1.5ex]
+{\bfseries 中文翻译：刘林栋\\[1.5ex]
+　　　　　            孟祥令}
+\end{minipage}
+\pagebreak
+% 封面结束
+
+\chapter{前言}%
+\flushleft
+%GENTLE READER: This is a handbook about TEX, a new typesetting system
+%intended for the creation of beautiful books—and especially for books
+%that contain a lot of mathematics. By preparing a manuscript in TEX format,
+%you will be telling a computer exactly how the manuscript is to be transformed
+%into pages whose typographic quality is comparable to that of the world’s finest
+%printers; yet you won’t need to do much more work than would be involved if
+%you were simply typing the manuscript on an ordinary typewriter. In fact, your
+%total work will probably be significantly less, if you consider the time it ordinarily
+%takes to revise a typewritten manuscript, since computer text files are so easy
+%to change and to reprocess. (If such claims sound too good to be true, keep in
+%mind that they were made by TEX’s designer, on a day when TEX happened to
+%be working, so the statements may be biased; but read on anyway.)
+亲爱的读者：这是一本\TeX{}——一种排版系统——的参考手册，使用\TeX{}，
+可以制作版面漂亮的书籍，尤其适用于含有大量数学公式的书籍。
+\TeX{}使用脚本语言来控制排版的格式及质量，你可以使用任意的文本编辑器来制作这些脚本文件。
+
+%This manual is intended for people who have never used TEX before,
+%as well as for experienced TEX hackers. In other words, it’s supposed to be a
+%panacea that satisfies everybody, at the risk of satisfying nobody. Everything you
+%need to know about TEX is explained here somewhere, and so are a lot of things
+%that most users don’t care about. If you are preparing a simple manuscript, you
+%won’t need to learn much about TEX at all; on the other hand, some things that
+%go into the printing of technical books are inherently difficult, and if you wish to
+%achieve more complex effects you will want to penetrate some of TEX’s darker
+%corners. In order to make it possible for many types of users to read this manual
+%effectively, a special sign is used to designate material that is for wizards only:
+%When the symbol
+%appears at the beginning of a paragraph, it warns of a “dangerous bend” in
+%the train of thought; don’t read the paragraph unless you need to. Brave and
+%experienced drivers at the controls of TEX will gradually enter more and more
+%of these hazardous areas, but for most applications the details won’t matter.
+
+本手册的面向对象为以前从未用过\TeX{}的用户，你可以从本书中找到有关\TeX{}的所有知识。
+如果只是做简单应用的话，你要学的内容并不多，但本书中也有一些较复杂的知识，例如与打印相关的内容，
+这些知识可以使你能够更加深入地掌握\TeX{}。为了使本书适用于各种读者群，我使用了一些标志来标识特殊的内容。
+当如下标志：
+$$\vbox{\hbox{\dbend}\vskip 11pt}$$
+出现在一段的开始时，它表示一个额外的知识点，如果你不想成为专家的话就可以略过去，
+有经验的用户可以对此进行仔细研究。
+
+\end{CJK*}
+\end{document}

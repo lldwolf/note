@@ -1,0 +1,58 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+Defining the OLE DB interface</TITLE>
+</HEAD>
+<BODY>
+<A NAME="BABDEHGI"></A><h1>Defining the OLE DB interface</h1>
+<A NAME="TI484"></A><h4>Using the OLE DB Database Profile Setup</h4>
+<A NAME="TI485"></A><p>To define a connection through the OLE DB interface, you must
+create a database profile by supplying values for at least the basic
+connection parameters in the Database Profile Setup - OLE DB dialog
+box. You can then select this profile anytime to connect to your
+data in the development environment. </p>
+<A NAME="TI486"></A><p>For information on how to define a database profile, see <A HREF="connimp5.htm#X-ref289075262">"Using database profiles"</A>. </p>
+<A NAME="TI487"></A><h4>Specifying connection parameters</h4>
+<A NAME="TI488"></A><p>You must supply values for the Provider and Data Source connection parameters.
+Select a data provider from the list of installed data providers
+in the Provider dropdown listbox. The Data Source value varies depending
+on the type of data source connection you are making. For example: <A NAME="TI489"></A>
+<ul>
+<li class=fi>If you are using Microsoft's OLE DB Provider
+for ODBC to connect to the EAS Demo DB, you select MSDASQL as the
+Provider value and enter the actual ODBC data source name (in this
+case EAS Demo DB) as the Data Source value. </li>
+<li class=ds>If you are using Microsoft's OLE DB Provider
+for SQL Server, you select SQLOLEDB as the Provider value and enter
+the actual server name as the Data Source value. In the case of
+Microsoft SQL Server, you must also use the Extended Properties
+field to provide the database name (for example, Database=Pubs)
+since you can have multiple instances of a database. </li>
+<li class=ds>If you are using PB OLE DB Provider to connect to
+an Oracle8 database, you select PB Oracle8 OLE DB Provider as the
+Provider value and enter the actual data source name (which you
+should have previously defined using the MERANT OLE DB Administrator)
+as the Data Source value. 
+</li>
+</ul>
+</p>
+<A NAME="TI490"></A><h4>Using the Data Link API</h4>
+<A NAME="TI491"></A><p>The Data Link option allows you to access Microsoft's
+Data Link API, which allows you to define a file or use an existing
+file that contains your OLE DB connection information. A Data Link
+file is identified with the suffix .udl. </p>
+<A NAME="TI492"></A><p>To launch this option, select the File Name checkbox on the
+Connection tab and double-click on the button next to the File Name
+box. (You can also launch the Data Link API in the Database painter
+by double-clicking on the Manage Data Links utility included with
+the OLE DB interface in the list of Installed Database Interfaces.) </p>
+<A NAME="TI493"></A><p>For more information on using the Data Link
+API, see <A HREF="www.microsoft.com/data">Microsoft's Universal Data Access Web site</A>
+.</p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Using a Data Link file versus setting the DBParm parameters</span> <A NAME="TI494"></A>If you use a Data Link file to connect to your data source,
+all other settings you make in the OLE DB Database Profile Setup
+dialog box are ignored.</p>
+<A NAME="TI495"></A><A NAME="TI496"></A><p>This part describes how to set up and define database connections
+accessed through one of the native database interfaces.</p>
+

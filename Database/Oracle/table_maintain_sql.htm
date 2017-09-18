@@ -1,0 +1,254 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<title>对表的维护</title>
+<script language="javascript" src="css.js"></script>
+</head>
+
+<body>
+<h1>第N章 对表的维护</h1>
+<hr>
+<h2><a href="#create_table">N.1 创建表</a></h2>
+<h2><a href="#modify_table">N.2 修改表</a></h2>
+<h2><a href="#delete_table">N.3 删除表</a></h2>
+<h2><a href="#lock_table">N.4 表的锁定</a></h2>
+<h2><a href="#sys_table">N.100 表的各种参数对应的系统表或视图</a></h2>
+<hr>
+<h2><a name="create_table"></a>N.1 创建表</h2>
+<pre>--创建不带任何约束的表
+create table test_table(a int);
+
+--创建单主键约束的表
+create table test_table(a int primary key);
+
+--创建复合主键约束的表
+create table test_table(a int, b int, constraint pk_test_table primary key (a, b));
+
+--创建带外键约束的表
+create table table1(table1_id int primary key);
+create table table2(table2_id int primary key, table1_id int, 
+	constraint fk_table2_table1 foreign key (table1_id) references table1(table1_id));
+--或省略外键的数据类型
+create table table2(table2_id int primary key, table1_id, 
+	constraint fk_table2_table1 foreign key (table1_id) references table1(table1_id));
+	
+--创建非空约束
+create table test_table(a int not null);
+
+--创建默认值约束
+create table test_table(a int default 10);</pre>
+<p>各种约束集中于一列时，书写顺序为：</p>
+<p>默认值约束 - 非空约束 - 主键约束 </p>
+<p><img src="images/note.jpg" width="20" height="20">注意：表名最长为30个英文字母，汉字以2个英文字母计。</p>
+<h2><a name="modify_table"></a>N.2 修改表</h2>
+<h3>N.2.1 修改约束</h3>
+<h4>N.2.1.1 主键约束</h4>
+<pre>--创建测试表
+create table test_table(a int not null, b int not null);
+
+--创建主键约束
+alter table test_table add (primary key(a, b));
+
+--删除主键约束
+alter table test_table drop primary key cascade;
+
+--创建指定名称的主键约束
+alter table test_table add constraint pk_test_table primary key(a, b)
+
+--删除指定名称的主键约束
+alter table test_table drop constraint pk_test_table cascade</pre>
+<p>在删除主键约束时，cascade关键字的作用是删除对应该主键的外键引用。这样并不用担心会删除对应外键约束的列。例如：表table1的主键为table1_id，表table2有一个对应的外键为tabl1_id，删除table1的主键约束时，即使加了cascade，也不会删除table2的列table1_id，只是解除了外键约束而已。</p>
+<h4>N.2.1.2 外键约束</h4>
+<pre>--创建测试表
+create table table1(table1_id int primary key, table1_value varchar2(10));
+create table table2(table2_id int primary key, table1_id int not null, table2_value varchar2(10));
+
+--创建指定名称的外键约束
+alter table table2 add constraint fk_table2_table1 foreign key (table1_id) references table1(table1_id);
+
+--创建默认名称的外键约束
+alter table table2 add foreign key (table1_id) references table1(table1_id)</pre>
+<h3>N.2.2 修改列</h3>
+<h4>N.2.2.1 添加列</h4>
+<pre>alter table test_table add new_col int </pre>
+<h4>N.2.2.2 修改列 </h4>
+<pre>create table test_table(a int)
+--修改列的数据类型
+alter table test_table modify a varchar2(10)
+
+--修改数据类型时同时加上约束
+alter table test_table modify a varchar2(10) not null
+
+--修改列名
+alter table test_table rename column a to ab</pre>
+<h4>N.2.2.3 删除列</h4>
+<pre>alter table test_table drop column new_col </pre>
+<h2><a name="delete_table"></a>N.3 删除表</h2>
+<pre>--删除表
+drop table test_table</pre>
+<h2><a name="lock_table"></a>N.4 表的锁定 </h2>
+<p>锁定表的语法如下所示：</p>
+<PRE><B>LOCK TABLE</B> 
+[schema .] { table | view } 
+[ { <B>PARTITION</B> ( partition ) | <B>SUBPARTITION</B> ( subpartition ) }
+| @ dblink
+] 
+[, [schema .] { table | view } 
+ [ { <B>PARTITION</B> ( partition ) | <B>SUBPARTITION</B> ( subpartition ) }
+ | @ dblink
+ ]
+]...
+<B>IN</B> lockmode <B>MODE</B> [<B>NOWAIT</B>];</PRE>
+<p>锁定表以后，根据锁定模式限制其它会话对被锁定表的访问，即语法中的 lockmode 部分，可采用如下锁定模式：</p>
+<table width="80%" >
+  <tr>
+    <th width="30%">锁定模式</th>
+    <th width="70%">说明</th>
+  </tr>
+  <tr>
+    <td>ROW SHARE </td>
+    <td>行级锁，简称RS锁，允许其它 session 并发访问被锁定的表，但不允许其它 session 使用 exclusive 模式锁定整张表 </td>
+  </tr>
+  <tr>
+    <td>ROW EXCLUSIVE </td>
+    <td>行级排它锁，简称RX锁，与 ROW SHARE 相同，不过它还禁止其它用户使用 share 模式锁定整张表，当使用 insert/delete/update 操作时，自动生成该锁</td>
+  </tr>
+  <tr>
+    <td>SHARE UPDATE </td>
+    <td>与 ROW SHARE 相同，该关键字主要是为了与以前版本兼容</td>
+  </tr>
+  <tr>
+    <td>SHARE</td>
+    <td>共享锁，简称S锁，允许其它 session 使用 select for update 锁定记录，不允许 insert/update/delete</td>
+  </tr>
+  <tr>
+    <td>SHARE ROW EXCLUSIVE</td>
+    <td>共享级排它锁，简称SRX锁，与 SHARE 类似，区别在于 SHARE 为 非抢占式的，一个 session 进行 share 锁定时，其它用户可同时进行 share 锁定；而 SHARE ROW EXCLUSIVE 为抢占式的，只能有一个 session 能对某个表进行该模式锁定。 </td>
+  </tr>
+  <tr>
+    <td>EXCLUSIVE</td>
+    <td>排它锁，简称X锁，只允许其它session查询，不允许 lock/insert/update/delete 表中任意一行。锁定级别最高，并发度最小。</td>
+  </tr>
+</table>
+<p>NOWAIT 关键字用于表示如果锁定时与其它 session 发生资源冲突，则立刻返回，否则将等待，直到其它 session 将资源释放。 </p>
+<p>注意，只有锁定表的语句，没有解锁的语句，因为锁都是发生在事务期内，一旦提交，则锁自动解除。</p>
+<p>锁定表的命令如下所示:</p>
+<pre>--以独占方式锁定表
+lock table 表名 in exclusive mode;</pre>
+<p>如果有锁未能正常释放（死锁），使用如下方式释放锁</p>
+<pre>select * from v$locked_object</pre>
+<p>查看是什么进程引起的锁定，根据V$session查找对应的会话，执行</p>
+<pre>alter system kill session 'id,sid#'</pre>
+<p>或者使用Enterprise Manager Console，右侧树中例程里的锁节点。</p>
+<h2><a name="sys_table"></a>N.100 表的各种参数对应的系统表或视图</h2>
+<h3>N.100.1 常用操作 </h3>
+<table width="99%"  cellspacing="0" cellpadding="0">
+  <tr>
+    <th width="10%">参数</th>
+    <th width="25%">对应表/视图</th>
+    <th width="65%">说明</th>
+  </tr>
+  <tr>
+    <td>表名</td>
+    <td>sys.obj$(表)<br>
+      sys.all_all_tables(视图)<br>
+      sys.all_tables(视图)</td>
+    <td>查询SYSTEM用户的表TEST_TABLE<br>
+      1、使用sys.obj$<br>
+      <pre>select a.* from sys.obj$ a, sys.user$ b
+where a.owner# = b.user# and b.name = 'SYSTEM' and a.name = 'TEST_TABLE' and a.type# = 2</pre>
+2、使用sys.all_all_tables或sys.all_tables，用法相同<br>
+<pre>select * from sys.all_all_tables 
+where owner = 'SYSTEM' and table_name = 'TEST_TABLE'</pre></td>
+  </tr>
+  <tr>
+    <td>主键约束</td>
+    <td>sys.all_constraints(视图)<br>
+      sys.all_cons_columns(视图)</td>
+    <td>查询SYSTEM用户表TEST_TABLE的主键列<br>
+	<pre>select b.*
+from sys.all_constraints a, sys.all_cons_columns b
+where a.owner = 'SYSTEM' and a.table_name = 'TEST_TABLE' and a.constraint_type = 'P' 
+  and a.owner = b.owner </pre>
+  或使用系统表
+  <pre>select e.name column_name
+from sys.cdef$ a
+  inner join sys.obj$ b on b.obj# = a.obj# and b.name = 'COMPONENT'
+  inner join sys.user$ c on c.user# = b.owner# and c.name = 'DEMO'
+  inner join sys.ccol$ d on d.con# = a.con# and d.obj# = b.obj#
+  inner join sys.col$ e on e.obj# = b.obj# and e.col# = d.col#
+where a.type# = 2 </pre></td>
+  </tr>
+  <tr>
+    <td>默认值约束</td>
+    <td>sys.col$.default$<br>
+      sys.all_tab_cols.data_default<br>
+      sys.all_tab_columns.data_default</td>
+    <td>查询SYSTEM用户表TEST_TABLE的列&quot;A&quot;的默认值<br>
+      1、使用sys.col$
+<pre>select a.default$
+from sys.col$ a, sys.obj$ b, sys.user$ c
+where a.obj# = b.obj# and b.owner# = c.user# 
+  and c.name = 'SYSTEM' and b.name = 'TEST_TABLE' and a.name = 'A'</pre>
+
+      2、使用sys.all_tab_cols或sys.all_tabl_columns，用法相同
+<pre>select data_default
+from sys.all_tab_columns
+where owner = 'SYSTEM' and table_name = 'TEST_TABLE' and column_name = 'A'</pre></td>
+  </tr>
+  <tr>
+    <td>外键约束</td>
+    <td>sys.all_constraints(视图)<br>
+sys.all_cons_columns(视图)</td>
+    <td>设SYSTEM有用户表table1，table2，table2.table1_id为外键，引用table1.table1_id<br>
+      sys.constraints.constraint_type为“R”，sys.all_constraints.constraint_name为外键约束名，可根据该名在sys.all_cons_columns中查得对应的外键列，而sys.all_constraints.r_constraint_name为对应的引用列
+<pre>select b.column_name as 外键列, c.table_name as 引用表, c.column_name as 引用列
+from sys.all_constraints a, sys.all_cons_columns b, sys.all_cons_columns c
+where a.owner = 'REPORT_SYS' and a.table_name = 'TABLE2' and constraint_type = 'R'
+  and a.owner = b.owner and a.owner = c.owner
+  and a.constraint_name = b.constraint_name and a.r_constraint_name = c.constraint_name
+  and c.table_name = '表名'</pre>
+  2、使用系统表
+  <pre>select a.name fk_name, 
+       d.name src_table_name, f.name src_column_name,
+       i.name obj_table_name, k.name obj_column_name
+from sys.con$ a
+  inner join sys.user$ b on b.user# = a.owner#
+  inner join sys.cdef$ c on c.con# = a.con#
+  inner join sys.obj$ d on d.obj# = c.obj#
+  inner join sys.ccol$ e on e.con# = a.con# and e.obj# = d.obj#
+  inner join sys.col$ f on f.obj# = d.obj# and f.col# = e.col#
+  inner join sys.con$ g on g.con# = c.rcon#
+  inner join sys.cdef$ h on h.con# = g.con#
+  inner join sys.obj$ i on i.obj# = h.obj#
+  inner join sys.ccol$ j on j.con# = g.con# and j.obj# = i.obj#
+  inner join sys.col$ k on k.obj# = i.obj# and k.col# = j.col#
+where b.name = '用户名' and c.type# = 4 and d.name = '表名'
+order by src_table_name, src_column_name</pre></td>
+  </tr>
+  <tr>
+    <td>所有列</td>
+    <td>sys.col$</td>
+    <td><pre>select c.*
+from sys.obj$ a, sys.user$ b, sys.col$ c
+where a.owner# = b.user# and b.name = 'DEMO' and a.type# = 2
+  and c.obj# = a.obj# and a.name = 'COMPONENT'
+order by c.col#</pre></td>
+  </tr>
+</table>
+<p>有关一些列的一些常用属性，请参考“<a href="sys_table_analysis.htm#sys.col">sys.col$分析</a>”</p>
+<h3>N.100.2 有关主键的操作</h3>
+<h4>N.100.2.1 查找以某字段为主键的表</h4>
+<pre>select distinct a.table_name
+from all_constraints a
+where a.owner = 'DEMO' and a.constraint_type = 'P'
+  and a.constraint_name in (select constraint_name from all_cons_columns where owner = a.owner and column_name in ('UNIT_ID'))
+</pre>
+<p>&nbsp; </p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<script language="javascript" src="index.js"></script>
+</body>
+</html>

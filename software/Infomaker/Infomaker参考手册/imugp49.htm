@@ -1,0 +1,105 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+Defining queries </TITLE>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312"></HEAD>
+<BODY>
+<A NAME="CFHECFDH"></A>
+<h1>定义查询</h1>
+<A NAME="TI1629"></A>
+<p>一个查询就是一条SQL SELECT语句，在查询Painter中生成，保存时设定其名称，然后就可以重复使用了。</p>
+<A NAME="TI1630"></A>
+<p>一堆废话，有耐心的就帮我翻一下。Queries save time, because you specify all the data requirements
+just once. For example, you can specify the columns, which rows
+to retrieve, and the sorting order in a query. Whenever you want
+to create a report using that data, simply specify the query
+as the data source.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> 定义查询的步骤： </p>
+<ol>
+  <li class=fi>
+菜单上的 File&gt;New。<br>
+<br></li>
+<li class=ds>
+在对话框中选Database面板。<br>
+<br></li>
+<li class=ds> 选择Query图标并点OK。
+<br>
+<br></li>
+<li class=ds>
+在选择表的对话框选择你需要使用的表（注：最画蛇添足的功能，真不如出一个SQL文本编辑器），并点Open。<br>
+<br>
+你可以选择列、定义排序方式、分组规则、计算列等等。<br>
+<br></li></ol>
+<br><A NAME="TI1631"></A>
+<p>有关定义SELECT语句的内容，请参考<A HREF="imugp47.htm#CFHDDDHF">"使用 SQL Select语句"</A>.</p>
+<A NAME="TI1632"></A>
+<h2>预览查询结果</h2>
+<A NAME="TI1633"></A>
+<p>创建查询时，你可以进行预览以确定返回结果是否正确。</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> 预览查询的步骤 </p>
+<ol>
+  <li class=fi>
+在菜单中选择 Design&gt;Preview。<br>
+<br>
+InfoMaker以表格形式返回查询结果集。<br>
+<br></li>
+<li class=ds>
+你可以在数据库Painter中处理返回的数据。<br>
+<br>
+包括对数据进行过滤或排序，但不能插入或删除数据。<br>
+<br>
+有关对数据的处理，请参考<A HREF="imugp31.htm#BFCDFDFD">第三章, "管理数据库"</A>.<br>
+<br></li>
+<li class=ds>
+看完后，按Preview按钮返回查询Painter。<br>
+<br></li></ol>
+<br><A NAME="TI1634"></A>
+<h2>保存查询</h2>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> 步骤如下： </p>
+<ol>
+<li class=fi>
+选择菜单项 File&gt;Save Query。<br>
+<br>
+If you have previously saved the query, InfoMaker saves the
+new version and returns you to the Query painter.<br><br>
+If you have not previously saved the query, InfoMaker displays
+the Save Query dialog box.<br><br></li>
+<li class=ds>
+给查询起个名字(参考<A HREF="imugp49.htm#BFCBDAHA">"查询命名"</A>).<br>
+<br></li>
+<li class=ds>
+（可选）输入对查询的注释。<br>
+<br>
+These comments display in the Library painter. It is a good
+idea to use comments to remind yourself and others of the purpose
+of the query.<br><br></li>
+<li class=ds>
+按OK.<br>
+<br></li></ol>
+<br><A NAME="BFCBDAHA"></A>
+<h4>查询命名</h4>
+<A NAME="TI1635"></A>
+<p>你爱咋起就咋起。The query name can be any valid InfoMaker identifier up to
+40 characters. When you name queries, use a unique
+name to identify each one. One approach is a 2-part name: a standard
+prefix that identifies the object as a query (such as q_)
+and a unique suffix. For example, you might
+name a query that displays employee data q_emp_data.</p>
+<A NAME="TI1636"></A>
+<p>有关标识符的信息，请参考<i></i>
+<A HREF="imugp140.htm#CAIBEHFJX">第19章, "标识符"</A>.</p>
+<A NAME="TI1637"></A>
+<h2>修改查询</h2>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> 步骤如下： </p>
+<ol>
+  <li class=fi>
+选择菜单项 File&gt;Open。<br>
+<br></li>
+<li class=ds>
+选择要修改的查询。<br>
+<br></li>
+<li class=ds> 改！
+<br>
+<br></li></ol>
+<br>

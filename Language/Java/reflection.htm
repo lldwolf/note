@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>动态加载对象</title>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+<p id="title">动态加载对象</p>
+
+<h1>N.1 Class 对象 </h1>
+<p>下面的代码展示了获取Class对象的方法:</p>
+<pre class="code" data-type="java">Class c = o.getClass();		//从现有对象获取
+c = VOID.TYPE;		//特殊的 'non-return-value' 对象
+c = Byte.TYPE;		//表示一个字节，用于取得 Primitive 类型
+c = Integer.TYPE;
+
+c = int.class;		//与Integer.TYPE相同
+c = String.class;		//与"".getClass()相同
+c = byte[].class;		//字节数组
+c = Class[][].class;
+
+c = Class.forName("java.util.ArrayList"); // 使用 forName 方法
+</pre>
+<h1>N.2 Relection on a Class</h1>
+<p>下例展示了使用 Class 对象进行 Reflection 操作</p>
+<pre class="code" data-type="java">import java.lang.reflect.*;
+
+Object o;
+Class c = o.getClass();
+
+//如果是数组, 取得其基类型
+while(c.isArray())
+	c = c.getComponentType();
+
+//打印继承关系
+if(!c.isPrimitive())
+{
+	for(Class s = c; s != null; s = s.getSuperclass())
+		System.out.println(s.getName() + " extends ";
+}
+
+//创建一个同类型对象, 要求有一个不带参数的构造函数
+Object newobj = null;
+try
+{
+	newobj = c.newInstance();
+}
+catch(Exception e)
+{
+	...
+}
+
+//如果类中有名为setText的方法, 传递一个字符串参数, 则调用
+try
+{
+	Method m = c.getMethod("setText", new Class[]{String.class});
+	m.invode(newobj, new Object[] { "My Label" });
+}
+catch(Exception e)
+{
+	...
+}</pre>
+<h1>  N.3 动态加载对象</h1>
+<p>Class 对象提供了动态创建对象的简单方法，更复杂的控制方法，需使用java.lang.ClassLoader对象，或使用java.net.URLClassLoader。这是很有用的技术，程序可以根据配置文件动态地加载对象，像现在流行的一些开源项目，如struts、 spring、Hibernate等，均以该技术为基础。</p>
+<pre class="code" data-type="java">String classname = config.getProperty("filterclass",		//the property name
+			"com.lld.test.Default");		//a default
+try
+{
+	Class c = Class.forName(classname);
+	Object o = c.newInstance();
+}
+catch(Exception e)
+{
+	...
+}</pre>
+<p>上面的代码中，要创建的对象必须在 class path 中。否则，需要使用下面的代码：</p>
+<pre class="code" data-type="java">import java.net.*;
+
+String class_dir = config.getProperty("filterDirectory");
+try
+{
+	ClassLoader loader = new URLClassLoader(new URL[]{ new URL{classdir} });
+	Class c = loader.loadClass(classname);;
+}
+catch(Exception e)
+{
+	...
+}
+</pre>
+<h1>N.100 网络教程</h1>
+<p><a href="resource/JAVA反射.mht">JAVA反射</a></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+
+</body>
+</html>

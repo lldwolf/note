@@ -1,0 +1,1208 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+	<title>常用功能及命令</title>
+	<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+<body>
+	<p id="title">常用功能及命令</p>
+
+	<h1>文件/目录操作</h1>
+	<h2>文件/目录操作</h2>
+	<table style="width: 90%">
+
+		<tr>
+			<th>Command</th>
+			<th>Desc</th>
+			<th>Sample</th>
+		</tr>
+		<tr>
+			<td>cd
+			</td>
+			<td>设定当前操作目录
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>cp
+			</td>
+			<td>复制文件/目录
+			</td>
+			<td>
+				<ul>
+					<li>cp a a1</li>
+					<li>cp -r lld lld1 (递归复制目录)</li>
+				</ul>
+			</td>
+		</tr>
+		<tr>
+			<td>find</td>
+			<td>查找文件</td>
+			<td>
+                <p><a href="#find">具体点这里</a></p>
+			</td>
+		</tr>
+		<tr>
+			<td>ln</td>
+			<td>创建链接文件 (link file)</td>
+			<td>
+				<pre class="code" data-type="sh"># 创建指向 /tmp/test.ksh 的链接文件 /home/ll52957/test
+ln -s /tmp/test.ksh /home/ll52957/test</pre>
+			</td>
+		</tr>
+		<tr>
+			<td>ls
+			</td>
+			<td>列出指定目录的文件
+			</td>
+			<td>
+                <pre class="code" data-type="sh"># 列出 lld 目录下的所有文件
+ls lld
+					
+# 显示详细信息，并按最后更改时间排序
+ls -lrt lld*
+					
+# 显示目录本身的信息，而不是列出目录下的文件(防止列出子目录下的文件)
+ls -d lld* 
+					
+# 将结果按字母顺序排列
+ls -n lld* 
+					
+# 将结果按逗号分隔
+ls -m lld* 
+					
+# 对于目录显示 / 标识
+ls -F lld* 
+                    
+# bash, 忽略大小写
+shopt -s nocaseglob 
+ls -l lld*
+                    
+# 以易读方式显示文件大小
+ls -h lld*
+					
+# 将结果显示为1列
+ls -1 lld* </pre>
+				<ul>
+				</ul>
+			</td>
+		</tr>
+		<tr>
+			<td>mkdir
+			</td>
+			<td>创建目录
+			</td>
+			<td>
+				<pre class="code" data-type="sh">mkdir lld
+
+# 创建目录及所需的父目录
+mkdir -p /tmp/lld/test</pre>
+			</td>
+		</tr>
+		<tr>
+			<td>mv
+			</td>
+			<td>移动/重命名文件/目录
+			</td>
+			<td>mv lld lld1
+			</td>
+		</tr>
+		<tr>
+			<td>rm
+			</td>
+			<td>删除文件/目录
+			</td>
+			<td>
+				<ul>
+					<li>rm a</li>
+					<li>rm -rf lld (递归强制删除目录)</li>
+				</ul>
+			</td>
+		</tr>
+		<tr>
+			<td>scp</td>
+			<td>远程复制</td>
+			<td>
+				<pre class="code" data-type="sh"># 复制 sonar*.gz 到远程的 /tmp 目录
+scp sonar*.gz ll52957@cfnyps2d.nam.nsroot.net:/tmp</pre>
+			</td>
+		</tr>
+
+	</table>
+    <a id="find"></a>
+    <h3>find 命令</h3>
+    				<p>常用参数</p>
+				<ol>
+					<li>-name "文件名"</li>
+					<li>-type d/f/l
+							<ol>
+								<li>d: 目录</li>
+								<li>f: 普通文件</li>
+								<li>l: link file</li>
+                                <li>b: 块设备文件</li>
+                                <li>c: 字符设备文件。</li>
+                                <li>p: 管道文件。</li>
+							</ol>
+					</li>
+					<li>-mtime -n +n: 按照文件的更改时间来查找文件， - n表示文件更改时间距现在n天以内，+ n表示文件更改时间距现在n天以前</li>
+					<li>-size n：[c]: 查找文件长度为n块的文件，带有c时表示文件长度以字节计</li>
+					<li>-depth: 在查找文件时，首先查找当前目录中的文件，然后再在其子目录中查找。</li>
+					<li>-maxdepth: 设定最大查找深度，设为1则仅在当前目录查找</li>
+				</ol>
+				<pre class="code" data-type="sh"># 在当前目录及子目录下查找 *.txt
+find . -name "*.txt"
+
+# 仅在当前目录下查找 *.txt 并打印完整信息
+find . -name "*.txt"  -maxdepth 1 | xargs ls -l
+                    
+# 在 logs 目录下查找 5 天内的文件
+find logs -type f -mtime -5
+
+# 在 logs 目录下查找大于 1M 的文件
+find logs -type f -size +1000000c
+
+# 在当前目录下查找除目录以外的所有类型的文件
+find . ! -type d
+
+# 在 /usr/my-logs 目录下查找所有名字为 logs， 类型为 link 的文件，并删除找到的所有文件
+find /usr/my-logs -type l -name logs | xargs rm
+
+# 在当前目录下查找所有的 *.log 文件，然后把结果保存到/tmp/log-files.txt 文件中
+find . -name "*.log" | xargs echo > /tmp/log-files.txt
+
+# 在 /usr/my-logs 目录下查找所有名字为 logs， 类型为 link 的文件，并复制到 /tmp/ 目录
+find /usr/my-logs -type l -name logs -exec cp {} /tmp/ \;
+
+# 在 /usr/my-logs 目录下查找所有名字为 logs， 类型为 link 的文件，并复制到 /tmp/ 目录
+# 使用-i参数默认的前面输出用{}代替
+find /usr/my-logs -type l -name logs | xargs -i cp {} /tmp/
+
+# 如果不相使用默认的 {} 来指示参数可以使用 -I 参数，如下例使用 [] 来代替 {}
+find /usr/my-logs -type l -name logs | xargs -I [] cp [] /tmp/
+
+# xargs 使用 -p 参数可以手动确认每条命令是否执行. y 执行，n 不执行
+find /usr/my-logs -type l -name logs | xargs -p -i cp {} /tmp/
+
+# find后执行xargs提示xargs: argument line too long解决方法
+# -l1是一次处理一个；-t是处理之前打印出命令
+find . -type f -atime +0 -print0 | xargs -0 -l1 -t rm -f
+</pre>
+    <p class="note">说明: 在使用 find命令的-exec选项处理匹配到的文件时， find命令将所有匹配到的文件一起传递给exec执行。但有些系统对能够传递给exec的命令长度有限制，这样在find命令运行几分钟之后，就会出现溢出错误。错误信息通常是“参数列太长”或“参数列溢出”。这就是xargs命令的用处所在，特别是与find命令一起使用。  
+        <br /><br />
+find命令把匹配到的文件传递给xargs命令，而xargs命令每次只获取一部分文件而不是全部，不像-exec选项那样。这样它可以先处理最先获取的一部分文件，然后是下一批，并如此继续下去。  
+        <br /><br />
+在有些系统中，使用-exec选项会为处理每一个匹配到的文件而发起一个相应的进程，并非将匹配到的文件全部作为参数一次执行；这样在有些情况下就会出现进程过多，系统性能下降的问题，因而效率不高； 而使用xargs命令则只有一个进程。另外，在使用xargs命令时，究竟是一次获取所有的参数，还是分批取得参数，以及每一次获取参数的数目都会根据该命令的选项及系统内核中相应的可调参数来确定。</p>
+
+	<h2>文件内容操作</h2>
+	<table style="width: 90%">
+		<tr>
+			<th>Command</th>
+			<th>Desc</th>
+			<th>Sample</th>
+		</tr>
+		<tr>
+			<td>cat</td>
+			<td>查看文件内容</td>
+			<td>
+				<pre class="code" data-type="sh"># 查看文件内容
+$ cat [file_name]
+
+# 显示文件行号
+$ cat -n [file_name]</pre>
+			</td>
+		</tr>
+        <tr>
+            <td>more/less</td>
+            <td>分屏查看</td>
+            <td>more file_name</td>
+        </tr>
+        <tr>
+            <td>nl</td>
+            <td>带行号查看文件内容</td>
+            <td>nl file_name</td>
+        </tr>
+		<tr>
+			<td>grep</td>
+			<td>检索文件内容</td>
+			<td>
+				<p>在文件中查找字符串</p>
+				<pre class="code" data-type="sh">grep "searching string" *.log</pre>
+				<p>也可与其它命令结合，如列出所有包含某字符串的文件</p>
+				<pre class="code" data-type="sh">ls *.log | grep "searching string"</pre>
+				<p>也可以只显示关心的搜索字符串</p>
+				<pre class="code" data-type="sh">cat *.log* | grep "Retrieving deal for user" | grep "dealId = 41374" | grep "userId = RB51088"</pre>
+
+				<p>-c 参数用于打印查找到的个数</p>
+				<p>-v 参数用于查找不符合给定字符串的记录</p>
+			</td>
+		</tr>
+		<tr>
+			<td>head/tail</td>
+			<td>查看文件头/尾内容</td>
+			<td>
+				<pre class="code" data-type="sh"># 查看文件前5行内容
+head -5 [file_name]
+
+# 查看文件最后5行内容
+tail -5 [file_name]
+
+# 查看文件从第2行到结束内容
+tail -n +2 [file_name]</pre>
+			</td>
+		</tr>
+	</table>
+	<h1>工具命令</h1>
+	<table style="width: 90%">
+
+		<tr>
+			<th>Command</th>
+			<th>Desc</th>
+			<th>Sample</th>
+		</tr>
+		<tr>
+			<td>date
+			</td>
+			<td>日期/时间
+			</td>
+			<td>
+				<ul>
+					<li>date (显示当前时间)</li>
+					<li>date +%Y/%m/%d (以 yyyy/mm/dd 模式显示日期)</li>
+					<li>date +%H:%M (以 HH:mm 模式显示时间)</li>
+					<li>date +"%Y-%m-%d %H:%M:%S" (中间有空格)</li>
+				</ul>
+			</td>
+		</tr>
+		<tr>
+			<td>cal
+			</td>
+			<td>显示日历
+			</td>
+			<td>
+				<ul>
+					<li>cal (显示当前月日历)</li>
+					<li>cal 2013 (显示 2013 年日历)</li>
+					<li>cal 10 2013 (显示 2013 年 10 月日历)</li>
+				</ul>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<a href="bc_cmd.htm">bc</a>
+			</td>
+			<td>计算器
+			</td>
+			<td>支持如下操作符和函数：
+					<ul>
+						<li>+</li>
+						<li>-</li>
+						<li>*</li>
+						<li>/</li>
+						<li>^: 指数</li>
+						<li>%: 余数</li>
+						<li>sqrt(10.000): 求10的平方根, 结果精度为3</li>
+						<li>scale=3: 设定结果的精度为3</li>
+						<li>quit: 退出</li>
+					</ul>
+			</td>
+		</tr>
+		<tr>
+			<td>gzip</td>
+			<td>压缩/解压缩</td>
+			<td>
+				<pre class="code" data-type="sh">#压缩
+gzip filename
+
+#解压缩
+gzip -d filename</pre>
+				使用 gzip 解压后原先的文件会被删掉
+			</td>
+		</tr>
+		<tr>
+			<td><a href="#tar">tar</a></td>
+			<td>压缩</td>
+			<td>
+				<pre class="code" data-type="sh"># 打 tar 包
+tar -cvf compressFileName.tar folderToCompress
+
+# 解 tar 包
+tar -xvf /opt/soft/test/log.tar
+
+# 将一个目录压缩为 gzip 格式
+tar -zcvf compressFileName.tar.gz folderToCompress
+
+# 解压缩
+tar -zxvf /opt/soft/test/log.tar.gz</pre>
+			</td>
+		</tr>
+		<tr>
+			<td>unzip</td>
+			<td>解压缩 zip 文件</td>
+			<td>
+				<pre class="code" data-type="sh">unzip file.zip -d destination_folder</pre>
+			</td>
+		</tr>
+		<tr>
+			<td>mailx</td>
+			<td>邮件</td>
+			<td>
+				<p>发送简单邮件</p>
+				<pre class="code" data-type="sh">echo "something" | mailx -s "subject" recipient@somewhere.com</pre>
+				<p>多行内容</p>
+				<pre class="code" data-type="sh">mailx -s "subject" lfong.liu@citi.com &lt;&lt;XX
+first line
+second line
+XX</pre>
+				<p>发送附件</p>
+				<pre class="code" data-type="sh">uuencode file file | mailx -s "subject" recipient@somewhere.com</pre>
+				<p>发送附件和内容</p>
+				<pre class="code" data-type="sh">(echo "something\n" ; uuencode file file) | mailx -s "subject" recipient@somewhere.com</pre>
+			</td>
+		</tr>
+		<tr>
+			<td>zip</td>
+			<td>压缩</td>
+			<td>
+				<pre class="code" data-type="sh"># 将 current 目录下的所有文件压缩至 /tmp/1.zip
+zip -r /tmp/1.zip current
+
+# 将所有的 /tmp/*.txt 压缩至 /tmp/1.zip
+zip -r /tmp/1.zip -i /tmp/*.txt
+				</pre>
+			</td>
+		</tr>
+        <tr>
+            <td>wc</td>
+            <td>文本统计，按顺序显示行数，字数，字节数</td>
+            <td>
+                <pre class="code" data-type="sh"># 显示行数，字数，字节数，文件名, 并在最后显示统计结果
+wc *.log
+
+# 只显示行数和文件名
+wc -l *.log
+
+# 只显示行数
+wc -l < 1.log
+
+# 显示指定文本行数，字数，字节数
+cat [file] | wc</pre>
+            </td>
+        </tr>
+	</table>
+	<h1>权限命令</h1>
+	<p>由于复制（cp）会复制执行者的属性与权限，因此在复制文件给组外成员时，需修改一下拥有者和群组。</p>
+	<table style="width: 90%">
+
+		<tr>
+			<th>Command</th>
+			<th>Desc</th>
+			<th>Sample</th>
+		</tr>
+		<tr>
+			<td>chgrp
+			</td>
+			<td>改变文件所属群组
+			</td>
+			<td>
+				<p>要改变的组名必须在 /etc/group 文件内</p>
+				<p>示例</p>
+				<ul>
+					<li>chgrp users install.log (将 install.log 的群组改为 users)</li>
+					<li>chgrp -R users lld (将目录 lld 及它所有的子目录的群组改为 users)</li>
+				</ul>
+			</td>
+		</tr>
+		<tr>
+			<td>chown
+			</td>
+			<td>改变文件所有者
+			</td>
+			<td>
+				<p>要改变的所有者必须在 /etc/passwd 文件内</p>
+				<ul>
+					<li>chown bin install.log (将 install.log 的拥有者改为 bin 这个账号)</li>
+					<li>chown -R bin lld (将 lld 目录及它所有子目录的拥有者改为 bin 这个账号)</li>
+					<li>chown root:root install.log (将 install.log 的拥有者回为 root，其中冒号用于分开拥用者账号和群组)</li>
+					<li>chown .sshd install.log (将 install.log 的群组改为 sshd，即可模拟 chgrp 的功能)</li>
+				</ul>
+			</td>
+		</tr>
+		<tr>
+			<td>chmod
+			</td>
+			<td>改变文件权限
+			</td>
+			<td><pre class="code" data-type="sh"># 改变某目录及其所有子目录的权限对所有用户开放
+chmod 777 -R [folder_name]</pre></td>
+		</tr>
+
+	</table>
+	<h1>系统命令</h1>
+	<h2>查看内核及版本</h2>
+	<pre class="code" data-type="sh"># 查看内核版本
+<span style="background-color:aquamarine">cat /proc/version</span>
+Linux version 2.6.18-348.18.1.el5 (mockbuild@x86-022.build.eng.bos.redhat.com) (gcc version 4.1.2 20080704 (Red Hat 4.1.2-54)) #1 SMP Fri Sep 6 12:37:18 EDT 2013
+		
+<span style="background-color:aquamarine">uname -a</span>
+Linux vm-9e88-17b6 2.6.18-348.18.1.el5 #1 SMP Fri Sep 6 12:37:18 EDT 2013 x86_64 x86_64 x86_64 GNU/Linux
+
+<span style="background-color:aquamarine">uname -r</span>
+2.6.18-348.18.1.el5
+
+# 查看linux版本
+<span style="background-color:aquamarine">lsb_release -a</span>
+LSB Version:    :core-4.0-amd64:core-4.0-noarch:graphics-4.0-amd64:graphics-4.0-noarch:printing-4.0-amd64:printing-4.0-noarch
+Distributor ID: RedHatEnterpriseServer
+Description:    Red Hat Enterprise Linux Server release 5.9 (Tikanga)
+Release:        5.9
+Codename:       Tikanga
+
+# 针对 Redhat Linux
+<span style="background-color:aquamarine">cat /etc/redhat-release</span>
+Red Hat Enterprise Linux Server release 5.9 (Tikanga)
+
+<span style="background-color:aquamarine">rpm -q redhat-release</span>
+redhat-release-5Server-5.9.0.2
+	</pre>
+	<h2>磁盘占用</h2>
+	<table style="width: 90%">
+		<tr>
+			<th style="width: 150px">命令</th>
+			<th>说明</th>
+		</tr>
+		<tr>
+			<td>du</td>
+			<td>
+				<p>列出目录的大小</p>
+				<pre class="code" data-type="sh">du -sh <em>dir_path</em> #以 G 为单位统计指定目录的大小
+du -sk * | sort -n #以 K 为单位统计当前目录下所有子目录的大小并进行排序</pre>
+			</td>
+		</tr>
+		<tr>
+			<td>df</td>
+			<td>
+				<p>查询磁盘占用情况</p>
+				<pre class="code" data-type="sh">df -h #以 G 为单位进行统计 (Solaris)
+df -g #以 G 为单位进行统计 (Linux)
+df -k #以 K 为单位进行统计</pre>
+				<p>查看 mount folder 信息</p>
+				<pre class="code" data-type="sh">$ df -P -T /home/ll52957
+<span style="color:green; background-color:lightgrey">Filesystem                                                  Type 1024-blocks      Used Available Capacity Mounted on
+nycvnasicg0003.nam.nsroot.net:/vol/nycicgv0018/data/ll52957 nfs    607783872 534524544  73259328      88% /home/ll52957</span>
+
+				</pre>
+			</td>
+		</tr>
+	</table>
+	<h2>查看系统参数</h2>
+	<table style="width: 90%">
+		<tr>
+			<th style="width: 150px">命令</th>
+			<th>说明</th>
+		</tr>
+		<tr>
+			<td>最大命令行长度</td>
+			<td><pre class="code" data-type="sh">
+getconf ARG_MAX
+
+# 扣掉环境变量实际可输入的最大长度
+echo $(( $(getconf ARG_MAX) - $(env | wc -c) ))</pre></td>
+			
+		</tr>
+	</table>
+	<h2>进程控制</h2>
+	<table style="width: 90%">
+		<tr>
+			<th style="width: 150px">命令</th>
+			<th>说明</th>
+		</tr>
+		<tr>
+			<td>ps</td>
+			<td>
+				<pre class="code" data-type="sh">#显示所有包含 gollf 的进程信息，[g]ollf 可以滤掉命令本身所在进程
+ps -ef | grep [g]ollf</pre>
+			</td>
+		</tr>
+		<tr>
+			<td>kill</td>
+			<td>
+				<pre class="code" data-type="sh">#强制结束 pid 为 15433 的进程
+kill -9 15433</pre>
+			</td>
+		</tr>
+		<tr>
+			<td>top</td>
+			<td>动态显示所有活动的进程</td>
+		</tr>
+	</table>
+	<p>Linux中的ps命令是Process Status的缩写。ps命令用来列出系统中当前运行的那些进程。ps命令列出的是当前那些进程的快照，就是执行ps命令的那个时刻的那些进程，如果想要动态的显示进程信息，就可以使用top命令。</p>
+	<p>要对进程进行监测和控制，首先必须要了解当前进程的情况，也就是需要查看当前进程，而 ps 命令就是最基本同时也是非常强大的进程查看命令。使用该命令可以确定有哪些进程正在运行和运行的状态、进程是否结束、进程有没有僵死、哪些进程占用了过多的资源等等。总之大部分信息都是可以通过执行该命令得到的。</p>
+	<p>ps 为我们提供了进程的一次性的查看，它所提供的查看结果并不动态连续的；如果想对进程时间监控，应该用 top 工具。</p>
+	<p>kill 命令用于杀死进程。</p>
+	<p>linux上进程有5种状态: </p>
+	<ol>
+		<li>运行(正在运行或在运行队列中等待) </li>
+		<li>中断(休眠中, 受阻, 在等待某个条件的形成或接受到信号) </li>
+		<li>不可中断(收到信号不唤醒和不可运行, 进程必须等待直到有中断发生) </li>
+		<li>僵死(进程已终止, 但进程描述符存在, 直到父进程调用wait4()系统调用后释放) </li>
+		<li>停止(进程收到SIGSTOP, SIGSTP, SIGTIN, SIGTOU信号后停止运行运行) </li>
+	</ol>
+	<p>ps工具标识进程的5种状态码: </p>
+	<ul>
+		<li>D 不可中断 uninterruptible sleep (usually IO) </li>
+		<li>R 运行 runnable (on run queue) </li>
+		<li>S 中断 sleeping </li>
+		<li>T 停止 traced or stopped </li>
+		<li>Z 僵死 a defunct (”zombie”) process </li>
+	</ul>
+	<h4>命令参数</h4>
+	<ul>
+		<li>a  显示所有进程</li>
+		<li>-a 显示同一终端下的所有程序</li>
+		<li>-A 显示所有进程</li>
+		<li>c  显示进程的真实名称</li>
+		<li>-N 反向选择</li>
+		<li>-e 等于“-A”</li>
+		<li>e  显示环境变量</li>
+		<li>f  显示程序间的关系</li>
+		<li>-H 显示树状结构</li>
+		<li>r  显示当前终端的进程</li>
+		<li>T  显示当前终端的所有程序</li>
+		<li>u  指定用户的所有进程</li>
+		<li>-au 显示较详细的资讯</li>
+		<li>-aux 显示所有包含其他使用者的行程 </li>
+		<li>-C&lt;命令&gt; 列出指定命令的状况</li>
+		<li>--lines&lt;行数&gt; 每页显示的行数</li>
+		<li>--width&lt;字符数&gt; 每页显示的字符数</li>
+		<li>--help 显示帮助信息</li>
+		<li>--version 显示版本显示</li>
+	</ul>
+	<h4>实例</h4>
+	<pre class="code" data-type="sh"># 显示所有进程信息
+<span style="background-color:aquamarine">ps -A</span>
+
+# 显示指定用户信息
+<span style="background-color:aquamarine">ps -u root</span>
+
+# 显示所有进程信息，连同命令行
+<span style="background-color:aquamarine">ps -ef</span>
+
+# ps 与grep 常用组合用法，查找特定进程
+<span style="background-color:aquamarine">ps -ef|grep ssh</span>
+
+# 将目前属于您自己这次登入的 PID 与相关信息列示出来
+<span style="background-color:aquamarine">ps -l</span>
+
+F S   UID   PID  PPID  C PRI  NI ADDR SZ WCHAN  TTY          TIME CMD
+4 S     0 17398 17394  0  75   0 - 16543 wait   pts/0    00:00:00 bash
+4 R     0 17469 17398  0  77   0 - 15877 -      pts/0    00:00:00 ps
+
+各相关信息的意义：
+F 代表这个程序的旗标 (flag)， 4 代表使用者为 super user
+S 代表这个程序的状态 (STAT)，关于各 STAT 的意义将在内文介绍
+UID 程序被该 UID 所拥有
+PID 就是这个程序的 ID ！
+PPID 则是其上级父程序的ID
+C CPU 使用的资源百分比
+PRI 这个是 Priority (优先执行序) 的缩写，详细后面介绍
+NI 这个是 Nice 值，在下一小节我们会持续介绍
+ADDR 这个是 kernel function，指出该程序在内存的那个部分。如果是个 running的程序，一般就是 "-"
+SZ 使用掉的内存大小
+WCHAN 目前这个程序是否正在运作当中，若为 - 表示正在运作
+TTY 登入者的终端机位置
+TIME 使用掉的 CPU 时间。
+CMD 所下达的指令为何
+在预设的情况下， ps 仅会列出与目前所在的 bash shell 有关的 PID 而已，所以， 当我使用 ps -l 的时候，只有三个 PID。
+
+# 列出目前所有的正在内存当中的程序
+<span style="background-color:aquamarine">ps aux</span>
+
+USER       PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+root         1  0.0  0.0  10368   676 ?        Ss   Nov02   0:00 init [3]                  
+root         2  0.0  0.0      0     0 ?        S<   Nov02   0:01 [migration/0]
+root         3  0.0  0.0      0     0 ?        SN   Nov02   0:00 [ksoftirqd/0]
+root         4  0.0  0.0      0     0 ?        S<   Nov02   0:01 [migration/1]
+root         5  0.0  0.0      0     0 ?        SN   Nov02   0:00 [ksoftirqd/1]
+root         6  0.0  0.0      0     0 ?        S<   Nov02  29:57 [events/0]
+root         7  0.0  0.0      0     0 ?        S<   Nov02   0:00 [events/1]
+root         8  0.0  0.0      0     0 ?        S<   Nov02   0:00 [khelper]
+root        49  0.0  0.0      0     0 ?        S<   Nov02   0:00 [kthread]
+root        54  0.0  0.0      0     0 ?        S<   Nov02   0:00 [kblockd/0]
+root        55  0.0  0.0      0     0 ?        S<   Nov02   0:00 [kblockd/1]
+root        56  0.0  0.0      0     0 ?        S<   Nov02   0:00 [kacpid]
+
+USER：该 process 属于那个使用者账号的
+PID ：该 process 的号码
+%CPU：该 process 使用掉的 CPU 资源百分比
+%MEM：该 process 所占用的物理内存百分比
+VSZ ：该 process 使用掉的虚拟内存量 (Kbytes)
+RSS ：该 process 占用的固定的内存量 (Kbytes)
+TTY ：该 process 是在那个终端机上面运作，若与终端机无关，则显示 ?，另外， tty1-tty6 是本机上面的登入者程序，若为 pts/0 等等的，则表示为由网络连接进主机的程序。
+STAT：该程序目前的状态，主要的状态有
+R ：该程序目前正在运作，或者是可被运作
+S ：该程序目前正在睡眠当中 (可说是 idle 状态)，但可被某些讯号 (signal) 唤醒。
+T ：该程序目前正在侦测或者是停止了
+Z ：该程序应该已经终止，但是其父程序却无法正常的终止他，造成 zombie (疆尸) 程序的状态
+START：该 process 被触发启动的时间
+TIME ：该 process 实际使用 CPU 运作的时间
+COMMAND：该程序的实际指令
+
+# 列出类似程序树的程序显示
+<span style="background-color:aquamarine">ps -axjf</span>
+
+# 找出与 cron 与 syslog 这两个服务有关的 PID 号码
+<span style="background-color:aquamarine">ps aux | egrep '(cron|syslog)'</span>
+
+# 输出指定的字段
+<span style="background-color:aquamarine">ps -o pid,ppid,pgrp,session,tpgid,comm</span></pre>
+	<h1>字符串处理命令</h1>
+	<h2>tr</h2>
+	<p>实现字符的简单转换，也可以删除字符串中的指定子串，合并字符串中重复串</p>
+	<ul>
+		<li>-c, -C, –complement 用集合1中的字符串替换，要求字符集为ASCII。</li>
+		<li>-d, –delete 删除集合1中的字符而不是转换</li>
+		<li>-s, –squeeze-repeats 删除所有重复出现字符序列，只保留第一个；即将重复出现字符串压缩为一个字符串。</li>
+		<li>-t, –truncate-set1 先删除第一字符集较第二字符集多出的字符</li>
+	</ul>
+	<pre class="code" data-type="sh">ls | tr '\0' '\n' # 每一个字符串均以 '\0' 作为结束符，因此使用该特性可以在打印字符串后换行
+
+ls | tr '\n' ' ' # 将换行符替换成空格
+
+tr f F &lt; huanxiangwu.txt # 将文件中的所有f替换成F
+
+ls | tr -d '\n' # 删除换行符（所有内容拼接成一行）
+
+tr -d f < huanxiangwu.txt # 删除文件中所有的f
+
+echo huanxiangwu | tr a-z A-Z # 将huanxiangwu转换成HUANXIANGWU
+
+echo huanxiangwu | tr '[:lower:]' '[:upper:]' # 将huanxiangwu转换成HUANXIANGWU</pre>
+    <h2>sed</h2>
+    <p>示例如下:</p>
+    <pre class="code" data-type="sh">
+#删除第二到第五行的内容并显示
+nl 123.txt | sed '2,5d' 
+    </pre>
+	<h2>awk</h2>
+    <h3>简介</h3>
+    <p>awk编程的内容极多，这里只罗列简单常用的用法，更多请参考 <a href="http://www.gnu.org/software/gawk/manual/gawk.html">http://www.gnu.org/software/gawk/manual/gawk.html</a> </p>
+    <p>其中，commands 是真正awk命令，[-F域分隔符]是可选的。 input-file(s) 是待处理的文件。 在awk中，文件的每一行中，由域分隔符分开的每一项称为一个域。通常，在不指名-F域分隔符的情况下，默认的域分隔符是空格。</p>
+    <pre class="code" data-type="sh">awk '{pattern + action}' {filenames}</pre>
+    <p>尽管操作可能会很复杂，但语法总是这样，其中 pattern 表示 AWK 在数据中查找的内容，而 action 是在找到匹配内容时所执行的一系列命令。花括号（{}）不需要在程序中始终出现，但它们用于根据特定的模式对一系列指令进行分组。 pattern就是要表示的正则表达式，用斜杠括起来。</p>
+    <p>使用命令行执行时，其格式如下</p>
+    <pre class="code" data-type="sh">awk [-F field-separator] ‘commands’ input-file(s)</pre>
+    <p>awk工作流程是这样的：读入有’n’换行符分割的一条记录，然后将记录按指定的域分隔符划分域，填充域，$0则表示所有域,$1表示第一个域,$n表示第n个域。默认域分隔符是”空格” 或 “Tab”</p>
+    <p>还可以使用 shell 脚本方式执行</p>
+    <p>将所有的awk命令插入一个文件，并使awk程序可执行，然后awk命令解释器作为脚本的首行，一遍通过键入脚本名称来调用。 相当于shell脚本首行的：#!/bin/sh 可以换成：#!/bin/awk</p>
+    <p>也可以将所有的awk命令插入一个单独文件，然后调用： awk -f awk-script-file input-file(s) 其中，-f选项加载awk-script-file中的awk脚本，input-file(s)跟上面的是一样的。</p>
+    <h3>实例</h3>
+	<p>将字符串以空白符分割为字符串数组，并返回指定索引的子串</p>
+	<pre class="code" data-type="sh"># 返回b
+echo "a b c" | awk '{print $2}'</pre>
+    <p>将字符串以冒号分割为字符串数组，并返回指定索引的子串</p>
+    <pre class="code" data-type="sh"># 返回 a
+echo "a:b:c" | awk -F ':' '{print $1}'</pre>
+    <p>返回多个子串，并以指定分隔符分隔</p>
+    <pre class="code" data-type="sh"># 以逗号分隔
+echo "a b c" | awk '{print $1","$2}'
+
+# 以 Tab 分隔
+echo "a b c" | awk '{print $1"\t"$2}'</pre>
+    <p>打印文件名和大小，并加上标题及结尾</p>
+    <pre class="code" data-type="sh">ls -l | awk 'BEGIN {print "Name\tSize"} {print $9"\t"$5} END {print "----END----"}'</pre>
+    <p>awk工作流程是这样的：先执行BEGIN，然后读取文件，读入有/n换行符分割的一条记录，然后将记录按指定的域分隔符划分域，填充域，$0则表示所有域,$1表示第一个域,$n表示第n个域,随后开始执行模式所对应的动作action。接着开始读入第二条记录······直到所有的记录都读完，最后执行END操作。</p>
+    <p>即先执行 BEGIN {print "Name\tSize"}</p>
+    <p>然后读入输入，并对每一行执行 {print $9"\t"$5}</p>
+    <p>结束后，执行 END {print "----END----"}'</p>
+    <p>搜索/etc/passwd有root关键字的所有行</p>
+    <pre class="code" data-type="sh">awk -F ':' '/root/' /etc/passwd</pre>
+    <p>这种是pattern的使用示例，匹配了pattern(这里是root)的行才会执行action(没有指定action，默认输出每行的内容)。</p>
+    <p>搜索支持正则，例如找root开头的: awk -F: ‘/^root/’ /etc/passwd</p>
+    <p>搜索/etc/passwd有root关键字的所有行，并显示对应的shell</p>
+    <pre class="code" data-type="sh">awk -F ':' '/root/{print $7}' /etc/passwd</pre>
+    <p>这里指定了action{print $7}</p>
+    <h3>awk内置变量</h3>
+    <p>awk有许多内置变量用来设置环境信息，这些变量可以被改变，下面给出了最常用的一些变量。</p>
+    <pre>ARGC               命令行参数个数
+ARGV               命令行参数排列
+ENVIRON            支持队列中系统环境变量的使用
+FILENAME           awk浏览的文件名
+FNR                浏览文件的记录数
+FS                 设置输入域分隔符，等价于命令行 -F选项
+NF                 浏览记录的域的个数
+NR                 已读的记录数
+OFS                输出域分隔符
+ORS                输出记录分隔符
+RS                 控制记录分隔符</pre>
+    <p>此外,$0变量是指整条记录。$1表示当前行的第一个域,$2表示当前行的第二个域,……以此类推</p>
+    <p>统计/etc/passwd:文件名，每行的行号，每行的列数，对应的完整行内容:</p>
+    <pre class="code" data-type="sh">awk  -F ':'  '{print "filename:" FILENAME ",linenumber:" NR ",columns:" NF ",linecontent:"$0}' /etc/passwd</pre>
+    <p>使用printf替代print,可以让代码更加简洁，易读</p>
+    <pre class="code" data-type="sh">awk  -F ':'  '{printf("filename:%10s,linenumber:%s,columns:%s,linecontent:%sn",FILENAME,NR,NF,$0)}' /etc/passwd</pre>
+    <h3>awk 编程</h3>
+    <h4>变量和赋值</h4>
+    <p>除了awk的内置变量，awk还可以自定义变量。</p>
+    <pre class="code" data-type="sh"># 下面统计/etc/passwd的账户人数
+awk '{count++;print $0;} END{print "user count is ", count}' /etc/passwd</pre>
+    <p>count是自定义变量。之前的action{}里都是只有一个print,其实print只是一个语句，而action{}可以有多个语句，以;号隔开。</p>
+    <p>这里没有初始化count，虽然默认是0，但是妥当的做法还是初始化为0:</p>
+    <pre class="code" data-type="sh">awk 'BEGIN {count=0;print "[start]user count is ", count} {count=count+1;print $0;} END{print "[end]user count is ", count}' </pre>
+    <p>统计某个文件夹下的文件占用的字节数, 以M为单位显示</p>
+    <pre class="code" data-type="sh">ls -l |awk 'BEGIN {size=0;} {size=size+$5;} END{print "[end]size is ", size/1024/1024,"M"}' </pre>
+    <h4>条件语句</h4>
+    <p>统计某个文件夹下的文件占用的字节数,过滤4096大小的文件(一般都是文件夹):</p>
+    <pre class="code" data-type="sh">ls -l |awk 'BEGIN {size=0;print "[start]size is ", size} {if($5!=4096){size=size+$5;}} END{print "[end]size is ", size/1024/1024,"M"}' </pre>
+    <h4>循环语句</h4>
+    <p>awk中的循环语句同样借鉴于C语言，支持while、do/while、for、break、continue，这些关键字的语义和C语言中的语义完全相同。</p>
+    <h4>数组</h4>
+    <p>因为awk中数组的下标可以是数字和字母，数组的下标通常被称为关键字(key)。值和关键字都存储在内部的一张针对key/value应用hash的表格里。由于hash不是顺序存储，因此在显示数组内容时会发现，它们并不是按照你预料的顺序显示出来的。数组和变量一样，都是在使用时自动创建的，awk也同样会自动判断其存储的是数字还是字符串。一般而言，awk中的数组用来从记录中收集信息，可以用于计算总和、统计单词以及跟踪模板被匹配的次数等等。</p>
+    <p>显示/etc/passwd的账户</p>
+    <pre class="code" data-type="sh">awk -F ':' 'BEGIN {count=0;} {name[count] = $1;count++;}; END{for (i = 0; i ' /etc/passwd</pre>
+    <p>这里使用for循环遍历数组</p>
+    <h2>eval</h2>
+    <p>执行字符串代表的命令, 如下所示</p>
+    <pre class="code" data-type="sh">
+foo=10
+x=foo
+y='$'$x
+echo $y
+$foo
+eval y='$'$x
+echo $y
+10</pre>
+	<h1>网络命令</h1>
+
+	<table style="width: 90%">
+
+		<tr>
+			<th>Command</th>
+			<th>Desc</th>
+			<th>Sample</th>
+		</tr>
+		<tr>
+			<td>ping</td>
+			<td>网络测试</td>
+			<td>
+				<pre class="code" data-type="sh"># Linux, 测试 4 次
+ping -c 4 lnycrecmoap1d.nam.nsroot.net
+
+# Solaris 发送包大小为 56， 测试 4 次，测试目标为 loanps1d.nam.nsroot.net，显示完整测试结果
+ping -s loanps1s.nam.nsroot.net 56 4
+ping -s www.ws.i-deal.com 64 4
+ping -s www.google.com 56 4</pre>
+			</td>
+		</tr>
+		<tr>
+			<td>ifconfig</td>
+			<td>网络配置</td>
+			<td>
+				<pre># 查看IP
+ifconfig -a</pre>
+			</td>
+		</tr>
+		<tr>
+			<td>netstat</td>
+			<td></td>
+			<td>
+				<pre class="code" data-type="sh"># 查看端口号 9049 是否被使用
+netstat -ano | grep 9049
+
+#in Solaris
+netstat -an | grep 9049</pre>
+			</td>
+		</tr>
+		<tr>
+			<td>hostname</td>
+			<td>返回当前机器名</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>host</td>
+			<td>根据IP查域名或反之</td>
+			<td>
+				<pre class="code" data-type="sh">$host lnycrecmoap1d.nam.nsroot.net
+lnycrecmoap1d.nam.nsroot.net has address 162.124.206.60
+$host 162.124.206.60
+60.206.124.162.in-addr.arpa domain name pointer lnycrecmoap1d.nam.nsroot.net.</pre>
+			</td>
+		</tr>
+
+	</table>
+	<h1>常用命令组合</h1>
+	<pre class="code" data-type="sh"># 查找所有超过 15 天的 log 并删除
+$find /opt/apps/ilTokenSrv/logs -mtime +15 -type f -name ilrouterToken.log.* | xargs rm -rf</pre>
+    
+	<h1>命令索引</h1>
+	<h2>T</h2>
+	<a id="tar"></a>
+	<h3>tar</h3>
+	<p>首先要弄清两个概念：打包和压缩。打包是指将一大堆文件或目录变成一个总的文件；压缩则是将一个大的文件通过一些压缩算法变成一个小文件。
+为什么要区分这两个概念呢？这源于Linux中很多压缩程序只能针对一个文件进行压缩，这样当你想要压缩一大堆文件时，你得先将这一大堆文件先打成一个包（tar命令），然后再用压缩程序进行压缩（gzip bzip2命令）。</p>
+	<p>linux下最常用的打包程序就是tar了，使用tar程序打出来的包我们常称为tar包，tar包文件的命令通常都是以.tar结尾的。生成tar包后，就可以用其它的程序来进行压缩。</p>
+	<h4>命令格式</h4>
+	<pre>tar[必要参数][选择参数][文件] </pre>
+	<h4>功能描述</h4>
+	<p>用来压缩和解压文件。tar本身不具有压缩功能。他是调用压缩功能实现的</p>
+	<h4>参数</h4>
+	<pre>-A 新增压缩文件到已存在的压缩
+-B 设置区块大小
+-c 建立新的压缩文件
+-d 记录文件的差别
+-r 添加文件到已经压缩的文件
+-u 添加改变了和现有的文件到已经存在的压缩文件
+-x 从压缩的文件中提取文件
+-t 显示压缩文件的内容
+-z 支持gzip解压文件
+-j 支持bzip2解压文件
+-Z 支持compress解压文件
+-v 显示操作过程
+-l 文件系统边界设置
+-k 保留原有文件不覆盖
+-m 保留文件不被覆盖
+-W 确认压缩文件的正确性
+
+-b 设置区块数目
+-C 切换到指定目录
+-f 指定压缩文件
+--help 显示帮助信息
+--version 显示版本信息</pre>
+	<div>
+		一些常用的基本命令:<br />
+		uname -a查看内核版本<br />
+		ls -al显示所有文件的属性<br />
+		pwd显示当前路径<br />
+		cd -返回上一次目录cd ~返回主目录<br />
+		date s设置时间、日期<br />
+		cal显示日历cal 2006<br />
+		bc计算器具<br />
+		man &amp; info帮助手册<br />
+		locale显示当前字体locale -a所有可用字体/etc/sysconfig/i18n设置文件<br />
+		LANG=en使用英文字体<br />
+		sync将数据同步写入硬盘<br />
+		shutdonw -h now &amp; half &amp; poweroff 关机<br />
+		reboot重启<br />
+		startx &amp; init 5 进入图形介面<br />
+		/work &amp; ?work向上、下查找文档内容<br />
+		chgrp改变档案群组 chgrp testing install.log<br />
+		chown改变所属人 chown root:root install.log<br />
+		chmod改变属性chmod 777 install.logread=4 write=2 execute=1<br />
+		cp 复制 cp filename<br />
+		rm 删除文件 rm -rf filename 强制删除文件<br />
+		rmdir 删除文件夹<br />
+		mv 移动mv 123.txt 222.txt 重命名<br />
+		mkdir创建文件夹<br />
+		touch创建文件 更新当前时间<br />
+		cat由第一行开始显示cat |more 分页<br />
+		nl在内容前加行号<br />
+		more &amp; less 一面一面翻动<br />
+		od显示非纯文档<br />
+		df -h 显示分区空间<br />
+		du 显示目录或文件的大小<br />
+		fdisk 分区设置fdisk -l /dev/hda 显示硬盘分区状态<br />
+		mkfs建立各种文件系统 mkfs -t ext3 /dev/ram15
+		<br />
+		fsck检查和修复LINUX档案<br />
+		ln硬链接 ln -s 软件链接<br />
+		whereis 查找命令<br />
+		locate查找<br />
+		find查找 find / -name "***.***"<br />
+		which查看工具<br />
+		whoami显示当前用户<br />
+		gcc -v查看GCC版本<br />
+		chattr +i filename 禁止删除 chattr -i filename 取消禁止<br />
+		lsattr显示隐藏档属性<br />
+		updatedb 更新资料库<br />
+		mke2fs格式化 mkfs -t ext3
+		<br />
+		dd if=/etc/passwd of=/tmp/passwd.bak备份<br />
+		mount列出系统所有的分区<br />
+		mount -t iso9660 /dev/cdrom /mnt/cdrom 挂载光盘<br />
+		mount -t vfat /dev/fd0 /mnt/floppy挂载软盘<br />
+		mount -t vfat -o iocharset=utf8,umask=000 /dev/hda2 /mnt/hda2 挂载fat32分区<br />
+		mount -t ntfs -o nls=utf8,umask=000 /dev/hda3 /mnt/hda3挂载ntfs分区<br />
+		Linux-NTFS Project: <a href="http://linux-ntfs.sourceforge.net/"><font color="#223355">http://linux-ntfs.sourceforge.net/</a><br />
+		umount /mnt/hda3 缷载<br />
+		ifconfig 显示或设置网络设备<br />
+		service network restart 重启网卡
+		<br />
+		ifdown eth0 关闭网卡<br />
+		ifup eth0开启网卡<br />
+		clear清屏<br />
+		history历史记录!55 执行第55个指令<br />
+		stty 设置终端stty -a<br />
+		fdisk /mbr 删除GRUB<br />
+		at僅進行一次的工作排程<br />
+		crontab 循環執行的例行性命令[e]编辑,[l]显示,[r]删除任务<br />
+		&amp;后台运行程序tar -zxvf 123.tar.gz &amp; ---------&gt;后台运行<br />
+		jobs观看后台暂停的程序 jobs -l<br />
+		fg将后台程序调到前台 fg n ------&gt;n是数字,可以指定进行那个程序<br />
+		bg让工作在后台运行<br />
+		kill结束进程kill -9 PID[9]强制结束,[15]正常结束,[l]列出可用的kill信号<br />
+		ps aux 查看后台程序
+		<br />
+		top查看后台程序 top -d 2每两秒更新一次top -d 2 -p10604 观看某个PID<br />
+		top -b -n 2 &gt; /tmp/top.txt -----&gt;將 top 的資訊進行 2 次，然後將結果輸出到 /tmp/top.txt<br />
+		pstree 以树状图显示程序[A]以 ASCII 來連接, [u]列出PID, [p]列出帐号<br />
+		killall 要刪除某個服務killall -9 httpd<br />
+		free显示内存状态free -m --------&gt;以M为单位显示<br />
+		uptime显示目前系统开机时间<br />
+		netstat 显示网络状态netstat -tulnp------&gt;找出目前系統上已在監聽的網路連線及其 PID<br />
+		dmesg显示开机信息demsg | more<br />
+		nice设置优先权nice -n -5 vi &amp; -----&gt;用 root 給一個 nice 植為 -5 ，用於執行 vi
+		<br />
+		renice调整已存在优先权<br />
+		runlevel 显示目前的runlevel<br />
+		depmod分析可载入模块的相依性<br />
+		lsmod显示已载入系统的模块<br />
+		modinfo 显示kernel模块的信息<br />
+		insmod载入模块<br />
+		modprobe 自动处理可载入模块<br />
+		rmmod删除模块<br />
+		chkconfig 检查，设置系统的各种服务chkconfig --list -----&gt;列出各项服务状态<br />
+		ntsysv设置系统的各种服务<br />
+		cpio备份文件<br />
+	</div>
+	<div>
+		<br />
+		压缩命令：<br />
+		*.Zcompress 程式壓縮的檔案；
+		<br />
+		*.bz2bzip2 程式壓縮的檔案；
+		<br />
+		*.gzgzip 程式壓縮的檔案；
+		<br />
+		*.tartar 程式打包的資料，並沒有壓縮過；
+		<br />
+		*.tar.gz tar 程式打包的檔案，其中並且經過 gzip 的壓縮<br />
+		compress filename 压缩文件 加[-d]解压 uncompress<br />
+		gzip filename 压缩 加[-d]解压 zcat 123.gz 查看压缩文件内容<br />
+		bzip2 -z filename 压缩 加[-d]解压 bzcat filename.bz2 查看压缩文件内容<br />
+		tar -cvf /home/123.tar /etc 打包，不压缩<br />
+		tar -xvf 123.tar 解开包<br />
+		tar -zxvf /home/123.tar.gz 以gzip解压<br />
+		tar -jxvf /home/123.tar.bz2 以bzip2解压<br />
+		tar -ztvf /tmp/etc.tar.gz 查看tar内容<br />
+		cpio -covB &gt; [file|device] 份份<br />
+		cpio -icduv &lt; [file|device] 还原
+	</div>
+	<div>
+	</div>
+	<div>
+		vi一般用法<br />
+		一般模式编辑模式指令模式<br />
+		h 左a,i,r,o,A,I,R,O:w 保存<br />
+		j 下进入编辑模式:w! 强制保存<br />
+		k 上dd 删除光标当前行:q! 不保存离开<br />
+		l 右ndd 删除n行:wq! 保存后离开<br />
+		0 移动到行首yy 复制当前行:e! 还原原始档<br />
+		$ 移动到行尾nyy 复制n行:w filename 另存为<br />
+		H 屏幕最上p,P 粘贴:set nu 设置行号<br />
+		M 屏幕中央u 撤消:set nonu 取消行号<br />
+		L 屏幕最下[Ctrl]+r 重做上一个动作ZZ 保存离开<br />
+		G 档案最后一行[ctrl]+z 暂停退出:set nohlsearch 永久地关闭高亮显示<br />
+		/work 向下搜索:sp 同时打开两个文档
+		<br />
+		?work 向上搜索[Ctrl]+w 两个文档设换<br />
+		gg 移动到档案第一行:nohlsearch暂时关闭高亮显示
+	</div>
+	<div>
+	</div>
+	<div>
+		认识SHELL<br />
+		alias显示当前所有的命令别名alias lm="ls -al" 命令别名unalias lm 取消命令别名<br />
+		type类似which<br />
+		exprot设置或显示环境变量<br />
+		exprot PATH="$PATH":/sbin 添加/sbin入PATH路径<br />
+		echo $PATH显示PATH路径<br />
+		bash进入子程序<br />
+		name=yang设定变量<br />
+		unset name取消变量<br />
+		echo $name显示变量的内容<br />
+		myname="$name its me" &amp; myname='$name its me'单引号时$name失去变量内容<br />
+		ciw=/etc/sysconfig/network-scripts/设置路径<br />
+		env列出所有环境变量<br />
+		echo $RANDOM显示随意产生的数<br />
+		set设置SHELL<br />
+		PS1='[\u@\h \w \A #\#]\$ '提示字元的設定<br />
+		[root@linux ~]# read [-pt] variable-----------读取键盘输入的变量<br />
+		參數：<br />
+		-p ：後面可以接提示字元！<br />
+		-t ：後面可以接等待的『秒數！』<br />
+		declare声明 shell 变量<br />
+		ulimit -a 显示所有限制资料<br />
+		ls /tmp/yang &amp;&amp; echo "exist" || echo "not exist"<br />
+		意思是說，當 ls /tmp/yang 執行後，若正確，就執行echo "exist" ,若有問題，就執行echo "not exist"
+		<br />
+		echo $PATH | cut -d ':' -f 5以:为分隔符,读取第5段内容<br />
+		export | cut -c 10-20读取第10到20个字节的内容<br />
+		last | grep 'root'搜索有root的一行,加[-v]反向搜索<br />
+		cat /etc/passwd | sort排序显示<br />
+	</div>
+	<div>
+		正规表示法<br />
+		[root@test root]# grep [-acinv] '搜尋字串' filename<br />
+		參數說明：<br />
+		-a ：將 binary 檔案以 text 檔案的方式搜尋資料<br />
+		-c ：計算找到 '搜尋字串' 的次數<br />
+		-i ：忽略大小寫的不同，所以大小寫視為相同<br />
+		-n ：順便輸出行號<br />
+		-v ：反向選擇，亦即顯示出沒有 '搜尋字串' 內容的那一行！<br />
+		grep -n 'the' 123.txt搜索the字符 -----------搜尋特定字串<br />
+		grep -n 't[ea]st' 123.txt搜索test或taste两个字符---------利用 [] 來搜尋集合字元<br />
+		grep -n '[^g]oo' 123.txt搜索前面不为g的oo-----------向選擇 [^]
+		<br />
+		grep -n '[0-9]' 123.txt 搜索有0-9的数字<br />
+		grep -n '^the' 123.txt 搜索以the为行首-----------行首搜索^<br />
+		grep -n '^[^a-zA-Z]' 123.txt 搜索不以英文字母开头<br />
+		grep -n '[a-z]$' 123.txt搜索以a-z结尾的行---------- 行尾搜索$<br />
+		grep -n 'g..d' 123.txt搜索开头g结尾d字符----------任意一個字元 .
+		<br />
+		grep -n 'ooo*' 123.txt搜索至少有两个oo的字符---------重複字元 *<br />
+		
+		awd模式扫描和处理语言<br />
+		
+		diff比较文件的差异<br />
+		cmp比较两个文件是否有差异<br />
+		patch修补文件<br />
+		pr要打印的文件格式化<br />
+	</div>
+	<div>
+		<br />
+		帐号管理<br />
+		/etc/passwd系统帐号信息<br />
+		/etc/shadow帐号密码信息经MD5 32位加密<br />
+		在密码栏前面加『 * 』『 ! 』禁止使用某帐号<br />
+		/etc/group系统群组信息<br />
+		/etc/gshadow<br />
+		newgrp改变登陆组<br />
+		useradd &amp; adduser建立新用户 ---------&gt; useradd -m test 自动建立用户的登入目录<br />
+		useradd -m -g pgroup test ---------&gt;指定所属级<br />
+		/etc/default/useradd 相关设定<br />
+		/etc/login.defsUID/GID 有關的設定<br />
+		passwd更改密码 -----------&gt; passwd test<br />
+		usermod 修改用户帐号<br />
+		userdel 删除帐号 -----------&gt;userdel -r test<br />
+		chsh更换登陆系统时使用的SHELL [-l]显示可用的SHELL;[-s]修改自己的SHELL<br />
+		chfn改变finger指令显示的信息<br />
+		finger查找并显示用户信息<br />
+		id显示用户的ID -----------&gt; id test<br />
+		groupadd 添加组<br />
+		groupmod 与usermod类似<br />
+		groupdel 删除组<br />
+		su test更改用户 su -进入root,且使用root的环境变量<br />
+		sudo以其他身份来执行指令<br />
+		visudo编辑/etc/sudoers加入一行『 test ALL=(ALL) ALL 』<br />
+		%wheel ALL = (ALL) ALL系统里所有wheel群组的用户都可用sudo<br />
+		%wheel ALL = (ALL) NOPASSWD: ALLwheel群组所有用户都不用密码NOPASSWD<br />
+		User_Alias ADMPW = vbird, dmtsai, vbird1, vbird3加入ADMPW组<br />
+		ADMPW ALL = NOPASSWD: !/usr/bin/passwd, /usr/bin/passwd [A-Za-z]*, \<br />
+		!/usr/bin/passwd root可以更改使用者密码,但不能更改root密码 (在指令前面加入 ! 代表不可)<br />
+		PAM (Pluggable Authentication Modules, 嵌入式模組)<br />
+		who &amp; w看谁在线<br />
+		last最近登陆主机的信息<br />
+		lastlog最近登入的時間读取 /var/log/lastlog
+		<br />
+		talk与其他用户交谈<br />
+		write发送信息write test [ctrl]+d 发送<br />
+		mesg设置终端机的写入权限mesg n 禁止接收mesg y
+		<br />
+		wall向所有用户发送信息wall this is q test<br />
+		mail写mail
+		<br />
+		/etc/default/useradd家目录默认设置
+	</div>
+	<div>
+		quota显示磁盘已使用的空间与限制quota -guvs -----&gt;秀出目前 root 自己的 quota 限制值<br />
+		quota -vu 查询<br />
+		quotacheck 检查磁盘的使用空间与限制quotacheck -avug -----&gt;將所有的在 /etc/mtab 內，含有 quota 支援的 partition 進行掃瞄<br />
+		[-m] 强制扫描
+		<br />
+		quota一定要是独立的分区,要有quota.user和quota.group两件文件,在/etc/fstab添加一句:<br />
+		/dev/hda3 /home ext3 defaults,usrquota,grpquota 1 2<br />
+		chmod 600 quota*设置完成,重启生效<br />
+		edquota编辑用户或群组的quota [u]用户,[g]群组,[p]复制,[t]设置宽限期限
+		<br />
+		edquota -a yangedquota -p yang -u young -----&gt;复制<br />
+		quotaon开启磁盘空间限制quotaon -auvg --------&gt;啟動所有的具有 quota 的 filesystem<br />
+		quotaoff 关闭磁盘空间限制quotaoff -a --------&gt;關閉了 quota 的限制<br />
+		repquota -av查閱系統內所有的具有 quota 的 filesystem 的限值狀態
+	</div>
+	<div>
+		Quota 從開始準備 filesystem 的支援到整個設定結束的主要的步驟大概是：<br />
+		1、設定 partition 的 filesystem 支援 quota 參數：<br />
+		由於 quota 必須要讓 partition 上面的 filesystem 支援才行，一般來說， 支援度最好的是 ext2/ext3 ，<br />
+		其他的 filesystem 類型鳥哥我是沒有試過啦！ 啟動 filesystem 支援 quota 最簡單就是編輯 /etc/fstab ，<br />
+		使得準備要開放的 quota 磁碟可以支援 quota 囉；<br />
+		2、建立 quota 記錄檔：<br />
+		剛剛前面講過，整個 quota 進行磁碟限制值記錄的檔案是 aquota.user/aquota.group，
+		<br />
+		要建立這兩個檔案就必須要先利用 quotacheck 掃瞄才行喔！<br />
+		3、編輯 quota 限制值資料：<br />
+		再來就是使用 edquota 來編輯每個使用者或群組的可使用空間囉；<br />
+		4、重新掃瞄與啟動 quota ：<br />
+		設定好 quota 之後，建議可以再進行一次 quotacheck ，然後再以 quotaon 來啟動吧！
+	</div>
+	<div>
+		<br />
+		开机流程简介<br />
+		1、載入 BIOS 的硬體資訊，並取得第一個開機裝置的代號；
+		<br />
+		2、讀取第一個開機裝置的 MBR 的 boot Loader (亦即是 lilo, grub, spfdisk 等等) 的開機資訊；
+		<br />
+		3、載入 Kernel 作業系統核心資訊， Kernel 開始解壓縮，並且嘗試驅動所有硬體裝置；
+		<br />
+		4、Kernel 執行 init 程式並取得 run-level 資訊；
+		<br />
+		5、init 執行 /etc/rc.d/rc.sysinit 檔案；
+		<br />
+		6、啟動核心的外掛模組 (/etc/modprobe.conf)；
+		<br />
+		7、init 執行 run-level 的各個批次檔( Scripts )；
+		<br />
+		8、init 執行 /etc/rc.d/rc.local 檔案；
+		<br />
+		9、執行 /bin/login 程式，並等待使用者登入；
+		<br />
+		10、登入之後開始以 Shell 控管主機。
+	</div>
+	<div>
+		在/etc/rc.d/rc3.d內,以S开头的为开机启动,以K开头的为关闭,接着的数字代表执行顺序
+	</div>
+	<div>
+		GRUB vga设定<br />
+		彩度\解析度 640x480 800x600 1024x768 1280x1024 bit
+		<br />
+		2567697717737758 bit
+		<br />
+		3276878478779079315 bit
+		<br />
+		6553678578879179416 bit
+		<br />
+		16.8M78678979279532 bit
+	</div>
+	<div>
+		<br />
+		./configure检查系统信息./configure --help | more 帮助信息<br />
+		make clean清除之前留下的文件<br />
+		make编译<br />
+		make install 安装
+	</div>
+	<div>
+		rpm -q -----&gt;查询是否安装rpm -ql ------&gt;查询该套件所有的目录<br />
+		rpm -qi -----&gt;查询套件的说明资料rpm -qc[d] -----&gt;设定档与说明档<br />
+		rpm -ivh ----&gt;安装rpm -V --------&gt;查看套件有否更动过<br />
+		rpm -e ------&gt;删除rpm -Uvh -------&gt;升级安装
+		<br />
+		--nodeps -----&gt;强行安装--test -----&gt;测试安装
+	</div>
+	<div>
+		<font size="3"><font face="Times New Roman">
+	</div>
+	<p>&nbsp;</p>
+	<p>&nbsp;</p>
+	<p>&nbsp;</p>
+	<p>&nbsp;</p>
+
+</body>
+</html>

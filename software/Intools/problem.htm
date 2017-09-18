@@ -1,0 +1,29 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<title>INtools的一些问题的解决方案</title>
+<script language="javascript" src="css.js"></script>
+</head>
+
+<body>
+<h1>第N章 INtools的一些问题的解决方案</h1>
+<h3>1、在从ORACLE库导到SQL SERVER中后，浏览索引表时出现“substr……”错误</h3>
+<p>把索引表格式中把排序规则去掉</p>
+<h3>2、在洛阳院中，曾经所有的点的规格书均无法打开及修改模板，提示错误如下：cannot load page#1，在载入form时为空屏</h3>
+<p>修改系统preference中的specification选项中的psr路径，确认为空。</p>
+<h3>3、初始化域后，无法新建位号，提示“无法将NULL值插入component.cmpnt_loc_id”之类的错误</h3>
+<p>解决方案，这是component_function_type表中的对应字段为NULL，执行如下语句：</p>
+<pre>update component_function_type set cmpnt_loc_id = 0 where cmpnt_loc_id is null
+update component_function_type set cmpnt_io_type_id = 0 where cmpnt_io_type_id is null</pre>
+<p>4、SECCO用的ORACLE数据库字符集中WE8ISO8859P1，客户端需将下列注册表项</p>
+<ul>
+  <li>HKEY_LOCAL_MACHINE\SOFTWARE\ORACLE\NLS_LANG </li>
+  <li>HKEY_LOCAL_MACHINE\SOFTWARE\ORACLE\HOME0\NLS_LANG </li>
+</ul>
+<p>设为AMERICAN_AMERICA.WE8ISO8859P1</p>
+<p>&nbsp;</p>
+<script language="javascript" src="index.js"></script>
+</body>
+</html>

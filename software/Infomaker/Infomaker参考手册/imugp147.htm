@@ -1,0 +1,105 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+Matching text patterns</TITLE>
+</HEAD>
+<BODY>
+<A NAME="CAIEBHFI"></A><h1>Matching text patterns</h1>
+<A NAME="TI5920"></A><p>A text pattern is an expression that you can use to evaluate
+whether a string contains a particular pattern of characters. Text
+patterns consist of metacharacters, which have special meaning,
+and characters (nonmetacharacters). The way the metacharacters and
+normal characters are combined specify the pattern you are looking
+for.</p>
+<A NAME="TI5921"></A><h4>Metacharacters</h4>
+<A NAME="TI5922"></A><p>Valid metacharacters are:<A NAME="TI5923"></A>
+<ul>
+<li class=fi>^ (caret)</li>
+<li class=ds>$ (dollar sign)</li>
+<li class=ds>. (period)</li>
+<li class=ds>\ (backslash)</li>
+<li class=ds>[ ] (brackets)</li>
+<li class=ds>* (asterisk)</li>
+<li class=ds>+ (plus)</li>
+<li class=ds>? (question mark)
+</li>
+</ul>
+</p>
+<A NAME="TI5924"></A><h4>Nonmetacharacters</h4>
+<A NAME="TI5925"></A><p>In a text pattern, you can also use characters that are not
+metacharacters. One or more nonmetacharacters in a text pattern
+(such as letters) match the characters themselves. For example,
+A matches A, and ABC matches ABC.</p>
+<A NAME="TI5926"></A><h4>Examples </h4>
+<A NAME="TI5927"></A><p>Text patterns are needed in all expressions that use the Match
+function. Text patterns are used in validation rules in the Form
+painter (in a column object's Validation property page)
+and the Database painter (in the Match Pattern dialog box).</p>
+<A NAME="TI5928"></A><p>For information about the Match function,
+see <A HREF="imugp204.htm#CAIDIFDJ">Match</A>.</p>
+<A NAME="TI5929"></A><p>The following table shows various text patterns and sample
+text that matches each pattern: </p>
+<A NAME="TI5930"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI5931"></A>This pattern</th>
+<th align="left" valign=bottom><A NAME="TI5932"></A>Matches</th>
+</tr>
+<tr><td valign=top><A NAME="TI5933"></A>AB</td>
+<td valign=top><A NAME="TI5934"></A>Any string that contains AB; for example,
+ABA, DEABC, graphAB_one </td>
+</tr>
+<tr><td valign=top><A NAME="TI5935"></A>B*</td>
+<td valign=top><A NAME="TI5936"></A>Any string that contains 0 or more Bs;
+for example, AC, B, BB, BBB, ABBBC, and so on </td>
+</tr>
+<tr><td valign=top><A NAME="TI5937"></A>AB*C</td>
+<td valign=top><A NAME="TI5938"></A>Any string containing the pattern AC
+or ABC or ABBC, and so on (0 or more Bs) </td>
+</tr>
+<tr><td valign=top><A NAME="TI5939"></A>AB+C</td>
+<td valign=top><A NAME="TI5940"></A>Any string containing the pattern ABC
+or ABBC or ABBBC, and so on (1 or more Bs) </td>
+</tr>
+<tr><td valign=top><A NAME="TI5941"></A>ABB*C</td>
+<td valign=top><A NAME="TI5942"></A>Any string containing the pattern ABC
+or ABBC or ABBBC, and so on (1 B plus 0 or more Bs) </td>
+</tr>
+<tr><td valign=top><A NAME="TI5943"></A>^AB</td>
+<td valign=top><A NAME="TI5944"></A>Any string starting with AB</td>
+</tr>
+<tr><td valign=top><A NAME="TI5945"></A>AB?C</td>
+<td valign=top><A NAME="TI5946"></A>Any string containing the pattern AC
+or ABC (0 or 1 B) </td>
+</tr>
+<tr><td valign=top><A NAME="TI5947"></A>^[ABC]</td>
+<td valign=top><A NAME="TI5948"></A>Any string starting with A, B, or C</td>
+</tr>
+<tr><td valign=top><A NAME="TI5949"></A>[^ABC]</td>
+<td valign=top><A NAME="TI5950"></A>A string containing any characters other
+than A, B, or C </td>
+</tr>
+<tr><td valign=top><A NAME="TI5951"></A>^[^abc]</td>
+<td valign=top><A NAME="TI5952"></A>A string that begins with any character
+except a, b, or c </td>
+</tr>
+<tr><td valign=top><A NAME="TI5953"></A>^[^a-z]$</td>
+<td valign=top><A NAME="TI5954"></A>Any single-character string that is not
+a lowercase letter (^ and $ indicate the beginning and
+end of the string)</td>
+</tr>
+<tr><td valign=top><A NAME="TI5955"></A>[A-Z]+</td>
+<td valign=top><A NAME="TI5956"></A>Any string with one or more uppercase
+letters</td>
+</tr>
+<tr><td valign=top><A NAME="TI5957"></A>^[0-9]+$</td>
+<td valign=top><A NAME="TI5958"></A>Any string consisting only of digits</td>
+</tr>
+<tr><td valign=top><A NAME="TI5959"></A>^[0-9][0-9][0-9]$</td>
+<td valign=top><A NAME="TI5960"></A>Any string consisting of exactly three
+digits</td>
+</tr>
+<tr><td valign=top><A NAME="TI5961"></A>^([0-9][0-9][0-9])$</td>
+<td valign=top><A NAME="TI5962"></A>Any string consisting of exactly three
+digits enclosed in parentheses </td>
+</tr>
+</table>
+

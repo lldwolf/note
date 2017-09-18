@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>DevExpress.XtraGrid.GridControl</title>
+<script type="text/javascript" src="../../../mylib/js/css.js"></script>
+
+<style type="text/css">
+.first_class {font-family:宋体; font-weight:bold; font-size:16px; text-align:center; layout-flow:vertical-ideographic}
+.second_class {font-weight: bold}
+</style>
+</head>
+
+<body>
+<p id="title">DevExpress.XtraScheduler</p>
+
+<p>日志控件，类似于 Outlook 中的 Calendar。</p>
+<h1>基本用法</h1>
+<h2>创建一个Appointment</h2>
+<pre>Appointment app = new Appointment();
+app.Subject = "Test";
+app.AllDay = true;
+app.Start = DateTime.Now.Date;
+schedulerStorage1.Appointments.Add(app);</pre>
+<h1>技巧</h1>
+<h1>控制日期标识的显示</h1>
+<p>下面的代码可实现下图效果</p>
+<img alt="" src="img/schedule_custom_draw_header.png" />
+<pre>using DevExpress.XtraScheduler;
+using DevExpress.XtraScheduler.Drawing;
+using System.Drawing.Drawing2D;
+
+private void schedulerControl1_CustomDrawDayHeader(object sender, CustomDrawObjectEventArgs e)
+{
+	DayHeader header = e.ObjectInfo as DayHeader;
+	// Draws the outer rectangle.
+	e.Cache.FillRectangle(new LinearGradientBrush(e.Bounds, Color.LightBlue, Color.Blue, LinearGradientMode.Vertical), e.Bounds);
+	Rectangle innerRect = Rectangle.Inflate(e.Bounds, -2, -2);
+	// Draws the inner rectangle.
+	e.Cache.FillRectangle(new LinearGradientBrush(e.Bounds, Color.Blue, Color.LightSkyBlue, LinearGradientMode.Vertical), innerRect);
+	// Draws the header's caption.
+	e.Cache.DrawString(header.Caption, header.Appearance.HeaderCaption.Font, new SolidBrush(Color.White), innerRect, header.Appearance.HeaderCaption.GetStringFormat());
+	e.Handled = true;
+}</pre>
+
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+
+</body>
+</html>

@@ -1,0 +1,752 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<title>常用函数</title>
+<script language="javascript" src="css.js"></script>
+</head>
+
+<body>
+<h1>第三章 常用函数</h1>
+<h2>3.1 case</h2>
+<p>用于计算条件列表并返回多个可能结果表达式之一，它有两种格式：</p>
+<ul type="square">
+  <li>简单 CASE 函数将某个表达式与一组简单表达式进行比较以确定结果。</li>
+  <li>CASE 搜索函数计算一组布尔表达式以确定结果。</li>
+</ul>
+<h3>3.1.1 简单CASE函数</h3>
+<pre><CODE>CASE <I>input_expression</I></CODE>
+  <CODE>WHEN <I>when_expression </I>THEN <I>result_expression</I></CODE>
+  <CODE>[ ...<I>n </I>]</CODE>
+  <CODE>[ELSE <I>else_result_expression</I></CODE>]
+<CODE>END</CODE></pre>
+<p>例1：显示所有的仪表类型（表component_function_type），要求如果仪表类型名为“FE”的显示为“Flow Meter”，为“TE”的显示为“Temp. Meter”，其它的显示为“Other”。</p>
+<pre>select cmpnt_func_type_id,
+  case cmpnt_func_type_name
+    when 'FE' then 'Flow Meter'
+    when 'TE' then 'Temp. Meter'
+    else 'Other'
+  end as 仪表类型
+from component_function_type</pre>
+<h3>3.1.2 CASE 搜索函数</h3>
+<pre>CASE
+  WHEN Boolean_expression THEN result_expression
+  [ ...n ]
+  [ELSE else_result_expression]
+END</pre>
+<p>例2：显示仪表索引表内容，要求位号中含TE的显示仪表类型为“Temp. Meter”，含FE的显示为“Flow Meter”，其它的显示为“Other Meter”。</p>
+<pre>select cmpnt_name, 
+  case
+    when cmpnt_name like '%FE%' then 'Flow Meter'
+    when cmpnt_name like '%TE%' then 'Temp. Meter'
+    else 'Other Meter'
+  end as 仪表类型,
+  cmpnt_serv
+from component</pre>
+<h2>3.2 字符串类函数</h2>
+<h3>3.2.1 字符串相加</h3>
+<p>将两个字符串连成一个字符串</p>
+<p>在SQL SERVER中，字符串相加操作符为“+”，ORACLE中为“||”或函数“concat”。</p>
+<p>例3：将字符串“abc”和“def”连成一个字符串</p>
+<pre>--SQL SERVER语法
+select 'abc' + 'def'
+
+--ORACLE语法
+select 'abc' || 'def' from dual
+
+--或
+
+select concat('abc', 'def') from dual</pre>
+<p><img src="images/bm1.BMP">注意：concat函数只能有两个参数。</p>
+<h3>3.2.2 取子串</h3>
+<p>SQL SERVER：substring(表达式, 开始位置, 所取子串的长度) </p>
+<p>ORACLE：substr(字符串表达式, 开始位置, 所取子串的长度)</p>
+<p>例4：取字符串“abcdefghijlmn”中的第2到第5个，即“bcde”</p>
+<pre>--SQL SERVER语法
+select substring('abcdefghijlmn', 2, 4)
+
+--ORACLE 语法
+select substr('abcdefghijlmn', 2, 4) from dual</pre>
+<p><img src="images/bm1.BMP">注意：第三个参数为所取子串的长度，而不是在字符串中的截止位置。如果所取子串的长度超过表达式长度，则返回至最后一个字符。</p>
+<h3>3.2.3 去掉空格</h3>
+<p>ltrim(字符串): 去掉左端空格</p>
+<p>rtrim(字符串): 去掉右端空格</p>
+<p><img src="images/bm1.BMP">注意：对于ORACLE数据库，在查询时不会动滤掉CHAR类型数据右端的空格，例如：对于字符串'abc&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'，在SQL SERVER中，field_name = 'abc'可以检索到它，而在ORACLE中则不行，需要用 rtrim(field_name) = 'abc'。</p>
+<h3>3.2.4 大小写转换</h3>
+<p>lower(字符串): 转换字符串为小写</p>
+<p>upper(字符串): 转换字符串为大写</p>
+<p><img src="images/bm1.BMP"> 注意：对ORACLE数据库，查询时是区分大小写的，而SQL SERVER默认情况是不分大小写的，如果要区分的话，可用如下方式：</p>
+<pre>--区分大小写
+where field_name collate latin1_general_cs_as = 'AA'</pre>
+<h3>3.2.5 字符串替换</h3>
+<p>replace(源串, 查找串, 替换串)</p>
+<p>例5：字符串'1234567123', 将'123'转换为'abc'后输出</p>
+<pre>--SQL SERVER
+select replace('1234567123', '123', 'abc')
+
+--ORACLE
+select replace('1234567123', '123', 'abc') from dual</pre>
+<p>在ORACLE中还有一个更加强大的函数decode，其格式为：</p>
+<p> <B>DECODE</B>(expr,search,result[,search,result]...[,default])</p>
+<p>用于将表达式“expr”中的“search”字符串替换为“result”字符串显示例如：</p>
+<pre>create table test_table(col1 number)
+insert into test_table(col1) values(1)
+insert into test_table(col1) values(2)
+insert into test_table(col1) values(3)
+insert into test_table(col1) values(4)
+
+select decode(col1, 1, '记录1', 2, '记录2', '其它') from test_table</pre>
+<h3>3.2.6 定位子串</h3>
+<p>在SQL SERVER中使用函数charindex，在ORACLE中使用函数instr</p>
+<p>例6：查找字符串'abcdefg'中'cd'的出现位置</p>
+<pre>--SQL SERVER
+select charindex('cd', 'abcdefg')
+
+--ORACLE
+select instr('abcdefg', 'cd') from dual</pre>
+<p>注意这两个函数使用的区别，对charindex，第一个参数为要搜索的字符串，第二个参数为源字符串，而instr则正好相反，这两个函数都还可以有第三个参数，为一整数，表示源字符串的起始搜索位置，instr还可以有第4个参数，为一整数，表示要找的第几个匹配子串。下面是这两个函数的说明：</p>
+<p><CODE>CHARINDEX <B>( </B><I>substring</I><B>,</B> <I>string</I> [ <B>,</B> <I>start_location </I>] <B>) </B></CODE></p>
+<p>INSTR( string , substring [, position [, occurrence]] ) </p>
+<h3>3.2.7 取字符串长度</h3>
+<p>例7：求字符串'ABCDEFGHI'的长度</p>
+<pre>--SQL SERVER
+select len('ABCDEFGHI')
+
+--ORACLE
+select length('ABCDEFGHI') from dual</pre>
+<p>下面是这两个函数的定义</p>
+<p>LEN <B>( </B><I>string_expression </I><B>) </B></p>
+<p>LENGTH( char )</p>
+<h2>3.3 转换函数</h2>
+<p>转换函数，即用于将一种数据类型转为另一种数据类型，例如将一个字符串转换为一个数字。</p>
+<h3>3.3.1 SQL SERVER下的数据类型转换</h3>
+<p>SQL SERVER支持一些默认的数据类型转换，例如：</p>
+<pre>select '1234' + 1</pre>
+<p>其返回结果为数字1235，在查询条件中日期型字段时，可以直接这样写</p>
+<pre>where date_field = '2005-12-1'</pre>
+<p>但有时这样并不能满足全部要求，例如第一个例子中如果想得到结果字符串为'12341'，那就需要用于强制数据类型转换，SQL SERVER使用两个函数进行数据类型转换，cast 和 convert</p>
+<h4>3.3.1.1 cast 函数</h4>
+<p>其语法为：cast(表达式 as 要转换成的数据类型)</p>
+<p>例8：将字符串'1234'转成整型，并与10相加</p>
+<pre>select cast('1234' as int) + 10</pre>
+<h4>3.3.1.2 convert 函数</h4>
+<p>其语法为：<CODE>CONVERT (<I>要转换成的数据类型</I>[(长度)], <I>表达式</I> [, <I>格式字符串</I>])</CODE> </p>
+<p>这个相对于CAST函数的区别是能够使用一个格式字符串，它是一个整数值，表示使用某种模式进行转换，使得转化后的结果更加丰富。常用的有如下几种情况：</p>
+<p>一、日期型与字符串转换时，可用如下格式串</p>
+<table width="90%" >
+  <tr>
+    <th width="20%">不带世纪位(yy)</th>
+    <th width="20%">带世纪位(yyyy)</th>
+    <th width="20%">标准</th>
+    <th width="40%">输入/输出</th>
+  </tr>
+  <tr>
+    <td>-</td>
+    <td>0或100</td>
+    <td>默认值</td>
+    <td>mon dd yyyy hh:miAM(或PM)</td>
+  </tr>
+<TR>
+<TD>-</TD>
+<TD>0 或 100 (*) </TD>
+<TD>默认值</TD>
+<TD>mon dd yyyy hh:miAM（或 PM）</TD>
+</TR>
+
+<TR>
+<TD>1</TD>
+<TD>101</TD>
+<TD>美国</TD>
+<TD>mm/dd/yyyy</TD>
+</TR>
+
+<TR>
+<TD>2</TD>
+<TD>102</TD>
+<TD>ANSI</TD>
+<TD>yy.mm.dd</TD>
+</TR>
+
+<TR>
+<TD>3</TD>
+<TD>103</TD>
+<TD>英国/法国</TD>
+<TD>dd/mm/yy</TD>
+</TR>
+
+<TR>
+<TD>4</TD>
+<TD>104</TD>
+<TD>德国</TD>
+<TD>dd.mm.yy</TD>
+</TR>
+
+<TR>
+<TD>5</TD>
+<TD>105</TD>
+<TD>意大利</TD>
+<TD>dd-mm-yy</TD>
+</TR>
+
+<TR>
+<TD>6</TD>
+<TD>106</TD>
+<TD>-</TD>
+<TD>dd mon yy</TD>
+</TR>
+
+<TR>
+<TD>7</TD>
+<TD>107</TD>
+<TD>-</TD>
+<TD>mon dd, yy</TD>
+</TR>
+
+<TR>
+<TD>8</TD>
+<TD>108</TD>
+<TD>-</TD>
+<TD>hh:mm:ss</TD>
+</TR>
+
+<TR>
+<TD>-</TD>
+<TD>9 或 109 (*) </TD>
+<TD>默认值 + 毫秒</TD>
+<TD>mon dd yyyy hh:mi:ss:mmmAM（或 PM）</TD>
+</TR>
+
+<TR>
+<TD>10</TD>
+<TD>110</TD>
+<TD>美国</TD>
+<TD>mm-dd-yy</TD>
+</TR>
+
+<TR>
+<TD>11</TD>
+<TD>111</TD>
+<TD>日本</TD>
+<TD>yy/mm/dd</TD>
+</TR>
+
+<TR>
+<TD>12</TD>
+<TD>112</TD>
+<TD>ISO</TD>
+<TD>yymmdd</TD>
+</TR>
+
+<TR>
+<TD>-</TD>
+<TD>13 或 113 (*) </TD>
+<TD>欧洲默认值 + 毫秒</TD>
+<TD>dd mon yyyy hh:mm:ss:mmm(24h)</TD>
+</TR>
+
+<TR>
+<TD>14</TD>
+<TD>114</TD>
+<TD>-</TD>
+<TD>hh:mi:ss:mmm(24h)</TD>
+</TR>
+
+<TR>
+<TD>-</TD>
+<TD>20 或 120 (*) </TD>
+<TD>ODBC 规范</TD>
+<TD><I>yyyy</I>-<I>mm-dd hh</I>:<I>mm</I>:<I>ss</I>[.<I>fff</I>]</TD>
+</TR>
+
+<TR>
+<TD>-</TD>
+<TD>21 或 121 (*) </TD>
+<TD>ODBC 规范（带毫秒）</TD>
+<TD><I>yyyy</I>-<I>mm-dd hh</I>:<I>mm</I>:<I>ss</I>[.<I>fff</I>]</TD>
+</TR>
+
+<TR>
+<TD>-</TD>
+<TD>126(***)</TD>
+<TD>ISO8601</TD>
+<TD>yyyy-mm-dd Thh:mm:ss:mmm（不含空格）</TD>
+</TR>
+
+<TR>
+<TD>-</TD>
+<TD>130*</TD>
+<TD>科威特</TD>
+<TD>dd mon yyyy hh:mi:ss:mmmAM</TD>
+</TR>
+
+<TR>
+<TD>-</TD>
+<TD>131*</TD>
+<TD>科威特</TD>
+<TD>dd/mm/yy hh:mi:ss:mmmAM</TD>
+</TR>
+</table>
+<p><img src="images/bm1.BMP">注：我们发现里面没有yyyy-mm-dd这种格式（对于格式120多了毫秒），不过可以用如下语句实现：convert(varchar(10), getdate(), 120)</p>
+<p>二、float或double型与字符串型转换时可用的style</p>
+<TABLE width="90%">
+
+<TR>
+<TH class=label width=16%>值</TH>
+<TH class=label width=84%>输出</TH>
+</TR>
+
+<TR>
+<TD><B>0</B>（默认值）</TD>
+<TD>最大为 6 位数。根据需要使用科学记数法。</TD>
+</TR>
+
+<TR>
+<TD><B>1</B></TD>
+<TD>始终为 8 位值。始终使用科学记数法。</TD>
+</TR>
+
+<TR>
+<TD><B>2</B></TD>
+<TD>始终为 16 位值。始终使用科学记数法。</TD>
+</TR>
+</TABLE>
+<p>三、money型与字符串转换时用的style</p>
+<TABLE width="90%">
+
+<TR>
+<TH width="16%">值</TH>
+<TH width="84%">输出</TH>
+</TR>
+
+<TR>
+<TD><B>0</B>（默认值）</TD>
+<TD>小数点左侧每三位数字之间不以逗号分隔，小数点右侧取两位数，例如 4235.98。</TD>
+</TR>
+
+<TR>
+<TD><B>1</B></TD>
+<TD>小数点左侧每三位数字之间以逗号分隔，小数点右侧取两位数，例如 3,510.92。</TD>
+</TR>
+
+<TR>
+<TD><B>2</B></TD>
+<TD>小数点左侧每三位数字之间不以逗号分隔，小数点右侧取四位数，例如 4235.9819。 </TD>
+</TR>
+</TABLE>
+<h3>3.3.2 ORACLE 下的数据类型转换</h3>
+<p>ORACLE最不方便的地方就是不能自动将查询条件中的字符串转换为日期，例如下面的语句：</p>
+<pre>select *
+from component
+where chg_date &gt; '2005-1-1' </pre>
+<p>是错误的，因为ORACLE认为日期型字段不能直接与字符串比较，而应该写成如下的形式：</p>
+<pre>select *
+from component
+where chg_date &gt; to_date('2005-1-1', 'YYYY-MM-DD')</pre>
+<h4>3.3.2.1 to_char, 转换为字符串 </h4>
+<p>语法：to_char(日期值, 格式字符串)</p>
+<h4>3.3.2.2 to_date，转换为日期</h4>
+<p>语法：&nbsp;to_date(字符串值, 格式字符串)</p>
+<h4>3.3.3.3 常用的日期格式字符串</h4>
+<table width="90%" >
+  <tr>
+    <th width="20%">元素</th>
+    <th width="10%"><div align="center">可应用<br>
+        于函数</div></th>
+    <th width="70%">说明</th>
+  </tr>
+  <tr>
+    <td>-<br>
+      /<br>
+      ,<br>
+      .<br>
+      ;<br>
+      :<br>
+&quot;text&quot; </td>
+    <td><div align="center">Y</div></td>
+    <td>直接出现在结果字符串中</td>
+  </tr>
+  <tr>
+    <td>AD<br>
+      A.D.</td>
+    <td><div align="center">Y</div></td>
+    <td>公元指示符</td>
+  </tr>
+  <tr>
+    <td>AM<br>
+      A.M.</td>
+    <td><div align="center">Y</div></td>
+    <td>上下午指示符</td>
+  </tr>
+  <tr>
+    <td>BC<br>
+      B.C.</td>
+    <td><div align="center">Y</div></td>
+    <td>公元前指示符, 中文状态下显示上午或下午</td>
+  </tr>
+  <tr>
+    <td>CC<br>
+      SCC</td>
+    <td><div align="center">N</div></td>
+    <td>世纪<br>
+      2002返回21, 2000返回20 </td>
+  </tr>
+  <tr>
+    <td>D</td>
+    <td><div align="center">Y</div></td>
+    <td>星期几(1-7)</td>
+  </tr>
+  <tr>
+    <td>DAY</td>
+    <td><div align="center">Y</div></td>
+    <td>星期几的名称, 在中文状态下返回星期一至星期日, 在英文状态下返回Monday至Sunday</td>
+  </tr>
+  <tr>
+    <td>DD</td>
+    <td><div align="center">Y</div></td>
+    <td>在一个月中的第几天(1-31)</td>
+  </tr>
+  <tr>
+    <td>DDD</td>
+    <td><div align="center">Y</div></td>
+    <td>在一年中的第几天(1-366)</td>
+  </tr>
+  <tr>
+    <td>DY</td>
+    <td><div align="center">Y</div></td>
+    <td>星期几的简称, 在中文状态下与DAY相同, 在英文状态下为单词简写</td>
+  </tr>
+  <tr>
+    <td>E</td>
+    <td><div align="center">N</div></td>
+    <td>Abbreviated era name (Japanese Imperial, ROC Official, and Thai Buddha calendars).</td>
+  </tr>
+  <tr>
+    <td>EE</td>
+    <td><div align="center">N</div></td>
+    <td>Full era name (Japanese Imperial, ROC Official, and Thai Buddha calendars).</td>
+  </tr>
+  <tr>
+    <td>FF[1..9]</td>
+    <td><div align="center">Y</div></td>
+    <td>毫秒数, FF1-FF9, 数据表示毫秒的位数, 现在一般为FF3, 即精确到3位, 于例如:<br>
+      SELECT TO_CHAR(SYSTIMESTAMP, 'SS.FF2') from dual; </td>
+  </tr>
+  <tr>
+    <td>HH</td>
+    <td><div align="center">Y</div></td>
+    <td>在一天中的第几个小时(1-12)</td>
+  </tr>
+  <tr>
+    <td>HH12</td>
+    <td><div align="center">N</div></td>
+    <td>在一天中的第几个小时(1-12)</td>
+  </tr>
+  <tr>
+    <td>HH24</td>
+    <td><div align="center">Y</div></td>
+    <td>在一天中的第几个小时(0-23)</td>
+  </tr>
+  <tr>
+    <td>IW</td>
+    <td><div align="center">N</div></td>
+    <td>在一年中的第几个星期</td>
+  </tr>
+  <tr>
+    <td>IYY<br>
+      IY<br>
+      I</td>
+    <td><div align="center">N</div></td>
+    <td>ISO年的最后3位、2位、1位</td>
+  </tr>
+  <tr>
+    <td>IYYY</td>
+    <td><div align="center">N</div></td>
+    <td>ISO年的4位表示</td>
+  </tr>
+  <tr>
+    <td>J</td>
+    <td><div align="center">Y</div></td>
+    <td>罗马儒略历，公历天数, 自公元前4712-1-1日以来的天数</td>
+  </tr>
+  <tr>
+    <td>MI</td>
+    <td><div align="center">Y</div></td>
+    <td>分钟(0-59)</td>
+  </tr>
+  <tr>
+    <td>MM</td>
+    <td><div align="center">Y</div></td>
+    <td>月(1-12)</td>
+  </tr>
+  <tr>
+    <td>MON</td>
+    <td>Y</td>
+    <td>月的名称缩写, 中文状态下与MONTH相同</td>
+  </tr>
+  <tr>
+    <td>MONTH</td>
+    <td>Y</td>
+    <td>月的名称, 中文状态下为1月-12月, 英文状态下为January-December </td>
+  </tr>
+  <tr>
+    <td>PM<br>
+      P.M.</td>
+    <td>Y</td>
+    <td>上下行指示符, 与AM功能相同 </td>
+  </tr>
+  <tr>
+    <td>Q</td>
+    <td>N</td>
+    <td>季度(1-4)</td>
+  </tr>
+  <tr>
+    <td>RM</td>
+    <td>Y</td>
+    <td>用罗马数字表示的月(I-XII), 如果用RM则用大写显示I-XII, 如果用rm则用小写显示i-xii</td>
+  </tr>
+  <tr>
+    <td>RR</td>
+    <td>Y</td>
+    <td>显示年的后两位</td>
+  </tr>
+  <tr>
+    <td>RRRR</td>
+    <td>Y</td>
+    <td>以4位显示年</td>
+  </tr>
+  <tr>
+    <td>SS</td>
+    <td>Y</td>
+    <td>秒(0-59)</td>
+  </tr>
+  <tr>
+    <td>SSSSS</td>
+    <td>Y</td>
+    <td>零点以来经过的秒数(0-86399)</td>
+  </tr>
+  <tr>
+    <td>TZD</td>
+    <td>Y</td>
+    <td>夏令时信息<br>
+      Example: PST (for US/Pacific standard time); PDT (for US/Pacific daylight time).</td>
+  </tr>
+  <tr>
+    <td>TZH</td>
+    <td>Y</td>
+    <td>时区小时信息<br>
+      Example: 'HH:MI:SS.FFTZH:TZM'.</td>
+  </tr>
+  <tr>
+    <td>TZM</td>
+    <td>Y</td>
+    <td>时区分钟信息<br>
+      Example: 'HH:MI:SS.FFTZH:TZM'.</td>
+  </tr>
+  <tr>
+    <td>TZR</td>
+    <td>Y</td>
+    <td>时区信息<br>
+      Example: US/Pacific</td>
+  </tr>
+  <tr>
+    <td>WW</td>
+    <td>N</td>
+    <td>一年中的第几个星期</td>
+  </tr>
+  <tr>
+    <td>W</td>
+    <td>N</td>
+    <td>一月中的第几个星期</td>
+  </tr>
+  <tr>
+    <td>X</td>
+    <td>Y</td>
+    <td>本地小数点格式<br>
+      Example: 'HH:MI:SSXFF'.</td>
+  </tr>
+  <tr>
+    <td>Y,YYY</td>
+    <td>Y</td>
+    <td>以千分位方式显示年, 即第一位后显示一个逗号 </td>
+  </tr>
+  <tr>
+    <td>YEAR<br>
+      SYEAR</td>
+    <td>Y</td>
+    <td>用英语显示年, 例如2005显示为TWO THOUSAND FIVE, S用来表示公元前的前缀&quot;-&quot;</td>
+  </tr>
+  <tr>
+    <td>YYYY<br>
+      SYYYY</td>
+    <td>Y</td>
+    <td>用4位数字显示年, S表示公元前的前缀&quot;-&quot; </td>
+  </tr>
+  <tr>
+    <td>YYY<br>
+      YY<br>
+      Y</td>
+    <td>Y</td>
+    <td>年的后3位、2位、1位数字</td>
+  </tr>
+</table>
+<p>例9：显示当前日期</p>
+<pre>select to_char(sysdate, '&quot;当前日期：&quot;YYYY-MM-DD') from dual</pre>
+<h4>3.3.3.4 to_number 转换为数字</h4>
+<p>例10：将字符串'1234'与数字10相加</p>
+<pre>select to_number('1234') + 10 from dual </pre>
+<p><img src="images/bm1.BMP">注：其实不用to_number函数也会得到相同的结果，但这样更正规一些。</p>
+<h2>3.4 数值计算函数</h2>
+<h3>3.4.1 对小数的舍入</h3>
+<h4>3.4.1.1 round, 四舍五入的函数</h4>
+<p>SQL SERVER和ORACE都支持的语法为: round(<em>numric_expression</em>, <em>length</em>)</p>
+<p>第一个参数为数字类型表达式，第二个参数为要保留的小数点位数，length可以为负，如果为负则表示从小数点左边开始舍入，例如round(145.5, -1)返回值为150</p>
+<p><img src="images/bm1.BMP"> 注：对ORACLE，第2个参数可省略，取默认值0。</p>
+<p><img src="images/bm1.BMP">注：对SQL SERVER，还可以有第3个参数，默认值为0，选非0值时表示截断，而不是四舍五入，例如round(145.59, 1, 1)返回值为145.5，而非145.6。</p>
+<h4>3.4.1.2 取大于或等于所给数字表达式的最小整数</h4>
+<p>SQL SERVER的函数为 ceiling，ORACLE的函数为 ceil，用法如下：</p>
+<pre>--SQL SERVER，返回值为146
+select ceiling(145.1)
+
+--ORACLE，返回值为146
+select ceil(145.1) from dual</pre>
+<h4>3.4.1.3 取小于或等于所给数字表达式的最大整数。</h4>
+<p>SQL SERVER和ORACLE的函数均为: floor(<em>numric_expression</em>) </p>
+<p>例如:</p>
+<pre>--返回值为145
+--SQL SERVER
+select floor(145.9)
+
+--ORACLE
+select floor(145.9) from dual</pre>
+<h3>3.4.2 绝对值 </h3>
+<p>SQL SERVER和ORACLE的函数都是: abs(<em>numric_expression</em>) </p>
+<h2>3.5 日期和时间函数 </h2>
+<h3>3.5.1 当前日期</h3>
+<p>SQL SERVER: getdate()</p>
+<p>ORACLE: sysdate, current_date</p>
+<h3>3.5.2 日期运算</h3>
+<h4>3.5.2.1 SQL SERVER</h4>
+<p><CODE>DATEADD <B>(</B> <I>datepart </I><B>,</B> <I>number</I><B>,</B> <I>date </I><B>) </B></CODE></p>
+<p>在向指定日期加上一段时间的基础上，返回新的 <B>datetime</B> 值。</p>
+<p><I><a name="datepart"></a>datepart </I>是指定应返回的日期部分的参数。下表列出了 SQL Server 识别的日期部分和缩写。</p>
+<TABLE width="90%">
+  <TR>
+    <TH width="44%">日期部分</TH>
+    <TH width="56%">缩写</TH>
+  </TR>
+  <TR>
+    <TD>year</TD>
+    <TD>yy, yyyy</TD>
+  </TR>
+  <TR>
+    <TD>quarter</TD>
+    <TD>qq, q</TD>
+  </TR>
+  <TR>
+    <TD>month</TD>
+    <TD>mm, m</TD>
+  </TR>
+  <TR>
+    <TD>dayofyear</TD>
+    <TD>dy, y</TD>
+  </TR>
+  <TR>
+    <TD>day</TD>
+    <TD>dd, d</TD>
+  </TR>
+  <TR>
+    <TD>week</TD>
+    <TD>wk, ww</TD>
+  </TR>
+  <TR>
+    <TD>weekday</TD>
+    <TD>dw</TD>
+  </TR>
+  <TR>
+    <TD>Hour</TD>
+    <TD>hh</TD>
+  </TR>
+  <TR>
+    <TD>minute</TD>
+    <TD>mi, n</TD>
+  </TR>
+  <TR>
+    <TD>second</TD>
+    <TD>ss, s</TD>
+  </TR>
+  <TR>
+    <TD>millisecond</TD>
+    <TD>ms</TD>
+  </TR>
+</TABLE>
+<p><em>number</em> 是用来增加 <I>datepart</I> 的值。如果指定一个不是整数的值，则将废弃此值的小数部分。例如，如果为 <I>datepart</I> 指定 <B>day</B>，为 <I>number </I>指定 <B>1.75</B>，则 <I>date </I>将增加 1, 可以为负数， 表示将时间提前</p>
+<p>例：取2005-12-25日10天后的值</p>
+<pre>select dateadd(day, 10, '2005-12-25')</pre>
+<h4>3.5.2.2 ORACLE</h4>
+<p>ORACLE可直接对日期型值进行操作，以天为单位，1/24则表示1小时</p>
+<p>例：</p>
+<pre>--加1小时
+select to_date('2005-12-1 0:0', 'YYYY-MM-DD HH24:MI') + 1 / 24 from dual
+
+--加1天
+select to_date('2005-12-1', 'YYYY-MM-DD') + 1 from dual</pre>
+<h3>3.5.3 日期比较</h3>
+<h4>3.5.3.1 SQL SERVER</h4>
+<p><CODE>DATEDIFF <B>( </B><I>datepart </I><B>,</B> <I>startdate </I><B>,</B> <I>enddate </I><B>) </B></CODE></p>
+<p>返回跨两个指定日期的日期和时间边界数。 </p>
+<p>有关datepart的可用值请参看“<a href="#datepart">SQL SERVER 日期格式字符串</a>”</p>
+<p>例: 返回2005-11-1和2005-12-1之间的天数</p>
+<pre>select datediff(day, '2005-11-1', '2005-12-1')</pre>
+<h4>3.5.3.2 ORACLE</h4>
+<p>ORACLE可直接对两个日期进行相减，得到相差的天数</p>
+<p>例: 返回2005-11-1和2005-12-1之间的天数</p>
+<pre>select to_date('2005-12-1', 'YYYY-MM-DD') - to_date('2005-11-1', 'YYYY-MM-DD') from dual</pre>
+<h3>3.5.4 日期解析</h3>
+<p>即从一个日期中提取出自己需要的部分，如年、月、日、时、分、秒等。</p>
+<h4>3.5.4.1 SQL SERVER</h4>
+<p><CODE>DATEPART <B>( </B><I>datepart </I><B>,</B> <I>date </I><B>) </B></CODE></p>
+<p>有关datepart的可用值请参看“<a href="#datepart">SQL SERVER 日期格式字符串</a>”</p>
+<p>例如：</p>
+<pre>select cast(datepart(year, '2005-12-1') as varchar) + '年'</pre>
+<p>其实SQL SERVER还有直接取日期部分的函数：</p>
+<p>YEAR(日期): 取日期中的年 </p>
+<p>MONTH(日期): 取日期中月</p>
+<p>DAY(日期): 取日期中的日</p>
+<h4>3.5.4.2 ORACLE</h4>
+<p>其语法格式如下：</p>
+<p><img src="images/extract_datetime.gif" width="541" height="282"></p>
+<p>例如：</p>
+<pre>select extract(year from to_date('2005-12-1', 'YYYY-MM-DD')) || '年' from dual</pre>
+<h2>3.7 习题</h2>
+<p>1、在DEMO库中，位号的第5位为功能号（例如：101-FE   -100）对索引表分类，取出所有T、P、F、L类的仪表，并按T、P、F、L的顺序进行排序，即温度类仪表放在一块儿，同类仪表内部再按位号排序，写出SQL SERVER语法及ORACLE语句</p>
+<p>2、获取仪表索引表(component表)内容，其中要求输出仪表位置、cmpnt_name、cmpnt_serv，其中仪表位置定义如下：为其proj_id、plant_id、area_id、unit_id用字符“_”相连，例如“1_4085_4087_12589”，并先按这个字段排序，再按位号排序，要求分别写出ORACLE和SQL SERVER下的语句 </p>
+<p>3、输出DCS IO索引表，其格式定义如下，其中包括：回路号(component.cmpnt_name)、 回路功能(loop.loop_serv)、 回路功能指示为6个字母，表示回路的功能，便如FIC1001，具有I功能和C功能，于是在相应列上标上符号√。（注：从第2个字母开始为功能指示字符），要求分别写出SQL SERVER和ORACLE下的语句</p>
+<table width="90%" >
+  <tr>
+    <th>回路号</th>
+    <th>回路功能</th>
+    <th>Q</th>
+    <th>I</th>
+    <th>R</th>
+    <th>C</th>
+    <th>A</th>
+    <th>S</th>
+  </tr>
+  <tr>
+    <td>FIC1001</td>
+    <td>流量指示控制</td>
+    <td>&nbsp;</td>
+    <td>√</td>
+    <td>&nbsp;</td>
+    <td>√</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+<p>4、显示索引表中每个位号及其最后修改日期（component.chg_date）, 要求日期显式格式为“****年**月**日”，要求分别写出SQL SERVER及ORACLE下的SQL语句</p>
+<p>&nbsp;</p>
+<script language="javascript" src="index.js"></script>
+
+</body>
+</html>

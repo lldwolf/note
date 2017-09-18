@@ -1,0 +1,55 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+IsNumber</TITLE>
+</HEAD>
+<BODY>
+<A NAME="CAIBFFEI"></A><A NAME="TI6836"></A><h1>IsNumber</h1>
+<A NAME="TI6837"></A><p>
+<FORM>
+<INPUT
+ TYPE = "BUTTON"
+ VALUE = "Examples"
+ onClick = "window.location = 'imugp188.htm#EX40';">
+<INPUT
+  TYPE = "BUTTON"
+ VALUE = "See also"
+ onClick = "window.location = 'imugp188.htm#SA40';">
+</FORM>
+</p>
+<h3>Description</h3><A NAME="TI6838"></A><p>Reports whether the value of a string is a number.</p>
+
+<h3>Syntax</h3><pre><b>IsNumber</b> ( <i>string</i> )</pre>
+<A NAME="TI6839"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI6840"></A>Argument</th>
+<th align="left" valign=bottom><A NAME="TI6841"></A>Description</th>
+</tr>
+<tr><td valign=top><A NAME="TI6842"></A><i>string</i></td>
+<td valign=top><A NAME="TI6843"></A>A string whose value you want to test
+to determine whether it is a valid number</td>
+</tr>
+</table>
+
+<h3>Return Values</h3><A NAME="TI6844"></A><p>Boolean. Returns TRUE if <i>string</i> is a
+valid number and FALSE if it is not.</p>
+
+<A NAME="EX40"></A><h3>Examples</h3><A NAME="TI6845"></A><p>This expression returns TRUE:<pre><i>IsNumber</i> ("32.65")</pre>
+</p>
+<A NAME="TI6846"></A><p>This expression returns FALSE:<pre><i>IsNumber</i> ("A16")</pre>
+</p>
+<A NAME="TI6847"></A><p>This expression for a computed field returns "Not
+a valid age" if age does not contain a number:<pre>If(<i>IsNumber</i> (age), age, "Not a valid age")</pre>
+</p>
+<A NAME="TI6848"></A><p>To pass this validation rule, Age_nbr must
+be a number:<pre><i>IsNumber</i> (Age_nbr) = TRUE</pre>
+</p>
+
+<A NAME="SA40"></A><h3>See Also</h3><A NAME="TI6849"></A><p><A NAME="TI6850"></A>
+<ul>
+<li class=fi><A HREF="imugp185.htm#CAIDIIGH">Integer</A></li>
+<li class=ds> 
+</li>
+</ul>
+</p>
+
+

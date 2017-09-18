@@ -1,0 +1,32 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<script language="javascript" src="css.js"></script>
+<title>基本配置</title>
+</head>
+
+<body>
+ <h1>第N章 基本配置</h1>
+ <h2>N.1 端口配置</h2>
+ <h3>N.1.1 HTTP端口</h3>
+ <p>JBoss的默认HTTP监听端口是8080，但有时会和机器上安装的某些软件冲突（如Oracle），这时就需要更改，更改方法为：</p>
+ <p>若为JBoss 3.2.x，则找到文件 %JBOSS_HOME%\server\default\deploy\jbossweb-tomcat.sar\META-INF\jboss-service.xml，找到如下的内容：</p>
+<pre> &lt;!-- A HTTP/1.1 Connector on port 8080 --&gt;
+&lt;Connector 
+  className=&quot;org.apache.coyote.tomcat4.CoyoteConnector&quot;
+  port=&quot;8080&quot; minProcessors=&quot;3&quot; maxProcessors=&quot;10&quot;
+  enableLookups=&quot;true&quot; acceptCount=&quot;10&quot; debug=&quot;0&quot; 
+  connectionTimeout=&quot;20000&quot; useURIValidationHack=&quot;false&quot; /&gt;</pre>
+<p>若为JBoss 4.x，则要找到文件 %JBOSS_HOME%\server\default\deploy\jbossweb-tomcat50.sar\server.xml，找到内容：</p>
+<pre>&lt;Connector port="8080" address="${jboss.bind.address}"
+  maxThreads="150" minSpareThreads="25" maxSpareThreads="75"
+  enableLookups="false" redirectPort="8443" acceptCount="100"
+  connectionTimeout="20000" disableUploadTimeout="true"/&gt;</pre>
+<p>将8080改为需要的端口与即可</p>
+<h3>N.1.2 RMI端口</h3>
+<p>修改位置为D:\java\jboss-4.0.1\server\default\conf\jboss-service.xml，默认为1098，其配置信息如下所示</p>
+<p>&nbsp;</p>
+</body>
+</html>

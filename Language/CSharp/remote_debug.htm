@@ -1,0 +1,51 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+    <script type="text/javascript" src="../../mylib/js/css.js"></script>
+    <title>Remote Debug</title>
+</head>
+
+<body>
+    <p id="title">Remote Debug</p>
+    <h1>Overview</h1>
+    <p>VS 支持远程 Debug。也就是说，如果用户没有安装 Visual Studio，开发者仍然可以从本机远程调试用户端的程序。</p>
+    <p>步骤如下：</p>
+    <p>假设现在有A、B两台机器，其中A是Dev的开发server(这里是在win server环境去开发)装着Visual Studio以及Code，B机器上是Tester部署着我们的应用.</p>
+    <ol>
+        <li>
+            <p>远端程序需要有编译出的相应 *.pdb 文件</p>
+        </li>
+        <li>
+            <p>在A机器上的Visual Studio安装目录下找到Common7\IDE\Remote Debugger文件夹, 并将其Copy到B机器上</p>
+        </li>
+        <li>
+            <p>运行B机器上Remote Debugger下与本机向对应的目录下（x86  or x64 ）的msvsmon.exe文件如下图：</p>
+            <p><img alt="" src="images/remote_debug01.png" /></p>
+            <p>可以看到，默认的开放端口是 4016</p>
+        </li>
+        <li>
+            <p>进入菜单 Tools &rarr; Options，设置任何人都可以 Debug，如下图所示：</p>
+            <p><img alt="" src="images/remote_debug02.png" /></p>
+            <p>从安全角度讲，其实应该使用 Windows Authtication。但通常为了省事儿就不这么干了。如果使用 Windows Authentication 时设置如下图所示</p>
+            <p><img alt="" src="images/remote_debug03.png" /></p>
+            <p>到此需要调试的机器B已经设置完毕.</p>
+        </li>
+        <li>
+            <p>返回到A机器上，在打开的源码中选择Debug菜单中的Attach to Process子菜单项，在弹出的对话框中的Qualifier  文本框中输入Step 3 里的Server name 或 IP 地址，然后点击"Refresh"按钮，选中需要调试的的进程，点击Attach按钮，如下图：</p>
+            <p><img alt="" src="images/remote_debug04.png" /></p>
+        </li>
+        <li>
+            <p>这时候返回到B机器上，你会在Remote Debugger中看到一条类似如红框所示的信息，这说明Remote Debugger已经连上了。</p>
+            <p><img alt="" src="images/remote_debug05.png" /></p>
+        </li>
+        <li>
+            <p>剩下的，你就可以像在本机一样 debug了</p>
+        </li>
+    </ol>
+    <p class="note">采用Windows Authentication​的话，两台机器的账户名和密码要是一样，如果遇到不一致的情况，可以通过新建用户或者修改密码的方式来解决。</p>
+    <p class="note">采用No Authentication​的话，两台机器的防火墙都需要关掉</p>
+
+</body>
+</html>

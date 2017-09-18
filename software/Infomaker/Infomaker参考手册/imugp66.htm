@@ -1,0 +1,295 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+Working with validation rules </TITLE>
+</HEAD>
+<BODY>
+<A NAME="X-ref301085948"></A><h1>Working with validation rules </h1>
+<A NAME="TI2705"></A><p>When users enter data in a form, you want to be
+sure the data is valid before using it to update the database. One
+way to do this is through validation rules.</p>
+<A NAME="TI2706"></A><p>You usually define validation rules in the Database painter.
+To use a validation rule, you associate it with a column in the
+Database painter or Form painter.</p>
+<A NAME="TI2707"></A><p>InfoMaker uses validation rules when you enter data:<A NAME="TI2708"></A>
+<ul>
+<li class=fi>Directly in the database using
+the Database painter</li>
+<li class=ds>In a form
+</li>
+</ul>
+</p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Another technique</span> <A NAME="TI2709"></A>You can also perform data validation through code tables,
+which are implemented through a column's edit style.</p>
+<A NAME="TI2710"></A>For more information, see <A HREF="imugp65.htm#BFCBBIBJ">"Working with edit styles "</A>.</p>
+<A NAME="TI2711"></A><h2>Understanding validation rules</h2>
+<A NAME="TI2712"></A><p>Validation rules are criteria that a form uses to validate
+data entered into a column. They are InfoMaker-specific and therefore
+not enforced by the DBMS. Validation rules apply to forms (which
+support updating) but not to reports.</p>
+<A NAME="TI2713"></A><p>Validation rules assigned in the Database painter are used
+by default when you place columns in a form. You can override
+the default rules in the Form painter.</p>
+<A NAME="TI2714"></A><p>A validation rule is an expression that evaluates to either
+TRUE or FALSE. If the expression evaluates to TRUE for an entry
+into a column, InfoMaker accepts the entry. If the expression evaluates
+to FALSE, the entry is not accepted and an error message is displayed: </p>
+<br><img src="images/Dwdis23.gif">
+<A NAME="TI2715"></A><p>You can customize the message displayed when a value is rejected.</p>
+<A NAME="X-ref356198657"></A><h2>Using validation rules</h2>
+<A NAME="TI2716"></A><p>You work with validation rules in the Database painter and Form painter.</p>
+<A NAME="TI2717"></A><h4>What you do in the Database painter</h4>
+<A NAME="TI2718"></A><p>In the Database painter, you can:<A NAME="TI2719"></A>
+<ul>
+<li class=fi>Create, modify, and delete named validation rules<br>
+The validation rules are stored in the extended attribute
+system tables. Once you define a validation rule, it can be used
+by any column of the appropriate data type in the database.<br></li>
+<li class=ds>Assign validation rules to columns and remove them
+from columns<br>
+These rules are used by default when you place the column
+in a form in the Form painter.<br>
+</li>
+</ul>
+</p>
+<A NAME="TI2720"></A><h4>What you do in the Form painter</h4>
+<A NAME="TI2721"></A><p>In the Form painter, you can:<A NAME="TI2722"></A>
+<ul>
+<li class=fi>Accept the validation rule assigned to a column in the Database
+painter</li>
+<li class=ds>Create an ad hoc, unnamed rule to use with one specific
+column
+</li>
+</ul>
+</p>
+<A NAME="TI2723"></A><h4>Validation rules and the extended attribute system
+tables</h4>
+<A NAME="TI2724"></A><p>Once you have placed a column that has a validation rule from
+the extended attribute system tables in a form, there is no
+longer any link to the named rule in the extended attribute system
+tables.</p>
+<A NAME="TI2725"></A><p>If the definition of the validation rule later changes in
+the extended attribute system tables, the rule for the column in
+a form will not change.</p>
+<A NAME="TI2726"></A><h2>Defining a validation rule in the Database painter</h2>
+<A NAME="TI2727"></A><p>Typically, you will define validation rules in the Database
+painter, because validation rules are properties of the data itself.
+Once defined in the Database painter, the rules are used by default
+each time the column is placed in a form.</p>
+<A NAME="TI2728"></A><p>This section describes the ways you can manipulate validation
+rules in the Database painter.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To create a new validation rule</p>
+<ol><li class=fi>
+In the Database painter, select Object&gt;Insert&gt;Validation
+Rule from the menu bar.<br><br>
+The Validation Rule view displays in the Properties view.<br><br></li>
+<li class=ds>
+Assign a name to the rule, select the data type
+of the columns to which it applies, and customize the error message
+(if desired).<br><br>
+For information, see <A HREF="imugp66.htm#BFCECHDI">"Customizing the error message"</A>.<br><br></li>
+<li class=ds>
+Click the definition tab and define the expression
+for the rule.<br><br>
+For information, see <A HREF="imugp66.htm#X-ref353596681">"Defining the expression"</A>.<br><br><br><img src="images/Dwdis24b.gif"><br>
+</li></ol>
+<A NAME="TI2729"></A><p>You can use this rule with any column of the appropriate data
+type in the database.</p>
+<br><p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To modify a validation rule:</p>
+<ol><li class=fi>
+In the Database painter, open the Extended
+Attributes view.<br><br></li>
+<li class=ds>
+In the Extended Attributes view, open the list
+of validation rules.<br><br></li>
+<li class=ds>
+Position the pointer on the validation rule you
+want to modify, display the popup menu, and select Properties.<br><br></li>
+<li class=ds>
+In the Validation Rule view, modify the validation
+rule as desired.<br><br>
+For information, see <A HREF="imugp66.htm#X-ref353596681">"Defining the expression"</A> and <A HREF="imugp66.htm#BFCECHDI">"Customizing the error message"</A>.<br><br></li></ol>
+<br><p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To associate a validation rule with a column in
+the Database painter:</p>
+<ol><li class=fi>
+In the Database painter (Objects view),
+position the pointer on the column, select Properties from the column's
+popup menu, and select the Validation tab.<br><br></li>
+<li class=ds>
+Select a validation rule from the Validation Rule
+dropdown listbox.<br><br>
+The column now has the selected validation rule associated
+with it in the extended attribute system tables. Whenever you use
+this column in a form, it will use this validation rule unless
+you override it in the Form painter.<br><br></li></ol>
+<br><p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To remove a validation rule from a column in the
+Database painter:</p>
+<ol><li class=fi>
+In the Database painter (Objects view),
+position the pointer on the column, select Properties from its popup
+menu, and select the Validation tab in the Properties view.<br><br></li>
+<li class=ds>
+Select (None) from the list in the Validation
+Rule dropdown listbox.<br><br>
+The validation rule is no longer associated with the column.<br><br></li></ol>
+<br><A NAME="X-ref353596681"></A><h3>Defining the expression</h3>
+<A NAME="TI2730"></A><p>A validation rule is a boolean expression. InfoMaker applies
+the boolean expression to an entered value. If the expression returns
+TRUE, the value is accepted. Otherwise, the value is not accepted
+and an error message displays.</p>
+<A NAME="TI2731"></A><h4>What expressions can contain</h4>
+<A NAME="TI2732"></A><p>You can use any valid InfoMaker expression in validation rules.</p>
+<A NAME="TI2733"></A><p>Validation rules can include most InfoMaker functions. InfoMaker function functions
+are displayed in the Functions listbox and can be pasted into the definition.</p>
+<A NAME="TI2734"></A><p>For information about these functions, see Chapter
+21, "DataWindow Expression and InfoMaker Functions".</p>
+<A NAME="TI2735"></A><p>Use the notation <i>@placeholder</i>
+ (where <i>placeholder</i>
+ is
+any group of characters) to indicate the current column in the rule.
+When you define a validation rule in the Database painter, InfoMaker stores
+it in the extended attribute system tables with the placeholder
+name. During execution, InfoMaker substitutes the value of the
+column for <i>placeholder</i>
+.</p>
+<A NAME="TI2736"></A><h4>Pasting the placeholder</h4>
+<A NAME="TI2737"></A><p>The @col can be easily used as the placeholder. A
+button in the Paste area is labeled with @col. You can
+click the button to paste the @col into the validation
+rule.</p>
+<A NAME="TI2738"></A><h4>An example</h4>
+<A NAME="TI2739"></A><p>For example, to make sure that both Age and Salary are greater
+than zero using a single validation rule, define the validation
+rule as follows:<pre>@col &gt; 0</pre>
+</p>
+<A NAME="TI2740"></A><p>Then associate the validation rule with both the Age and Salary
+columns. At execution time, InfoMaker substitutes the appropriate
+values for the column data when the rule is applied.</p>
+<A NAME="BFCDCEDI"></A><h3>Using match values for charactercolumns</h3>
+<A NAME="TI2741"></A><p>If you are defining the validation rule for a character column,
+you can use the Match button on the Definition page of the Validation
+Rule view. This button lets you define a match pattern for matching
+the contents of a column to a specified text pattern (for example,
+^[0-9]+$ for all numbers and
+^[A-Za-z]+$ for all letters).</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To specify a match pattern for character columns:</p>
+<ol><li class=fi>
+Click the Match button on the Definition
+page of the Validation Rule view.<br><br>
+The Match Pattern dialog box displays.<br><br></li>
+<li class=ds>
+Enter the text pattern you want to match the column
+to.<br><br>
+<i>or</i>
+<br><br>
+Select a displayed pattern.<br><br></li>
+<li class=ds>
+(Optional) Enter a test value and click the Test
+button to test the pattern.<br><br></li>
+<li class=ds>
+Click OK when you are satisfied that the pattern
+is correct.<br><br></li></ol>
+<br><A NAME="TI2742"></A><p>For more on the Match function and text patterns,
+see Chapter 23, "DataWindow Painter and InfoMaker Functions".</p>
+<A NAME="BFCECHDI"></A><h3>Customizing the error message</h3>
+<A NAME="TI2743"></A><p>When you define a validation rule, InfoMaker automatically
+creates the error message that displays by default when users enter
+an invalid value:<pre>'Item ~'' + @<i>Col</i> + '~' does not pass validation test.'</pre>
+</p>
+<A NAME="TI2744"></A><p>You can edit the string expression to create a custom error
+message.</p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Different syntax in the Form painter</span> <A NAME="TI2745"></A>If you're working in the Form painter, you can enter
+a string expression for the message, but you don't use
+the @ sign for placeholders. For example, this is the default
+message:<pre>'Item ~'' + <i>ColumnName</i> + '~' does not pass validation test.'</pre>
+</p>
+<A NAME="TI2746"></A><p>A validation rule for the Salary column in the Employee table
+might have the following custom error message associated with it:<pre>Please enter a salary greater than $10,000.'</pre>
+</p>
+<A NAME="TI2747"></A><p>If users enter a salary less than or equal to $10,000,
+the custom error message displays:</p>
+<br><img src="images/Dwdis25.gif">
+<A NAME="TI2748"></A><h3>Specifying initial values</h3>
+<A NAME="TI2749"></A><p>As part of defining a validation rule, you can supply an initial
+value for a column.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To specify an initial value for a column in the
+Database painter:</p>
+<ol><li class=fi>
+Select Properties from the column's
+popup menu and select the Validation tab.<br><br></li>
+<li class=ds>
+Specify a value in the Initial Value box.<br><br></li></ol>
+<br><A NAME="TI2750"></A><h2>Defining a validation rule in the Form painter</h2>
+<A NAME="TI2751"></A><p>Validation rules you assign to a column in the Database painter
+are used by default when you place the column in a form. You
+can override the validation rule in the Form painter by defining
+an ad hoc rule for one specific column.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To specify a validation rule for a column in the
+Form painter:</p>
+<ol><li class=fi>
+In the Form painter, select Properties
+from the column's popup menu, then select the Validation
+tab in the Properties view.<br><br></li>
+<li class=ds>
+Create or modify the validation expression, as
+described next. To help you work on the expression, you can use
+the button to the right of the Validation expression box to display
+the Modify Expression dialog box.<br><br></li>
+<li class=ds>
+(Optional) Enter a string or string expression
+to customize the validation error message.<br><br>
+For more information, see <A HREF="imugp66.htm#BFCECHDI">"Customizing the error message"</A>.<br><br></li></ol>
+<br><A NAME="BABCFCCI"></A><h3>Specifying the expression</h3>
+<A NAME="TI2752"></A><p>Since you might just have entered a value in the column, validation
+rules refer to the current data value, which you can obtain through
+the GetText function.</p>
+<A NAME="TI2753"></A><p>Using GetText ensures that the most recent data entered in
+the current column is evaluated.</p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>InfoMaker does the conversion for you</span> <A NAME="TI2754"></A>If you have associated a validation rule for a column in the
+Database painter, InfoMaker automatically converts the syntax to
+use GetText when you place the column in a form.</p>
+<A NAME="TI2755"></A><p>GetText returns a string. Be sure to use a data conversion
+function (such as Integer or Real) if you want to compare the entered
+value with a data type other than string.</p>
+<A NAME="TI2756"></A><p>For more on the GetText function and text
+patterns, see Chapter 23, "DataWindow Painter and InfoMaker Functions".</p>
+<A NAME="TI2757"></A><h4>Referring to other columns</h4>
+<A NAME="TI2758"></A><p>You can refer to the values in other columns by specifying
+their names in the validation rule. You can paste the column names
+in the rule using the Columns box.</p>
+<A NAME="TI2759"></A><h3>Examples</h3>
+<A NAME="TI2760"></A><p>Here are some examples of validation rules.</p>
+<p><b>Example 1</b>   To check that the data entered in the current column is a
+positive integer, use this validation rule:</p>
+<A NAME="TI2761"></A><p><pre>Integer(GetText( )) &gt; 0</pre>
+</p>
+<p><b>Example 2</b>   If the current column contains the discounted price and the column
+named Full_Price contains the full price, you could use
+the following validation rule to evaluate the contents of the column
+using the Full_Price column:</p>
+<A NAME="TI2762"></A><p><pre>Match(GetText( ),"^[0-9]+$") AND<br> Real(GetText( )) &lt; Full_Price</pre>
+</p>
+<A NAME="TI2763"></A><p>To pass the validation rule, the data must be all digits (must
+match the text pattern <b>^[0-9]+$</b>)
+and must be less than the amount in the Full_Price column.</p>
+<A NAME="TI2764"></A><p>Notice that to compare the numeric value in the column with
+the numeric value in the Full_Price column, the Real function
+was used to convert the text to a number.</p>
+<p><b>Example 3</b>   In your company, a product price and a sales commission are related
+in the following way:<A NAME="TI2765"></A>
+<ul>
+<li class=fi>If
+the price is greater than or equal to $1000, the commission
+is between 10 percent and 20 percent</li>
+<li class=ds>If the price is less than $1000, the commission
+is between 4 percent and 9 percent
+</li>
+</ul>
+</p>
+<A NAME="TI2766"></A><p>The Sales table has two columns, Price and Commission. The
+validation rule for the Commission column is:<pre>(Number(GetText( )) &gt;= If(price &gt;= 1000, .10, .04))<br> AND<br> (Number(GetText( )) &lt;= If(price &gt;= 1000, .20, .09))</pre>
+</p>
+<A NAME="TI2767"></A><p>A customized error message for the Commission column is:<pre>"Price is " + if(price &gt;= 1000,<br> "greater than or equal to","less than") +<br> " 1000. Commission must be between " +<br> If(price &gt;= 1000,".10", ".04") + " and " +<br> If(price &gt;= 1000, ".20.", ".09.")</pre>
+</p>
+

@@ -1,0 +1,49 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+IsRowModified</TITLE>
+</HEAD>
+<BODY>
+<A NAME="DWFIsRowModified"></A><A NAME="TI6851"></A><h1>IsRowModified</h1>
+<A NAME="TI6852"></A><p>
+<FORM>
+<INPUT
+ TYPE = "BUTTON"
+ VALUE = "Examples"
+ onClick = "window.location = 'imugp189.htm#EX41';">
+<INPUT
+  TYPE = "BUTTON"
+ VALUE = "See also"
+ onClick = "window.location = 'imugp189.htm#SA41';">
+</FORM>
+</p>
+<h3>Description</h3><A NAME="TI6853"></A><p>Reports whether the row has been modified. </p>
+
+<h3>Syntax</h3><pre><b>IsRowModified</b> ( )</pre>
+
+<h3>Return Values</h3><A NAME="TI6854"></A><p>Boolean. Returns TRUE if the row has been modified and FALSE
+if it has not.</p>
+
+<h3>Usage</h3><A NAME="TI6855"></A><p>In a DataWindow object, when you use IsRowModified in bands
+other than the detail band, it reports on a row in the detail band.
+See GetRow for a table specifying which row is associated with each
+band for reporting purposes.</p>
+
+<A NAME="EX41"></A><h3>Examples</h3><A NAME="TI6856"></A><p>This expression in a computed field in the detail
+area displays TRUE or FALSE to indicate whether each row has been
+modified:<pre><i>IsRowModified</i> ()</pre>
+</p>
+<A NAME="TI6857"></A><p>This expression defined in the Properties view for
+the Color property of the computed field displays the text (TRUE)
+in red if the user has modified any value in the row:<pre>If(<i>IsRowModified</i> (), 255, 0)</pre>
+</p>
+
+<A NAME="SA41"></A><h3>See Also</h3><A NAME="TI6858"></A><p><A NAME="TI6859"></A>
+<ul>
+<li class=fi><A HREF="imugp180.htm#CAIBGHBE">GetRow</A>
+</li>
+</ul>
+</p>
+
+

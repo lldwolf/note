@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<title>第三章 常用的JavaScript控制</title>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+<p id="title">第三章 常用的JavaScript控制</p>
+
+<h1>对HTML元素的控制</h1>
+<h2>控制标签是否可见</h2>
+<p>可使用如下代码：</p>
+<pre>--保留原占位空间
+var tag = document.all[&quot;tag_name&quot;];
+tag.style.visibility = &quot;visible&quot;;	//使可见
+tag.style.visibility = &quot;hidden&quot;;	//使隐藏
+
+--不保留原占位空间
+var tag = document.all[&quot;tag_name&quot;];
+tag.style.display = &quot;block&quot;;		//使可见
+tag.style.display = &quot;none&quot;;		//使隐藏</pre>
+<p>其中<em> tag_name</em> 为HTML标签的ID或Name属性，为了兼容性建议使用ID，因为有的浏览器不支持Name属性（IE支持）。</p>
+<p>因为JavaScript为解释性语言，所以在所有的HTML标签装入前，上述代码不能起作用，例如直接在 <em>&lt;head&gt; &lt;/head&gt;</em> 内嵌入上述代码，浏览器会报告错误，说找不到对象。</p>
+<h1>N.100 常见错误 </h1>
+<h2>N.100.1 HTMLElement.tagName</h2>
+<p>其返回值为大写</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<script language="javascript" src="index.js"></script>
+</body>
+</html>

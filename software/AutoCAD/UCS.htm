@@ -1,0 +1,35 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>坐标系统</title>
+<script language="javascript" src="css.js"></script>
+</head>
+
+<body>
+<h1>第N章 坐标系统</h1>
+<hr />
+<h2>N.1 将坐标系切换为世界UCS</h2>
+<pre>Private Sub ToWorldUCS()
+
+    '切换UCS至世界UCS
+    Dim worldUCS As AcadUCS
+    Dim origin(0 To 2) As Double
+    Dim xAxisPnt(0 To 2) As Double
+    Dim yAxisPnt(0 To 2) As Double
+    
+    origin(0) = 0#: origin(1) = 0#: origin(2) = 0#
+    xAxisPnt(0) = 1#: xAxisPnt(1) = 0#: xAxisPnt(2) = 0#
+    yAxisPnt(0) = 0#: yAxisPnt(1) = 1#: yAxisPnt(2) = 0#
+    
+    Set worldUCS = ThisDrawing.UserCoordinateSystems.Add(origin, xAxisPnt, yAxisPnt, "World_UCS")
+    ThisDrawing.ActiveUCS = worldUCS
+
+End Sub</pre>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<script language="javascript" src="index.js"></script>
+</body>
+</html>

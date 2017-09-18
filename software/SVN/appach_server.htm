@@ -1,0 +1,142 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>安装 ApacheSVN 服务器</title>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+<h1>第3章 安装 ApacheSVN 服务器</h1>
+<hr />
+<h2>3.1 概述 </h2>
+<p>我们在第1章中讲述的服务器是一种轻型的服务器，使用自己定义的协议和客户端，一般称之为svnserver。</p>
+<p>Apache通过mod_dav_svn模块，可以访问SVN版本库，并且使客户端可以使用HTTP的扩展协议WebDAV/DeltaV进行访问，这种服务器称为AppacheSVN服务器。</p>
+<p>通过Http协议访问版本库是 Subversion 的亮点之一。ApacheSVN服务器 具备了许多 svnserve服务器 没有的特性，使用上更加灵活，但是有一点难于配置，灵活通常会带来复杂性。</p>
+<p>由于 Subversion 需要版本化的控制，因此标准的 Http 协议不能满足需求。要让 Apache 与 Subversion 协同工作，需要使用 WebDAV（Web-based Distributed Authoring and Versioning：）Web 分布式创作和版本控制）。WebDAV 是 HTTP 1.1 的扩展，关于 WebDAV 的规范和工作原理，可以参考 IETF RFC 2518 。</p>
+<h2>3.2 配置Apache</h2>
+<p>为了让你的版本库使用HTTP网络，你必需具备以下几个条件：</p>
+<ol>
+  <li>配置好httpd 2.2.x，并且使用mod_dav启动。</li>
+  <li>为mod_dav安装mod_dav_svn插件</li>
+  <li>配置你的httpd.conf，使http协议能访问版本库 </li>
+</ol>
+<p>下面是配置过程详解</p>
+<ol>
+  <li>安装Appache</li>
+  <li>安装Subversion，将安装目录下的bin子目录下的intl3_svn.dll、libdb44.dll、mod_authz_svn.so、mod_dav_svn.so 拷贝到Apache的模块目录（Apache 安装目录的 modules 文件夹）。</li>
+  <li>修改Apache的配置文件 httpd.conf ，使用LoadModule来加载mod_dav_svn模块，如下所示，将
+<pre>#LoadModule dav_module modules/mod_dav.so</pre>
+改为
+<pre>LoadModule dav_module modules/mod_dav.so</pre>
+即去掉前面的#号，并添加：
+<pre>LoadModule dav_svn_module modules/mod_dav_svn.so</pre>
+一定确定它在 mod_dav 之后
+</li>
+  <li>现在你已经设置了Apache和Subversion，但是Apache不知道如何处理 Subversion客户端，例如TortoiseSVN。为了让Apache知道哪个目录是用来作为Subversion版本库，你需要使用编辑器（例如记事本）编辑Apache的配置文件，在配置文件最后添加如下几行：
+  <pre>&lt;Location /repository/&gt;
+  DAV svn
+  SVNPath c:\svn_prj\project1
+&lt;/Location&gt;</pre>
+这个配置告诉Apache首先需要启用 dav_module，然后加载 dav_svn_module 。版本库对外的URL是：http://服务器IP/repository/ ，所有的Subversion版本库在物理上位于c:\svn_prj\project1 。</li>
+</ol>
+<p>配置完毕后重新启动 Apache，打开浏览器，输入 http://服务器IP/ repository/ 将会看到如下画面：</p>
+<p><img src="ss" width="100" height="100" /></p>
+<p>这表示 Apache 的 dav_svn 模块已经可以正常工作了。用户可以使用任何一种 Subversion 的客户端通过 Http 协议访问你的版本库。</p>
+<p>如果想要指定多个版本库，可以用多个 Location 标签，也可以使用 SVNParentPath 代替 SVNPath，例如在 c:\svn_prj 下有多个版本库 project1，project2 等等，用如下方式指定：</p>
+<pre>&lt;Location /repository/&gt;
+　DAV svn
+　SVNParentPath c:\svn_prj
+&lt;/Location&gt;</pre>
+<p>“SVNParentPath c:\svn_prj ” 表示 c:\svn_prj 下的每个子目录都是一个版本库。可以通过 http://服务器IP/repository/project1/，http://服务器IP/repository/project2/ 来访问。</p>
+<p>现在你的版本库任何人都可以访问，并且有完全的写操作权限。也就是说任何人都可以匿名读取，修改，提交，以及删除版本库中的内容(注：这时不需要配置E:\svn\repos\conf\svnserve.conf 文件，并且也不需要启动E:\subversion\bin\svnserve.exe。因为提交是通过Apache的dav模块处理的，而不是由 svnservice处理。)。我们用 TortoiseSVN 客户端验证即知。</p>
+<p>显然大部分场合这是不符合需求的。那么如何进行权限设置呢，Apache 提供了基本的权限设置：</p>
+<h2>3.3 认证</h2>
+<h3>3.3.1 基本HTTP认证</h3>
+<p>最简单的客户端认证方式是通过 HTTP 基本认证机制，简单的使用用户名和密码来验证一个用户的身份。Apache提供了一个 htpasswd 工具来管理一个用户文件，这个文件包含用户名和加密后的密码，这些就是你希望赋予 Subversion 特别权限的用户。htpasswd 可以在 Apache 的 bin 安装目录下找到。具体使用方法如下：</p>
+<pre>创建用户文件：
+htpasswd -c E:\usr\Apache2.2\bin\passwd.conf username
+
+添加新用户（-m 表示以 MD5 加密密码，可选项）：
+htpasswd [-m] E:\usr\Apache2.2\bin\passwd.conf Newusername
+
+更改用户密码：
+htpasswd [-m] E:\usr\Apache2.2\bin\passwd.conf username
+
+删除用户（要用大写的 D ）：
+htpasswd –D E:\usr\Apache2.2\bin\passwd.conf username</pre>
+<p>接下来修改 httpd.conf，在 Location 标签中加入如下内容：</p>
+<pre>AuthType Basic
+AuthName &quot;svn repos&quot;
+AuthUserFile E:/usr/Apache2.2/bin/passwd.conf
+Require valid-user</pre>
+<p>说明如下：</p>
+<ul>
+  <li>AuthType Basic：启用基本的验证，比如用户名/密码对。</li>
+  <li>AuthName &quot;svn repos&quot;：当一个认证对话框弹出时，出现在认证对话框中的信息。（最好用英文，TortoiseSVN 不支持中文，安装语言包除外。）</li>
+  <li>AuthUserFile E:/usr/Apache2.2/bin/passwd：指定E:\usr\Apache2.2\bin\passwd为用户文件，用来验证用户的用户名及密码。</li>
+  <li>Require valid-user：限定用户只有输入正确的用户名及密码后才能访问这个路径</li>
+</ul>
+<p>重新启动 Apache ，打开浏览器访问版本库。Apache 会提示你输入用户名和密码来认证登陆了，现在只有 passwd 文件中设定的用户才可以访问版本库。也可以配置只有特定用户可以访问，替换上述 &quot;Require valid-user&quot; 为 &quot;Require user tony robert&quot; 将只有用户文件中的 tony 和 robert 可以访问该版本库。</p>
+<p>有的时候也许不需要这样严格的访问控制，例如大多数开源项目允许匿名的读取操作，而只有认证用户才允许写操作。为了实现更为细致的权限认证，可以使用 Limit 和 LimitExcept 标签。例如：</p>
+<pre>&lt;LimitExcept GET PROPFIND OPTIONS REPORT&gt;
+  require valid-user
+&lt;/LimitExcept&gt;</pre>
+<p>以上配置将使匿名用户有读取权限，而限制只有 passwd 中配置的用户可以使用写操作。</p>
+<p>如果这还不能满足你的要求，你希望精确的控制版本库目录访问，可以使用 Apache 的 mod_authz_svn 模块对每个目录进行认证操作。</p>
+<h3>3.3.2 用 mod_authz_svn 进行目录访问控制</h3>
+<p>首先需要让 Apache 将 mod_authz_svn 模块加载进来。在 Subversion 的安装目录中找到 mod_auth_svn 模块，将其拷贝到 Apache 安装目录的 modules 子目录下。修改 httpd.conf 文件，添加：</p>
+<pre>LoadModule authz_svn_module modules/mod_authz_svn.so</pre>
+<p>现在可以在 Location 标签中使用 authz 的功能了。一个基本的 authz 配置如下：</p>
+<pre>&lt;Location /repository/&gt;
+  DAV svn
+  SVNParentPath e:/svn
+
+  # our access control policy
+  AuthzSVNAccessFile E:/usr/Apache2.2/bin/accesspolicy.conf
+
+  # try anonymous access first, resort to real
+  # authentication if necessary.
+  Satisfy Any
+  Require valid-user
+
+  # how to authenticate a user
+  AuthType Basic
+  AuthName &quot;Subversion repository&quot;
+  AuthUserFile E:/usr/Apache2.2/bin/passwd.conf
+&lt;/Location&gt;</pre>
+<p>AuthzSVNAccessFile 指向的是 authz 的策略文件，详细的权限控制可以在这个策略文件中指定。访问文件 accesspolicy.conf 的语法与svnserve.conf和 Apache 的配置文件非常相似，以（#）开头的行会被忽略；在它的简单形式里，每一小节命名一个版本库和一个里面的路径；认证用户名是在每个小节中的选项名；每个选项的值描述了用户访问版本库的级别：r（只读）或者rw（读写），如果用户没有提到或者值留空，访问是不允许的； * 表示所有用户，用它控制匿名用户的访问权限；@符号区分组和用户。如：</p>
+<pre>[groups]
+committers = paulex, richard
+developers = jimmy, michel, spark, sean
+
+[/]
+* = r
+@committers = rw 
+
+[/branches/dev]
+@developers = rw 
+
+[/tags]
+tony = rw 
+[/private]
+* = 
+@committers= r</pre>
+<p>使用 SVNParentPath 代替 SVNPath 来指定多个版本库的父目录时，其中所有的版本库都将按照这个策略文件配置。例如上例中 tony 将对所有版本库里的 /tags 目录具有读写权限。如果要对具体每个版本库配置，用如下的语法</p>
+<pre>[groups]
+project1_committers = paulex, richard
+project2_committers = jimmy, michel, spark, tony, Robert
+
+[project1:/] 
+* = r 
+@ project1_committer = rw
+
+[project2:/] 
+* = r 
+@ project2_committer = rw</pre>
+<p>这样项目1的 project1_committer 组只能对 project1 版本库下的文件具有写权限而不能修改版本库 project2 ，同样项目2的 project2_commiter 组也不能修改 project1 版本库的文件。</p>
+<p>
+  <script type="text/javascript" src="index.js"></script>
+</p>
+</body>
+</html>

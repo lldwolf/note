@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+    <title>DevExpress WPF 训练题 - 内嵌 LookUpEdit</title>
+    <script type="text/javascript" src="../../../mylib/js/css.js"></script>
+</head>
+
+<body>
+    <p id="title">DevExpress WPF 训练题 - 内嵌 LookUpEdit</p>
+    <h1>要求</h1>
+    <p>界面如下所示</p>
+    <p><img alt="" src="img/xpf_test_grid_lookupedit_dynamic.png" /></p>
+    <p>国家列表由动态数据源提供，在本例中，需要为每个国家显示不同的城市</p>
+    <h1>xaml</h1>
+    <pre class="code" data-type="xml">&lt;Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
+        xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid"
+        xmlns:model="clr-namespace:DXWPFApplication1.Model"
+        xmlns:converter="clr-namespace:DXWPFApplication1.Converters"
+        x:Class="DXWPFApplication1.GridEditorLookUpEdit2Window"
+        Title="GridEditorLookUpEdit2Window"
+        Height="500"
+        Width="700"&gt;
+    &lt;Window.Resources&gt;
+        &lt;converter:CityConverter x:Key="cityConverter" /&gt;
+    &lt;/Window.Resources&gt;
+    &lt;DockPanel&gt;
+        &lt;dxg:GridControl x:Name="gridControl"
+                         ItemsSource="{Binding}"
+                         EnableSmartColumnsGeneration="True"&gt;
+            &lt;dxg:GridControl.View&gt;
+                &lt;dxg:TableView AllowPerPixelScrolling="True"
+                               AutoWidth="True"
+                               NewItemRowPosition="Bottom"
+                               ShowTotalSummary="True" /&gt;
+            &lt;/dxg:GridControl.View&gt;
+            &lt;dxg:GridControl.Columns&gt;
+                &lt;dxg:GridColumn FieldName="CountryCode"
+                                Header="Country Code" /&gt;
+                &lt;dxg:GridColumn FieldName="CountryName"
+                                Header="Country Name" /&gt;
+                &lt;dxg:GridColumn FieldName="Capital"
+                                Header="Capital"&gt;
+                    &lt;dxg:GridColumn.CellTemplate&gt;
+                        &lt;DataTemplate&gt;
+                            &lt;dxg:LookUpEdit x:Name="PART_Editor"
+                                            IsTextEditable="False"
+                                            AutoPopulateColumns="False"
+                                            ItemsSource="{Binding CurrentItem, ElementName=gridControl, Converter={StaticResource ResourceKey=cityConverter}}"
+                                            AllowSpinOnMouseWheel="False"
+                                            PopupWidth="500"&gt;
+                                &lt;dxg:LookUpEdit.PopupContentTemplate&gt;
+                                    &lt;ControlTemplate&gt;
+                                        &lt;dxg:GridControl x:Name="PART_GridControl"
+                                                         AutoPopulateColumns="False"&gt;
+                                            &lt;dxg:GridControl.View&gt;
+                                                &lt;dxg:TableView AutoWidth="True"
+                                                               ShowGroupPanel="False"
+                                                               AllowGrouping="False"
+                                                               AllowEditing="False" /&gt;
+                                            &lt;/dxg:GridControl.View&gt;
+                                            &lt;dxg:GridControl.Columns&gt;
+                                                &lt;dxg:GridColumn Header="Post Code"
+                                                                FieldName="PostCode" /&gt;
+                                                &lt;dxg:GridColumn Header="City"
+                                                                FieldName="CityName" /&gt;
+                                            &lt;/dxg:GridControl.Columns&gt;
+                                        &lt;/dxg:GridControl&gt;
+                                    &lt;/ControlTemplate&gt;
+                                &lt;/dxg:LookUpEdit.PopupContentTemplate&gt;
+                            &lt;/dxg:LookUpEdit&gt;
+                        &lt;/DataTemplate&gt;
+                    &lt;/dxg:GridColumn.CellTemplate&gt;
+                &lt;/dxg:GridColumn&gt;
+                &lt;dxg:GridColumn FieldName="Capital"
+                                Header="Capital"&gt;
+                    &lt;dxg:GridColumn.EditSettings&gt;
+                        &lt;dxe:ComboBoxEditSettings ItemsSource="{Binding CurrentItem, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type dxg:GridControl}}, Converter={StaticResource ResourceKey=cityConverter}}"&gt;
+                            &lt;dxe:ComboBoxEditSettings.StyleSettings&gt;
+                                &lt;dxe:ComboBoxStyleSettings /&gt;
+                            &lt;/dxe:ComboBoxEditSettings.StyleSettings&gt;
+                        &lt;/dxe:ComboBoxEditSettings&gt;
+                    &lt;/dxg:GridColumn.EditSettings&gt;
+                &lt;/dxg:GridColumn&gt;
+            &lt;/dxg:GridControl.Columns&gt;
+        &lt;/dxg:GridControl&gt;
+
+    &lt;/DockPanel&gt;
+&lt;/Window&gt;</pre>
+    <h1>xaml.cs</h1>
+    <pre class="code" data-type="csharp">using System.Collections.ObjectModel;
+using System.Windows;
+using DXWPFApplication1.Model;
+
+namespace DXWPFApplication1
+{
+    public partial class GridEditorLookUpEdit2Window : Window
+    {
+        public GridEditorLookUpEdit2Window()
+        {
+            InitializeComponent();
+
+            ObservableCollection&lt;Country&gt; countryList = new ObservableCollection&lt;Country&gt;(DemoDataProvider.Instance.CountryList);
+            this.DataContext = countryList;
+        }
+    }
+}</pre>
+    <h1>Lookup 数据源</h1>
+    <pre class="code" data-type="csharp">using System.Collections.Generic;
+
+namespace DXWPFApplication1.Model
+{
+    public class Country
+    {
+        public string CountryCode { get; set; }
+        public string CountryName { get; set; }
+        public City Capital { get; set; }
+        public List&lt;City&gt; Cities { get; set; }
+
+        public static List&lt;Country&gt; GetTestingData()
+        {
+            List&lt;Country&gt; countries = new List&lt;Country&gt;();
+            countries.Add(new Country()
+            {
+                CountryCode = "CA",
+                CountryName = "Canada",
+                Cities = new List&lt;City&gt;() {
+					new City() { CityName = "Vancouver", PostCode="10001" },
+					new City() { CityName = "Toronto", PostCode="10002" },
+					new City() { CityName = "Dawson City", PostCode="10003" },
+					new City() { CityName = "Red Deer", PostCode="10004" },
+					new City() { CityName = "Ottawa", PostCode="10005" } }
+            });
+            countries.Add(new Country()
+            {
+                CountryCode = "CN",
+                CountryName = "China",
+                Cities = new List&lt;City&gt;() {
+					new City() { CityName = "Beijing", PostCode="20001" },
+					new City() { CityName = "Shanghai", PostCode="20002" },
+					new City() { CityName = "Weifang", PostCode="20003" },
+					new City() { CityName = "Qingdao", PostCode="20004" } }
+            });
+            countries.Add(new Country()
+            {
+                CountryCode = "GB",
+                CountryName = "United Kingdom",
+                Cities = new List&lt;City&gt;() {
+					new City() { CityName = "London", PostCode="30001" },
+					new City() { CityName = "Liverpool", PostCode="30002" },
+					new City() { CityName = "Southampton", PostCode="30003" },
+					new City() { CityName = "Oxford", PostCode="30004" },
+					new City() { CityName = "Cambridge", PostCode="30005" } }
+            });
+            countries.Add(new Country()
+            {
+                CountryCode = "US",
+                CountryName = "United States",
+                Cities = new List&lt;City&gt;() {
+					new City() { CityName = "Washington", PostCode="40001" },
+					new City() { CityName = "New York", PostCode="40002" },
+					new City() { CityName = "Los Angeles", PostCode="40003" },
+					new City() { CityName = "San Francisco", PostCode="40004" },
+					new City() { CityName = "Chicago", PostCode="40005" } }
+            });
+
+            return countries;
+        }
+
+        public override string ToString()
+        {
+            return this.CountryName + "(" + this.CountryCode + ")";
+        }
+    }
+
+    public class City
+    {
+        public string CityName { get; set; }
+        public string PostCode { get; set; }
+
+        public override string ToString()
+        {
+            return string.Format("{0} - {1}", this.PostCode, this.CityName);
+        }
+    }
+
+}</pre>
+    <h1>Converter</h1>
+    <pre class="code" data-type="csharp">using System;
+using System.Collections.Generic;
+using System.Windows.Data;
+using DXWPFApplication1.Model;
+
+namespace DXWPFApplication1.Converters
+{
+    internal class CityConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        {
+            Country country = (Country)value;
+
+            if (country == null)
+            {
+                return null;
+            }
+
+            List&lt;City&gt; cities = new List&lt;City&gt;(country.Cities);
+
+            if (country.Capital != null)
+            {
+                if (!cities.Exists(item =&gt; item.CityName == country.Capital.CityName))
+                {
+                    cities.Add(country.Capital);
+                }
+            }
+
+            return cities;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+}</pre>
+    </body>
+</html>

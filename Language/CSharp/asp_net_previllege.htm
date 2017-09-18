@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>权限配置</title>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+<p id="title">权限配置</p>
+
+<h1>文件夹访问权限</h1>
+<p>如果要在ASP.NET应用程序中有对文件的操作，例如读、写、创建、删除等。如果不作任何设置，则在应用程序运行时会报错，提示权限不足。</p>
+<h2>ASPNET用户</h2>
+<p>如果没在web.config的system.web节中加入如下配置项</p>
+<pre class="code" data-type="xml">identity impersonate=&quot;true&quot; /&gt;</pre>
+<p>则系统是以ASPNET的身份访问文件夹，因此需要将ASPNET用户加入到文件夹的安全属性页中，并设为完全控制，如下图所示：</p>
+<img src="images/asp_net_dir_privilege.jpg" />
+<h2>IUSR用户</h2>
+<p>如果在web.config的system.web节中有如下配置项</p>
+<pre class="code" data-type="xml">identity impersonate=&quot;true&quot; /&gt;</pre>
+<p>则需要将IUSR用户添加到文件夹的安全属性页中，并设为完全控制，如下图所示：</p>
+<img src="images/asp_net_dir_privilege2.jpg" />
+<p>注意：IUSR用户的名称为“IUSR_机器名”。</p>
+<h2>直接使用授权用户</h2>
+<p>也可以直接指定ASPNET以授权用户访问文件夹，如administrator用户，指定方式为在web.config的system.web节中添加如下配置项：</p>
+<pre class="code" data-type="xml">identity impersonate=&quot;true&quot; userName=&quot;administrator&quot; password=&quot;口令&quot;/&gt;</pre>
+<p>这样ASP.NET应用程序就以administrator的身份访问系统。</p>
+<h1>DCOM访问权限设置</h1>
+<p>DCOM权限是指如何设置ASP.NET程序以使其能够使用DCOM接口，例如Excel。如果未成功设置，会出现类似于下面这样的错误信息：</p>
+<pre class="code" data-type="csharp">检索 COM 类工厂中 CLSID 为 {00024500-0000-0000-C000-000000000046} 的组件时失败，原因是出现以下错误: 80070005。
+
+说明: 执行当前 Web 请求期间，出现未处理的异常。请检查堆栈跟踪信息，以了解有关该错误以及代码中导致错误的出处的详细信息。 
+
+异常详细信息: System.UnauthorizedAccessException: 检索 COM 类工厂中 CLSID 为 {00024500-0000-0000-C000-000000000046} 的组件时失败，
+原因是出现以下错误: 80070005。 
+
+ASP.NET 未被授权访问所请求的资源。请考虑授予 ASP.NET 请求标识访问此资源的权限。ASP.NET 有一个在应用程序没有模拟时使用的基进程标识
+(通常，在 IIS 5 上为 {MACHINE}\ASPNET，在 IIS 6 上为网络服务)。如果应用程序正在通过 &lt;identity impersonate="true"/&gt; 模拟，
+则标识将为匿名用户(通常为 IUSR_MACHINENAME)或经过身份验证的请求用户。 
+
+要将 ASP.NET 访问权限授予某个文件，请在资源管理器中右击该文件，选择“属性”，然后选择“安全”选项卡。单击“添加”添加适当的用户或组。
+突出显示 ASP.NET 帐户，选中所需访问权限对应的框。</pre>
+<p>通常情况下，最简单的方式是如同上节所示，使用&lt;identity&gt;标签，指定ASP.NET程序以administrator的身份访问系统，则可成功访问DCOM接口。</p>
+<p>当然，这不是唯一的解决途径，事实上，我假节读者已经详细地阅读了上节的内容，知道了ASP.NET程序是如何以administrator、ASPNET或IUSR_MACHINENAME用户访问系统。现在我假设用户是以ASPNET的身份访问系统。可遵循如下步骤设置：</p>
+<p>第一步、在命令窗口中运行dcomcnfg命令，找到“Microsoft Excel应用程序”，如下图所示：</p>
+<img src="images/dcomcnfg1.jpg" />
+<p>第二步、打开“默认安全机制页”，将ASPNET用户添加进来，如下图所示：</p>
+<img src="images/dcomcnfg2.jpg" />
+<p>现在，就可以通过ASPNET用户访问Excel的DCOM接口了。</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+
+</body>
+</html>

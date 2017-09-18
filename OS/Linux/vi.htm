@@ -1,0 +1,189 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="zh-cn" dir="ltr" lang="zh-cn">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="KEYWORDS" content="Vi指令大全" />
+	<meta name="robots" content="index,follow" />
+
+	<title>Vi指令大全 - Wikipedia</title>
+	<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+<body>
+	<p id="title">Vi指令大全</p>
+	<h1>最常用的指令</h1>
+	<table style="width: 90%">
+		<tr>
+			<th>类别</th>
+			<th>命令</th>
+			<th>说明</th>
+		</tr>
+		<tr>
+			<td rowspan="7">命令</td>
+			<td>Esc</td>
+			<td>进入命令状态</td>
+		</tr>
+		<tr>
+			<td>q</td>
+			<td>退出</td>
+		</tr>
+		<tr>
+			<td>q!</td>
+			<td>不保存退出</td>
+		</tr>
+		<tr>
+			<td>w</td>
+			<td>保存</td>
+		</tr>
+		<tr>
+			<td>wq</td>
+			<td>保存退出</td>
+		</tr>
+		<tr>
+			<td>!command</td>
+			<td>执行 shell 命令 command</td>
+		</tr>
+		<tr>
+			<td>:r!command</td>
+			<td>将命令command的输出结果放到当前行</td>
+		</tr>
+		<tr>
+			<td rowspan="12">移动光标</td>
+			<td>h</td>
+			<td>左移一个字符</td>
+		</tr>
+		<tr>
+			<td>l</td>
+			<td>右移一个字符</td>
+		</tr>
+		<tr>
+			<td>k</td>
+			<td>上移一行</td>
+		</tr>
+		<tr>
+			<td>j</td>
+			<td>下移一行</td>
+		</tr>
+		<tr>
+			<td>w</td>
+			<td>右移一个字至字首</td>
+		</tr>
+		<tr>
+			<td>e</td>
+			<td>右移一个字至字尾</td>
+		</tr>
+		<tr>
+			<td>b</td>
+			<td>左移一个字至字首</td>
+		</tr>
+		<tr>
+			<td>0</td>
+			<td>移至行首</td>
+		</tr>
+		<tr>
+			<td>$</td>
+			<td>移至行尾</td>
+		</tr>
+		<tr>
+			<td>gg</td>
+			<td>移至文件头</td>
+		</tr>
+		<tr>
+			<td>Shift + g</td>
+			<td>移至文件尾</td>
+		</tr>
+		<tr>
+			<td>行号gg</td>
+			<td>移动至指定行</td>
+		</tr>
+		<tr>
+			<td rowspan="4">屏幕翻滚</td>
+			<td>Ctrl+u</td>
+			<td>向文件首翻半屏</td>
+		</tr>
+		<tr>
+			<td>Ctrl+d</td>
+			<td>向文件尾翻半屏</td>
+		</tr>
+		<tr>
+			<td>Ctrl+f</td>
+			<td>向文件首翻一屏</td>
+		</tr>
+		<tr>
+			<td>Ctrl+b</td>
+			<td>向文件尾翻一屏</td>
+		</tr>
+		<tr>
+			<td rowspan="11">编辑类（命令状态下输入）</td>
+			<td>i</td>
+			<td>在光标前插入</td>
+		</tr>
+		<tr>
+			<td>a</td>
+			<td>在光标后插入</td>
+		</tr>
+		<tr>
+			<td>o</td>
+			<td>在当前行之下新开一行</td>
+		</tr>
+		<tr>
+			<td>O</td>
+			<td>在当前行之上新开一行</td>
+		</tr>
+		<tr>
+			<td>r</td>
+			<td>替换当前字符</td>
+		</tr>
+		<tr>
+			<td>R</td>
+			<td>替换当前及其后字符，直至按 Esc</td>
+		</tr>
+		<tr>
+			<td>x</td>
+			<td>删除光标后的字符</td>
+		</tr>
+		<tr>
+			<td>X</td>
+			<td>删除光标前的字符</td>
+		</tr>
+		<tr>
+			<td>dd</td>
+			<td>删除当前行</td>
+		</tr>
+		<tr>
+			<td>d$</td>
+			<td>删至行尾</td>
+		</tr>
+		<tr>
+			<td>1,$d</td>
+			<td>删除从第1行至尾行所有行</td>
+		</tr>
+		<tr>
+			<td rowspan="6">搜索及替换</td>
+			<td>/pattern</td>
+			<td>从光标开始处向文件尾搜索pattern</td>
+		</tr>
+		<tr>
+			<td>?pattern</td>
+			<td>从光标开始处向文件首搜索pattern</td>
+		</tr>
+		<tr>
+			<td>n</td>
+			<td>查找下一个匹配项</td>
+		</tr>
+		<tr>
+			<td>N</td>
+			<td>查找上一个匹配项</td>
+		</tr>
+		<tr>
+			<td>:s/p1/p2/g</td>
+			<td>将当前行中所有p1均用p2替代</td>
+		</tr>
+		<tr>
+			<td>:g/p1/s//p2/g</td>
+			<td>将当前文件中所有p1均用p2替代</td>
+		</tr>
+	</table>
+	<h1>常见问题</h1>
+	<p>按下 Ctrl + S 后屏幕会被锁死，按 Ctrl + Q 或 Ctrl + Z 可解锁</p>
+</body>
+</html>

@@ -1,0 +1,76 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+Installing InfoMaker deployment files</TITLE>
+</HEAD>
+<BODY>
+<A NAME="BABDABJA"></A><h1>Installing InfoMaker deployment files</h1>
+<A NAME="TI5493"></A><p>When you install InfoMaker, shared files that are used by
+both PowerBuilder and InfoMaker are installed in the Shared\PowerBuilder
+directory. You need to deploy a subset of these files with your
+application.</p>
+<A NAME="TI5494"></A><p>The following table indicates which feature each file is required
+to support. For example, PBVM80<i></i>
+.DLL
+is required for all 32-bit deployed applications. You need not install
+some other files unless your application uses the features indicated.
+You should install the deployment DLLs in the same directory as
+the application or in a directory on the system path.</p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Database connections</span> <A NAME="TI5495"></A>The deployment files needed to enable database connections
+are described in <A HREF="imugp137.htm#BABDJHJB">"Making the data source available"</A>.</p>
+<A NAME="TI5496"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><td valign=top><A NAME="TI5497"></A>Required for</td>
+<td valign=top><A NAME="TI5498"></A>Name</td>
+</tr>
+<tr><td valign=top><A NAME="TI5499"></A>All</td>
+<td valign=top><A NAME="TI5500"></A>PBVM80<i></i>
+.DLL,
+LIBJCC.DLL</td>
+</tr>
+<tr><td valign=top><A NAME="TI5501"></A>Reports and forms</td>
+<td valign=top><A NAME="TI5502"></A>PBDWE80<i></i>
+.DLL</td>
+</tr>
+<tr><td valign=top><A NAME="TI5503"></A>Rich Text</td>
+<td valign=top><A NAME="TI5504"></A>PBRTC80<i></i>
+.DLL</td>
+</tr>
+<tr><td valign=top><A NAME="TI5505"></A>DataWindow plugin</td>
+<td valign=top><A NAME="TI5506"></A>NPDWE80<i></i>
+.DLL</td>
+</tr>
+<tr><td valign=top><A NAME="TI5507"></A>Font mapping</td>
+<td valign=top><A NAME="TI5508"></A>PBFNT80.INI</td>
+</tr>
+<tr><td valign=top><A NAME="TI5509"></A>Label report presentation style predefined
+formats</td>
+<td valign=top><A NAME="TI5510"></A>PBLAB80.INI</td>
+</tr>
+<tr><td valign=top><A NAME="TI5511"></A>Database connection tracing</td>
+<td valign=top><A NAME="TI5512"></A>PBTRA80<i></i>
+.DLL</td>
+</tr>
+</table>
+<A NAME="TI5513"></A><h4>Localized deployment files</h4>
+<A NAME="TI5514"></A><p>Localized deployment files are provided for French, German,
+Italian, Spanish, Dutch, Danish, Norwegian, and Swedish. These files
+are usually available shortly after the general release of a new
+version of InfoMaker.</p>
+<A NAME="TI5515"></A><p>The localized deployment files let you deploy InfoMaker applications
+with standard runtime dialog boxes in the local language. They handle
+language-specific data when the application runs, including:<A NAME="TI5516"></A>
+<ul>
+<li class=fi><b>DayName function
+manipulation</b>   The DayName function returns a name in the language of the
+deployment files available on the machine where the application
+is run.</li>
+<li class=ds><b>DateTime manipulation</b>   When you use the String function to format a date and the
+month is displayed as text (for example, the display format includes
+"mmm"), the month is in the language of the deployment files available
+when the application is run.</li>
+<li class=ds><b>Error messages</b>   InfoMaker error messages are translated into the language
+of the deployment files.
+</li>
+</ul>
+</p>
+

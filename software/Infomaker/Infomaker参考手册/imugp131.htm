@@ -1,0 +1,135 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+Running an application</TITLE>
+</HEAD>
+<BODY>
+<A NAME="X-ref307909508"></A><h1>Running an application</h1>
+<A NAME="TI5364"></A><p>You can run your application the same way you run other Windows applications.
+For example, you can double-click the executable file in Explorer or
+File Manager or you can create an application shortcut on the desktop
+and double-click the shortcut.</p>
+<A NAME="TI5365"></A><p>If you create an application shortcut, before you can run
+your application by double-clicking the shortcut, you need to modify
+the shortcut's Start In property.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To modify the Start In property of the application
+shortcut:</p>
+<ol><li class=fi>
+Position the pointer on the icon, display
+the popup menu, and select Properties.<br><br>
+InfoMaker displays the shortcut's property sheet.<br><br></li>
+<li class=ds>
+Select the Shortcut tab and type the location
+of the Sybase system files in the Start In box.<br><br><p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>About the location of Sybase system files</span> <A NAME="TI5366"></A>When you install InfoMaker, the installation process automatically
+puts the DLLs in a system folder. If you have changed the names
+of the folders used for installing, you need to use your names in
+this step.</p>
+<A NAME="TI5367"></A>The folder path is <i></i>
+<i>c:\Program
+Files\Sybase\Shared\PowerBuilder</i>
+. </p>
+<A NAME="TI5368"></A>You must specify the name of the drive. If you use backslashes
+to specify a relative pathname, the application will be unable to
+locate the system files.</p>
+</li>
+<li class=ds>
+Click OK.<br><br>
+Now you can double-click the application shortcut to run the
+application.<br><br></li></ol>
+<br><A NAME="TI5369"></A><h4>What happens when you run an application</h4>
+<A NAME="TI5370"></A><p>When you run the application, the application reads information
+in the application's initialization file and connects to
+the database to access the data. Then the application's
+main window displays with a menu bar and toolbar:</p>
+<br><img src="images/wwapp080.gif">
+<A NAME="TI5371"></A><p>The application toolbar always has an Exit button and optionally
+has a Reports button, a Pipelines button, and a Forms button. If
+the application does not have any reports, the toolbar does not
+have a Reports button (similarly for forms and pipelines). If you
+defined toolbar buttons for individual reports, forms, or pipelines
+when you created the application, the toolbar contains these buttons.</p>
+<A NAME="BFCBEBHJ"></A><h2>Identifying your application</h2>
+<A NAME="TI5372"></A><p>Most applications can be identified by selecting Help&gt;About
+to display information about the application such as its name, name
+of the company producing the application, version, and so on. By
+default, InfoMaker includes the application name and Sybase-brand
+information to identify your application.</p>
+<A NAME="TI5373"></A><p>You can modify the application's initialization file
+so that your users see customized information about you and your
+company.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To customize the application-identity information
+users see in the Help&gt;About window:</p>
+<ol><li class=fi>
+Open the application's initialization
+file and create an About section by adding the following line:<br><br>
+<pre>[About]</pre>
+<br><br></li>
+<li class=ds>
+Include some lines like the following in the About
+section:<br><br>
+<pre>[About]<br> developer_name = Sandy Johnson<br> software_version = 1.0<br> company_logo = internet.bmp<br> email_address = sjohnson@sybase.com<br> web_address = www.sybase.com<br> phone_number = 1-800-8SYBASE</pre>
+<br><br></li>
+<li class=ds>
+Save the initialization file.<br><br>
+Now when you open the Help About window, you see the customized information
+in the Help&gt;About window:<br><br><br><img src="images/wwapp083.gif"><br>
+</li></ol>
+<br><A NAME="TI5374"></A><h2>Running a report, form, or pipeline</h2>
+<A NAME="TI5375"></A><p>To run a report, form, or pipeline, you can do any of the
+following:</p>
+<A NAME="TI5376"></A><p><A NAME="TI5377"></A>
+<ul>
+<li class=fi>Click its button in
+the toolbar if you defined a toolbar item for the object.</li>
+<li class=ds>Select it from the Objects menu, which lists all
+reports, forms, or pipelines in the executable.<br>
+If you specified a toolbar button and button text for a report,
+form, or pipeline, this text displays instead of the report, form,
+or pipeline object name in the Objects menu.<br></li>
+<li class=ds>Click the Reports, Forms, or Pipelines button in
+the toolbar and select the item in the resulting dialog box.
+</li>
+</ul>
+</p>
+<A NAME="TI5378"></A><h4>What happens when you run a report or form</h4>
+<A NAME="TI5379"></A><p>Running a report or form in an executable file is the same
+as running a report or a form in InfoMaker.</p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>When a report is retrieving data</span> <A NAME="TI5380"></A>The number of rows retrieved displays in MicroHelp and the
+Retrieve button changes to a Cancel button. You can click the Cancel
+button at any time to stop retrieval.</p>
+<A NAME="TI5381"></A><h4>What happens when you run a pipeline</h4>
+<A NAME="TI5382"></A><p>When you run a pipeline in an application, the Pipeline window
+displays. You can then execute the pipeline manually or specify
+delayed execution. Advanced users of the application can redefine
+a pipeline object if you instruct users how to do this.</p>
+<A NAME="TI5383"></A><p>For information about executing a pipeline
+and redefining a pipeline object in the application, see <A HREF="imugp132.htm#BFCBFAGF">"Using a pipeline in an application"</A>.</p>
+<A NAME="TI5384"></A><h4>For more information</h4>
+<A NAME="TI5385"></A><p>For information about previewing reports, see <A HREF="imugp53.htm#CAIECGIC">"Using the Preview view of
+a report "</A>.</p>
+<A NAME="TI5386"></A><p>For information about running forms that use built-in InfoMaker form
+styles, see <A HREF="imugp117.htm#X-ref386533843">"Working with forms"</A>.</p>
+<A NAME="TI5387"></A><p>For information about running forms using a style created
+by a PowerBuilder developer at your organization, see the developer.</p>
+<A NAME="TI5388"></A><h2>Managing the toolbar</h2>
+<A NAME="TI5389"></A><p>You can move the toolbar and suppress the display of text
+in the toolbar by selecting items from the popup menu.</p>
+<A NAME="TI5390"></A><h2>Managing the open reports, forms, and pipelines</h2>
+<A NAME="TI5391"></A><p>You can manage the display of reports, forms, and pipelines
+you have opened by selecting items from the Window menu, which InfoMaker automatically provides
+in the executable.</p>
+<A NAME="BFCCBCCI"></A><h2>Using the query governor in an application</h2>
+<A NAME="TI5392"></A><p>When an InfoMaker application (executable file) is created,
+a query governor is included automatically.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To access and use the query governor in an application:</p>
+<ol><li class=fi>
+In the running InfoMaker application,
+select File&gt;Query Governor from the menu bar.<br><br>
+The Query Governor dialog box displays:<br><br><br><img src="images/wwapp085.gif"><br>
+</li>
+<li class=ds>
+To specify the maximum number of rows to be retrieved
+and the maximum time for retrieval, select the appropriate checkbox,
+change the limit, and click OK.<br><br></li></ol>
+<br>

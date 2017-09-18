@@ -1,0 +1,104 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+About native database interfaces</TITLE>
+</HEAD>
+<BODY>
+<A NAME="X-ref289083822"></A><h1>About native database interfaces</h1>
+<A NAME="TI513"></A><p>The native database interfaces provide native connections
+to many databases and DBMSs. This section describes how the native
+database interfaces access these databases.</p>
+<A NAME="TI514"></A><p>For a complete list of the supported native
+database interfaces, see "Supported Database Interfaces" in online
+Help.</p>
+<A NAME="TI515"></A><h2>What is a native database interface?</h2>
+<A NAME="TI516"></A><p>A native database interface is a direct connection to your
+data in InfoMaker.</p>
+<A NAME="TI517"></A><p>Each native database interface uses its own interface DLL
+to communicate with a specified database through a vendor-specific
+database API. For example, the Sybase Adaptive Server Enterprise
+interface uses a DLL named PBSYC<i>n</i>
+0.DLL to access
+the database, while the Oracle 8.0.4 database interface accesses
+the database through PBO84<i>n</i>
+0.DLL.</p>
+<A NAME="TI518"></A><p>In contrast, a standard database interface uses a standard
+API to communicate with the database. For example, InfoMaker can
+use a single-interface DLL to communicate with the ODBC Driver Manager
+and corresponding driver to access any ODBC data source.</p>
+<A NAME="TI519"></A><h2>Components of a database interface connection</h2>
+<A NAME="TI520"></A><p>When you use a native database interface to access a database,
+your connection goes through several layers before reaching the
+data. Each layer is a separate component of the connection and each
+component may come from a different vendor.</p>
+<br><img src="images/Cnw5ovr.gif">
+<A NAME="TI521"></A><p>For diagrams showing the specific components
+of your connection, see "Basic software components" in the section
+in this chapter for your native database interface.</p>
+<A NAME="TI522"></A><h2>Using a native database interface</h2>
+<A NAME="TI523"></A><p>You perform several basic steps to use a native database interface
+to access a database. </p>
+<A NAME="TI524"></A><h3>About preparing to use the database</h3>
+<A NAME="TI525"></A><p>The
+first step in connecting to a database through a native database
+interface is to prepare to use the database. Preparing the database
+ensures that you will be able to access and use your data in InfoMaker.</p>
+<A NAME="TI526"></A><p>You must prepare the database <i>outside</i>
+ InfoMaker <i>before</i>
+ you
+start the product, then define the database interface and connect
+to it. The requirements differ for each database--but in
+general, preparing a database involves four basic steps.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To prepare to use your database with InfoMaker:</p>
+<ol><li class=fi>
+Make sure the required database server
+software is properly installed and configured at your site.<br><br></li>
+<li class=ds>
+If network software is required, make sure it
+is properly installed and configured at your site and on the client
+computer so that you can connect to the database server.<br><br></li>
+<li class=ds>
+Make sure the required database client software
+is properly installed and configured on the client computer. (Typically,
+the client computer is the one running InfoMaker.)<br><br>
+You must obtain the client software from your database vendor
+and make sure that the version you install supports <i>all</i>
+ of
+the following:<A NAME="TI527"></A>
+<ul>
+<li class=fi>The operating
+system running on the client computer</li>
+<li class=ds>The version of the database that you want to access</li>
+<li class=ds>The version of InfoMaker that you are running
+</li>
+</ul>
+<br><br></li>
+<li class=ds>
+Verify that you can connect to the server and
+database you want to access outside InfoMaker.<br><br></li></ol>
+<br><A NAME="TI528"></A><p>For specific instructions to use with your
+database, see "Preparing to use the database" in the section in
+this chapter for your native database interface.</p>
+<A NAME="TI529"></A><h3>About installing native database interfaces</h3>
+<A NAME="TI530"></A><p>After you prepare to use the database, you must install the
+native database interface that accesses the database.</p>
+<A NAME="TI531"></A><p>For instructions, see the<i> Installation
+Guide</i>
+<i></i>
+.</p>
+<A NAME="TI532"></A><h3>About defining native database interfaces</h3>
+<A NAME="TI533"></A><p>Once you are ready to access the database, you start InfoMaker and
+define the database interface. To define a database interface, you
+must create a database profile by completing the Database Profile
+Setup dialog box for that interface.</p>
+<A NAME="TI534"></A><p>For general instructions, see <A HREF="connimp5.htm#X-ref298585259">"About creating database
+profiles"</A>. For instructions
+about defining database interface parameters unique to a particular database,
+see "Preparing to use the database" in the section in this chapter
+for your database interface. </p>
+<A NAME="TI535"></A><h3>What to do next</h3>
+<A NAME="TI536"></A><p>For instructions on how to prepare the database
+and define the database interface you are using, see the section
+in this chapter for your native database interface.</p>
+

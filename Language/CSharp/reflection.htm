@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+	<title>反射机制（Reflection）</title>
+	<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+	<p id="title">反射机制（Reflection）</p>
+
+	<h1>基本使用</h1>
+	<h2>第一例</h2>
+	<pre class="code" data-type="csharp">//测试类
+class TestClass
+{
+	public int F1 = 0;
+
+	public TestClass()
+	{ }
+
+	public TestClass(int val)
+	{
+		this.F1 = val;
+	}
+
+	public override string ToString()
+	{
+		return this.F1.ToString();
+	}
+}
+
+static void Main(string[] args)
+{
+    //---------- 创建对象 ----------
+
+    //创建已知类型（无参）
+    object obj1 = Activator.CreateInstance(typeof(TestClass));
+    obj1 = Activator.CreateInstance&lt;TestClass&gt;();
+    
+    //创建已知类型（含参）
+    obj1 = Activator.CreateInstance(typeof(TestClass), 1000);
+    
+    //创建已知类型范型
+    obj1 = Activator.CreateInstance(typeof(Dictionary&lt;int, TestClass&gt;));
+    
+    //创建未知类型范型
+    Type t = typeof(Dictionary&lt;,&gt;);
+    t = t.MakeGenericType(typeof(int), typeof(TestClass));  //指定范型为Dictionary&lt;int, TestClass&gt;
+    obj1 = Activator.CreateInstance(t);
+    
+    //---------- 调用方法 ----------
+    //添加一个新元素
+    obj1.GetType().InvokeMember("Add", BindingFlags.InvokeMethod, null, obj1, new object[] { 1, new TestClass() });
+    
+    //获取键值集合
+    List&lt;int&gt; keys = new List&lt;int&gt;((IEnumerable&lt;int&gt;)obj1.GetType().InvokeMember("Keys", BindingFlags.GetProperty, null, obj1, null));
+    
+    //获取元素
+    TestClass c1 = (TestClass)obj1.GetType().InvokeMember("get_Item", BindingFlags.InvokeMethod, null, obj1, new object[] { keys[0] });
+}</pre>
+	<h2>创建对象</h2>
+	<pre class="code" data-type="csharp">// 指定创建属于某 Assembly 的对象
+// 可使用相对路径加载 dll
+Assembly dsAsssembly = Assembly.LoadFrom(@"folder\my.dll");
+Type type = dsAsssembly.GetType("mynamespaec.myclass");
+object tabDealEntryForm = Activator.CreateInstance(type, "arguments for constructor");</pre>
+	<h1>获取一个对象的信息</h1>
+	<p>
+		<img src="img/methodInfo.png" alt="member info" /></p>
+	<h2>属性</h2>
+	<p>属性使用get和set方法描述。</p>
+	<pre class="code" data-type="csharp">private string GetProperties(object obj)
+{
+    string str = &quot;&quot;;
+
+    foreach (MemberInfo mi in obj.GetType().GetMembers())
+    {
+        if (mi.MemberType == MemberTypes.Property)
+        {
+            try
+            {
+                PropertyInfo prop = obj.GetType().GetProperty(mi.Name);
+                if (!prop.IsSpecialName)
+                {
+                    string prop_value = Convert.ToString(prop.GetValue(obj, null));
+                    if (prop_value == &quot;\0&quot;)
+                        prop_value = &quot;NULL&quot;;
+                    str += mi.Name + &quot; = &quot; + prop_value + &quot;\r\n&quot;;
+                }
+            }
+            catch (AmbiguousMatchException)
+            {
+            }
+        }
+    }
+
+    return str;
+
+}</pre>
+	<p>其中捕获的那个异常是因为对于某情况会出现，例如XmlProcessInstruction.Item属性，需要用PropertyInfo.GetProperty(string, Type[])方法来获取属性。例如：</p>
+	<pre class="code" data-type="csharp">GetValue(obj, new Type[0]);</pre>
+	<h2>字段</h2>
+	<p>只能获取公用字段的信息</p>
+	<pre class="code" data-type="csharp">private class Test
+{
+	public int a = 1;
+	public string b = &quot;sss&quot;;
+}
+
+private void button1_Click(object sender, System.EventArgs e)
+{
+	string str = &quot;&quot;;
+	Test txt = new Test();
+
+	foreach(MemberInfo mi in txt.GetType().GetMembers())
+	{
+		if(mi.MemberType == MemberTypes.Field)
+		{
+			string prop_value = Convert.ToString(txt.GetType().GetField(mi.Name).GetValue(txt));
+			if(prop_value == &quot;\0&quot;)
+				prop_value = &quot;NULL&quot;;
+			str += mi.Name + &quot; = &quot; + prop_value + &quot;\r\n&quot;;
+		}
+	}
+
+	this.textBox1.Text = str;
+}</pre>
+	<h2>特性</h2>
+	<pre class="code" data-type="csharp">MemberInfo.GetCustomAttributes</pre>
+	<h1>高级用法</h1>
+	<h2>绑定事件</h2>
+	<pre class="code" data-type="csharp">using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Reflection;
+
+namespace ReflectTest
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Class1 o = new Class1();
+            EventInfo e = o.GetType().GetEvent(&quot;ShowMsg&quot;);
+
+            e.AddEventHandler(o, new NoArgsDelegate(ShowMsg));
+            o.ShowMessage();
+            Console.Read();
+        }
+
+        private static void ShowMsg()
+        {
+            Console.WriteLine(&quot;abcd&quot;);
+        }
+
+        public delegate void NoArgsDelegate();
+
+        public class Class1
+        {
+            public event NoArgsDelegate ShowMsg;
+            public void ShowMessage()
+            {
+                if (this.ShowMsg != null)
+                    this.ShowMsg();
+            }
+        }
+
+    }
+}</pre>
+	<h2>泛型反射</h2>
+	<h3>范型类判断</h3>
+	<pre class="code" data-type="csharp">// 判断是否实现 ICollection 接口
+private bool IsCollection(Type type)
+{
+	Type[] interfaceTypes = type.GetInterfaces();
+
+	foreach (Type interfaceType in interfaceTypes)
+	{
+		if (interfaceType.IsGenericType &amp;&amp; interfaceType.GetGenericTypeDefinition() == typeof(ICollection&lt;&gt;))
+		{
+			return true;
+		}
+	}
+
+	return false;
+}</pre>
+	<h3>泛型方法</h3>
+	<pre class="code" data-type="csharp">private static void InvokeGenericMethod()
+{
+    MethodInfo method = typeof(Program).GetMethod(&quot;ShowMsgGeneric&quot;, BindingFlags.NonPublic | BindingFlags.Static);
+    method = method.MakeGenericMethod(typeof(DateTime));
+    method.Invoke(null, null);
+}
+
+private static void ShowMsgGeneric&lt;T&gt;()
+{
+    Console.WriteLine(typeof(T).ToString());
+}</pre>
+	<p>上例中的范型方法反射只适用于没有同名非范型方法的情况，如果有同名同参的非范型方法，就比较麻烦，需要手工把需要的方法过滤出来：</p>
+	<pre class="code" data-type="csharp">MethodInfo genericJsonMethod = typeof(JsonConvert).GetMethods(BindingFlags.Static | BindingFlags.Public)
+		.First(m =&gt; m.IsGenericMethod &amp;&amp; m.Name == &quot;DeserializeObject&quot; &amp;&amp; m.ContainsGenericParameters &amp;&amp; m.GetParameters().Length == 1);</pre>
+	<h2>静态反射</h2>
+	<p>对于静态态的静态方法，在调用时第一个参数 target 需设为 null.</p>
+	<h1>反射帮助类 (还没写好，似乎应该移到 组件开发 中)</h1>
+	<p>System.Reflection namespace 中提供了反射的通用机制，但对于某些特殊用途，还有另外几个与反射相关的类</p>
+	<h2>TypeDescriptor</h2>
+	<p>TypeDescriptor 不同，它主要用于 IComponent 接口的实现类。它不关心对象的成员方法，但可以通过几个服务来实现对象元数据的扩展。
+	</p>
+	<table style="width: 80%">
+		<tr>
+			<th>服务名</th>
+			<th>说明</th>
+		</tr>
+		<tr>
+			<td>IExtenderProvider</td>
+			<td>允许另外一个类，例如 ToolTip，来提供额外的属性</td>
+		</tr>
+		<tr>
+			<td>ITypeDescriptorFilterService</td>
+			<td>允许另一个对象来个修改目标对象的元数据（仅限 public）</td>
+		</tr>
+		<tr>
+			<td>ICustomTypeDescriptor</td>
+			<td>允许一个类动态定义自己的元数据</td>
+		</tr>
+	</table>
+	<p>使用 TypeDescriptor 可以为控件在设计期和运行期定义不同的行为。所以它常被用于来设计运行期框架。</p>
+	<h1>使用实例</h1>
+	<h2>一些常用的判断</h2>
+	<pre class="code" data-type="csharp">
+// 判断某类型是否实现了某个接口
+if (typeof(interface_type).IsAssignableFrom(typeof(MyType)))
+{
+	...
+}
+
+// 判断某类型是否有无参构造函数
+ConstructorInfo[] constructors = t.GetConstructors(BindingFlags.Instance | BindingFlags.Public);
+bool hasNonArgConstructor = false;
+
+foreach (ConstructorInfo constructor in constructors)
+{
+	if (constructor.GetParameters().Length == 0)
+	{
+		hasNonArgConstructor = true;
+		break;
+	}
+}
+	</pre>
+	<h2>使用Form名称做为参数载入Form</h2>
+	<pre class="code" data-type="csharp">System.Reflection.Assembly assembly = System.Reflection.Assembly.GetExecutingAssembly();
+Form f = (Form)assembly.CreateInstance(&quot;demo.Form1&quot;);
+f.ShowDialog();</pre>
+	<h2>获取一个DLL中定义的所有对象 </h2>
+	<pre class="code" data-type="csharp">public static void Main()
+{
+	Assembly assem = System.Reflection.Assembly.LoadFrom(@&quot;C:\WINNT\Microsoft.NET\Framework\v2.0.50727\mscorlib.dll&quot;);
+	Type[] all_types = assem.GetTypes();
+	foreach(Type t in all_types)
+	{
+		string class_name = t.ToString();
+		if(class_name.IndexOf('.') &gt; 0 &amp;&amp; class_name.IndexOf('.') == class_name.LastIndexOf('.'))
+			Console.WriteLine(t.ToString());
+	}
+	Console.Read();
+}</pre>
+	<h2>生成接口的实现类 </h2>
+	<pre class="code" data-type="csharp">using System;
+using System.Collections.Generic;
+using System.Reflection;
+
+interface IA
+{
+	string s
+	{
+		get;
+		set;
+	}
+	
+	string s2
+	{
+		get;
+	}
+	
+	string Add(int a);
+	void Remove();
+	string Delete(int i, int j);
+}
+
+public class MyClass
+{
+	private static string GetMethodInfo(MethodInfo method_info)
+	{
+		string info = &quot;public &quot; + GetTypeInfo(method_info.ReturnType) + &quot; &quot; + method_info.Name + &quot;(&quot;;
+		ParameterInfo[] parameter_infos = method_info.GetParameters();
+		for(int iParam = 0; iParam &lt; parameter_infos.Length; iParam++)
+		{
+			info += GetTypeInfo(parameter_infos[iParam].ParameterType) + &quot; &quot; + parameter_infos[iParam].Name;
+			if(iParam != parameter_infos.Length - 1)
+				info += &quot;, &quot;;
+		}
+		info += &quot;)\r\n&quot;;
+		info += &quot;{\r\n&quot;;
+		if(method_info.ReturnType != typeof(void))
+			info += &quot;\treturn null;\r\n&quot;;
+		info += &quot;}\r\n&quot;;
+		
+		return info;
+	}
+	
+	private static string GetTypeInfo(Type t)
+	{
+		if(t == typeof(string))
+			return &quot;string&quot;;
+		else if(t == typeof(int))
+			return &quot;int&quot;;
+		else if(t == typeof(void))
+			return &quot;void&quot;;
+		else
+			return t.ToString();
+	}
+	
+	public static void Main()
+	{
+		string info = &quot;&quot;;
+		Type interface_type = typeof(IA);
+		List&lt;MethodInfo&gt; method_infos = new List&lt;MethodInfo&gt;();
+		List&lt;PropertyInfo&gt; property_infos = new List&lt;PropertyInfo&gt;();
+		
+		MethodInfo[] temp_method_infos = interface_type.GetMethods();
+		foreach(MethodInfo method_info in temp_method_infos)
+		{
+			method_infos.Add(method_info);
+		}
+		
+		PropertyInfo[] temp_property_infos = interface_type.GetProperties();
+		foreach(PropertyInfo property_info in temp_property_infos)
+		{
+			property_infos.Add(property_info);
+		}
+		
+		foreach(PropertyInfo property_info in property_infos)
+		{
+			info = &quot;public &quot; + GetTypeInfo(property_info.PropertyType) + &quot; &quot; + property_info.Name + &quot;\r\n&quot;;
+			info += &quot;{&quot;;
+			MethodInfo get_method = property_info.GetGetMethod();
+			if(get_method != null)
+			{
+				info += &quot;\tget { return null; }\r\n&quot;;
+				method_infos.Remove(get_method);
+			}
+			
+			MethodInfo set_method = property_info.GetSetMethod();
+			if(set_method != null)
+			{
+				info += &quot;\tset { }\r\n&quot;;
+				method_infos.Remove(set_method);
+			}
+			info += &quot;}&quot;; 
+			Console.WriteLine(info);			
+		}
+		
+		Console.WriteLine(&quot;\r\n&quot;);
+		
+		foreach(MethodInfo method_info in method_infos)
+		{
+			info = GetMethodInfo(method_info);
+			Console.WriteLine(info);
+		}
+		
+		Console.Read();
+		
+	}
+	
+}</pre>
+	<h2>打印对象的所有属性 </h2>
+	<pre class="code" data-type="csharp">public override string ToString()
+{
+	try
+	{
+		StringBuilder buff = new StringBuilder();
+
+		PropertyInfo[] props = this.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.GetProperty);
+
+		foreach (PropertyInfo prop in props)
+		{
+			buff.Append(prop.Name);
+			buff.Append(&quot;: &quot;);
+
+			if (prop.PropertyType.IsArray)
+			{
+				object arrObj = this.GetType().InvokeMember(prop.Name, BindingFlags.GetProperty, null, this, null);
+				if (arrObj == null)
+					buff.Append(&quot;[null]&quot;);
+				else
+				{
+					int arrLen = (int)arrObj.GetType().InvokeMember(&quot;Length&quot;, BindingFlags.GetProperty, null, arrObj, null);
+					for (int i = 0; i &lt; arrLen; i++)
+					{
+						buff.Append(i + &quot;: &quot;);
+						object itemObj = arrObj.GetType().InvokeMember(&quot;GetValue&quot;, BindingFlags.InvokeMethod, null, arrObj, new object[] { i });
+						if (itemObj != null)
+							buff.Append(Convert.ToString(itemObj));
+						else
+							buff.Append(&quot;[null]&quot;);
+
+						buff.AppendLine();
+					}
+				}
+			}
+			else
+			{
+				object obj = this.GetType().InvokeMember(prop.Name, BindingFlags.GetProperty, null, this, null);
+				if (obj == null)
+					buff.Append(&quot;[null]&quot;);
+				else
+					buff.Append(Convert.ToString(obj));
+			}
+			buff.AppendLine();
+		}
+
+		return buff.ToString();
+	}
+	catch (Exception ex)
+	{
+		return &quot;Failed to get pojo info.\r\n&quot; + ex;
+	}
+}</pre>
+	
+	<p>&nbsp;</p>
+	<p>&nbsp;</p>
+	<script type="text/javascript" language="javascript" src="index.js"></script>
+</body>
+</html>

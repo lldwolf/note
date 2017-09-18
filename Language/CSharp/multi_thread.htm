@@ -1,0 +1,1819 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+	<title>并行编程</title>
+	<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+	<p id="title">并行编程</p>
+
+	<h1>概述</h1>
+	<h2>多线程的使用场景</h2>
+	<p>我在工作中曾使用过线程的场景如下 (WinForm)</p>
+	<ul>
+		<li>使用线程监听数据</li>
+		<li>优化界面体验，将耗时数据操作使用线程执行，然后即可在界面上显示滚动条</li>
+		<li>优化程序性能，将多个不占用本机源的耗时操作，如Web Service调用，使用多个线程并发执行</li>
+		<li>如果有多个线程刷新界面，则需将耗时的数据操作使用线程执行，以避免界面阻塞</li>
+		<li>一些特殊的需求，例如Excel COM接口操作，放在线程中执行可避免一些莫名其妙的异常</li>
+	</ul>
+	<p>有个问题需要说明下：在以前，多线程并不总意味着执行效率的提高。但在多核CPU普及后，操作系统将会自动将多个线程分配到多个CPU内核上，并行的优势就体现出来了。例如，即使对于一个简单地快速排序算法，我们也可以把它的处理分成多个线程执行，从而提高大量数据排序的性能。</p>
+	<p>可通过系统变量 Environment.ProcessorCount 来获取能够同时承载的最大线程数。例如，如果一台电脑有 2 个 4 核 CPU，每个CPU可同时运行 2 个线程，那么该变量的值为 16。</p>
+	<h2>.NET Framework 对多线程的支持</h2>
+	<p>.NET Framework 提供了丰富的类库来提供并行编程的支持，大体列举如下</p>
+	<table style="width: 90%">
+		<tr>
+			<th>多线程实现</th>
+			<th>描述</th>
+		</tr>
+		<tr>
+			<td>Thread</td>
+			<td>多线程的最直接实现方式，或者说最原始的实现方式</td>
+		</tr>
+		<tr>
+			<td>ThreadPool</td>
+			<td>线程池，可根据当前运行环境优化线程的创建及调度</td>
+		</tr>
+		<tr>
+			<td>委托的异步调用</td>
+			<td>常用于关注线程的执行结束时间或执行结果的情景</td>
+		</tr>
+		<tr>
+			<td>Timer</td>
+			<td>用于定时任务</td>
+		</tr>
+		<tr>
+			<td>BackgorundWorker</td>
+			<td>常用于 UI 开发时使用线程优化用户体验，用于分离子线程的数据处理和界面处理部分</td>
+		</tr>
+		<tr>
+			<td>Task</td>
+			<td>.NET Framework 4 对于简化多线程编程模型的实现，可取代以前的 BackgroundWorker, Thread, Delegate Invoke</td>
+		</tr>
+		<tr>
+			<td>Parallel</td>
+			<td>.NET Framework 4 对于简化并行任务的实现，可方便地将多个任务分配到多个线程执行</td>
+		</tr>
+		<tr>
+			<td>PLINQ</td>
+			<td>将 LINQ 与并行运算结合</td>
+		</tr>
+		<tr>
+			<td>Mutex 与 Semphore</td>
+			<td>用于互斥访问</td>
+		</tr>
+		<tr>
+			<td>EventWaitHandle</td>
+			<td>用于线程同步</td>
+		</tr>
+		<tr>
+			<td>Interlocker</td>
+			<td>用于提供一些核心的原子操作</td>
+		</tr>
+	</table>
+	<h2>一些常用的工具函数</h2>
+	<table style="width:90%">
+		<tr>
+			<th>函数</th>
+			<th>说明</th>
+		</tr>
+		<tr>
+			<td>Thread.Sleep</td>
+			<td>挂起线程指定时间</td>
+		</tr>
+		<tr>
+			<td>Thread.SpinWait</td>
+			<td>让线程保持高强度运行一段时间，常用于测试</td>
+		</tr>
+	</table>
+	<h2>并行性能分析工具</h2>
+	<p>在 VS2012 中，加入了并行性能分析工具，可通过如下菜单打开：</p>
+	<p>ANALYZE -&gt; Concurrent Visualizer</p>
+	<p>可以启动一个新进程，可也以附加到现在进程上去。</p>
+	<p>我使用如下的一个简单程序</p>
+	<pre class="code" data-type="csharp">for (int i = 0; i &lt; 10; i++)
+{
+	Thread t = new Thread(() =&gt; Thread.SpinWait(150000));
+	t.Start();
+}</pre>
+	它会生成如下几张图表
+	<h3>Utilization</h3>
+	<p>该图可用来查看CPU/GPU的整体使用情况</p>
+	<img alt="" src="images/mt-analysis-utilization.png" />
+	<h3>Threads</h3>
+	<p>该图用来查看每个 Thread 的执行情况，下表里那些 CLR Worker Thread 就是我们创建出来的线程</p>
+	<img alt="" src="images/mt-analysis-threads.png" />
+	<h3>Cores</h3>
+	<p>用来查看线程在各个CPU上的并行执行情况</p>
+	<img alt="" src="images/mt-analysis-cores.png" />
+	<h1>多线程在 .NET 中的各种实现途径</h1>
+	<h2>Thread</h2>
+	<h3>无参任务示例</h3>
+	<p>启动一个线程，该线程将运行一个无参方法</p>
+
+	<pre class="code" data-type="csharp" data-collapsed="true" title="显示代码">static void Main(string[] args)
+{
+	Start();
+}
+
+static public void Start()
+{
+	Thread t = new Thread(new ThreadStart(ThreadProc));
+	t.Start();
+}
+
+//线程启动时运行的程序
+static public void ThreadProc()
+{
+	for(int i = 0; i < 10; i++)
+	{
+		Console.WriteLine("Thread is running..." + i);
+		Thread.Sleep(1000);
+	}
+}</pre>
+
+	<p>Thread的构造函数的参数为ThreadStart类型，使用方法如上。</p>
+	<h3>使用带参任务</h3>
+	<p>上例使用的 ThreadStart 为无参任务，如需要参数，可使用 ParameterizedThreadStart 对象，然后在 Thread.Start 中传入参数。</p>
+	<pre class="code" data-type="csharp">Thread t = new Thread(new ParameterizedThreadStart(TestMethodWithParam));
+t.Start("hello");
+
+...
+
+private static void TestMethodWithParam(object arg)
+{
+	Console.WriteLine(string.Format("Thread: {0}, arg: {1}", Thread.CurrentThread.ManagedThreadId, arg));
+}</pre>
+	<h3>扩展</h3>
+	<p>Thread.ManagedThreadId 属性为线程ID</p>
+	<p>Thread.IsBackground是一个很常用的属性，设为true后在主线程结束后，它会自动结束。</p>
+	<h2>使用委托(delegate)实现异步调用</h2>
+	<p>示例包括如下内容:</p>
+	<ol>
+		<li>异步调用</li>
+		<li>异步调用返回处理</li>
+		<li>异步调用异常捕获</li>
+	</ol>
+
+	<pre class="code" data-type="csharp" data-collapsed="true" title="显示代码">using System;
+using System.Runtime.Remoting.Messaging;
+
+class Program
+{
+	delegate string TestInvoker(string s1);
+
+	static void Main(string[] args)
+	{
+		TestInvoker invoker = new TestInvoker(test1);
+		string para = "abc";
+		IAsyncResult asyncRes = invoker.BeginInvoke(para, new AsyncCallback(test_complete), para);
+		Console.WriteLine("aa");
+		Console.Read();
+	}
+
+	private static string test1(string s1)
+	{
+		Console.WriteLine("enter");
+
+		//演示如何捕获异常
+		throw new Exception("Test Exception");
+
+		Console.WriteLine("quit");
+		return "ss";
+	}
+
+	private static void test_complete(IAsyncResult async)
+	{
+		AsyncResult res = (AsyncResult)async;
+		Console.WriteLine("Invoke Parameter: " + res.AsyncState);	//print "abc"
+		TestInvoker invoker = (TestInvoker)res.AsyncDelegate;
+
+		try
+		{
+			string invokeResult = invoker.EndInvoke(async);
+			Console.WriteLine("Result: " + invokeResult);	//print "ss"
+		}
+		catch (Exception ex)
+		{
+			Console.WriteLine(ex.ToString());
+		}
+	}
+}</pre>
+
+	<h2>线程池</h2>
+	<h3>基本使用</h3>
+	<p>场景：让线程池分配一个线程执行任务，并等待任务结束。</p>
+	<p>关键类：ThreadPool, AutoResetEvent</p>
+
+	<pre class="code" data-type="csharp" data-collapsed="true" title="显示代码">using System;
+using System.Threading;
+
+class Program
+{
+	static void Main(string[] args)
+	{
+		Console.WriteLine("Main Thread ID: " + Thread.CurrentThread.ManagedThreadId);
+		
+		AutoResetEvent resetEvent = new AutoResetEvent(false);
+		bool isGot = ThreadPool.QueueUserWorkItem(new WaitCallback(DoTask), resetEvent);
+		Console.WriteLine("Getting thread: " + isGot);
+
+		resetEvent.WaitOne();
+
+		Console.WriteLine("Task is finished.");
+
+		Console.Read();
+	}
+
+	static Random r = new Random();
+	static void DoTask(object state)
+	{
+		Console.WriteLine("Child Thread ID: " + Thread.CurrentThread.ManagedThreadId);
+		int time = 1000 * r.Next(2, 10);
+		Console.WriteLine("Performing a task for {0} milliseconds.", time);
+		Thread.Sleep(time);
+
+		AutoResetEvent resetEvent = state as AutoResetEvent;
+		resetEvent.Set();
+	}
+}</pre>
+
+	<h3>线程池的特殊机制</h3>
+	<p>通过下例可看出线程池与直接使用线程的区别。比较下面两段代码：</p>
+	<pre class="code" data-type="csharp">//直接创建线程
+for (int i = 0; i < 5; i++)
+{
+	Thread t = new Thread(new ThreadStart(() =>
+	{
+		Console.WriteLine(string.Format("Thread [{0}] is stared", Thread.CurrentThread.ManagedThreadId));
+		Thread.Sleep(1000);
+	}));
+	t.Start();
+}</pre>
+	<p>可能的运行结果如下所示：</p>
+	<img alt="" src="images/multi_thread_1.PNG" />
+	<pre class="code" data-type="csharp">//使用线程池
+for (int i = 0; i < 5; i++)
+{
+
+	ThreadPool.QueueUserWorkItem(new WaitCallback(obj =>
+		{
+			Console.WriteLine(string.Format("Thread [{0}] is stared at {1}", Thread.CurrentThread.ManagedThreadId, DateTime.Now));
+			Thread.Sleep(1000);
+		}));
+}</pre>
+	<p>可能的运行结果如下：</p>
+	<img alt="" src="images/multi_thread_2.PNG" />
+	<p>从测试结果可是看出，例一创建出了5个货真价实的线程，而例二只从线程池使用了两个线程。这是线程池使用了某种调度模式，兼顾了线程的数量与响应时间。如果我们增大例二中的线程挂起时间，则使用的线程数也会相应增多。例如将挂起时间设为10000，我们也会看到5个活动线程。</p>
+	<p class="note">注意：委托的异步调用隐含使用了线程池的机制。</p>
+	<h3>线程池的容量</h3>
+	<p>可使用 ThreadPool.GetMaxThreads 和 ThreadPool.GetAvailableThreads 方法获取线程池中最大线程数量和可用线程数量。通常情况下，不需要去担心线程池中线程数量不足的问题。实际上，我从未手工设置过最大线程支持数。</p>
+	<h2>Parallel 类</h2>
+	<p>.NET Framework 4.0 加入了 Parallel 类以简化并行编程。它支持以下特性</p>
+	<ul>
+		<li>优化的线程调度策略</li>
+		<li>异常处理</li>
+		<li>中断机制</li>
+		<li>长地址？</li>
+		<li>本地线程？</li>
+	</ul>
+	<h3>Parrallel.For</h3>
+	<p>类似于 for 循环</p>
+	<p>下面的例子使用多线程执行 100 次 Sleep 操作</p>
+	<pre class="code" data-type="csharp">Parallel.For(0, 100, i =>
+{
+	Thread.Sleep(i);
+});</pre>
+	<p class="note">注意：第二个参数执行的相当于 &lt; 操作，所以 i 的执行是从 0 到 99。</p>
+	<h3>Parallel.ForEach</h3>
+	<p>类似于 foreach 循环</p>
+	<pre class="code" data-type="csharp">int[] values = new int[]{10, 20, 30};
+Parallel.ForEach&lt;int&gt;(values, time =&gt;
+{
+	Thread.Sleep(time);
+});</pre>
+	<p>foreach 其实是比 for 应用更用广泛的循环，在很多情况下，我们可以将一些循环转化为 foreach 循环</p>
+	<p>对于普通 for 循环，我们可以使用 Enumerable.Range 函数转化</p>
+	<pre class="code" data-type="csharp">//for
+for (int i = 0; i < 10; i++)
+{
+
+}
+
+//foreach
+foreach(int i in Enumerable.Range(0, 10)
+{
+
+}</pre>
+	<p>对于如下情况的 for 循环</p>
+	<pre class="code" data-type="csharp">for (Node&lt;T&gt; node = head; node != null; node = node.Next)
+{
+	// ... Process node
+}</pre>
+	<p>我们可以借助 yield 关键字来创建 IEnumerable</p>
+	<pre class="code" data-type="csharp">IEnumerable&lt;T&gt; Iterate(Node&lt;T&gt; head)
+{
+	for (Node&lt;T&gt; node = head; node != null; node = node.Next)
+	{
+		yield return node;
+	}
+}</pre>
+	<p>这样，原先的 for 循环即可转化为 foreach 循环</p>
+	<pre class="code" data-type="csharp">Parallel.ForEach(Iterate(head), node =&gt;
+	{
+		// ... Process node
+	});</pre>
+	<p>因为 Parallel.ForEach 对可索引的集合进行了优化，因此，如果需要提高时间性能的化，可将其转化为 Array，如下所示</p>
+	<pre class="code" data-type="csharp">Parallel.ForEach(Iterate(head).ToArray(), node =&gt;
+	{
+		// ... Process node
+	});</pre>
+	<p>我们可以把 Iterate 函数进行泛型扩展，这样就可以支持所有类似的操作</p>
+	<pre class="code" data-type="csharp">public static IEnumerable&lt;T&gt; Iterate&lt;T&gt;(Func&lt;T&gt; initialization, Func&lt;T, bool&gt; condition, Func&lt;T, T&gt; update)
+{
+	for (T i = initialization(); condition(i); i = update(i))
+	{
+		yield return i;
+	}
+}
+
+// using it
+Parallel.ForEach(Iterate(() =&gt; head, node =&gt; node != null, node =&gt; node.Next), node =&gt;
+	{
+		// ... Process node
+	});</pre>
+	<h3>Parallel.Invoke</h3>
+	<p>先看一下 Parallel.Invoke 的定义</p>
+	<pre class="code" data-type="csharp">public static void Invoke(
+	params Action[] actions
+)
+
+public static void Invoke(
+	ParallelOptions parallelOptions,
+	params Action[] actions
+)</pre>
+	<p>很明显地，通过 Invoke 函数，我们可以把任意的几个 Action 并行执行。</p>
+	<h3>限定最大线程数</h3>
+	<p>可通过 ParallelOptions 参数来限定最大执行的线程数，如下例中，最多只允许两个线程同时运行</p>
+	<pre class="code" data-type="csharp">Parallel.For(0, 5,
+		<span style="background-color:aquamarine">new ParallelOptions() { MaxDegreeOfParallelism = 2 },</span>
+		i =&gt;
+		{
+			Console.WriteLine(string.Format("Running by thread ID {0}", Thread.CurrentThread.ManagedThreadId));
+			Thread.Sleep(5000);
+		});</pre>
+	<h2>Task</h2>
+	<h3>Task 基本用法</h3>
+	<p>Task 是 .NET Framework 4.0 中新提供的对象，用于简化并行编程模式。</p>
+	<p>下例展示了如何创建Task，及如何通过 ContinueWith 方法获取其返回值。</p>
+
+	<pre class="code" data-type="csharp" data-collapsed="true" title="显示代码">using System;
+using System.Threading;
+using System.Threading.Tasks;
+
+namespace TaskTest
+{
+	class Program
+	{
+		static void Main(string[] args)
+		{
+			for (int i = 1; i &lt; 10; i++)
+			{
+				string item2 = "item" + i;
+				Task&lt;string&gt; t = new Task&lt;string&gt;(() =&gt; { return item2; });
+				t.ContinueWith(t1 =&gt; { Console.WriteLine(t1.Result + " is returned."); });
+				t.Start();
+			}
+
+			Console.Read();
+		}
+	}
+}</pre>
+	<p>ContinueWith 中可以继续使用 return 返回值，但不支持换返回值类型，如果需要换返回值类型，需要重新创建一个 Task，例如：</p>
+	<pre class="code" data-type="csharp">Task t2 = t.ContinueWith&lt;int&gt;(...);</pre>
+	<h3>在 Task.ContinueWith 中切回主线程</h3>
+	<p>对于桌面程序(WinForm/WPF), 我们经常需要在异步任务结束后在主线程序中执行刷新, 这时需要使用 TaskScheduler, 如下所示</p>
+	<pre class="code" data-type="csharp">TaskScheduler uiScheduler = TaskScheduler.FromCurrentSynchronizationContext();
+System.Threading.Tasks.Task task = System.Threading.Tasks.Task.Factory.StartNew(() =&gt; {
+			//do some asynchronous job
+		 });
+task.ContinueWith(t =&gt;
+{
+	//switch to main thread
+}, CancellationToken.None, TaskContinuationOptions.OnlyOnRanToCompletion, uiScheduler);
+task.ContinueWith(t =&gt;
+{
+	//exception handler
+}, CancellationToken.None, TaskContinuationOptions.OnlyOnFaulted, uiScheduler);</pre>
+	<h1>线程嵌套</h1>
+	<p>我们可以在子线程中继续创建子线程。</p>
+	<h2>Task 中的任务嵌套</h2>
+	<p>可以在 Task 中创建新的 Task，这被称为子任务，子任务的调度与主任务有所不同，是采用后进先出的方式(LIFO)</p>
+
+	<pre class="code" data-type="csharp">static void QueueTasks()
+{
+	// TaskA is a top level task.
+	Task taskA = Task.Factory.StartNew(() =>
+	{
+		Console.WriteLine("I was enqueued on the thread pool's global queue.");
+
+		// TaskB is a nested task and TaskC is a child task. Both go to local queue.
+		Task taskB = new Task(() => Console.WriteLine("I was enqueued on the local queue."));
+		Task taskC = new Task(() => Console.WriteLine("I was enqueued on the local queue, too."),
+								TaskCreationOptions.AttachedToParent);
+
+		taskB.Start();
+		taskC.Start();
+
+	});
+}</pre>
+
+	<h1>任务中止机制</h1>
+	<p>在某些情况下，我们需要中止线程的执行。</p>
+	<h2>Thread.Abort</h2>
+	<p>一种很容易想到的方式是使用 Thread.Abort 来终止线程，如下例所示：</p>
+	<pre class="code" data-type="csharp">static void Main(string[] args)
+{
+	Thread t = new Thread(new ThreadStart(() =&gt;
+	{
+		try
+		{
+			Console.WriteLine("Task is started");
+			Thread.Sleep(1000);
+			Console.WriteLine("Task is compeleted");
+		}
+		catch (ThreadAbortException)
+		{
+			Console.WriteLine("Task is aborted!");
+		}
+	}));
+	t.Start();
+	Thread.Sleep(100);
+	t.Abort();
+	t.Join();
+	Console.Read();
+}</pre>
+	<p>对于该示例程序，有如下几点需要值得注意一下：</p>
+	<ol>
+		<li>调用 Abort 后不能保证线程会立即中止，可调用 Join 来保证 Abort 执行完毕</li>
+		<li>Abort 也可以提供一个参数，通过 ThreadAbortException.ExceptionState 获取</li>
+	</ol>
+	<p class="note"><br />在上例中，线程在调用 Abort 后立即中止了，那是因为在线程中我们使用了 Thread.Sleep，可以很快地接受响应。
+		实际情况可能要复杂一些，如果线程正在执行一些真正的任务，例如 Web Service 调用，Abort 只能等到调用完成后才会去中止线程。
+		我们可以使用 Thread.SpinWait(1000000000) 来代替 Sleep 函数来模拟。
+		你将会发现线程直到 SpinWait 执行完后才去去中止。
+		<br /><br />
+		Abort 还会引发一些其它潜在的问题，例如 lock 未及时释放引起的死锁，所以真正在应用场景中，推荐使用的是 CancellationToken，请参看下节
+	</p>
+	<h2>使用 CancellationToken</h2>
+	<p></p>
+	<p>使用 CancellationToken，可随时在子线程中检查是否需要停止当前任务，如下例所示</p>
+
+	<pre class="code" data-type="csharp" data-collapsed="true" title="显示代码">static void Main(string[] args)
+{
+	CancellationTokenSource tokenSource = new CancellationTokenSource();
+	CancellationToken ct = tokenSource.Token;
+
+	var task = Task.Factory.StartNew(() =&gt;
+	{
+		// Were we already canceled?
+		ct.ThrowIfCancellationRequested();
+
+		int counter = 0;
+		while (true)
+		{
+			Thread.Sleep(10);
+			Console.WriteLine(string.Format("{0} times.", ++counter));
+					
+			// Poll on this property if you have to do  other cleanup before throwing. 
+			if (ct.IsCancellationRequested)
+			{
+				// Clean up here, then...
+				ct.ThrowIfCancellationRequested();
+				break;
+			}
+
+		}
+	}, tokenSource.Token); // Pass same token to StartNew.
+
+	Thread.Sleep(100);
+	tokenSource.Cancel();
+
+	// Just continue on this thread, or Wait/WaitAll with try-catch: 
+	try
+	{
+		task.Wait();
+	}
+	catch (AggregateException e)
+	{
+		foreach (var v in e.InnerExceptions)
+			Console.WriteLine(e.Message + " " + v.Message);
+	}
+
+	Console.ReadKey();
+}</pre>
+
+	<p>有人可能会有疑惑，这样的工作似乎使用线程间的共享变量也可以完成，而且更简单。这样想也没错，但使用 CancellationToken 可以适用于更加复杂的情况</p>
+	<ul>
+		<li>取消通知是跨对象的，例如，在对象A中并行调用的是对象B中的方法，如果使用共享变量的话，只能使用全局变量或使B保留对A的引用。</li>
+		<li>CancellationToken 提供了 <span style="font-weight:bold">Register</span> 方法来注册线程中止后要做的工作，这样可以很容易地让代码的耦合性更低，下面的代码将保证在线程中止后打印一行信息。
+			<pre class="code" data-type="csharp">ct.Register(() => Console.WriteLine("Clean Up"));</pre>
+	</ul>
+	<h2>Parallel.Stop/Break</h2>
+	<p>相对上面的例子，Parallel 提供了更加简单的中断机制，那就是 Stop 和 Break 方法。示例如下：</p>
+	<pre class="code" data-type="csharp">Parallel.For(0, N, (int i, ParallelLoopState loop) =&gt;
+{
+	// ...
+	if (someCondition)
+	{
+		loop.Stop();
+		return;
+	}
+	// ...
+	while (true)
+	{
+		if (loop.IsStopped) return;
+		// ...
+	}
+});</pre>
+	<p>Break 的示例也类似。两者的区别是：</p>
+	<ul>
+		<li>Stop: 调用后将不再有新的任务启动</li>
+		<li>Break: 调用后当前任务之后的任务将不再被启动，而之前的任务将继续启动</li>
+	</ul>
+	<h1>异常处理</h1>
+	<h2>在 Delegate 异步调用中处理异常</h2>
+	<pre class="code" data-type="csharp">static void Main(string[] args)
+{
+	Action invoker = () =&gt; { throw new Exception("Test Exception"); };
+	IAsyncResult asyncRes = invoker.BeginInvoke(new AsyncCallback(AfterComplete), null);
+	Console.Read();
+}
+
+private static void AfterComplete(IAsyncResult async)
+{
+	AsyncResult res = (AsyncResult)async;
+	Action invoker = (Action)res.AsyncDelegate;
+
+	try
+	{
+		invoker.EndInvoke(async);
+	}
+	catch (Exception ex)
+	{
+		Console.WriteLine("An error happen! The error detail is: \r\n" + ex);
+	}
+}</pre>
+		<h2>Task 异常处理</h2>
+	<p>下面的代码展示了如何在 Task 中处理线程异常</p>
+
+	<pre class="code" data-type="csharp" data-collapsed="true" title="显示代码">using System;
+using System.Threading;
+using System.Threading.Tasks;
+
+namespace TaskTest
+{
+	class Program
+	{
+		static void Main(string[] args)
+		{
+			TaskFactory factory = new TaskFactory();
+
+			//For console project, it's required.
+			SynchronizationContext.SetSynchronizationContext(new SynchronizationContext());
+
+			TaskScheduler uiScheduler = TaskScheduler.FromCurrentSynchronizationContext();
+
+			Task task = Task.Factory.StartNew(() =&gt; TestAction());
+
+			//execute when no exception
+			task.ContinueWith(t =&gt; { }, CancellationToken.None, TaskContinuationOptions.OnlyOnRanToCompletion, uiScheduler);
+
+			//execute when exception raise
+			task.ContinueWith(t =&gt; Console.WriteLine(t.Exception), CancellationToken.None, TaskContinuationOptions.OnlyOnFaulted, uiScheduler);
+
+			Console.WriteLine("End..");
+			Console.Read();
+		}
+
+		private static Random radomer = new Random((int)DateTime.Now.Ticks);
+
+		private static void TestAction()
+		{
+			throw new Exception("Test failed.");
+		}
+	}
+}</pre>
+	<h1>线程同步</h1>
+	<h2>线程调度</h2>
+	<p>设想一下如下的场景，有3个任务T1、T2、T3，如果T3需要在T1、T2都结束后再执行T3，有如下几种实现方式</p>
+	<h3>Join</h3>
+	<pre class="code" data-type="csharp">static void Main(string[] args)
+{
+	Action&lt;string&gt; testAction = delegate(string id)
+	{
+		Console.WriteLine(string.Format("{0} is running...", id));
+		Thread.Sleep(1000);
+		Console.WriteLine(string.Format("{0} is completed", id));
+	};
+	Thread t1 = new Thread(() =&gt; testAction("T1"));
+	Thread t2 = new Thread(() =&gt; testAction("T2"));
+	Thread t3 = new Thread(() =&gt; testAction("T3"));
+	t1.Start();
+	t2.Start();
+	t1.Join();
+	t2.Join();
+	t3.Start();
+	Console.Read();
+}</pre>
+	<h3>WaitHandle.WaitAll</h3>
+	<p>WaitHandle.WaitAll 方法将阻塞参数中传入的任务。同时 WaitHandle 还提供了更多的控制函数，如 WaitAny, WaitTimeout 等</p>
+	<p>对于 Thread，需要借助 ManualResetEvent 来实现，ManualResetEvent 与 AutoResetEvent 同为 WaitHandle 的继承类，至于它们的区别，可参看本章相关内容。</p>
+	<pre class="code" data-type="csharp">static void Main(string[] args)
+{
+	Action&lt;string&gt; testAction = delegate(string id)
+	{
+		Console.WriteLine(string.Format("{0} is running...", id));
+		Thread.Sleep(1000);
+		Console.WriteLine(string.Format("{0} is completed", id));
+	};
+	ManualResetEvent[] waitEvents = new ManualResetEvent[] { new ManualResetEvent(false), new ManualResetEvent(false) };
+	Thread t1 = new Thread(() =&gt;
+	{
+		testAction("T1");
+		waitEvents[0].Set();
+	});
+
+	Thread t2 = new Thread(() =&gt;
+	{
+		testAction("T2");
+		waitEvents[1].Set();
+	});
+
+	Thread t3 = new Thread(() =&gt; testAction("T3"));
+	t1.Start();
+	t2.Start();
+	WaitHandle.WaitAll(waitEvents);
+	t3.Start();
+	Console.Read();
+}</pre>
+	<p>对于 delegate 异步调用，情况稍有点不同，从代码上看更简洁一些</p>
+	<pre class="code" data-type="csharp">static void Main(string[] args)
+{
+	Action&lt;string&gt; testAction = delegate(string id)
+	{
+		Console.WriteLine(string.Format("{0} is running...", id));
+		Thread.Sleep(1000);
+		Console.WriteLine(string.Format("{0} is completed", id));
+	};
+
+	IAsyncResult t1 = testAction.BeginInvoke("T1", null, null);
+	IAsyncResult t2 = testAction.BeginInvoke("T2", null, null);
+	WaitHandle.WaitAll(new WaitHandle[] { t1.AsyncWaitHandle, t2.AsyncWaitHandle });
+	IAsyncResult t3 = testAction.BeginInvoke("T3", null, null);
+	Console.Read();
+}</pre>
+	<h3>SpinWait.SpinUntil</h3>
+	<p>这个方式是监控某个条件是否满足，满足后就结束</p>
+	<pre class="code" data-type="csharp">SpinWait.SpinUntil(() => isCompleted);
+//do others ...</pre>
+	<p>还可能通过重载方法设定最长等待时间</p>
+	<h3>Task</h3>
+	<p>.NET Framework 4 中新增的 Task 简化了 Wait 这种编程模式，如下所示</p>
+	<pre class="code" data-type="csharp">static void Main(string[] args)
+{
+	Action&lt;string&gt; testAction = delegate(string id)
+	{
+		Console.WriteLine(string.Format("{0} is running...", id));
+		Thread.Sleep(1000);
+		Console.WriteLine(string.Format("{0} is completed", id));
+	};
+	Task t1 = Task.Factory.StartNew(() =&gt; testAction("T1"));
+	Task t2 = Task.Factory.StartNew(() =&gt; testAction("T2"));
+	Task.WaitAll(t1, t2);
+	Task t3 = Task.Factory.StartNew(() =&gt; testAction("T3"));
+	Console.Read();
+}</pre>
+	<p>实际上，如果使用 TaskFactory，可将代码改变得更加完美，这也是 Task 的推荐使用方式</p>
+
+	<pre class="code" data-type="csharp">static void Main(string[] args)
+{
+	Action&lt;string&gt; testAction = delegate(string id)
+	{
+		Console.WriteLine(string.Format("{0} is running...", id));
+		Thread.Sleep(1000);
+		Console.WriteLine(string.Format("{0} is completed", id));
+	};
+	Task t1 = Task.Factory.StartNew(() =&gt; testAction("T1"));
+	Task t2 = Task.Factory.StartNew(() =&gt; testAction("T2"));
+	<span style="background-color:aquamarine">Task.Factory.ContinueWhenAll(new Task[] { t1, t2 }, (Task[] tasks) =&gt; testAction("T3"));</span>
+	Console.Read();
+}</pre>
+
+	<p>如果只是简单地等待所有线程结束，可使用 Task.WaitAll 静态方法</p>
+
+	<h3>一点扩展</h3>
+	<p>有时我们常常只是为了提高用户界面体验而加入线程，如果是在主线程下阻塞子线程会导制界面停止响应。因此在这种情况下需要一点小技巧来阻塞线程。那就是先新开一个子线程A，再在这个新开的子线程A中使用我们上述的代码来创建实现运行的子线程。这样阻塞的便是我们新开的线程A而非主线程，从而保证了用户界面的体验。</p>
+	<p class="note">注意，如果Thread使用了STAThreadAttribute，则WaitAll方法不被支持，所以，为了使之更加通用，可采用以下方法进行通用化扩展</p>
+	<pre class="code" data-type="csharp">public static void WaitAll(WaitHandle[] waitHandles)
+{
+	if (Thread.CurrentThread.GetApartmentState()  == ApartmentState.STA)
+	{
+		// WaitAll for multiple handles on an STA thread is not supported.
+		// ...so wait on each handle individually.
+		foreach (WaitHandle myWaitHandle in waitHandles)
+		{
+			WaitHandle.WaitAny(new WaitHandle[] { myWaitHandle });
+		}
+	}
+	else
+	{
+		WaitHandle.WaitAll(waitHandles);
+	}
+}</pre>
+
+	<h1>AutoResetEvent 与 ManualResetEvent</h1>
+	<p>AutoResetEvent 与 ManualResetEvent 是 .NET Framework 中 EventWaitHandle 的两个继承类。其功能分别等同于使用不同 EventResetMode 参数创建的  EventWaitHandle。</p>
+	<p>AutoResetEvent 在执行 Set 唤醒等待任务后会自动重置为非触发状态。ManualResetEvent 则需手工调用 Reset 方法恢复为非触发状态。</p>
+	<p>AutoResetEvent 很适合用于实现“生产者－消费者”模式。生产者使用 Set 方法通知消费者，消费者使用 WaitOne 方法等待被唤醒。</p>
+	<p>AutoResetEvent 每次只能唤醒一个等待的任务。因此，常用于临界资源的互斥访问。下面是 AutoResetEvent 的例子，演示了其单任务唤醒方式。在示例中，event_1 一开始即处于唤醒状态，所以 event_1 只需要 Set 两次即可。</p>
+	<pre class="code" data-type="csharp" data-collapsed="true" title="显示代码">using System;
+using System.Threading;
+
+// Visual Studio: Replace the default class in a Console project with 
+//                the following class.
+class Example
+{
+    private static AutoResetEvent event_1 = new AutoResetEvent(true);
+    private static AutoResetEvent event_2 = new AutoResetEvent(false);
+
+    static void Main()
+    {
+        Console.WriteLine("Press Enter to create three threads and start them.\r\n" +
+                          "The threads wait on AutoResetEvent #1, which was created\r\n" +
+                          "in the signaled state, so the first thread is released.\r\n" +
+                          "This puts AutoResetEvent #1 into the unsignaled state.");
+        Console.ReadLine();
+
+        for (int i = 1; i &lt; 4; i++)
+        {
+            Thread t = new Thread(ThreadProc);
+            t.Name = "Thread_" + i;
+            t.Start();
+        }
+        Thread.Sleep(250);
+
+        for (int i = 0; i &lt; 2; i++)
+        {
+            Console.WriteLine("Press Enter to release another thread.");
+            Console.ReadLine();
+            event_1.Set();
+            Thread.Sleep(250);
+        }
+
+        Console.WriteLine("\r\nAll threads are now waiting on AutoResetEvent #2.");
+        for (int i = 0; i &lt; 3; i++)
+        {
+            Console.WriteLine("Press Enter to release a thread.");
+            Console.ReadLine();
+            event_2.Set();
+            Thread.Sleep(250);
+        }
+
+        // Visual Studio: Uncomment the following line.
+        //Console.Readline();
+    }
+
+    static void ThreadProc()
+    {
+        string name = Thread.CurrentThread.Name;
+
+        Console.WriteLine("{0} waits on AutoResetEvent #1.", name);
+        event_1.WaitOne();
+        Console.WriteLine("{0} is released from AutoResetEvent #1.", name);
+
+        Console.WriteLine("{0} waits on AutoResetEvent #2.", name);
+        event_2.WaitOne();
+        Console.WriteLine("{0} is released from AutoResetEvent #2.", name);
+
+        Console.WriteLine("{0} ends.", name);
+    }
+}
+
+<span style="color:Green">/* This example produces output similar to the following:
+
+Press Enter to create three threads and start them.
+The threads wait on AutoResetEvent #1, which was created
+in the signaled state, so the first thread is released.
+This puts AutoResetEvent #1 into the unsignaled state.
+
+Thread_1 waits on AutoResetEvent #1.
+Thread_1 is released from AutoResetEvent #1.
+Thread_1 waits on AutoResetEvent #2.
+Thread_3 waits on AutoResetEvent #1.
+Thread_2 waits on AutoResetEvent #1.
+Press Enter to release another thread.
+
+Thread_3 is released from AutoResetEvent #1.
+Thread_3 waits on AutoResetEvent #2.
+Press Enter to release another thread.
+
+Thread_2 is released from AutoResetEvent #1.
+Thread_2 waits on AutoResetEvent #2.
+
+All threads are now waiting on AutoResetEvent #2.
+Press Enter to release a thread.
+
+Thread_2 is released from AutoResetEvent #2.
+Thread_2 ends.
+Press Enter to release a thread.
+
+Thread_1 is released from AutoResetEvent #2.
+Thread_1 ends.
+Press Enter to release a thread.
+
+Thread_3 is released from AutoResetEvent #2.
+Thread_3 ends.
+ */</span></pre>
+
+	<p>ManualResetEvent 因为不会自动重置，则一次可唤醒多个等待线程。同理，在唤醒后执行Reset前，调用其 WaitOne 方法将不会再阻塞。下例是 ManualResetEvent 的例子</p>
+	<pre class="code" data-type="csharp" data-collapsed="true" title="显示代码">using System;
+using System.Threading;
+
+public class Example
+{
+    // mre is used to block and release threads manually. It is
+    // created in the unsignaled state.
+    private static ManualResetEvent mre = new ManualResetEvent(false);
+
+    static void Main()
+    {
+        Console.WriteLine("\nStart 3 named threads that block on a ManualResetEvent:\n");
+
+        for(int i = 0; i &lt;= 2; i++)
+        {
+            Thread t = new Thread(ThreadProc);
+            t.Name = "Thread_" + i;
+            t.Start();
+        }
+
+        Thread.Sleep(500);
+        Console.WriteLine("\nWhen all three threads have started, press Enter to call Set()" +
+                          "\nto release all the threads.\n");
+        Console.ReadLine();
+
+        mre.Set();
+
+        Thread.Sleep(500);
+        Console.WriteLine("\nWhen a ManualResetEvent is signaled, threads that call WaitOne()" +
+                          "\ndo not block. Press Enter to show this.\n");
+        Console.ReadLine();
+
+        for(int i = 3; i &lt;= 4; i++)
+        {
+            Thread t = new Thread(ThreadProc);
+            t.Name = "Thread_" + i;
+            t.Start();
+        }
+
+        Thread.Sleep(500);
+        Console.WriteLine("\nPress Enter to call Reset(), so that threads once again block" +
+                          "\nwhen they call WaitOne().\n");
+        Console.ReadLine();
+
+        mre.Reset();
+
+        // Start a thread that waits on the ManualResetEvent.
+        Thread t5 = new Thread(ThreadProc);
+        t5.Name = "Thread_5";
+        t5.Start();
+
+        Thread.Sleep(500);
+        Console.WriteLine("\nPress Enter to call Set() and conclude the demo.");
+        Console.ReadLine();
+
+        mre.Set();
+
+        // If you run this example in Visual Studio, uncomment the following line:
+        //Console.ReadLine();
+    }
+
+
+    private static void ThreadProc()
+    {
+        string name = Thread.CurrentThread.Name;
+
+        Console.WriteLine(name + " starts and calls mre.WaitOne()");
+
+        mre.WaitOne();
+
+        Console.WriteLine(name + " ends.");
+    }
+}
+
+<span style="color:Green">/* This example produces output similar to the following:
+
+Start 3 named threads that block on a ManualResetEvent:
+
+Thread_0 starts and calls mre.WaitOne()
+Thread_1 starts and calls mre.WaitOne()
+Thread_2 starts and calls mre.WaitOne()
+
+When all three threads have started, press Enter to call Set()
+to release all the threads.
+
+
+Thread_2 ends.
+Thread_0 ends.
+Thread_1 ends.
+
+When a ManualResetEvent is signaled, threads that call WaitOne()
+do not block. Press Enter to show this.
+
+
+Thread_3 starts and calls mre.WaitOne()
+Thread_3 ends.
+Thread_4 starts and calls mre.WaitOne()
+Thread_4 ends.
+
+Press Enter to call Reset(), so that threads once again block
+when they call WaitOne().
+
+
+Thread_5 starts and calls mre.WaitOne()
+
+Press Enter to call Set() and conclude the demo.
+
+Thread_5 ends.
+ */</span></pre>
+
+	<h1>Mutex 与 Semphore</h1>
+	<h2>Mutex 的特点</h2>
+	<p>Mutex 的特点为执行 WaitOne 后，将会阻止其他线程重入其后代码。直到调用其 ReleaseMutex 之后。通常在用于临界资源访问</p>
+	<p>Mutex 与 lock 的形为很像。但 Mutex 的作用域为系统级，而 lock 只作用于当前应用。因此，如果是对本地变量的访问限制，可以使用 lock，但如果是对某个文件的访问限制，最好是使用 Mutex，但这时需要使用 Named Mutex，即初始化 Mutex 的标识符。Non-Named Mutex 不能作跨进程限制。</p>
+
+	<pre class="code" data-type="csharp" data-collapsed="true" title="查看代码">// This example shows how a Mutex is used to synchronize access
+// to a protected resource. Unlike Monitor, Mutex can be used with
+// WaitHandle.WaitAll and WaitAny, and can be passed across
+// AppDomain boundaries.
+
+using System;
+using System.Threading;
+
+class Test
+{
+    // Create a new Mutex. The creating thread does not own the
+    // Mutex.
+    private static Mutex mut = new Mutex();
+    private const int numIterations = 1;
+    private const int numThreads = 3;
+
+    static void Main()
+    {
+        // Create the threads that will use the protected resource.
+        for(int i = 0; i < numThreads; i++)
+        {
+            Thread myThread = new Thread(new ThreadStart(MyThreadProc));
+            myThread.Name = String.Format("Thread{0}", i + 1);
+            myThread.Start();
+        }
+
+        // The main thread exits, but the application continues to
+        // run until all foreground threads have exited.
+    }
+
+    private static void MyThreadProc()
+    {
+        for(int i = 0; i < numIterations; i++)
+        {
+            UseResource();
+        }
+    }
+
+    // This method represents a resource that must be synchronized
+    // so that only one thread at a time can enter.
+    private static void UseResource()
+    {
+        // Wait until it is safe to enter.
+        mut.WaitOne();
+
+        Console.WriteLine("{0} has entered the protected area", 
+            Thread.CurrentThread.Name);
+
+        // Place code to access non-reentrant resources here.
+
+        // Simulate some work.
+        Thread.Sleep(500);
+
+        Console.WriteLine("{0} is leaving the protected area\r\n", 
+            Thread.CurrentThread.Name);
+
+        // Release the Mutex.
+        mut.ReleaseMutex();
+    }
+}</pre>
+
+	<h2>Semphore</h2>
+	<p>Semphore 可看作是 Mutex 的加强版，为带计数功能的 Mutex。适用于临界资源可以被有限个使用者访问的情况。</p>
+	<pre class="code" data-type="csharp" data-collapsed="true" title="显示代码">using System;
+using System.Threading;
+
+public class Example
+{
+    // A semaphore that simulates a limited resource pool.
+    //
+    private static Semaphore _pool;
+
+    // A padding interval to make the output more orderly.
+    private static int _padding;
+
+    public static void Main()
+    {
+        // Create a semaphore that can satisfy up to three
+        // concurrent requests. Use an initial count of zero,
+        // so that the entire semaphore count is initially
+        // owned by the main program thread.
+        //
+        _pool = new Semaphore(0, 3);
+
+        // Create and start five numbered threads. 
+        //
+        for(int i = 1; i <= 5; i++)
+        {
+            Thread t = new Thread(new ParameterizedThreadStart(Worker));
+
+            // Start the thread, passing the number.
+            //
+            t.Start(i);
+        }
+
+        // Wait for half a second, to allow all the
+        // threads to start and to block on the semaphore.
+        //
+        Thread.Sleep(500);
+
+        // The main thread starts out holding the entire
+        // semaphore count. Calling Release(3) brings the 
+        // semaphore count back to its maximum value, and7
+        // allows the waiting threads to enter the semaphore,
+        // up to three at a time.
+        //
+        Console.WriteLine("Main thread calls Release(3).");
+        _pool.Release(3);
+
+        Console.WriteLine("Main thread exits.");
+    }
+
+    private static void Worker(object num)
+    {
+        // Each worker thread begins by requesting the
+        // semaphore.
+        Console.WriteLine("Thread {0} begins " +
+            "and waits for the semaphore.", num);
+        _pool.WaitOne();
+
+        // A padding interval to make the output more orderly.
+        int padding = Interlocked.Add(ref _padding, 100);
+
+        Console.WriteLine("Thread {0} enters the semaphore.", num);
+
+        // The thread's "work" consists of sleeping for 
+        // about a second. Each thread "works" a little 
+        // longer, just to make the output more orderly.
+        //
+        Thread.Sleep(1000 + padding);
+
+        Console.WriteLine("Thread {0} releases the semaphore.", num);
+        Console.WriteLine("Thread {0} previous semaphore count: {1}",
+            num, _pool.Release());
+    }
+}</pre>
+
+	<h1>锁机制</h1>
+	<h2>原子操作</h2>
+	<h3>Interlocker</h3>
+	<p>Interlocker 类提供了很多常见的原子操作。</p>
+	<p>例如 Interlocker.Add 方法，声明如下</p>
+	<pre class="code" data-type="csharp">public static int Add(
+	ref int location1,
+	int value
+)</pre>
+	<p>它会在执行加法时锁定 location1，直到操作完成返回后才允许其它线程修改 location1。</p>
+	<p>对于常见的加1或减1操作，可使用 Increment 或 Decrement 方法</p>
+	<p>下例给出了一个常见的场景，要求同时执行多个线程，然后所有线程成功后再继续，代码如下：</p>
+	<pre class="code" data-type="csharp">ManualResetEvent mr = new ManualResetEvent(false);
+int completedCounter = 0;
+
+List&lt;Action&gt; actions = new List&lt;Action&gt;();
+
+for (int i = 0; i &lt; 100; i++)
+{
+	actions.Add((Action)(() =&gt;
+	{
+		Thread.Sleep(1000);
+	}));
+}
+
+foreach (Action action in actions)
+{
+	System.Threading.ThreadPool.QueueUserWorkItem(delegate
+	{
+		action();
+
+		if (Interlocked.Increment(ref completedCounter) == actions.Count)
+		{
+			mr.Set();
+		}
+	});
+
+}
+
+mr.WaitOne();</pre>
+	<h2>读写锁</h2>
+	<p>读写锁的使用场景</p>
+	<ul>
+		<li>只能由单个线程写，但可以由多个线程同时读。</li>
+		<li>在进行读操作时，不可同时进行写操作。反之亦然。</li>
+	</ul>
+	<p>“读写锁”在.NET框架中有着两个实现：ReaderWriterLock和ReaderWriterLockSlim。前者出现在.NET 1.x中，而后者随.NET 2.0发布。两者的区别在于前者性能低，后者性能高，因此在目前，基本上需要读写锁的场景都会建议使用ReaderWriterLockSlim（除了稍后会提到的情况）。</p>
+	<pre class="code" data-type="csharp">var source = Enumerable.Range(1, 1000).ToArray();
+var dict = source.ToDictionary(i =&gt; i);
+int iteration = 10000;
+
+var rwLockSlim = new ReaderWriterLockSlim();
+foreach (var i in source)
+{
+    rwLockSlim.EnterReadLock();
+    var ignore = dict[i];
+    rwLockSlim.ExitReadLock();
+}
+
+var rwLock = new ReaderWriterLock();
+foreach (var i in source)
+{
+    rwLock.AcquireReaderLock(0);
+    var ignore = dict[i];
+    rwLock.ReleaseReaderLock();
+}</pre>
+	<p>.NET 3.5的ReaderWriterLockSlim类会在某些时候读取Environment.ProcesserCount，这在Medium Trust的环境下会引发SecurityException。因此您会发现，在目前的ASP.NET MVC框架中，所有需要读写锁的地方都使用了ReaderWriterLock而不是Slim组件。</p>
+	<h1>线程与WinForm界面</h1>
+	<p>在WinForm开发时，经常使用子线程时行界面的体验优化，例如在进行耗时数据操作时，在界面上显示一个滚动条。通常需要将数据操作放到子线程中，否则滚动条会冻结在那里。</p>
+	<p>至于为什么滚动条会冻结，这是对于WinForm开发一个不幸的消息，那就是界面操作只能由创建界面的线程（通常是主线程）来操作，也就是说，在主线程中做耗时操作时，主线程不会去处理滚动条的刷新了。而且如果子线程试图直接操作界面元素，将会引发运行时异常。</p>
+	<p>因此，在子线程中如果试图去控制界面时，需调用界面的Invoke方法或BeginInvoke方法。其中Invoke方法将会阻塞当前线程的执行，直到主线程执行完界面刷新操作。BeginInvoke则在调用后立刻返回，主线程将在可用时去执行被委派界面操作。</p>
+	<p>但无论是Invoke还是BeginInvoke，都有可能在主线程忙碌时超时引发异常。为此，可使用如下方法添加重试机制避免异常（可声明在Form或UserControl的基类中）</p>
+
+	<pre class="code" data-type="csharp" data-collapsed="true" title="显示代码">using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace Test
+{
+    public class InvokeSyncSupportedForm : System.Windows.Forms.Form
+    {
+        private const int EMS_MAX_WAITING_TIME = 3;
+        private int refreshCounter = 0;
+        public virtual void InvokeSync(Delegate method, params object[] args)
+        {
+            if (method == null)
+                return;
+
+            string controlName = this.Name + "(" + this.GetType().FullName + ")";
+            string methodName = method.Method.Name;
+            try
+            {
+                if (this.InvokeRequired)
+                {
+                    System.Diagnostics.Debug(string.Format("Enter Invoke with retry-mechanism, Control: {0}, Method: {1}.", controlName, methodName));
+                    IAsyncResult result = this.BeginInvoke(method, args);
+                    if (result.AsyncWaitHandle.WaitOne(EMS_MAX_WAITING_TIME))
+                    {
+                        System.Diagnostics.Debug(string.Format("Successful to invoke with retry-mechanism, Control: {0}, Method: {1}.", controlName, methodName));
+                    }
+                    else
+                    {
+                        refreshCounter++;
+
+                        if (refreshCounter &gt; EMS_MAX_TRY_COUNT)
+                        {
+                            System.Diagnostics.Debug(string.Format("{0} try more than {1} times, abort it. Method: {2}", controlName, EMS_MAX_TRY_COUNT, methodName));
+                        }
+                        else
+                        {
+                            System.Diagnostics.Debug(string.Format("{0} try {1} times to invoke method {2}.", controlName, refreshCounter, methodName));
+                            this.InvokeSync(method, args);
+                        }
+                    }
+                }
+                else
+                {
+                    method.DynamicInvoke(args);
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug(ex.ToString());
+                throw(ex);
+            }
+            finally
+            {
+                refreshCounter = 0;
+            }
+        }
+    }
+}</pre>
+
+	<h2>ParallelOptions</h2>
+	<p>Parallel 的这3个方法均可接受一个 ParallelOptions 参数，它可实现以下功能</p>
+	<h3>中断并发执行</h3>
+	<p>通过 CancellationToken 属性，可从外部中断并发的执行，示例代码如下：</p>
+	<h1>常见问题</h1>
+	<h2>共享变量</h2>
+	<p>请看一下面这段代码，是否有什么问题：</p>
+	<pre class="code" data-type="csharp">using System;
+using System.Threading.Tasks;
+
+namespace TaskTest
+{
+	class Program
+	{
+		static void Main(string[] args)
+		{
+			string[] items = new string[] { "item1", "item2", "item3" };
+
+			TaskFactory factory = new TaskFactory();
+			foreach (var item in items)
+			{
+				factory.StartNew(() => { Console.WriteLine(item); });
+			}
+
+			Console.Read();
+		}
+	}
+}</pre>
+	<p>按照构想，似乎是应该顺序打印item1, item2, item3，但执行一下的话，会发现结果相当诡异（这是一种可能结果，可能会有其它结果，但我相信大部分情况下，你不会得到正确的预想结果）：</p>
+	<img alt="" src="images/multi_thread_3.png" />
+	<p>为了说明问题的原因，我们居 StartNew 语句后加入如下语句再重新运行</p>
+	<pre class="code" data-type="csharp">Console.WriteLine("Print " + item);</pre>
+	<p>一种可能的结果如下图所示：</p>
+	<img alt="" src="images/multi_thread_4.png" />
+	<p>这似乎就是问题所在了，等到线程开始执行时，item变量已经变成最后一个元素了。既然知道了原因，解决方案也就出来了，那就是在启动线程之前，缓存所需要的参数，修改后的程序如下所示：</p>
+	<pre class="code" data-type="csharp">using System;
+using System.Threading.Tasks;
+
+namespace TaskTest
+{
+	class Program
+	{
+		static void Main(string[] args)
+		{
+			string[] items = new string[] { "item1", "item2", "item3" };
+
+			TaskFactory factory = new TaskFactory();
+			foreach (var item in items)
+			{
+				string item2 = item;
+				factory.StartNew(() => { Console.WriteLine(item2); });
+			}
+
+			Console.Read();
+		}
+	}
+}</pre>
+	<h2>Dictionary 的线程安全性</h2>
+	<p>首先，Dictionary 是非线程安全的，非线程安全并不是指多个线程不能同时进行读写，而是指有可能因为多个线程同时操作而产生的“脏读”或数据破坏的情况。可使用读写锁进行控制，或使用内置的 System.Collections.Concurrent.ConcurrentDictionary 对象。</p>
+	<p>&nbsp;</p>
+	<h1>示例代码</h1>
+	<h2>简单生产者消费者模式实现</h2>
+	<h3>使用 BlockingCollection</h3>
+	<p>.NET Framework 4 中新增了 BlokcingCollection，可方便地用于 Producer/Consumer 模式，示例代码如下所示</p>
+	<pre class="code" data-type="csharp">using System;
+using System.Collections.Concurrent;
+using System.Threading;
+using System.Threading.Tasks;
+
+namespace ConsoleApplication1
+{
+	class Program
+	{
+		static void Main(string[] args)
+		{
+			Random r = new Random((int)DateTime.Now.Ticks);
+			BlockingCollection&lt;int&gt; pool = new BlockingCollection&lt;int&gt;();
+
+			//Consumer
+			Task.Factory.StartNew(() =&gt;
+				{
+					Parallel.ForEach(pool.GetConsumingEnumerable(),
+						val =&gt;
+						{
+							Console.WriteLine(string.Format("{0} is consumed by thread [{1}]", val, Thread.CurrentThread.ManagedThreadId));
+							Thread.Sleep(r.Next(1, 100));
+						});
+					Console.WriteLine("All are consumed.");
+				});
+
+			//Producer
+			for (int i = 0; i &lt; 100; i++)
+			{
+				pool.Add(i);
+				Console.WriteLine(string.Format("{0} is produced.", i));
+				Thread.Sleep(r.Next(1, 100));
+			}
+			
+			//Complete producing
+			pool.CompleteAdding();
+			Console.Read();
+
+		}
+	}
+}</pre>
+	<h2>使用线程同时写入多个文件</h2>
+	<p>手工关联线程和ManualResetEvent(WaitHandle的继承类)对象，MSDN示例，使用线程同时写入多个文件。</p>
+	<p><a href="http://msdn.microsoft.com/en-us/library/z6w25xa6.aspx">MSDN 链接 http://msdn.microsoft.com/en-us/library/z6w25xa6.aspx</a></p>
+
+	<pre class="code" data-type="csharp" data-collapsed="true" title="显示代码">using System;
+using System.IO;
+using System.Security.Permissions;
+using System.Threading;
+
+class Test
+{
+	static void Main()
+	{
+		const int numberOfFiles = 5;
+		string dirName = @"C:\temp";
+		string fileName;
+
+		byte[] byteArray;
+		Random randomGenerator = new Random();
+
+		ManualResetEvent[] manualEvents = new ManualResetEvent[numberOfFiles];
+		State stateInfo;
+
+		if (!Directory.Exists(dirName))
+		{
+			Directory.CreateDirectory(dirName);
+		}
+
+		// Queue the work items that create and write to the files.
+		for (int i = 0; i &lt; numberOfFiles; i++)
+		{
+			fileName = string.Concat(dirName, @"\Test", i.ToString(), ".dat");
+
+			// Create random data to write to the file.
+			byteArray = new byte[1000000];
+			randomGenerator.NextBytes(byteArray);
+
+			manualEvents[i] = new ManualResetEvent(false);
+
+			stateInfo = new State(fileName, byteArray, manualEvents[i]);
+
+			ThreadPool.QueueUserWorkItem(new WaitCallback(Writer.WriteToFile), stateInfo);
+		}
+
+		// Since ThreadPool threads are background threads, 
+		// wait for the work items to signal before exiting.
+		WaitHandle.WaitAll(manualEvents);
+		Console.WriteLine("Files written - main exiting.");
+		Console.Read();
+	}
+}
+
+// Maintain state to pass to WriteToFile.
+class State
+{
+	public string fileName;
+	public byte[] byteArray;
+	public ManualResetEvent manualEvent;
+
+	public State(string fileName, byte[] byteArray, ManualResetEvent manualEvent)
+	{
+		this.fileName = fileName;
+		this.byteArray = byteArray;
+		this.manualEvent = manualEvent;
+	}
+}
+
+class Writer
+{
+	static int workItemCount = 0;
+	Writer() { }
+
+	public static void WriteToFile(object state)
+	{
+		int workItemNumber = workItemCount;
+		Interlocked.Increment(ref workItemCount);
+		Console.WriteLine("Starting work item {0}.", workItemNumber.ToString());
+		State stateInfo = (State)state;
+		FileStream fileWriter = null;
+
+		// Create and write to the file.
+		try
+		{
+			fileWriter = new FileStream(stateInfo.fileName, FileMode.Create);
+			fileWriter.Write(stateInfo.byteArray, 0, stateInfo.byteArray.Length);
+		}
+		finally
+		{
+			if (fileWriter != null)
+			{
+				fileWriter.Close();
+			}
+
+			// Signal Main that the work item has finished.
+			Console.WriteLine("Ending work item {0}.", workItemNumber.ToString());
+			stateInfo.manualEvent.Set();
+		}
+	}
+}</pre>
+
+	<h2>使用 Delegate 异步调用模拟实现 Task</h2>
+	<p style="font-weight: bold">例1：我实现的多任务并发类，实现如下功能：</p>
+	<ul>
+		<li>同步或异步执行多线程任务</li>
+		<li>任务最大并发数设定</li>
+		<li>单任务完成响应</li>
+		<li>任务全部完成响应</li>
+		<li>任务返回值获取</li>
+		<li>任务失败监视</li>
+		<li>多种线程实现方式
+        <ul>
+			<li>New Thread</li>
+			<li>ThreadPool</li>
+			<li>Delegate.BeginInvoke</li>
+		</ul>
+		</li>
+	</ul>
+	<p>主程序清单</p>
+
+	<pre class="code" data-type="csharp" data-collapsed="true" title="显示代码">using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.Remoting.Messaging;
+using System.Text;
+using System.Threading;
+
+public delegate object TaskDelegate(object param);
+
+public enum ThreadMode
+{
+	ThreadPool,
+	CreateThread,
+	Dispatcher
+}
+
+public class Task
+{
+	public Task(TaskDelegate invoker, object param)
+	{
+		this.taskId = Guid.NewGuid().ToString() + invoker.Method.Name;
+		this.TaskInvoker = invoker;
+		this.TaskParam = param;
+		this.IsFailed = false;
+	}
+
+	private string taskId;
+	public string TaskId { get { return this.taskId; } }
+
+	public object Tag { get; set; }
+
+	public TaskDelegate TaskInvoker;
+	public object TaskParam;
+
+	private object taskResult;
+	private static object taskResultLocker = new object();
+	public object TaskResult
+	{
+		get
+		{
+			lock (taskResultLocker)
+			{
+				return this.taskResult;
+			}
+		}
+
+		set
+		{
+			lock (taskResultLocker)
+			{
+				this.taskResult = value;
+			}
+		}
+	}
+
+	public bool IsFailed { get; private set; }
+	public Exception Error { get; private set; }
+	public void SetError(Exception ex)
+	{
+		if (ex == null)
+			return;
+
+		this.IsFailed = true;
+		this.Error = ex;
+	}
+}
+
+public class BaseTaskBinding
+{
+	public BaseTaskBinding()
+	{
+		this.taskList = new List&lt;Task&gt;();
+		this.taskQueue = new Queue&lt;Task&gt;();
+		this.resetEvents = new Dictionary&lt;string, ManualResetEvent&gt;();
+		this.MaxConcurenceTaskCount = int.MaxValue;
+		this.ThreadMode = ThreadMode.ThreadPool;
+	}
+
+	private List&lt;Task&gt; taskList;
+	private Queue&lt;Task&gt; taskQueue;
+	private Dictionary&lt;string, ManualResetEvent&gt; resetEvents = new Dictionary&lt;string, ManualResetEvent&gt;();
+	private static object newTaskLocker = new object();
+
+	public ThreadMode ThreadMode { get; set; }
+	public int MaxConcurenceTaskCount { get; set; }
+	public List&lt;Exception&gt; Errors
+	{
+		get
+		{
+			List&lt;Exception&gt; errors = new List&lt;Exception&gt;();
+			foreach (Task task in this.taskList)
+			{
+				if (task.IsFailed)
+				{
+					errors.Add(task.Error);
+				}
+			}
+			return errors;
+		}
+	}
+
+	public bool IsFailed
+	{
+		get
+		{
+			foreach (Task task in this.taskList)
+			{
+				if (task.IsFailed)
+				{
+					return true;
+				}
+			}
+
+			return false;
+		}
+	}
+
+	public string ErrorStack
+	{
+		get
+		{
+			StringBuilder buf = new StringBuilder();
+			this.Errors.ForEach(item =&gt; buf.Append(item.ToString()));
+			return buf.ToString();
+		}
+	}
+
+	public event EventHandler RunCompleted;
+	public event EventHandler OneTaskCompleted;
+
+	public Task this[int index]
+	{
+		get
+		{
+			return this.taskList[index];
+		}
+
+		set
+		{
+			this.taskList[index] = value;
+		}
+	}
+
+	public virtual void AddTask(Task task)
+	{
+		taskList.Add(task);
+		taskQueue.Enqueue(task);
+
+		if (task.TaskInvoker != null)
+		{
+			this.resetEvents.Add(task.TaskId, new ManualResetEvent(false));
+		}
+	}
+
+	public void Run(bool isAsync = false)
+	{
+		Thread t = new Thread(new ThreadStart(this.RunTasks));
+		t.SetApartmentState(ApartmentState.MTA);
+		t.Name = "Run Binding Task";
+		t.Start();
+
+		if (!isAsync)
+		{
+			t.Join();
+		}
+	}
+
+	private void RunTasks()
+	{
+		this.RunMe();
+		WaitHandle.WaitAll(this.resetEvents.Values.ToArray());
+		if (this.RunCompleted != null)
+		{
+			this.RunCompleted(this, EventArgs.Empty);
+		}
+	}
+
+	private void RunMe()
+	{
+		int taskIndex = 0;
+		int taskCount = this.taskQueue.Count;
+		while (taskIndex &lt; this.MaxConcurenceTaskCount &amp;&amp; this.taskQueue.Count &gt; 0)
+		{
+			Task task = this.DequeueTask();
+			if (task != null)
+			{
+				this.RunTaskInThread(task);
+				taskIndex++;
+			}
+			else
+			{
+				break;
+			}
+		}
+	}
+
+	private void RunTaskInThread(Task task)
+	{
+		switch (this.ThreadMode)
+		{
+			case ThreadMode.CreateThread:
+				Thread t = new Thread(new ParameterizedThreadStart(this.RunTask));
+				t.Start(task);
+				break;
+			case ThreadMode.Dispatcher:
+				task.TaskInvoker.BeginInvoke(task.TaskParam, new AsyncCallback(this.Task_Complete), task);
+				break;
+			default:
+				ThreadPool.QueueUserWorkItem(new WaitCallback(this.RunTask), task);
+				break;
+		}
+	}
+
+	private void RunTask(object task)
+	{
+		Task taskObj = task as Task;
+		try
+		{
+			taskObj.TaskResult = taskObj.TaskInvoker(taskObj.TaskParam);
+		}
+		catch (Exception ex)
+		{
+			taskObj.SetError(ex);
+		}
+		finally
+		{
+			resetEvents[taskObj.TaskId].Set();
+		}
+
+		this.AfterTaskCompleted(taskObj);
+	}
+
+	private void Task_Complete(IAsyncResult async)
+	{
+		Task taskObj = async.AsyncState as Task;
+		AsyncResult res = async as AsyncResult;
+		TaskDelegate invoker = res.AsyncDelegate as TaskDelegate;
+		try
+		{
+			taskObj.TaskResult = invoker.EndInvoke(async);
+		}
+		catch (Exception ex)
+		{
+			taskObj.SetError(ex);
+		}
+		finally
+		{
+			this.resetEvents[taskObj.TaskId].Set();
+		}
+
+		this.AfterTaskCompleted(taskObj);
+	}
+
+	private void AfterTaskCompleted(Task task)
+	{
+		if (this.OneTaskCompleted != null)
+		{
+			this.OneTaskCompleted(task, EventArgs.Empty);
+		}
+
+		Task nextTask = this.DequeueTask();
+
+		if (nextTask != null &amp;&amp; nextTask.TaskInvoker != null)
+		{
+			this.RunTaskInThread(nextTask);
+		}
+
+	}
+
+	private Task DequeueTask()
+	{
+		Task nextTask = null;
+
+		lock (newTaskLocker)
+		{
+			if (this.taskQueue.Count &gt; 0)
+			{
+				nextTask = this.taskQueue.Dequeue();
+				while (nextTask.TaskInvoker == null)
+				{
+					nextTask = this.taskQueue.Dequeue();
+				}
+			}
+		}
+
+		return nextTask;
+	}
+
+}</pre>
+
+	<p>测试程序</p>
+	<pre class="code" data-type="csharp" data-collapsed="true" title="显示代码">using System;
+using System.Threading;
+using ThreadCommon;
+
+class Program
+{
+	private static Random randomer = new Random((int)DateTime.Now.Ticks);
+	static void Main(string[] args)
+	{
+		Console.WriteLine(string.Format("Main Thread Id: [{0}]", Thread.CurrentThread.ManagedThreadId));
+
+		Console.WriteLine("Testing started.");
+
+		//run in sync mode
+		SyncTest();
+
+		//run in async mode
+		AsyncTest();
+
+		Console.WriteLine("Do something in main thread.");
+		Console.Read();
+	}
+
+	private static void SyncTest()
+	{
+		BaseTaskBinding taskBinding = CreateTestTasks();
+		taskBinding.ThreadMode = ThreadMode.CreateThread;
+		taskBinding.MaxConcurenceTaskCount = 3;
+		taskBinding.Run();
+	}
+
+	private static void AsyncTest()
+	{
+		BaseTaskBinding taskBinding = CreateTestTasks();
+		taskBinding.ThreadMode = ThreadMode.Dispatcher;
+		taskBinding.MaxConcurenceTaskCount = 3;
+		taskBinding.Run(true);
+	}
+
+	private static BaseTaskBinding CreateTestTasks()
+	{
+		BaseTaskBinding taskBinding = new BaseTaskBinding();
+
+		for (int i = 1; i &lt;= 5; i++)
+		{
+			Task task = new Task(DoTask, null);
+			task.TaskParam = task.TaskId;
+			taskBinding.AddTask(task);
+		}
+
+		taskBinding.OneTaskCompleted += new EventHandler(taskBinding_OneTaskCompleted);
+		taskBinding.RunCompleted += new EventHandler(taskBinding_RunCompleted);
+		return taskBinding;
+	}
+
+	private static void taskBinding_OneTaskCompleted(object sender, EventArgs e)
+	{
+		Console.WriteLine(string.Format("Task {0} is done. Sleep {1} ms. Thread Id: {2}", (sender as Task).TaskId, (sender as Task).TaskResult, Thread.CurrentThread.ManagedThreadId));
+	}
+
+	private static void taskBinding_RunCompleted(object sender, EventArgs e)
+	{
+		Console.WriteLine("All tasks are done.");
+	}
+
+	private static object DoTask(object param)
+	{
+		Console.WriteLine(string.Format("Task [{0}] with ID {1} is running at {2}.", param, Thread.CurrentThread.ManagedThreadId, DateTime.Now));
+		int sleepTime = randomer.Next(1000, 2000);
+		Thread.Sleep(sleepTime);
+		return sleepTime;
+	}
+}</pre>
+	<p><a href="demo/TaskBindingSample.zip">示例下载</a></p>
+</body>
+</html>

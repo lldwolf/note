@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+<title>流操作</title>
+</head>
+
+<body>
+<p id="title">流操作</p>
+
+<h1>概述</h1>
+<h1>流的写入与读取</h1>
+
+<h1>概述</h1>
+<p>常用的流操作类</p>
+<table style="width:80%">
+<tbody>
+	<tr>
+		<th>类</th>
+		<th>描述</th>
+	</tr>
+	<tr>
+		<td>FileStream</td>
+		<td>文件流，以流方式读写文件</td>
+	</tr>
+	<tr>
+		<td>MemoryStream</td>
+		<td>内存流，以流方式进行内存读写操作</td>
+	</tr>
+	<tr>
+		<td>GZipStream</td>
+		<td>压缩流</td>
+	</tr>
+	<tr>
+		<td>DeflateStream</td>
+		<td>压缩流</td>
+	</tr>
+</tbody>
+</table>
+<h1>流的写入与读取</h1>
+<h1>通用的流读取操作</h1>
+<p>读取流的内容时，通常会用到两个类：</p>
+<ul>
+	<li>StreamReader：用于以文本方式读取流内容</li>
+	<li>BinaryReader：用于以二进制方式读取流内容</li>
+</ul>
+<p>流文件读取示例</p>
+<pre class="code" data-type="csharp">using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Text;
+
+namespace StreamTest
+{
+	class Program
+	{
+		static void Main(string[] args)
+		{
+			string cmdStr;
+			while ((cmdStr = GetCmd()) != &quot;0&quot;)
+			{
+				string filePath;
+				string fileContent;
+				byte[] binContent;
+				switch (cmdStr)
+				{
+					case &quot;1&quot;:
+						filePath = GetFilePath();
+						fileContent = ReadTextFileOneTime(filePath);
+						Console.WriteLine(fileContent);
+						break;
+					case &quot;2&quot;:
+						filePath = GetFilePath();
+						fileContent = ReadTextFileLineByLine(filePath);
+						Console.WriteLine(fileContent);
+						break;
+					case &quot;3&quot;:
+						filePath = GetFilePath();
+						binContent = ReadBinaryFile(filePath);
+						PrintBytes(binContent);
+						break;
+					default:
+						break;
+				}
+			}
+		}
+
+		#region Internal Method
+
+		private static string GetCmd()
+		{
+			StringBuilder buf = new StringBuilder();
+			buf.AppendLine(&quot;0.\tQuit&quot;);
+			buf.AppendLine(&quot;1.\tRead Text File One Time&quot;);
+			buf.AppendLine(&quot;2.\tRead Text File Line By Line&quot;);
+			buf.AppendLine(&quot;3.\tRead Binary File&quot;);
+			buf.Append(&quot;Input the command No:&quot;);
+			Console.WriteLine(buf.ToString());
+			return Console.ReadLine();
+		}
+
+		private static string GetFilePath()
+		{
+			Console.WriteLine(&quot;Input file path:&quot;);
+			string filePath = Console.ReadLine();
+			while (!File.Exists(filePath))
+			{
+				Console.WriteLine(string.Format(&quot;Cannot file file {0}, Re-input:&quot;, filePath));
+				filePath = Console.ReadLine();
+			}
+			return filePath;
+		}
+
+		private static void PrintBytes(byte[] bytes)
+		{
+			StringBuilder buf = new StringBuilder();
+			int counter = 0;
+			foreach (byte val in bytes)
+			{
+				if (counter % 16 == 0)
+				{
+					if (counter != 0)
+					{
+						buf.AppendLine();
+					}
+
+					buf.Append(Convert.ToString(counter, 16).PadLeft(8, '0') + &quot;: &quot;);
+				}
+
+				buf.Append(Convert.ToString(val, 16).PadLeft(2, '0') + &quot; &quot;);
+
+				counter++;
+			}
+
+			Console.WriteLine(buf.ToString());
+		}
+
+		#endregion Internal Method
+
+		#region Stream Method
+
+		private static string ReadTextFileOneTime(string fileName)
+		{
+			StreamReader sr = File.OpenText(fileName);
+			return sr.ReadToEnd();
+		}
+
+		private static string ReadTextFileLineByLine(string fileName)
+		{
+			StreamReader sr = File.OpenText(fileName);
+			StringBuilder buf = new StringBuilder();
+			string str;
+			while ((str = sr.ReadLine()) != null)
+			{
+				buf.AppendLine(str);
+			}
+			return buf.ToString();
+		}
+
+		private static byte[] ReadBinaryFile(string fileName)
+		{
+			List&lt;byte&gt; buf = new List&lt;byte&gt;();
+			int readScale = 1024;
+			FileStream stream = new FileStream(fileName, FileMode.Open, FileAccess.Read);
+			BinaryReader reader = new BinaryReader(stream, Encoding.UTF8);
+
+			byte[] readBuf = reader.ReadBytes(readScale);
+
+			while (readBuf != null &amp;&amp; readBuf.Length &gt; 0)
+			{
+				buf.AddRange(readBuf);
+				readBuf = reader.ReadBytes(readScale);
+			}
+
+			return buf.ToArray();
+		}
+
+		#endregion Stream Method
+	}
+}</pre>
+<p>&nbsp;</p>
+
+</body>
+</html>

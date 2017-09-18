@@ -1,0 +1,43 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>Collections</title>
+<script language="javascript" src="css.js"></script>
+</head>
+
+<body>
+ <h1>第N章 使用动态对象数组</h1>
+ <hr />
+ <p>如果你已经使用过Java或.net之类的语言，应该对ArrayList这种动态对象数组不陌生。所幸，在VBA中也有类似的对象Collection。使用方法如下：</p>
+ <p>先建立一个类模块Class1，它的内容很简单，只有两个公用变量：</p>
+ <pre>Public Attr1 As Integer
+Public Attr2 As String</pre>
+ <p>然后建立测试模块，内容如下：</p>
+ <pre>Public Sub test()
+
+    Dim t As Class1
+    
+    Set t = New Class1
+    
+    t.Attr1 = 10
+    t.Attr2 = &quot;safdsaf&quot;
+    
+    Dim a As Collection
+    Set a = New Collection
+    
+    Call a.Add(t)
+    
+    Dim b As Class1
+    
+    Set b = a(1)
+    
+    MsgBox b.Attr2
+
+End Sub</pre>
+ <p>&nbsp;</p>
+ <p>&nbsp;</p>
+ <p>&nbsp; </p>
+<script language="javascript" src="index.js"></script>
+</body>
+</html>

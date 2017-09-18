@@ -1,0 +1,302 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+Working with nested reports </TITLE>
+</HEAD>
+<BODY>
+<A NAME="BFCBAGGB"></A><h1>Working with nested reports </h1>
+<A NAME="TI3406"></A><p>When you use nested reports either in composite reports or
+in other base reports, several enhancements and options are available.
+An easy way to see what you can do is to select the nested report
+and look at the Properties view for it. The following screen shows
+the Properties view for a related nested report:</p>
+<br><img src="images/Nest22.gif">
+<A NAME="TI3407"></A><p>Many of the options in the Properties view are described in <A HREF="imugp51.htm#CAICGCGD">Chapter 5, "Enhancing Reports "</A>--not here.
+For example, using borders on nested reports is like using borders
+on any control.</p>
+<A NAME="TI3408"></A><p>This section describes activities that apply only to nested
+reports or that have special meaning for nested reports. It covers:<A NAME="TI3409"></A>
+<ul>
+<li class=fi><A HREF="imugp85.htm#BFCBIHGI">"Adjusting nested report
+width"</A></li>
+<li class=ds><A HREF="imugp85.htm#BFCDCJDA">"Changing a nested report
+from one report to another"</A></li>
+<li class=ds><A HREF="imugp85.htm#BFCCDAFB">"Modifying the definition
+of a nested report"</A></li>
+<li class=ds><A HREF="imugp85.htm#BFCBBACA">"Adding another nested report
+to a composite report"</A></li>
+<li class=ds><A HREF="imugp85.htm#BFCDIAGD">"Supplying retrieval arguments
+to relate a nested report to its base report"</A></li>
+<li class=ds><A HREF="imugp85.htm#BFCDEGGE">"Specifying criteria to relate
+a nested report to its base report"</A></li>
+<li class=ds><A HREF="imugp85.htm#BFCCIAGD">"Using options for nested
+reports"</A>
+</li>
+</ul>
+</p>
+<A NAME="BFCBIHGI"></A><h2>Adjusting nested report width</h2>
+<A NAME="TI3410"></A><p>When you preview a report with nested reports, you may find
+that the width of the nested report is unacceptable. This can happen,
+for example, if you change the design of the nested report or if
+you use newspaper columns in a nested report. The width of the nested
+report is not adjusted to fit its contents at execution time; if
+the report is too narrow, some columns may be truncated. For example,
+if the size of the nested report is set to 6 inches wide in the
+parent report, columns in the nested report that exceed that width
+are not displayed in the parent report.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To adjust report width:</p>
+<ol><li class=fi>
+In the Design view, position the pointer
+near a vertical edge of the nested report and press the left mouse
+button.<br><br></li>
+<li class=ds>
+Drag the edge to widen the nested report.<br><br></li>
+<li class=ds>
+Check the new width in the Preview view.<br><br></li></ol>
+<br><A NAME="BFCDCJDA"></A><h2>Changing a nested report from one report to another</h2>
+<A NAME="TI3411"></A><p>When you are working with nested reports, you may want to
+change the nested report that is used. For example, you may work
+on several versions of a nested report and need to update the version
+of the nested report that the composite or base report uses.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To change the nested report to a different report:</p>
+<ol><li class=fi>
+Select the nested report in the Design
+view.<br><br></li>
+<li class=ds>
+In the Properties view, General property page,
+click the button next to the Report box.<br><br></li>
+<li class=ds>
+Select the report you want to use and click OK.<br><br>
+The name of the report that displays in the box in the Design
+view changes to the new one.<br><br></li></ol>
+<br><A NAME="BFCCDAFB"></A><h2>Modifying the definition of a nested report</h2>
+<A NAME="TI3412"></A><p>While you are working with nested reports, you may want to
+modify the definition of the nested report. You can do this directly
+from the composite report or base report that contains the nested
+report.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To modify the definition of a nested report from
+the composite report or base report:</p>
+<ol><li class=fi>
+Position the pointer on the nested report
+whose definition you want to modify and display the popup menu.<br><br></li>
+<li class=ds>
+Select Modify Report from the popup menu.<br><br>
+The nested report opens and displays in the painter. Both
+the composite or base report and the nested report are open.<br><br></li>
+<li class=ds>
+Modify the report.<br><br></li>
+<li class=ds>
+Select File&gt;Close from the menu bar.<br><br>
+You are prompted to save your changes.<br><br></li>
+<li class=ds>
+Click OK.<br><br>
+You return to the composite report or to the base report that
+includes the nested report.<br><br></li></ol>
+<br><A NAME="BFCBBACA"></A><h2>Adding another nested report to a composite report</h2>
+<A NAME="TI3413"></A><p>After you have created a composite report, you may want to
+add another report.</p>
+<A NAME="TI3414"></A><p>For information on adding a nested report
+to a report (not a composite report), see <A HREF="imugp84.htm#BFCCACGF">"Placing a related nested
+report in another report"</A> or <A HREF="imugp84.htm#BFCDGAHG">"Placing an unrelated nested
+report in another report"</A>.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To add another nested report to a composite report:</p>
+<ol><li class=fi>
+Open the composite report.<br><br></li>
+<li class=ds>
+Select Insert&gt;Control&gt;Report
+from the menu bar.<br><br></li>
+<li class=ds>
+Click in the Design view where you want to place
+the report.<br><br>
+The Select Report dialog box displays listing defined reports in
+the current library.<br><br></li>
+<li class=ds>
+Select the report you want and click OK.<br><br>
+A box representing the report displays in the Design view.<br><br></li></ol>
+<br><A NAME="BFCDIAGD"></A><h2>Supplying retrieval arguments to relate a nested report to its base report</h2>
+<A NAME="TI3415"></A><p>The most efficient way to relate a nested report to its base
+report is to use retrieval arguments. If your nested report has
+arguments defined, you use the process described in this section
+to supply the retrieval argument value from the base report to the
+nested report. (The process described is part of the whole process
+covered in <A HREF="imugp84.htm#BFCCACGF">"Placing a related nested
+report in another report"</A>.)</p>
+<A NAME="TI3416"></A><h4>Why retrieval arguments are efficient</h4>
+<A NAME="TI3417"></A><p>Some DBMSs have the ability to bind input variables in the
+WHERE clause of the SELECT statement. When you use retrieval arguments,
+a DBMS <i>with this capability</i>
+ sets up placeholders
+in the WHERE clause and compiles the SELECT statement <i>once</i>
+. InfoMaker retains
+this compiled form of the SELECT statement for use in subsequent
+retrieval requests.</p>
+<A NAME="TI3418"></A><h4>Requirements for reusing the compiled SELECT
+statement</h4>
+<A NAME="TI3419"></A><p>To enable InfoMaker to retain and reuse the compiled SELECT
+statement:<A NAME="TI3420"></A>
+<ul>
+<li class=fi>The database interface
+must support binding of input variables.</li>
+<li class=ds>You must enable binding support by setting the DisableBind
+DBParm to 0, which is the default.</li>
+<li class=ds>You must enable caching in the database profile.
+You should set the SQLCache DBParm parameter to the number of levels
+of nesting plus 5.<br>
+For more information, see the description
+of the SQLCache and DisableBind DBParm parameters in the online
+Help.<br>
+</li>
+</ul>
+</p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Nested reports in composite reports</span> <A NAME="TI3421"></A>If the base report is a composite report, you need to define
+retrieval arguments for the composite report before you can supply
+them to the nested report. </p>
+<A NAME="TI3422"></A>In the Properties view for the composite report, select the
+General page. Then define the retrieval arguments that the nested
+report needs, taking care to specify the correct type.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To supply a retrieval argument value from the
+base report to the nested report:</p>
+<ol><li class=fi>
+Make sure that the nested report has been
+set up to take one or more retrieval arguments.<br><br>
+See <A HREF="imugp84.htm#BFCBAJDF">"Placing a nested report
+in another report "</A>.<br><br></li>
+<li class=ds>
+Select the nested report and then select the General
+page of the Properties view.<br><br>
+The Arguments box lists arguments defined for the nested report
+and provides a way for you to specify how information from the base
+report will supply the value of the argument to the nested report.<br><br><br><img src="images/Nest15a.gif"><br>
+</li>
+<li class=ds>
+Supply the base report column that will supply
+the argument's value. To do this, click the button in the
+Expression column.<br><br>
+The Modify Expression dialog box displays. In this dialog
+box you can easily select one of the columns or develop an expression.
+In the example, the column named <i>id</i>
+ from the
+base report will supply the value for the argument <i>:customerid</i>
+ in
+the nested report.<br><br>
+When you run the report now, you will not be prompted for
+retrieval argument values for the nested report. The base report
+will supply the retrieval argument values automatically.<br><br></li></ol>
+<br><A NAME="BFCDEGGE"></A><h2>Specifying criteria to relate a nested report to its base report</h2>
+<A NAME="TI3423"></A><p>If you do not have arguments defined for the nested report
+and if database efficiency is not an issue, you can place a nested
+report in another report and specify criteria to pass values to
+the related nested report.</p>
+<A NAME="TI3424"></A><h4>How the DBMS processes SQL if you use the specify
+criteria technique</h4>
+<A NAME="TI3425"></A><p>If you use the specify criteria technique, the DBMS repeatedly
+recompiles the SELECT statement and then executes it. The recompilation
+is necessary for each possible variation of the WHERE clause.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To specify criteria to relate a nested report
+to its base report:</p>
+<ol><li class=fi>
+Select the nested report and then select
+the Criteria page in the Properties view.<br><br>
+The Criteria property page provides a way for you to specify
+how information from the base report will supply the retrieval criteria
+to the nested report.<br><br></li>
+<li class=ds>
+Click the button next to the criteria box.<br><br>
+The Specify Retrieval Criteria dialog box displays.<br><br></li>
+<li class=ds>
+Enter the retrieval criteria and click OK.<br><br>
+The rules for specifying criteria are the same as for specifying
+criteria in the Quick Select data source. Multiple criteria in one
+line are ANDed together. Criteria entered on separate lines are
+ORed together.<br><br>
+In this example, the customer ID (the <i>id</i>
+ column)
+is the retrieval criterion being supplied to the nested report.
+Notice that the id column is preceded by a colon (:), which is required:<br><br><br><img src="images/nest28.gif"><br>
+
+When you run the report now, InfoMaker retrieves rows in
+the nested report based on the criteria you have specified. In the
+example, the customer ID column in the base report determines which
+rows from the sales_order table are included for each customer.<br><br></li></ol>
+<br><A NAME="BFCCIAGD"></A><h2>Using options for nested reports</h2>
+<A NAME="TI3426"></A><h4>Using the Autosize Height option</h4>
+<A NAME="TI3427"></A><p>Autosize Height should be on for all nested reports except
+graphs. This option ensures that the height of the nested report
+can change to accommodate the rows that are returned.</p>
+<A NAME="TI3428"></A><p>This option is on by default for all nested reports except
+graphs. Usually there is no reason to change it. If you do want
+to force a nested report to have a fixed height, you can turn this
+option off.</p>
+<A NAME="TI3429"></A><p>Note that the detail band also has an Autosize Height option.
+The option is on by default and must be on for the Autosize Height
+option for the nested report to work properly.</p>
+<A NAME="TI3430"></A><p>Bands other than the detail band do not have an Autosize Height
+option. If you place a nested report in a band other than the detail
+band, you must size the band itself to hold the report.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To change the Autosize Height option in a nested
+report:</p>
+<ol><li class=fi>
+In the Design view, select the nested report.<br><br></li>
+<li class=ds>
+In the Properties view, select the Position properties
+page.<br><br></li>
+<li class=ds>
+Select/clear the Autosize Height checkbox.<br><br></li></ol>
+<br><p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Handling large rows</span> <A NAME="TI3431"></A>To avoid multiple blank pages or other anomalies in printed
+reports, never create a DataWindow with a data row greater than
+the size of the target page. To handle large text-string columns,
+break the large string into a series of small strings. The smaller
+strings are used to populate individual data rows within a nested
+report instead of using a single AutoSize Height text column. </p>
+<A NAME="TI3432"></A><h4>Using the Slide option</h4>
+<A NAME="TI3433"></A><p>InfoMaker determines the appropriate Slide options when positioning
+the nested report(s) and assigns default values. Usually you should
+not change the default values:<A NAME="TI3434"></A>
+<ul>
+<li class=fi>The Slide Left option is on by default for grid
+and crosstab style reports and off by default for all others. Having
+Slide Left on for grid and crosstab ensures that these reports break
+horizontally on whole columns and not in the middle of a column.</li>
+<li class=ds>The Slide Up All Above/Directly Above options
+ensure that the nested report uses just as much vertical space as
+it needs. One of these options is on by default for all nested reports.
+</li>
+</ul>
+</p>
+<A NAME="TI3435"></A><p>For more information, see <A HREF="imugp55.htm#BFCDCEHJ">"Sliding controls to remove
+blank space in a report"</A>.</p>
+<A NAME="TI3436"></A><h4>Using the New Page option (composite only)</h4>
+<A NAME="TI3437"></A><p>The New Page option forces a new page for a nested report
+used <i>in a composite report</i>
+. By default, this
+option is off.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To specify that a nested report in a composite
+report should begin on a new page:</p>
+<ol><li class=fi>
+In the Design view, select the nested report.<br><br></li>
+<li class=ds>
+In the Properties view, select the General page.<br><br></li>
+<li class=ds>
+Select the New Page checkbox.<br><br>
+A checkmark displays indicating the option is selected.<br><br></li></ol>
+<br><A NAME="TI3438"></A><h4>Using the Trail Footer option (composite only)</h4>
+<A NAME="TI3439"></A><p>The Trail Footer option controls the placement of the footer
+for the last page of a nested report <i>in a composite report</i>
+.
+By default, this option is on. The footer appears directly under
+the contents of the nested report and not at the bottom of the page.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To specify that the footer should appear at the
+bottom of the page:</p>
+<ol><li class=fi>
+In the Design view, select the nested report.<br><br></li>
+<li class=ds>
+In the Properties view, select the General page.<br><br></li>
+<li class=ds>
+Clear the Trail Footer checkbox.<br><br>
+The checkmark next to the option disappears, indicating the
+option is no longer selected. The footer will appear at the bottom
+of the page on all pages of the nested report, including the last
+page. Note that if another nested report begins on the same page,
+the footer from the earlier report might be misleading or confusing.<br><br></li></ol>
+<br>

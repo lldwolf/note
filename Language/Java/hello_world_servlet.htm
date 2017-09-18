@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>Hello World - Servlet</title>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+<p id="title">Hello World - Servlet</p>
+
+<p>JSP1传递一个name参数给Servlet，如果name为Peter，Servlet再将其传递给JSP2，显示 “Hello Peter!”，否则Servlet将其传递给JSP3，显示“Sorry, I don’t know (name值)!”（不使用任何开源框架）。</p>
+<p>为了完成上述功能，我们需要完成以下操作。</p>
+<ul>
+	<li><a href="#jsp1">用于发送请求的JSP1</a></li>
+	<li>用于接收响应的JSP2</li>
+	<li>用于处理请求的Servlet</li>
+	<li>在web.xml中注册Servlet</li>
+</ul>
+<h1>JSP1</h1>
+<p>关键代码如下所示：</p>
+<pre>&lt;form name=&quot;form1&quot; method=&quot;post&quot; action=&quot;/jsp_test/hello.do&quot; target=&quot;_blank&quot;&gt;
+	&lt;input type=&quot;text&quot; name=&quot;name&quot; value=&quot;Peter&quot; /&gt;
+	&lt;br /&gt;
+	&lt;input type=&quot;submit&quot; value=&quot;Submit&quot; /&gt;
+&lt;/form&gt;</pre>
+<h1>N.2 JSP2</h1>
+<p>关键代码如下所示：</p>
+<pre>&lt;%
+	String name = request.getParameter(&quot;name&quot;);
+	if(&quot;Peter&quot;.equals(name))
+		out.println(&quot;&lt;p style='color:blue;'&gt;Hello &quot; + name + &quot;!&lt;/p&gt;&quot;);
+	else
+		out.println(&quot;&lt;p style='color:red;'&gt;Sorry, I don't know &quot; + name + &quot;!&lt;/p&gt;&quot;);
+%&gt;</pre>
+<h1>N.3 Servlet</h1>
+<p>要使用Servlet，需引入servlet-api.jar包到你的CLASSPATH中，它位于Tomcat/lib目录下</p>
+<p>该Servlet的源码如下所示：</p>
+<pre>package lld.test.helloworld;
+
+import java.io.IOException;
+
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+public class HelloServlet extends HttpServlet
+{
+	public void doPost(
+			HttpServletRequest request,
+			HttpServletResponse response) throws IOException, ServletException
+	{
+		String name = request.getParameter(&quot;name&quot;);
+		request.setAttribute(&quot;name&quot;, name);
+		ServletContext context = this.getServletContext();
+		RequestDispatcher dispatcher = context.getRequestDispatcher(&quot;/hello/servlet_jsp2.jsp&quot;);
+		dispatcher.forward(request, response);
+	}
+	
+	public void doGet(
+			HttpServletRequest request, 
+			HttpServletResponse response) throws IOException, ServletException
+	{
+		this.doPost(request, response);
+	}
+	
+}</pre>
+<h1>N.4 在web.xml中注册Servlet</h1>
+<pre>&lt;servlet&gt;
+	&lt;servlet-name&gt;HelloServlet&lt;/servlet-name&gt;
+	&lt;servlet-class&gt;lld.test.helloworld.HelloServlet&lt;/servlet-class&gt;
+&lt;/servlet&gt;
+&lt;servlet-mapping&gt;
+	&lt;servlet-name&gt;HelloServlet&lt;/servlet-name&gt;
+	&lt;url-pattern&gt;/hello.do&lt;/url-pattern&gt;
+&lt;/servlet-mapping&gt;</pre>
+<h1>N.5 使用Tomcat的注意事项</h1>
+<p>我使用的Tomcat版本为6，如果在应用程序的WEB-INF/lib下有与tomcat安装目录的lib目录下有重复的文件，例如servlet-api.jar或servlet-api.jar，在Tomcat启动时会报错：servlet-api.jar not loaded。</p>
+<p>因此，在部署时需要删除WEB-INF/lib目录下的与Tomcat的重复包。</p>
+<p>为了不生成重复包，你可以将tomcat/lib/servlet-api.jar添加到你的CLASSPATH中，如果使用Eclipse的话，在项目的Properties - Java Build Path - Libraries 中，使用“Add External JARs...” 按钮将Tomcat/lib/servlet-api.jar 添加进来即可，这样就不会在WEB-INF/lib下生成servlet-api.jar文件。</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+
+</body>
+</html>

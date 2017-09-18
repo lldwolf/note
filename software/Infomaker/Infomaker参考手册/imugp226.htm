@@ -1,0 +1,55 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+RelativeDate</TITLE>
+</HEAD>
+<BODY>
+<A NAME="DWFRelativeDate"></A><A NAME="TI7580"></A><h1>RelativeDate</h1>
+<A NAME="TI7581"></A><p>
+<FORM>
+<INPUT
+ TYPE = "BUTTON"
+ VALUE = "Examples"
+ onClick = "window.location = 'imugp226.htm#EX78';">
+<INPUT
+  TYPE = "BUTTON"
+ VALUE = "See also"
+ onClick = "window.location = 'imugp226.htm#SA78';">
+</FORM>
+</p>
+<h3>Description</h3><A NAME="TI7582"></A><p>Obtains the date that occurs a specified number of days after
+or before another date.</p>
+
+<h3>Syntax</h3><pre><b>RelativeDate</b> ( <i>date</i>, <i>n</i> )</pre>
+<A NAME="TI7583"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI7584"></A>Argument</th>
+<th align="left" valign=bottom><A NAME="TI7585"></A>Description</th>
+</tr>
+<tr><td valign=top><A NAME="TI7586"></A><i>date</i></td>
+<td valign=top><A NAME="TI7587"></A>A date value</td>
+</tr>
+<tr><td valign=top><A NAME="TI7588"></A><i>n</i></td>
+<td valign=top><A NAME="TI7589"></A>An integer indicating the number of days</td>
+</tr>
+</table>
+
+<h3>Return Values</h3><A NAME="TI7590"></A><p>Date. Returns the date that occurs <i>n</i> days
+after <i>date</i> if <i>n</i> is greater
+than 0. Returns the date that occurs <i>n</i> days
+before <i>date</i> if <i>n</i> is less
+than 0.</p>
+
+<A NAME="EX78"></A><h3>Examples</h3><A NAME="TI7591"></A><p>This expression returns 1999-02-10:<pre><i>RelativeDate</i> (1999-01-31, 10)</pre>
+</p>
+<A NAME="TI7592"></A><p>This expression returns 1999-01-21:<pre><i>RelativeDate</i> (1999-01-31, -10)</pre>
+</p>
+
+<A NAME="SA78"></A><h3>See Also</h3><A NAME="TI7593"></A><p><A NAME="TI7594"></A>
+<ul>
+<li class=fi><A HREF="imugp174.htm#CAIBGFFH">DaysAfter</A></li>
+<li class=ds> 
+</li>
+</ul>
+</p>
+
+

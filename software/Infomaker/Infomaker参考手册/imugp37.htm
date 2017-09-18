@@ -1,0 +1,203 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+Working with keys</TITLE>
+</HEAD>
+<BODY>
+<A NAME="CCJDECFJ"></A><h1>Working with keys</h1>
+<A NAME="TI1046"></A><p>If your DBMS supports primary and foreign keys, you can work
+with the keys in InfoMaker. </p>
+<A NAME="TI1047"></A><h4>Why you should use keys</h4>
+<A NAME="TI1048"></A><p>If your DBMS supports them, you should use primary and foreign
+keys to enforce the referential integrity of your database. That
+way you can rely on the DBMS to make sure that only valid values
+are entered for certain columns.</p>
+<A NAME="TI1049"></A><p>For example, say you have two tables called Department and
+Employee. The Department table contains the column Dept_Head_ID,
+which holds the ID of the department's manager. You want
+to make sure that only valid employee IDs are entered in this column.
+The only valid values for Dept_Head_ID in the Department
+table are values for Emp_ID in the Employee table.</p>
+<A NAME="TI1050"></A><p>To enforce this kind of relationship, you define a foreign
+key for Dept_Head_ID that points to the Employee
+table. With this key in place, the DBMS disallows any value for
+Dept_Head_ID that does not match an Emp_ID in
+the Employee table:</p>
+<br><img src="images/db0012.gif">
+<A NAME="TI1051"></A><p>For more about primary and foreign keys, consult
+a book about relational database design or your DBMS documentation.</p>
+<A NAME="TI1052"></A><h4>What you can do in the Database painter</h4>
+<A NAME="TI1053"></A><p>You can work with keys in the following ways:<A NAME="TI1054"></A>
+<ul>
+<li class=fi>Look at existing primary and foreign keys</li>
+<li class=ds>Open all tables that depend on a particular primary
+key</li>
+<li class=ds>Open the table containing the primary key used by
+a particular foreign key</li>
+<li class=ds>Create, alter, and drop keys
+</li>
+</ul>
+</p>
+<A NAME="TI1055"></A><p>For the most part, you work with keys the same way for each
+DBMS that supports keys. But there are some DBMS-specific issues.</p>
+<A NAME="TI1056"></A><p>For complete information about using keys
+with your DBMS, see your DBMS documentation.</p>
+<A NAME="TI1057"></A><h4>Viewing keys</h4>
+<A NAME="TI1058"></A><p>Keys can be viewed in several ways:<A NAME="TI1059"></A>
+<ul>
+<li class=fi>In
+the expanded tree view of a table in the Objects view</li>
+<li class=ds>As icons connected by lines to a table in the Objects
+Layout view
+</li>
+</ul>
+</p>
+<A NAME="TI1060"></A><p>In the following picture, the Department table has two keys:<A NAME="TI1061"></A>
+<ul>
+<li class=fi>A primary key (on dept_id)</li>
+<li class=ds>A foreign key (on dept_head_id)
+</li>
+</ul>
+</p>
+<br><img src="images/db0013.gif">
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>If you can't see the lines</span> <A NAME="TI1062"></A>If the color of your window background makes it hard to see
+the lines for the keys and indexes, you can set the colors for each
+component of the Database painter's graphical table representation,
+including keys and indexes.</p>
+<A NAME="TI1063"></A>For information, see <A HREF="imugp34.htm#BABDFCJG">"Modifying database preferences"</A>.</p>
+<A NAME="TI1064"></A><h4>Opening related tables</h4>
+<A NAME="TI1065"></A><p>When working with tables containing keys, you can easily open
+related tables.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To open the table that a particular foreign key
+references:</p>
+<ol><li class=fi>
+Display the foreign key popup menu.<br><br></li>
+<li class=ds>
+Select Open Referenced Table.<br><br></li></ol>
+<br><p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To open all tables referencing a particular primary
+key:</p>
+<ol><li class=fi>
+Display the primary key popup menu.<br><br></li>
+<li class=ds>
+Select Open Dependent Table(s).<br><br>
+InfoMaker opens and expands all tables in the database containing
+foreign keys that reference the selected primary key.<br><br></li></ol>
+<br><A NAME="TI1066"></A><h4>Defining primary keys</h4>
+<A NAME="TI1067"></A><p>If your DBMS supports primary keys, you can define them in InfoMaker.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To create a primary key:</p>
+<ol><li class=fi>
+Highlight the table for which you want
+to create a primary key and click the Create Primary Key button.<br><br>
+<i>or</i>
+<br><br>
+Select Object&gt;Insert&gt;Primary Key from
+the Painter Bar menu or New&gt;Primary Key from the popup
+menu.<br><br>
+<i>or</i>
+<br><br>
+Expand the table's tree view, right click Primary
+Key, and select New Primary Key from the popup menu. <br><br>
+The Primary Key property sheet displays in the Object Details
+view. <br><br><br><img src="images/dbpk.gif"><br>
+</li>
+<li class=ds>
+Select one or more columns for the primary key.<br><br><p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Columns that are allowed in a primary key</span> <A NAME="TI1068"></A>Only a column that does not allow NULLs can be included as
+a column in a primary key definition. If you choose a column that
+allows NULLs, you get a DBMS error when you save the table. In DBMSs
+that allow rollback for Data Definition Language (DDL), the table
+definition is rolled back. In DBMSs that don't allow rollback
+for DDL, the painter is refreshed with the current definition of
+the table.</p>
+</li>
+<li class=ds>
+Specify any information required by your DBMS.<br><br><p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Naming a primary key</span> <A NAME="TI1069"></A>Some DBMSs allow you to name a primary key and specify whether
+it is clustered or not clustered. For these DBMSs, the Primary Key
+property page has a way to specify these properties.</p>
+
+For DBMS-specific information, see your DBMS
+documentation.<br><br></li>
+<li class=ds>
+Right-click on the Object Details view and select
+Save Changes from the popup menu. <br><br>
+Any changes you've made in the property sheet are
+immediately saved to the table definition. <br><br></li></ol>
+<br><p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Completing the primary key</span> <A NAME="TI1070"></A>Some DBMSs automatically create a unique index when you define
+a primary key so that you can immediately begin to add data to the
+table. Others require you to separately create a unique index to
+support the primary key before populating the table with data.</p>
+<A NAME="TI1071"></A>To find out what your DBMS does, see your
+DBMS documentation.</p>
+<A NAME="TI1072"></A><h4>Defining foreign keys</h4>
+<A NAME="TI1073"></A><p>If your DBMS supports foreign keys, you can define them in InfoMaker.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To create a foreign key:</p>
+<ol><li class=fi>
+Highlight the table and click the Create
+Foreign Key button.<br><br>
+<i>or</i>
+<br><br>
+Select Object&gt;Insert&gt;Foreign Key from
+the Painter Bar menu or New&gt;Foreign Key from the popup
+menu.<br><br>
+<i>or</i>
+<br><br>
+Expand the table's tree view and right click
+on Foreign Keys and select New Foreign Key from the popup menu. <br><br>
+The Foreign Key property sheet displays in the Object Details
+view. Some of the information is DBMS-specific. <br><br><br><img src="images/dbfk.gif"><br>
+</li>
+<li class=ds>
+Name the foreign key in the Foreign Key Name box.<br><br></li>
+<li class=ds>
+Select the columns for the foreign key.<br><br></li>
+<li class=ds>
+On the Primary Key tab, select the table and column
+containing the Primary key referenced by the foreign key you are
+defining.<br><br><p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Key definitions must match exactly</span> <A NAME="TI1074"></A>The definition of the foreign key columns must match the primary
+key columns, including datatype, precision (width), and scale (decimal specification).</p>
+</li>
+<li class=ds>
+On the Rules tab, specify any information required
+by your DBMS.<br><br>
+For example, you may need to specify a delete rule by selecting
+one of the rules listed for On Delete of Primary Table Row.<br><br>
+For DBMS-specific information, see your DBMS
+documentation.<br><br></li>
+<li class=ds>
+Right-click on the Object Details view and select
+Save Changes from the popup menu. <br><br>
+Any changes you've made in the property sheet are
+immediately saved to the table definition. <br><br></li></ol>
+<br><A NAME="TI1075"></A><h4>Modifying keys</h4>
+<A NAME="TI1076"></A><p>You can modify a primary key in InfoMaker.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To modify a key:</p>
+<ol><li class=fi>
+Highlight the primary key listed in the
+table's expanded tree view and click the Properties button.<br><br>
+<i>or</i>
+<br><br>
+Select Properties from the Object or popup menu.<br><br>
+<i>or</i>
+<br><br>
+Drag the primary key icon and drop it in the Object
+Details view. <br><br></li>
+<li class=ds>
+Select one or more columns for the primary key.<br><br></li>
+<li class=ds>
+Right-click on the Object Details view and select
+Save Changes from the popup menu. <br><br>
+Any changes you've made in the property sheet are
+immediately saved to the table definition. <br><br></li></ol>
+<br><A NAME="TI1077"></A><h4>Dropping a key</h4>
+<A NAME="TI1078"></A><p>You can drop keys (remove them from the database) from within InfoMaker.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To drop a key:</p>
+<ol><li class=fi>
+Highlight the key in the expanded tree
+view for the table in the Objects view or right-click the key icon
+for the table in the Object Layout view.<br><br></li>
+<li class=ds>
+Select Drop Primary Key or Drop Foreign Key from
+the key's popup menu.<br><br></li>
+<li class=ds>
+Click Yes.<br><br></li></ol>
+<br>

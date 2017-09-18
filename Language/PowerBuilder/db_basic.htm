@@ -1,0 +1,110 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<title>数据库初步</title>
+<script language="javascript" src="css.js"></script>
+</head>
+<body>
+<h1>第N章 数据库初步</h1>
+<hr>
+<h2>N.1 简介</h2>
+<p>在PB中SQL语句是直接嵌入的，里面可以使用PB变量，在SQL语句中使用的方式为</p>
+<pre>:变量名</pre>
+<p>嵌入的SQL语句都要以字符“;”结尾。</p>
+<h2>N.2 连接数据库</h2>
+<p>所有的数据库操作都需要一个TransactionObject对象，PB系统有一个全局的该类型对象SQLCA。例如要初始化SQL SERVER连接，代码如下：</p>
+<pre>SQLCA.DBMS = &quot;MSS Microsoft SQL Server&quot;
+SQLCA.Database = &quot;intools&quot;
+SQLCA.ServerName = &quot;127.0.0.1&quot;
+SQLCA.LogId = &quot;demo&quot;
+SQLCA.LogPass = &quot;demo&quot;
+SQLCA.AutoCommit = True</pre>
+<p>这些语句可通过如下方法获取，打开Database Painter，建立相应数据库的连接，在其属性窗口的Preview面板中，把那些代码拷出来即可，界面如下：</p>
+<p><img src="img/sql_text.jpg" width="371" height="471"></p>
+<h2>N.3 查询单条记录</h2>
+<pre>string cmpnt_name
+
+connect;
+
+select cmpnt_serv into :cmpnt_name
+from component
+where cmpnt_id = 13985
+using SQLCA;
+
+sle_1.text = cmpnt_name</pre>
+<h2>N.4 判断事务对象的返回信息</h2>
+<p>在进行程序设计时，应该考虑到各种特殊情况下程序的处理。在输入数据正确时，能正确运行，输入数据错误时，运行就出现异常的程序就不理想。同样，在SQL语句执行时也会有各种情况，可以通过事务对象的返回信息来做相应的处理。在事务对象中有5个参数用来返回SQL语句的执行状态，如下表所示：</p>
+<table width="80%" >
+  <tr>
+    <th width="20%">参数</th>
+    <th width="20%">类型</th>
+    <th width="60%">意义</th>
+  </tr>
+  <tr>
+    <td>SQLCode</td>
+    <td>Long</td>
+    <td>是否成功标志，有三个可能的取值：0—成功，100—无数据，-1—错误(关于错误的详细信息用参数SQLDBCode或SQLErrText来获取)</td>
+  </tr>
+  <tr>
+    <td>SQLDBCode</td>
+    <td>Long</td>
+    <td>数据库的错误代码</td>
+  </tr>
+  <tr>
+    <td>SQLErrText</td>
+    <td>String</td>
+    <td>数据库的错误信息</td>
+  </tr>
+  <tr>
+    <td>SQLNRows</td>
+    <td>Long</td>
+    <td>涉及到的行数（不同的DBMS有所不同）</td>
+  </tr>
+  <tr>
+    <td>SQLReturnData</td>
+    <td> String</td>
+    <td>DBMS指定的信息</td>
+  </tr>
+</table>
+<p>其中，最常使用的是SQLCode，经常使用该参数判断操作是否正确，然后再决定如何做进一步的处理工作。</p>
+<h2>N.5 执行更改数据库的SQL</h2>
+<pre>string remark1;
+
+remark1 = sle_1.text;
+
+connect;
+
+update component set remark1 = :remark1
+where cmpnt_id = 13985
+using SQLCA;</pre>
+<h2>N.6 使用游标查询多行数据</h2>
+<pre>string cmpnt_ids
+string cmpnt_id
+
+connect using SQLCA;
+
+declare cur_cmpnt cursor for
+select cmpnt_id from component where cmpnt_name like '%FE%'
+using SQLCA;
+
+open cur_cmpnt;
+fetch cur_cmpnt into :cmpnt_id;
+do while SQLCA.SQLCode <> 100
+	cmpnt_ids += cmpnt_id + ","
+	fetch cur_cmpnt into :cmpnt_id;
+loop
+
+close cur_cmpnt;
+
+sle_1.text = cmpnt_ids</pre>
+<h2>N.7 动态SQL语句</h2>
+<p>调用格式为：</p>
+<pre>execute immediate SQLStatement
+{using TransactionObject}</pre>
+<h2>N.8 示例 </h2>
+<p><a href="downloads/pb_test.zip">下载</a></p>
+<script language="javascript" src="index"></script>
+</body>
+</html>

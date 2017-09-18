@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+	<script type="text/javascript" src="../../../mylib/js/css.js"></script>
+	<title>WPF之数据绑定</title>
+</head>
+<body>
+	<p id="title">数据绑定</p>
+
+	<h1>基本绑定语法</h1>
+	<p>基本的绑定需要如下两部分：</p>
+	<ul>
+		<li>绑定目标：UI部分</li>
+		<li>数据源</li>
+	</ul>
+	<p>下例将一个 TextBox 与一个对象的 Name 属性进行绑定。</p>
+	<div id="accordion-simple_binding_source">
+		<p><a href="#">数据源对象</a></p>
+		<pre class="code" data-type="csharp">using System.ComponentModel;
+
+namespace WpfDemo.DataBinding.Models
+{
+	public class Person : INotifyPropertyChanged
+	{
+		public event PropertyChangedEventHandler PropertyChanged;
+
+		protected void Notify(string propName)
+		{
+			if (this.PropertyChanged != null)
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propName));
+			}
+		}
+
+		private string name;
+		public string Name
+		{
+			get { return this.name; }
+			set
+			{
+				if (this.name == value) return;
+
+				this.name = value;
+				this.Notify(&quot;Name&quot;);
+			}
+		}
+
+		private string gender;
+		public string Gender
+		{
+			get { return this.gender; }
+			set
+			{
+				if (this.gender == value) return;
+
+				this.gender = value;
+				this.Notify(&quot;Gender&quot;);
+			}
+		}
+
+		private DateTime? birthday;
+		public DateTime? Birthday
+		{
+			get { return this.birthday; }
+			set
+			{
+				if (this.birthday == value) return;
+
+				this.birthday = value;
+				this.Notify(&quot;Birthday&quot;);
+			}
+		}
+	}
+}</pre>
+	</div>
+	<p>对于控件的绑定语法</p>
+	<pre class="code" data-type="xml">&lt;TextBox Text=&quot;{Binding Path=Name}&quot; /&gt;</pre>
+	<p class="note">Path 可以省略。&lt;TextBox Text=&quot;{Binding Name}&quot; /&gt;</p>
+
+	<p>然后在 TextBox 的上级标签类设置好 DataContext 即可，可以使用代码进行设置，如下我将 DataContext 设置在最顶层的 Window 级别：</p>
+	<pre class="code" data-type="csharp">this.DataContext = new Person();</pre>
+	<p>也可以直接在 XAML 中生成对象进行绑定，如下所示</p>
+	<div id="accordion-binding-xaml">
+		<p><a href="#">代码示例</a></p>
+		<pre class="code" data-type="xml">&lt;Window x:Class=&quot;WpfDemo.DataBinding.PersonBindingWindow&quot;
+		xmlns=&quot;http://schemas.microsoft.com/winfx/2006/xaml/presentation&quot;
+		xmlns:x=&quot;http://schemas.microsoft.com/winfx/2006/xaml&quot;
+		xmlns:sys=&quot;clr-namespace:System;assembly=mscorlib&quot;
+		xmlns:model=&quot;clr-namespace:WpfDemo.DataBinding.Models&quot;
+		Title=&quot;PersonBindingWindow&quot;
+		Height=&quot;300&quot;
+		Width=&quot;300&quot;&gt;
+
+&lt;Window.Resources&gt;
+	&lt;model:Person x:Key=&quot;person&quot;
+					Name=&quot;Lindong&quot;
+					Gender=&quot;M&quot;
+					Birthday=&quot;3/29/1979&quot; /&gt;
+	&lt;model:GenderConverter x:Key=&quot;genderConverter&quot; /&gt;
+&lt;/Window.Resources&gt;
+
+...
+&lt;StackPanel DataContext=&quot;{StaticResource ResourceKey=person}&quot;&gt;
+...</pre>
+	</div>
+	<h1>绑定类型</h1>
+	<h2>静态资源绑定</h2>
+	<div id="accordion-binding-static-res">
+		<p><a href="#">静态资源绑定</a></p>
+		<pre class="code" data-type="xml">&lt;xmlns:sys=&quot;clr-namespace:System;assembly=mscorlib&quot;
+
+...
+
+&lt;Window.Resources&gt;
+	&lt;sys:String x:Key=&quot;static_string&quot;&gt;Static Resource&lt;/sys:String&gt;
+&lt;/Window.Resources&gt;
+	
+...
+	
+&lt;TextBox Text=&quot;{StaticResource ResourceKey=static_string}&quot; /&gt;</pre>
+	</div>
+	<h2>动态资源绑定</h2>
+	
+		
+		<pre class="code" data-type="xml">&lt;TextBox Text=&quot;{DynamicResource dynamic_string}&quot; /&gt;</pre>
+			
+<p>.cs file</p>
+<pre class="code" data-type="csharp">this.Resources.Add(&quot;dynamic_string&quot;, &quot;Dynamic Resource&quot;);</pre>
+	
+	<h2>附加属性绑定</h2>
+	
+		<pre class="code" data-type="xml">&lt;dxe:TextEdit Grid.Row=&quot;2&quot;
+                Text=&quot;{Binding RelativeSource={RelativeSource Mode=Self}, Path=(Grid.Row)}&quot; /&gt;</pre>
+	
+	<h2>与其它控件绑定</h2>
+	
+		<pre class="code" data-type="xml">&lt;dxe:TextEdit x:Name=&quot;textEdit1&quot; /&gt;
+&lt;dxe:ButtonEdit Text=&quot;{Binding ElementName=textEdit1, Path=Text}&quot; /&gt;</pre>
+	
+	<h2>相对绑定方式</h2>
+	
+		
+		<pre class="code" data-type="xml">&lt;TextBox Text=&quot;{Binding RelativeSource={RelativeSource AncestorType=Window, AncestorLevel=1}, Path=Height}&quot; /&gt;</pre>
+		<p>上例表示从level 1开始查找类型为Window的元素。如果 Grid 里面再套个 Grid，那么 Grid 就有了两个 level。</p>
+	
+	<h1>Converter</h1>
+	<p>有时源数据与显示时的需求并不匹配，如在显示性别时，我希望显示为 "Female" 或 "Male"，但数据源数据为 "F" 或 "M"，这时我们需要实现一个 IValueConverter 接口，实现源数据和目标数据的相互转换。</p>
+	<div id="accordion-converter">
+		<p><a href="#">Converter 示例</a></p>
+		<pre class="code" data-type="csharp">public class GenderConverter : System.Windows.Data.IValueConverter
+{
+	public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+	{
+		string str = System.Convert.ToString(value);
+		switch (str)
+		{
+			case &quot;F&quot;:
+				return &quot;Female&quot;;
+			case &quot;M&quot;:
+				return &quot;Male&quot;;
+			default:
+				return string.Empty;
+		}
+	}
+
+	public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+	{
+		string str = System.Convert.ToString(value);
+		switch (str)
+		{
+			case &quot;Female&quot;:
+				return &quot;F&quot;;
+			case &quot;Male&quot;:
+				return &quot;M&quot;;
+			default:
+				return string.Empty;
+		}
+	}
+}</pre>
+	</div>
+	<p>在 XAML 中绑定 Converter</p>
+	<div id="accordion-converter-xaml">
+		<p><a href="#">Converter XAML</a></p>
+		<pre class="code" data-type="xml">&lt;Window x:Class=&quot;WpfDemo.DataBinding.PersonBindingWindow&quot;
+		xmlns=&quot;http://schemas.microsoft.com/winfx/2006/xaml/presentation&quot;
+		xmlns:x=&quot;http://schemas.microsoft.com/winfx/2006/xaml&quot;
+		xmlns:sys=&quot;clr-namespace:System;assembly=mscorlib&quot;
+		xmlns:model=&quot;clr-namespace:WpfDemo.DataBinding.Models&quot;
+		Title=&quot;PersonBindingWindow&quot;
+		Height=&quot;300&quot;
+		Width=&quot;300&quot;&gt;
+	&lt;Window.Resources&gt;
+		&lt;x:Array x:Key=&quot;GenderList&quot;
+				 Type=&quot;sys:String&quot;&gt;
+			&lt;x:Static Member=&quot;sys:String.Empty&quot; /&gt;
+			&lt;sys:String&gt;Male&lt;/sys:String&gt;
+			&lt;sys:String&gt;Female&lt;/sys:String&gt;
+		&lt;/x:Array&gt;
+		&lt;model:Person x:Key=&quot;person&quot;
+					  Name=&quot;Lindong&quot;
+					  Gender=&quot;M&quot;
+					  Birthday=&quot;3/29/1979&quot; /&gt;
+		&lt;model:GenderConverter x:Key=&quot;genderConverter&quot; /&gt;
+	&lt;/Window.Resources&gt;
+	&lt;StackPanel DataContext=&quot;{StaticResource ResourceKey=person}&quot;&gt;
+		&lt;TextBlock Text=&quot;Name:&quot; /&gt;
+		&lt;TextBox Grid.Column=&quot;1&quot;
+				 Text=&quot;{Binding Path=Name}&quot; /&gt;
+		&lt;TextBlock Text=&quot;Gender:&quot; /&gt;
+		&lt;ComboBox ItemsSource=&quot;{StaticResource ResourceKey=GenderList}&quot;
+				  Text=&quot;{Binding Path=Gender, Converter={StaticResource ResourceKey=genderConverter}}&quot; /&gt;
+		&lt;TextBlock Text=&quot;Birthday:&quot; /&gt;
+		&lt;DatePicker Text=&quot;{Binding Path=Birthday}&quot; /&gt;
+		&lt;Button Grid.Row=&quot;2&quot;
+				Grid.Column=&quot;0&quot;
+				Grid.ColumnSpan=&quot;2&quot;
+				HorizontalAlignment=&quot;Center&quot;
+				Width=&quot;80&quot;
+				Content=&quot;Show&quot; /&gt;
+	&lt;/StackPanel&gt;
+&lt;/Window&gt;</pre>
+	</div>
+	<h1>多重绑定</h1>
+	<p>有时候，一个项可能需要几个值共同确定，例如，我们增加一个 checkbox，是否可婚（Marriagable），男22女20，即需要由 Birthday 和 Gender 两项共同确定。这时，我们需要实现 IMultiValueConverter 接口，如下所示：</p>
+	<div id="accordion-multi-binding-converter">
+		<p><a href="#">IMultiValueConverter 实现</a></p>
+		<pre class="code" data-type="csharp">public class MarriagableConverter : System.Windows.Data.IMultiValueConverter
+{
+
+	public object Convert(object[] values, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+	{
+		DateTime birthDay = (DateTime)values[0];
+		string gender = (string)values[1];
+
+		if (gender == &quot;M&quot;)
+		{
+			return DateTime.Now.Year - birthDay.Year &gt;= 22;
+		}
+		else
+		{
+			return DateTime.Now.Year - birthDay.Year &gt;= 20;
+		}
+	}
+
+	public object[] ConvertBack(object value, Type[] targetTypes, object parameter, System.Globalization.CultureInfo culture)
+	{
+		throw new NotImplementedException();
+	}
+}</pre>
+	</div>
+	<p>然后，在 XAML 中使用如下方式将其与 CheckBox.IsChecked 绑定</p>
+	<div id="accordion-multi-binding-xaml">
+		<p><a href="#">MultiBinding XAML</a></p>
+		<pre class="code" data-type="xml">&lt;Window.Resources&gt;
+	...
+	&lt;model:MarriagableConverter x:Key=&quot;marriagableConverter&quot; /&gt;
+	...
+&lt;/Window.Resources&gt;
+
+&lt;CheckBox Content=&quot;Marriagable&quot;
+			IsEnabled=&quot;False&quot;&gt;
+	&lt;CheckBox.IsChecked&gt;
+		&lt;MultiBinding Mode=&quot;OneWay&quot;
+						Converter=&quot;{StaticResource ResourceKey=marriagableConverter}&quot;&gt;
+			&lt;Binding Path=&quot;Birthday&quot; /&gt;
+			&lt;Binding Path=&quot;Gender&quot; /&gt;
+		&lt;/MultiBinding&gt;
+	&lt;/CheckBox.IsChecked&gt;
+&lt;/CheckBox&gt;</pre>
+	</div>
+	<h1>集合绑定</h1>
+	<p>集合绑定常用的类是使用 ObservableCollection&lt;T&gt; 或 DataTable。这两个类的好象是它们集成了集合变化（如元素新增或删除）时的消息通知，所以当集合变化时，绑定的控件会相应地刷新显示。</p>
+	<p>注意，这里的集合变化只是指新增或删除元素，如果如果只是元素的属性发生变化，那仍然需要上文所讲的 INotifyPropertyChanged 接口来实现。</p>
+	<p>如果不需要实现双向绑定，只是单纯的一次性绑定，那么任意集合都可以，例如普通数组</p>
+	<p>下面是一个绑定普通数组的例子，用来显示各个文件扩展名对应的图标及文件类型说明，通过本例也可以复习下 Converter，预习下 Data Template</p>
+	<div id="accordion-array-binding">
+		<p><a href="#">查看代码</a></p>
+		<pre class="code" data-type="xml">&lt;Window x:Class=&quot;WpfSkill.Images.ImageDemoWindow&quot;
+        xmlns=&quot;http://schemas.microsoft.com/winfx/2006/xaml/presentation&quot;
+        xmlns:x=&quot;http://schemas.microsoft.com/winfx/2006/xaml&quot;
+        xmlns:sys=&quot;clr-namespace:System;assembly=mscorlib&quot;
+        xmlns:local=&quot;clr-namespace:WpfSkill.Images&quot;
+        Title=&quot;ImageDemoWindow&quot;
+        WindowStartupLocation=&quot;CenterScreen&quot;
+        Height=&quot;500&quot;
+        Width=&quot;600&quot;&gt;
+    &lt;Window.Resources&gt;
+        &lt;x:Array x:Key=&quot;fileExts&quot;
+                 Type=&quot;sys:String&quot;&gt;
+            &lt;sys:String&gt;.cs&lt;/sys:String&gt;
+            &lt;sys:String&gt;.csproj&lt;/sys:String&gt;
+            &lt;sys:String&gt;.doc&lt;/sys:String&gt;
+            &lt;sys:String&gt;.exe&lt;/sys:String&gt;
+            &lt;sys:String&gt;.java&lt;/sys:String&gt;
+            &lt;sys:String&gt;.js&lt;/sys:String&gt;
+            &lt;sys:String&gt;.msg&lt;/sys:String&gt;
+            &lt;sys:String&gt;.sln&lt;/sys:String&gt;
+            &lt;sys:String&gt;.txt&lt;/sys:String&gt;
+            &lt;sys:String&gt;.xls&lt;/sys:String&gt;
+            &lt;sys:String&gt;.xlsx&lt;/sys:String&gt;
+            &lt;sys:String&gt;.xml&lt;/sys:String&gt;
+            &lt;sys:String&gt;.zip&lt;/sys:String&gt;
+            &lt;sys:String&gt;.zzz&lt;/sys:String&gt;
+        &lt;/x:Array&gt;
+
+        &lt;local:ExtSmallImageConverter x:Key=&quot;smallIconConverter&quot; /&gt;
+        &lt;local:ExtLargeImageConverter x:Key=&quot;largeIconConverter&quot; /&gt;
+        &lt;local:ExtFileDescConverter x:Key=&quot;extDescConverter&quot; /&gt;
+
+        &lt;DataTemplate x:Key=&quot;fileExtTemplate&quot;&gt;
+            &lt;StackPanel Orientation=&quot;Horizontal&quot;&gt;
+                &lt;Image Width=&quot;16&quot;
+                       Height=&quot;16&quot;
+                       Stretch=&quot;Uniform&quot;
+                       Source=&quot;{Binding Converter={StaticResource smallIconConverter}}&quot; /&gt;
+                &lt;Image Source=&quot;{Binding Converter={StaticResource largeIconConverter}}&quot; /&gt;
+                &lt;TextBlock Text=&quot;{Binding}&quot;
+                           VerticalAlignment=&quot;Center&quot;
+                           Margin=&quot;0, 0, 10, 0&quot;
+                           FontWeight=&quot;Bold&quot; /&gt;
+                &lt;TextBlock Text=&quot;{Binding Converter={StaticResource extDescConverter}}&quot;
+                           VerticalAlignment=&quot;Center&quot;
+                           Margin=&quot;0, 0, 0, 0&quot; /&gt;
+            &lt;/StackPanel&gt;
+        &lt;/DataTemplate&gt;
+    &lt;/Window.Resources&gt;
+    &lt;Grid&gt;
+        &lt;ListBox ItemsSource=&quot;{StaticResource ResourceKey=fileExts}&quot;
+                 ItemTemplate=&quot;{StaticResource ResourceKey=fileExtTemplate}&quot;&gt;
+        &lt;/ListBox&gt;
+    &lt;/Grid&gt;
+&lt;/Window&gt;</pre>
+	</div>
+	<p><a href="sample/file_icon_list.zip">完整示例下载</a></p>
+	<h1>杂项</h1>
+	<h2>PropertyChanged 事件的改进</h2>
+	<p>平时在写程序时，我一直不太喜欢使用字符串作为 PropertyChanged 事件参数的方式。有些框架，如Unify，Prism，MVVMLight 支持如下的方式，我觉得更符合编程的习惯</p>
+	<pre class="code" data-type="csharp">//原始方式
+this.Notify("Birthday");
+
+//改进方式
+this.Nofify(() => this.Birthday);</pre>
+	<p>其实现方式是在基类中添加一个使用表达式的重载方法</p>
+	<div id="accordion-observable-object">
+		<p><a href="#">XAML 绑定</a></p>
+		<pre class="code" data-type="csharp">using System;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.Linq.Expressions;
+
+//Event Design: http://msdn.microsoft.com/en-us/library/ms229011.aspx
+
+namespace MicroMvvm
+{
+    [Serializable]
+    public abstract class ObservableObject : INotifyPropertyChanged
+    {
+        [field: NonSerialized]
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void OnPropertyChanged(PropertyChangedEventArgs e)
+        {
+            var handler = this.PropertyChanged;
+            if (handler != null)
+            {
+                handler(this, e);
+            }
+        }
+
+        protected void RaisePropertyChanged&lt;T&gt;(Expression&lt;Func&lt;T&gt;&gt; propertyExpresssion)
+        {
+			//PropertySupport 是 Prism 中的工具类
+            string propertyName = PropertySupport.ExtractPropertyName(propertyExpresssion);
+            this.RaisePropertyChanged(propertyName);
+        }
+
+		protected void RaisePropertyChanged(String propertyName)
+        {
+            VerifyPropertyName(propertyName);
+            OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
+        }
+
+        /// &lt;summary&gt;
+        /// Warns the developer if this Object does not have a public property with
+        /// the specified name. This method does not exist in a Release build.
+        /// &lt;/summary&gt;
+        [Conditional(&quot;DEBUG&quot;)]
+        [DebuggerStepThrough]
+        public void VerifyPropertyName(String propertyName)
+        {
+            // verify that the property name matches a real,  
+            // public, instance property on this Object.
+            if (TypeDescriptor.GetProperties(this)[propertyName] == null)
+            {
+                Debug.Fail(&quot;Invalid property name: &quot; + propertyName);
+            }
+        }
+    }
+}</pre>
+	</div>
+
+</body>
+</html>

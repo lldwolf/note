@@ -1,0 +1,37 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+Highlighting information in a form</TITLE>
+</HEAD>
+<BODY>
+<A NAME="X-ref306594253"></A><h1>Highlighting information in a form</h1>
+<A NAME="TI5295"></A><p>Every control in a form has a set of properties that determine
+basically what the control looks like and where it is located. For
+example, the values in a column of data display in a particular
+font and color, in a particular location, with or without a border,
+and so on.</p>
+<A NAME="TI5296"></A><p>This chapter thus far has described how you modify various
+properties of controls in the Layout view. These modifications are
+static. They do not change when you run the form.</p>
+<A NAME="TI5297"></A><p>In contrast, you can also tell InfoMaker to modify some of
+these properties when you run the form <i>based on conditions
+you specify</i>
+. These modifications are dynamic. They are
+based on information available only when you run the form.</p>
+<A NAME="TI5298"></A><p>For example, you can tell InfoMaker to show salaries greater
+than $30,000 in red. When you run the form, salaries greater
+than $30,000 display in red. When you enter new salary
+data in the form, a salary greater than $30,000 displays
+in red after you enter the salary and then move the pointer to or
+tab to another column of data.</p>
+<A NAME="TI5299"></A><p>You modify properties based on conditions you specify by entering
+an expression in the Properties view for the control. In this example,
+the expression for the salary column's color property is:<pre>if( employee_salary &gt; 30000, 255, 0 )</pre>
+</p>
+<A NAME="TI5300"></A><h4>For more information</h4>
+<A NAME="TI5301"></A><p>For information on modifying properties based on conditions
+you specify, see <A HREF="imugp72.htm#BFCBCADF">Chapter 8, "Highlighting Information
+in Reports and Forms"</A>.
+The technique works the same way in forms and reports.</p>
+

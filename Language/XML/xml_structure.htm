@@ -1,0 +1,121 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>XML的组成</title>
+<script language="javascript" src="css.js"></script>
+</head>
+
+<body>
+<h1>第N章 XML的组成</h1>
+<hr />
+<h2><a href="#title">N.1 文档首部</a></h2>
+<h2><a href="#document">N.2 文档实例</a></h2>
+<h2><a href="#comment">N.3 批注 </a></h2>
+<h2><a href="#cdata">N.4 CDATA区段</a></h2>
+<h2><a href="#process_instruction">N.5 处理指令</a></h2>
+<h2><a href="#name_space">N.6 名域</a></h2>
+<h2><a name="title" id="title"></a>N.1 文档首部</h2>
+<p>由以下部分构成，按顺序列出：</p>
+<ol>
+  <li>一个XML说明（可选）</li>
+  <li>注释（可选）</li>
+  <li>一个文档类型说明（可选）</li>
+  <li>注释（可选）</li>
+</ol>
+<h3>N.1.1 XML说明 </h3>
+<p>如果要有的说就出现在XML文档的第一行，下面是一个例子：</p>
+<pre>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;yes&quot;?&gt;</pre>
+<p>由以下部分按顺序组成：</p>
+<ol>
+  <li>特定串&lt;?xml</li>
+  <li>当前文档所用的XML版本，必选项</li>
+  <li>编码方式，可选</li>
+  <li>描述XML文档是否为独立文档，可选</li>
+  <li>结束标志?&gt;</li>
+</ol>
+<p>其中独立文档表示该文档为一个完整的XML文档，而不是其它XML文档的一部分。</p>
+<h3>N.1.2 文档类型说明（Document Type Declaration） </h3>
+<p>指出哪种文档类型定义（DTD）与该文档实例相关。下面的是一个嵌套文档类说明和一个链接文档类型说明的示例。</p>
+<p><strong>嵌套文档类说明示例</strong></p>
+<pre>&lt;?xml version=&quot;1.0&quot;?&gt;
+&lt;!DOCTYPE fragment
+[
+	&lt;!ELEMENT fragment (#PCDATA)&gt;
+	&lt;!ENTITY foofrag &quot;said Holmes,&quot;&gt;
+[&gt;
+&lt;fragment&gt;&quot;Excellent,&quot; &amp;foofrag; &quot;That's why she cried, 'Liar!'&quot;&lt;/fragment&gt;</pre>
+<p><strong>链接文档类型说明示例</strong></p>
+<pre>&lt;?xml version=&quot;1.0&quot;?&gt;
+&lt;!DOCTYPE fragment SYSTEM &quot;fragment.dtd&quot;&gt;
+&lt;fragment&gt;&quot;Excellent,&quot; &amp;foofrag; &quot;That's why she cried, 'Liar!'&quot;&lt;/fragment&gt;</pre>
+<p>如果未指定绝对URI，那么分析器会当前目录（XML文档所在目录）来查找DTD文件。</p>
+<h2><a name="document" id="document"></a>N.2 文档实例</h2>
+<p>这是XML文档的主体部分，使用层次结构。 </p>
+<h3>N.2.1 元素 </h3>
+<pre>&lt;tag_name&gt;content&lt;/tag_name&gt; </pre>
+<h3>N.2.2 属性</h3>
+<p>&nbsp; </p>
+<h2><a name="comment" id="comment"></a>N.3 批注 </h2>
+<pre>&lt;!-- remark content --&gt;</pre>
+<h2><a name="cdata" id="cdata"></a>N.4 CDATA区段</h2>
+<p>CDATA 区段以字符“&lt;![CDATA[”开始，并以“]]&gt;”字符结束。在这两个定义符号之间，你可以输入任何字符（包括&lt;, &gt;, &amp;等），除了“]]&gt;”之外。（因为，该字符会被解释成CDATA区段的结束。）所有位在CDATA 区段中的字符都被视为元素字符数据的字义 (literal) 部分，而不是XML 标签。</p>
+<p>CDATA段中可以包含除了“]]&gt;”之外的任意字符，也就是说，与XML规则冲突的字符都可以写在里面而无需转义，常被程序员用来存放JavaScript代码。</p>
+<p>下面是一个例子：</p>
+<pre>&lt;?xml version=&quot;1.0&quot;?&gt;
+&lt;fragment&gt;&lt;![CDATA[
+while(i &lt;= 8)
+	sum += i++;
+]]&gt;&lt;/fragment&gt;</pre>
+<h2><a name="process_instruction" id="process_instruction"></a>N.5 处理指令</h2>
+<h3>N.5.1 概述 </h3>
+<p>处理指令的目的是提供XML 处理器传送给应用软件的信息，由如下成分严格按照下面的顺序出现：</p>
+<ol>
+  <li>串&lt;?</li>
+  <li>处理指令目标的名称，它们可以是除大写或小写XML串以外的任何XML名</li>
+  <li>除“?&gt;”之外的其它字符串</li>
+  <li>结束串?&gt;</li>
+</ol>
+<p>例如最常用的样式表处理器</p>
+<pre>&lt;?xml-stylesheet type=&quot;text/xsl&quot; href=&quot;basic.xsl&quot;?&gt;</pre>
+<p>使用处理指令的原因很多，大多数都与延伸XML分析器的处理范围有关，而该分析器正在控制你正在使用的XML文档。一个简单例子是使Web Spider知道你是否想索引一个页面：</p>
+<pre>&lt;?robots index=&quot;no&quot; follow=&quot;yes&quot;?&gt; </pre>
+<p>除了把指令传递给其它处理器外，XML处理器本身不对指令进行任何处理。</p>
+<h2><a name="name_space" id="name_space"></a>N.6 名域（NameSpace）</h2>
+<p>名域的用途是解决不同的XML文档同名元素的解析问题，通过定义唯一的名域，可以使不同的XML文档的同名元素具有不同的释义。如果你是Java或C#的开发人员，可以将名域类比为包名（Package），元素名类比为类名（Class），通过两者组合唯一地确定一个类。</p>
+<p>名域使用元素的xmlns属性来指定，使用xmlns指定的名域为默认名域，该元素下的所有子元素若不使用其它名域前缀则默认表示属于该名域，例如如下程序段，使用双名域：</p>
+<pre>&lt;bibEntry
+	xmlns:b=&quot;http://wwww.nowhere.at.all/bibliography&quot;
+	xmlns:h=&quot;http://w3.org/html&quot;
+&gt;
+	&lt;b:B&gt;
+		&lt;b:T&gt;Steam and Steam Engine&lt;/b:T&gt;
+		&lt;b:Notes&gt;
+			&lt;h:P&gt;aaaaa&lt;/h:P&gt;
+			&lt;h:P&gt;bbbbb&lt;/h:P&gt;
+		&lt;/b:Notes&gt;
+	&lt;/b:B&gt;
+&lt;/bibEntry&gt;</pre>
+<p>如果使用缺省名域进行简化，则如下所示：</p>
+<pre>&lt;bibEntry
+	xmlns=&quot;http://wwww.nowhere.at.all/bibliography&quot;
+	xmlns:h=&quot;http://w3.org/html&quot;
+&gt;
+	&lt;B&gt;
+		&lt;T&gt;Steam and Steam Engine&lt;/T&gt;
+		&lt;Notes&gt;
+			&lt;h:P&gt;aaaaa&lt;/h:P&gt;
+			&lt;h:P&gt;bbbbb&lt;/h:P&gt;
+		&lt;/Notes&gt;
+	&lt;/B&gt;
+&lt;/bibEntry&gt;</pre>
+<p>而且，子元素如果设置默认名域的话，会覆盖父元素的默认名域，因此，如果想在子空间删除缺省名域的话，只需在子元素中声明一个空的名域就行了，如下所示：</p>
+<pre>&lt;e xmlns=&quot;&quot;&gt;
+......
+&lt;/e&gt;</pre>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<script language="javascript" src="index.js"></script>
+</body>
+</html>

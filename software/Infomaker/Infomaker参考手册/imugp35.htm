@@ -1,0 +1,65 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+Creating and deleting an Adaptive Server Anywhere database</TITLE>
+</HEAD>
+<BODY>
+<A NAME="CCJBHEBB"></A><h1>Creating and deleting an Adaptive Server Anywhere database</h1>
+<A NAME="TI928"></A><p>In InfoMaker you work within an existing database. With one
+exception, creating or deleting a database is an administrative
+task that is not performed directly in InfoMaker. The one exception
+is that you can create and delete a local Adaptive Server Anywhere database from
+within InfoMaker.</p>
+<A NAME="TI929"></A><p>For information about creating and deleting
+other databases, see your DBMS documentation.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To create a local Adaptive Server Anywhere database:</p>
+<ol><li class=fi>
+From the Objects view, launch the Create
+ASA Database utility included with the ODBC interface.<br><br>
+The Create Adaptive Server Anywhere Database dialog box displays.<br><br><br><img src="images/dbasa.gif"><br>
+</li>
+<li class=ds>
+In the Database Name box, specify the filename
+and path of the database you are creating. <br><br>
+If you do not provide a file extension, the database filename
+is given the extension DB.<br><br></li>
+<li class=ds>
+Define other properties of the database as needed. <br><br>
+If you are using a non-English database, you can specify a
+code page in the Collation Sequence box.<br><br>
+For complete information about filling in
+the dialog box, click the Help button in the dialog box.<br><br></li>
+<li class=ds>
+Click OK.<br><br></li></ol>
+<br><p><b>What happens</b>   When you click OK, InfoMaker does the following:<A NAME="TI930"></A>
+<ul>
+<li class=fi>Creates a database with the
+specified name in the specified directory or folder. If a database
+with the same name exists, you are asked whether you want to replace
+it.</li>
+<li class=ds>Adds a data source to the ODBC.INI key in the registry.
+The data source has the same name as the database unless one with
+the same name already exists, in which case a suffix is appended.</li>
+<li class=ds>Creates a database profile and adds it to the registry.
+The profile has the same name as the database unless one with the
+same name already exists, in which case a suffix is appended.</li>
+<li class=ds>Connects to the new database.
+</li>
+</ul>
+</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To delete a local Adaptive Server Anywhere database:</p>
+<ol><li class=fi>
+Open the Database painter.<br><br></li>
+<li class=ds>
+From the Objects view, launch the Delete ASA Database
+utility included with the ODBC interface.<br><br>
+The Delete Local Database dialog box displays.<br><br><br><img src="images/dbdasa.gif"><br>
+</li>
+<li class=ds>
+Select the database you want to delete and select
+Open.<br><br></li>
+<li class=ds>
+Click Yes to delete the database.<br><br></li></ol>
+<br><p><b>What happens</b>   When you click Yes, InfoMaker deletes the specified database.</p>
+

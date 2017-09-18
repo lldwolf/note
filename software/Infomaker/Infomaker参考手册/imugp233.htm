@@ -1,0 +1,29 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+RowCount</TITLE>
+</HEAD>
+<BODY>
+<A NAME="DWFRowCount"></A><A NAME="TI7767"></A><h1>RowCount</h1>
+<A NAME="TI7768"></A><p>
+<FORM>
+<INPUT
+ TYPE = "BUTTON"
+ VALUE = "Examples"
+ onClick = "window.location = 'imugp233.htm#EX85';">
+</FORM>
+</p>
+<h3>Description</h3><A NAME="TI7769"></A><p>Obtains the number of rows that are currently available in
+the primary buffer.</p>
+
+<h3>Syntax</h3><pre><b>RowCount</b> ( )</pre>
+
+<h3>Return Values</h3><A NAME="TI7770"></A><p>Long. Returns the number of rows that are currently available,
+0 if no rows are currently available, and -1 if an error occurs.</p>
+
+<A NAME="EX85"></A><h3>Examples</h3><A NAME="TI7771"></A><p>This expression in a computed field returns a warning
+if no data exists and the number of rows if there is data:<pre>If(<i>RowCount</i> () = 0, "No Data", String(<i>RowCount</i> ()))</pre>
+</p>
+
+

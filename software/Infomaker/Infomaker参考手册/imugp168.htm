@@ -1,0 +1,55 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+CurrentRow</TITLE>
+</HEAD>
+<BODY>
+<A NAME="CAIDFJIE"></A><A NAME="TI6526"></A><h1>CurrentRow</h1>
+<A NAME="TI6527"></A><p>
+<FORM>
+<INPUT
+ TYPE = "BUTTON"
+ VALUE = "Examples"
+ onClick = "window.location = 'imugp168.htm#EX20';">
+<INPUT
+  TYPE = "BUTTON"
+ VALUE = "See also"
+ onClick = "window.location = 'imugp168.htm#SA20';">
+</FORM>
+</p>
+<h3>Description</h3><A NAME="TI6528"></A><p>Reports the number of the current row (the row with focus). </p>
+
+<h3>Syntax</h3><pre><b>CurrentRow</b> ( <i></i>)</pre>
+
+<h3>Return Values</h3><A NAME="TI6529"></A><p>Long. Returns the number of the row if it succeeds and 0 if
+no row is current.</p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>What row is current</span> <A NAME="TI6530"></A>The current row is not always a row displayed on the screen.
+For example, if the cursor is on row 7 column 2 and the user uses
+the scroll bar to scroll to row 50, the current row remains row
+7 unless the user clicks row 50.</p>
+
+<A NAME="EX20"></A><h3>Examples</h3><A NAME="TI6531"></A><p>This expression in a computed field returns the number
+of the current row:<pre><i>CurrentRow</i> ()</pre>
+</p>
+<A NAME="TI6532"></A><p>This expression for a computed control displays an
+arrow bitmap as an indicator for the row with focus and displays
+no bitmap for rows not having focus. As the user moves from row
+to row, an arrow marks where the user is:<pre>Bitmap(If(<i>CurrentRow</i> () = GetRow(),"arrow.bmp",""))</pre>
+</p>
+<A NAME="TI6533"></A><p>Alternatively, this expression for the Visible property
+of an arrow picture control makes the arrow bitmap visible for the
+row with focus and invisible for rows not having focus. As the user
+moves from row to row, an arrow marks where the user is:<pre>If(<i>CurrentRow</i> () = GetRow(), 1, 0)</pre>
+</p>
+
+<A NAME="SA20"></A><h3>See Also</h3><A NAME="TI6534"></A><p><A NAME="TI6535"></A>
+<ul>
+<li class=fi><A HREF="imugp148.htm#X-ref350653848">"Example 3: creating
+a row indicator"</A></li>
+<li class=ds><A HREF="imugp180.htm#CAIBGHBE">GetRow</A>
+</li>
+</ul>
+</p>
+
+

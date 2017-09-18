@@ -1,0 +1,86 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+LastPos</TITLE>
+</HEAD>
+<BODY>
+<A NAME="BACCFEEB"></A><A NAME="TI6961"></A><h1>LastPos</h1>
+<A NAME="TI6962"></A><p>
+<FORM>
+<INPUT
+ TYPE = "BUTTON"
+ VALUE = "Examples"
+ onClick = "window.location = 'imugp195.htm#EX47';">
+<INPUT
+  TYPE = "BUTTON"
+ VALUE = "See also"
+ onClick = "window.location = 'imugp195.htm#SA47';">
+</FORM>
+</p>
+<h3>Description</h3><A NAME="TI6963"></A><p>Finds the last position of a target string in a source string.</p>
+
+<h3>Syntax</h3><pre><b>LastPos</b> ( <i>string1</i>, <i>string2</i> {, <i>searchlenth</i> } )</pre>
+<A NAME="TI6964"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI6965"></A>Argument</th>
+<th align="left" valign=bottom><A NAME="TI6966"></A>Description</th>
+</tr>
+<tr><td valign=top><A NAME="TI6967"></A><i>string1</i></td>
+<td valign=top><A NAME="TI6968"></A>The string in which you want to find <i>string2</i></td>
+</tr>
+<tr><td valign=top><A NAME="TI6969"></A><i>string2</i></td>
+<td valign=top><A NAME="TI6970"></A>The string you want to find in <i>string1</i></td>
+</tr>
+<tr><td valign=top><A NAME="TI6971"></A><i>searchlength</i> <br> (optional)</td>
+<td valign=top><A NAME="TI6972"></A>A long that limits the search to the
+leftmost searchlength characters of the source string <i>string1</i>.
+The default is the entire string</td>
+</tr>
+</table>
+
+<h3>Return Values</h3><A NAME="TI6973"></A><p>Long. Returns a long whose value is the starting position
+of the last occurrence of <i>string2</i> in <i>string1</i> within
+the characters specified in <i>searchlength</i>. If <i>string2</i> is
+not found in <i>string1</i> or if <i>searchlength</i> is
+0, LastPos returns 0. If any argument's value is NULL,
+LastPos returns NULL.</p>
+
+<h3>Usage</h3><A NAME="TI6974"></A><p>The LastPos function is case sensitive. The entire target
+string must be found in the source string.</p>
+
+<A NAME="EX47"></A><h3>Examples</h3><A NAME="TI6975"></A><p>This statement returns 6, because the position of
+the last occurrence of RU is position 6:<pre><i>LastPos</i> ("BABE RUTH", "RU")</pre>
+</p>
+<A NAME="TI6976"></A><p>This statement returns 3:<pre><i>LastPos</i> ("BABE RUTH", "B")</pre>
+</p>
+<A NAME="TI6977"></A><p>This statement returns 0, because the case does not
+match:<pre><i>LastPos</i> ("BABE RUTH", "be") </pre>
+</p>
+<A NAME="TI6978"></A><p>This statement searches the leftmost 4 characters
+and returns 0, because the only occurrence of RU is after position
+4:<pre><i>LastPos</i> ("BABE RUTH", "RU", 2)</pre>
+</p>
+<A NAME="TI6979"></A><p>These statements change the text in the SingleLineEdit
+sle_group. The last instance of the text NY is changed
+to North East:<pre>long place_nbr</pre>
+<pre>place_nbr = <i>LastPos</i> (sle_group.Text, "NY")</pre>
+<pre>sle_group.SelectText(place_nbr, 2 )</pre>
+<pre>sle_group.ReplaceText("North East")</pre>
+</p>
+<A NAME="TI6980"></A><p>These statements separate the return value of GetBandAtPointer
+into the band name and row number. The LastPos function finds the
+position of the (last) tab in the string and the Left and Mid functions
+extract the information to the left and right of the tab:<pre>string s, ls_left, ls_right</pre>
+<pre>integer li_tab</pre>
+<pre></pre>
+<pre>s = dw_groups.GetBandAtPointer()</pre>
+<pre>li_tab = <i>LastPos</i> (s, "~t")</pre>
+<pre></pre>
+<pre>ls_left = Left(s, li_tab - 1)</pre>
+<pre>ls_right = Mid(s, li_tab + 1)</pre>
+</p>
+<A NAME="TI6981"></A><p>These statements tokenize a source string backwards:<pre>// Tokenize the source string backwards<br> // Results in "pbsyc80.dll  powerbuilder  <br> // shared  sybase  programs  c:<br> <br> string  sSource = &amp;<br>   'c:\programs\sybase\shared\powerbuilder\pbsyc80.dll'<br> string  sFind   = '\'<br> string  sToken<br> long  llStart, llEnd<br> <br> llEnd = Len(sSource) + 1<br> <br> DO<br>    llStart = LastPos(sSource, sFind, llEnd)<br>    sToken = Mid(sSource, (llStart + 1), &amp;<br>       (llEnd - llStart))<br>    mle_comment.text += sToken + '  '<br>    llEnd = llStart - 1<br> LOOP WHILE llStart &gt; 1</pre>
+</p>
+
+<A NAME="SA47"></A><h3>See Also</h3><A NAME="TI6982"></A><p><A HREF="imugp221.htm#CAIBADFC">Pos</A> </p>
+
+

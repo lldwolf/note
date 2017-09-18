@@ -1,0 +1,60 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+Example 3: highlighting rows of data</TITLE>
+</HEAD>
+<BODY>
+<A NAME="CAIDGJAE"></A><h1>Example 3: highlighting rows of data</h1>
+<A NAME="TI2940"></A><p>The following report is an employee phone list. Out-of-state
+(not in Massachusetts) employees are shown in bold and preceded
+by two asterisks (**):</p>
+<br><img src="images/cond040.gif">
+<A NAME="TI2941"></A><p>This report uses newspaper columns. To
+understand how to create this report without highlighting data,
+see <A HREF="imugp54.htm#BFCDJAJF">"Printing with newspaper-style
+columns"</A>.</p>
+<A NAME="TI2942"></A><p>In the Design view, the detail band looks like this. It includes
+four controls: the employee last name, a comma, the employee first
+name, and the phone number:</p>
+<br><img src="images/cond045.gif">
+<A NAME="TI2943"></A><h4>Making the controls display in bold</h4>
+<A NAME="TI2944"></A><p>To make these controls display in bold if the employee is
+not from Massachusetts, you would use the Font property page. To
+do this, select Properties from the popup menu of each control and
+in the Properties view, click the Font tab. For each control, click
+the button next to the Bold property and enter the following expression
+in the Modify Expression dialog box:<pre>If(state = 'MA', 400, 700)</pre>
+</p>
+<A NAME="TI2945"></A><p>The expression states: If the value of the state column is
+MA (if this is true), use 400 as the font weight. This means employees
+from Massachusetts will display in the normal font. For false (any
+state but MA), use 700 as the font weight. This means all other
+employees display in bold font.</p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Logic that relies on the state column</span> <A NAME="TI2946"></A>To use logic that relies on the state column, you need to
+include it in the data source. You can add the column after creating
+the report by modifying the data source. Also notice that the
+state column does not actually appear anywhere in the report.
+Values must be available but do not need to be included in the report.</p>
+<A NAME="TI2947"></A><h4>Adding the two asterisks (**)</h4>
+<A NAME="TI2948"></A><p>To insert two asterisks (**) in front of
+the employee name if the employee is not from Massachusetts, you
+would first add a text control with the two asterisks in bold, exactly
+as you want them to display:</p>
+<br><img src="images/cond047.gif">
+<A NAME="TI2949"></A><p>Then you use logic on the Visible property of the Text control
+(**). To do this, be sure the text control is
+still selected. Then click the button next to its Visible property
+on the General property page in the Properties view. In the Modify Expression
+dialog box that displays, enter the following expression:<pre>If(state = 'MA', 0, 1)</pre>
+</p>
+<A NAME="TI2950"></A><p>This expression says: If the state of the employee is MA (the
+true condition), the Visible property of the ** control
+is off (indicated by 0). If the state of the employee is not MA
+(the false condition), the Visible property of the ** control is
+on (indicated by 1). The asterisks will be visible next to that
+employee's name.</p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Tip</span> <A NAME="TI2951"></A>You can use underlines, italics, strikethrough, borders, and
+colors to highlight your information. Experiment to get the effects
+you like.</p>
+

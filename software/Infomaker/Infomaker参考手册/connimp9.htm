@@ -1,0 +1,63 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+About preparing ODBC data sources</TITLE>
+</HEAD>
+<BODY>
+<A NAME="CCJCCDFI"></A><h1>About preparing ODBC data sources</h1>
+<A NAME="TI216"></A><p>The first step in connecting to an ODBC data source is to
+prepare to use the data source. Preparing the data source ensures
+that you are able to connect to it and use your data in InfoMaker.</p>
+<A NAME="TI217"></A><p>You prepare to use a data source <i>outside</i>
+ InfoMaker <i>before</i>
+ you
+start the product, define the data source, and connect to it. The
+requirements differ for each data source--but in general,
+preparing to use a data source involves the following steps.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To prepare to use an ODBC data source with InfoMaker:</p>
+<ol><li class=fi>
+If network software is required to access
+the data source, make sure it is properly installed and configured
+at your site and on the client workstation.<br><br></li>
+<li class=ds>
+If database software is required, make sure it
+is properly installed and configured on your computer or network
+server.<br><br></li>
+<li class=ds>
+Make sure the required data files are present
+on your computer or network server.<br><br></li>
+<li class=ds>
+Make sure the names of tables and columns you
+want to access follow standard SQL naming conventions.<br><br>
+The data source is case senstitive. Avoid using all lowercase
+characters, blank spaces, or database-specific reserved words in
+table and column names. It is safest to use all uppercase characters
+when naming tables and columns that you want to access in InfoMaker. <br><br><p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Backquote character not allowed as a delimiter</span> <A NAME="TI218"></A>The online Help supplied for the MERANT ODBC drivers indicates
+that you can use the backquote (`) character, also known as the
+grave character, as a delimiter for table and column names that
+do not follow standard SQL naming conventions.</p>
+<A NAME="TI219"></A>However, InfoMaker does <i>not</i>
+ currently
+allow use of the backquote character as a delimiter for table and
+column names.</p>
+<A NAME="TI220"></A>To ensure that you can access your tables and columns in InfoMaker, avoid
+using nonstandard characters (such as all lowercase, mixed case, blank
+spaces, or database-specific reserved words) when naming tables and
+columns. </p>
+</li>
+<li class=ds>
+If your database requires it, make sure the tables
+you want to access have unique indexes.<br><br></li>
+<li class=ds>
+Install both of the following using the InfoMaker Setup
+program:<A NAME="TI221"></A>
+<ul>
+<li class=fi>The ODBC driver
+that accesses your data source</li>
+<li class=ds>The ODBC interface 
+</li>
+</ul>
+
+                    <br><br></li></ol>
+<br>

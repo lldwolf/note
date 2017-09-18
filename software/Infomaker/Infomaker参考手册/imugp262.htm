@@ -1,0 +1,811 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+The PBCatEdt table </TITLE>
+</HEAD>
+<BODY>
+<A NAME="X-ref339789789"></A><h1>The PBCatEdt table </h1>
+<A NAME="TI8428"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI8429"></A>Column</th>
+<th align="left" valign=bottom><A NAME="TI8430"></A>Column name</th>
+<th align="left" valign=bottom><A NAME="TI8431"></A>Description</th>
+</tr>
+<tr><td valign=top><A NAME="TI8432"></A>1</td>
+<td valign=top><A NAME="TI8433"></A>pbe_name</td>
+<td valign=top><A NAME="TI8434"></A>Edit style name</td>
+</tr>
+<tr><td valign=top><A NAME="TI8435"></A>2</td>
+<td valign=top><A NAME="TI8436"></A>pbe_edit</td>
+<td valign=top><A NAME="TI8437"></A>Format string (edit style type dependent;
+see below)</td>
+</tr>
+<tr><td valign=top><A NAME="TI8438"></A>3</td>
+<td valign=top><A NAME="TI8439"></A>pbe_type</td>
+<td valign=top><A NAME="TI8440"></A>Edit style type (see below)</td>
+</tr>
+<tr><td valign=top><A NAME="TI8441"></A>4</td>
+<td valign=top><A NAME="TI8442"></A>pbe_cntr</td>
+<td valign=top><A NAME="TI8443"></A>Revision counter (increments each time
+edit style is altered)</td>
+</tr>
+<tr><td valign=top><A NAME="TI8444"></A>5</td>
+<td valign=top><A NAME="TI8445"></A>pbe_seqn</td>
+<td valign=top><A NAME="TI8446"></A>Row sequence number for edit types requiring more
+than one row in PBCatEdt table</td>
+</tr>
+<tr><td valign=top><A NAME="TI8447"></A>6</td>
+<td valign=top><A NAME="TI8448"></A>pbe_flag</td>
+<td valign=top><A NAME="TI8449"></A>Edit style flag (edit style type dependent;
+see below)</td>
+</tr>
+<tr><td valign=top><A NAME="TI8450"></A>7</td>
+<td valign=top><A NAME="TI8451"></A>pbe_work</td>
+<td valign=top><A NAME="TI8452"></A>Extra field (edit style type dependent;
+see below)</td>
+</tr>
+</table>
+<A NAME="TI8453"></A><h2>Available edit style types</h2>
+<A NAME="TI8454"></A><p>The following edit style types are available:</p>
+<A NAME="TI8455"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI8456"></A>Edit style type</th>
+<th align="left" valign=bottom><A NAME="TI8457"></A>pbe_type value (column 3)</th>
+</tr>
+<tr><td valign=top><A NAME="TI8458"></A>CheckBox</td>
+<td valign=top><A NAME="TI8459"></A>85</td>
+</tr>
+<tr><td valign=top><A NAME="TI8460"></A>RadioButton</td>
+<td valign=top><A NAME="TI8461"></A>86</td>
+</tr>
+<tr><td valign=top><A NAME="TI8462"></A>DropDownListBox</td>
+<td valign=top><A NAME="TI8463"></A>87</td>
+</tr>
+<tr><td valign=top><A NAME="TI8464"></A>DropDownDataWindow</td>
+<td valign=top><A NAME="TI8465"></A>88</td>
+</tr>
+<tr><td valign=top><A NAME="TI8466"></A>Edit</td>
+<td valign=top><A NAME="TI8467"></A>89</td>
+</tr>
+<tr><td valign=top><A NAME="TI8468"></A>Edit Mask</td>
+<td valign=top><A NAME="TI8469"></A>90</td>
+</tr>
+</table>
+<A NAME="TI8470"></A><h3>CheckBox edit style (code 85)</h3>
+<A NAME="TI8471"></A><p>Here is a sample row in the PBCatEdt table for a CheckBox
+edit style:</p>
+<A NAME="TI8472"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI8473"></A>Name</th>
+<th align="left" valign=bottom><A NAME="TI8474"></A>Edit</th>
+<th align="left" valign=bottom><A NAME="TI8475"></A>Type</th>
+<th align="left" valign=bottom><A NAME="TI8476"></A>Cntr</th>
+<th align="left" valign=bottom><A NAME="TI8477"></A>Seqn</th>
+<th align="left" valign=bottom><A NAME="TI8478"></A>Flag</th>
+<th align="left" valign=bottom><A NAME="TI8479"></A>Work</th>
+</tr>
+<tr><td valign=top><A NAME="TI8480"></A>MyEdit</td>
+<td valign=top><A NAME="TI8481"></A><i>Text</i>
+</td>
+<td valign=top><A NAME="TI8482"></A>85</td>
+<td valign=top><A NAME="TI8483"></A>1</td>
+<td valign=top><A NAME="TI8484"></A>1</td>
+<td valign=top><A NAME="TI8485"></A><i>Flag</i>
+</td>
+<td valign=top><A NAME="TI8486"></A></td>
+</tr>
+<tr><td valign=top><A NAME="TI8487"></A>MyEdit</td>
+<td valign=top><A NAME="TI8488"></A><i>OnValue</i>
+</td>
+<td valign=top><A NAME="TI8489"></A>85</td>
+<td valign=top><A NAME="TI8490"></A>1</td>
+<td valign=top><A NAME="TI8491"></A>2</td>
+<td valign=top><A NAME="TI8492"></A>0</td>
+<td valign=top><A NAME="TI8493"></A></td>
+</tr>
+<tr><td valign=top><A NAME="TI8494"></A>MyEdit</td>
+<td valign=top><A NAME="TI8495"></A><i>OffValue</i>
+</td>
+<td valign=top><A NAME="TI8496"></A>85</td>
+<td valign=top><A NAME="TI8497"></A>1</td>
+<td valign=top><A NAME="TI8498"></A>3</td>
+<td valign=top><A NAME="TI8499"></A>0</td>
+<td valign=top><A NAME="TI8500"></A></td>
+</tr>
+<tr><td valign=top><A NAME="TI8501"></A>MyEdit</td>
+<td valign=top><A NAME="TI8502"></A><i>ThirdValue</i>
+</td>
+<td valign=top><A NAME="TI8503"></A>85</td>
+<td valign=top><A NAME="TI8504"></A>1</td>
+<td valign=top><A NAME="TI8505"></A>4</td>
+<td valign=top><A NAME="TI8506"></A>0</td>
+<td valign=top><A NAME="TI8507"></A></td>
+</tr>
+</table>
+<A NAME="TI8508"></A><p>where:</p>
+<A NAME="TI8509"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI8510"></A>Value</th>
+<th align="left" valign=bottom><A NAME="TI8511"></A>Meaning</th>
+</tr>
+<tr><td valign=top><A NAME="TI8512"></A><i>Text</i>
+</td>
+<td valign=top><A NAME="TI8513"></A>CheckBox text</td>
+</tr>
+<tr><td valign=top><A NAME="TI8514"></A><i>OnValue</i>
+</td>
+<td valign=top><A NAME="TI8515"></A>Data value for On state</td>
+</tr>
+<tr><td valign=top><A NAME="TI8516"></A><i>OffValue</i>
+</td>
+<td valign=top><A NAME="TI8517"></A>Data value for Off state</td>
+</tr>
+<tr><td valign=top><A NAME="TI8518"></A><i>ThirdValue</i>
+</td>
+<td valign=top><A NAME="TI8519"></A>Data value for Third state (this row
+exists only if 3 State is checked for the edit style--bit
+30 of <i>Flag</i>
+ is 1)</td>
+</tr>
+<tr><td valign=top><A NAME="TI8520"></A><i>Flag</i>
+</td>
+<td valign=top><A NAME="TI8521"></A>32-bit flag. Low-order four hex digits
+are generic edit type; high-order four are styles within the type.
+A 1 in any bit indicates the corresponding style is checked. A 0
+in any bit indicates the corresponding style is unchecked<A NAME="TI8522"></A>
+<ul>
+<li class=fi>Bit 31: Left Text</li>
+<li class=ds>Bit 30: 3 State</li>
+<li class=ds>Bit 29: 3D</li>
+<li class=ds>Bit 28: Scale Box</li>
+<li class=ds>Bits 27 - 16 (3 hex digits): Not used (set
+to 0)</li>
+<li class=ds>Bits 15 - 4 (3 hex digits): Always 0 for
+CheckBox edit style</li>
+<li class=ds>Bit 3: Always 0 for CheckBox edit style</li>
+<li class=ds>Bit 2: Always 1 for CheckBox edit style</li>
+<li class=ds>Bit 1: Always 0 for CheckBox edit style</li>
+<li class=ds>Bit 0: Always 0 for CheckBox edit style
+</li>
+</ul>
+</td>
+</tr>
+</table>
+<A NAME="TI8523"></A><h3>RadioButton edit style (code 86)</h3>
+<A NAME="TI8524"></A><p>Here is a sample row in the PBCatEdt table for a RadioButton
+edit style:</p>
+<A NAME="TI8525"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI8526"></A>Name</th>
+<th align="left" valign=bottom><A NAME="TI8527"></A>Edit</th>
+<th align="left" valign=bottom><A NAME="TI8528"></A>Type</th>
+<th align="left" valign=bottom><A NAME="TI8529"></A>Cntr</th>
+<th align="left" valign=bottom><A NAME="TI8530"></A>Seqn</th>
+<th align="left" valign=bottom><A NAME="TI8531"></A>Flag</th>
+<th align="left" valign=bottom><A NAME="TI8532"></A>Work</th>
+</tr>
+<tr><td valign=top><A NAME="TI8533"></A>MyEdit</td>
+<td valign=top><A NAME="TI8534"></A><i>Columns</i>
+</td>
+<td valign=top><A NAME="TI8535"></A>86</td>
+<td valign=top><A NAME="TI8536"></A>1</td>
+<td valign=top><A NAME="TI8537"></A>1</td>
+<td valign=top><A NAME="TI8538"></A><i>Flag</i>
+</td>
+<td valign=top><A NAME="TI8539"></A></td>
+</tr>
+<tr><td valign=top><A NAME="TI8540"></A>MyEdit</td>
+<td valign=top><A NAME="TI8541"></A><i>Display1</i>
+</td>
+<td valign=top><A NAME="TI8542"></A>86</td>
+<td valign=top><A NAME="TI8543"></A>1</td>
+<td valign=top><A NAME="TI8544"></A>2</td>
+<td valign=top><A NAME="TI8545"></A>0</td>
+<td valign=top><A NAME="TI8546"></A></td>
+</tr>
+<tr><td valign=top><A NAME="TI8547"></A>MyEdit</td>
+<td valign=top><A NAME="TI8548"></A><i>Data1</i>
+</td>
+<td valign=top><A NAME="TI8549"></A>86</td>
+<td valign=top><A NAME="TI8550"></A>1</td>
+<td valign=top><A NAME="TI8551"></A>3</td>
+<td valign=top><A NAME="TI8552"></A>0</td>
+<td valign=top><A NAME="TI8553"></A></td>
+</tr>
+<tr><td valign=top><A NAME="TI8554"></A>MyEdit</td>
+<td valign=top><A NAME="TI8555"></A><i>Display2</i>
+</td>
+<td valign=top><A NAME="TI8556"></A>86</td>
+<td valign=top><A NAME="TI8557"></A>1</td>
+<td valign=top><A NAME="TI8558"></A>4</td>
+<td valign=top><A NAME="TI8559"></A>0</td>
+<td valign=top><A NAME="TI8560"></A></td>
+</tr>
+<tr><td valign=top><A NAME="TI8561"></A>MyEdit</td>
+<td valign=top><A NAME="TI8562"></A><i>Data2</i>
+</td>
+<td valign=top><A NAME="TI8563"></A>86</td>
+<td valign=top><A NAME="TI8564"></A>1</td>
+<td valign=top><A NAME="TI8565"></A>5</td>
+<td valign=top><A NAME="TI8566"></A>0</td>
+<td valign=top><A NAME="TI8567"></A></td>
+</tr>
+</table>
+<A NAME="TI8568"></A><p>where:</p>
+<A NAME="TI8569"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI8570"></A>Value</th>
+<th align="left" valign=bottom><A NAME="TI8571"></A>Meaning</th>
+</tr>
+<tr><td valign=top><A NAME="TI8572"></A><i>Columns</i>
+</td>
+<td valign=top><A NAME="TI8573"></A>Character representation (in decimal)
+of number of columns (buttons) across</td>
+</tr>
+<tr><td valign=top><A NAME="TI8574"></A><i>Display1</i>
+</td>
+<td valign=top><A NAME="TI8575"></A>Display value for first button</td>
+</tr>
+<tr><td valign=top><A NAME="TI8576"></A><i>Data1</i>
+</td>
+<td valign=top><A NAME="TI8577"></A>Data value for first button</td>
+</tr>
+<tr><td valign=top><A NAME="TI8578"></A><i>Display2</i>
+</td>
+<td valign=top><A NAME="TI8579"></A>Display value for second button</td>
+</tr>
+<tr><td valign=top><A NAME="TI8580"></A><i>Data2</i>
+</td>
+<td valign=top><A NAME="TI8581"></A>Data value for second button<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>About the display and data values</span> <A NAME="TI8582"></A>Display and data values are repeated in pairs for each radio
+button defined in the edit style</p>
+</td>
+</tr>
+<tr><td valign=top><A NAME="TI8583"></A><i>Flag</i>
+</td>
+<td valign=top><A NAME="TI8584"></A>32-bit flag. Low-order four hex digits
+are generic edit type; high-order four are styles within the type.
+A 1 in any bit indicates the corresponding style is checked. A 0
+in any bit indicates the corresponding style is unchecked<A NAME="TI8585"></A>
+<ul>
+<li class=fi>Bit 31: Left Text</li>
+<li class=ds>Bit 30: 3D</li>
+<li class=ds>Bit 29: Scale Circles</li>
+<li class=ds>Bit 38: Not used (set to 0)</li>
+<li class=ds>Bits 27 - 16 (3 hex digits): Not used (set
+to 0)</li>
+<li class=ds>Bits 15 - 4 (3 hex digits): Always 0 for
+RadioButton edit style</li>
+<li class=ds>Bit 3: Always 1 for RadioButton edit style</li>
+<li class=ds>Bit 2: Always 0 for RadioButton edit style</li>
+<li class=ds>Bit 1: Always 0 for RadioButton edit style</li>
+<li class=ds>Bit 0: Always 0 for RadioButton edit style
+</li>
+</ul>
+</td>
+</tr>
+</table>
+<A NAME="TI8586"></A><h3>DropDownListBox edit style (code 87)</h3>
+<A NAME="TI8587"></A><p>Here is a sample row in the PBCatEdt table for a DropDownListBox
+edit style:</p>
+<A NAME="TI8588"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI8589"></A>Name</th>
+<th align="left" valign=bottom><A NAME="TI8590"></A>Edit</th>
+<th align="left" valign=bottom><A NAME="TI8591"></A>Type</th>
+<th align="left" valign=bottom><A NAME="TI8592"></A>Cntr</th>
+<th align="left" valign=bottom><A NAME="TI8593"></A>Seqn</th>
+<th align="left" valign=bottom><A NAME="TI8594"></A>Flag</th>
+<th align="left" valign=bottom><A NAME="TI8595"></A>Work</th>
+</tr>
+<tr><td valign=top><A NAME="TI8596"></A>MyEdit</td>
+<td valign=top><A NAME="TI8597"></A><i>Limit</i>
+</td>
+<td valign=top><A NAME="TI8598"></A>87</td>
+<td valign=top><A NAME="TI8599"></A>1</td>
+<td valign=top><A NAME="TI8600"></A>1</td>
+<td valign=top><A NAME="TI8601"></A><i>Flag</i>
+</td>
+<td valign=top><A NAME="TI8602"></A><i>Key</i>
+</td>
+</tr>
+<tr><td valign=top><A NAME="TI8603"></A>MyEdit</td>
+<td valign=top><A NAME="TI8604"></A><i>Display1</i>
+</td>
+<td valign=top><A NAME="TI8605"></A>87</td>
+<td valign=top><A NAME="TI8606"></A>1</td>
+<td valign=top><A NAME="TI8607"></A>2</td>
+<td valign=top><A NAME="TI8608"></A>0</td>
+<td valign=top><A NAME="TI8609"></A></td>
+</tr>
+<tr><td valign=top><A NAME="TI8610"></A>MyEdit</td>
+<td valign=top><A NAME="TI8611"></A><i>Data1</i>
+</td>
+<td valign=top><A NAME="TI8612"></A>87</td>
+<td valign=top><A NAME="TI8613"></A>1</td>
+<td valign=top><A NAME="TI8614"></A>3</td>
+<td valign=top><A NAME="TI8615"></A>0</td>
+<td valign=top><A NAME="TI8616"></A></td>
+</tr>
+<tr><td valign=top><A NAME="TI8617"></A>MyEdit</td>
+<td valign=top><A NAME="TI8618"></A><i>Display2</i>
+</td>
+<td valign=top><A NAME="TI8619"></A>87</td>
+<td valign=top><A NAME="TI8620"></A>1</td>
+<td valign=top><A NAME="TI8621"></A>4</td>
+<td valign=top><A NAME="TI8622"></A>0</td>
+<td valign=top><A NAME="TI8623"></A></td>
+</tr>
+<tr><td valign=top><A NAME="TI8624"></A>MyEdit</td>
+<td valign=top><A NAME="TI8625"></A><i>Data2</i>
+</td>
+<td valign=top><A NAME="TI8626"></A>87</td>
+<td valign=top><A NAME="TI8627"></A>1</td>
+<td valign=top><A NAME="TI8628"></A>5</td>
+<td valign=top><A NAME="TI8629"></A>0</td>
+<td valign=top><A NAME="TI8630"></A></td>
+</tr>
+</table>
+<A NAME="TI8631"></A><p>where:</p>
+<A NAME="TI8632"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI8633"></A>Value</th>
+<th align="left" valign=bottom><A NAME="TI8634"></A>Meaning</th>
+</tr>
+<tr><td valign=top><A NAME="TI8635"></A><i>Limit</i>
+</td>
+<td valign=top><A NAME="TI8636"></A>Character representation (in decimal)
+of the <i>Limit</i> value</td>
+</tr>
+<tr><td valign=top><A NAME="TI8637"></A><i>Key</i>
+</td>
+<td valign=top><A NAME="TI8638"></A>One-character accelerator key</td>
+</tr>
+<tr><td valign=top><A NAME="TI8639"></A><i>Display1</i>
+</td>
+<td valign=top><A NAME="TI8640"></A>Display value for first entry in code
+table</td>
+</tr>
+<tr><td valign=top><A NAME="TI8641"></A><i>Data1</i>
+</td>
+<td valign=top><A NAME="TI8642"></A>Data value for first entry in code table</td>
+</tr>
+<tr><td valign=top><A NAME="TI8643"></A><i>Display2</i>
+</td>
+<td valign=top><A NAME="TI8644"></A>Display value for second entry in code
+table</td>
+</tr>
+<tr><td valign=top><A NAME="TI8645"></A><i>Data2</i>
+</td>
+<td valign=top><A NAME="TI8646"></A>Data value for second entry in code table<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>About the display and data values</span> <A NAME="TI8647"></A>Display and data values are repeated in pairs for each entry
+in the code table</p>
+</td>
+</tr>
+<tr><td valign=top><A NAME="TI8648"></A><i>Flag</i>
+</td>
+<td valign=top><A NAME="TI8649"></A>32-bit flag. Low-order four hex digits
+are generic edit type; high-order four are styles within the type.
+A 1 in any bit indicates the corresponding style is checked. A 0
+in any bit indicates the corresponding style is unchecked<A NAME="TI8650"></A>
+<ul>
+<li class=fi>Bit 31: Sorted</li>
+<li class=ds>Bit 30: Allow editing</li>
+<li class=ds>Bit 29: Auto HScroll</li>
+<li class=ds>Bit 28: VScroll bar</li>
+<li class=ds>Bit 27: Always show list</li>
+<li class=ds>Bit 26: Always show arrow</li>
+<li class=ds>Bit 25: Uppercase</li>
+<li class=ds>Bit 24: Lowercase (if bits 25 and 24 are both 0,
+then case is Any)</li>
+<li class=ds>Bit 23: Empty string is NULL</li>
+<li class=ds>Bit 22: Required field</li>
+<li class=ds>Bit 21: Not used (set to 0)</li>
+<li class=ds>Bit 20: Not used (set to 0)</li>
+<li class=ds>Bits 19 - 16 (1 hex digit): Not used (set
+to 0)</li>
+<li class=ds>Bits 15 - 4 (3 hex digits): Always 0 for
+DropDownListBox edit style</li>
+<li class=ds>Bit 3: Always 0 for DropDownListBox edit style</li>
+<li class=ds>Bit 2: Always 0 for DropDownListBox edit style</li>
+<li class=ds>Bit 1: Always 1 for DropDownListBox edit style</li>
+<li class=ds>Bit 0: Always 0 for DropDownListBox edit style
+</li>
+</ul>
+</td>
+</tr>
+</table>
+<A NAME="TI8651"></A><h3>DropDownDataWindow edit style (code 88)</h3>
+<A NAME="TI8652"></A><p>Here is a sample row in the PBCatEdt table for a DropDownDataWindow
+edit style:</p>
+<A NAME="TI8653"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI8654"></A>Name</th>
+<th align="left" valign=bottom><A NAME="TI8655"></A>Edit</th>
+<th align="left" valign=bottom><A NAME="TI8656"></A>Type</th>
+<th align="left" valign=bottom><A NAME="TI8657"></A>Cntr</th>
+<th align="left" valign=bottom><A NAME="TI8658"></A>Seqn</th>
+<th align="left" valign=bottom><A NAME="TI8659"></A>Flag</th>
+<th align="left" valign=bottom><A NAME="TI8660"></A>Work</th>
+</tr>
+<tr><td valign=top><A NAME="TI8661"></A>MyEdit</td>
+<td valign=top><A NAME="TI8662"></A><i>DataWin</i>
+</td>
+<td valign=top><A NAME="TI8663"></A>88</td>
+<td valign=top><A NAME="TI8664"></A>1</td>
+<td valign=top><A NAME="TI8665"></A>1</td>
+<td valign=top><A NAME="TI8666"></A><i>Flag</i>
+</td>
+<td valign=top><A NAME="TI8667"></A><i>Limit</i>
+</td>
+</tr>
+<tr><td valign=top><A NAME="TI8668"></A>MyEdit</td>
+<td valign=top><A NAME="TI8669"></A><i>DataCol</i>
+</td>
+<td valign=top><A NAME="TI8670"></A>88</td>
+<td valign=top><A NAME="TI8671"></A>1</td>
+<td valign=top><A NAME="TI8672"></A>2</td>
+<td valign=top><A NAME="TI8673"></A>0</td>
+<td valign=top><A NAME="TI8674"></A><i>Key</i>
+</td>
+</tr>
+<tr><td valign=top><A NAME="TI8675"></A>MyEdit</td>
+<td valign=top><A NAME="TI8676"></A><i>DisplayCol</i>
+</td>
+<td valign=top><A NAME="TI8677"></A>88</td>
+<td valign=top><A NAME="TI8678"></A>1</td>
+<td valign=top><A NAME="TI8679"></A>3</td>
+<td valign=top><A NAME="TI8680"></A>0</td>
+<td valign=top><A NAME="TI8681"></A><i>Width%</i>
+</td>
+</tr>
+</table>
+<A NAME="TI8682"></A><p>where:</p>
+<A NAME="TI8683"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI8684"></A>Value</th>
+<th align="left" valign=bottom><A NAME="TI8685"></A>Meaning</th>
+</tr>
+<tr><td valign=top><A NAME="TI8686"></A><i>DataWin</i>
+</td>
+<td valign=top><A NAME="TI8687"></A>Name of DataWindow object (report) to
+use</td>
+</tr>
+<tr><td valign=top><A NAME="TI8688"></A><i>DataCol</i>
+</td>
+<td valign=top><A NAME="TI8689"></A>Data column from DataWindow object (report)</td>
+</tr>
+<tr><td valign=top><A NAME="TI8690"></A><i>DisplayCol</i>
+</td>
+<td valign=top><A NAME="TI8691"></A>Display column from DataWindow object (report)</td>
+</tr>
+<tr><td valign=top><A NAME="TI8692"></A><i>Limit</i>
+</td>
+<td valign=top><A NAME="TI8693"></A>Character representation (in decimal)
+of <i>Limit</i> value</td>
+</tr>
+<tr><td valign=top><A NAME="TI8694"></A><i>Key</i>
+</td>
+<td valign=top><A NAME="TI8695"></A>One-character accelerator key</td>
+</tr>
+<tr><td valign=top><A NAME="TI8696"></A><i>Width%</i>
+</td>
+<td valign=top><A NAME="TI8697"></A>Width of the dropdown part of the DropDownDataWindow
+in %</td>
+</tr>
+<tr><td valign=top><A NAME="TI8698"></A><i>Flag</i>
+</td>
+<td valign=top><A NAME="TI8699"></A>32-bit flag. Low-order four hex digits
+are generic edit type; high-order four are styles within the type.
+A 1 in any bit indicates the corresponding style is checked. A 0
+in any bit indicates the corresponding style is unchecked<A NAME="TI8700"></A>
+<ul>
+<li class=fi>Bit 31: Allow editing</li>
+<li class=ds>Bit 30: Auto HScroll</li>
+<li class=ds>Bit 29: VScroll bar</li>
+<li class=ds>Bit 28: Always show list</li>
+<li class=ds>Bit 27: Uppercase</li>
+<li class=ds>Bit 26: Lowercase (if bits 27 and 26 are both 0,
+then case is Any)</li>
+<li class=ds>Bit 25: HScroll bar</li>
+<li class=ds>Bit 24: Split horizontal scroll bar</li>
+<li class=ds>Bit 23: Empty string is NULL</li>
+<li class=ds>Bit 22: Required field</li>
+<li class=ds>Bit 21: Always show arrow</li>
+<li class=ds>Bit 20: Not used (set to 0)</li>
+<li class=ds>Bits 19 - 16 (1 hex digit): Not used (set
+to 0)</li>
+<li class=ds>Bits 15 - 8 (2 hex digits): Always 0 for
+DropDownDataWindow edit style</li>
+<li class=ds>Bit 7: Always 0 for DropDownDataWindow edit style</li>
+<li class=ds>Bit 6: Always 0 for DropDownDataWindow edit style</li>
+<li class=ds>Bit 5: Always 0 for DropDownDataWindow edit style</li>
+<li class=ds>Bit 4: Always 1 for DropDownDataWindow edit style</li>
+<li class=ds>Bit 3 - 0 (1 hex digit): Always 0 for DropDownDataWindow
+edit style
+</li>
+</ul>
+</td>
+</tr>
+</table>
+<A NAME="TI8701"></A><h3>Edit edit style (code 89)</h3>
+<A NAME="TI8702"></A><p>Here is a sample row in the PBCatEdt table for an Edit edit
+style:</p>
+<A NAME="TI8703"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI8704"></A>Name</th>
+<th align="left" valign=bottom><A NAME="TI8705"></A>Edit</th>
+<th align="left" valign=bottom><A NAME="TI8706"></A>Type</th>
+<th align="left" valign=bottom><A NAME="TI8707"></A>Cntr</th>
+<th align="left" valign=bottom><A NAME="TI8708"></A>Seqn</th>
+<th align="left" valign=bottom><A NAME="TI8709"></A>Flag</th>
+<th align="left" valign=bottom><A NAME="TI8710"></A>Work</th>
+</tr>
+<tr><td valign=top><A NAME="TI8711"></A>MyEdit</td>
+<td valign=top><A NAME="TI8712"></A><i>Limit</i>
+</td>
+<td valign=top><A NAME="TI8713"></A>89</td>
+<td valign=top><A NAME="TI8714"></A>1</td>
+<td valign=top><A NAME="TI8715"></A>1</td>
+<td valign=top><A NAME="TI8716"></A><i>Flag</i>
+</td>
+<td valign=top><A NAME="TI8717"></A><i>Key</i>
+</td>
+</tr>
+<tr><td valign=top><A NAME="TI8718"></A>MyEdit</td>
+<td valign=top><A NAME="TI8719"></A><i>Format</i>
+</td>
+<td valign=top><A NAME="TI8720"></A>89</td>
+<td valign=top><A NAME="TI8721"></A>1</td>
+<td valign=top><A NAME="TI8722"></A>2</td>
+<td valign=top><A NAME="TI8723"></A>0</td>
+<td valign=top><A NAME="TI8724"></A><i>Focus</i>
+</td>
+</tr>
+<tr><td valign=top><A NAME="TI8725"></A>MyEdit</td>
+<td valign=top><A NAME="TI8726"></A><i>Display1</i>
+</td>
+<td valign=top><A NAME="TI8727"></A>89</td>
+<td valign=top><A NAME="TI8728"></A>1</td>
+<td valign=top><A NAME="TI8729"></A>3</td>
+<td valign=top><A NAME="TI8730"></A>0</td>
+<td valign=top><A NAME="TI8731"></A></td>
+</tr>
+<tr><td valign=top><A NAME="TI8732"></A>MyEdit</td>
+<td valign=top><A NAME="TI8733"></A><i>Data1</i>
+</td>
+<td valign=top><A NAME="TI8734"></A>89</td>
+<td valign=top><A NAME="TI8735"></A>1</td>
+<td valign=top><A NAME="TI8736"></A>4</td>
+<td valign=top><A NAME="TI8737"></A>0</td>
+<td valign=top><A NAME="TI8738"></A></td>
+</tr>
+<tr><td valign=top><A NAME="TI8739"></A>MyEdit</td>
+<td valign=top><A NAME="TI8740"></A><i>Display2</i>
+</td>
+<td valign=top><A NAME="TI8741"></A>89</td>
+<td valign=top><A NAME="TI8742"></A>1</td>
+<td valign=top><A NAME="TI8743"></A>5</td>
+<td valign=top><A NAME="TI8744"></A>0</td>
+<td valign=top><A NAME="TI8745"></A></td>
+</tr>
+<tr><td valign=top><A NAME="TI8746"></A>MyEdit</td>
+<td valign=top><A NAME="TI8747"></A><i>Data2</i>
+</td>
+<td valign=top><A NAME="TI8748"></A>89</td>
+<td valign=top><A NAME="TI8749"></A>1</td>
+<td valign=top><A NAME="TI8750"></A>6</td>
+<td valign=top><A NAME="TI8751"></A>0</td>
+<td valign=top><A NAME="TI8752"></A></td>
+</tr>
+</table>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>About the example</span> <A NAME="TI8753"></A>This example shows an Edit edit style using a code table of
+display and data values. There is a pair of rows in PBCatEdt for
+each entry in the code table <i>only if</i>
+ bit 23
+of <i>Flag</i>
+ is 1.</p>
+<A NAME="TI8754"></A>For information about code tables in edit
+styles, see <A HREF="imugp62.htm#CAIDCCJB">Chapter 6, "Displaying and Validating
+Data "</A>.</p>
+<A NAME="TI8755"></A><p>where:</p>
+<A NAME="TI8756"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI8757"></A>Value</th>
+<th align="left" valign=bottom><A NAME="TI8758"></A>Meaning</th>
+</tr>
+<tr><td valign=top><A NAME="TI8759"></A><i>Limit</i>
+</td>
+<td valign=top><A NAME="TI8760"></A>Character representation (in decimal)
+of <i>Limit</i> value</td>
+</tr>
+<tr><td valign=top><A NAME="TI8761"></A><i>Key</i>
+</td>
+<td valign=top><A NAME="TI8762"></A>One-character accelerator key</td>
+</tr>
+<tr><td valign=top><A NAME="TI8763"></A><i>Format</i>
+</td>
+<td valign=top><A NAME="TI8764"></A>Display format mask</td>
+</tr>
+<tr><td valign=top><A NAME="TI8765"></A><i>Focus</i>
+</td>
+<td valign=top><A NAME="TI8766"></A>Character "1" if Show Focus Rectangle
+is checked. NULL otherwise</td>
+</tr>
+<tr><td valign=top><A NAME="TI8767"></A><i>Flag</i>
+</td>
+<td valign=top><A NAME="TI8768"></A>32-bit flag. Low-order four hex digits
+are generic edit type; high-order four are styles within the type.
+A 1 in any bit indicates the corresponding style is checked. A 0
+in any bit indicates the corresponding style is unchecked<A NAME="TI8769"></A>
+<ul>
+<li class=fi>Bit 31: Uppercase</li>
+<li class=ds>Bit 30: Lowercase (if Bits 31 and 30 are both 0,
+then case is Any)</li>
+<li class=ds>Bit 29: Auto selection</li>
+<li class=ds>Bit 28: Password</li>
+<li class=ds>Bit 27: Auto HScroll</li>
+<li class=ds>Bit 26: Auto VScroll</li>
+<li class=ds>Bit 25: HScroll bar</li>
+<li class=ds>Bit 24: VScroll bar</li>
+<li class=ds>Bit 23: Use code table</li>
+<li class=ds>Bit 22: Validate using code table</li>
+<li class=ds>Bit 21: Display only</li>
+<li class=ds>Bit 20: Empty string is NULL</li>
+<li class=ds>Bit 19: Required field</li>
+<li class=ds>Bit 18: Not used (set to 0)</li>
+<li class=ds>Bit 17: Not used (set to 0)</li>
+<li class=ds>Bit 16: Not used (set to 0)</li>
+<li class=ds>Bits 15 - 4 (3 hex digits): Always 0 for
+Edit edit style</li>
+<li class=ds>Bit 3: Always 0 for Edit edit style</li>
+<li class=ds>Bit 2: Always 0 for Edit edit style</li>
+<li class=ds>Bit 1: Always 0 for Edit edit style</li>
+<li class=ds>Bit 0: Always 1 for Edit edit style
+</li>
+</ul>
+</td>
+</tr>
+</table>
+<A NAME="TI8770"></A><h3>Edit Mask edit style (code 90)</h3>
+<A NAME="TI8771"></A><p>Here is a sample row in the PBCatEdt table for an Edit Mask
+edit style:</p>
+<A NAME="TI8772"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI8773"></A>Name</th>
+<th align="left" valign=bottom><A NAME="TI8774"></A>Edit</th>
+<th align="left" valign=bottom><A NAME="TI8775"></A>Type</th>
+<th align="left" valign=bottom><A NAME="TI8776"></A>Cntr</th>
+<th align="left" valign=bottom><A NAME="TI8777"></A>Seqn</th>
+<th align="left" valign=bottom><A NAME="TI8778"></A>Flag</th>
+<th align="left" valign=bottom><A NAME="TI8779"></A>Work</th>
+</tr>
+<tr><td valign=top><A NAME="TI8780"></A>MyEdit</td>
+<td valign=top><A NAME="TI8781"></A><i>Format</i>
+</td>
+<td valign=top><A NAME="TI8782"></A>90</td>
+<td valign=top><A NAME="TI8783"></A>1</td>
+<td valign=top><A NAME="TI8784"></A>1</td>
+<td valign=top><A NAME="TI8785"></A><i>Flag</i>
+</td>
+<td valign=top><A NAME="TI8786"></A><i>DtFcKy</i>
+</td>
+</tr>
+<tr><td valign=top><A NAME="TI8787"></A>MyEdit</td>
+<td valign=top><A NAME="TI8788"></A><i>Range</i>
+</td>
+<td valign=top><A NAME="TI8789"></A>90</td>
+<td valign=top><A NAME="TI8790"></A>1</td>
+<td valign=top><A NAME="TI8791"></A>2</td>
+<td valign=top><A NAME="TI8792"></A>0</td>
+<td valign=top><A NAME="TI8793"></A><i>SpinInc</i>
+</td>
+</tr>
+<tr><td valign=top><A NAME="TI8794"></A>MyEdit</td>
+<td valign=top><A NAME="TI8795"></A><i>Display1</i>
+</td>
+<td valign=top><A NAME="TI8796"></A>90</td>
+<td valign=top><A NAME="TI8797"></A>1</td>
+<td valign=top><A NAME="TI8798"></A>3</td>
+<td valign=top><A NAME="TI8799"></A>0</td>
+<td valign=top><A NAME="TI8800"></A></td>
+</tr>
+<tr><td valign=top><A NAME="TI8801"></A>MyEdit</td>
+<td valign=top><A NAME="TI8802"></A><i>Data1</i>
+</td>
+<td valign=top><A NAME="TI8803"></A>90</td>
+<td valign=top><A NAME="TI8804"></A>1</td>
+<td valign=top><A NAME="TI8805"></A>4</td>
+<td valign=top><A NAME="TI8806"></A>0</td>
+<td valign=top><A NAME="TI8807"></A></td>
+</tr>
+<tr><td valign=top><A NAME="TI8808"></A>MyEdit</td>
+<td valign=top><A NAME="TI8809"></A><i>Display2</i>
+</td>
+<td valign=top><A NAME="TI8810"></A>90</td>
+<td valign=top><A NAME="TI8811"></A>1</td>
+<td valign=top><A NAME="TI8812"></A>5</td>
+<td valign=top><A NAME="TI8813"></A>0</td>
+<td valign=top><A NAME="TI8814"></A></td>
+</tr>
+<tr><td valign=top><A NAME="TI8815"></A>MyEdit</td>
+<td valign=top><A NAME="TI8816"></A><i>Data2</i>
+</td>
+<td valign=top><A NAME="TI8817"></A>90</td>
+<td valign=top><A NAME="TI8818"></A>1</td>
+<td valign=top><A NAME="TI8819"></A>6</td>
+<td valign=top><A NAME="TI8820"></A>0</td>
+<td valign=top><A NAME="TI8821"></A></td>
+</tr>
+</table>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>About the example</span> <A NAME="TI8822"></A>This example shows an Edit Mask edit style using a code table
+of display and data values as part of a spin control. Rows 2 and
+beyond exist in PBCatEdt only if the edit mask is defined as a spin
+control (bit 29 of <i>Flag</i>
+ is 1). Rows 3 and beyond
+exist only if the optional code table is populated.</p>
+<A NAME="TI8823"></A>For information about using an edit mask as
+a spin control, see <A HREF="imugp62.htm#CAIDCCJB">Chapter 6, "Displaying and Validating
+Data "</A>.</p>
+<A NAME="TI8824"></A><p>where:</p>
+<A NAME="TI8825"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI8826"></A>Value</th>
+<th align="left" valign=bottom><A NAME="TI8827"></A>Meaning</th>
+</tr>
+<tr><td valign=top><A NAME="TI8828"></A><i>Format</i>
+</td>
+<td valign=top><A NAME="TI8829"></A>Display format mask</td>
+</tr>
+<tr><td valign=top><A NAME="TI8830"></A><i>DtFcKy</i>
+</td>
+<td valign=top><A NAME="TI8831"></A>Concatenated string with 1-character
+data-type code, 1-character focus-rectangle code (0 or 1), and 1-character
+accelerator key<A NAME="TI8832"></A>Data type codes:<A NAME="TI8833"></A>Format String = "0"<A NAME="TI8834"></A>Format Number = "1"<A NAME="TI8835"></A>Format Date = "2"<A NAME="TI8836"></A>Format Time = "3"<A NAME="TI8837"></A>Format DataTime= "4"<A NAME="TI8838"></A>Examples:<A NAME="TI8839"></A>
+<ul>
+<li class=fi>"10x" means
+format is Number type, focus rectangle option is unchecked, accelerator
+key is "x"</li>
+<li class=ds>"31z" means format is Time type, focus rectangle
+option is checked, accelerator key is "z"
+</li>
+</ul>
+</td>
+</tr>
+<tr><td valign=top><A NAME="TI8840"></A><i>Range</i>
+</td>
+<td valign=top><A NAME="TI8841"></A>Character representation (in decimal)
+of spin control range. The min value and max value are tab-delimited<A NAME="TI8842"></A>Example:<A NAME="TI8843"></A>
+<ul>
+<li class=fi>"1[tab]13"
+means min = 1, max = 13
+</li>
+</ul>
+</td>
+</tr>
+<tr><td valign=top><A NAME="TI8844"></A><i>SpinInc</i>
+</td>
+<td valign=top><A NAME="TI8845"></A>Character representation (in decimal)
+of spin increment</td>
+</tr>
+<tr><td valign=top><A NAME="TI8846"></A><i>Display1</i>
+</td>
+<td valign=top><A NAME="TI8847"></A>Display value for first entry in code
+table</td>
+</tr>
+<tr><td valign=top><A NAME="TI8848"></A><i>Data1</i>
+</td>
+<td valign=top><A NAME="TI8849"></A>Data value for first entry in code table</td>
+</tr>
+<tr><td valign=top><A NAME="TI8850"></A><i>Display2</i>
+</td>
+<td valign=top><A NAME="TI8851"></A>Display value for second entry in code
+table</td>
+</tr>
+<tr><td valign=top><A NAME="TI8852"></A><i>Data2</i>
+</td>
+<td valign=top><A NAME="TI8853"></A>Data value for second entry in code table<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>About the display and data values</span> <A NAME="TI8854"></A>Display and data values are repeated in pairs for each entry
+in the code table</p>
+</td>
+</tr>
+<tr><td valign=top><A NAME="TI8855"></A><i>Flag</i>
+</td>
+<td valign=top><A NAME="TI8856"></A>32-bit flag. Low-order four hex digits
+are generic edit type; high-order four are styles within the type.
+A 1 in any bit indicates the corresponding style is checked. A 0
+in any bit indicates the corresponding style is unchecked<A NAME="TI8857"></A>
+<ul>
+<li class=fi>Bit 31: Required</li>
+<li class=ds>Bit 30: Autoskip</li>
+<li class=ds>Bit 29: Spin control</li>
+<li class=ds>Bit 28: Read only (code table option)</li>
+<li class=ds>Bit 27: Use code table</li>
+<li class=ds>Bit 26: Not used (set to 0)</li>
+<li class=ds>Bit 25: Not used (set to 0)</li>
+<li class=ds>Bit 24: Not used (set to 0)</li>
+<li class=ds>Bit 23 - 16 (2 hex digits): Not used (set
+to 0)</li>
+<li class=ds>Bit 15 - 8 (2 hex digits): Always 0 for
+Edit Mask edit style</li>
+<li class=ds>Bit 7: Always 0 for Edit Mask edit style</li>
+<li class=ds>Bit 6: Always 0 for Edit Mask edit style</li>
+<li class=ds>Bit 5: Always 1 for Edit Mask edit style</li>
+<li class=ds>Bit 4: Always 0 for Edit Mask edit style</li>
+<li class=ds>Bits 3 - 0 (1 hex digit): Always 0 for
+Edit Mask edit style
+</li>
+</ul>
+</td>
+</tr>
+</table>

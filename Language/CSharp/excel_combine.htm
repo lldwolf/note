@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>Excel的二次开发实例：合并Excel文件 </title>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+<p id="title">Excel的二次开发实例：合并Excel文件
+</p>
+
+<p>我曾经遇到客户提出一个需求，要求将多个格式类似的Excel文件合并成一个Excel文件。</p>
+<p>一开始觉得这个需求还是很容易实现的，使用C#封装Excel合并的VBA宏，加个循环而已。示例的VBA宏如下所示：</p>
+<pre class="code" data-type="csharp">Sub CombineSheet()
+
+
+    Dim Files() As String
+    
+    '取一个文件夹下的所有文件，这是自己写的一个函数，非VBA库函数
+    Call GetFilesInDir(&quot;C:\Documents and Settings\Administrator\桌面\压力变送器&quot;, Files)
+    
+    Dim iFile As Integer
+    Dim xBook As Excel.Workbook
+    Dim xSheet As Excel.Worksheet
+    Dim xNewBook As Excel.Workbook
+    Dim iPos As Integer
+    Dim sNewFile As String
+    Dim sSheetName As String
+    
+	'目标文件
+    sNewFile = &quot;C:\Documents and Settings\Administrator\桌面\aaa.xls&quot;
+    Set xNewBook = Workbooks.Add
+    Call xNewBook.SaveAs(sNewFile)
+    
+    Application.DisplayAlerts = False
+    
+    For iFile = LBound(Files) To UBound(Files)
+        Set xBook = Workbooks.Open(Files(iFile))
+        
+        sSheetName = &quot;次页&quot;
+        Set xSheet = xBook.Worksheets(sSheetName)
+        xSheet.Copy After:=xNewBook.Worksheets(xNewBook.Worksheets.Count)
+        
+        sSheetName = &quot;第三页&quot;
+        Set xSheet = xBook.Worksheets(sSheetName)
+        xSheet.Copy After:=xNewBook.Worksheets(xNewBook.Worksheets.Count)
+        Call xBook.Close(False)
+    Next iFile
+    
+    xNewBook.Worksheets(3).Delete
+    xNewBook.Worksheets(2).Delete
+    xNewBook.Worksheets(1).Delete
+
+    MsgBox &quot;OK&quot;
+
+End Sub</pre>
+<p>但很快，客户就发回反馈说当合并的文件数比较多时，会提示错误“不同的单元格格式太多”，实际运行了一下，发现确实如此，即使使用VBA宏运行完毕也是同样错误，发现随着合并工作表的个数增多，分为如下三个阶段：</p>
+<ol>
+  <li>能够合并成功，保存后能够成功打开</li>
+  <li>能够合并成功，但保存后再打开时提示“不同的单元格格式太多”</li>
+  <li>合并过程中报错“不同的单元格格式太多”，合并无法完成</li>
+</ol>
+<p>另人疑惑的是，纯使用手工合并这些文件则不会出错。</p>
+<p>根据Microsoft提供的资料，Excel最多可使用4000种单元格格式，我在第二阶段能够合并完成，但无法打开保存文件的情况下，不保存为xls文件，而是保存为xml文件（Excel 2003以上版本支持这个功能），发现保存的xml文件中，单元格格式确实超过了4000。但仔细分析会发现，里面大量的单元格格式都是重复的。估计是使用COM接口合并文件时，Excel只是简单地把所有的格式合并在一起，而不是检查重复的情况并合并（微软程序员在偷懒）。</p>
+<p>在这种情况下，只好自己动手合并这些格式，大致思路如下：</p>
+<ol>
+  <li>通过COM接口将所有的Excel文件转存为xml文件</li>
+  <li>使用C#的XML类合并这些XML文件为一个XML文件</li>
+  <li>分析目标XML文件中的单元格格式并合并重复单元格</li>
+  <li>将目标XML文件通过COM接口存为xls文件</li>
+  <li>因为XML文件不能保存Excel中的对象（图表、文本框等），需要打开源Excel文件将对象插入到目标Excel文件的合适位置</li>
+</ol>
+<p>使用以上步骤后，合并成功，原先的上万个单元格格式被合并成了不到100个。</p>
+<p>不过在合并的过程中有如下值得注意的地方：</p>
+<ul>
+  <li>对于DataValidation标签，合并前可能有多个单元格具有相同的有效性规则，它们会放在同一个DataValidation标签中，但合并后最好将它们拆开，不然有时会报错“格式错误”</li>
+  <li>注意&lt;DataValidation&gt;的xmlns并不是默认xmlns，而是x</li>
+  <li>在操作过程序要注意到各节点及属性的xmlns，创建属性时，带前缀的属性创建时加上NamespaceURI</li>
+  <li>在使用递归方式复制节点时，最后的文本值（InnerText）竟然也是一个节点，节点名称为“#text”，faint</li>
+</ul>
+<p>如有兴趣的朋友请email至<a href="mailto:lldwolf@163.com">lldwolf@163.com</a></p>
+<p>&nbsp;</p>
+
+</body>
+</html>

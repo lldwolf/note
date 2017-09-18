@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<title>文档工具NDoc</title>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+<p id="title">文档工具NDoc</p>
+
+<h1>下载及安装</h1>
+<p>本地下载：<a href="downloads/NDoc-v1.3.1.msi">安装程序</a>、<a href="downloads/ndoc-devel-v1.3.1.zip">源代码</a></p>
+<p>官方网站：<a href="http://ndoc.sourceforge.net/">http://ndoc.sourceforge.net/</a></p>
+<p>本文使用的NDoc版本为1.3.1</p>
+<h1><a></a>使用说明 </h1>
+<p>运行主界面如下图所示：</p>
+<p align="center"><img src="images/ndoc_main.jpg" width="504" height="720"></p>
+<p>要生成类的说明文档，需要做如下两步主要工作：</p>
+<h2>生成XML说明文档 </h2>
+<p>在编译.net项目时使用/doc编译参数，在IDE中的配置方法如下：</p>
+<OL type=1>
+  <LI>打开此项目的“属性页”对话框。
+  <LI>单击“配置属性”文件夹。 
+  <LI>单击“生成”属性页。 
+  <LI>修改“XML 文档文件”属性。</LI>
+</OL>
+<p>类及其成员的注释要使用如下的注释块：</p>
+<pre class="code" data-type="csharp">/// &lt;summary&gt;
+/// 主说明
+/// &lt;/summary&gt;
+/// &lt;param name=&quot;参数名&quot;&gt;参数说明&lt;/param&gt;
+/// &lt;returns&gt;返回值说明&lt;/returns&gt;</pre>
+<h2>配置</h2>
+<p>在NDoc的“Select Assembles to Document”中按“Add”按钮，配置生成的可执行文档及对应的XML文档，如下图所示：</p>
+<p align="center"><img src="images/ndoc_add_assemble.jpg" width="765" height="219"></p>
+<h2>生成</h2>
+<p>在“Select and Configure Documenter”中可以选择生成的文档类型，不过MSDN类型不支持中文。按工具栏上的“Build Documentation”按钮即可生成相应的文档。</p>
+<h1>在.net 2.0下使用</h1>
+<h2>.net 2.0支持 </h2>
+<p>有两种办法</p>
+<p>第一种办法是添加配置文件NDoc.exe.config，内容如下：</p>
+<pre class="code" data-type="xml">configuration&gt;
+   &lt;startup&gt;
+      &lt;supportedRuntime version=&quot;v2.0.50727&quot; /&gt;
+   &lt;/startup&gt;
+&lt;/configuration&gt;</pre>
+<p>第二种办法是使用VS2005重新编译</p>
+<p><br>
+  编译的时候，发现找不到 using MSHelpCompiler 一看果然一个引用不可用，删掉，准备从网上搜索这个dll重新添加进去，后来一想，刚装的那个ndoc<br>
+文件夹里肯定有那个dll，果然找到，呵呵，添加进去。重新编译，搞定！</p>
+<p>将编译出来的NDocGui.exe覆盖原来的，报错，算了，干脆直接使用新编译出来的吧。</p>
+<h2>去掉泛型错误</h2>
+<p>在NDoc 1.3中，如果目标程序的类型中有&lt;T&gt;这样的范围支持，则编译时会报错，报错的位置为出现如下属性的代码</p>
+<pre class="code" data-type="csharp">type.FullName....</pre>
+<p>这是因为对于泛型，其FullName为null，将其代码进行如下修改：</p>
+<pre class="code" data-type="csharp">if(type.FullName != null)
+	[原代码]
+else
+	...</pre>
+<p>重新编译即可。</p>
+<h1>中文支持 </h1>
+<p>编译成CHM格式时，中文字符变成了？，既然是开源了，当然可以去修改源码</p>
+<p>msdn工程中MsdnDocumenter.cs中Build函数中部分代码</p>
+<pre class="code" data-type="csharp">CultureInfo ci = new CultureInfo(MyConfig.LangID);
+currentFileEncoding = Encoding.GetEncoding(ci.TextInfo.ANSICodePage);
+
+//add by me
+currentFileEncoding = Encoding.UTF8;
+</pre>
+<p>&nbsp;</p>
+
+</body>
+</html>

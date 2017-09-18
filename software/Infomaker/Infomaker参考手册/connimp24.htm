@@ -1,0 +1,159 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+Microsoft SQL Server</TITLE>
+</HEAD>
+<BODY>
+<A NAME="X-ref353186148"></A><h1>Microsoft SQL Server</h1>
+<A NAME="TI613"></A><p>This section describes how to use the Microsoft SQL Server
+database interface in InfoMaker.</p>
+<A NAME="CCJDDHBE"></A><h2>Supported versions for SQL Server</h2>
+<A NAME="TI614"></A><p>You can access Microsoft SQL Server Version 6.0, 6.5, 7.0
+and SQL Server 2000 databases using the Microsoft SQL Server interface.
+The SQL Server interface uses a DLL named PBMSS80.DLL to access
+the database.</p>
+<A NAME="TI615"></A><p>For more information about supported interfaces
+for your product, see "Supported Database Interfaces" in online
+Help.</p>
+<A NAME="TI616"></A><h2>Supported SQL Server data types</h2>
+<A NAME="TI617"></A><p>The Microsoft SQL Server database interface supports these
+data types:</p>
+<A NAME="TI618"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><td valign=top><A NAME="TI619"></A>Binary</td>
+<td valign=top><A NAME="TI620"></A>Numeric</td>
+</tr>
+<tr><td valign=top><A NAME="TI621"></A>Bit</td>
+<td valign=top><A NAME="TI622"></A>Real</td>
+</tr>
+<tr><td valign=top><A NAME="TI623"></A>Character (fewer
+than 255 characters)</td>
+<td valign=top><A NAME="TI624"></A>SmallDateTime</td>
+</tr>
+<tr><td valign=top><A NAME="TI625"></A>DateTime</td>
+<td valign=top><A NAME="TI626"></A>SmallInt</td>
+</tr>
+<tr><td valign=top><A NAME="TI627"></A>Decimal</td>
+<td valign=top><A NAME="TI628"></A>SmallMoney</td>
+</tr>
+<tr><td valign=top><A NAME="TI629"></A>Float</td>
+<td valign=top><A NAME="TI630"></A>Text</td>
+</tr>
+<tr><td valign=top><A NAME="TI631"></A>Identity</td>
+<td valign=top><A NAME="TI632"></A>Timestamp</td>
+</tr>
+<tr><td valign=top><A NAME="TI633"></A>Image</td>
+<td valign=top><A NAME="TI634"></A>TinyInt</td>
+</tr>
+<tr><td valign=top><A NAME="TI635"></A>Int</td>
+<td valign=top><A NAME="TI636"></A>VarBinary</td>
+</tr>
+<tr><td valign=top><A NAME="TI637"></A>Money</td>
+<td valign=top><A NAME="TI638"></A>VarChar</td>
+</tr>
+</table>
+<A NAME="TI639"></A><h2>Basic software components for SQL Server</h2>
+<A NAME="TI640"></A><p>You must install the following software components to access
+a database with the Microsoft SQL Server interface:</p>
+<br><img src="images/Cnw5mss.gif">
+<A NAME="CCJDJDDE"></A><h2>Preparing to use the SQL Server database</h2>
+<A NAME="TI641"></A><p>Before you define the database interface and connect to a
+Microsoft SQL Server database in InfoMaker, follow these steps
+to prepare the database for use: <A NAME="TI642"></A>
+<ol>
+</li>
+<li class=ds>Install and configure the required
+database server, network, and client software. </li>
+<li class=ds>Install the SQL Server database interface.</li>
+<li class=ds>Verify that you can connect to the Microsoft SQL
+Server server and database outside InfoMaker. 
+</li>
+</ol>
+</p>
+<A NAME="TI643"></A><h4>Step 1: install and configure the database server</h4>
+<A NAME="TI644"></A><p>You must install and configure the database server, network,
+and client software for SQL Server. </p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To install and configure the database server,
+network, and client software:</p>
+<ol><li class=fi>
+Make sure the Microsoft SQL Server 6.x
+or 7.x and 2000 database software is installed and running on the
+server specified in your database profile.<br><br>
+You must obtain the database server software and required
+licenses from Microsoft Corporation.<br><br>
+For installation instructions, see your Microsoft
+SQL Server documentation.<br><br><p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Upgrading from an earlier version of SQL Server</span> <A NAME="TI645"></A>For instructions on upgrading to SQL Server 7.x or 2000 from
+an earlier version of SQL Server or installing it alongside an earlier
+version, see your Microsoft SQL Server documentation.</p>
+</li>
+<li class=ds>
+If you are accessing a remote SQL Server database,
+make sure the required network software (for example, TCP/IP)
+is installed and running on your computer and is properly configured
+so that you can connect to the SQL Server database server at your
+site.<br><br>
+For installation and configuration instructions,
+see your network or database administrator.<br><br></li>
+<li class=ds>
+Install the required Microsoft SQL Server client
+software on each client computer on which InfoMaker is installed.<br><br>
+You must obtain the SQL Server client software from Microsoft Corporation.
+Make sure the version of the client software you install supports <i>all</i>
+ of
+the following:<A NAME="TI646"></A>
+<ul>
+<li class=fi>The operating
+system running on the client computer</li>
+<li class=ds>The version of the database that you want to access</li>
+<li class=ds>The version of InfoMaker that you are running
+</li>
+</ul>
+<br><br>
+For installation instructions, see your Microsoft
+SQL Server documentation.<br><br></li>
+<li class=ds>
+Make sure the SQL Server client software is properly
+configured so that you can connect to the SQL Server database server
+at your site.<br><br>
+Once you install the SQL Server client software, you can configure optional
+client connection parameters by using the SQL Server Client Configuration
+Utility that comes with the client software.<br><br>
+For configuration instructions, see your Microsoft
+SQL Server documentation.<br><br></li>
+<li class=ds>
+If required by your operating system, make sure
+the directory containing the SQL Server client software is in your
+system path.<br><br></li>
+<li class=ds>
+Make sure only one copy of each of the following
+files is installed on your computer:<A NAME="TI647"></A>
+<ul>
+<li class=fi>DBMSSOCN.DLL</li>
+<li class=ds>NTWDBLIB.DLL (32-bit SQL Server DLL)
+</li>
+</ul>
+
+                        <br><br></li></ol>
+<br><A NAME="TI648"></A><h4>Step 2: install the database interface</h4>
+<A NAME="TI649"></A><p>When prompted to do so by the InfoMaker Setup program, select
+the native SQL Server database interface.</p>
+<A NAME="TI650"></A><p>For installation instructions, see the <i>Installation
+Guide</i>
+.</p>
+<A NAME="TI651"></A><h4>Step 3: verify the connection </h4>
+<A NAME="TI652"></A><p>Make sure you can connect to the SQL Server server and database
+you want to access from outside InfoMaker.</p>
+<A NAME="TI653"></A><p>To verify the connection, use any Windows-based utility that
+connects to the database. When connecting, be sure to specify the
+same parameters you plan to use in your InfoMaker database profile
+to access the database.</p>
+<A NAME="TI654"></A><h2>Defining the SQL Server database interface</h2>
+<A NAME="TI655"></A><p>To define a connection through the Microsoft SQL Server interface,
+you must create a database profile by supplying values for at least
+the basic connection parameters in the Database Profile Setup -
+Microsoft SQL Server dialog box. You can then select this profile
+at any time to connect to your database in the development environment.</p>
+<A NAME="TI656"></A><p>For information on how to define a database profile, see <A HREF="connimp5.htm#X-ref289075262">"Using database profiles"</A>. </p>
+<A NAME="TI657"></A><h2>What to do next</h2>
+<A NAME="TI658"></A><p>For instructions on connecting to the database,
+see <A HREF="connimp32.htm#CCJBAGDB">"Connecting to a database"</A>.</p>
+

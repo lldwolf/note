@@ -1,0 +1,1254 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+
+    <script language="javascript" src="css.js"></script>
+
+    <title>系统表分析</title>
+</head>
+<body>
+    <h1>
+        第N章 系统表分析</h1>
+    <h2>
+        N.1 数据库结构
+    </h2>
+    <h3>
+        N.1.1 user$</h3>
+    <p>
+        <a name="user"></a>说明：用户表</p>
+    <table width="80%">
+        <tr>
+            <th width="30%">
+                字段
+            </th>
+            <th width="70%">
+                说明
+            </th>
+        </tr>
+        <tr>
+            <td>
+                user#
+            </td>
+            <td>
+                用户号，主键
+            </td>
+        </tr>
+        <tr>
+            <td>
+                name
+            </td>
+            <td>
+                用户名
+            </td>
+        </tr>
+    </table>
+    <h3>
+        <a name="obj"></a>N.1.2 obj$</h3>
+    <p>
+        说明：对象表</p>
+    <table width="80%">
+        <tr>
+            <th width="30%">
+                字段
+            </th>
+            <th width="70%">
+                说明
+            </th>
+        </tr>
+        <tr>
+            <td>
+                obj#
+            </td>
+            <td>
+                对象号，主键
+            </td>
+        </tr>
+        <tr>
+            <td>
+                owner#
+            </td>
+            <td>
+                所属用户，链接<a href="#user">user$</a>.user#
+            </td>
+        </tr>
+        <tr>
+            <td>
+                name
+            </td>
+            <td>
+                对象名
+            </td>
+        </tr>
+        <tr>
+            <td>
+                type#
+            </td>
+            <td>
+                对象类型，<a href="#object_type">详细信息</a>
+            </td>
+        </tr>
+    </table>
+    <a name="object_type"></a>
+    <table width="80%">
+        <caption align="top">
+            对象类型
+        </caption>
+        <tr>
+            <th width="30%">
+                值
+            </th>
+            <th width="80%">
+                说明
+            </th>
+        </tr>
+        <tr>
+            <td>
+                1
+            </td>
+            <td>
+                索引
+            </td>
+        </tr>
+        <tr>
+            <td>
+                2
+            </td>
+            <td>
+                表
+            </td>
+        </tr>
+        <tr>
+            <td>
+                4
+            </td>
+            <td>
+                视图
+            </td>
+        </tr>
+        <tr>
+            <td>
+                5
+            </td>
+            <td>
+                一些系统的对象，例如dual, v$sqltext
+            </td>
+        </tr>
+        <tr>
+            <td>
+                6
+            </td>
+            <td>
+                序列
+            </td>
+        </tr>
+        <tr>
+            <td>
+                7
+            </td>
+            <td>
+                存储过程
+            </td>
+        </tr>
+        <tr>
+            <td>
+                8
+            </td>
+            <td>
+                函数
+            </td>
+        </tr>
+        <tr>
+            <td>
+                9
+            </td>
+            <td>
+                程序包
+            </td>
+        </tr>
+        <tr>
+            <td>
+                11
+            </td>
+            <td>
+                程序包体
+            </td>
+        </tr>
+        <tr>
+            <td>
+                12
+            </td>
+            <td>
+                触发器
+            </td>
+        </tr>
+    </table>
+    <h3>
+        <a name="sys.col" id="sys.col"></a>N.1.3 col$</h3>
+    <p>
+        说明：列</p>
+    <table width="80%">
+        <tr>
+            <th width="30%">
+                字段
+            </th>
+            <th width="70%">
+                说明
+            </th>
+        </tr>
+        <tr>
+            <td>
+                obj#
+            </td>
+            <td>
+                外键，所属对象，链接<a href="#obj">obj$</a>.obj#
+            </td>
+        </tr>
+        <tr>
+            <td>
+                col#
+            </td>
+            <td>
+                主键
+            </td>
+        </tr>
+        <tr>
+            <td>
+                segcol#
+            </td>
+            <td>
+                顺序号
+            </td>
+        </tr>
+        <tr>
+            <td>
+                name
+            </td>
+            <td>
+                列名
+            </td>
+        </tr>
+        <tr>
+            <td>
+                type#
+            </td>
+            <td>
+                数据类型，<a href="#data_type">详细信息</a>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                length
+            </td>
+            <td>
+                长度
+            </td>
+        </tr>
+        <tr>
+            <td>
+                precision#
+            </td>
+            <td>
+                数字型字段的长度(包括小数位长度)
+            </td>
+        </tr>
+        <tr>
+            <td>
+                scale
+            </td>
+            <td>
+                数字型字段的小数位长度
+            </td>
+        </tr>
+        <tr>
+            <td>
+                charsetform
+            </td>
+            <td>
+                <p>
+                    字符集</p>
+                <p>
+                    1, 'CHAR_CS',<br>
+                    2, 'NCHAR_CS',<br>
+                    3, NLS_CHARSET_NAME(c.charsetid),<br>
+                    4, 'ARG:'||c.charsetid</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                null$
+            </td>
+            <td>
+                可否为空，0表示可为空，-1为默认值，其它值表示不可为空
+            </td>
+        </tr>
+        <tr>
+            <td>
+                default$
+            </td>
+            <td>
+                默认值
+            </td>
+        </tr>
+        <tr>
+            <td>
+                lowval
+            </td>
+            <td>
+                最小值
+            </td>
+        </tr>
+        <tr>
+            <td>
+                hival
+            </td>
+            <td>
+                最大值
+            </td>
+        </tr>
+        <tr>
+            <td>
+                data_length
+            </td>
+            <td>
+                默认值，为<a href="data_type.htm#long">LONG</a>类型
+            </td>
+        </tr>
+    </table>
+    <a name="data_type"></a>
+    <table width="80%">
+        <caption align="top">
+            数据类型
+        </caption>
+        <tr>
+            <th width="30%">
+                值
+            </th>
+            <th width="80%">
+                说明
+            </th>
+        </tr>
+        <tr>
+            <td>
+                1
+            </td>
+            <td>
+                varchar2, nvarchar2, 由charsetform值进一步确定
+            </td>
+        </tr>
+        <tr>
+            <td>
+                2
+            </td>
+            <td>
+                若presision#为126时表示float，若precision为空，scale为0表示int（small int与int相同），其它为number
+            </td>
+        </tr>
+        <tr>
+            <td>
+                8
+            </td>
+            <td>
+                long
+            </td>
+        </tr>
+        <tr>
+            <td>
+                9
+            </td>
+            <td>
+                charsetform为2时为nchar varying, 否则为char varying
+            </td>
+        </tr>
+        <tr>
+            <td>
+                12
+            </td>
+            <td>
+                date
+            </td>
+        </tr>
+        <tr>
+            <td>
+                23
+            </td>
+            <td>
+                raw
+            </td>
+        </tr>
+        <tr>
+            <td>
+                24
+            </td>
+            <td>
+                long raw
+            </td>
+        </tr>
+        <tr>
+            <td>
+                58
+            </td>
+            <td>
+                &nbsp;
+            </td>
+        </tr>
+        <tr>
+            <td>
+                69
+            </td>
+            <td>
+                rowid
+            </td>
+        </tr>
+        <tr>
+            <td>
+                96
+            </td>
+            <td>
+                charsetform为2时nchar, 否则char
+            </td>
+        </tr>
+        <tr>
+            <td>
+                105
+            </td>
+            <td>
+                MLSLABEL
+            </td>
+        </tr>
+        <tr>
+            <td>
+                106
+            </td>
+            <td>
+                MLSLABEL
+            </td>
+        </tr>
+        <tr>
+            <td>
+                111
+            </td>
+            <td>
+                &nbsp;
+            </td>
+        </tr>
+        <tr>
+            <td>
+                112
+            </td>
+            <td>
+                charsetform为2时nclob, 否则clob
+            </td>
+        </tr>
+        <tr>
+            <td>
+                113
+            </td>
+            <td>
+                blob
+            </td>
+        </tr>
+        <tr>
+            <td>
+                114
+            </td>
+            <td>
+                bfile
+            </td>
+        </tr>
+        <tr>
+            <td>
+                115
+            </td>
+            <td>
+                cfile
+            </td>
+        </tr>
+        <tr>
+            <td>
+                121
+            </td>
+            <td>
+                &nbsp;
+            </td>
+        </tr>
+        <tr>
+            <td>
+                122
+            </td>
+            <td>
+                &nbsp;
+            </td>
+        </tr>
+        <tr>
+            <td>
+                123
+            </td>
+            <td>
+                &nbsp;
+            </td>
+        </tr>
+        <tr>
+            <td>
+                178
+            </td>
+            <td>
+                time
+            </td>
+        </tr>
+        <tr>
+            <td>
+                179
+            </td>
+            <td>
+                time with time zone
+            </td>
+        </tr>
+        <tr>
+            <td>
+                180
+            </td>
+            <td>
+                timestamp
+            </td>
+        </tr>
+        <tr>
+            <td>
+                181
+            </td>
+            <td>
+                timestamp with time zone
+            </td>
+        </tr>
+        <tr>
+            <td>
+                182
+            </td>
+            <td>
+                INTERVAL YEAR to month
+            </td>
+        </tr>
+        <tr>
+            <td>
+                183
+            </td>
+            <td>
+                interval day to second
+            </td>
+        </tr>
+        <tr>
+            <td>
+                208
+            </td>
+            <td>
+                urowid
+            </td>
+        </tr>
+        <tr>
+            <td>
+                231
+            </td>
+            <td>
+                timestamp with local time zone
+            </td>
+        </tr>
+    </table>
+    <p>
+        一个常用的SQL语句，用来查询哪些表具有某个列名：</p>
+    <pre>SELECT * FROM SYS.OBJ$ 
+WHERE OWNER# = 64 AND TYPE# = 2 AND OBJ# IN (SELECT OBJ# FROM SYS.COL$ WHERE NAME = 'REV_ID')
+ORDER BY NAME</pre>
+    <h3>
+        <a name="cdef"></a>N.1.4 cdef$</h3>
+    <p>
+        说明：约束定义，约束名请到<a href="#con">con#</a>中查找，约束关联的列请查阅<a href="#ccol">ccol$</a>表。</p>
+    <table width="80%">
+        <tr>
+            <th width="30%">
+                字段
+            </th>
+            <th width="70%">
+                说明
+            </th>
+        </tr>
+        <tr>
+            <td>
+                con#
+            </td>
+            <td>
+                主键
+            </td>
+        </tr>
+        <tr>
+            <td>
+                obj#
+            </td>
+            <td>
+                所属主对象，链接obj$.obj#
+            </td>
+        </tr>
+        <tr>
+            <td>
+                type#
+            </td>
+            <td>
+                约束类型，<a href="#constraint_type">详细</a>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                robj#
+            </td>
+            <td>
+                外键约束引用对象，链接obj$.obj#
+            </td>
+        </tr>
+        <tr>
+            <td>
+                rcon#
+            </td>
+            <td>
+                外键约束引用对象，链接cdef#.con#
+            </td>
+        </tr>
+        <tr>
+            <td>
+                &nbsp;
+            </td>
+            <td>
+                &nbsp;
+            </td>
+        </tr>
+    </table>
+    <a name="contraint_type"></a>
+    <table width="80%">
+        <caption align="top">
+            约束类型
+        </caption>
+        <tr>
+            <th width="30%">
+                值
+            </th>
+            <th width="80%">
+                说明
+            </th>
+        </tr>
+        <tr>
+            <td>
+                2
+            </td>
+            <td>
+                主键
+            </td>
+        </tr>
+        <tr>
+            <td>
+                4
+            </td>
+            <td>
+                外键
+            </td>
+        </tr>
+        <tr>
+            <td>
+                7
+            </td>
+            <td>
+                &nbsp;
+            </td>
+        </tr>
+    </table>
+    <h3>
+        <a name="con"></a>N.1.5 con#</h3>
+    <p>
+        说明：约束</p>
+    <table width="80%">
+        <tr>
+            <th width="30%">
+                字段
+            </th>
+            <th width="70%">
+                说明
+            </th>
+        </tr>
+        <tr>
+            <td>
+                con#
+            </td>
+            <td>
+                主键
+            </td>
+        </tr>
+        <tr>
+            <td>
+                owner#
+            </td>
+            <td>
+                所用用户，链接user$.user#
+            </td>
+        </tr>
+        <tr>
+            <td>
+                name
+            </td>
+            <td>
+                约束名
+            </td>
+        </tr>
+    </table>
+    <h3>
+        <a name="ccol"></a>N.1.6 ccol$
+    </h3>
+    <p>
+        说明：约束引用的列</p>
+    <table width="80%">
+        <tr>
+            <th width="30%">
+                字段
+            </th>
+            <th width="70%">
+                说明
+            </th>
+        </tr>
+        <tr>
+            <td>
+                con#
+            </td>
+            <td>
+                链接cdef$.con#
+            </td>
+        </tr>
+        <tr>
+            <td>
+                obj#
+            </td>
+            <td>
+                所属表，链接obj$.obj#
+            </td>
+        </tr>
+        <tr>
+            <td>
+                col#
+            </td>
+            <td>
+                关联列，链接col$.col#
+            </td>
+        </tr>
+    </table>
+    <h2>
+        N.2 数据库文件</h2>
+    <h3>
+        <a name="dba_data_files"></a>N.2.1 dba_data_files</h3>
+    <table width="80%">
+        <tr>
+            <th width="30%">
+                列
+            </th>
+            <th width="70%">
+                说明
+            </th>
+        </tr>
+        <tr>
+            <td>
+                file_name
+            </td>
+            <td>
+                文件名
+            </td>
+        </tr>
+        <tr>
+            <td>
+                file_id
+            </td>
+            <td>
+                文件号
+            </td>
+        </tr>
+        <tr>
+            <td>
+                table_space_name
+            </td>
+            <td>
+                表空间
+            </td>
+        </tr>
+        <tr>
+            <td>
+                bytes
+            </td>
+            <td>
+                大小（按字节）
+            </td>
+        </tr>
+        <tr>
+            <td>
+                &nbsp;
+            </td>
+            <td>
+                &nbsp;
+            </td>
+        </tr>
+    </table>
+    <p>
+        &nbsp;
+    </p>
+    <h2>
+        N.4 Dual</h2>
+    <p>
+        dual是Oracle与数据字典一起自动创建的一个表﹐它只有一列﹕DUMMY﹐其数据类型为﹕VARCHAR2(1)。dual中只有一行数据﹕'X'。dual属于sys模式﹐但所有用户都可以使用dual名称访问它﹐用SELECT计算常量表达式﹑伪列等值时常用该表﹐因为它只返回一行数据﹐而使用其它表时可能返回多个数据行。
+    </p>
+    <h2>
+        N.5 系统表</h2>
+    <table style="line-height: 14px; color: #000000; font-size: 12px; font-weight: normal"
+        class="parm_values" border="1" cellspacing="0" cellpadding="4" width="651">
+        <tbody>
+            <tr style="text-align: left; background-color: #cccccc; font-size: 12px; vertical-align: top"
+                class="th_left_top">
+                <th width="204">
+                    System Table
+                </th>
+                <th>
+                    Description
+                </th>
+            </tr>
+            <tr style="text-align: left; font-size: 12px; vertical-align: top" class="tr_left_top">
+                <td style="font-size: 12px">
+                    ALL_ARGUMENTS
+                </td>
+                <td style="font-size: 12px">
+                    Arguments in object accessible to the user
+                </td>
+            </tr>
+            <tr style="text-align: left; font-size: 12px; vertical-align: top" class="tr_left_top">
+                <td style="font-size: 12px">
+                    ALL_CATALOG
+                </td>
+                <td style="font-size: 12px">
+                    All tables, views, synonyms, sequences accessible to the user
+                </td>
+            </tr>
+            <tr style="text-align: left; font-size: 12px; vertical-align: top" class="tr_left_top">
+                <td style="font-size: 12px">
+                    ALL_COL_COMMENTS
+                </td>
+                <td style="font-size: 12px">
+                    Comments on columns of accessible tables and views
+                </td>
+            </tr>
+            <tr style="text-align: left; font-size: 12px; vertical-align: top" class="tr_left_top">
+                <td style="font-size: 12px">
+                    ALL_CONSTRAINTS
+                </td>
+                <td style="font-size: 12px">
+                    Constraint definitions on accessible tables
+                </td>
+            </tr>
+            <tr style="text-align: left; font-size: 12px; vertical-align: top" class="tr_left_top">
+                <td style="font-size: 12px">
+                    ALL_CONS_COLUMNS
+                </td>
+                <td style="font-size: 12px">
+                    Information about accessible columns in constraint definitions
+                </td>
+            </tr>
+            <tr style="text-align: left; font-size: 12px; vertical-align: top" class="tr_left_top">
+                <td style="font-size: 12px">
+                    ALL_DB_LINKS
+                </td>
+                <td style="font-size: 12px">
+                    Database links accessible to the user
+                </td>
+            </tr>
+            <tr style="text-align: left; font-size: 12px; vertical-align: top" class="tr_left_top">
+                <td style="font-size: 12px">
+                    ALL_ERRORS
+                </td>
+                <td style="font-size: 12px">
+                    Current errors on stored objects that user is allowed to create
+                </td>
+            </tr>
+            <tr style="text-align: left; font-size: 12px; vertical-align: top" class="tr_left_top">
+                <td style="font-size: 12px">
+                    ALL_INDEXES
+                </td>
+                <td style="font-size: 12px">
+                    Descriptions of indexes on tables accessible to the user
+                </td>
+            </tr>
+            <tr style="text-align: left; font-size: 12px; vertical-align: top" class="tr_left_top">
+                <td style="font-size: 12px">
+                    ALL_IND_COLUMNS
+                </td>
+                <td style="font-size: 12px">
+                    COLUMNs comprising INDEXes on accessible TABLES
+                </td>
+            </tr>
+            <tr style="text-align: left; font-size: 12px; vertical-align: top" class="tr_left_top">
+                <td style="font-size: 12px">
+                    ALL_LOBS
+                </td>
+                <td style="font-size: 12px">
+                    Description of LOBs contained in tables accessible to the user
+                </td>
+            </tr>
+            <tr style="text-align: left; font-size: 12px; vertical-align: top" class="tr_left_top">
+                <td style="font-size: 12px">
+                    ALL_OBJECTS
+                </td>
+                <td style="font-size: 12px">
+                    Objects accessible to the user
+                </td>
+            </tr>
+            <tr style="text-align: left; font-size: 12px; vertical-align: top" class="tr_left_top">
+                <td style="font-size: 12px">
+                    ALL_OBJECT_TABLES
+                </td>
+                <td style="font-size: 12px">
+                    Description of all object tables accessible to the user
+                </td>
+            </tr>
+            <tr style="text-align: left; font-size: 12px; vertical-align: top" class="tr_left_top">
+                <td style="font-size: 12px">
+                    ALL_SEQUENCES
+                </td>
+                <td style="font-size: 12px">
+                    Description of SEQUENCEs accessible to the user
+                </td>
+            </tr>
+            <tr style="text-align: left; font-size: 12px; vertical-align: top" class="tr_left_top">
+                <td style="font-size: 12px">
+                    ALL_SNAPSHOTS
+                </td>
+                <td style="font-size: 12px">
+                    Snapshots the user can access
+                </td>
+            </tr>
+            <tr style="text-align: left; font-size: 12px; vertical-align: top" class="tr_left_top">
+                <td style="font-size: 12px">
+                    ALL_SOURCE
+                </td>
+                <td style="font-size: 12px">
+                    Current source on stored objects that user is allowed to create
+                </td>
+            </tr>
+            <tr style="text-align: left; font-size: 12px; vertical-align: top" class="tr_left_top">
+                <td style="font-size: 12px">
+                    ALL_SYNONYMS
+                </td>
+                <td style="font-size: 12px">
+                    All synonyms accessible to the user
+                </td>
+            </tr>
+            <tr style="text-align: left; font-size: 12px; vertical-align: top" class="tr_left_top">
+                <td style="font-size: 12px">
+                    ALL_TABLES
+                </td>
+                <td style="font-size: 12px">
+                    Description of relational tables accessible to the user
+                </td>
+            </tr>
+            <tr style="text-align: left; font-size: 12px; vertical-align: top" class="tr_left_top">
+                <td style="font-size: 12px">
+                    ALL_TAB_COLUMNS
+                </td>
+                <td style="font-size: 12px">
+                    Columns of user's tables, views and clusters
+                </td>
+            </tr>
+            <tr style="text-align: left; font-size: 12px; vertical-align: top" class="tr_left_top">
+                <td style="font-size: 12px">
+                    ALL_TAB_COL_STATISTICS
+                </td>
+                <td style="font-size: 12px">
+                    Columns of user's tables, views and clusters
+                </td>
+            </tr>
+            <tr style="text-align: left; font-size: 12px; vertical-align: top" class="tr_left_top">
+                <td style="font-size: 12px">
+                    ALL_TAB_COMMENTS
+                </td>
+                <td style="font-size: 12px">
+                    Comments on tables and views accessible to the user
+                </td>
+            </tr>
+            <tr style="text-align: left; font-size: 12px; vertical-align: top" class="tr_left_top">
+                <td style="font-size: 12px">
+                    ALL_TRIGGERS
+                </td>
+                <td style="font-size: 12px">
+                    Triggers accessible to the current user
+                </td>
+            </tr>
+            <tr style="text-align: left; font-size: 12px; vertical-align: top" class="tr_left_top">
+                <td style="font-size: 12px">
+                    ALL_TRIGGER_COLS
+                </td>
+                <td style="font-size: 12px">
+                    Column usage in user's triggers or in triggers on user's tables
+                </td>
+            </tr>
+            <tr style="text-align: left; font-size: 12px; vertical-align: top" class="tr_left_top">
+                <td style="font-size: 12px">
+                    ALL_TYPES
+                </td>
+                <td style="font-size: 12px">
+                    Description of types accessible to the user
+                </td>
+            </tr>
+            <tr style="text-align: left; font-size: 12px; vertical-align: top" class="tr_left_top">
+                <td style="font-size: 12px">
+                    ALL_UPDATABLE_COLUMNS
+                </td>
+                <td style="font-size: 12px">
+                    Description of all updatable columns
+                </td>
+            </tr>
+            <tr style="text-align: left; font-size: 12px; vertical-align: top" class="tr_left_top">
+                <td style="font-size: 12px">
+                    ALL_USERS
+                </td>
+                <td style="font-size: 12px">
+                    Information about all users of the database
+                </td>
+            </tr>
+            <tr style="text-align: left; font-size: 12px; vertical-align: top" class="tr_left_top">
+                <td style="font-size: 12px">
+                    ALL_VIEWS
+                </td>
+                <td style="font-size: 12px">
+                    Description of views accessible to the user
+                </td>
+            </tr>
+            <tr style="text-align: left; font-size: 12px; vertical-align: top" class="tr_left_top">
+                <td style="font-size: 12px">
+                    DATABASE_COMPATIBLE_LEVEL
+                </td>
+                <td style="font-size: 12px">
+                    Database compatible parameter set via init.ora
+                </td>
+            </tr>
+            <tr style="text-align: left; font-size: 12px; vertical-align: top" class="tr_left_top">
+                <td style="font-size: 12px">
+                    DBA_DB_LINKS
+                </td>
+                <td style="font-size: 12px">
+                    All database links in the database
+                </td>
+            </tr>
+            <tr style="text-align: left; font-size: 12px; vertical-align: top" class="tr_left_top">
+                <td style="font-size: 12px">
+                    DBA_ERRORS
+                </td>
+                <td style="font-size: 12px">
+                    Current errors on all stored objects in the database
+                </td>
+            </tr>
+            <tr style="text-align: left; font-size: 12px; vertical-align: top" class="tr_left_top">
+                <td style="font-size: 12px">
+                    DBA_OBJECTS
+                </td>
+                <td style="font-size: 12px">
+                    All objects in the database
+                </td>
+            </tr>
+            <tr style="text-align: left; font-size: 12px; vertical-align: top" class="tr_left_top">
+                <td style="font-size: 12px">
+                    DBA_ROLES
+                </td>
+                <td style="font-size: 12px">
+                    All Roles which exist in the database
+                </td>
+            </tr>
+            <tr style="text-align: left; font-size: 12px; vertical-align: top" class="tr_left_top">
+                <td style="font-size: 12px">
+                    DBA_ROLE_PRIVS
+                </td>
+                <td style="font-size: 12px">
+                    Roles granted to users and roles
+                </td>
+            </tr>
+            <tr style="text-align: left; font-size: 12px; vertical-align: top" class="tr_left_top">
+                <td style="font-size: 12px">
+                    DBA_SOURCE
+                </td>
+                <td style="font-size: 12px">
+                    Source of all stored objects in the database
+                </td>
+            </tr>
+            <tr style="text-align: left; font-size: 12px; vertical-align: top" class="tr_left_top">
+                <td style="font-size: 12px">
+                    DBA_TABLESPACES
+                </td>
+                <td style="font-size: 12px">
+                    Description of all tablespaces
+                </td>
+            </tr>
+            <tr style="text-align: left; font-size: 12px; vertical-align: top" class="tr_left_top">
+                <td style="font-size: 12px">
+                    DBA_TAB_PRIVS
+                </td>
+                <td style="font-size: 12px">
+                    All grants on objects in the database
+                </td>
+            </tr>
+            <tr style="text-align: left; font-size: 12px; vertical-align: top" class="tr_left_top">
+                <td style="font-size: 12px">
+                    DBA_TRIGGERS
+                </td>
+                <td style="font-size: 12px">
+                    All triggers in the database
+                </td>
+            </tr>
+            <tr style="text-align: left; font-size: 12px; vertical-align: top" class="tr_left_top">
+                <td style="font-size: 12px">
+                    DBA_TS_QUOTAS
+                </td>
+                <td style="font-size: 12px">
+                    Tablespace quotas for all users
+                </td>
+            </tr>
+            <tr style="text-align: left; font-size: 12px; vertical-align: top" class="tr_left_top">
+                <td style="font-size: 12px">
+                    DBA_USERS
+                </td>
+                <td style="font-size: 12px">
+                    Information about all users of the database
+                </td>
+            </tr>
+            <tr style="text-align: left; font-size: 12px; vertical-align: top" class="tr_left_top">
+                <td style="font-size: 12px">
+                    DBA_VIEWS
+                </td>
+                <td style="font-size: 12px">
+                    Description of all views in the database
+                </td>
+            </tr>
+            <tr style="text-align: left; font-size: 12px; vertical-align: top" class="tr_left_top">
+                <td style="font-size: 12px">
+                    DICTIONARY
+                </td>
+                <td style="font-size: 12px">
+                    Description of data dictionary tables and views
+                </td>
+            </tr>
+            <tr style="text-align: left; font-size: 12px; vertical-align: top" class="tr_left_top">
+                <td style="font-size: 12px">
+                    DICT_COLUMNS
+                </td>
+                <td style="font-size: 12px">
+                    Description of columns in data dictionary tables and views
+                </td>
+            </tr>
+            <tr style="text-align: left; font-size: 12px; vertical-align: top" class="tr_left_top">
+                <td style="font-size: 12px">
+                    GLOBAL_NAME
+                </td>
+                <td style="font-size: 12px">
+                    global database name
+                </td>
+            </tr>
+            <tr style="text-align: left; font-size: 12px; vertical-align: top" class="tr_left_top">
+                <td style="font-size: 12px">
+                    NLS_DATABASE_PARAMETERS
+                </td>
+                <td style="font-size: 12px">
+                    Permanent NLS parameters of the database
+                </td>
+            </tr>
+            <tr style="text-align: left; font-size: 12px; vertical-align: top" class="tr_left_top">
+                <td style="font-size: 12px">
+                    NLS_INSTANCE_PARAMETERS
+                </td>
+                <td style="font-size: 12px">
+                    NLS parameters of the instance
+                </td>
+            </tr>
+            <tr style="text-align: left; font-size: 12px; vertical-align: top" class="tr_left_top">
+                <td style="font-size: 12px">
+                    NLS_SESSION_PARAMETERS
+                </td>
+                <td style="font-size: 12px">
+                    NLS parameters of the user session
+                </td>
+            </tr>
+            <tr style="text-align: left; font-size: 12px; vertical-align: top" class="tr_left_top">
+                <td style="font-size: 12px">
+                    PRODUCT_COMPONENT_VERSION
+                </td>
+                <td style="font-size: 12px">
+                    version and status information for component products
+                </td>
+            </tr>
+            <tr style="text-align: left; font-size: 12px; vertical-align: top" class="tr_left_top">
+                <td style="font-size: 12px">
+                    ROLE_TAB_PRIVS
+                </td>
+                <td style="font-size: 12px">
+                    Table privileges granted to roles
+                </td>
+            </tr>
+            <tr style="text-align: left; font-size: 12px; vertical-align: top" class="tr_left_top">
+                <td style="font-size: 12px">
+                    SESSION_PRIVS
+                </td>
+                <td style="font-size: 12px">
+                    Privileges which the user currently has set
+                </td>
+            </tr>
+            <tr style="text-align: left; font-size: 12px; vertical-align: top" class="tr_left_top">
+                <td style="font-size: 12px">
+                    SESSION_ROLES
+                </td>
+                <td style="font-size: 12px">
+                    Roles which the user currently has enabled.
+                </td>
+            </tr>
+            <tr style="text-align: left; font-size: 12px; vertical-align: top" class="tr_left_top">
+                <td style="font-size: 12px">
+                    SYSTEM_PRIVILEGE_MAP
+                </td>
+                <td style="font-size: 12px">
+                    Description table for privilege type codes. Maps privilege type numbers to type
+                    names
+                </td>
+            </tr>
+            <tr style="text-align: left; font-size: 12px; vertical-align: top" class="tr_left_top">
+                <td style="font-size: 12px">
+                    TABLE_PRIVILEGES
+                </td>
+                <td style="font-size: 12px">
+                    Grants on objects for which the user is the grantor, grantee, owner, or an enabled
+                    role or PUBLIC is the grantee
+                </td>
+            </tr>
+            <tr style="text-align: left; font-size: 12px; vertical-align: top" class="tr_left_top">
+                <td style="font-size: 12px">
+                    TABLE_PRIVILEGE_MAP
+                </td>
+                <td style="font-size: 12px">
+                    Description table for privilege (auditing option) type codes. Maps privilege (auditing
+                    option) type numbers to type names
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <p>
+        &nbsp;</p>
+    <p>
+        &nbsp;
+    </p>
+    <p>
+        &nbsp;
+    </p>
+    <p>
+        &nbsp;
+    </p>
+    <p>
+        &nbsp;
+    </p>
+
+    <script language="javascript" src="index.js"></script>
+
+</body>
+</html>

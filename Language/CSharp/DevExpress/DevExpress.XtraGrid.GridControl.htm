@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>DevExpress.XtraGrid.GridControl</title>
+<script type="text/javascript" src="../../../mylib/js/css.js"></script>
+
+<style type="text/css">
+.first_class {font-family:宋体; font-weight:bold; font-size:16px; text-align:center; layout-flow:vertical-ideographic}
+.second_class {font-weight: bold}
+</style>
+</head>
+
+<body>
+<p id="title">DevExpress.XtraGrid.GridControl</p>
+
+<h1>快速入门</h1>
+<h2>设定数剧源</h2>
+<p>GridControl控件实际上分为两个部分：GridControl和GridView。我们平时对其作的大部分操作，事实上都是对GridView的操作。GridControl最常用的操作只有两个：</p>
+<ol>
+	<li>设定数据源</li>
+	<li>设定导航按钮</li>
+</ol>
+<p>OK，下面我开始一个最简单的例子，关键代码如下所示：</p>
+<pre>DataTable tb = new DataTable();
+//生成数据...
+this.gridControl1.DataSource = tb;</pre>
+<p>Very easy，不是吗？至于如何对表格的样式做出复杂的控制，请关注以后的内容。</p>
+<p><b>常用数据源及说明</b></p>
+<table width="90%">
+    <tr>
+        <th>&nbsp</th>
+        <th>复杂类型</th>
+        <th>新增</th>
+        <th>修改</th>
+        <th>删除</th>
+        <th>数据校验</th>
+    </tr>
+    <tr>
+        <th style="">List&lt;&gt;/ArrayList/Array</th>
+        <td>Y</td>
+        <td>N</td>
+        <td>Y</td>
+        <td>N</td>
+        <td>Manual</td>
+    </tr>
+    <tr>
+        <th>BindingList&lt;&gt;</th>
+        <td>Y</td>
+        <td>Y</td>
+        <td>Y</td>
+        <td>Y</td>
+        <td>Manual</td>
+    </tr>
+    <tr>
+        <th>CollectionBase + IBindingList</th>
+        <td>Y</td>
+        <td>Manual</td>
+        <td>Manual</td>
+        <td>Manual</td>
+        <td>Manual</td>
+    </tr>
+    <tr>
+        <th>DataTable</th>
+        <td>N</td>
+        <td>Y</td>
+        <td>Y</td>
+        <td>Y</td>
+        <td>Y</td>
+    </tr>
+    <tr>
+        <th>DataView</th>
+        <td>N</td>
+        <td>N</td>
+        <td>N</td>
+        <td>N</td>
+        <td>Y</td>
+    </tr>
+</table>
+<h1>外观</h1>
+<p>很多外观属性默认使用父控件的设置，例如，GridColumn 默认使用 GridView 的设置。一般情况下，只需在子控件中设置与父控件不同的外观属性。</p>
+<p>首先，对外观项目作一个分组，如下所示：</p>
+<table width="90%">
+	<tbody>
+	<tr>
+		<th>一级分类</th>
+		<th>二级分类</th>
+		<th>三级分类</th>
+		<th>设置方式</th>
+	</tr>
+	<tr>
+		<td rowspan="3" class="first_class">标 题 栏</td>
+		<td rowspan="3" class="second_class">标题</td>
+		<td>字体</td>
+		<td>
+			<ul>
+				<li>GridView
+					<ul>
+						<li>Apperance.HeaderPanel.Font</li>
+					</ul>
+				</li>
+			</ul>
+		</td>
+	</tr>
+	<tr>
+		<td>对齐方式</td>
+		<td>
+			<ul>
+				<li>GridView
+					<ul>
+						<li>Apperance.HeaderPanel.TextOptions.HAlignment: 水平对齐</li>
+						<li>Apperance.HeaderPanel.TextOptions.VAlignment: 垂直对齐</li>
+					</ul>
+				</li>
+			</ul>
+		</td>
+	</tr>
+	<tr>
+		<td>是否自动换行</td>
+		<td>
+			<ul>
+				<li>GridView
+					<ul>
+						<li>Apperance.HeaderPanel.TextOptions.WorkWrap: 设为 Wrap 即可自动换行</li>
+						<li>ColumnPanelRowHeight: 设定标题栏高度</li>
+					</ul>
+				</li>
+			</ul>
+		</td>
+	</tr>
+	<tr>
+		<td rowspan="2" class="first_class">分组栏</td>
+		<td rowspan="2" class="second_class">显示控制</td>
+		<td>是否显示</td>
+		<td>
+			<ul>
+				<li>GridView.OptionsView.ShowGroupPanel</li>
+			</ul>
+		</td>
+	</tr>
+	<tr>
+		<td>显示文本</td>
+		<td>
+			<ul>
+				<li>GridView.GroupPanelText</li>
+			</ul>
+		</td>
+	</tr>
+	</tbody>
+</table>
+<h2>分组</h2>
+<h3>分组栏(Group Panel)</h3>
+<p>通过 GridView.OptionsView.ShowGroupPanel 属性控制其是否显示</p>
+<p>通过 GridView.GroupPanelText 属性控制其显示文本的内容，默认为：Drag a column header here to group by that column</p>
+<h3>控制</h3>
+<p>通过 GridView.OptionsCustomization.AllowGroup 属性设置其是否支持分组操作，如果设为 false，即使分组栏显示，你仍然不能通过拖动列头至分组栏来分组。</p>
+<h1>数据源</h1>
+<h2>Overview</h2>
+<h3>设置</h3>
+<p>通过 GridControl.DataSource 属性可设置其数据源。凡实现 System.ComponentModel.IBindingList 的接口的对象均可作为其数据源。</p>
+<p>不过，作为 IBindingList 的成员对象（例如, DataTable 的成员对象为 DataRow），可选择性的实现如下接口：</p>
+<ul>
+	<li>IEditableObject：支持编辑、取消编辑、提交编辑的功能</li>
+	<li>IDataErrorInfo：支持数据验证功能，具体参见“数据验证”部分</li>
+</ul>
+<p>C# 中提供的常用数据源对象有：DataTable, List&lt;T&gt;, ArrayList，BindingList&lt;T&gt;。其中，DataRow 实现了 IEditableObject 和 IDataErrorInfo 接口</p>
+
+
+<h3>取值</h3>
+<p>数据源改变后，可通过 GridControl.RefreshDataSource 方法刷新数据源</p>
+<p>初学者经常遇到的一个困惑就是如何从 GridControl 中获取数据源本身的信息。数据源中的列并不一定都显示在表格中，GridView 中提供了 GetRow, GetRowCellValue, GetRowCellDisplayText 这三个方法</p>
+<ul>
+	<li>GetRowCellDisplayText：获取指定单元格显示的文本，这个最简单</li>
+	<li>GetRowCellValue：获取指定单元格的实际值，实际值与显示值时有可能不一样的，GridControl 为实现这一点提供了相当丰富的功能。例如：对于 bool 型值，可能显示文本为 Yes/No。该函数返回类型为 object，开发人员许手工转换为实际值。</li>
+	<li>GetRow：获取指定行对象，返回类型为 object，须手工转换为实际类型。例如，如果数据源类型为 DataTable，返回的类型为 DataRowView（不是 DataRow，切记，可通过 DataRowView.Row 获取对应的 DataRow 对象），如果数据源为 List&lt;T&gt;，则返回的类型为 T</li>
+</ul>
+<p>作为参数，行标识(RowHandle)为 int 型，从0开始计数，我们可通过 GridView.FocusedRowHandle 取焦点所在行，但值得注意的是，对于新插入的行，RowHandle的值为一个很大的负数（-2147483647，即FFFFFFFF）。</p>
+<p>作为参数，列标识可为 GridColumn 对象或对应的 FieldName，</p>
+<h2>BindingList&lt;T&gt;</h2>
+<h3>Overview</h3>
+<p>DevExpress 中的实例使用CollectionBase作为自定义IBindingList实现的基类。实际上，使用BindingList&lt;T&gt;更加简单。</p>
+<p>BindingList对于POJO类型没有要求，不需要实现某些特定的接口。但要注意，需绑定到Grid的字段，必须声明为Property（有getter方法）</p>
+<h3>AddNewCore</h3>
+<p>每当在Grid中新加一行时，BindingList&lt;T&gt;会自动创建一个对象并加到List中。由于调用的是无参构造函数，因此如果需要对新建对象进行初始化，需重载AddNewCore方法，示例代码如下：</p>
+<pre>class TestPojo
+{
+	public string Id { get; set; }
+}
+
+class TestPojoList : BindingList&lt;TestPojo&gt;
+{
+	protected override object AddNewCore()
+	{
+		TestPojo pojo = base.AddNewCore() as TestPojo;
+		pojo.Id = System.Guid.NewGuid().ToString();
+		return pojo;
+	}
+}</pre>
+<p>有时需要完全重写AddNewCore方法。例如如果需要在生成新行时，加入的对象是子类，示例代码如下：</p>
+<pre>class TestPojo
+{
+	public string Id { get; set; }
+}
+
+class SubTestPojo : TestPojo
+{
+}
+
+class TestPojoList : BindingList&lt;TestPojo&gt;
+{
+	protected override object AddNewCore()
+	{
+		SubTestPojo pojo = new SubTestPojo();
+		pojo.Id = System.Guid.NewGuid().ToString();
+		this.Items.Add(pojo);
+		return pojo;
+	}
+}</pre>
+<h2>复杂数据类型</h2>
+<h3>显示图片</h3>
+<pre>DataTable tb = new DataTable();
+DataColumn col = tb.Columns.Add(&quot;img&quot;, typeof(byte[]));   //一定要显式声明类型
+DataColumn co2 = tb.Columns.Add(&quot;txt&quot;, typeof(string));			
+
+Stream fs = File.OpenRead(@&quot;C:\file.png&quot;);
+Image img = Image.FromStream(fs);
+DataRow row = tb.NewRow();
+MemoryStream ms = new MemoryStream();
+img.Save(ms, ImageFormat.Jpeg);
+ms.Seek(0, SeekOrigin.Begin);
+byte[] buf = new byte[ms.Length];
+ms.Read(buf, 0, buf.Length);
+row[0] = buf;
+row[1] = &quot;1\r\n2\r\n3&quot;;
+tb.Rows.Add(row);
+this.gridControl1.DataSource = tb;</pre>
+<h1>布局</h1>
+<h2>多行式表格</h2>
+<p>即一条记录在表格中占用多行</p>
+<h2>单元格输入风格</h2>
+<p>可确定单元格风格为：</p>
+<ul>
+  <li>字符串（普通）</li>
+  <li>货币</li>
+  <li>日期</li>
+  <li>检查框</li>
+  <li>图片</li>
+  <li>数字框（带上下箭头）</li>
+  <li>格式化字符串</li>
+  <li>单选框</li>
+  <li>下拉框</li>
+</ul>
+<h1>自定义</h1>
+<h2>自定义排序</h2>
+<h3>属性设置</h3>
+<p style="font-weight:bold">GridColumn </p>
+<ul>
+	<li>SortMode: DevExpress.XtraGrid.ColumnSortMode.Custom</li>
+</ul>
+<h3>事件</h3>
+<p style="font-weight:bold">GridView </p>
+<ul>
+	<li>CustomColumnSort: 关键在于 DevExpress.XtraGrid.Views.Base.CustomColumnSortEventArgs 型参数的设置，主要有如下两个:</li>
+	<ul>
+		<li>Handled: 设为 true 表示已被处理，取代默认排序规则</li>
+		<li>Result: 表示比较结果，大于零表示“大于”，小于零表示“小于”，等于零表示“等于”</li>
+	</ul>
+	还有如下属性值得注意
+	<ul>
+		<li>Column: 正在比较的列</li>
+		<li>ListSourceRowIndex1, ListSourceRowIndex2: 正在比较的两行</li>
+	</ul>
+</ul>
+<h3>示例</h3>
+<pre>private void viewTranche_CustomColumnSort(object sender, DevExpress.XtraGrid.Views.Base.CustomColumnSortEventArgs e)
+{
+	DataView tb = e.Column.View.DataSource as DataView;
+	if (e.Column.FieldName == &quot;Tenor&quot;)
+	{
+		e.Handled = true;
+		int t1 = 0, t2 = 0;
+		if (tb[e.ListSourceRowIndex1][&quot;TenorInDays&quot;] != DBNull.Value)
+			t1 = (int)tb[e.ListSourceRowIndex1][&quot;TenorInDays&quot;];
+
+		if (tb[e.ListSourceRowIndex2][&quot;TenorInDays&quot;] != DBNull.Value)
+			t2 = (int)tb[e.ListSourceRowIndex2][&quot;TenorInDays&quot;];
+
+		e.Result = Comparer.Default.Compare(t1, t2);
+	}
+}</pre>
+<h1>内嵌控件</h1>
+<p>内嵌控件是指嵌在单元格中的控件。通过使用内嵌控件，可以在单元各中显示更丰富的内容，以及实现更灵活的控制，例如可以点击一个单元格时出现一个下拉框，或图形选择框，等等。</p>
+<h2>添加内嵌控件</h2>
+
+<h2>内嵌控件与普通控件的关系</h2>
+<p>内嵌控件的名字通常是普通控件的名字加上RepositoryItem，我们以LookupEdit控件为例说明两者之间的关系。</p>
+<p>LookupEdit对应的内嵌控件就是RepositoryItemLookupEdit。如果注意观察一下，typeof(RepositoryItemLookupEdit)与typeof(LookupEdit.Properties)是相同的。</p>
+<p>我们可以为RepositoryItemLookupEdit控件定义事件，大多数事件都有 sender 参数指示发送对象。我们察看一下它的 Type，会发现它实际为 LookupEdit 对象，而不是 RepositoryItemLookupEdit 对象。这说明在处于编辑状态时，会以预定义的 RepositoryItemLookupEdit 为模板重新创建一个新的 LookupEdit 对象用于编辑功能。换言之，我们在事件中对 LookupEdit 进行修改，并不影响 RepositoryItemLookupEdit 的属性。以最常用的 EditValueChanged 事件为例，当单元格未触发该事件时，使用 RepositoryItemLookupEdit 的属性来完成显示，但当该事件被触发后，则是用新创建的 LookupEdit 来完成该事件相应的操作。</p>
+<p>这个特性给了我们很大的方便，下面是几个事例：</p>
+<p><b>事例一：Grid 中有两列，第一列表示省，第二列表示该省辖下的市，均使用 LookupEdit 作为输入控件。</b></p>
+<p>最合理的做法当然是选定某省后，第二列的下拉列表中直显示该省辖下的市。因此，使用全部的市作为第二列 RepositoryItemLookupEdit 的 DataSource，以确保所有的值均可正常显示。但在其 Enter 事件中，重新定义事件相应 LookupEdit 的 DataSource 为前列设定省的下辖市。</p>
+<h2>内嵌PopupContainerEdit的特殊处理</h2>
+<ol>
+    <li>在QueryPopup事件中获取当前行对象</li>
+    <li>在QueryResultValue/ClosedUp事件中判断当前行对象是否为null，若为null则需手工创建对象并加入DataSource</li>
+</ol>
+<pre>private void Form1_Load(object sender, EventArgs e)
+{
+	DataTable tb = new DataTable();
+	tb.Columns.Add(&quot;col1&quot;, typeof(string));
+	tb.Columns.Add(&quot;col2&quot;, typeof(string));
+	tb.Columns.Add(&quot;col3&quot;, typeof(string));
+	this.gridControl1.DataSource = tb;
+}
+
+DataRow EditingRow;
+
+private void repositoryItemPopupContainerEdit1_QueryPopUp(object sender, CancelEventArgs e)
+{
+	this.EditingRow = null;
+	DataRowView rowView = this.gridView1.GetRow(this.gridView1.FocusedRowHandle) as DataRowView;
+	if (rowView != null)
+		this.EditingRow = rowView.Row;
+}
+
+private void repositoryItemPopupContainerEdit1_CloseUp(object sender, DevExpress.XtraEditors.Controls.CloseUpEventArgs e)
+{
+	string txt1 = this.textEdit1.Text;
+	string txt2 = this.textEdit2.Text;
+
+	DataTable tb = this.gridControl1.DataSource as DataTable;
+	if (this.EditingRow == null)
+	{
+		DataRow newRow = tb.NewRow();
+		tb.Rows.Add(newRow);
+		this.EditingRow = newRow;
+		this.gridView1.FocusedRowHandle = this.gridView1.RowCount - 2;
+	}
+
+	this.EditingRow[&quot;col1&quot;] = txt1 + &quot;-&quot; + txt2;
+	e.AcceptValue = true;
+	e.Value = txt1 + &quot;-&quot; + txt2;
+}</pre>
+<p><a href="sample/Popup_Row_Test.zip">完整示例</a></p>
+<h2>内嵌CheckedComboBoxEdit的特殊处理</h2>
+<p>在新增行，当CheckedComboBoxEdit控件关闭时，即使没有选择任何项，仍然会在grid中添加新行。对其CloseUp事件添加如下代码可避免该问题：</p>
+<pre>private void repositoryItemCheckedComboBoxEdit1_CloseUp(object sender, DevExpress.XtraEditors.Controls.CloseUpEventArgs e)
+{
+    if (this.gridView1.GetRow(this.gridView1.FocusedRowHandle) == null && string.IsNullOrEmpty(Convert.ToString(e.Value)))
+    {
+        e.AcceptValue = false;
+    }
+}</pre>
+<h1>操作</h1>
+<h2>删除行</h2>
+<p>调用 GridView.DeleteRow(int rowHandle) </p>
+<p>调用该操作后，会同步删除数据源中的相应记录。如 DataTable.Rows, List.Item</p>
+<h1>Group</h1>
+<h2>Appearance Related</h2>
+<img alt="picture not found!" src="img/group_appearance.bmp" />
+<ul>
+    <li>A: OptionsView.ShowGroupExpandCollapseButtons, 是否显示展开/关闭图标</li>
+    <li>B: LevelIndent, 前置空白宽度</li>
+    <li>C: GroupFormat, 显示格式，默认为{0}: [#image]{1} {2}</li>
+</ul>
+<h2>RowHandle of Group Row</h2>
+<img alt="Picture not found!" src="img/group_row_handle.bmp" />
+<h2>判断某行是否为Group Row</h2>
+<pre>view.IsGroupRow(rowHandle);</pre>
+<h2>获取Group Row数量</h2>
+<p>无直接属性，需根据数据源判断。</p>
+<h2>获取Group Row对象</h2>
+<pre>for(int i = 1; i <= view.GroupCount; i++)
+{
+    object rowObj = view.GetRow(0 - i);
+}</pre>
+<h2>获取Group的展开状态</h2>
+<pre>view.GetRowExpanded(rowHandle)</pre>
+<h2>展开Group</h2>
+<pre>view.ExpandGroupRow(rowHandle);      //展开某行
+view.ExpandAllGroups();              //展开所有行</pre>
+<h2>折叠Group</h2>
+<pre>view.CollapseGroupRow(rowHandle);    //折叠某行
+view.CollapseAllGroups();            //折叠所有行</pre>
+<h1>Skill</h1>
+<h2>允许用户拖动列，但不能将列删除</h2>
+<pre>private void gridview1_DragObjectOver(object sender, DevExpress.XtraGrid.Views.Base.DragObjectOverEventArgs e)
+{
+    GridColumn column = e.DragObject as GridColumn;
+    if (column != null && e.DropInfo.Index < 0)
+    {
+        e.DropInfo.Valid = false;
+    }
+}</pre>
+<h1>实例</h1>
+<h2>h.100.1 同步单元格数据</h2>
+<p><b>Description: Grid 中有两列，当第一列发生改变时,同步改变第二列的显示。</b></p>
+<p><b>点评：</b>从直观上看很容易，但比较 tricky 的是对于新增行的处理，需要利用 GridView.InitNewRow 实践对新增行进行特别处理，示例代码如下所示：</p>
+<pre>
+private void Form1_Load(object sender, EventArgs e)
+{
+	DataTable tb = new DataTable();
+	tb.Columns.Add(&quot;col1&quot;, typeof(int));
+	tb.Columns.Add(&quot;col2&quot;, typeof(int));
+
+	DataTable tb1 = new DataTable();
+	tb1.Columns.Add(&quot;id&quot;, typeof(int));
+	tb1.Columns.Add(&quot;name&quot;, typeof(string));
+	tb1.Rows.Add(new object[] { 1, &quot;abc&quot; });
+	tb1.Rows.Add(new object[] { 2, &quot;bbb&quot; });
+
+	this.gridControl1.DataSource = tb;
+	this.repositoryItemLookUpEdit1.DataSource = tb1;
+	this.repositoryItemLookUpEdit2.DataSource = tb1;
+}
+
+private object NewValue;
+private void gridView1_CellValueChanging(object sender, DevExpress.XtraGrid.Views.Base.CellValueChangedEventArgs e)
+{
+	object a = this.gridView1.GetRow(e.RowHandle);
+	if (a == null)
+	{
+		NewValue = e.Value;
+		return;
+	}
+	if (e.Column == this.gridColumn1)
+	{
+		this.gridView1.SetRowCellValue(e.RowHandle, this.gridColumn2, e.Value);
+	}
+}
+
+private void gridView1_InitNewRow(object sender, DevExpress.XtraGrid.Views.Grid.InitNewRowEventArgs e)
+{
+	object value = NewValue;
+	this.gridView1.SetRowCellValue(e.RowHandle, this.gridColumn2, value);
+}</pre>
+<p>&nbsp;</p>
+
+</body>
+</html>

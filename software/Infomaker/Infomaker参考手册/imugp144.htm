@@ -1,0 +1,164 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+Where you use expressions </TITLE>
+</HEAD>
+<BODY>
+<A NAME="CAIDCCEB"></A><h1>Where you use expressions </h1>
+<A NAME="TI5611"></A><p>An InfoMaker expression is a combination of data, operators,
+and functions that, when evaluated, results in a value. An expression
+can include column names, operators, InfoMaker functions, and constants
+such as numbers and text strings. </p>
+<A NAME="TI5612"></A><p>For information about InfoMaker functions
+that you can use in expressions, see <A HREF="imugp148.htm#BFCDFAJD">"Using DataWindow
+expression and InfoMaker functions"</A>, or look up the function you want
+in online Help. </p>
+<A NAME="TI5613"></A><p>In InfoMaker, you use expressions in these ways:</p>
+<A NAME="TI5614"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI5615"></A>In this painter</th>
+<th align="left" valign=bottom><A NAME="TI5616"></A>Expressions are used in</th>
+</tr>
+<tr><td valign=top><A NAME="TI5617"></A>Report painter </td>
+<td valign=top><A NAME="TI5618"></A><A NAME="TI5619"></A>
+<ul>
+<li class=fi>Computed
+fields</li>
+<li class=ds>Conditional expressions for property values</li>
+<li class=ds>Filters</li>
+<li class=ds>Sorting</li>
+<li class=ds>Series and values in graphs</li>
+<li class=ds>Columns, rows, and values in crosstabs
+</li>
+</ul>
+</td>
+</tr>
+<tr><td valign=top><A NAME="TI5620"></A>Form painter </td>
+<td valign=top><A NAME="TI5621"></A><A NAME="TI5622"></A>
+<ul>
+<li class=fi>Computed
+fields</li>
+<li class=ds>Conditional expressions for property values</li>
+<li class=ds>Validation rules
+</li>
+</ul>
+</td>
+</tr>
+<tr><td valign=top><A NAME="TI5623"></A>Database painter</td>
+<td valign=top><A NAME="TI5624"></A>Validation rules</td>
+</tr>
+</table>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Other types of expressions you use</span> <A NAME="TI5625"></A>You also use expressions in Quick Select, SQL Select, and
+the Query painter to specify selection criteria, and in SQL Select
+and the Query painter to create computed columns. In these painters
+you are using SQL operators and DBMS-specific functions, not InfoMaker operators
+and functions, to create expressions. </p>
+<A NAME="TI5626"></A><p>Some of the specific places where you use expressions are
+described here. </p>
+<A NAME="TI5627"></A><h4>In computed fields</h4>
+<A NAME="TI5628"></A><p>Expressions for computed fields can evaluate to any value.
+The data type of the expression becomes the data type of the computed
+field:</p>
+<A NAME="TI5629"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI5630"></A>Expression</th>
+<th align="left" valign=bottom><A NAME="TI5631"></A>Description</th>
+</tr>
+<tr><td valign=top><A NAME="TI5632"></A>Today ( )</td>
+<td valign=top><A NAME="TI5633"></A>Displays the date using the Today function</td>
+</tr>
+<tr><td valign=top><A NAME="TI5634"></A>Salary/12</td>
+<td valign=top><A NAME="TI5635"></A>Computes the monthly salary</td>
+</tr>
+<tr><td valign=top><A NAME="TI5636"></A>Sum (Salary for group 1)</td>
+<td valign=top><A NAME="TI5637"></A>Computes the salary for the first group
+using the Sum aggregate function</td>
+</tr>
+<tr><td valign=top><A NAME="TI5638"></A>Price*Quantity</td>
+<td valign=top><A NAME="TI5639"></A>Computes the total cost</td>
+</tr>
+</table>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Expressions for graphs and crosstabs</span> <A NAME="TI5640"></A>You can use similar expressions for series and values in graphs
+and for columns, rows, and values in crosstabs.</p>
+<A NAME="TI5641"></A><h4>In filters</h4>
+<A NAME="TI5642"></A><p>Filter expressions are boolean expressions that must evaluate
+to TRUE or FALSE:</p>
+<A NAME="TI5643"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI5644"></A>Expression</th>
+<th align="left" valign=bottom><A NAME="TI5645"></A>Description</th>
+</tr>
+<tr><td valign=top><A NAME="TI5646"></A>Academics = "*****"
+AND Cost = "$$$"</td>
+<td valign=top><A NAME="TI5647"></A>Displays data only for colleges with
+both a 5-star academic rating and a $$$ cost
+rating</td>
+</tr>
+<tr><td valign=top><A NAME="TI5648"></A>Emp_sal &lt; 50000</td>
+<td valign=top><A NAME="TI5649"></A>Displays data for employees with salaries
+less than $50,000</td>
+</tr>
+<tr><td valign=top><A NAME="TI5650"></A>Salary &gt; 50000 AND Dept_id BETWEEN
+400 AND 700</td>
+<td valign=top><A NAME="TI5651"></A>Displays data for employees in departments
+400, 500, 600, and 700 with salaries greater than $50,000</td>
+</tr>
+<tr><td valign=top><A NAME="TI5652"></A>Month(Bdate) = 9 OR Month(Bdate) = 2</td>
+<td valign=top><A NAME="TI5653"></A>Displays data for people with birth dates
+in September or February</td>
+</tr>
+<tr><td valign=top><A NAME="TI5654"></A>Match ( Lname, "[ ^ABC ]"
+)</td>
+<td valign=top><A NAME="TI5655"></A>Displays data for people whose last name
+begins with A, B, or C</td>
+</tr>
+</table>
+<A NAME="TI5656"></A><h4>In validation rules for table columns</h4>
+<A NAME="TI5657"></A><p>Validation rules are boolean expressions that compare column
+data with values and that use relational and logical operators.
+When the validation rule evaluates to FALSE, then the data in the
+column is rejected. </p>
+<p><b>In the Form painter</b>   When you specify a validation rule in the Form painter, you
+want to validate the newly entered value. To refer to the newly
+entered value, use the GetText function. Because GetText returns
+a string, you also need a data conversion function (such as Integer
+or Real) if you compare the value to other types of data.</p>
+<A NAME="TI5658"></A><p>If you include the column name in the expression, you get
+the value that already exists for the column instead of the newly
+entered value that needs validating. </p>
+<p><b>In the Database painter</b>   When you specify the validation rule in the Database painter,
+you are defining a general rule that can be applied to any column.
+Use @placeholder to stand for the newly entered value.
+The name you use for @placeholder is irrelevant--you
+can assign the rule to any column that has a data type appropriate
+for the comparison.</p>
+<A NAME="TI5659"></A><p>When you define a form, a validation rule assigned to
+a column is brought into the form and converted to form syntax. @placeholder
+is converted to GetText and the appropriate data type conversion
+function.</p>
+<p><b>Other columns in the rule</b>   You can refer to values in other columns for the current row
+by specifying their names in the validation rule:</p>
+<A NAME="TI5660"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI5661"></A>Expression in Database painter</th>
+<th align="left" valign=bottom><A NAME="TI5662"></A>Expression in Form painter</th>
+<th align="left" valign=bottom><A NAME="TI5663"></A>Description</th>
+</tr>
+<tr><td valign=top><A NAME="TI5664"></A>@column &gt;= 10000</td>
+<td valign=top><A NAME="TI5665"></A>Integer(GetText())&gt;= 10000</td>
+<td valign=top><A NAME="TI5666"></A>If a user enters a salary below $10,000,
+an error message displays</td>
+</tr>
+<tr><td valign=top><A NAME="TI5667"></A>@column IN (100, 200, 300)</td>
+<td valign=top><A NAME="TI5668"></A>Integer(GetText()) IN (100, 200, 300)</td>
+<td valign=top><A NAME="TI5669"></A>If a user does not enter a department
+ID of 100, 200, or 300, an error message displays</td>
+</tr>
+<tr><td valign=top><A NAME="TI5670"></A>@salary &gt; 0</td>
+<td valign=top><A NAME="TI5671"></A>Long(GetText()) &gt; 0</td>
+<td valign=top><A NAME="TI5672"></A>If a user does not enter a positive number,
+an error message displays</td>
+</tr>
+<tr><td valign=top><A NAME="TI5673"></A>Match(@disc_price, "^[0-9]+$")
+and @disc_price &lt; Full_Price</td>
+<td valign=top><A NAME="TI5674"></A>Match(GetText( ), <br> "^[0-9]+$")
+and Real(GetText()) &lt; Full_Price</td>
+<td valign=top><A NAME="TI5675"></A>If a user enters any characters other
+than digits, or the resulting number is greater than or equal to
+the value in the Full_Price column, an error message displays</td>
+</tr>
+</table>
+

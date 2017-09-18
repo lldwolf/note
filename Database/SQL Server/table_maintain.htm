@@ -1,0 +1,273 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<title>对表的维护</title>
+<script language="javascript" src="css.js"></script>
+</head>
+
+<body>
+<h1>第N章 对表的维护</h1>
+<hr>
+<h2><a href="#create_table">N.1 创建表</a></h2>
+<h2><a href="#alter_table">N.2 修改表</a></h2>
+<h2><a href="#drop_table">N.3 删除表</a></h2>
+<h2><a href="#program">N.99 实用程序</a> </h2>
+<h3>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#table_rec_count">N.99.1 统计各表的记录数</a></h3>
+<h2><a href="#systable">N.100 表的各种参数对应的系统表或视图</a></h2>
+<hr>
+<h2><a name="create_table"></a>N.1 创建表</h2>
+<pre>--创建不带任何约束的表
+create table test_table(a int);
+
+--创建单主键约束的表
+create table test_table(a int primary key);
+
+--创建复合主键约束的表
+create table test_table(a int, b int, constraint pk_test_table primary key (a, b));
+
+--创建带外键约束的表
+create table table1(table1_id int primary key);
+create table table2(table2_id int primary key, table1_id int, 
+	constraint fk_table2_table1 foreign key (table1_id) references table1(table1_id));
+--或省略外键的数据类型
+create table table2(table2_id int primary key, table1_id, 
+	constraint fk_table2_table1 foreign key (table1_id) references table1(table1_id));
+	
+--创建非空约束
+create table test_table(a int not null);
+
+--创建默认值约束
+create table test_table(a int default 10);</pre>
+<p>各种约束集中于一列时，书写顺序为：</p>
+<p>默认值约束 - 非空约束 - 主键约束 </p>
+<p><img src="images/note.jpg" width="20" height="20">注意：表名最长字符串为128，中英文不限，即最长可以为128个汉字，也可以也128个英文字母。</p>
+<h2><a name="alter_table"></a>N.2 修改表</h2>
+<h3>N.2.1 修改约束</h3>
+<h4>N.2.1.1 主键约束</h4>
+<pre>--创建测试表
+create table test_table(a int not null, b int not null);
+
+--创建主键约束
+alter table test_table add (primary key(a, b));
+
+--删除主键约束
+alter table test_table drop primary key cascade;
+
+--创建指定名称的主键约束
+alter table test_table add constraint pk_test_table primary key(a, b)
+
+--删除指定名称的主键约束
+alter table test_table drop constraint pk_test_table</pre>
+<h4>N.2.1.2 外键约束</h4>
+<pre>--创建测试表
+create table table1(table1_id int primary key, table1_value varchar(10));
+create table table2(table2_id int primary key, table1_id int not null, table2_value varchar(10));
+
+--创建指定名称的外键约束
+alter table table2 add constraint fk_table2_table1 foreign key (table1_id) references table1(table1_id);
+
+--创建默认名称的外键约束
+alter table table2 add foreign key (table1_id) references table1(table1_id)
+
+--删除指定名称的外键约束
+alter table table2 drop constraint fk_table2_table1</pre>
+<h3>N.2.2 修改列</h3>
+<h4>N.2.2.1 添加列</h4>
+<pre>alter table test_table add new_col int </pre>
+<h4>N.2.2.2 修改列 </h4>
+<pre>create table test_table(a int)
+--修改列的数据类型
+alter table test_table alter column a varchar(10)
+
+--修改数据类型时同时加上约束
+alter table test_table alter column a varchar(10) not null
+
+--修改列名
+sp_rename 'test_table.test_table_value', 'test_table_value1', 'column'</pre>
+<h4>N.2.2.3 删除列</h4>
+<pre>alter table test_table drop column new_col </pre>
+<h3>N.2.3 修改表名</h3>
+<pre>sp_rename @objname='旧表名', @newname='新表名', @objtype='object' </pre>
+<h2><a name="drop_table"></a>N.3 删除表</h2>
+<pre>--删除表
+drop table test_table</pre>
+<h2><a name="program"></a>N.99 实用程序 </h2>
+<h3><a name="table_rec_count"></a>N.99.1 统计各表的记录数</h3>
+<pre>if exists (select * from tempdb..sysobjects where xtype = 'U' and name = 'temp_table_list')
+begin
+	drop table tempdb..temp_table_list
+end
+
+create table tempdb..temp_table_list(table_name varchar(40), record_count int )
+
+declare @rec_up_count int
+declare @table_name varchar(40)
+
+declare cur_table cursor local forward_only for
+select name from sysobjects where xtype = 'U'
+
+declare @sql nvarchar(1000)
+
+open cur_table
+
+fetch next from cur_table into @table_name
+while @@fetch_status = 0
+begin
+	set @sql = N'insert into tempdb..temp_table_list(table_name, record_count) '  + char(13) + char(10)
+		 + N'select ''' + @table_name + N''', count(*) from ' + @table_name
+	exec sp_executesql @sql
+	fetch next from cur_table into @table_name
+end
+
+close cur_table
+deallocate cur_table
+
+select * from tempdb..temp_table_list
+</pre>
+<h2><a name="systable"></a>N.100 表的各种参数对应的系统表或视图</h2>
+<table width="95%"  cellspacing="0" cellpadding="0">
+  <tr>
+    <th width="10%">参数</th>
+    <th width="25%">对应表/视图</th>
+    <th width="65%">说明</th>
+  </tr>
+  <tr>
+    <td>表名</td>
+    <td>sysobects</td>
+    <td>xtype = 'U'的记录</td>
+  </tr>
+  <tr>
+    <td>列信息</td>
+    <td>&nbsp;</td>
+    <td><pre>select b.name, b.xtype, b.collation, b.length, b.isnullable, b.prec, b.scale, 
+  c.name as data_type_name, 
+  isnull((select [text] from syscomments where id = b.cdefault), '(null)') default_value,
+  columnproperty(a.id, b.name, 'isidentity') as is_identity,
+  case columnproperty(a.id, b.name, 'isidentity') 
+  	when 1 then IDENT_SEED('用户名.表名') 
+	else 0 
+  end as identity_seed,
+  case columnproperty(a.id, b.name, 'isidentity') 
+  	when 1 then ident_incr('用户名.表名') 
+	else 0 
+  end as identity_increment
+from sysobjects a
+  inner join syscolumns b on b.id = a.id
+  inner join systypes c on c.xtype = b.xtype and c.usertype = b.usertype
+  inner join sysusers d on d.uid = a.uid
+where d.name = '用户名' and a.name = '表名'
+order by b.colid</pre></td>
+  </tr>
+  <tr>
+    <td>主键约束</td>
+    <td>sysobjects<br>
+      sysindexes<br>
+      sysindexkeys</td>
+    <td><pre>sp_pkeys '表名' </pre>
+		或
+	<pre>--创建测试表，使用两列作复合主键
+create table test_table(a int, b int, constraint pk_test_table primary key(a,b))
+
+--查找主键列
+select a.*
+from syscolumns a
+  inner join sysobjects b on b.id = a.id and b.xtype = 'U'
+  inner join sysusers c on b.uid = c.uid
+  inner join sysobjects d on d.xtype = 'PK' and d.parent_obj = b.id
+  inner join sysindexes e on e.id = b.id and e.name = d.name
+  inner join sysindexkeys f on f.id = b.id and f.indid = e.indid and f.colid = a.colid
+where c.name = 'dbo' and b.name = 'test_table'</pre></td>
+  </tr>
+  <tr>
+    <td>默认值约束</td>
+    <td>sysobjects<br>
+      syscolumns
+      <br>
+    syscomments</td>
+    <td><pre>select a.text
+from syscomments a
+  inner join sysobjects b on b.id = a.id and b.xtype = 'D'
+  inner join sysobjects c on c.id = b.parent_obj and c.xtype = 'U' and c.name = '表名'
+  inner join syscolumns d on d.id = c.id and d.colid = a.colid and d.name = '列名'
+</pre></td>
+  </tr>
+  <tr>
+    <td>外键约束</td>
+    <td>&nbsp;</td>
+    <td>1、使用系统存储过程
+	<PRE>sp_fkeys '表名'</PRE>
+	2、使用系统表
+	<pre>select c.constid, b.name f_table, d.name f_col, e.name ref_table, f.name ref_col
+from sysusers a 
+  inner join sysobjects b on b.uid = a.uid and b.name = '表名'
+  inner join sysforeignkeys c on c.fkeyid = b.id
+  inner join syscolumns d on d.id = b.id and d.colid = c.fkey
+  inner join sysobjects e on e.id = c.rkeyid
+  inner join syscolumns f on f.id = e.id and f.colid = c.rkey
+where a.name = '用户名'</pre>
+</td>
+  </tr>
+  <tr>
+    <td>标识列</td>
+    <td>&nbsp;</td>
+    <td><pre>--获取列是否为标识列
+select columnproperty(a.id, b.name, 'isidentity') as is_identity
+from sysobjects a
+  inner join syscolumns b on b.id = a.id
+where a.name = '表名' and b.name = '列名'
+
+--获取标识列的种子值和自增量
+select ident_seed('用户名.表名') as identity_seed, i
+       dent_incr('用户名.表名') as identity_increment</pre></td>
+  </tr>
+  <tr>
+    <td>取表的所有列</td>
+    <td>&nbsp;</td>
+    <td><pre>select a.name table_name, c.name column_name, d.name data_type, c.length column_length, 
+       c.prec [precision], c.scale, c.isnullable nullable
+from sysobjects a
+  inner join sysusers b on a.uid = b.uid and b.name = '用户名'
+  inner join syscolumns c on c.id = a.id
+  left join systypes d on d.xtype = c.xtype and d.usertype = c.usertype
+where a.xtype = 'U' and a.name = '表名'
+order by a.name, c.colid</pre>
+看到了网页写的一个更狠的写法
+<pre>SELECT 表名=case when a.colorder=1 then d.name else '' end,
+       表说明=case when a.colorder=1 then isnull(f.value,'') else '' end,
+       字段序号=a.colorder,
+       字段名=a.name,
+       标识=case when COLUMNPROPERTY( a.id,a.name,'IsIdentity')=1 then '√'else '' end,
+       主键=case when exists
+	     (SELECT 1 FROM sysobjects 
+	       where xtype='PK' and name in 
+		     (SELECT name FROM sysindexes 
+			   WHERE indid in
+			     (SELECT indid FROM sysindexkeys WHERE id = a.id AND colid=a.colid))) 
+			then '√' else '' end,
+       类型=b.name,
+       占用字节数=a.length,
+       长度=COLUMNPROPERTY(a.id,a.name,'PRECISION'),
+       小数位数=isnull(COLUMNPROPERTY(a.id,a.name,'Scale'),0),
+       允许空=case when a.isnullable=1 then '√'else '' end,
+       默认值=isnull(e.text,''),
+       字段说明=isnull(g.[value],'')
+   FROM syscolumns a 
+       left join systypes b on a.xtype=b.xusertype 
+       inner join sysobjects d on a.id=d.id and d.xtype='U' and d.name<>'dtproperties'
+       left join syscomments e on a.cdefault=e.id 
+       left join sysproperties g on a.id=g.id  and a.colid=g.smallid 
+       left join sysproperties f on d.id=f.id and f.smallid=0 
+       where d.name='component'
+   Order by a.id,a.colorder</pre></td>
+  </tr>
+</table>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<script language="javascript" src="index.js"></script>
+<p>&nbsp;</p>
+</body>
+</html>

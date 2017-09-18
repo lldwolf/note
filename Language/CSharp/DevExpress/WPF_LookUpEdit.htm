@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>TextEdit</title>
+<script type="text/javascript" src="../../../mylib/js/css.js"></script>
+</head>
+<body>
+<p id="title">LookUpEdit</p>
+
+<h1>Basic Info</h1>
+<h1>Skill</h1>
+<h2>允许内嵌的 LookupEdit 输入 null (允许删除以前的选择)</h2>
+<p>LookupEdit Setup:</p>
+<ul>
+	<li>AllowNullInput: True</li>
+	<li>TextEditStyle: Standard</li>
+</ul>
+<p>Necessary method & event:</p>
+<ul>
+	<li>LookupEdit.CloseUp Event</li>
+	<pre>this.gridView1.ValidateEditor();</pre>
+	<li>LookupEdit.ProcessNewValue Event</li>
+	<pre>
+int rowHandle = gridView1.FocusedRowHandle;
+GridColumn column = gridView1.FocusedColumn;
+object value = (sender as LookUpEdit).Properties.GetKeyValueByDisplayText(e.DisplayValue.ToString());
+
+this.BeginInvoke(new MethodInvoker(delegate
+{
+    gridView1.SetRowCellValue(rowHandle, column, value);
+}));
+
+e.Handled = true;</pre>
+
+</ul>
+<p>Note: The related field type must be nullable</p>
+<h1>Extension</h1>
+
+
+</body>
+</html>

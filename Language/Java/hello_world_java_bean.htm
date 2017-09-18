@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<title>HelloWorld——Java Bean </title>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+<p id="title">HelloWorld——Java Bean </p>
+
+<p>使用一个Java Bean，其中一个属性为Name，例如，其Name值为Peter, 则显示“Hello Peter!”</p>
+<p>关键代码如下：</p>
+<p><strong>Bean 类（PeopleBean.java）</strong></p>
+<pre>package lld.test.helloworld;
+
+public class PeopleBean
+{
+	private String name;
+
+	public String getName()
+	{
+		return name;
+	}
+
+	public void setName(String name)
+	{
+		this.name = name;
+	}
+}</pre>
+<p><strong>JSP(javabean.jsp)</strong></p>
+<pre>&lt;%@ page import=&quot;lld.test.helloworld.PeopleBean&quot; %&gt;
+...
+&lt;body&gt;
+	&lt;jsp:useBean id=&quot;peopleBean&quot; class=&quot;lld.test.helloworld.PeopleBean&quot; scope=&quot;session&quot; /&gt;
+	&lt;jsp:setProperty name=&quot;peopleBean&quot; property=&quot;name&quot; value=&quot;Peter&quot; /&gt;
+	&lt;p&gt;Hello, &lt;jsp:getProperty name=&quot;peopleBean&quot; property=&quot;name&quot; /&gt;&lt;/p&gt;
+&lt;/body&gt;</pre>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+
+</body>
+</html>

@@ -1,0 +1,72 @@
+inherited FrmReadWrite: TFrmReadWrite
+  Caption = 'FrmReadWrite'
+  PixelsPerInch = 96
+  TextHeight = 12
+  object Memo1: TMemo
+    Left = 161
+    Top = 0
+    Width = 527
+    Height = 453
+    Align = alClient
+    TabOrder = 0
+  end
+  object GroupBox1: TGroupBox
+    Left = 0
+    Top = 0
+    Width = 161
+    Height = 453
+    Align = alLeft
+    TabOrder = 1
+    object Button1: TButton
+      Left = 16
+      Top = 32
+      Width = 121
+      Height = 25
+      Caption = 'Read text file'
+      TabOrder = 0
+    end
+    object BtnReadRevLine: TButton
+      Left = 16
+      Top = 80
+      Width = 121
+      Height = 25
+      Caption = 'Write Rev Line'
+      TabOrder = 1
+    end
+    object BtnWritesLines: TButton
+      Left = 16
+      Top = 128
+      Width = 121
+      Height = 25
+      Caption = 'Write Lines'
+      TabOrder = 2
+      OnClick = BtnWritesLinesClick
+    end
+    object BtnReadLines: TButton
+      Left = 16
+      Top = 176
+      Width = 121
+      Height = 25
+      Caption = 'Read lines'
+      TabOrder = 3
+      OnClick = BtnReadLinesClick
+    end
+    object Button5: TButton
+      Left = 16
+      Top = 232
+      Width = 121
+      Height = 25
+      Caption = 'Move Lines Mem'
+      TabOrder = 4
+      OnClick = Button5Click
+    end
+  end
+  object OpenDialog1: TOpenDialog
+    Left = 136
+    Top = 32
+  end
+  object SaveDialog1: TSaveDialog
+    Left = 184
+    Top = 48
+  end
+end

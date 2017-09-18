@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<title>数据库的基本操作在C#中的实现</title>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+<style type="text/css">
+<!--
+.style1 {font-size: large}
+-->
+</style>
+</head>
+
+<body>
+<p id="title">数据库的基本操作在C#中的实现</p>
+
+<h1>前言</h1>
+<p>基本的数据库操作包括如下内容：</p>
+<ol>
+  <li>连接数据库</li>
+  <li>从数据库中执行SQL语句查询，并获取返回的结果</li>
+  <li>将SQL查询的结果集以表格形式在界面上显示</li>
+  <li>在数据库中执行数据库更新语句</li>
+  <li>在SQL语句中使用参数</li>
+  <li>使用事务</li>
+  <li>批量更改数据库内容</li>
+  <li>调用存储过程</li>
+  <li>操作大数据字段</li>
+</ol>
+<h1>连接数据库</h1>
+<p>针对不同类型的数据库，我们使用下面3个类来连接数据库</p>
+<table style="width:95%"  cellspacing="0" cellpadding="0">
+  <tr>
+    <th width="15%">类</th>
+    <th width="20%">命名空间</th>
+    <th width="10%">数据库</th>
+    <th width="55%">连接字符串示例</th>
+  </tr>
+  <tr>
+    <td>SqlConnection</td>
+    <td>System.Data.SqlClient</td>
+    <td>SQL SERVER </td>
+    <td><p>packet size=数据包的大小;user id=用户名;data source=&quot;数据库服务器名&quot;;persist security info=True;initial catalog=数据库名;password=口令;Connection Timeout=连接超时秒数</p>
+      <p>数据包大小默认为4096，是用来与 SQL Server 的实例通讯的网络数据包的大小（以字节为单位）。如果应用程序执行批量复制操作，或者发送或接收大量的<B>文本</B>或<B>图像</B>数据，则使用比默认大小大的数据包可提高效率，因为它可减少网络的读取和写入操作。如果应用程序发送或接收少量信息，则可以将数据包大小设置为 512 字节，该设置足以应付大多数数据传送操作。对于大多数应用程序而言，最好使用默认的数据包大小。<B>PacketSize</B> 可以是 512 和 32767 字节范围内的一个值。如果该值超出了这个范围，就会产生异常。</p>
+    <p>数据库服务器名可以为机器名或IP地址，对于本机数据库，可使用：</p>
+    <ul>
+      <li>.</li>
+      <li>(local)</li>
+      <li>127.0.0.1</li>
+    </ul></td>
+  </tr>
+  <tr>
+    <td>OracleConnection</td>
+    <td>System.Data.OracleClient</td>
+    <td>Oracle</td>
+    <td><p>user id=用户名;data source=ORACLE服务名;password=口令</p>
+    <p>ORACLE服务名就是在ORACLE的OEM中看到的名字</p></td>
+  </tr>
+  <tr>
+    <td>OleDbConnection</td>
+    <td>System.Data.OleDb</td>
+    <td>OLE DB </td>
+    <td><p>连接Access</p>
+      <p>Jet OLEDB:Global Partial Bulk Ops=2;Jet OLEDB:Registry Path=;Jet OLEDB:Database Locking Mode=1;Jet OLEDB:Database Password=;Data Source=&quot;ACCESS数据库文件所在的路径&quot;;Password=;Jet OLEDB:Engine Type=5;Jet OLEDB:Global Bulk Transactions=1;Provider=&quot;Microsoft.Jet.OLEDB.4.0&quot;;Jet OLEDB:System database=;Jet OLEDB:SFP=False;Extended Properties=;Mode=Share Deny None;Jet OLEDB:New Database Password=;Jet OLEDB:Create System Database=False;Jet OLEDB:Don't Copy Locale on Compact=False;Jet OLEDB:Compact Without Replica Repair=False;User ID=Admin;Jet OLEDB:Encrypt Database=False</p>
+      <p>连接Oracle</p>
+      <p>Provider=MSDAORA.1; Data Source=服务名; User Id=用户名; Password=口令; conn.cursorlocation=3</p></td>
+  </tr>
+</table>
+<p>上面几个类连接数据库的方法都是一样的，以SQL SERVER为例：</p>
+<pre class="code" data-type="csharp">SqlConnection conn = new SqlConnection(&quot;连接字符串&quot;);</pre>
+<p><a href="ConnectionStrings.htm" class="style1">更多的连接字符串。</a></p>
+<p><img src="images/note.jpg" width="20" height="20">注意：在使用Oracle 9i + Windows时，在ASP.NE中（WinForm没问题）中使用System.Data.OracleClient访问Oracle数据库时收到如下信息</p>
+<p>System.Data.OracleClient requires Oracle client software version 8.1.7 or greater.</p>
+<p>原因是Oracle 9i Release 2 客户端在安装到Windows的NTFS分区下时的安全认证设置不正确，引起本机的Authenticated Users用户无法看到ORACLE_HOME目录下的内容; 这导致在ASP.NET以Authenticated Users权限使用System.Data.OracleClient连接Oracle数据库时报出以上错误。</p>
+<p>要解决以上问题，只要给Authenticated Users 组加上访问Oracle Home目录的权限即可</p>
+<ul>
+  <li>以Administrator权限登录Windows. </li>
+  <li> 启动Window 资源浏览器找到ORACLE_HOME目录，如C:\Oracle\ora92 </li>
+  <li> 右键弹出菜单，选择该目录共享与安全（Win2000下要点击属性） </li>
+  <li> 点击 “安全” 页签 </li>
+  <li> 在组和用户名称列表中点击“Authenticated Users” 项. </li>
+  <li> 在该用户的权限列表中，将“读取和运行”的选择框置为不选中状态 </li>
+  <li> 再次点击“读取和运行”的选择框，将其设置为选中状态 </li>
+  <li> 点击“高级”按钮并在权限项目中确定“Authenticated Users” 是否拥有“读取并运行”权限并应用于“该文件夹，及子文件夹和文件”. 如果不是，双击这样，并确保权限可以“应用于” “该文件夹，及子文件夹和文件”. 该项非常重要你一定要核查. </li>
+  <li> 点击“确定” 按钮 </li>
+  <li> 重启动, 以使得所有的修改生效.<br>
+  </li>
+</ul>
+<h1>从数据库中执行SQL语句查询，并获取返回的结果</h1>
+<h2>使用DataAdapter</h2>
+<p>针对数据库的不同，使用DataAdapter的派生类SqlDataAdapter、OracleDataAdapter和OleDbAdapter，它们的用法相同，以下以SQL SERVER为例，说明其用法：</p>
+<pre class="code" data-type="csharp">conn.Open();						//conn为SqlConnection对象
+string sql = "select customer_id, customer_name from customers";
+SqlDataAdapter adapter = new SqlDataAdapter(sql, conn);		//第二个参数为数据库连接对象
+DataSet ds = new DataSet();
+adapter.Fill(ds);
+MessageBox.Show(ds.Tables[0].Rows[0]["customer_name"].ToString());	//显示结果集的第一行第二列内容
+conn.Close();</pre>
+<p>可使用<em>DataTable.Rows[行号][列号]</em>来检索结果集，列号可以为数字（表示第几列）或列名字符串。</p>
+<p><img src="images/note.jpg" width="20" height="20">注意：对ACCESS数据库，虽然在其内部是以 * 作为通配符，在使用OLEDB引擎时，还是需要用 % 作为通配符。 </p>
+<h2>使用Command 和 DataReader </h2>
+<p>同样地，针对数据库的不同，Command的派生类为SqlCommand、OracleCommand和OleDbCommand，DataReader的派生类为SqlDataReader、OracleDataReader和OleDbDataReader。以SQL SERVER为例，说明其用法：</p>
+<pre class="code" data-type="csharp">conn.Open();						//conn为SqlConnection对象
+string sql = "select customer_id, customer_name from customers";
+SqlCommand cmd = new SqlCommand(sql, conn);		//第二个参数为数据库连接对象
+SqlDataReader reader = cmd.ExecuteReader();
+try
+{
+	reader.Read();
+	MessageBox.Show(reader[&quot;customer_name&quot;].ToString());	//显示结果集的第一行第二列内容
+}finally
+{
+	reader.Close();
+}
+conn.Close();</pre>
+<p>使用DataReader，要求一定要关闭DataReader，在DataReader关闭前不能再用这个Connection对象作其它数据库操作，因此一定要保证DataReader能够关闭。</p>
+<p>使用Command对象作查询时，一般不像上例一样使用，因为DataReader并不好用，它主要用于如下两方面：</p>
+<ol>
+  <li>使用Command.ExecuteScalar返回单个结果</li>
+  <li>操作大数据量字段，如Oracle下的BLOB类型，SQL SERVER下的Image类型</li>
+</ol>
+<p>有关第二个用途，我会在下面的章节中介绍，下面是第一种用法的代码：</p>
+<pre class="code" data-type="csharp">conn.Open();						//conn为SqlConnection对象
+string sql = "select customer_name, customer_id from customers";
+SqlCommand cmd = new SqlCommand(sql, conn);			//第二个参数为数据库连接对象
+string customer_name = cmd.ExecuteScalar().ToString();		//返回第一行第一列结果
+MessageBox.Show(customer_name);
+conn.Close();</pre>
+<h2>返回大数据量字段</h2>
+<p>对于ORACLE的BLOB、CLOB、LONG RAW或SQL SERVER的IMAGE、TEXT等类型的字段，可用如下方法获取：</p>
+<pre class="code" data-type="csharp">//取数据到一个DataTable中
+DataTable table = ...
+byte[] buf = (byte[])table.Rows[i][j];
+
+//将内容存至一个文件
+FileInfo fi = new FileInfo(@&quot;c:\a.zip&quot;);
+FileStream fs = fi.OpenWrite();
+BinaryWriter bw = new BinaryWriter(fs);
+bw.Write(psr);
+bw.Close();</pre>
+<h1>将SQL查询的结果集与控件相连</h1>
+<p>只要有DataSource属性的控件都可以与数据集相连，以表格方式显示的有DataGrid，显示单行单列的有TextBox、ComboBox等，一般对于表格形式显示的将数据集对象（DataSet、DataTable、DataView）赋给其DataSource属性即可，对于单行单列的属性，还有DisplayMember、ValueMember 和 SelectedValue等属性，具体使用请参看<a href="Component.htm">控件</a>一章。</p>
+<h1>执行数据库更新语句</h1>
+<p>就是像INSERT、UPDATE、DELETE之类的SQL语句，需要使用Command对象，对数据库的不同又分为SqlCommand、OracleCommand和OleDbCommand等。使用Command对象的步骤很简单：</p>
+<ol>
+  <li>创建数据库连接</li>
+  <li>创建一个Command对象，并指定其数据库连接和SQL语句</li>
+  <li>执行其ExecuteNonQuery方法</li>
+</ol>
+<p>示例代码如下：</p>
+<pre class="code" data-type="csharp">//在Northwind的customers表中插入一条记录
+SqlConnection conn = new SqlConnection(&quot;packet size=4096;user id=sa;data source=\&quot;.\&quot;;persist security info=True;
+	initial catalog=Northwind;password=sa&quot;);
+string sql = &quot;&quot;;
+sql = &quot;insert into customers(customerid, companyname, contactname)\r\n&quot;
+	+ &quot;values('LLD', 'AUTO', '刘林栋')&quot;;
+SqlCommand cmd = new SqlCommand(sql, conn);
+cmd.Connection.Open();
+cmd.ExecuteNonQuery();
+cmd.Connection.Close();</pre>
+<h1>在SQL语句中使用参数</h1>
+<h2>序 </h2>
+<p>对应的C#类为SqlParameter、OracleParameter和OleDbParameter，不同的数据库驱动在参数前使用不同的前缀，SQL语句中的参数在ORACLE和SQL SERVER下格式有所不同，ORACLE下SQL语句中的参数以字符“:”开头，SQL SERVER中以字符“@”开头，而OLE DB中使用字符“?”作为占位符且不使用参数名，只能使用索引值在Parameters中进行定位操作（可能SQL SERVER也支持占位符方式）,一个参数主要包括以下几个信息：</p>
+<table style="width:100%"  cellspacing="0" cellpadding="0">
+  <tr>
+    <th width="15%">信息</th>
+    <th width="15%">属性</th>
+    <th width="70%">说明</th>
+  </tr>
+  <tr>
+    <td>参数名</td>
+    <td>ParameterName</td>
+    <td>字符串，在设置该名时，SQL SERVER需要加字符“@”，而ORACLE直接写参数中即可</td>
+  </tr>
+  <tr>
+    <td>数据类型</td>
+    <td>DbType</td>
+    <td>ORACLE下为System.Data.OracleClient.OracleType，SQL SERVER下为System.Data.SqlClient.SqlDbType，这是枚举类型</td>
+  </tr>
+  <tr>
+    <td>方向</td>
+    <td>Direction</td>
+    <td>指示参数是只可输入、只可输出、双向还是存储过程返回值参数。</td>
+  </tr>
+  <tr>
+    <td>数据来源</td>
+    <td>SourceVersion</td>
+    <td>表示参数的值是使用当前值还是原始值，用在Update过程中的UpdateCommand对象</td>
+  </tr>
+  <tr>
+    <td>长度</td>
+    <td>Size</td>
+    <td>数据的长度，以字节为单位，默认值由参数值推导出</td>
+  </tr>
+  <tr>
+    <td>对应的表列名</td>
+    <td>SourceColumn</td>
+    <td>对应的DataTable的列名</td>
+  </tr>
+</table>
+<p><img src="images/note.jpg" width="20" height="20">注意: 对于Oracle，在 SQL 语句或存储过程中使用命名参数时，必须在参数名称前加冒号 (:)。但是，当在代码中的其他地方引用命名参数时（例如，当调用 Add 时），不要在命名参数前加冒号 (:)。Oracle.NET Framework 数据提供程序会自动提供冒号。例如，在语句中，需要这样写：</p>
+<pre class="code" data-type="csharp">select * from customers where customerid = :p_customerid</pre>
+<p>而在代码中添加时，需要这样使用：</p>
+<pre class="code" data-type="csharp">cmd.Parameters.Add(&quot;p_customerid&quot;, 1);</pre>
+<p>还有其它的一些信息，可参考MSDN相关项。</p>
+<p>在下列情况中，需要在SQL语句中使用参数：</p>
+<ol>
+  <li>对于某些INSERT或UPDATE语句，更新的字段数非常多，使用拼装方式写成SQL语句后难以理解和维护，于是对插入值进行参数化</li>
+  <li>调用存储过程，而存储过程有返回参数</li>
+  <li>使用DataAdapter的批量更新功能</li>
+</ol>
+<p>使用参数还有以下附加好处：</p>
+<ol>
+  <li>不用担心参数中的特殊字符，例如，如果参数中有单引号“'”，那么在使用字符串拼装时需要将其处理为转义字符串“''”</li>
+  <li>在SQL SERVER中，可以省略字符串的N前缀，例如：</li>
+  <pre class="code" data-type="csharp">select * from customers where customername = N'姓名'</pre>
+</ol>
+<p><img src="images/note.jpg" width="20" height="20">注意：在设定参数值时的空值不能使用null，而应使用DBNull.Value</p>
+<h2>参数化SQL语句</h2>
+<p>在SQL SERVER中，在NorthWind数据库的Customers表中插入一条记录，其示例代码如下：</p>
+<pre class="code" data-type="csharp">SqlConnection conn = new SqlConnection(&quot;packet size=4096;user id=sa;data source=\&quot;.\&quot;;persist security info=True;
+	initial catalog=Northwind;password=sa&quot;);
+string sql = &quot;&quot;;
+sql = &quot;insert into customers(customerid, companyname, contactname)\r\n&quot;
+	+ &quot;values(@customerid, @companyname, @contactname)&quot;;
+SqlCommand cmd = new SqlCommand(sql, conn);
+SqlParameter parm1 = new SqlParameter(&quot;@customerid&quot;, typeof(string));
+SqlParameter parm2 = new SqlParameter(&quot;@companyname&quot;, typeof(string));
+SqlParameter parm3 = new SqlParameter(&quot;@contactname&quot;, typeof(string));
+cmd.Parameters.Add(parm1);
+cmd.Parameters.Add(parm2);
+cmd.Parameters.Add(parm3);
+cmd.Connection.Open();
+parm1.Value = &quot;LLD&quot;;
+parm2.Value = &quot;AUTO&quot;;
+parm3.Value = &quot;刘林栋&quot;;
+cmd.ExecuteNonQuery();
+parm1.Value = &quot;LHC&quot;;
+parm2.Value = &quot;AUTO&quot;;
+parm3.Value = &quot;令狐冲&quot;;
+cmd.Connection.Close();</pre>
+<p>如果是ORACLE数据库，其对应的写法如下：</p>
+<pre class="code" data-type="csharp">string sql = &quot;&quot;;
+sql = &quot;insert into customers(customerid, companyname, contactname)\r\n&quot;
+	+ &quot;values(:customerid, :companyname, :contactname)&quot;;
+OracleCommand cmd = new OracleCommand(sql, conn);
+OracleParameter parm1 = new OracleParameter(&quot;customerid&quot;, typeof(string));
+OracleParameter parm2 = new OracleParameter(&quot;companyname&quot;, typeof(string));
+OracleParameter parm3 = new OracleParameter(&quot;contactname&quot;, typeof(string));
+cmd.Parameters.Add(parm1);
+cmd.Parameters.Add(parm2);
+cmd.Parameters.Add(parm3);
+cmd.Connection.Open();
+parm1.Value = &quot;LLD&quot;;
+parm2.Value = &quot;AUTO&quot;;
+parm3.Value = &quot;刘林栋&quot;;
+cmd.ExecuteNonQuery();
+parm1.Value = &quot;LHC&quot;;
+parm2.Value = &quot;AUTO&quot;;
+parm3.Value = &quot;令狐冲&quot;;
+cmd.Connection.Close();</pre>
+<p>对于Access，对应写法如下：</p>
+<pre class="code" data-type="csharp">string sql = &quot;&quot;;
+sql = &quot;insert into customers(customerid, companyname, contactname)\r\n&quot;
+	+ &quot;values(?, ?, ?)&quot;;
+OleDbCommand cmd = new OleDbCommand(sql, conn);
+OleDbParameter parm1 = new OleDbParameter(&quot;&quot;, typeof(string));
+OleDbParameter parm2 = new OleDbParameter(&quot;&quot;, typeof(string));
+OleDbParameter parm3 = new OleDbParameter(&quot;&quot;, typeof(string));
+cmd.Parameters.Add(parm1);
+cmd.Parameters.Add(parm2);
+cmd.Parameters.Add(parm3);
+parm1.Value = &quot;LLD&quot;;
+parm2.Value = &quot;AUTO&quot;;
+parm3.Value = &quot;刘林栋&quot;;
+cmd.ExecuteNonQuery();
+parm1.Value = &quot;LHC&quot;;
+parm2.Value = &quot;AUTO&quot;;
+parm3.Value = &quot;令狐冲&quot;;
+cmd.ExecuteNonQuery();</pre>
+<p>在Access中，创建OleDbParameter时的参数名其实可以随便写，关键在于要按实际出现的顺序添加到参数表中。说实话，因为不能按名称索引参数，使得在Access中使用参数化SQL的可读性大大降低。</p>
+<p>对于SELECT语句，可以同样处理，如下所示（SQL SERVER）：</p>
+<pre class="code" data-type="csharp">SqlConnection conn = new SqlConnection(&quot;user id=sa;data source=\&quot;.\&quot;;persist security info=True;initial catalog=pubs;password=sa&quot;);
+conn.Open();
+string sql = &quot;select count(*) from authors where au_lname = @name&quot;;
+SqlDataAdapter adapter = new SqlDataAdapter(sql, conn);
+SqlParameter param = new SqlParameter(&quot;@name&quot;, typeof(string));
+adapter.SelectCommand.Parameters.Add(param);
+DataTable tb = new DataTable();
+param.Value = &quot;White&quot;;
+adapter.Fill(tb);
+conn.Close();
+MessageBox.Show(tb.Rows[0][0].ToString());</pre>
+<h2>调用带有返回参数存储过程</h2>
+<h3>SQL SERVER示例</h3>
+<p>在此先创建一个简单的存储过程如下：</p>
+<pre class="code" data-type="csharp">create procedure [test_proc]
+	@input_parm int,
+	@output_parm int output
+as
+  select @output_parm = @input_parm * 100</pre>
+<p>该存储过程的功能非常简单，就是将第一个参数乘100后赋给第二个参数，在C#中使用如下方式取得返回的参数：</p>
+<pre class="code" data-type="csharp">string sql = "exec test_proc @input_parm, @output_parm output";
+SqlCommand cmd = new SqlCommand(sql, conn);
+SqlParameter parm1 = new SqlParameter("@input_parm", SqlDbType.Int);
+parm1.Direction = ParameterDirection.Input;
+SqlParameter parm2 = new SqlParameter("@output_parm", SqlDbType.Int);
+parm2.Direction = ParameterDirection.Output;
+cmd.Parameters.Add(parm1);
+cmd.Parameters.Add(parm2);
+cmd.Connection.Open();
+parm1.Value = 5;
+cmd.ExecuteNonQuery();
+MessageBox.Show(cmd.Parameters["@output_parm"].Value.ToString());
+cmd.Connection.Close();</pre>
+<p><img src="images/note.jpg" width="20" height="20">注意：在调用SQL SERVER存储过程时，对于输出参数，需要在参数后加上关键字<strong>output</strong>。</p>
+<h3>ORACLE示例</h3>
+<p>在此创建一个简单的存储过程如下：</p>
+<pre class="code" data-type="csharp">CREATE OR REPLACE  PROCEDURE &quot;TEST_PROC&quot;  (input_parm in
+    int, output_parm out int)
+as
+begin
+  output_parm := input_parm * 100;
+end TEST_PROC;</pre>
+<p>该存储过程的功能非常简单，就是将第一个参数乘100后赋给第二个参数，在C#中使用如下方式取得返回的参数（如果你看了上一节，就觉得这句话比较费了）： </p>
+<pre class="code" data-type="csharp">OracleConnection conn = new OracleConnection(&quot;user id=system;data source=oemrep_liuld;password=password&quot;);
+string sql = &quot;test_proc&quot;;
+OracleCommand cmd = new OracleCommand(sql, conn);
+cmd.CommandType = CommandType.StoredProcedure;
+OracleParameter parm1 = new OracleParameter(&quot;input_parm&quot;, OracleType.Int32);
+parm1.Direction = ParameterDirection.Input;
+OracleParameter parm2 = new OracleParameter(&quot;output_parm&quot;, OracleType.Int32);
+parm2.Direction = ParameterDirection.Output;
+cmd.Parameters.Add(parm1);
+cmd.Parameters.Add(parm2);
+cmd.Connection.Open();
+cmd.Parameters[&quot;input_parm&quot;].Value = 5;
+cmd.ExecuteNonQuery();
+MessageBox.Show(cmd.Parameters[&quot;output_parm&quot;].Value.ToString());
+cmd.Connection.Close();</pre>
+<p><img src="images/note.jpg" width="20" height="20">注意：在ORACLE调用存储过程，在SQL语句中不能写参数，而是使用Command.Parameters属性添加，要求添加的参数名与存储过程中的参数名一致。</p>
+<h2>IN操作符中的参数</h2>
+<p>对于使用 in 操作符的SQL语句，像 in (@param) 这样的参数语法在C#中就不支持了，例如，对于如下SQL语句</p>
+<pre class="code" data-type="csharp">select count(*) from authors where au_lname in ('Green', 'White')</pre>
+<p>这实在不是一个好消息，作为变通的方法，有如下两个：</p>
+<p>1、对于SQL SERVER或ORACLE这种支持动态执行SQL语句的数据库，使用拼接字符串的方法，下面是一个SQL SERVER的例子</p>
+<pre class="code" data-type="csharp">string sql = &quot;declare @sql nvarchar(500)\r\n&quot;
+    + &quot;set @sql = 'select count(*) from authors where au_lname in (' + @name + ')'\r\n&quot;
+    + &quot;exec sp_executesql @sql&quot;;
+SqlConnection conn = ...; //获取SQL SERVER pubs库的连接
+SqlParameter param = new SqlParameter(&quot;@name&quot;, typeof(string));
+param.SqlValue = &quot;'White', 'Green'&quot; ;
+SqlDataAdapter adapter = new SqlDataAdapter(sql, conn);
+adapter.SelectCommand.Parameters.Add(param);
+DataTable tb = new DataTable();
+adapter.Fill(tb);</pre>
+<p>其实这真是一个很糟糕的主意。</p>
+<p>2、使用变通的方式，取消 in 操作符</p>
+<p>我们可以这样想，把 in 操作符后的列表组合为一个字符串，那么只要保证测试字段值包含在这个字符串中不就可以了？因此，可以考虑将SQL语句写成如下方式：</p>
+<pre class="code" data-type="csharp">select count(*) from authors where charindex(au_lname, @name) &gt; 0</pre>
+<p>这样C#就可以支持了，只需将字符串“Green, White”作为参数传入即可</p>
+<p>当然，上面的方法还是存在一个漏洞，那就是如果一条记录的au_lname值为Gr，仍然是满足上述查询条件的，因此，需要加入一些特殊字符，例如：</p>
+<pre class="code" data-type="csharp">select count(*) from authors where charindex('''' + au_lname + '''', @name) &gt; 0</pre>
+<p>而将字符串“'White', 'Green'”作为参数传入，完整代码如下所示：</p>
+<pre class="code" data-type="csharp">string sql = &quot;select count(*) from authors where charindex('''' + au_lname + '''', @name) &gt; 0&quot;;
+SqlConnection conn = ...; //获取SQL SERVER pubs库的连接
+SqlParameter param = new SqlParameter(&quot;@name&quot;, typeof(string));
+param.SqlValue = &quot;'White', 'Green'&quot; ;
+SqlDataAdapter adapter = new SqlDataAdapter(sql, conn);
+adapter.SelectCommand.Parameters.Add(param);
+DataTable tb = new DataTable();
+adapter.Fill(tb);</pre>
+<p>类似地还可能使用LIKE操作符变通。</p>
+<h2>使用DataAdapter的批量更新功能</h2>
+<p>&nbsp;</p>
+<h1>调用存储过程</h1>
+<h2>普通存储过程</h2>
+<p>对SQL SERVER，与普通数据库更新语句在调用上没有区别。对ORACLE，需作如下调整：</p>
+<pre class="code" data-type="csharp">OracleCommand cmd = ...
+cmd.CommandType = CommandType.StoredProcedure;</pre>
+<h2>参数化调用存储过程</h2>
+<pre class="code" data-type="csharp">[Serializable]
+public class Parameter
+{
+    public string Name;
+    public object Value;
+    public SqlDbType dbType = SqlDbType.VarChar;
+	public void New()
+	{
+	}
+
+	public void New(string _Name, object _value, SqlDbType _dbType)
+	{
+		Name = _Name;
+		Value = _value;
+		dbType = _dbType;
+	}
+}
+
+[Serializable]
+public class Parameters : CollectionBase
+{
+	public Parameter this[int index]
+	{
+		get {return (Parameter)List[index];}
+		set {List[index] = value;}
+	}
+
+	public int Add( string Name, object Value)  
+	{
+		Parameter Parm = new Parameter();
+		Parm.Name = Name;
+        Parm.Value = Value;
+		return( this.Add(Parm) );
+	}
+
+	public int Add( string Name, object Value, SqlDbType dbType)  
+	{
+		Parameter Parm = new Parameter();
+		Parm.Name = Name;
+		Parm.Value = Value;
+        Parm.dbType = dbType;
+		return( this.Add(Parm) );
+	}
+
+	public int Add(Parameter value)  
+	{
+		return( List.Add(value) );
+	}
+
+	public int IndexOf(Parameter value)
+	{
+		return this.List.IndexOf(value);
+	}
+
+	public void IndexOf(int index, Parameter value)
+	{
+		List.Insert(index, value);
+	}
+
+	public void Remove(Parameter value)
+	{
+		List.Remove(value);
+	}
+
+	public bool Contains(Parameter value)
+	{
+		return List.Contains(value);
+	}
+
+	protected override void OnInsert( int index, Object value )  
+	{
+		if ( value.GetType() != Type.GetType(&quot;NGEN.classes.Parameter&quot;) )
+			throw new ArgumentException( &quot;value must be of type DisplayColumn.&quot;, &quot;value&quot; );
+	}
+
+	protected override void OnRemove( int index, Object value )  
+	{
+		if ( value.GetType() != Type.GetType(&quot;NGEN.classes.Parameter&quot;) )
+			throw new ArgumentException( &quot;value must be of type DisplayColumn.&quot;, &quot;value&quot; );
+	}
+
+	protected override void OnSet( int index, Object oldValue, Object newValue )  
+	{
+		if ( newValue.GetType() != Type.GetType(&quot;NGEN.classes.Parameter&quot;) )
+			throw new ArgumentException( &quot;newValue must be of type DisplayColumn.&quot;, &quot;newValue&quot; );
+	}
+
+	protected override void OnValidate( Object value )  
+	{
+		if ( value.GetType() != Type.GetType(&quot;NGEN.classes.Parameter&quot;) )
+			throw new ArgumentException( &quot;value must be of type DisplayColumn.&quot; );
+	}
+
+}
+
+//调用没有返回值的存储过程
+static public int ExecuteStoredProcNonQuery( string spName, Parameters paramInfos) 
+{ 
+	int result = 0;
+
+	ISession session = Global.NHSessionFactory.OpenSession();
+	
+	IDbCommand cmd = Global.NHSessionFactory.ConnectionProvider.Driver.CreateCommand(); 
+
+	cmd.CommandText = spName; 
+	cmd.CommandType = CommandType.StoredProcedure; 
+
+	// 加入参数 
+	if ( paramInfos != null ) 
+	{ 
+		foreach( Parameter info in paramInfos ) 
+		{ 
+			IDbDataParameter parameter = cmd.CreateParameter(); 
+			parameter.ParameterName = info.Name; // driver.FormatNameForSql( info.Name ); 
+			parameter.Value = info.Value; 
+			cmd.Parameters.Add( parameter ); 
+		} 
+	} 
+
+	IDbConnection conn = session.Connection;
+	if(conn.State == ConnectionState.Closed)
+		conn.Open();
+	try 
+	{ 
+		cmd.Connection = conn; 
+		result = cmd.ExecuteNonQuery();
+	} 
+	finally 
+	{ 
+		conn.Close();
+	} 
+
+	return result; 
+}</pre>
+<h2>调用带返回结果的存储过程</h2>
+<pre class="code" data-type="csharp">//调用存储过程并以DataSet方式返回结果集
+static public DataSet ExecuteStoredProcAsDataSet( string spName, Parameters paramInfos) 
+{ 
+	DataSet result = new DataSet();
+
+	ISession session = Global.NHSessionFactory.OpenSession();
+	
+	IDbCommand cmd = Global.NHSessionFactory.ConnectionProvider.Driver.CreateCommand(); 
+
+	cmd.CommandText = spName; 
+	cmd.CommandType = CommandType.StoredProcedure; 
+
+	// 加入参数 
+	if ( paramInfos != null ) 
+	{ 
+		foreach( Parameter info in paramInfos ) 
+		{ 
+			IDbDataParameter parameter = cmd.CreateParameter(); 
+			parameter.ParameterName = info.Name; // driver.FormatNameForSql( info.Name ); 
+			parameter.Value = info.Value; 
+			cmd.Parameters.Add( parameter ); 
+		} 
+	} 
+
+	IDbConnection conn = session.Connection;
+	if(conn.State == ConnectionState.Closed)
+		conn.Open();
+	try 
+	{ 
+		cmd.Connection = conn; 
+		IDataAdapter da = new SqlDataAdapter(cmd as SqlCommand);
+		da.Fill(result);
+	} 
+	finally 
+	{ 
+		conn.Close();
+	} 
+
+	return result; 
+}
+
+//调用存储过程并返回单个结果
+static public object GetScalarValueFromSP( string spName, Parameters paramInfos) 
+{ 
+	object result;
+
+	ISession session = Global.NHSessionFactory.OpenSession();
+	
+	IDbCommand cmd = Global.NHSessionFactory.ConnectionProvider.Driver.CreateCommand(); 
+
+	cmd.CommandText = spName; 
+	cmd.CommandType = CommandType.StoredProcedure; 
+
+	// 加入参数 
+	if ( paramInfos != null ) 
+	{ 
+		foreach( Parameter info in paramInfos ) 
+		{ 
+			IDbDataParameter parameter = cmd.CreateParameter(); 
+			parameter.ParameterName = info.Name; // driver.FormatNameForSql( info.Name ); 
+			parameter.Value = info.Value; 
+			cmd.Parameters.Add( parameter ); 
+		} 
+	} 
+
+	IDbConnection conn = session.Connection;
+	if(conn.State == ConnectionState.Closed)
+		conn.Open();
+	try 
+	{ 
+		cmd.Connection = conn; 
+		result = cmd.ExecuteScalar();
+	} 
+	finally 
+	{ 
+		conn.Close();
+	} 
+
+	return result; 
+}</pre>
+<h1>使用事务</h1>
+<p>针对不同的数据库引擎，有不同的事务类，例如对SQL SERVER为SqlTransaction，对ORACLE为OracleTransaction，但它们的用法都基本相同，下面以SqlTransaction为例介绍其用法：</p>
+<pre class="code" data-type="csharp">SqlConnection conn = ...
+SqlTransaction tran = conn.BeginTransaction();
+try
+{
+	SqlCommand cmd = ...
+	cmd.Transaction = tran;
+	cmd.ExecuteNonQuery();
+	tran.Commit();
+}
+catch
+{
+	tran.Rollback();
+}
+</pre>
+<h1>常见出错信息 </h1>
+<table style="width:100%"  border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <th width="45%">出错信息</th>
+    <th width="10%">数据库</th>
+    <th width="45%">解决方案</th>
+  </tr>
+  <tr>
+    <td>GetDescription 因E_FAIL(0x80004005) 而失败 </td>
+    <td>Access</td>
+    <td>在sql语句中有些字段或表的名字与access关键字冲突，将这些冲突的名字用[]括起来即可。</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+<p>&nbsp;</p>
+<p></p>
+<p></p>
+<p> </p>
+
+</body>
+</html>

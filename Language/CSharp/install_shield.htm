@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<title>打包应用程序</title>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+<p id="title">打包应用程序</p>
+<h1>使用IDE为应用程序打包</h1>
+<p>新建项目 -- 安装和部署项目 -- 安装项目</p>
+<p>默认打开的是文件系统视图，产生三个文件夹：</p>
+<p>1、应用程序文件夹：要安装的文件</p>
+<p>2、用户的“程序”菜单：在开始菜单中生成的项</p>
+<p>3、用户桌面：在桌面生成的图标</p>
+<p>把需要安装的程序拖到相应的文件夹下即可。</p>
+<h1>注册表视图</h1>
+<p>在解决方案资源管理器中项目的右键菜单中选择“注册表视图”即可打开注册表视图。</p>
+<p>在注册表视图中，你可以添加程序安装时要向注册表中添加的项，在程序卸载时会自动将这些项删除。</p>
+<h1>文件类型视图 </h1>
+<p>在解决方案资源管理器中项目的右键菜单中选择“文件类型视图”即可打开本视图。</p>
+<p>在本视图中，可以设定与该程序相关联的文件扩展名。</p>
+<h1>用户界面视图</h1>
+<p>本视图用于设定在安装时显示的界面，主要可以修改安装界面上的logo图片</p>
+<h1>自定义操作视图</h1>
+<p>本视图用于设定在某些操作（安装、提交、回滚、卸载）时需要执行的操作。</p>
+<h1>启动条件视图</h1>
+<p>用于设定启动该安装程序需要的软件，例如一般都会需要.NET Framework，在启动条件中加入，设定其InstallUrl属性，则在启动前如果该软件不存在的话会自动安装。</p>
+<h1>卸载程序</h1>
+<pre class="code" data-type="csharp">msiexec /uninstall {07F76306-00CF-47DB-810A-D306DE910E26}</pre>
+<p>后面的号为该安装项目的ProductCode属性。msiexec的完整帮助如下：</p>
+<pre class="code" data-type="csharp">msiexec /Option &lt;Required Parameter&gt; [Optional Parameter]
+
+安装选项
+	&lt;/package | /i&gt; &lt;Product.msi&gt;
+		安装或配置产品
+	/a &lt;Product.msi&gt;
+		管理安装 - 在网络上安装产品
+	/j&lt;u|m&gt; &lt;Product.msi&gt; [/t &lt;Transform List&gt;] [/g &lt;Language ID&gt;]
+		播发产品 - m 播发到所有用户，u 播发到当前用户
+	&lt;/uninstall | /x&gt; &lt;Product.msi | ProductCode&gt;
+		卸载产品
+显示选项
+	/quiet
+		安静模式，无用户交互
+	/passive
+		无从参与模式 - 只显示进程栏
+	/q[n|b|r|f]
+		设置用户界面级别
+		n - 无用户界面
+		b - 基本界面
+		r - 精简界面
+		f - 完整界面(默认值)
+	/help
+		帮助信息
+重新启动选项
+	/norestart
+		安装完成后不重新启动
+	/promptrestart
+		提示用户重新启动(如果必要)
+	/forcerestart
+		安装后总是重新启动计算机
+日志选项
+	/l[i|w|e|a|r|u|c|m|o|p|v|x|+|!|*] &lt;LogFile&gt;
+		i - 状态消息
+		w - 非致命警告
+		e - 全部错误消息
+		a - 操作的启动
+		r - 操作特定记录
+		u - 用户请求
+		c - 初始界面参数
+		m - 内存不足或致命退出信息
+		o - 磁盘空间不足消息
+		p - 终端属性
+		v - 详细输出
+		x - 额外调试信息
+		+ - 扩展到现有日志文件
+		! - 每一行刷新到日志
+		* - 记录所有信息，除了 v 和 x 选项
+	/log &lt;LogFile&gt;
+		与 /l* &lt;LogFile&gt; 相同
+更新选项
+	/update &lt;Update1.msp&gt;[;Update2.msp]
+		应用更新
+	/uninstall &lt;PatchCodeGuid&gt;[;Update2.msp] /package &lt;Product.msi | ProductCode&gt;
+		删除产品的更新
+修复选项
+	/f[p|e|c|m|s|o|d|a|u|v] &lt;Product.msi | ProductCode&gt;
+		修复产品
+		p - 仅当文件丢失时
+		o - 如果文件丢失或安装了更旧的版本(默认值)
+		e - 如果文件丢失或安装了相同或更旧的版本
+		d - 如果文件丢失或安装了不同版本
+		c - 如果文件丢失或较验和与计算的值不匹配
+		a - 强制重新安装所有文件
+		u - 所有必要的用户特定注册表项(默认值)
+		m - 所有必要的计算机特定注册表项(默认值)
+		s - 所有现有的快键方式(默认值)
+		v - 从源运行并缓存本地数据包
+设置公共属性
+	[PROPERTY=PropertyValue]</pre>
+<h1>技巧</h1>
+<h2>在安装时自动安装.net framework</h2>
+<p>在微软官方网站下载Microsoft Visual Studio .NET 2003 引导程序插件，文件名叫：PluginInstaller.msi</p>
+<p>  下载地址：http://www.microsoft.com/downloads/details.aspx?FamilyID=627921a0-d9e7-43d6-a293-72f9c370bd19&amp;displaylang=zh-cn</p>
+<p><a href="downloads/PluginInstaller.msi">本地下载</a></p>
+<p> 你安装了这个插件然后用IDE自带的安装部署即可，他会在你的安装包里另加三个文件：MDAC 2.8 和.Net Framework 和中文语言包，并且自动判断系统是否已安装框架。</p>
+<h2>解决共享类库项目时的DLL不兼容</h2>
+<p>在开发项目的过程序，一般会将一些公用的模块抽取出来，做成单独的类库，其它的子项目以项目引用的方式来引用它。但这在子项目很多时会出现一个问题，就是这个公用类库每次在子项目重生成时都会编译一次，每编译一次版本号就会自动变化，这样，最后集中打包时就会出找不到对应版本号类库的信息。例如如下的错误信息：</p>
+<p>xxx1.exe 找不到对应的 xxxx.dll(版本号1.0.2732.17723) <br>
+xxx2.exe 找不到对应的 xxxx.dll(版本号1.0.2732.17755)<br>
+xxx3.exe 找不到对应的 xxxx.dll(版本号1.0.2732.17812)</p>
+<p>其实用的都是同一套类库，只是每次编译后版本号变化了而已，要解决这个麻烦事，可使用如下的解决方案。</p>
+<p>打开类库项目下的 AssemblyInfo.cs，将</p>
+<pre class="code" data-type="csharp">[assembly: AssemblyVersion(&quot;1.0.*&quot;)]</pre>
+<p>改为</p>
+<pre class="code" data-type="csharp">[assembly: AssemblyVersion(&quot;1.0.0.0&quot;)]</pre>
+<p>也就是不要让版本号自动变化了，这样也就保证了所有子项目引用的类库版本都是一致的。不过，如果对类库做了大改动的话，建议手工更新版本号。
+  
+</p>
+</body>
+</html>

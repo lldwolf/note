@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>插件安装方法</title>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+<p id="title">第N章 插件安装方法</p>
+
+<h1>安装</h1>
+<p>一般来说，eclipse插件都是安装在plugins目录下。不过这样一来，当安装了许多插件之后，eclipse变的很大，最主要的是不便于更新和管理众多插件。用links方式安装eclipse插件，可以解决这个问题。</p>
+<p>eclipse插件的格式统一，下载解压后都是一个eclipse目录，里面再有两个目录：features和plugins。</p>
+<p>单独建立一个插件目录放置各个插件，例如，我建立d:\java\plug-ins目录作为插件目录，要安装插件emf时，我在插件目录下建立emf目录，然后将emf插件（即插件的eclipse目录）复制进去，即目录结构是这样的：d:\java\plug-ins\emf\eclipse</p>
+<p>Eclipse 将会到指定的目录下去查找 eclipse\features 目录和eclipse\plugins 目录，看是否有合法的功能部件和（或）插件。也就是说，目标目录必须包含一个 \eclipse 目录。如果找到，附加的功能部件和插件在运行期配置是将是可用的，如果链接文件是在工作区创建之后添加的，附加的功能部件和插件会作为新的配置变更来处理。</p>
+<p>然后在 eclipse安装目录D:\eclipse目录中建立一个子目录links，在links目录中建立一个link文件，比如emf.link，改文件内容为：path=D:/java/plug-ins/ems，即这个link文件要对应一个刚解压后的插件目录。</p>
+<p>说明：</p>
+<ol>
+	<li>插件可以分别安装在多个自定义的目录中。</li>
+	<li>一个自定义目录可以安装多个插件。</li>
+	<li>link文件的文件名及扩展名可以取任意名称，比如ddd.txt，myplugin都可以。</li>
+	<li>link文件中path=插件目录的path路径分隔要用\\或是/</li>
+	<li>在links目录也可以有多个link文件，每个link文件中的path参数都将生效。</li>
+	<li>插件目录可以使用相对路径。</li>
+	<li>可以在links目录中建立一个子目录，转移暂时不用的插件到此子目录中，加快eclipse启动。</li>
+	<li>如果安装后看不到插件，把eclipse 目录下的configuration目录删除，重启即可。</li>
+</ol>
+<h1>注意事项</h1>
+<h2>启动Eclipse未加载插件</h2>
+<p>有时启动Eclipse未加载插件，解决方法很多，总结一下：</p>
+<ol>
+	<li>删除整个目录/eclipse/configuration/org.eclipse.update/，重启Eclipse</li>
+	<li>在启动Eclipse时带上 -clean参数，如：d:\eclipse\eclipse.exe -clean</li>
+	<li>如果Eclipse启动找不到插件了，解决办法: 在/configuration/config.ini文件中加入一行
+　　osgi.checkConfiguration=true
+　　这样它会寻找并安装插件，找到后可以把那行再注释掉，这样以后每次启动就不会因寻找插件而显得慢了</li>
+</ol>
+<h2>版本号</h2>
+<p>一般来说相同版本号的才比较兼容。即插件的版本号要与Eclipse的版本号相同，这样不容易出问题，下载时最好认真看清楚网站上的说明，否则有时安装总出现莫名其妙的问题，浪费时间。</p>
+<h2>验证</h2>
+<p>插件安装完成后，可到菜单【Help】-->【About Eclipse Platform】--->【Plug-in Details】里查看</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+
+</body>
+</html>

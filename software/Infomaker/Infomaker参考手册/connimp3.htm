@@ -1,0 +1,53 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+Accessing data in InfoMaker</TITLE>
+</HEAD>
+<BODY>
+<A NAME="X-ref347903822"></A><h1>Accessing data in InfoMaker</h1>
+<A NAME="TI78"></A><p>There are several ways to access data in the InfoMaker development environment: <A NAME="TI79"></A>
+<ul>
+<li class=fi>Through one of the standard
+database interfaces such as ODBC, JDBC, or OLE DB</li>
+<li class=ds>Through one of the native database interfaces
+</li>
+</ul>
+</p>
+<A NAME="TI80"></A><h4>Standard database interfaces</h4>
+<A NAME="TI81"></A><p>A standard database interface communicates with a database
+via a standard-compliant driver (in the case of ODBC and JDBC) or
+data provider (in the case of OLE DB). The standard-compliant driver
+or data provider translates the abstract function calls defined
+by the standard's API into calls that are understood by
+a specific database. To use a standard interface, you need to install
+the standard's API and a suitable driver or data provider.
+You then install the standard database interface you want to use
+to access your DBMS by selecting the interface in the InfoMaker Setup
+program. InfoMaker currently supports the following standard interfaces: <A NAME="TI82"></A>
+<ul>
+<li class=fi>Open Database Connectivity (ODBC)</li>
+<li class=ds>Java Database Connectivity (JDBC)</li>
+<li class=ds>Microsoft's Universal Data Access Component
+OLE DB
+</li>
+</ul>
+</p>
+<A NAME="TI83"></A><h4>Native database interfaces</h4>
+<A NAME="TI84"></A><p>A native database interface communicates with a database via
+a direct connection. It communicates to a database using that database's
+native API. </p>
+<A NAME="TI85"></A><p>To access data through one of the native database interfaces,
+you must first install the appropriate database software on the
+server and client workstations at your site. You then install the
+native database interface that accesses your DBMS by selecting the
+interface in the InfoMaker Setup program.</p>
+<A NAME="TI86"></A><p>For example, if you have the appropriate Sybase Adaptive Server
+Enterprise server and client software installed, you can access
+the database by installing the Adaptive Server Enterprise database
+interface.</p>
+<A NAME="TI87"></A><h4>InfoMaker with other Sybase products</h4>
+<A NAME="TI88"></A><p>If your version of InfoMaker was provided with another Sybase
+product, see the Help for that product for information about database
+connectivity features.</p>
+

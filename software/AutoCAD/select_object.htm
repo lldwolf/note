@@ -1,0 +1,230 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<title>选择对象</title>
+<script language="javascript" src="css.js"></script>
+</head>
+
+<body>
+<h1>第N章 选择对象
+</h1>
+<hr>
+<h2>N.1 典型代码</h2>
+<pre>Dim cset As AcadSelectionSet
+Dim gpCode(0) As Integer
+Dim dataValue(0) As Variant
+gpCode(0) = 0
+dataValue(0) = &quot;Circle&quot;
+
+Set cset = ThisDrawing.SelectionSets.Add(&quot;set2&quot;)
+
+Call cset.Select(acSelectionSetAll, Nothing, Nothing, gpCode, dataValue)
+
+MsgBox cset.Count
+
+Call cset.Delete</pre>
+<p>上述代码取屏幕内的所有圆圈对象</p>
+<h2>N.2 AcadSelectionSet对象说明 </h2>
+<p>在上述代码中，主要使用了AcadSelectionSet对象，它包括如下几个方法来从屏幕上截取对象：</p>
+<table width="90%"  border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <th width="30%">方法</th>
+    <th width="70%">说明</th>
+  </tr>
+  <tr>
+    <td>Select</td>
+    <td>选取矩形区域内的对象，选取方式根据参数来获取。</td>
+  </tr>
+  <tr>
+    <td>SelectAtPoint</td>
+    <td>取经过某个点的对象，但若有多个对象经过同一点，则只能取到一个对象，这不能不说是一个BUG</td>
+  </tr>
+  <tr>
+    <td>SelectByPolygon</td>
+    <td>获取某个区域内的对象</td>
+  </tr>
+  <tr>
+    <td>SelectOnScreen</td>
+    <td>使用鼠标在屏幕上选取要选择的对象，用于和用户交互。</td>
+  </tr>
+</table>
+<h2>N.3 参数说明</h2>
+<h3><a name="select"></a>N.3.1 Select方法</h3>
+<p>原型如下：</p>
+<pre>object.Select Mode[, Point1][, Point2][, FilterType][, FilterData]   </pre>
+<table width="90%"  border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <th width="30%">参数</th>
+    <th width="70%">说明</th>
+  </tr>
+  <tr>
+    <td>Mode</td>
+    <td>请参见<a href="#acselect">AcSelect枚举类型说明</a></td>
+  </tr>
+  <tr>
+    <td>Point1</td>
+    <td>一个规模为3的数组，描述选取区域的起始点，如果Mode参数为acSelectionSetAll，则该参数可省略。</td>
+  </tr>
+  <tr>
+    <td>Point2</td>
+    <td>一个规模为3的数组，描述选取区域的结束点，如果Mode参数为acSelectionSetAll，则该参数可省略。</td>
+  </tr>
+  <tr>
+    <td>FilterType</td>
+    <td>选取类型，为DXF组码，长度为1的整型数组，通常为0</td>
+  </tr>
+  <tr>
+    <td>FilterData</td>
+    <td>选取对象的类型，长度为1的字符串数组，其值通常为插入对象时的AutoCAD命令，具体列表请参见<a href="#filter_data">FilterData列表</a>。如果需自己查找，可将dwg另存为dxf格式，例如搜索AcDbPolyline（ObjectName），看到附近的LWPOLYLINE就是DXF码。</td>
+  </tr>
+</table>
+<h3>N.3.2 SelectAtPoint 方法</h3>
+<p>原型如下：</p>
+<pre>object.SelectAtPoint Point, FilterType, FilterData</pre>
+<table width="90%"  border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <th width="30%">参数</th>
+    <th width="70%">说明</th>
+  </tr>
+  <tr>
+    <td>Point</td>
+    <td>一个规模为3的数组，描述选取对象的经过点，但若有多个对象经过同一点，则只能取到一个对象，这不能不说是一个BUG</td>
+  </tr>
+  <tr>
+    <td>FilterType</td>
+    <td>请参考<a href="#select">Select方法</a>。</td>
+  </tr>
+  <tr>
+    <td>FilterData</td>
+    <td>请参考<a href="#select">Select方法</a>。</td>
+  </tr>
+</table>
+<h3>N.3.3 SelectByPolygon 方法</h3>
+<p>原型如下：</p>
+<pre>object.SelectByPolygon Mode, PointsList, FilterType, FilterData </pre>
+<table width="90%"  border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <th width="30%">参数</th>
+    <th width="70%">说明</th>
+  </tr>
+  <tr>
+    <td>Mode</td>
+    <td>请参考<a href="#select">Select方法</a>。</td>
+  </tr>
+  <tr>
+    <td>PointList</td>
+    <td>一个封闭的多边形的点集合，为二维数组，每个点占3个元素，最后一个点与第一个点相同，表示区域闭合。</td>
+  </tr>
+  <tr>
+    <td>FilterType</td>
+    <td>请参考<a href="#select">Select方法</a>。</td>
+  </tr>
+  <tr>
+    <td>FilterData</td>
+    <td>请参考<a href="#select">Select方法</a>。</td>
+  </tr>
+</table>
+<h3>N.3.4 SelectOnScreen 方法</h3>
+<p>原型如下：</p>
+<pre>object.SelectOnScreen [FilterType][, FilterData] </pre>
+<table width="90%"  border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <th width="30%">参数</th>
+    <th width="70%">说明</th>
+  </tr>
+  <tr>
+    <td>FilterType</td>
+    <td>请参考<a href="#select">Select方法</a>。</td>
+  </tr>
+  <tr>
+    <td>FilterData</td>
+    <td>请参考<a href="#select">Select方法</a>。</td>
+  </tr>
+</table>
+<h3><a name="acselect"></a>N.3.5 AcSelect枚举类型说明</h3>
+<table width="90%"  border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <th width="30%">枚举值</th>
+    <th width="70%">说明</th>
+  </tr>
+  <tr>
+    <td>acSelectionSetWindow </td>
+    <td>获取完全在指定矩形区域内的对象</td>
+  </tr>
+  <tr>
+    <td>acSelectionSetCrossing</td>
+    <td>获取部分在指定矩形区域（包括完全在矩形区域内）内的对象</td>
+  </tr>
+  <tr>
+    <td>acSelectionSetPrevious </td>
+    <td>获取最后一次调用获取的对象</td>
+  </tr>
+  <tr>
+    <td>acSelectionSetLast</td>
+    <td>获取最后创建的可视对象</td>
+  </tr>
+  <tr>
+    <td>acSelectionSetAll </td>
+    <td>获取屏幕上的所有对象，注意，是屏幕上的所有对象，而不是图纸上的所有对象，如果想取屏幕上的所有对象的话，可先使用Application.ZoomAll方法缩放图纸至整个屏幕。</td>
+  </tr>
+</table>
+<h3><a name="filter_data"></a>N.3.6 FilterData列表</h3>
+<table width="90%"  border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <th width="30%">AutoCAD对象</th>
+    <th width="30%">FilterData值</th>
+    <th width="40%">ObjectName</th>
+    <th width="40%">对应的类</th>
+  </tr>
+  <tr>
+    <td>直线</td>
+    <td>Line</td>
+    <td>AcDbLine</td>
+    <td>AcadLine</td>
+  </tr>
+  <tr>
+    <td>多段线</td>
+    <td>LWPolyLine</td>
+    <td>AcDbPolyLine</td>
+    <td>AcadLWPolyline</td>
+  </tr>
+  <tr>
+    <td>圆</td>
+    <td>Circle</td>
+    <td>AcDbCircle</td>
+    <td>AcadCircle</td>
+  </tr>
+  <tr>
+    <td>文本</td>
+    <td>Text</td>
+    <td>AcDbText</td>
+    <td>AcadText</td>
+  </tr>
+  <tr>
+    <td>多行文本</td>
+    <td>MText</td>
+    <td>AcDbMText</td>
+    <td>AcadMText</td>
+  </tr>
+  <tr>
+    <td>块、外部参照</td>
+    <td>Insert</td>
+    <td>AcDbBlockReference</td>
+    <td>AcadBlockReference</td>
+  </tr>
+  <tr>
+    <td>属性</td>
+    <td>attdef</td>
+    <td>AcDbAttribute</td>
+    <td>AcadAttribute</td>
+  </tr>
+</table>
+<h2>N.100 注意事项</h2>
+<p>对于多行文本的抽取，如果系统中不存在多行文本对象的字体，那么使用VBA打开图纸并抽取时取不到，但如果手工打开并指定字体转换后则可以抽到。</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<script language="javascript" src="index.js"></script>
+</body>
+</html>

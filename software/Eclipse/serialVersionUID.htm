@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>关于serialVersionUID的解释</title>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+<p id="title">第N章 关于serialVersionUID的解释
+</p>
+
+<p>前两天升级了Eclipse到3.1版本，在老版本的IDE环境中写的程序在Problems中会出来好多类似的警告:</p>
+<pre>The serializable class ListColumnAction does not declare a static final serialVersionUID field of type  long</pre>
+<p>当采用程序的自动修复时，采用Auto generate方式，Eclipse会加上：</p>
+<pre>private static final long serialVersionUID = xxxxxxxL;</pre>
+<p>其实这个问题倒也不影响程序的运行，但是我看到Problems里面有警告就不舒服，同时也说明我们写的代码还是不规范。不怕，我们有互联网查查是怎么回事，具体的原因还就是和序列化中的这个serialVersionUID有关。</p>
+<p> serialVersionUID 用来表明类的不同版本间的兼容性。如果你修改了此类, 要修改此值。否则以前用老版本的类序列化的类恢复时会出错。</p>
+<p>在JDK中，可以利用JDK的bin目录下的serialver.exe工具产生这个serialVersionUID，对于Test.class，执行命令：serialver Test。</p>
+<p>为了在反序列化时，确保类版本的兼容性，最好在每个要序列化的类中加入private static final long serialVersionUID这个属性，具体数值自己定义。这样，即使某个类在与之对应的对象已经序列化出去后做了修改，该对象依然可以被正确反序列化。否则，如果不显式定义该属性，这个属性值将由JVM根据类的相关信息计算，而修改后的类的计算结果与修改前的类的计算结果往往不同，从而造成对象的反序列化因为类版本不兼容而失败。</p>
+<p>不显式定义这个属性值的另一个坏处是，不利于程序在不同的JVM之间的移植。因为不同的编译器实现该属性值的计算策略可能不同，从而造成虽然类没有改变，但是因为JVM不同，出现因类版本不兼容而无法正确反序列化的现象出现。</p>
+<p>当我们的系统不太经常需要序列化类时，可以去掉这些警告，做如下设置：Window--&gt;Preferences--&gt;Java--&gt;Compiler--&gt;Error/Warings，将Potential programing problems下的serializable class without serialVersionUID的设置由warning改为Ignore。然后Eclipse会重新编译程序，那些警告信息也就消失了。</p>
+<p>最后的建议是，如果我们开发大量需要序列化的类的时候，我们最好还是还原为原来的设置。</p>
+<p>下面有JDK文档中给出的有关Serializable接口中给出的帮助:</p>
+
+<p>The serialization runtime associates with each serializable class a version number, called a serialVersionUID, which is used during deserialization to verify that the sender and receiver of a serialized object have loaded classes for that object that are compatible with respect to serialization. If the receiver has loaded a class for the object that has a different serialVersionUID than that of the corresponding sender's class, then deserialization will result in an InvalidClassException. A serializable class can declare its own serialVersionUID explicitly by declaring a field named &quot;serialVersionUID&quot; that must be static, final, and of type long:<br />
+</p>
+<p> ANY-ACCESS-MODIFIER static final long serialVersionUID = 42L;<br />
+  If a serializable class does not explicitly declare a serialVersionUID, then the serialization runtime will calculate a default serialVersionUID value for that class based on various aspects of the class, as described in the Java(TM) Object Serialization Specification. However, it is strongly recommended that all serializable classes explicitly declare serialVersionUID values, since the default serialVersionUID computation is highly sensitive to class details that may vary depending on compiler implementations, and can thus result in unexpected InvalidClassExceptions during deserialization. Therefore, to guarantee a consistent serialVersionUID value across different java compiler implementations, a serializable class must declare an explicit serialVersionUID value. It is also strongly advised that explicit serialVersionUID declarations use the private modifier where possible, since such declarations apply only to the immediately declaring class--serialVersionUID fields are not useful as inherited members. Array classes cannot declare an explicit serialVersionUID, so they always have the default computed value, but the requirement for matching serialVersionUID values is waived for array classes. </p>
+<p>&nbsp;</p>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</body>
+</html>

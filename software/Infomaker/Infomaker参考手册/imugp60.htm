@@ -1,0 +1,95 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+Retrieving data</TITLE>
+</HEAD>
+<BODY>
+<A NAME="CHDBDABC"></A><h1>Retrieving data</h1>
+<A NAME="TI2147"></A><p>In a report, you can prompt for retrieval criteria, retrieve
+rows as needed, and save retrieved rows to disk.</p>
+<A NAME="CAIDHFDE"></A><h2>Prompting for retrieval criteria in a report</h2>
+<A NAME="TI2148"></A><p>You can define your report so that it always prompts for
+retrieval criteria just before it retrieves data. </p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To prompt for retrieval criteria in a report:</p>
+<ol><li class=fi>
+Select View&gt;Column Specifications
+from the menu bar.<br><br>
+The Column Specifications view displays listing all columns
+in the report.<br><br></li>
+<li class=ds>
+Select the Prompt checkbox next to each column
+you want to be able to specify retrieval criteria for when you run
+the report.<br><br></li></ol>
+<br><A NAME="TI2149"></A><h4>What happens</h4>
+<A NAME="TI2150"></A><p>When you specify prompting for criteria, InfoMaker displays
+the following dialog box just before a retrieval is to be done:</p>
+<br><img src="images/Dwen29.gif">
+<A NAME="TI2151"></A><p>Each column you selected in the Column Specification view
+displays in the grid. You can specify criteria here exactly as in
+the grid with the Quick Select data source.</p>
+<A NAME="TI2152"></A><p>Criteria specified here are added to the WHERE clause for
+the SQL SELECT statement defined for the report.</p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Testing in InfoMaker</span> <A NAME="TI2153"></A>You can test the prompting for criteria by retrieving data
+in the Preview view of the report.</p>
+<A NAME="TI2154"></A><h4>Using edit styles</h4>
+<A NAME="TI2155"></A><p>If a column uses a code table or the RadioButton, CheckBox,
+or DropDownListBox edit style, an arrow displays in the column header
+and users can select a value from a dropdown listbox when specifying
+criteria:</p>
+<br><img src="images/Dwen30.gif">
+<A NAME="TI2156"></A><p>If you don't want the dropdown listbox used for a
+column for specifying retrieval criteria, select the Override Edit
+checkbox on the General property page of the column's Properties
+view.</p>
+<A NAME="TI2157"></A><h4>Forcing the entry of criteria</h4>
+<A NAME="TI2158"></A><p>If you have specified prompting for criteria for a column,
+you can force the entry of criteria for the column by selecting
+the Equality Required checkbox on the General property page of the
+column's Properties view. InfoMaker will underline the
+column header in the grid during prompting. Selection criteria for the
+specified column must be entered, and the = operator must
+be used.</p>
+<A NAME="TI2159"></A><h4>For more information</h4>
+<A NAME="TI2160"></A><p>The section <A HREF="imugp47.htm#BFCDBCEF">"Using Quick Select"</A> describes in detail how you can specify
+selection criteria in the grid.</p>
+<A NAME="CAIBFCAB"></A><h2>Retrieving rows as needed</h2>
+<A NAME="TI2161"></A><p>If your report retrieves hundreds of rows, there can be
+a noticeable delay while all the rows are retrieved. In these reports,
+you can have InfoMaker retrieve only as many rows as it has to
+before displaying data.</p>
+<A NAME="TI2162"></A><p>For example, if your report displays only 10 rows at a
+time, it might make sense to have InfoMaker retrieve only a small
+number of rows before presenting the data. Then as you page through
+the data, InfoMaker continues to retrieve what is necessary to
+display the new information. There may be slight pauses while InfoMaker retrieves
+the additional rows, but the pauses may be worth it if users do
+not need to wait a long time to start working with data.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To specify that a report retrieve only as
+many rows as it needs to:</p>
+<ol><li class=fi>
+Select Rows&gt;Retrieve Options&gt;Rows
+As Needed from the menu bar.<br><br>
+With this setting, InfoMaker presents data and returns control
+to you when it has retrieved enough rows to display in the report. <br><br></li></ol>
+<br><A NAME="TI2163"></A><p>Retrieve Rows As Needed is overridden if you have specified
+sorting or have used aggregate functions, such as Avg and Sum, in
+the report. This is because InfoMaker must retrieve every row
+before it can sort or perform aggregates.</p>
+<A NAME="TI2164"></A><p>In a multiuser situation, Retrieve Rows As Needed might lock
+other people from the tables.</p>
+<A NAME="CAIBJBCD"></A><h2>Saving retrieved rows to disk </h2>
+<A NAME="TI2165"></A><p>If you want to maximize the amount of memory available to InfoMaker and other
+running applications, you can have InfoMaker save retrieved data
+on your hard disk in a temporary file rather than keep the data
+in memory. InfoMaker swaps rows of data from the temporary file
+into memory as needed to display data.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To maximize available memory by saving retrieved
+rows to disk:</p>
+<ol><li class=fi>
+Select Rows&gt;Retrieve Options&gt;Rows
+to Disk from the menu bar.<br><br>
+With this setting, when displaying data, InfoMaker swaps
+rows of data from the temporary file into memory instead of keeping
+all the retrieved rows of data in memory. <br><br></li></ol>
+<br>

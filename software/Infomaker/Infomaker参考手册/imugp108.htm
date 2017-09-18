@@ -1,0 +1,112 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+Creating a data pipeline</TITLE>
+</HEAD>
+<BODY>
+<A NAME="BCDCCEBH"></A><h1>Creating a data pipeline</h1>
+<A NAME="TI4503"></A><p>You have a number of choices when creating a data pipeline.
+This section walks you through them.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To create a data pipeline:</p>
+<ol><li class=fi>
+Click the New button in the PowerBar and
+then select the Database tab page.<br><br></li>
+<li class=ds>
+Select Data Pipeline and click OK.<br><br>
+The New Data Pipeline dialog box displays.<br><br><br><img src="images/pipes060.gif"><br>
+
+The Source Connection and Destination Connection boxes display database
+profiles that have been defined. The last database you connected to
+is selected as the source. The first database on the destination
+list is selected as the destination.<br><br><p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>If you don't see the connections you need</span> <A NAME="TI4504"></A>To create a pipeline, the databases you want to use for your
+source and destination must each have a database profile defined.
+If you don't see profiles for the databases you want to
+use, cancel the New Data Pipeline dialog box and then define those
+profiles.</p>
+<A NAME="TI4505"></A>For information about defining profiles, see <A HREF="imugp109.htm#BCDDHDEH">"Changing the destination
+and source databases"</A>.</p>
+</li>
+<li class=ds>
+Select a data source.<br><br>
+The data source determines how InfoMaker retrieves data when
+you execute a pipeline:<br><br><A NAME="TI4506"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI4507"></A>Data source</th>
+<th align="left" valign=bottom><A NAME="TI4508"></A>Use it if</th>
+</tr>
+<tr><td valign=top><A NAME="TI4509"></A>Quick Select</td>
+<td valign=top><A NAME="TI4510"></A>The data is from tables that have a primary/foreign
+key relationship and you only need to sort and limit data</td>
+</tr>
+<tr><td valign=top><A NAME="TI4511"></A>SQL Select</td>
+<td valign=top><A NAME="TI4512"></A>You want more control over the SQL SELECT
+statement generated for the data source or your data is from tables
+that are not connected through a key</td>
+</tr>
+<tr><td valign=top><A NAME="TI4513"></A>Query</td>
+<td valign=top><A NAME="TI4514"></A>The data has been defined as a query</td>
+</tr>
+<tr><td valign=top><A NAME="TI4515"></A>Stored Procedure</td>
+<td valign=top><A NAME="TI4516"></A>The data is defined in a stored procedure</td>
+</tr>
+</table>
+</li>
+<li class=ds>
+Select the source and destination connections
+and click OK.<br><br></li>
+<li class=ds>
+Define the data to pipe.<br><br>
+How you do this depends on what data source you chose in step
+3.<br><br>
+For complete information about using each
+data source and defining the data, see <A HREF="imugp42.htm#BFCDDADG">Chapter 4, "Defining Reports "</A>.<br><br>
+When you finish defining the data to pipe, the Data Pipeline
+painter workspace displays the pipeline definition, which includes
+a pipeline operation, a checkbox for specifying whether to pipe
+extended attributes, and source and destination items:<br><br><br><img src="images/pipes070.gif"><br>
+
+The pipeline definition is InfoMaker's best guess
+based on the source data you specified.<br><br></li>
+<li class=ds>
+Modify the pipeline definition as needed.<br><br>
+For information, see <A HREF="imugp109.htm#BCDCFJDI">"Modifying the data pipeline
+definition "</A>.<br><br></li>
+<li class=ds>
+(Optional) Modify the source data as needed:<br><br><ol><li class=fi>
+Click the Data button in
+the PainterBar.<br><br>
+<i>or</i>
+<br><br>
+Select Design&gt;Edit Data Source from the menu
+bar.<br><br>
+For information about working in the Select
+painter, see <A HREF="imugp42.htm#BFCDDADG">Chapter 4, "Defining Reports "</A>.<br><br>
+When you return to the Data Pipeline painter workspace, InfoMaker reminds
+you that the pipeline definition will change. Click OK to accept
+the definition change.<br><br></li></ol>
+<br></li>
+<li class=ds>
+If you want to try the pipeline now, click the
+Execute button.<br><br>
+<i>or</i>
+<br><br>
+Select Design&gt;Execute from the menu bar.<br><br>
+InfoMaker retrieves the source data and executes the pipeline.
+If you specified retrieval arguments in the Select painter, InfoMaker first
+prompts you to supply them.<br><br><p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>The role of the Query governor</span> <A NAME="TI4517"></A>Options you set in the Query Governor affect the Data Pipeline
+painter when you specify the data and when data is piped. In the
+Query Governor, you can set data selection options and limit the
+number of rows piped and the elapsed piping time. </p>
+<A NAME="TI4518"></A>For more information, see <A HREF="imugp22.htm#CAICGJAJ">Chapter 2, "Working with Libraries"</A>.</p>
+
+During execution, the number of rows read and written, the
+elapsed execution time, and the number of errors display in MicroHelp.
+You can stop execution yourself or InfoMaker may stop execution
+when errors occur.<br><br>
+For information about execution and how rows
+are committed to the destination table, see <A HREF="imugp109.htm#BCDCGDID">"When execution stops"</A>.<br><br></li>
+<li class=ds>
+Save the pipeline definition if appropriate.<br><br>
+For information, see <A HREF="imugp111.htm#BCDCIABH">"Saving a pipeline "</A>.<br><br><p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Seeing the results of piping data</span> <A NAME="TI4519"></A>You can see the results of piping data by connecting to the
+destination database and opening the destination table.</p>
+</li></ol>
+<br>

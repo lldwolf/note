@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+<title>Windows基本组件</title>
+</head>
+
+<body>
+<p id="title">	基本组件</p>
+
+<table style="width:100%" >
+  <tr>
+    <th colspan="5">窗体控件</th>
+  </tr>
+  <tr>
+    <td width="20%">Button</td>
+    <td width="20%">CheckBox</td>
+    <td width="20%">CheckedListBox</td>
+    <td width="20%">ColorDialog</td>
+    <td width="20%"><a href="#ComboBox">ComboBox</a></td>
+  </tr>
+  <tr>
+    <td><a href="#ContextMenu">ContextMenu</a></td>
+    <td>CrystalReportView</td>
+    <td><a href="#DataGrid">DataGrid</a></td>
+    <td>DataGridComboBox</td>
+    <td>DataTimePicker</td>
+  </tr>
+  <tr>
+    <td>DomainUpDown</td>
+    <td>ErrorProvider</td>
+    <td>FolderBrowseDialog</td>
+    <td>FontDialog</td>
+    <td>GroupBox</td>
+  </tr>
+  <tr>
+    <td>HelpProvider</td>
+    <td>HScrollBar</td>
+    <td>ImageList</td>
+    <td><a href="#Label">Label</a></td>
+    <td>LinkLabel</td>
+  </tr>
+  <tr>
+    <td>ListBox</td>
+    <td><a href="#ListView">ListView</a></td>
+    <td>MainMenu</td>
+    <td>MonthCalendar</td>
+    <td>NotifyIcon</td>
+  </tr>
+  <tr>
+    <td>NumericUpDown</td>
+    <td>OpenFileDialog</td>
+    <td>PageSetupDialog</td>
+    <td>Panel</td>
+    <td><a href="#PictureBox">PictureBox</a></td>
+  </tr>
+  <tr>
+    <td>PrintDialog</td>
+    <td>PrintDocument</td>
+    <td>PrintPreviewControl</td>
+    <td>PrintPreviewDialog</td>
+    <td>ProgressBar</td>
+  </tr>
+  <tr>
+    <td>RadioButton</td>
+    <td><a href="#RichTextBox">RichTextBox</a></td>
+    <td>SaveFileDialog</td>
+    <td>Splitter</td>
+    <td>StatusBar</td>
+  </tr>
+  <tr>
+    <td>TabControl</td>
+    <td><a href="#TextBox">TextBox</a></td>
+    <td>Timer</td>
+    <td><a href="#ToolBar">ToolBar</a></td>
+    <td>ToolTip</td>
+  </tr>
+  <tr>
+    <td>TrackBar</td>
+    <td><a href="#TreeView">TreeView</a></td>
+    <td>VScrollBar</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <th colspan="5">其它</th>
+  </tr>
+  <tr>
+    <td><a href="#Form">Form</a></td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+<h1>Form－－窗体</h1>
+<h2>常用属性 </h2>
+<table style="width:99%">
+  <tr>
+    <th width="15%">属性</th>
+    <th width="15%">类型</th>
+    <th width="70%">说明</th>
+  </tr>
+  <tr>
+    <td width="15%">AcceptButton</td>
+    <td width="15%">Button对象</td>
+    <td width="70%">窗体的“接受”按钮，如果设置了些按钮，则用户每次按“Enter”键都相当于用鼠标点击该按钮。对应的还有CancelButton属性</td>
+  </tr>
+  <tr>
+    <td>BackColor</td>
+    <td>System.Drawing.Color</td>
+    <td>窗体背景色</td>
+  </tr>
+  <tr>
+    <td>BackgroundImage</td>
+    <td>System.Drawing.Image</td>
+    <td>窗体背景图片，会自动铺满整个窗体</td>
+  </tr>
+  <tr>
+    <td>CancelButton</td>
+    <td>Button对象</td>
+    <td>获取或设置当用户按 ESC 键时单击的按钮控件。对应的还有AcceptButton属性。</td>
+  </tr>
+  <tr>
+    <td>Cursor</td>
+    <td>System.Windows.Forms.Cursor</td>
+    <td>用于获取或设置窗体的鼠标光标。例如将Cursor属性设为System.Windows.Forms.Cursors.WaitCursor则显示漏斗光标，设为Cursors.Default则显示普通的箭头光标。</td>
+  </tr>
+  <tr>
+    <td>DialogResult</td>
+    <td>DialogResult</td>
+    <td>枚举值，标识对话框的返回值。有如下几个返回值： <br>
+        <ul>
+          <li>Abort</li>
+          <li>Cancel</li>
+          <li>Ignore</li>
+          <li>No</li>
+          <li>None</li>
+          <li>OK</li>
+          <li>Retry</li>
+          <li>Yes</li>
+      </ul></td>
+  </tr>
+  <tr>
+    <td width="15%">FormBorderStyle</td>
+    <td width="15%">System.Windows.Forms.FormBorderStyle</td>
+    <td width="70%">表示窗体的边框模式，其类型为System.Windows.Forms.FormBorderStyle，为枚举类型，有以下几种模式：<br>
+        <ul>
+          <li> None：没有外边框的窗体，例如LOGO窗体一般使用这种模式        
+          <li>FixedSingle: 固定大小的窗体
+          <li>Fixed3D: 具有3D外观的固定大小的窗体
+          <li>Sizable: 可变大小的窗体（默认值）
+          <li>FixedDialog: 固定大小的对话框
+          <li>SizableDialog: 可变大小的工具窗口
+          <li>FixedToolWindow: 固定大小的工具窗口
+          <li>SizableToolWindow: 可变大小的工具窗口
+                
+</ul></td>
+  </tr>
+  <tr>
+    <td>MaximizeBox</td>
+    <td>bool</td>
+    <td>是否显示最大化按钮</td>
+  </tr>
+  <tr>
+    <td>MinimizeBox</td>
+    <td> bool </td>
+    <td>是否显示最小化按钮</td>
+  </tr>
+  <tr>
+    <td>ShowInTaskbar</td>
+    <td>bool</td>
+    <td>是否显示在任务栏上显示，默认为true，除了MDI子窗体外，为了保证任务栏上只显示一个图标，需要将除了主窗体外的其它窗体该属性设为false。</td>
+  </tr>
+  <tr>
+    <td>StartPosition</td>
+    <td>FormStartPosition枚举</td>
+    <td>有以下几个可选值<br>
+        <ul>
+          <li>CenterParent      
+          <li>CenterScreen      
+          <li>Manual      
+          <li>WindowDefaultBounds（默认值）：窗体定位在 Windows 默认位置，其边界也由 Windows 默认决定。
+          <li> WindowsDefaultLocation：窗体定位在 Windows 默认位置，其尺寸在窗体大小中指定。
+      </ul></td>
+  </tr>
+  <tr>
+    <td>Text</td>
+    <td>string</td>
+    <td>窗体的标题</td>
+  </tr>
+  <tr>
+    <td>TopMost</td>
+    <td>bool</td>
+    <td>窗体是否总是显示在最顶层</td>
+  </tr>
+  <tr>
+    <td>WindowState</td>
+    <td> FormWindowState枚举</td>
+    <td>有以下可选值：<br>
+        <ul>
+          <li>Maximized</li>
+          <li>Minimized</li>
+          <li>Normal</li>
+      </ul></td>
+  </tr>
+</table>
+<h2>常用方法</h2>
+<table style="width:99%">
+  <tr>
+    <th width="40%">方法</th>
+    <th width="60%">说明</th>
+  </tr>
+  <tr>
+    <td>void Close();</td>
+    <td>关闭窗体</td>
+  </tr>
+  <tr>
+    <td> void Hide();</td>
+    <td>隐藏窗体</td>
+  </tr>
+  <tr>
+    <td>Point PointToClient(Point p);</td>
+    <td>将指定屏幕点的位置计算成工作区坐标。</td>
+  </tr>
+  <tr>
+    <td>Point PointToScreen(Point p);</td>
+    <td>将指定工作区点的位置计算成屏幕坐标。该方法和前面的方法用来在两个坐标系间转换，在进行定位时经常用到。</td>
+  </tr>
+  <tr>
+    <td>void Show();</td>
+    <td>以非模式方式显示窗口</td>
+  </tr>
+  <tr>
+    <td> DialogResult ShowDialog();<br>
+      DialogResult ShowDialog(IWin32Window);</td>
+    <td>以模式方式显示窗体。第二个方法带的参数为其所有者</td>
+  </tr>
+</table>
+<h2>常用事件 </h2>
+<table style="width:99%">
+  <tr>
+    <th width="40%">事件</th>
+    <th width="60%">说明</th>
+  </tr>
+  <tr>
+    <td>Closing</td>
+    <td>该事件接收一个 CancelEventArgs 类型的参数，只要把该参数的 Cancel 属性设为 true，即可取消该窗体的关闭操作。</td>
+  </tr>
+  <tr>
+    <td>Load</td>
+    <td>装载窗体时触发，可以在该事件做一些准备工作。</td>
+  </tr>
+  <tr>
+    <td>Move</td>
+    <td>在移动窗体时发生</td>
+  </tr>
+  <tr>
+    <td>Resize</td>
+    <td>在调整窗体大小时发生</td>
+  </tr>
+</table>
+<h2>如何实现MDI窗体</h2>
+<p>将MDI主窗体的 IsMdiContainer 属性设为true，设子窗体为Form2，在显示Form2时这样写</p>
+<pre class="code" data-type="csharp">Form2 frm = new Form2();
+frm.MdiParent = this;
+frm.Show();</pre>
+<p>注意，MDI子窗体不能以 ShowDialog 方式显示。</p>
+<h2>建立窗体的附属窗体</h2>
+<p>即使一个窗体的所有者窗体关闭时，该窗体随之关闭，经常用来实现工具栏窗口，或者进度条。</p>
+<pre class="code" data-type="csharp">private Form2 frm;
+
+...
+this.frm = new Form2();
+this.frm.Owner = this;
+
+this.frm.Show();</pre>
+<h2>使用Form名作为索引载入窗体</h2>
+<pre class="code" data-type="csharp">System.Reflection.Assembly assembly = System.Reflection.Assembly.GetExecutingAssembly();
+Form f = (Form)assembly.CreateInstance(&quot;demo.Form1&quot;);
+f.ShowDialog();</pre>
+<h2>MDI主窗体与子窗体的关闭事件</h2>
+<p>在Closing事件中可以控制窗体是否关闭。按下关闭按钮后，该事件的触发次序为先所有子窗体后主窗体。MDI主窗体与子窗体事件中的FormClosingEventArgs参数实际上使共享的。也就是说，在子窗体的Closing事件中将 e.Cancel 设为true，等到主窗体中的该事件被触发时，其 e.Cancel 已经是true了。</p>
+<h1>ComboBox</h1>
+<h2>常用属性</h2>
+<h2>绑定数据源</h2>
+<p>使用DataSource属性，数据源可为ArrayList、DataSet、DataTable等</p>
+<p>绑定后DisplayMember属性为显示的列名，ValueMember为取值的列名，用于SelectedValue属性提取选中的值</p>
+<p>注意：</p>
+<p> 1、若数据源为DataSet，则列名格式为“表名.字段名”，若为DataTable，则直接写列名即可。</p>
+<p>2、列名是分大小写的，这点是比较恶心的，例如ORACLE数据库列名全是大写，如果你在DisplayMember中写了小写的话，会在下拉框中显示莫名其妙的“System.Data.DataRowView”</p>
+<p>3、如果针对SelectedIndexChanged事件编程，在设置完DataSource后会触发事件，但这时SelectedValue.ToString()的值为“System.Data.DataRowView”，要注意过滤。</p>
+<h1>ContextMenu</h1>
+<p>如果要实现如下效果，点击某个按钮（鼠标左键），则在该按钮下方弹出菜单，所用代码如下：</p>
+<pre class="code" data-type="csharp">Point pt = new Point(0, this.button1.Height);
+this.ctmProduct.Show(this.button1, pt);</pre>
+<p>即Show()的参数中的坐标点为相对所属控件左上角坐标的相对位移。</p>
+<h1>DataGrid </h1>
+<h2>基本使用方法</h2>
+<p>DataGrid最基本的使用方法就是绑定一个数据集并将其显示出来，应在设计时使用 <B>DataSource</B> 和 <B>DataMember</B> 属性，或在运行时使用 <B>SetDataBinding</B> 方法将其绑定到数据源。对于 <B>DataGrid</B> 有效的数据源包括：</p>
+<ul>
+  <li>DataTable 类</li>
+  <li>DataView 类</li>
+  <li> DataSet 类</li>
+  <li>DataViewManager 类 </li>
+</ul>
+<p>使用方法如下：</p>
+<pre class="code" data-type="csharp">using System.Data.SqlClient;
+...
+SqlConnection conn = new SqlConnection(&quot;user id=sa;data source=localhost;persist security info=true;initial catalog=Northwind;password=sa&quot;);
+DataSet ds = new DataSet();
+string sql = &quot;select CustomerID, CompanyName, ContactName, ContactTitle, Address from Customers&quot;;
+SqlDataAdapter adapter = new SqlDataAdapter(sql, conn);
+adapter.Fill(ds);
+
+this.dataGrid1.SetDataBinding(ds, ds.Tables[0].TableName);
+//或 this.dataGrid1.DataSource = ds.Tables[0];</pre>
+<h2>常用属性</h2>
+<h2>读取或设置Grid内某个单元格的内容</h2>
+<p>利用其DataSource属性，例如在上例中显示当前单元格的内容：</p>
+<pre class="code" data-type="csharp">//显示当前单元格的内容
+MessageBox.Show(this.dataGrid1[this.dataGrid1.CurrentCell]);
+
+//显示第4行第一个单元格的内容
+MessageBox.Show(this.dataGrid1[3, 0]);
+
+//取出后台对应数据库记录的第4行某列值
+DataView dv = (this.dataGrid1.BindingContext[dataGrid1.DataSource] as CurrencyManager).List as DataView;
+MessageBox.Show(dv[4]["column_name"].toString());
+
+//读取当前单元格的值
+string cell_value = DataGrid[DataGrid.CurrentCell.RowNumber, DataGrid.CurrentCell.ColumnNumber].toString();
+
+//设置当前单元格的值
+DataGrid.CurrentCell = new DataGridCell(行号, 列号);		//均从0开始</pre>
+<p>注意，在取对应后台数据库的值时，不能直接用DataTable，因为datagrid会排序，排序后的对应值与datatable是不同的。</p>
+<h2>控制各列的显示</h2>
+<p>在上例中后面加入</p>
+<pre class="code" data-type="csharp">DataGridTableStyle ts = new DataGridTableStyle();
+ts.MappingName = this.dataGrid1.DataMember;
+
+DataGridColumnStyle tc1 = new DataGridTextBoxColumn();
+tc1.MappingName = &quot;CustomerID&quot;;
+tc1.HeaderText = &quot;客户编号&quot;;
+tc1.Width = 90;
+tc1.Alignment = HorizontalAlignment.Center;
+ts.GridColumnStyles.Add(tc1);
+
+DataGridColumnStyle tc2 = new DataGridTextBoxColumn();
+tc2.MappingName = &quot;CompanyName&quot;;
+tc2.HeaderText = &quot;公司名称&quot;;
+tc2.Width = 180;
+tc2.Alignment = HorizontalAlignment.Center;
+ts.GridColumnStyles.Add(tc2);
+
+this.dataGrid1.TableStyles.Clear();
+this.dataGrid1.TableStyles.Add(ts);
+</pre>
+<p>这时DataGrid只显示前两列。并且表头居中显示，内容变为中文，宽度也调整了。</p>
+<p>DataGrid还可显示检查框列，使用的类为DataGridBoolColumn。不过它只支持字符串类型的列，需要将数字型的列转为字符串型的列。</p>
+<p>上面是以编程方式实现的，更简单的方法是在DataGrid控件的TableStyles属性中定义，各属性含义同上。</p>
+<h2>以主从方式显示</h2>
+<p>下面是一段以主从方式在DataGrid中显示数据的代码：</p>
+<pre class="code" data-type="csharp">SqlConnection conn = new SqlConnection(&quot;user id=sa;data source=localhost;persist security info=true;initial catalog=Northwind;password=sa&quot;);
+DataSet ds = new DataSet();
+string sql = &quot;select OrderID, CustomerID from Orders&quot;;
+SqlDataAdapter adapter = new SqlDataAdapter(sql, conn);
+ds.Tables.Add(&quot;Orders&quot;);
+ds.Tables.Add(&quot;OrderDetails&quot;);
+adapter.Fill(ds, &quot;Orders&quot;);
+
+sql = &quot;select OrderID, ProductID, UnitPrice, Quantity from [Order Details]&quot;;
+adapter = new SqlDataAdapter(sql, conn);
+adapter.Fill(ds, &quot;OrderDetails&quot;);
+
+DataTable tb_parent = ds.Tables[&quot;Orders&quot;];
+DataTable tb_child = ds.Tables[&quot;OrderDetails&quot;];
+
+DataRelation dr = new DataRelation(
+		&quot;details&quot;, 
+		new DataColumn[]{tb_parent.Columns[&quot;OrderID&quot;]}, 
+		new DataColumn[]{tb_child.Columns[&quot;OrderID&quot;]}); 
+		ds.Relations.Add(dr);
+this.dataGrid1.SetDataBinding(ds, &quot;Orders&quot;);
+</pre>
+<p>显示如下图所示：</p>
+<p><img src="images/001.jpg" width="186" height="190"> &nbsp;&nbsp;&nbsp;<img src="images/002.jpg" width="188" height="113"> &nbsp;&nbsp;&nbsp;<img src="images/003.jpg" width="336" height="114"></p>
+<p>注意：必须保证父表中的记录是唯一的，也就是说你建relation的那个字段值必须唯一。否则会出现运行时错误“Those columns don't currently have unique value.”。另外，以前我们在控制列时使用如下语句设定 DataGridTableStyle 对象的 MappingName:</p>
+<pre class="code" data-type="csharp">DataGridTableStyle ts = new DataGridTableStyle();
+ts.MappingName = this.dataGrid1.DataMember;</pre>
+<p>在从表中这种语句就不行了。因为这时 DataGrid 的 DataMember 属性值为“Orders.details”，这时要设置从表的列显示就需要直接赋其子表名，如下所示</p>
+<pre class="code" data-type="csharp">ts.MappingName = &quot;OrderDetails&quot;;</pre>
+<p>不过DataGrid.DataMember属性可用来判断当前显示的主表还是从表，可在DataGrid.Navigate事件（在主从表显示切换时触发）中编写控制列显示属性的代码。</p>
+<h2>将DataGrid内容保存到数据库</h2>
+<p>有时需要在DataGrid中修改完数据后，再回写至数据库，方法如下：</p>
+<pre class="code" data-type="csharp">//引入测试数据
+private SqlConnection conn;
+private SqlDataAdapter dataAdapter;
+private DataSet saveData;
+private void button1_Click(object sender, System.EventArgs e)
+{
+  conn = new SqlConnection("user id=sa;data source=localhost;persist security info=true;initial catalog=Northwind;password=sa");
+  this.saveData = new DataSet();
+  string sql = "select top 10 CustomerID, CompanyName from Customers";
+  this.dataAdapter = new SqlDataAdapter(sql, conn);
+  this.dataAdapter.Fill(this.saveData);
+
+  this.dataGrid1.SetDataBinding(this.saveData, this.saveData.Tables[0].TableName);
+  conn.Close();
+}
+
+//保存修改后的数据
+private void button3_Click(object sender, System.EventArgs e)
+{
+  string sql = "update customers set companyname = @companyname where customerid = @customerid";
+  SqlCommand cmd = new SqlCommand(sql, this.conn);
+  SqlParameter parm = cmd.Parameters.Add("@customerid", SqlDbType.NChar, 10, "customerid");
+  parm.SourceVersion = DataRowVersion.Original;
+  cmd.Parameters.Add("@companyname", SqlDbType.NVarChar, 80, "companyname");
+  this.dataAdapter.UpdateCommand = cmd;
+  this.dataAdapter.Update(this.saveData);
+  MessageBox.Show("OK！");
+}</pre>
+<p><em>注意：对于ORACLE数据库，参数格式为 :参数名，使用如下代码：</em></p>
+<pre class="code" data-type="csharp">//保存修改后的数据
+private void button3_Click(object sender, System.EventArgs e)
+{
+  string sql = "update customers set companyname = :companyname where customerid = :customerid";
+  OracleCommand cmd = new SqlCommand(sql, this.conn);
+  OracleParameter parm = cmd.Parameters.Add("customerid", SqlDbType.NChar, 10, "customerid");
+  parm.SourceVersion = DataRowVersion.Original;
+  cmd.Parameters.Add("companyname", SqlDbType.NVarChar, 80, "companyname");
+  this.dataAdapter.UpdateCommand = cmd;
+  this.dataAdapter.Update(this.saveData);
+  MessageBox.Show("OK！");
+}</pre>
+<p><img src="images/note.jpg" width="20" height="20">注意：可通过DataTable.DefaultView的AllowDelete、AllowNew、AllowEdit属性来控制DataGrid能够使用的操作。</p>
+<p>我发现使用DeleteCommand时，出现了如下异常：</p>
+<p>后台的表主键在插入提交时生成，使用的Sql Server数据库，按如下步骤操作：</p>
+<ol>
+  <li>插入行</li>
+  <li>提交</li>
+  <li>删除行</li>
+  <li>提交</li>
+</ol>
+<p>在删除行后提交时系统出现异常：“并发冲突: DeleteCommand影响0个记录”，在实验各种方法无效下，只好在每次提交后再重新载入一次数据到DataGrid，则不再出现该问题。</p>
+<h2>在事件中获取发生的单元格</h2>
+<h3>Mouse事件</h3>
+<p>包括MouseDown、MouseUp等鼠标事件，获取发生鼠标事件单元格的方式如下：</p>
+<pre class="code" data-type="csharp">private void dataGrid1_MouseDown(object sender, System.Windows.Forms.MouseEventArgs e)
+{
+  DataGrid grid = (DataGrid)sender;
+  DataGrid.HitTestInfo hti = grid.HitTest(new Point(e.X, e.Y));
+  MessageBox.Show(hti.Row + ", " + hti.Column);
+}</pre>
+<p>其中获取的Row和Column即发生事件的行和列（数据区的行和列，从0开始计数）</p>
+<h3>Drag事件</h3>
+<p>包括各种拖放事件，获取发生鼠标事件单元格的方式如下：</p>
+<pre class="code" data-type="csharp">private void dbgTag_DragDrop(object sender, System.Windows.Forms.DragEventArgs e)
+{
+  e.Effect = DragDropEffects.Copy;
+  DataGrid grid = (DataGrid)sender;
+  DataGrid.HitTestInfo hti = grid.HitTest(grid.PointToClient(new Point(e.X, e.Y)));
+  MessageBox.Show(hti.Row + ", " + hti.Column);
+}</pre>
+<h2>读取或设置当前单元格的值</h2>
+<pre class="code" data-type="csharp">//读取当前单元格的值
+string cell_value = DataGrid[DataGrid.CurrentCell.RowNumber, DataGrid.CurrentCell.ColumnNumber].toString();
+
+//设置当前单元格
+DataGrid.CurrentCell = new DataGridCell(行号, 列号);		//均从0开始</pre>
+<h2>多行选择</h2>
+<pre class="code" data-type="csharp">DataTable table = (DataTable)this.dataGrid1.DataSource;
+for(int i = 0; i < table.Rows.Count; i++)
+	if(this.dataGrid1.IsSelected(i))
+	{
+		Tools.displayWarning(this.dataGrid1[i, 0].ToString());
+	}
+
+//或使用如下更好的方法
+foreach(DataGridViewRow dgvr in dataGridView1.SelectedRows)
+{
+    int index=dgvr.Index+1;//得到每行的行号 
+}</pre>
+<h2>拖放时的问题及解决方案</h2>
+<p>在datagrid中使用拖放事件时，则datagrid在调整行高或列宽时会出现奇怪现象，并且不能自动排序，解决方案如下：</p>
+<pre class="code" data-type="csharp">//在mouse_down和mouse_move事件中加入
+DataGrid grid = (DataGrid)sender;
+DataGrid.HitTestInfo hti = grid.HitTest(new Point(e.X, e.Y));
+if(hti.Type == DataGrid.HitTestType.RowResize || hti.Type == DataGrid.HitTestType.ColumnResize || hti.Type == DataGrid.HitTestType.ColumnHeader) 
+{
+	return;
+}</pre>
+<p>其中使用DataGird.HitTestType枚举的成员来确定网格中被单击的部分，内容如下：</p>
+<table style="width:90%" cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=20%>成员名称</TH>
+<TH width=60%>说明</TH>
+<TH width=20%>值</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=20%><B>Caption</B></TD>
+<TD width=60%>控件的标题。</TD>
+<TD width=20%>32</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=20%><B>Cell</B>
+</TD>
+<TD width=60%>控件中的单元格。</TD>
+<TD width=20%>1</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=20%><B>ColumnHeader</B>
+</TD>
+<TD width=60%>控件中的列标题。</TD>
+<TD width=20%>2</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=20%><B>ColumnResize</B>
+</TD>
+<TD width=60%>列边框，它是列标题之间的线。可以拖动它来调整列的宽度。</TD>
+<TD width=20%>8</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=20%><B>None</B></TD>
+<TD width=60%>当控件不包含表，或者包含的行很少时，或者当表滚动到其底部时可见的背景区域。</TD>
+<TD width=20%>0</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=20%><B>ParentRows</B></TD>
+<TD width=60%>控件的父行区域。父行显示来自或关于当前显示的子表的父表信息，如父表的名称、列名和父记录的值。</TD>
+<TD width=20%>64</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=20%><B>RowHeader</B>
+</TD>
+<TD width=60%>控件中的行标题。</TD>
+<TD width=20%>4</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=20%><B>RowResize</B>
+</TD>
+<TD width=60%>行边框，它是网格行标题之间的线。可以拖动它来调整行的高度。</TD>
+<TD width=20%>16</TD>
+</TR>
+</table>
+<h2>DataGrid的访问权限</h2>
+<p>对于DataGrid的属性Editable，只能保证是否能够是否能够对DataGrid中的内容是否能够进行修改，至于更复杂的控制是否能够进行删除、修改、插入操作则无能为力，控制的方法如下：</p>
+<pre class="code" data-type="csharp">//设datagrid的DataSource为DataTable table
+table.DefaultView.AllowDelete = false;
+table.DefaultView.AllowNew = false;
+table.DefaultView.AllowEdit = true;
+this.dataGrid1.DataSource = table.DefaultView;</pre>
+<p>这样的话，DataGrid中的内容不能删除、新增，但可以进行修改。</p>
+<h2>排序</h2>
+<p>默认情况下，单击DataGrid的列头会按该列自动排序，如果要去掉该功能，需把AllowSorting属性设为false，同时，如果为该 DataGrid 设置了TableStyle的话，需把TableStyle的AllowSorting属性也设为false。</p>
+<h1>Label－－标签</h1>
+<h1>PictureBox控件</h1>
+<h2>定制PictureBox边框显示</h2>
+<p>例如我们想让在鼠标移到PictureBox控件上时显示一个蓝色的粗线框，使用如下代码：</p>
+<pre class="code" data-type="csharp">bool draw = false;
+private const int BORDER_WIDTH = 6;
+
+private void pictureBox1_Paint(object sender, System.Windows.Forms.PaintEventArgs e)
+{
+	Pen pen = new Pen(Color.Blue, BORDER_WIDTH);
+	if (draw == true)
+		e.Graphics.DrawRectangle(pen, 0 ,0, this.pictureBox1.Width,this.pictureBox1.Height);
+	else
+		this.pictureBox1.Image = this.pictureBox1.Image;
+
+	pen.Dispose();
+}
+
+private void pictureBox1_MouseEnter(object sender, System.EventArgs e)
+{
+	draw = true;
+	this.pictureBox1.Invalidate();
+}
+
+private void pictureBox1_MouseLeave(object sender, System.EventArgs e)
+{
+	draw = false;
+	this.pictureBox1.Invalidate();
+}</pre>
+<h1>ListView</h1>
+<h2>使用Details View</h2>
+<p>将ListView控件的View属性设为Details，即为Details View，它的属性与视图的关系如下：</p>
+<p><img src="images/ListView.png" width="670" height="137"> </p>
+<p>各列的列标题由Columns属确定。</p>
+<h1>RichTexBox控件</h1>
+<h2>变换颜色及字体</h2>
+<pre class="code" data-type="csharp">richTextBox1.Select(0, 4);		//从第一个字符起，长度为4
+richTextBox1.SelectionFont = new Font(&quot;Tahoma&quot;, 12, FontStyle.Bold);
+richTextBox1.SelectionColor = System.Drawing.Color.Red;</pre>
+<h2>取光标所在位置的行号</h2>
+<pre class="code" data-type="csharp">public int RichTextBox_CurrentLine(RichTextBox rtb, int pos)
+{
+	if(pos &lt; 0)
+		pos = 0;
+	string txt = rtb.Text.Substring(0, pos);
+	int count = 0;
+	for(int i = 0; i &lt; pos; i++)
+	{
+		if(txt[i] == '\n')
+			count++;
+	}
+	return count;
+}</pre>
+<h2>取光标的当前位置</h2>
+<p>RichTextBox.SelectionStart属性</p>
+<h1>TextBox控件</h1>
+<p>TextBox控件在中文环境下用起来很怪，感觉字都在上面，而不是居然对齐的。这是因为TextBox本身是为英文设计的，如果你在里面敲英文，那绝对是居中对齐，而中文方块字是和大写字母的底部基线对齐的，所以中文字就都跑上面去了，如果换个字体，例如Arial，那么中文看上去也会好一点，显示在中间。</p>
+<h1>ToolBar 控件</h1>
+<p>字体一般不要去动，我曾在win2000下动了一下它的字体，实际也没做什么改动，只是在设计界面中其属性窗口中的字体属性变成了粗体，表示我改动过了。但在英文版winxp（加入了中文支持）下，按钮上的文字显示不出来了，直到把自动生成的字体设置代码删除后才恢复正常。</p>
+<h1>TreeView 树形控件</h1>
+<h2>GetNodeAt方法</h2>
+<p>在做拖放操作时，需要判断拖放到了树的哪个节点上，这时需要用到TreeView.GetNodeAt方法，不过在调用的时候需要把屏幕点的位置（设备坐标）换算成工作区坐标（通用坐标）</p>
+<pre class="code" data-type="csharp">private void TreeView_DragDrop(object sender, System.Windows.Forms.DragEventArgs e)
+{
+	if(e.Data.GetDataPresent(typeof(System.Collections.ArrayList)))
+	{
+		e.Effect = DragDropEffects.Copy;
+		TreeView tv = (TreeView)sender;
+		TreeNode node = tv.GetNodeAt(tv.PointToClient(new Point(e.X, e.Y)));
+	}
+}</pre>
+<h2>常用操作编程</h2>
+<h3>拖放时，经过目标结点时高亮显示</h3>
+<pre class="code" data-type="csharp">private void Treeview1_DragOver(object sender, DragEventArgs e)
+{
+    if (e.Data.GetDataPresent(typeof(DPAUInfo)))
+    {
+        TreeViewHitTestInfo hti = this.tvTarget.HitTest(this.Treeview1.PointToClient(new Point(e.X, e.Y)));
+        this.Treeview1.SelectedNode = hti.Node;
+    }
+}</pre>
+<p>&nbsp; </p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+
+</body>
+</html>

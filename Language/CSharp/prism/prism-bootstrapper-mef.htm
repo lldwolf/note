@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+	<script type="text/javascript" src="../../../mylib/js/css.js"></script>
+	<title>MEF Bootstrapper</title>
+</head>
+
+<body>
+	<p id="title">MEF Bootstrapper</p>
+	<h1>Overview</h1>
+	<p>MEF 提供了4种方式来加载 Module</p>
+	<ul>
+		<li>使用代码加载</li>
+		<li>将 Module 配置在 XAML 中</li>
+		<li>将 Module 配置在 config 文件中</li>
+		<li>指定目录，自动搜索合法的 Module</li>
+	</ul>
+	<p>前两种方式为静态方式，无法在不修改代码的情况下加载新的 Module。而后两种则无此限制。</p>
+	<p>Prism MEF 提供了一个很好的扩展，就是提供了一种混合加载的方式，可以同时支持多种方式的配置，下面我们将会在例子里看到如何使用这种方式来加载 Module。</p>
+	<h1>准备工作</h1>
+	<p>通过下面的代码，我们将完成一个能运行的程序，并实现如下特性：</p>
+	<ul>
+		<li>使用 Prism MEF 框架，从 Bootstrapper 启动</li>
+		<li>注册并启动 Shell</li>
+	</ul>
+	<h2>需要引用的类库</h2>
+	<p>在本例中，我们需要引用如下3个类库</p>
+	<table style="width: 700px">
+		<tr>
+			<th style="width: 300px">类库</th>
+			<th>说明</th>
+		</tr>
+		<tr>
+			<td>System.ComponentModel.Composition</td>
+			<td>MEF</td>
+		</tr>
+		<tr>
+			<td>Microsoft.Practices.Prism.Composition</td>
+			<td>MEF Prism 扩展包</td>
+		</tr>
+		<tr>
+			<td>Microsoft.Practices.Prism.MefExtensions</td>
+			<td>MEF Prism 扩展包</td>
+		</tr>
+	</table>
+	<h2>创建 Shell</h2>
+	<p>即创建主窗口，只需要注意一点就可以了，需要在窗口类声明上使用 Export Attribute</p>
+	<pre class="code" data-type="csharp">using System.ComponentModel.Composition;
+...
+<span style="background-color:aquamarine">[Export]</span>
+public partial class MainWindow : Window
+{
+	...
+}</pre>
+	<h2>创建 Bootstrapper 类</h2>
+	<p>基于 MefBootstrapper 创建，并设置 Shell</p>
+	<pre class="code" data-type="csharp">public class Bootstrapper : MefBootstrapper
+{
+	protected override DependencyObject CreateShell()
+	{
+		return this.Container.GetExportedValue&lt;MainWindow&gt;();
+	}
+
+	protected override void InitializeShell()
+	{
+		base.InitializeShell();
+
+		Application.Current.MainWindow = (MainWindow)this.Shell;
+		Application.Current.MainWindow.Show();
+	}
+
+	//使用混合加载方式来加载 Module
+	protected override void ConfigureAggregateCatalog()
+	{
+		base.ConfigureAggregateCatalog();
+
+		//这个是用于注册 Shell 本身的 Module
+		this.AggregateCatalog.Catalogs.Add(new AssemblyCatalog(typeof(Bootstrapper).Assembly));
+	}
+}</pre>
+	<p class="note">上面的代码通过重载 <span></span>ConfigureAggregateCatalog 来使用了混合加载的方式。里面用于注册 Shell 自身 Module 的方式即是使用代码直接加载 Module。</p>
+	<h2>App.xaml 和 App.xaml.cs</h2>
+	<p>需要指定从 Bootstrapper 启动，而不是启动默认的主窗口</p>
+	<p style="font-weight:bold">App.xaml</p>
+	<pre class="code" data-type="xml">&lt;Application <span style="background-color:aquamarine">x:Class=&quot;GollfToolkit.Shell.App&quot;</span>
+             xmlns=&quot;http://schemas.microsoft.com/winfx/2006/xaml/presentation&quot;
+             xmlns:x=&quot;http://schemas.microsoft.com/winfx/2006/xaml&quot;&gt;
+&lt;/Application&gt;</pre>
+	<p style="font-weight:bold">App.xaml.cs</p>
+	<pre class="code" data-type="csharp">public partial class App : Application
+{
+	protected override void OnStartup(StartupEventArgs e)
+	{
+		base.OnStartup(e);
+
+		// The boostrapper will create the Shell instance, so the App.xaml does not have a StartupUri.
+		Bootstrapper bootstrapper = new Bootstrapper();
+		bootstrapper.Run();
+	}
+}</pre>
+	<h1>使用配置文件来注册 Module</h1>
+	<h2>建立 Module Project</h2>
+	<p>创建一个 Class Library Project，我们将其命名为 TestModule (Assembly Name 和 Default Namespace 也就用这个不改了)，建立 Module 的入口类 ModuleA，如下所示</p>
+	<pre class="code" data-type="csharp">using Microsoft.Practices.Prism.MefExtensions.Modularity;
+using Microsoft.Practices.Prism.Modularity;
+
+namespace TestModule
+{
+	[ModuleExport(typeof(ModuleA), InitializationMode = InitializationMode.OnDemand)]
+	public class ModuleA : IModule
+    {
+		public ModuleA()
+		{
+			System.Console.WriteLine("ModuleA is created.");
+		}
+
+		public void Initialize()
+		{
+			System.Console.WriteLine("ModuleA is initialized.");
+		}
+    }
+}</pre>
+	<p>上例实现了以下要素</p>
+	<ul>
+		<li>使用 ModuleExport 将模块公开</li>
+		<li>InitializationMode.OnDemand 表示 Module 将根据需要时加载</li>
+		<li>Initialize 函数将在 Module 首次加载时调用</li>
+	</ul>
+	<p class="note">因为我们需要将生成的文件复制到 Shell 所在的目录中，可以在 Project 属性页的 Build Events -&lt; Post-build event command line 中加入以下命令：<br /><br />
+		xcopy "$(TargetDir)TestModule.dll" "$(SolutionDir)Shell\bin\$(ConfigurationName)\" /Y
+	</p>
+	<h2>在配置文件 app.config 中注册</h2>
+	<pre class="code" data-type="xml">	&lt;configSections&gt;
+		&lt;section name=&quot;modules&quot;
+						 type=&quot;Microsoft.Practices.Prism.Modularity.ModulesConfigurationSection, Microsoft.Practices.Prism.Composition&quot;/&gt;
+	&lt;/configSections&gt;
+	&lt;modules&gt;
+		&lt;module assemblyFile=&quot;TestModule.dll&quot;
+						moduleType=&quot;TestModule.ModuleA, TestModule, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null&quot;
+						moduleName=&quot;ModuleA&quot;
+						startupLoaded=&quot;false&quot;/&gt;
+	&lt;/modules&gt;</pre>
+	<p>示例中需要注意的地方</p>
+	<ul>
+		<li>startupLoaded="false" 表示在系统启动时不自动加载该 Module</li>
+		<li>moduleName 的值定义了引用名</li>
+		<li>assemblyFile 指定了 Module 所在的 DLL 文件。</li>
+	</ul>
+	<h2>在 BootStrapper 使用 ConfigurationModuleCatalog</h2>
+	<pre class="code" data-type="csharp">
+public class Bootstrapper : MefBootstrapper
+{
+	...
+
+	protected override IModuleCatalog CreateModuleCatalog()
+	{
+		return new ConfigurationModuleCatalog();
+	}
+
+}</pre>
+	<p class="note">这里体现了 Prims MEF 的优势，可以混用多种方式的 ModuleCatalog.</p>
+	<h2>使用代码加载 Module</h2>
+	<p>在 Shell Window 中加个 Button 来加载 Module</p>
+	<pre class="code" data-type="csharp">using System.ComponentModel.Composition;
+using System.Windows;
+using Microsoft.Practices.Prism.Modularity;
+
+namespace GollfToolkit.Shell
+{
+	[Export]
+	public partial class MainWindow : Window
+	{
+		...
+
+#pragma warning disable 0649 // Imported by MEF
+
+		[Import(AllowRecomposition = false)]
+		private IModuleManager moduleManager;
+
+#pragma warning restore 0649
+
+		private void btnLoadA_Click(object sender, RoutedEventArgs e)
+		{
+			this.moduleManager.LoadModule("ModuleA");
+		}
+	}
+}</pre>
+	<p>上面的代码需要注意以下几点</p>
+	<ul>
+		<li>使用 pragma 预编译指令禁掉了编译警告，因为 moduleManager 将由 MEF 注入</li>
+		<li>Import Attribute 表示该变量将由 MEF 注入</li>
+		<li>app.config 中将 Module 标识定义为 "ModuleA"，所以将其作为 LoadModule 的参数</li>
+	</ul>
+	<h2>如何声明 Module Dependency</h2>
+	<p>声明 Module Dependency 后，MEF 会加载某个 Module 时自动加载 Dependency Module</p>
+	<p>模似 TestModule Project，我们建立一个几乎完全相同的 TestModuleB（除了类名不同），然后在 app.config 在做如下修改</p>
+	<pre class="code" data-type="xml">&lt;module assemblyFile=&quot;TestModuleB.dll&quot;
+				moduleType=&quot;TestModuleB.ModuleB, TestModuleB, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null&quot;
+				moduleName=&quot;ModuleB&quot;
+				startupLoaded=&quot;false&quot;&gt;
+	&lt;dependencies&gt;
+		&lt;dependency moduleName=&quot;ModuleA&quot;/&gt;
+	&lt;/dependencies&gt;
+&lt;/module&gt;</pre>
+</body>
+</html>

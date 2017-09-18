@@ -1,0 +1,408 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<script language="javascript" src="css.js"></script>
+<title>命名规则</title>
+</head>
+
+<body>
+<h1>第N章 命名规则</h1>
+<hr noshade>
+<h2><a href="#ISA">N.1 ISA 命名规则</a></h2>
+<h2><a href="#LOOP">N.2 LOOP 命名规则</a></h2>
+<h2><a href="#FLEXIBLE">N.3 Flexible 命名规则</a></h2>
+<h2><a href="#FREE">N.4 Free Format 命名规则</a> </h2>
+<hr noshade>
+<h2><a name="ISA"></a>N.1 ISA 命名规则</h2>
+<p>命名规则的每一段由两部分组成：分隔符和描述符。你可以使用任何字符作为分隔符，不过，我们伟大光荣正确的Intergraph预定义了一套分隔符，您老可以在下拉列表框中选择</p>
+<p>分隔符出现在每一段的前面，例如在仪表位号的命名规则中，第一个分隔符为‘U’，其它的分隔符为‘-’或‘/’，您也可以不设，以免碍眼。</p>
+<p>前缀（第一段）一般用来表示位号所在的DPAU。</p>
+<h3>N.1.1 仪表位号 </h3>
+<table width="90%">
+  <tr valign="middle">
+    <th width="20%">段</th>
+    <th width="20%">前缀</th>
+    <th width="20%">功能描述</th>
+    <th width="20%">回路ID</th>
+    <th width="20%">回路后缀</th>
+  </tr>
+  <tr valign="middle">
+    <td><p>示例</p></td>
+    <td><p>U 108 </p></td>
+    <td><p>FE-</p></td>
+    <td><p>2212/</p></td>
+    <td><p>1</p></td>
+  </tr>
+  <tr valign="middle">
+    <td><p>可用值</p></td>
+    <td><p>AREA NAME</p>
+        <p>PLANT NAME</p>
+        <p>UNIT NAME</p>
+    <p>UNIT NUMBER</p></td>
+    <td>仪表类型<br><br>
+
+    component_function_type.cmpnt_func_type_name</td>
+    <td><p>COMPONENT NUMBER</p>
+      <p>component.cmpnt_num</p></td>
+    <td><p>COMPONENT SUFFIX</p>
+    <p>component.cmpnt_suff</p></td>
+  </tr>
+</table>
+<h3>N.1.2 回路号</h3>
+<table width="90%" >
+  <tr>
+    <th width="16%">段</th>
+    <th width="20%">前缀</th>
+    <th width="16%">测定变量</th>
+    <th width="16%">功能</th>
+    <th width="16%">Loop Number </th>
+    <th width="16%">后缀</th>
+  </tr>
+  <tr>
+    <td>示例</td>
+    <td>U 108 - </td>
+    <td>F - </td>
+    <td>E - </td>
+    <td>2212 / </td>
+    <td>1</td>
+  </tr>
+  <tr>
+    <td>可用值</td>
+    <td>Area Name<br>
+    <br>
+    Loop Prefix<br>
+    <br>
+    Plant Name<br>
+    <br>
+    Unit Name<br>
+    <br>
+    Unit Number </td>
+    <td>Loop Measured Variable </td>
+    <td>Loop Function</td>
+    <td>Loop Number </td>
+    <td>Loop Suffix </td>
+  </tr>
+</table>
+<p><img src="images/bm1.BMP">注意：对于ISA标准的位号和回路号，前经段和后缀段的分隔符是可选的，同时回路功能段也是可选的。</p>
+<h3>N.1.3 接线设备</h3>
+<table width="90%" >
+  <tr>
+    <th width="25%">段</th>
+    <th width="25%">前缀</th>
+    <th width="25%">位号</th>
+    <th width="25%">后缀</th>
+  </tr>
+  <tr>
+    <td>示例</td>
+    <td>108</td>
+    <td>108 - FT - 2210/1 </td>
+    <td>1</td>
+  </tr>
+  <tr>
+    <td>可用值</td>
+    <td>Panel Prefix </td>
+    <td>位号（位号的全部, 包括分隔符）</td>
+    <td>Panel Suffix </td>
+  </tr>
+</table>
+<h3>N.1.4 设备电缆</h3>
+<table width="90%" >
+  <tr>
+    <th width="25%">段</th>
+    <th width="25%">前缀</th>
+    <th width="25%">位号</th>
+    <th width="25%">后缀</th>
+  </tr>
+  <tr>
+    <td>示例</td>
+    <td>C</td>
+    <td>108 - FT - 2210/1 </td>
+    <td>1</td>
+  </tr>
+  <tr>
+    <td>可用值</td>
+    <td>Cable Prefix </td>
+    <td>位号（位号的全部, 包括分隔符）</td>
+    <td>Cable Suffix </td>
+  </tr>
+</table>
+<h3>N.1.5 控制室位号</h3>
+<p> 控制室仪表位号包括7个段(真TMD多), 在下面的例子中, 5个段用于显示数据(对于不用的段, 将它们的<strong>Length</strong>参数设为0即可).</p>
+<table width="90%" >
+  <tr>
+    <th width="20%">段</th>
+    <th width="16%">1</th>
+    <th width="16%">2</th>
+    <th width="16%">3</th>
+    <th width="16%">4</th>
+    <th width="16%">5</th>
+  </tr>
+  <tr>
+    <td>示例</td>
+    <td>U 108 - </td>
+    <td>FE - </td>
+    <td>E - </td>
+    <td>1</td>
+    <td>TEST</td>
+  </tr>
+  <tr>
+    <td>可用值</td>
+    <td>Area Name<br>
+      <br>
+Plant Name<br>
+<br>
+Unit Name<br>
+<br>
+Unit Number </td>
+    <td valign="middle">仪表类型<br>
+        <br>  </td>
+    <td valign="middle"><p>回路功能</p>
+    </td>
+    <td valign="middle"><p>仪表后缀</p>
+    </td>
+    <td>自由段</td>
+  </tr>
+</table>
+<p><img src="images/bm1.BMP">注意: </p>
+<ul>
+  <li>
+    设定控制室仪表位号的命名规则, 是为了能够让INTOOLS自动创建控制仪表位号. 如果没有创建这个命名规则, CS Tag会使用如下命名方式: 仪表类型 + 数字串 + \后缀. 如果你想在定义仪表类型时别名(alias)选项可用的话, 必须要先在命名规则中选择仪表类型别名(INST. TYPE ALIAS)作为其中的一个段.
+  </li>
+  <li>你也可以选择仪表位号作为其中的一个段.</li>
+</ul>
+<h2><a name="LOOP"></a>N.2 Loop 命名规则</h2>
+<p> 每段包括一个分隔符和一个描述字符串（与ISA一样的啦，不过如果你没看我上一节的话，就没这种感觉了）。你可以使用任何字符作为分隔符，不过，我们伟大光荣正确的Intergraph预定义了一套分隔符，您老可以在下拉列表框中选择（我懒得改了，直接从ISA中copy过来了）。</p>
+<h3>N.2.1 位号</h3>
+<table width="90%" >
+  <tr>
+    <th width="20%">段</th>
+    <th width="16%">前缀</th>
+    <th width="16%">回路信息</th>
+    <th width="16%">回路ID</th>
+    <th width="16%">回路后缀</th>
+    <th width="16%">位号后缀</th>
+  </tr>
+  <tr>
+    <td>示例</td>
+    <td>U 108 - </td>
+    <td>LRC - </td>
+    <td>2212 - </td>
+    <td>A / </td>
+    <td>LX1</td>
+  </tr>
+  <tr>
+    <td>可用值</td>
+    <td>Area Name<br>
+      <br>
+Loop Prefix<br>
+<br>
+Plant Name<br>
+<br>
+Unit Name<br>
+<br>
+Unit Number </td>
+    <td>测量变量 + 回路功能 </td>
+    <td>Loop Number </td>
+    <td>Loop Suffix </td>
+    <td>仪表类型</td>
+  </tr>
+</table>
+<p><img src="images/bm1.BMP">注意：在该命名规则中，位号后缀段是必须的，前缀段和回路后缀段是可选的。</p>
+<h3>N.2.2 回路号</h3>
+<table width="90%" >
+  <tr>
+    <th width="20%">段</th>
+    <th width="16%">前缀</th>
+    <th width="16%">测量变量</th>
+    <th width="16%">功能</th>
+    <th width="16%">Loop Number </th>
+    <th width="16%">后缀</th>
+  </tr>
+  <tr>
+    <td>示例</td>
+    <td>U 108 - </td>
+    <td>L - </td>
+    <td>RC - </td>
+    <td>2212</td>
+    <td>/A</td>
+  </tr>
+  <tr>
+    <td>可用值</td>
+    <td>Area Name<br>
+      <br>
+Loop Prefix<br>
+<br>
+Plant Name<br>
+<br>
+Unit Name<br>
+<br>
+Unit Number</td>
+    <td>测量变量</td>
+    <td>回路功能</td>
+    <td>Loop Number </td>
+    <td>回路后缀</td>
+  </tr>
+</table>
+<p><img src="images/bm1.BMP">注意：前缀段和后缀段是可选的</p>
+<h3>N.2.3 接线设备</h3>
+<table width="90%" >
+  <tr>
+    <th width="25%">段</th>
+    <th width="25%">前缀</th>
+    <th width="25%">位号</th>
+    <th width="25%">后缀</th>
+  </tr>
+  <tr>
+    <td>示例</td>
+    <td>108</td>
+    <td>108 - FT - 2210/1 </td>
+    <td>1</td>
+  </tr>
+  <tr>
+    <td>可用值</td>
+    <td>Panel Prefix </td>
+    <td>位号（全）</td>
+    <td>Panel Suffix </td>
+  </tr>
+</table>
+<h3>N.2.4 电缆</h3>
+<table width="90%" >
+  <tr>
+    <th width="25%">段</th>
+    <th width="25%">前缀</th>
+    <th width="25%">位号</th>
+    <th width="25%">后缀</th>
+  </tr>
+  <tr>
+    <td>示例</td>
+    <td>C</td>
+    <td>108 - FT - 2210/1 </td>
+    <td>1</td>
+  </tr>
+  <tr>
+    <td>可用值</td>
+    <td>Cable Prefix </td>
+    <td>位号（全）</td>
+    <td>Cable Suffix </td>
+  </tr>
+</table>
+<h3>N.2.5 控制室位号</h3>
+<p>控制室仪表位号包括7个段(真TMD多), 在下面的例子中, 5个段用于显示数据(对于不用的段, 将它们的<strong>Length</strong>参数设为0即可).</p>
+<table width="90%" >
+  <tr>
+    <th width="20%">段</th>
+    <th width="16%">1</th>
+    <th width="16%">2</th>
+    <th width="16%">3</th>
+    <th width="16%">4</th>
+    <th width="16%">5</th>
+  </tr>
+  <tr>
+    <td>示例</td>
+    <td>U 108 - </td>
+    <td>FE - </td>
+    <td>E - </td>
+    <td>1</td>
+    <td>TEST</td>
+  </tr>
+  <tr>
+    <td>可用值</td>
+    <td>Area Name<br>
+        <br>
+      Component Prefix<br>
+      <br>
+      Plant Name<br>
+      <br>
+      Unit Name<br>
+      <br>
+      Unit Number </td>
+    <td valign="middle">仪表类型<br>
+        <br>
+    </td>
+    <td valign="middle"><p>回路功能</p></td>
+    <td valign="middle"><p>仪表后缀</p></td>
+    <td>自由段</td>
+  </tr>
+</table>
+<p><img src="images/bm1.BMP"> 注意： 设定控制室仪表位号的命名规则, 是为了能够让INTOOLS自动创建控制仪表位号. 如果没有创建这个命名规则, CS Tag会使用如下命名方式: 仪表类型 + 数字串 + \后缀. 如果你想在定义仪表类型时别名(alias)选项可用的话, 必须要先在命名规则中选择仪表类型别名(INST. TYPE ALIAS)作为其中的一个段.</p>
+<h2><a name="FLEXIBLE"></a>N.3 Flexible 命名规则</h2>
+<p>分段，但你可以设定下列任意内容作为一段：</p>
+<table width="90%" >
+  <tr>
+    <th width="30%">段</th>
+    <th width="70%">描述</th>
+  </tr>
+  <tr>
+    <td>AREA NAME </td>
+    <td>区域名</td>
+  </tr>
+  <tr>
+    <td>COMPONENT NUMBER </td>
+    <td>位号的数字段，例如位号 101-FT-202/A，数字段为202 </td>
+  </tr>
+  <tr>
+    <td>EQUIPMENT</td>
+    <td>设备</td>
+  </tr>
+  <tr>
+    <td>FREE SEGMENT </td>
+    <td>任意字符串</td>
+  </tr>
+  <tr>
+    <td>INSTRUMENT TYPE </td>
+    <td>仪表类型<br>
+    <br>
+    因为没有强制的仪表类型段了，所以在新建位号时，必须要手工关联其仪表类型。</td>
+  </tr>
+  <tr>
+    <td>LINE</td>
+    <td>Line Number </td>
+  </tr>
+  <tr>
+    <td>LOOP FUNCTION </td>
+    <td>回路功能</td>
+  </tr>
+  <tr>
+    <td>LOOP MEASURED VARIABLE </td>
+    <td>回路的测量变量</td>
+  </tr>
+  <tr>
+    <td>P&amp;ID</td>
+    <td>P&amp;ID 图号 </td>
+  </tr>
+  <tr>
+    <td>PLANT NAME </td>
+    <td>装置名</td>
+  </tr>
+  <tr>
+    <td>SUFFIX</td>
+    <td>位号或回路号后缀<br>
+    <br>
+    后缀用于批量创建回路或位号（如何批量创建位号）</td>
+  </tr>
+  <tr>
+    <td>UNIT NAME </td>
+    <td>单元名</td>
+  </tr>
+  <tr>
+    <td>UNIT NUMBER </td>
+    <td>Unit Number </td>
+  </tr>
+</table>
+<h2><a name="FREE"></a>N.4 Free Format 命名规则</h2>
+<p>只有一段，你想咋写就咋写。</p>
+<p><img src="images/bm1.BMP">注意：因为没有强制的仪表类型段了，所以在新建位号时，必须要手工关联其仪表类型。</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp; </p>
+<p>&nbsp; </p>
+<p>&nbsp; </p>
+<p>&nbsp;</p>
+<p>&nbsp; </p>
+<p>&nbsp;</p>
+<p>&nbsp; </p>
+<script language="javascript" src="index.js"></script>
+</body>
+</html>

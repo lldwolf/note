@@ -1,0 +1,194 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+Sample patterns</TITLE>
+</HEAD>
+<BODY>
+<A NAME="CAIDIFDJ"></A><A NAME="TI7089"></A><h1>Match</h1>
+<A NAME="TI7090"></A><p>
+<FORM>
+<INPUT
+ TYPE = "BUTTON"
+ VALUE = "Examples"
+ onClick = "window.location = 'imugp204.htm#EX56';">
+<INPUT
+  TYPE = "BUTTON"
+ VALUE = "See also"
+ onClick = "window.location = 'imugp204.htm#SA56';">
+</FORM>
+</p>
+<h3>Description</h3><A NAME="TI7091"></A><p>Determines whether a string's value contains a particular
+pattern of characters.</p>
+
+<h3>Syntax</h3><pre><b>Match</b> ( <i>string</i>, <i>textpattern</i> )</pre>
+<A NAME="TI7092"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI7093"></A>Argument</th>
+<th align="left" valign=bottom><A NAME="TI7094"></A>Description</th>
+</tr>
+<tr><td valign=top><A NAME="TI7095"></A><i>string</i></td>
+<td valign=top><A NAME="TI7096"></A>The string in which you want to look
+for a pattern of characters</td>
+</tr>
+<tr><td valign=top><A NAME="TI7097"></A><i>textpattern</i></td>
+<td valign=top><A NAME="TI7098"></A>A string whose value is the text pattern</td>
+</tr>
+</table>
+
+<h3>Return Values</h3><A NAME="TI7099"></A><p>Boolean. Returns TRUE if <i>string</i> matches <i>textpattern</i> and
+FALSE if it does not. Match also returns FALSE if either argument
+has not been assigned a value or the pattern is invalid.</p>
+
+<h3>Usage</h3><A NAME="TI7100"></A><p>Match enables you to evaluate whether a string contains a
+general pattern of characters. To find out whether a string contains
+a specific substring, use the Pos function.</p>
+<A NAME="TI7101"></A><p><i>Textpattern</i> is similar to a regular expression.
+It consists of metacharacters, which have special meaning, and ordinary
+characters, which match themselves. You can specify that the string
+begin or end with one or more characters from a set, or that it
+contain any characters except those in a set.</p>
+<A NAME="TI7102"></A><p>A text pattern consists of <strong>metacharacters</strong>,
+which have special meaning in the match string, and <strong>nonmetacharacters</strong>,
+which match the characters themselves.</p>
+<A NAME="TI7103"></A><p>The following tables explain the meaning and use of these
+metacharacters:</p>
+<A NAME="TI7104"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI7105"></A>Metacharacter</th>
+<th align="left" valign=bottom><A NAME="TI7106"></A>Meaning</th>
+<th align="left" valign=bottom><A NAME="TI7107"></A>Example</th>
+</tr>
+<tr><td valign=top><A NAME="TI7108"></A>Caret (^)</td>
+<td valign=top><A NAME="TI7109"></A>Matches the beginning of a string</td>
+<td valign=top><A NAME="TI7110"></A>^C matches C at the beginning of a string</td>
+</tr>
+<tr><td valign=top><A NAME="TI7111"></A>Dollar sign ($)</td>
+<td valign=top><A NAME="TI7112"></A>Matches the end of a string</td>
+<td valign=top><A NAME="TI7113"></A>s$ matches s at the end of a string</td>
+</tr>
+<tr><td valign=top><A NAME="TI7114"></A>Period (.)</td>
+<td valign=top><A NAME="TI7115"></A>Matches any character</td>
+<td valign=top><A NAME="TI7116"></A>. . . matches three consecutive characters</td>
+</tr>
+<tr><td valign=top><A NAME="TI7117"></A>Backslash (\)</td>
+<td valign=top><A NAME="TI7118"></A>Removes the following metacharacter's
+special characteristics so that it matches itself</td>
+<td valign=top><A NAME="TI7119"></A>\$ matches $</td>
+</tr>
+<tr><td valign=top><A NAME="TI7120"></A>Character class (a group of characters
+enclosed in square brackets [ ])</td>
+<td valign=top><A NAME="TI7121"></A>Matches any of the enclosed characters</td>
+<td valign=top><A NAME="TI7122"></A>[AEIOU] matches A,
+E, I, O, or U<A NAME="TI7123"></A>You can use hyphens to abbreviate ranges of characters in
+a character class. For example, [A-Za-z] matches
+any letter</td>
+</tr>
+<tr><td valign=top><A NAME="TI7124"></A>Complemented character class (first character inside
+the brackets is a caret)</td>
+<td valign=top><A NAME="TI7125"></A>Matches any character <i>not</i>
+ in
+the group following the caret</td>
+<td valign=top><A NAME="TI7126"></A>[^0-9] matches any
+character except a digit, and [^A-Za-z] matches
+any character except a letter</td>
+</tr>
+</table>
+<A NAME="TI7127"></A><p>The metacharacters asterisk (*), plus (+),
+and question mark (?) are unary operators that are used to specify
+repetitions in a regular expression:</p>
+<A NAME="TI7128"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI7129"></A>Metacharacter</th>
+<th align="left" valign=bottom><A NAME="TI7130"></A>Meaning</th>
+<th align="left" valign=bottom><A NAME="TI7131"></A>Example</th>
+</tr>
+<tr><td valign=top><A NAME="TI7132"></A>* (asterisk)  </td>
+<td valign=top><A NAME="TI7133"></A>Indicates zero or more occurrences</td>
+<td valign=top><A NAME="TI7134"></A>A* matches zero or more As (no
+As, A, AA, AAA, and so on)</td>
+</tr>
+<tr><td valign=top><A NAME="TI7135"></A>+ (plus)  </td>
+<td valign=top><A NAME="TI7136"></A>Indicates one or more occurrences</td>
+<td valign=top><A NAME="TI7137"></A>A+ matches one A or more than
+one A (A, AAA, and so on)</td>
+</tr>
+<tr><td valign=top><A NAME="TI7138"></A>? (question mark)  </td>
+<td valign=top><A NAME="TI7139"></A>Indicates zero or one occurrence</td>
+<td valign=top><A NAME="TI7140"></A>A? matches an empty string ("") or A</td>
+</tr>
+</table>
+<A NAME="TI7141"></A><h4>Sample patterns</h4>
+<A NAME="TI7142"></A><p>The following table shows various text patterns and sample text
+that matches each pattern:</p>
+<A NAME="TI7143"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI7144"></A>This pattern</th>
+<th align="left" valign=bottom><A NAME="TI7145"></A>Matches</th>
+</tr>
+<tr><td valign=top><A NAME="TI7146"></A>AB</td>
+<td valign=top><A NAME="TI7147"></A>Any string that contains AB; such as
+ABA, DEABC, graphAB_one</td>
+</tr>
+<tr><td valign=top><A NAME="TI7148"></A>B*</td>
+<td valign=top><A NAME="TI7149"></A>Any string that contains 0 or more Bs;
+such as AC, B, BB, BBB, ABBBC, and so on</td>
+</tr>
+<tr><td valign=top><A NAME="TI7150"></A>AB*C</td>
+<td valign=top><A NAME="TI7151"></A>Any string containing the pattern AC
+or ABC or ABBC, and so on (0 or more Bs)</td>
+</tr>
+<tr><td valign=top><A NAME="TI7152"></A>AB+C</td>
+<td valign=top><A NAME="TI7153"></A>Any string containing the pattern ABC
+or ABBC or ABBBC, and so on (1 or more Bs)</td>
+</tr>
+<tr><td valign=top><A NAME="TI7154"></A>ABB*C</td>
+<td valign=top><A NAME="TI7155"></A>Any string containing the pattern ABC
+or ABBC or ABBBC, and so on (1 B plus 0 or more Bs)</td>
+</tr>
+<tr><td valign=top><A NAME="TI7156"></A>^AB</td>
+<td valign=top><A NAME="TI7157"></A>Any string starting with AB</td>
+</tr>
+<tr><td valign=top><A NAME="TI7158"></A>AB?C</td>
+<td valign=top><A NAME="TI7159"></A>Any string containing the pattern AC
+or ABC (0 or 1 B)</td>
+</tr>
+<tr><td valign=top><A NAME="TI7160"></A>^[ABC]</td>
+<td valign=top><A NAME="TI7161"></A>Any string starting with A, B, or C</td>
+</tr>
+<tr><td valign=top><A NAME="TI7162"></A>[^ABC]</td>
+<td valign=top><A NAME="TI7163"></A>A string containing any characters other
+than A, B, or C</td>
+</tr>
+<tr><td valign=top><A NAME="TI7164"></A>^[^abc]</td>
+<td valign=top><A NAME="TI7165"></A>A string that begins with any character
+except a, b, or c</td>
+</tr>
+<tr><td valign=top><A NAME="TI7166"></A>^[^a-z]$</td>
+<td valign=top><A NAME="TI7167"></A>Any single-character string that is not
+a lowercase letter (^ and $ indicate the beginning and
+end of the string)</td>
+</tr>
+<tr><td valign=top><A NAME="TI7168"></A>[A-Z]+</td>
+<td valign=top><A NAME="TI7169"></A>Any string with one or more uppercase
+letters</td>
+</tr>
+<tr><td valign=top><A NAME="TI7170"></A>^[0-9]+$</td>
+<td valign=top><A NAME="TI7171"></A>Any string consisting only of digits</td>
+</tr>
+<tr><td valign=top><A NAME="TI7172"></A>^[0-9][0-9][0-9]$</td>
+<td valign=top><A NAME="TI7173"></A>Any string consisting of exactly three
+digits</td>
+</tr>
+<tr><td valign=top><A NAME="TI7174"></A>^([0-9][0-9][0-9])$</td>
+<td valign=top><A NAME="TI7175"></A>Any consisting of exactly three digits
+enclosed in parentheses</td>
+</tr>
+</table>
+
+<A NAME="EX56"></A><h3>Examples</h3><A NAME="TI7176"></A><p>This validation rule checks that the value the user
+entered begins with an uppercase letter. If value of the expression
+is false, the data fails validation:<pre><i>Match</i> (GetText(), "^[A-Z]")</pre>
+</p>
+
+<A NAME="SA56"></A><h3>See Also</h3><A NAME="TI7177"></A><p><A NAME="TI7178"></A>
+<ul>
+<li class=fi><A HREF="imugp221.htm#CAIBADFC">Pos</A></li>
+<li class=ds> 
+</li>
+</ul>
+</p>
+
+

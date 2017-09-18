@@ -1,0 +1,72 @@
+unit GetStringPropFrm;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, ModuleFrm, StdCtrls, TypInfo;
+
+type
+  TFrmGetStringProp = class(TFrm)
+    Label1: TLabel;
+    EdtProp: TEdit;
+    BtnGet: TButton;
+    BtnSet: TButton;
+    LblResult: TLabel;
+    Label3: TLabel;
+    EdtNew: TEdit;
+    BtnTrial: TButton;
+    procedure BtnGetClick(Sender: TObject);
+    procedure BtnSetClick(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  FrmGetStringProp: TFrmGetStringProp;
+
+implementation
+
+{$R *.dfm}
+
+procedure TFrmGetStringProp.BtnGetClick(Sender: TObject);
+var
+  PropInfo: PPropInfo;
+begin
+  if not Assigned(BtnTrial) then
+    ShowMessage('按钮名字已改变')
+  else
+  begin
+    PropInfo := GetPropInfo(BtnTrial.ClassInfo, EdtProp.Text);
+    if PropInfo <> nil then
+      if PropInfo^.PropType^.Kind = tkString then
+        LblResult.Caption := GetStrProp(BtnTrial, PropInfo)
+      else
+        ShowMessage('Not a string property')
+    else
+      ShowMessage('Propperty dosen''t exist');
+  end;
+end;
+
+procedure TFrmGetStringProp.BtnSetClick(Sender: TObject);
+var
+  PropInfo: PPropInfo;
+begin
+  if not Assigned(BtnTrial) then
+    ShowMessage('名字已改变！')
+  else
+  begin
+    PropInfo := GetPropInfo(BtnTrial.ClassInfo, EdtProp.Text);
+    if PropInfo <> nil then
+      if PropInfo^.PropType^.Kind = tkString then
+        SetStrProp(BtnTrial, PropInfo, EdtNew.Text)
+      else
+        ShowMessage('不是字符串属性')
+    else
+      ShowMessage('属性不存在!');
+  end;
+end;
+
+end.

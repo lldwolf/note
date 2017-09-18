@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>在Ubuntu下安装Tomcat 6</title>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+<p id="title">在Ubuntu下安装Tomcat 6</p>
+
+<h1>整理后的安装说明 </h1>
+<ol>
+  <li>JDK6要先装好</li>
+  <li>设置环境变量CATALINA_HOME为TOMCAT的主目录</li>
+  <li>在环境变量CLASSPATH中添加$CATALINA_HOME/lib</li>
+  <li>为$CATALINA_HOME/bin下的所有.sh文件添加执行权限</li>
+  <li>在$CATALIN_HOME/conf/tomcat-users.xml中添加Tomcat管理员用户</li>
+</ol>
+<p>启动tomcat的命令为</p>
+<pre>sh startup.sh</pre>
+<p>关闭tomcat的命令为</p>
+<pre>sh shutdown.sh</pre>
+<h1>手记 </h1>
+<p>JDK得首先确保安好，既然是装Tomcat 6，那么JDK也可装6及以上版本。JAVA_HOME和CLASS_PATH环境变量也设好，设置方法参见本人写的《JDK安装手记》</p>
+<p>到www.apache.org上下载Tomcat 6，是个zip文件，先在图形界面（我用的是gnome）下直接解压就行。然后令我莫名其妙的事开始了。</p>
+<p>到tomcat的bin目录下，我找到了startup.sh，然后我运行命令：</p>
+<pre>startup.sh</pre>
+<p>然后，出现了经典提示：</p>
+<pre>bash: shartup.sh: command not found</pre>
+<p>立刻晕菜，试着输入如下命令</p>
+<pre>bash startup.sh</pre>
+<p>似乎有点戏，因为错误提示信息变成了</p>
+<pre>Cannot find ./catalina.sh
+This file is needed to run this program</pre>
+<p>catalina.sh绝对就在当前目录下，咋回事？</p>
+<p>上网去查，说是可能权限不足，还好家里有本破linux教程，2000年出版的，当年贪便宜买的，买来也没怎么看过。找到了权限修改的命令，给startup.sh和catalina.sh加上执行权限</p>
+<pre>chmod +x startup.sh
+chmod +x catalina.sh
+chmod +x shutdown.sh</pre>
+<p>可以用命仅“list -l”查看权限。</p>
+<p>然后运行“bash startup.sh”，系统提示“BASEDIR is not defined”，比较晕，再试试“sudo bash startup.sh”，这下子更好，告诉我没有定义 JAVA_HOME 环境变量，我靠，JAVA程序都已经能运行了，还提示这个，郁闷地吐血。以前我改环境变量改的是/etc/environment，在网上乱翻资料，说是应该改/etc/profile，照着网上的说法抄了一下，如下所示：</p>
+<pre>PATH="/home/用户名/jdk/jdk1.6.0_06/bin:原先的PATH"
+JAVA_HOME="/home/用户名/jdk/jdk1.6.0_06"
+CLASSPATH="/home/用户名/jdk/jdk1.6.0_06/lib:."
+export PATH,JAVA_HOME,CLASSPATH</pre>
+<p>然后注销，Oh, God, 系统都登录不进去了，说是那个该死的“export PATH,JAVA_HOME,CLASSPATH”错误，只好使用修复模式（我的linux下只有一个普通用户）使用root登录，然后改成了</p>
+<pre>export PATH
+export JAVA_HOME
+export CLASSPATH</pre>
+<p>再启动就好了，但结果还是一样。我觉得我的命好苦，为什么看网上这帮子人都装得这么顺利，而我却弄出这么多事。由此深深地感受到了windows为什么能在普通用户市场独孤求败了，因为连我都搞得这么辛苦，怎么指望被普通人来接受linux。</p>
+<p>死马当活马医吧，在/etc/profile中再加上tomcat的根目录定义，环境变量名为BASEDIR，看一下怎么样，结果一个鸟样。使用env命令查看环境变量，BASEDIR、JAVA_HOME等变量皆在其中，哪里出错了？</p>
+<p>在网上乱翻资料，加入各种各样的环境变量，包括BASEDIR、CATALINA_HOME、CATALINA_BASE等，均告失败。后来灵光显现，执行如下命令：</p>
+<pre>chmod +x *.sh</pre>
+<p>再使用“sh startup.sh”，嗯，显示：</p>
+<pre>Using CATALINA_BASE:		/home/andy/java/tomcat6
+Using CATALINA_HOME:		/home/andy/java/tomcat6
+Using CATALINA_TMPDIR:	/home/andy/java/tomcat6/temp
+Using JRE_HOME		/home/andy/java/jdk1.6.0_06</pre>
+<p>貌似对了，不过在Firefox中输入http://localhost:8080，发现打不开Tomcat主页，Sigh，老天不是在玩我吧。不过仔细看了一下错误信息，发现不是提示网页没找到，而是说现在处理离线状态，所以不能浏览，我靠，我访问的是本机，关网络连接屁事，把File菜单中的“Work offline”选项上的对勾去掉，刷新，哇，那只该死的猫终于出来了。</p>
+<p>可惜最后它还是要让我头疼一下，我点了一下主页面左侧导航树内的“Status”链接，居然弹出提示框让我输入用户名和口令，我有点发蒙，在Windows下安装时会提示我输入用户名和口令，这个没设过啊，我试着输入用户名admin，口令为空，不行！好在Tomcat充分为菜鸟考虑，我点了cancel按钮后，系统给出了提示，根据提示，我到$CATALINA_HOME/conf/tomcat-users.xml，在&lt;tomcat-users&gt;标签中加入admin用户如下所示：</p>
+<pre>&lt;role rolename=&quot;manager&quot; /&gt;
+&lt;user username=&quot;admin&quot; password=&quot;password&quot; roles=&quot;manager&quot; /&gt;</pre>
+<p>然后重启Tomcat，再使用用户名admin，口令password登录，果然可以了，哈哈。睡觉。</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+
+</body>
+</html>

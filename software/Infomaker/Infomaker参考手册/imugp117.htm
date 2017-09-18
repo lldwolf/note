@@ -1,0 +1,343 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+Working with forms</TITLE>
+</HEAD>
+<BODY>
+<A NAME="X-ref386533843"></A><h1>Working with forms</h1>
+<A NAME="TI4878"></A><p>Once you have created a basic form, you can run it, import
+data into it, save its data in an external file, and print it. You
+can also assign actions to buttons you place in the form.</p>
+<A NAME="X-ref299433000"></A><h2>Running forms</h2>
+<A NAME="TI4879"></A><p>You run forms to display and change information in the database.
+You can run a form anytime after InfoMaker has generated a basic
+form.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To run a form you are not currently working on:</p>
+<ol><li class=fi>
+Click the Preview button in the PowerBar,
+select the form in the Run/Preview dialog box, then click
+OK:<br><br><br><img src="images/Dfrm22a.gif"><br>
+</li></ol>
+<br><p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To run a form you are currently working on:</p>
+<ol><li class=fi>
+Click the Run button in the PainterBar.<br><br></li></ol>
+<br><A NAME="TI4880"></A><h4>What happens</h4>
+<A NAME="TI4881"></A><p>You are now running the form. Command buttons and picture
+buttons you have placed in the form are now active.</p>
+<A NAME="TI4882"></A><p>For information about adding controls to a
+form, see <A HREF="imugp119.htm#BFCEACJI">Chapter 16, "Enhancing Forms"</A>.</p>
+<A NAME="TI4883"></A><p>Exactly what you can do when you run the form depends on the
+form style. It is the form style that determines the menu items
+that display in the menu bar and the buttons that display in the
+PainterBar when you run a form.</p>
+<A NAME="TI4884"></A><p>Typically when you run a form, InfoMaker retrieves the data
+from the database and displays it to you; then you can scroll through
+existing data and add, modify, and delete rows in the database.</p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>When you change data using a form</span> <A NAME="TI4885"></A>If you change data and you do not click the Update button
+before closing the form, InfoMaker prompts you to save data in
+the database before closing the form.</p>
+<A NAME="TI4886"></A><p>For complete information about what you can
+do when running forms that use InfoMaker's built-in form
+styles, see <A HREF="imugp117.htm#X-ref356371930">"Actions in forms"</A>.</p>
+<A NAME="TI4887"></A><p>If you need information about running forms using a style
+developed by a PowerBuilder user at your site, see the developer.</p>
+<A NAME="X-ref356371569"></A><h2>Limiting the retrieved data </h2>
+<A NAME="TI4888"></A><p>After you run a form, you can specify criteria that limit
+the rows of data and cause a re-retrieval of rows.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To specify criteria to limit the data:</p>
+<ol><li class=fi>
+Click the Criteria button in the toolbar.<br><br>
+<i>or</i>
+<br><br>
+Select Rows&gt;Specify Criteria from the menu
+bar.<br><br>
+InfoMaker clears all the data.<br><br></li>
+<li class=ds>
+Specify the criteria.<br><br>
+In master/detail forms, you specify the criteria
+in the form's master area, which is a freeform area for
+master/detail one-to-many forms and a grid area for master/detail
+many-to-one forms. Both are like the grid you use when defining
+data using the Quick Select data source.<br><br>
+Use expressions and operators in the blank spaces of the grid
+to specify criteria.<br><br>
+To specify a second set of criteria in a master/detail
+one-to-many form, press page down to get a new
+entry form and specify the criteria in the new master area. The
+second set of criteria will be ORed with the first set; data is
+retrieved if one set <i>or</i>
+ the other set is true.<br><br>
+For information about expressions, see <A HREF="imugp47.htm#BFCDBCEF">"Using Quick Select"</A>, and <A HREF="imugp143.htm#CAIBEHFJ">Chapter 20, "Operators
+and Expressions"</A>.<br><br></li>
+<li class=ds>
+Click the Apply button.<br><br>
+<i>or</i>
+<br><br>
+Select Rows&gt;Apply Criteria from the menu bar.<br><br>
+InfoMaker retrieves rows based on the criteria.<br><br></li>
+<li class=ds>
+If you want to modify the criteria, repeat steps
+1 through 3.<br><br></li></ol>
+<br><A NAME="TI4889"></A><h2>Importing data into a form</h2>
+<A NAME="TI4890"></A><p>When you run a form, you can import data from a file and save
+it in the database.</p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>For freeform and grid forms only</span> <A NAME="TI4891"></A>You can import data only in freeform and grid forms. You cannot
+import data in master/detail forms.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To import data:</p>
+<ol><li class=fi>
+Select Rows&gt;Import from the menu
+bar.<br><br>
+The Select Import File dialog box displays. <br><br></li>
+<li class=ds>
+Navigate to the folder you want and select the
+file from which you want to import the data. <br><br>
+The types of files that you can import into the form are shown
+in the Files of Type dropdown listbox.<br><br></li>
+<li class=ds>
+Click Open.<br><br>
+InfoMaker reads the data from the file. You can view the
+data and save it in an external file.<br><br></li></ol>
+<br><p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Data from a file must match retrieved columns</span> <A NAME="TI4892"></A>When importing data from a file, the data must match all the
+columns in the retrieved data (the columns specified in the SELECT
+statement), not just the columns that are displayed in the form.</p>
+<A NAME="X-ref307383663"></A><h2>Saving data in an external file</h2>
+<A NAME="TI4893"></A><p>When you run a form, you can save the data retrieved (and
+optionally the headers) in an external file.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To save data in an external file:</p>
+<ol><li class=fi>
+Select File&gt;Save Rows As from
+the menu bar.<br><br>
+The Save As dialog box displays.<br><br></li>
+<li class=ds>
+Choose a format for the file from the Save As
+Type dropdown listbox. <br><br>
+When you choose a format, InfoMaker supplies the appropriate
+file extension.<br><br>
+If you want the column headers saved in the file, select a
+file format that includes headers, for example Excel With Headers.
+When you select a <i>with headers</i>
+ format, the
+names of the database columns (not the column labels), are also
+saved in the file.<br><br><p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Saving the data as a Powersoft report or HTML table</span> <A NAME="TI4894"></A>Choose Powersoft report in the Save As Type box to save the
+data as a Powersoft PSR file. Choose HTML Table in the Save As Type
+box to save the data as an HTM file.</p>
+<A NAME="TI4895"></A>For information about PSR files and about
+working with files saved as HTM files, see <A HREF="imugp51.htm#CAICGCGD">Chapter 5, "Enhancing Reports "</A>.</p>
+</li>
+<li class=ds>
+Name the file.<br><br></li>
+<li class=ds>
+Click Save.<br><br>
+InfoMaker saves all rows in the file; all columns in the
+rows are saved.<br><br></li></ol>
+<br><A NAME="X-ref307190271"></A><h2>Printing forms</h2>
+<A NAME="TI4896"></A><p>Although forms are primarily used for data entry, after you
+run a form, you can print it. Printing a freeform form is particularly
+helpful because each page displays the data one row at a time.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To print a form:</p>
+<ol><li class=fi>
+Select File&gt;Print from the menu
+bar.<br><br>
+<i>or</i>
+<br><br>
+Add a command button to a form, associate the print
+action with the button, and click the button.<br><br></li></ol>
+<br><A NAME="TI4897"></A><p>For information about adding a command button
+and associating an action with a button, see <A HREF="imugp119.htm#BFCEACJI">Chapter 16, "Enhancing Forms"</A>.</p>
+<A NAME="X-ref356371930"></A><h2>Actions in forms</h2>
+<A NAME="TI4898"></A><p>You can assign the actions in the following table to buttons
+you place in a form. Many actions are also available in the toolbar
+and menu when you run a form.</p>
+<A NAME="TI4899"></A><p>Because all data is visible in Grid style forms, there are
+no First, Last, Next, and Prior buttons/actions as there
+are in the Freeform, Master/Detail One-To-Many, and Master/Detail
+Many-To-One styles.</p>
+<A NAME="TI4900"></A><p>For information about placing buttons in a
+form, see <A HREF="imugp119.htm#BFCEACJI">Chapter 16, "Enhancing Forms"</A>.</p>
+<A NAME="TI4901"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI4902"></A>Action</th>
+<th align="left" valign=bottom><A NAME="TI4903"></A>Menu item</th>
+<th align="left" valign=bottom><A NAME="TI4904"></A>What the action does</th>
+<th align="left" valign=bottom><A NAME="TI4905"></A>Form styles available in</th>
+</tr>
+<tr><td valign=top><A NAME="TI4906"></A>Apply_Criteria</td>
+<td valign=top><A NAME="TI4907"></A>Rows&gt;Apply Criteria</td>
+<td valign=top><A NAME="TI4908"></A>Validates the selection criteria, then
+re-retrieves the rows based on the criteria</td>
+<td valign=top><A NAME="TI4909"></A>All</td>
+</tr>
+<tr><td valign=top><A NAME="TI4910"></A>Cancel_Updates</td>
+<td valign=top><A NAME="TI4911"></A>Rows&gt;Cancel Changes</td>
+<td valign=top><A NAME="TI4912"></A>Discards changes made since the last update</td>
+<td valign=top><A NAME="TI4913"></A>All</td>
+</tr>
+<tr><td valign=top><A NAME="TI4914"></A>Clear_Filter</td>
+<td valign=top><A NAME="TI4915"></A>None</td>
+<td valign=top><A NAME="TI4916"></A>Clears the current filter</td>
+<td valign=top><A NAME="TI4917"></A>Freeform, Grid</td>
+</tr>
+<tr><td valign=top><A NAME="TI4918"></A>Clear_Detail_Filter</td>
+<td valign=top><A NAME="TI4919"></A>None</td>
+<td valign=top><A NAME="TI4920"></A>Clears the detail filter</td>
+<td valign=top><A NAME="TI4921"></A>Master/Detail One-To-Many,<A NAME="TI4922"></A>Master/Detail Many-To-One</td>
+</tr>
+<tr><td valign=top><A NAME="TI4923"></A>Clear_Master_Filter</td>
+<td valign=top><A NAME="TI4924"></A>None</td>
+<td valign=top><A NAME="TI4925"></A>Clears the master filter</td>
+<td valign=top><A NAME="TI4926"></A>Master/Detail One-To-Many,<A NAME="TI4927"></A>Master/Detail Many-To-One</td>
+</tr>
+<tr><td valign=top><A NAME="TI4928"></A>Close</td>
+<td valign=top><A NAME="TI4929"></A>File&gt;Close</td>
+<td valign=top><A NAME="TI4930"></A>Closes the form (in the InfoMaker environment,
+returns you to design mode)</td>
+<td valign=top><A NAME="TI4931"></A>All</td>
+</tr>
+<tr><td valign=top><A NAME="TI4932"></A>Delete_Row</td>
+<td valign=top><A NAME="TI4933"></A>Rows&gt;Delete (ctrl+d)</td>
+<td valign=top><A NAME="TI4934"></A>Deletes the current row in the form</td>
+<td valign=top><A NAME="TI4935"></A>All</td>
+</tr>
+<tr><td valign=top><A NAME="TI4936"></A>Filter_Dialog</td>
+<td valign=top><A NAME="TI4937"></A>None</td>
+<td valign=top><A NAME="TI4938"></A>Displays the Filter dialog box for defining
+a filter</td>
+<td valign=top><A NAME="TI4939"></A>Freeform, Grid</td>
+</tr>
+<tr><td valign=top><A NAME="TI4940"></A>Filter_Detail_Dialog</td>
+<td valign=top><A NAME="TI4941"></A>None</td>
+<td valign=top><A NAME="TI4942"></A>Displays the Filter dialog box for defining
+a filter for the detail part of the form</td>
+<td valign=top><A NAME="TI4943"></A>Master/Detail One-To-Many,<A NAME="TI4944"></A>Master/Detail Many-To-One</td>
+</tr>
+<tr><td valign=top><A NAME="TI4945"></A>Filter_Master_Dialog</td>
+<td valign=top><A NAME="TI4946"></A>None</td>
+<td valign=top><A NAME="TI4947"></A>Displays the Filter dialog box for defining
+a filter for the master part of the form</td>
+<td valign=top><A NAME="TI4948"></A>Master/Detail One-To-Many,<A NAME="TI4949"></A>Master/Detail Many-To-One</td>
+</tr>
+<tr><td valign=top><A NAME="TI4950"></A>First_Row</td>
+<td valign=top><A NAME="TI4951"></A>Rows&gt;First</td>
+<td valign=top><A NAME="TI4952"></A>Scrolls to the first retrieved row (in
+the master area)</td>
+<td valign=top><A NAME="TI4953"></A>Freeform, Master/Detail One-To-Many</td>
+</tr>
+<tr><td valign=top><A NAME="TI4954"></A>Import_File</td>
+<td valign=top><A NAME="TI4955"></A>Rows&gt;Import</td>
+<td valign=top><A NAME="TI4956"></A>Displays the Select Import File dialog box
+to select a file for importing rows of data</td>
+<td valign=top><A NAME="TI4957"></A>Freeform, Grid</td>
+</tr>
+<tr><td valign=top><A NAME="TI4958"></A>Insert_Row</td>
+<td valign=top><A NAME="TI4959"></A>Rows&gt;Insert (ctrl+i)</td>
+<td valign=top><A NAME="TI4960"></A>Inserts a new row (in the master area) and
+scrolls to it with the cursor in the first column</td>
+<td valign=top><A NAME="TI4961"></A>All</td>
+</tr>
+<tr><td valign=top><A NAME="TI4962"></A>Last_Row</td>
+<td valign=top><A NAME="TI4963"></A>Rows&gt;Last</td>
+<td valign=top><A NAME="TI4964"></A>Scrolls to the last row in the form (in
+the master area)</td>
+<td valign=top><A NAME="TI4965"></A>Freeform, Master/Detail One-To-Many</td>
+</tr>
+<tr><td valign=top><A NAME="TI4966"></A>Next_Row</td>
+<td valign=top><A NAME="TI4967"></A>Rows&gt;Next</td>
+<td valign=top><A NAME="TI4968"></A>Scrolls to the next row</td>
+<td valign=top><A NAME="TI4969"></A>Freeform, Master/Detail One-To-Many</td>
+</tr>
+<tr><td valign=top><A NAME="TI4970"></A>Print</td>
+<td valign=top><A NAME="TI4971"></A>File&gt;Print</td>
+<td valign=top><A NAME="TI4972"></A>Prints the retrieved data</td>
+<td valign=top><A NAME="TI4973"></A>All</td>
+</tr>
+<tr><td valign=top><A NAME="TI4974"></A>Print_Dialog</td>
+<td valign=top><A NAME="TI4975"></A>None</td>
+<td valign=top><A NAME="TI4976"></A>Displays the Windows Print dialog</td>
+<td valign=top><A NAME="TI4977"></A>Freeform, Grid</td>
+</tr>
+<tr><td valign=top><A NAME="TI4978"></A>Print_Setup</td>
+<td valign=top><A NAME="TI4979"></A>File&gt;Print Setup</td>
+<td valign=top><A NAME="TI4980"></A>Opens the Windows Printer Setup dialog
+box allowing you to change the printer or its settings</td>
+<td valign=top><A NAME="TI4981"></A>All</td>
+</tr>
+<tr><td valign=top><A NAME="TI4982"></A>Prior_Row</td>
+<td valign=top><A NAME="TI4983"></A>Rows&gt;Get Prior</td>
+<td valign=top><A NAME="TI4984"></A>Scrolls to the previous row in the master area</td>
+<td valign=top><A NAME="TI4985"></A>Freeform, Master/Detail One-To-Many</td>
+</tr>
+<tr><td valign=top><A NAME="TI4986"></A>Retrieve</td>
+<td valign=top><A NAME="TI4987"></A>Rows&gt;Retrieve</td>
+<td valign=top><A NAME="TI4988"></A>Retrieves rows from the database and prompts
+you for criteria if Prompt for Criteria was specified in the workspace</td>
+<td valign=top><A NAME="TI4989"></A>All</td>
+</tr>
+<tr><td valign=top><A NAME="TI4990"></A>Save_As</td>
+<td valign=top><A NAME="TI4991"></A>File&gt;Save Rows As</td>
+<td valign=top><A NAME="TI4992"></A>Saves rows of data in a selected file format,
+including text format or a Powersoft report</td>
+<td valign=top><A NAME="TI4993"></A>Freeform, Grid</td>
+</tr>
+<tr><td valign=top><A NAME="TI4994"></A>Sort_Dialog</td>
+<td valign=top><A NAME="TI4995"></A>None</td>
+<td valign=top><A NAME="TI4996"></A>Displays the Sort dialog box for defining
+sorting</td>
+<td valign=top><A NAME="TI4997"></A>Freeform, Grid</td>
+</tr>
+<tr><td valign=top><A NAME="TI4998"></A>Sort_Detail_Dialog</td>
+<td valign=top><A NAME="TI4999"></A>None</td>
+<td valign=top><A NAME="TI5000"></A>Displays the Sort dialog box for defining
+sorting for the detail part of the form</td>
+<td valign=top><A NAME="TI5001"></A>Master/Detail One-To-Many,<A NAME="TI5002"></A>Master/Detail Many-To-One</td>
+</tr>
+<tr><td valign=top><A NAME="TI5003"></A>Sort_Master_Dialog</td>
+<td valign=top><A NAME="TI5004"></A>None</td>
+<td valign=top><A NAME="TI5005"></A>Displays the Sort dialog box for defining
+sorting for the master part of the form</td>
+<td valign=top><A NAME="TI5006"></A>Master/Detail One-To-Many,<A NAME="TI5007"></A>Master/Detail Many-To-One</td>
+</tr>
+<tr><td valign=top><A NAME="TI5008"></A>Specify_Criteria</td>
+<td valign=top><A NAME="TI5009"></A>Rows&gt;Specify Criteria</td>
+<td valign=top><A NAME="TI5010"></A>Updates the database, then clears the form
+to allow you to specify selection criteria for the rows<A NAME="TI5011"></A>For information, see <A HREF="imugp117.htm#X-ref356371569">"Limiting the retrieved
+data "</A></td>
+<td valign=top><A NAME="TI5012"></A>All</td>
+</tr>
+<tr><td valign=top><A NAME="TI5013"></A>Update_Row</td>
+<td valign=top><A NAME="TI5014"></A>Rows&gt;Update (ctrl+i)</td>
+<td valign=top><A NAME="TI5015"></A>Updates the current row in the database</td>
+<td valign=top><A NAME="TI5016"></A>Freeform</td>
+</tr>
+<tr><td valign=top><A NAME="TI5017"></A>Update_Rows</td>
+<td valign=top><A NAME="TI5018"></A>Rows&gt;Update (ctrl+u)</td>
+<td valign=top><A NAME="TI5019"></A>Updates all modified rows in the database</td>
+<td valign=top><A NAME="TI5020"></A>Grid, Master/Detail One-To-Many, Master/Detail Many-To-One</td>
+</tr>
+</table>
+<A NAME="X-ref306625155"></A><h2>Accessing and deleting forms</h2>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To access a form:</p>
+<ol><li class=fi>
+Click the Open button in the PowerBar.<br><br>
+The Open dialog box displays:<br><br><br><img src="images/dfrm23.gif"><br>
+</li>
+<li class=ds>
+If necessary, select Forms in the Object Type
+box.<br><br></li>
+<li class=ds>
+Highlight the form you want in the list and click
+OK.<br><br></li>
+<li class=ds>
+The form displays in Layout view in the Form painter.
+You can work on the design of the form there.<br><br>
+For more information, see <A HREF="imugp119.htm#BFCEACJI">Chapter 16, "Enhancing Forms"</A>.<br><br></li>
+<li class=ds>
+Click the Run button to run the form. <br><br>
+When you run a form, InfoMaker retrieves data from the database
+and displays the form so that you can view and change information
+in the database.<br><br>
+For more information, see <A HREF="imugp117.htm#X-ref299433000">"Running forms"</A>.<br><br></li></ol>
+<br><p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To delete a form:</p>
+<ol><li class=fi>
+Use the Library painter<br><br>
+For more information, see <A HREF="imugp27.htm#X-ref302058104">"Copying, moving, and
+deleting objects"</A>.<br><br></li></ol>
+<br>

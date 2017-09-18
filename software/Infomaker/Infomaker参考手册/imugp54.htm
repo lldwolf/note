@@ -1,0 +1,439 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+Modifying general report properties </TITLE>
+</HEAD>
+<BODY>
+<A NAME="CAIDEEDG"></A><h1>Modifying general report properties </h1>
+<A NAME="TI1829"></A><p>This section describes the general report properties that
+you can modify. </p>
+<A NAME="CAIBHFBD"></A><h2>Changing the report style</h2>
+<A NAME="TI1830"></A><p>The general style properties for a report include:<A NAME="TI1831"></A>
+<ul>
+<li class=fi>The unit of measure used in the report</li>
+<li class=ds>A timer interval for events in the report</li>
+<li class=ds>A background color for the report
+</li>
+</ul>
+</p>
+<A NAME="TI1832"></A><p>InfoMaker assigns defaults when it generates the basic report.
+You can change the defaults.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To change the default style properties:</p>
+<ol><li class=fi>
+Position the pointer in the background
+of the report, display the popup menu, and select Properties.<br><br>
+The Properties view displays with the General property page
+on top.<br><br></li>
+<li class=ds>
+Click the unit of measure you want to use to specify
+distances when working with the report:<A NAME="TI1833"></A>
+<ul>
+<li class=fi>PowerBuilder units (PBUs)</li>
+<li class=ds>Pixels (smallest element on the display monitor)</li>
+<li class=ds>Thousandths of an inch</li>
+<li class=ds>Thousandths of a centimeter
+</li>
+</ul>
+
+                      <br><br><p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Choosing the unit of measure</span> <A NAME="TI1834"></A>If you plan to print the contents of the report during
+execution, change the unit of measure to inches or centimeters to
+make it easier to specify the margin measurements.</p>
+</li>
+<li class=ds>
+Specify the number of milliseconds you want between
+internal timer events in the report.<br><br>
+This value determines how often InfoMaker updates the time
+fields in the report. (Enter 60,000 milliseconds to specify
+one minute.)<br><br></li>
+<li class=ds>
+Select a background color from the Color dropdown
+listbox. The default color is the window background color.<br><br></li>
+<li class=ds>
+Click OK.<br><br></li></ol>
+<br><A NAME="BFCDAHDE"></A><h2>Setting colors in a report</h2>
+<A NAME="TI1835"></A><p>You can set different colors for each element of a report to
+enhance the display of information.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To set colors in a report:</p>
+<ol><li class=fi>
+Do one of the following:<br><br><A NAME="TI1836"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI1837"></A>To set colors for</th>
+<th align="left" valign=bottom><A NAME="TI1838"></A>Do this</th>
+</tr>
+<tr><td valign=top><A NAME="TI1839"></A>The report's background</td>
+<td valign=top><A NAME="TI1840"></A>Position the mouse on an empty spot in
+the report, display the popup menu, then select Properties.
+On the General property page of the report's Properties
+view, select a color from the Color dropdown listbox</td>
+</tr>
+<tr><td valign=top><A NAME="TI1841"></A>A band</td>
+<td valign=top><A NAME="TI1842"></A>Position the mouse pointer on the bar
+that represents the band, display the popup menu, then select Properties.
+On the General property page of the band's Properties view, select
+a color from the Color dropdown listbox. The choice you make here
+overrides the background color for the report</td>
+</tr>
+<tr><td valign=top><A NAME="TI1843"></A>A control</td>
+<td valign=top><A NAME="TI1844"></A>Position the mouse pointer on the control,
+display the popup menu, then select Properties. For controls that
+use text, you can set colors for background and text on the Font
+property page of the Properties view. For drawing controls, you
+can set colors on the General property page of the Properties view</td>
+</tr>
+</table>
+</li></ol>
+<br><A NAME="BFCCFJDB"></A><h2>Specifying properties of a grid report</h2>
+<A NAME="TI1845"></A><p>In grid reports you can specify:<A NAME="TI1846"></A>
+<ul>
+<li class=fi>When grid lines are displayed</li>
+<li class=ds>How users can interact with the report during
+execution
+</li>
+</ul>
+</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To specify basic grid report properties:</p>
+<ol><li class=fi>
+Position the mouse pointer on the background
+in a grid report, display the popup menu, and select Properties.<br><br></li>
+<li class=ds>
+Select the options you want in the Grid section
+on the General property page in the Properties view:<br><br><A NAME="TI1847"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI1848"></A>Option</th>
+<th align="left" valign=bottom><A NAME="TI1849"></A>Result</th>
+</tr>
+<tr><td valign=top><A NAME="TI1850"></A>On</td>
+<td valign=top><A NAME="TI1851"></A>Grid lines always display</td>
+</tr>
+<tr><td valign=top><A NAME="TI1852"></A>Off</td>
+<td valign=top><A NAME="TI1853"></A>Grid lines never display (users cannot
+resize columns during execution)</td>
+</tr>
+<tr><td valign=top><A NAME="TI1854"></A>Display Only</td>
+<td valign=top><A NAME="TI1855"></A>Grid lines display only when the report displays
+online</td>
+</tr>
+<tr><td valign=top><A NAME="TI1856"></A>Print Only</td>
+<td valign=top><A NAME="TI1857"></A>Grid lines display only when the contents
+of the report are printed</td>
+</tr>
+<tr><td valign=top><A NAME="TI1858"></A>Column Moving</td>
+<td valign=top><A NAME="TI1859"></A>Columns can be moved during execution</td>
+</tr>
+<tr><td valign=top><A NAME="TI1860"></A>Mouse Selection</td>
+<td valign=top><A NAME="TI1861"></A>Data can be selected during execution
+(and, for example, copied to the clipboard)</td>
+</tr>
+<tr><td valign=top><A NAME="TI1862"></A>Row Resize</td>
+<td valign=top><A NAME="TI1863"></A>Rows can be resized during execution</td>
+</tr>
+</table>
+</li></ol>
+<br><A NAME="BFCBJBBI"></A><h2>Specifying pointers for a report</h2>
+<A NAME="TI1864"></A><p>Just as with colors, you can specify different pointers to
+use when the mouse is over a particular area of the report. </p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To change the mouse pointer used during execution:</p>
+<ol><li class=fi>
+Position the mouse over the element of
+the report whose pointer you want to define, display the popup
+menu, and select Properties to display the appropriate Properties
+view.<br><br>
+You can set a pointer for the entire report, specific
+bands, and specific controls.<br><br></li>
+<li class=ds>
+Select the Pointer tab.<br><br></li>
+<li class=ds>
+Choose the pointer either from the Stock Pointers
+list or, if you have a file containing pointer definitions (CUR
+files), enter a pointer filename.<br><br>
+You can use the Browse button to search for the file.<br><br></li>
+<li class=ds>
+Click OK.<br><br></li></ol>
+<br><A NAME="BFCBAGDA"></A><h2>Defining print specifications for a report</h2>
+<A NAME="TI1865"></A><p>When you are satisfied with the look of the report, you
+can define the print specifications for the report.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To define print specifications for a report:</p>
+<ol><li class=fi>
+In the Report painter, select Properties from
+the report's popup menu to display the report's
+Properties view.<br><br></li>
+<li class=ds>
+In the Units box on the General property page,
+select a unit of measure.<br><br>
+It is easier to specify the margins when the unit of measure
+is inches or centimeters.<br><br></li>
+<li class=ds>
+Select the Print Specifications tab.<br><br>
+The Print Specifications property page uses the units of measure
+you specified on the General property page. <br><br></li>
+<li class=ds>
+Specify a name in the Document Name box.<br><br>
+This is the name that will be used in the print queue to identify
+the report.<br><br></li>
+<li class=ds>
+Specify the margins for the report.<br><br>
+You can also change margins in the Preview view while you
+are actually looking at data. If you change margins in the Preview
+view, the changes are recorded here on the Print Specifications
+page.<br><br>
+See <A HREF="imugp53.htm#CAIDJGIG">"Using print preview"</A>.<br><br></li>
+<li class=ds>
+Select the paper's orientation, size,
+and source from the dropdown listboxes. <br><br>
+For orientation, choose from the following:<br><br><A NAME="TI1866"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI1867"></A>Setting</th>
+<th align="left" valign=bottom><A NAME="TI1868"></A>Result</th>
+</tr>
+<tr><td valign=top><A NAME="TI1869"></A>Default</td>
+<td valign=top><A NAME="TI1870"></A>Uses the default printer setup</td>
+</tr>
+<tr><td valign=top><A NAME="TI1871"></A>Portrait</td>
+<td valign=top><A NAME="TI1872"></A>Prints the contents of the report across
+the width of the paper</td>
+</tr>
+<tr><td valign=top><A NAME="TI1873"></A>Landscape</td>
+<td valign=top><A NAME="TI1874"></A>Prints the contents of the report across
+the length of the paper</td>
+</tr>
+</table>
+</li>
+<li class=ds>
+If you want to prompt for print setup before printing,
+select the Prompt Before Printing checkbox.<br><br>
+InfoMaker will display the standard Print Setup dialog box
+each time users make a print request.<br><br></li>
+<li class=ds>
+If you want a multiple-column report where the
+data fills one column on a page, then the second, and so on, as
+in a newspaper, select the number and width of the columns in the
+Newspaper Columns box.<br><br>
+See <A HREF="imugp54.htm#BFCDJAJF">"Printing with newspaper-style
+columns"</A>.<br><br></li></ol>
+<br><A NAME="BFCDJAJF"></A><h3>Printing with newspaper-stylecolumns</h3>
+<A NAME="TI1875"></A><p>When you define a report, you can specify that it print
+in multiple columns across the page, like a newspaper. A typical
+use of newspaper-style columns is a phone list, where you want to
+have more than one column of names on a printed page. The following report has
+two newspaper-style columns:</p>
+<br><img src="images/Dwen17.gif">
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To define newspaper-style columns for a report:</p>
+<ol><li class=fi>
+Build a tabular report with the data
+you want.<br><br></li>
+<li class=ds>
+Select Properties from the report's
+popup menu.<br><br></li>
+<li class=ds>
+Select the Print Specifications tab.<br><br></li>
+<li class=ds>
+Specify the number of columns across the page
+and the width of columns in the Newspaper Columns Across and Newspaper
+Columns Width properties.<br><br></li>
+<li class=ds>
+For each control in the report that you do <i>not</i>
+ want
+to appear multiple times on the page (such as headers), select Properties
+from the control's popup menu. Then select the HideSnaked
+checkbox on the General page in the Properties view.<br><br></li></ol>
+<br><A NAME="TI1876"></A><h4>Example</h4>
+<A NAME="TI1877"></A><p>This example describes how you would create a newspaper-style report.</p>
+<A NAME="TI1878"></A><p>First create a tabular report with the last name, first
+name, and phone number columns. Then add a title, page number, and
+date. </p>
+<A NAME="TI1879"></A><p>The report looks like this in the Design view:</p>
+<br><img src="images/Dwen18.gif">
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Sliding columns</span> <A NAME="TI1880"></A>The Emp_Fname column and the text control holding
+a comma are defined as Slide Left so they display just to the right
+of the Emp_Lname column.</p>
+<A NAME="TI1881"></A><p>Next you specify two columns across and a column width of
+3.5 inches in the Newspaper Columns box in the Print Specifications
+page of the report's Properties view:</p>
+<br><img src="images/Dwen19.gif">
+<A NAME="TI1882"></A><p>In the Preview view with Print Preview turned on, the report displays
+the result set in two columns. Everything above the column headers
+(which includes page number, title, and date) also shows twice because
+of the 2-column specification. This information should appear only
+once per page.</p>
+<A NAME="TI1883"></A><p>To specify that page number, title, and date should appear
+only once on the page, you need to suppress printing after the first
+column. For each of these controls, select Properties from the control's
+popup menu. Then select the HideSnaked checkbox:</p>
+<br><img src="images/Dwen20.gif">
+<A NAME="TI1884"></A><p>The finished report looks like this, with one set of page
+heading information and two columns of column header and detail
+information:</p>
+<br><img src="images/Dwen21.gif">
+<A NAME="BFCCJHJC"></A><h2>Modifying text in a report</h2>
+<A NAME="TI1885"></A><p>When InfoMaker initially generates the basic report,
+it uses the following:<A NAME="TI1886"></A>
+<ul>
+<li class=fi>For the text and alignment
+of column headings and labels, InfoMaker uses the extended column
+attributes made in the Database painter.</li>
+<li class=ds>For fonts, InfoMaker uses the definitions made
+in the Database painter for the table. 
+</li>
+</ul>
+</p>
+<A NAME="TI1887"></A><p>You can override any of these defaults in a particular report.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To change text in a report:</p>
+<ol><li class=fi>
+Select the text.<br><br>
+The first box in the StyleBar is now active.<br><br></li>
+<li class=ds>
+Type the new text. <br><br>
+Use ~n~r to embed a newline character in the text.<br><br></li></ol>
+<br><p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To change the text properties for a text control
+in a report:</p>
+<ol><li class=fi>
+Select the text control.<br><br></li>
+<li class=ds>
+Do one of the following:<A NAME="TI1888"></A>
+<ul>
+<li class=fi>Change the text properties in the StyleBar. </li>
+<li class=ds>Select the Font property page in the control's
+Properties view and change the properties there.<br><img src="images/Dwen22.gif">
+
+</li>
+</ul>
+
+                      <br><br></li></ol>
+<br><A NAME="BFCDBBEJ"></A><h2>Naming controls in a report</h2>
+<A NAME="TI1889"></A><p>You use names to identify columns and other controls in filters and in InfoMaker functions. </p>
+<A NAME="TI1890"></A><p>The Report painter automatically generates names for all controls
+in a DataWindow object. To name columns, labels, and headings, the Report painter uses
+database and extended attribute information. To name all other controls,
+it uses a system of prefixes. You can control the prefixes used
+for automatic name generation and you can specify the name of any
+control explicitly.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To specify prefixes for naming controls systematically
+in a report:</p>
+<ol><li class=fi>
+Select Design&gt;Options from the
+menu bar and then select the Prefixes tab.<br><br></li>
+<li class=ds>
+Change prefixes as desired and click OK.<br><br></li></ol>
+<br><img src="images/Dwen19aa.gif">
+<br><p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To specify a name of a control in a report:</p>
+<ol><li class=fi>
+Select Properties from the control's
+popup menu and then select the General tab in the Properties view.<br><br></li>
+<li class=ds>
+Type the name in the Name box.<br><br></li></ol>
+<br><A NAME="BFCDJJGC"></A><h2>Using borders in a report</h2>
+<A NAME="TI1891"></A><p>You can place borders around text, columns, graphs, and crosstabs
+to enhance their appearance. InfoMaker provides six types of borders:
+Underline, Box, ResizeBorder, ShadowBox, Raised, and Lowered:</p>
+<br><img src="images/Dwen23.gif">
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Border appearance varies</span> <A NAME="TI1892"></A>Changing the border style may not have the same effect on
+all Windows platforms.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To add a border to a control in a report:</p>
+<ol><li class=fi>
+Select one or more controls.<br><br></li>
+<li class=ds>
+Select the border you want from the Border dropdown
+toolbar in the PainterBar.<br><br>
+InfoMaker places the border around the selected controls.<br><br></li></ol>
+<br><A NAME="TI1893"></A><p>You can also specify a border for one or more controls in
+the Properties view on the General property page. </p>
+<A NAME="BFCCFEED"></A><h2>Specifying variable-height detail bands in a report</h2>
+<A NAME="TI1894"></A><p>Sometimes reports contain columns whose data is of variable
+length. For example, a Memo column in a table might be a character
+column that can take up to several thousand characters. You don't
+want to reserve space for that much information for the column in
+the detail band, since it would make the detail band's
+height very large, meaning you could see few rows at a time.</p>
+<A NAME="TI1895"></A><p>Instead, you want the detail band to resize based on the data
+in the Memo column. If the Memo column has only one line of text,
+you want the detail band to be one line. If the Memo column has
+20 lines of text, you want the detail band to be 20 lines high.</p>
+<A NAME="TI1896"></A><p>To provide a detail band that resizes as needed, you specify
+that the variable-length columns and the band have Autosize Height.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To create a resizable detail band in a report:</p>
+<ol><li class=fi>
+Select Properties from the popup menu of
+a column that should resize based on the amount of data.<br><br></li>
+<li class=ds>
+Select the Autosize Height checkbox on the Position
+property page.<br><br></li>
+<li class=ds>
+Clear the Auto Horz Scroll checkbox on the Edit
+property page.<br><br>
+InfoMaker will wrap text in the Preview view instead of displaying
+text on one scrollable line.<br><br></li>
+<li class=ds>
+Repeat steps 1 to 3 for any other columns that
+should resize.<br><br></li>
+<li class=ds>
+Select Properties from the detail band's
+popup menu.<br><br></li>
+<li class=ds>
+Select the Autosize Height checkbox on the General
+property page.<br><br>
+In the Preview view, the detail band will resize based on
+the contents of the columns you defined as having Autosize Height.<br><br></li></ol>
+<br><p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Clipping columns</span> <A NAME="TI1897"></A>You can have Autosize Height columns without an Autosize Height
+detail band. If such a column expands beyond the size of the detail
+band in the Preview view, it will be clipped.</p>
+<A NAME="CAICFEBG"></A><h2>Modifying the data source of a report</h2>
+<A NAME="TI1898"></A><p>When modifying a report, you might realize that you haven't
+included all the columns you need. Or you might need to define retrieval
+arguments. You can modify the data source from the Report painter. How
+you do it depends on the data source.</p>
+<A NAME="TI1899"></A><h3>Modifying SQL SELECT statements</h3>
+<A NAME="TI1900"></A><p>If the data source is SQL (such as Quick Select, SQL Select,
+or Query), you can graphically modify the SQL SELECT statement.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To modify a SQL data source:</p>
+<ol><li class=fi>
+Select Design&gt;Data Source from
+the menu bar.<br><br>
+InfoMaker returns you to the Select painter. (If you used
+Quick Select to define the data source, this might be the first
+time you have seen the Select painter.)<br><br></li>
+<li class=ds>
+Modify the SELECT statement graphically using
+the same techniques as when creating it. <br><br>
+For more information, see <A HREF="imugp47.htm#CFHDDDHF">"Using SQL Select"</A>.<br><br><p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Modifying the statement syntactically</span> <A NAME="TI1901"></A>Select Design&gt;Convert to Syntax from the menu bar
+to modify the SELECT statement syntactically.</p>
+</li>
+<li class=ds>
+Click the Return button to return to the painter.<br><br></li></ol>
+<br><p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Changing the table</span> <A NAME="TI1902"></A>If you change the table referenced in the SELECT statement, InfoMaker maintains
+the columns in the Design view (now from a different table) only
+if they match the data types and order of the columns in the original
+table.</p>
+<A NAME="TI1903"></A><h4>Modifying the retrieval arguments</h4>
+<A NAME="TI1904"></A><p>You can add, modify, or delete retrieval arguments when modifying
+your data source.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To modify the retrieval arguments:</p>
+<ol><li class=fi>
+In the Select painter, select Design&gt;Retrieval
+Arguments from the menu bar.<br><br>
+The Specify Retrieval Arguments dialog box displays listing
+the existing arguments.<br><br></li>
+<li class=ds>
+Add, modify, or delete the arguments.<br><br></li>
+<li class=ds>
+Click OK.<br><br>
+You return to the Select painter, or to the text window displaying
+the SELECT statement if you are modifying the SQL syntactically.<br><br></li>
+<li class=ds>
+Reference any new arguments in the WHERE or HAVING clause
+of the SELECT statement.<br><br></li></ol>
+<br><A NAME="TI1905"></A><p>For more information about retrieval arguments,
+see <A HREF="imugp42.htm#BFCDDADG">Chapter 4, "Defining Reports "</A>.</p>
+<A NAME="TI1906"></A><h3>Modifying the result set</h3>
+<A NAME="TI1907"></A><p>If the data source is External or Stored Procedure, you can
+modify the result set description.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To modify a result set:</p>
+<ol><li class=fi>
+Select Design&gt;Data Source from the menu
+bar.<br><br>
+The Column Specification view displays.<br><br></li>
+<li class=ds>
+Review the specifications and make any necessary changes.<br><br></li></ol>
+<br><A NAME="TI1908"></A><h4>If the data source is a stored procedure</h4>
+<A NAME="TI1909"></A><p>If you are modifying the result set for a report whose
+data source is a stored procedure, the popup menu for the Column
+Specification view contains the menu item Stored Procedure.</p>
+<A NAME="TI1910"></A><p>Select Stored Procedure from the Column Specification view's
+popup menu to edit the Execute statement, select another stored
+procedure, or add retrieval arguments:</p>
+<br><img src="images/Dwen26.gif">
+

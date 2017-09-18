@@ -1,0 +1,441 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>常用功能及命令</title>
+<script language="javascript" src="css.js"></script>
+</head>
+
+<body>
+<h1>第N章 常用功能及命令</h1>
+<hr />
+<h2>N.1 linux目录架构</h2>
+<table width="90%" >
+  <tr>
+    <th width="25%">目录</th>
+    <th width="75%">说明</th>
+  </tr>
+  <tr>
+    <td>/</td>
+    <td>根目录</td>
+  </tr>
+  <tr>
+    <td>/bin</td>
+    <td>常用的命令 binary file 的目錄</td>
+  </tr>
+  <tr>
+    <td> /boot</td>
+    <td>存放系统启动时必须读取的档案，包括核心 (kernel) 在内</td>
+  </tr>
+  <tr>
+    <td>&nbsp;&nbsp;&nbsp;&nbsp;/boot/grub/menu.lst</td>
+    <td>GRUB设置</td>
+  </tr>
+  <tr>
+    <td>&nbsp;&nbsp;&nbsp;&nbsp;/boot/vmlinuz</td>
+    <td>内核</td>
+  </tr>
+  <tr>
+    <td>&nbsp;&nbsp;&nbsp;&nbsp;/boot/initrd</td>
+    <td>核心解壓縮所需 RAM Disk</td>
+  </tr>
+  <tr>
+    <td> /dev</td>
+    <td>系统周边设备</td>
+  </tr>
+  <tr>
+    <td>/etc</td>
+    <td>系统相关设定文件</td>
+  </tr>
+  <tr>
+    <td>&nbsp;&nbsp;&nbsp;&nbsp;/etc/DIR_COLORS</td>
+    <td>设定颜色</td>
+  </tr>
+  <tr>
+    <td>&nbsp;&nbsp;&nbsp;&nbsp;/etc/HOSTNAME</td>
+    <td>设定用户的节点名</td>
+  </tr>
+  <tr>
+    <td>/etc/NETWORKING</td>
+    <td>只有YES标明网络存在</td>
+  </tr>
+  <tr>
+    <td>/etc/host.conf</td>
+    <td>文件说明用户的系统如何查询节点名</td>
+  </tr>
+  <tr>
+    <td>/etc/hosts</td>
+    <td>设定用户自已的IP与名字的对应表</td>
+  </tr>
+  <tr>
+    <td>/etc/hosts.allow</td>
+    <td>设置允许使用inetd的机器使用 </td>
+  </tr>
+  <tr>
+    <td>/etc/hosts.deny</td>
+    <td>设置不允许使用inetd的机器使用</td>
+  </tr>
+  <tr>
+    <td>/etc/hosts.equiv</td>
+    <td>设置远端机不用密码</td>
+  </tr>
+  <tr>
+    <td>/etc/inetd.conf</td>
+    <td>设定系统网络守护进程inetd的配置</td>
+  </tr>
+  <tr>
+    <td>/etc/gateways</td>
+    <td>设定路由器</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+<p>  <br />
+  <br />
+  <br />
+  /etc/protocols 设定系统支持的协议<br />
+  /etc/named.boot 设定本机为名字服务器的配置文件<br />
+  /etc/sysconfig/network-scripts/ifcfg-eth0 设置IP<br />
+  /etc/resolv.conf设置DNS <br />
+  /etc/X11 X Window的配置文件,xorg.conf 或 XF86Config 這兩個 X Server 的設定檔<br />
+  /etc/fstab记录开机要mount的文件系统<br />
+  /etc/inittab 设定系统启动时init进程将把系统设置成什么样的runlevel<br />
+  /etc/issue 记录用户登录前显示的信息<br />
+  /etc/group 设定用户的组名与相关信息<br />
+  /etc/passwd 帐号信息<br />
+  /etc/shadow 密码信息<br />
+  /etc/sudoers 可以sudo命令的配置文件<br />
+  /etc/securetty 设定哪些终端可以让root登录<br />
+  /etc/login.defs 所有用户登录时的缺省配置<br />
+  /etc/exports 设定NFS系统用的<br />
+  /etc/init.d/ 所有服務的預設啟動 script 都是放在這裡的，例如要啟動或者關閉<br />
+  /etc/xinetd.d/ 這就是所謂的 super daemon 管理的各項服務的設定檔目錄<br />
+  /etc/modprobe.conf 内核模块额外参数设定<br />
+  /etc/syslog.conf 日志设置文件<br />
+  /home 使用者家目录<br />
+  /lib系统会使用到的函数库<br />
+  /lib/modules kernel 的相关模块<br />
+  /var/lib/rpm rpm套件安装处 <br />
+  /lost+found系統不正常產生錯誤時，會將一些遺失的片段放置於此目錄下<br />
+  /mnt外设的挂载点<br />
+  /media 与/mnt类似<br />
+  /opt主机额外安装的软件<br />
+  /proc虚拟目录，是内存的映射<br />
+  /proc/version 内核版本<br />
+  /proc/sys/kernel 系统内核功能<br />
+  /root系统管理员的家目录<br />
+  /sbin系统管理员才能执行的指令<br />
+  /srv一些服務啟動之後，這些服務所需要取用的資料目錄<br />
+  /tmp一般使用者或者是正在執行的程序暫時放置檔案的地方<br />
+  /usr最大的目录，存许应用程序和文件<br />
+  /usr/X11R6： X-Window目录 <br />
+  /usr/src：Linux源代码<br />
+  /usr/include：系统头文件<br />
+  /usr/openwin 存放SUN的OpenWin <br />
+  /usr/man 在线使用手册<br />
+  /usr/bin使用者可執行的 binary file 的目錄<br />
+  /usr/local/bin使用者可執行的 binary file 的目錄<br />
+  /usr/lib系统会使用到的函数库<br />
+  /usr/local/lib系统会使用到的函数库<br />
+  /usr/sbin系统管理员才能执行的指令<br />
+  /usr/local/sbin系统管理员才能执行的指令<br />
+  /var 日志文件<br />
+  /var/log/secure記錄登入系統存取資料的檔案，例如 pop3, ssh, telnet, ftp 等都會記錄在此檔案中<br />
+  /var/log/wtmp記錄登入者的訊息資料, last<br />
+  /var/log/messages 幾乎系統發生的錯誤訊息<br />
+  /var/log/boot.log 記錄開機或者是一些服務啟動的時候，所顯示的啟動或關閉訊息<br />
+  /var/log/maillog 紀錄郵件存取或往來( sendmail 與 pop3 )的使用者記錄<br />
+  /var/log/cron記錄 crontab 這個例行性服務的內容<br />
+  /var/log/httpd, /var/log/news, /var/log/mysqld.log, /var/log/samba, /var/log/procmail.log：<br />
+        
+分別是幾個不同的網路服務的記錄檔</p>
+<div></div>
+  <div>一些常用的基本命令:<br />
+    uname -a查看内核版本<br />
+    ls -al显示所有文件的属性<br />
+    pwd显示当前路径<br />
+    cd -返回上一次目录cd ~返回主目录<br />
+    date s设置时间、日期<br />
+    cal显示日历cal 2006<br />
+    bc计算器具<br />
+    man &amp; info帮助手册<br />
+    locale显示当前字体locale -a所有可用字体/etc/sysconfig/i18n设置文件<br />
+    LANG=en使用英文字体<br />
+    sync将数据同步写入硬盘<br />
+    shutdonw -h now &amp; half &amp; poweroff 关机<br />
+    reboot重启<br />
+    startx &amp; init 5 进入图形介面<br />
+    /work &amp; ?work向上、下查找文档内容<br />
+    chgrp改变档案群组 chgrp testing install.log<br />
+    chown改变所属人 chown root:root install.log<br />
+    chmod改变属性chmod 777 install.logread=4 write=2 execute=1<br />
+    cp 复制 cp filename<br />
+    rm 删除文件 rm -rf filename 强制删除文件<br />
+    rmdir 删除文件夹<br />
+    mv 移动mv 123.txt 222.txt 重命名<br />
+    mkdir创建文件夹<br />
+    touch创建文件 更新当前时间<br />
+    cat由第一行开始显示cat |more 分页<br />
+    nl在内容前加行号<br />
+    more &amp; less 一面一面翻动<br />
+    head -n filename 显示第N行内容<br />
+    tail -n filename 显示后N行内容<br />
+    od显示非纯文档<br />
+    df -h 显示分区空间<br />
+    du 显示目录或文件的大小<br />
+    fdisk 分区设置fdisk -l /dev/hda 显示硬盘分区状态<br />
+    mkfs建立各种文件系统 mkfs -t ext3 /dev/ram15 <br />
+    fsck检查和修复LINUX档案<br />
+    ln硬链接 ln -s 软件链接<br />
+    whereis 查找命令<br />
+    locate查找<br />
+    find查找 find / -name "***.***"<br />
+    which查看工具<br />
+    whoami显示当前用户<br />
+    gcc -v查看GCC版本<br />
+    chattr +i filename 禁止删除 chattr -i filename 取消禁止<br />
+    lsattr显示隐藏档属性<br />
+    updatedb 更新资料库<br />
+    mke2fs格式化 mkfs -t ext3 <br />
+    dd if=/etc/passwd of=/tmp/passwd.bak备份<br />
+    mount列出系统所有的分区<br />
+    mount -t iso9660 /dev/cdrom /mnt/cdrom 挂载光盘<br />
+    mount -t vfat /dev/fd0 /mnt/floppy挂载软盘<br />
+    mount -t vfat -o iocharset=utf8,umask=000 /dev/hda2 /mnt/hda2 挂载fat32分区<br />
+    mount -t ntfs -o nls=utf8,umask=000 /dev/hda3 /mnt/hda3挂载ntfs分区<br />
+    Linux-NTFS Project: <a href="http://linux-ntfs.sourceforge.net/"><font color="#223355">http://linux-ntfs.sourceforge.net/</a><br />
+    umount /mnt/hda3 缷载<br />
+    ifconfig 显示或设置网络设备<br />
+    service network restart 重启网卡 <br />
+    ifdown eth0 关闭网卡<br />
+    ifup eth0开启网卡<br />
+    clear清屏<br />
+    history历史记录!55 执行第55个指令<br />
+    stty 设置终端stty -a<br />
+    fdisk /mbr 删除GRUB<br />
+    at僅進行一次的工作排程<br />
+    crontab 循環執行的例行性命令[e]编辑,[l]显示,[r]删除任务<br />
+&amp;后台运行程序tar -zxvf 123.tar.gz &amp; ---------&gt;后台运行<br />
+    jobs观看后台暂停的程序 jobs -l<br />
+    fg将后台程序调到前台 fg n ------&gt;n是数字,可以指定进行那个程序<br />
+    bg让工作在后台运行<br />
+    kill结束进程kill -9 PID[9]强制结束,[15]正常结束,[l]列出可用的kill信号<br />
+    ps aux 查看后台程序 <br />
+    top查看后台程序 top -d 2每两秒更新一次top -d 2 -p10604 观看某个PID<br />
+    top -b -n 2 &gt; /tmp/top.txt -----&gt;將 top 的資訊進行 2 次，然後將結果輸出到 /tmp/top.txt<br />
+    pstree 以树状图显示程序[A]以 ASCII 來連接, [u]列出PID, [p]列出帐号<br />
+    killall 要刪除某個服務killall -9 httpd<br />
+    free显示内存状态free -m --------&gt;以M为单位显示<br />
+    uptime显示目前系统开机时间<br />
+    netstat 显示网络状态netstat -tulnp------&gt;找出目前系統上已在監聽的網路連線及其 PID<br />
+    dmesg显示开机信息demsg | more<br />
+    nice设置优先权nice -n -5 vi &amp; -----&gt;用 root 給一個 nice 植為 -5 ，用於執行 vi <br />
+    renice调整已存在优先权<br />
+    runlevel 显示目前的runlevel<br />
+    depmod分析可载入模块的相依性<br />
+    lsmod显示已载入系统的模块<br />
+    modinfo 显示kernel模块的信息<br />
+    insmod载入模块<br />
+    modprobe 自动处理可载入模块<br />
+    rmmod删除模块<br />
+    chkconfig 检查，设置系统的各种服务chkconfig --list -----&gt;列出各项服务状态<br />
+    ntsysv设置系统的各种服务<br />
+    cpio备份文件<br />
+      
+</div>
+  <div><br />
+      压缩命令：<br />
+       *.Zcompress 程式壓縮的檔案； <br />
+       *.bz2bzip2 程式壓縮的檔案； <br />
+       *.gzgzip 程式壓縮的檔案； <br />
+       *.tartar 程式打包的資料，並沒有壓縮過； <br />
+       *.tar.gz tar 程式打包的檔案，其中並且經過 gzip 的壓縮<br />
+      compress filename 压缩文件 加[-d]解压 uncompress<br />
+      gzip filename 压缩 加[-d]解压 zcat 123.gz 查看压缩文件内容<br />
+      bzip2 -z filename 压缩 加[-d]解压 bzcat filename.bz2 查看压缩文件内容<br />
+      tar -cvf /home/123.tar /etc 打包，不压缩<br />
+      tar -xvf 123.tar 解开包<br />
+      tar -zxvf /home/123.tar.gz 以gzip解压<br />
+      tar -jxvf /home/123.tar.bz2 以bzip2解压<br />
+      tar -ztvf /tmp/etc.tar.gz 查看tar内容<br />
+      cpio -covB &gt; [file|device] 份份<br />
+      cpio -icduv &lt; [file|device] 还原</div>
+  <div></div>
+  <div>vi一般用法<br />
+      一般模式编辑模式指令模式<br />
+      h 左a,i,r,o,A,I,R,O:w 保存<br />
+    j 下进入编辑模式:w! 强制保存<br />
+    k 上dd 删除光标当前行:q! 不保存离开<br />
+    l 右ndd 删除n行:wq! 保存后离开<br />
+    0 移动到行首yy 复制当前行:e! 还原原始档<br />
+    $ 移动到行尾nyy 复制n行:w filename 另存为<br />
+    H 屏幕最上p,P 粘贴:set nu 设置行号<br />
+    M 屏幕中央u 撤消:set nonu 取消行号<br />
+    L 屏幕最下[Ctrl]+r 重做上一个动作ZZ 保存离开<br />
+    G 档案最后一行[ctrl]+z 暂停退出:set nohlsearch 永久地关闭高亮显示<br />
+    /work 向下搜索:sp 同时打开两个文档 <br />
+    ?work 向上搜索[Ctrl]+w 两个文档设换<br />
+    gg 移动到档案第一行:nohlsearch暂时关闭高亮显示</div>
+  <div></div>
+  <div>认识SHELL<br />
+    alias显示当前所有的命令别名alias lm="ls -al" 命令别名unalias lm 取消命令别名<br />
+    type类似which<br />
+    exprot设置或显示环境变量<br />
+    exprot PATH="$PATH":/sbin 添加/sbin入PATH路径<br />
+    echo $PATH显示PATH路径<br />
+    bash进入子程序<br />
+    name=yang设定变量<br />
+    unset name取消变量<br />
+    echo $name显示变量的内容<br />
+    myname="$name its me" &amp; myname='$name its me'单引号时$name失去变量内容<br />
+    ciw=/etc/sysconfig/network-scripts/设置路径<br />
+    env列出所有环境变量<br />
+    echo $RANDOM显示随意产生的数<br />
+    set设置SHELL<br />
+    PS1='[\u@\h \w \A #\#]\$ '提示字元的設定<br />
+     [root@linux ~]# read [-pt] variable-----------读取键盘输入的变量<br />
+       
+    參數：<br />
+     -p ：後面可以接提示字元！<br />
+     -t ：後面可以接等待的『秒數！』<br />
+    declare声明 shell 变量<br />
+    ulimit -a 显示所有限制资料<br />
+     ls /tmp/yang &amp;&amp; echo "exist" || echo "not exist"<br />
+      
+    意思是說，當 ls /tmp/yang 執行後，若正確，就執行echo "exist" ,若有問題，就執行echo "not exist" <br />
+     echo $PATH | cut -d ':' -f 5以:为分隔符,读取第5段内容<br />
+     export | cut -c 10-20读取第10到20个字节的内容<br />
+     last | grep 'root'搜索有root的一行,加[-v]反向搜索<br />
+     cat /etc/passwd | sort排序显示<br />
+     cat /etc/passwd | wc显示『行、字数、字节数』</div>
+  <div>正规表示法<br />
+    [root@test root]# grep [-acinv] '搜尋字串' filename<br />
+      
+    參數說明：<br />
+    -a ：將 binary 檔案以 text 檔案的方式搜尋資料<br />
+    -c ：計算找到 '搜尋字串' 的次數<br />
+    -i ：忽略大小寫的不同，所以大小寫視為相同<br />
+    -n ：順便輸出行號<br />
+    -v ：反向選擇，亦即顯示出沒有 '搜尋字串' 內容的那一行！<br />
+     grep -n 'the' 123.txt搜索the字符 -----------搜尋特定字串<br />
+     grep -n 't[ea]st' 123.txt搜索test或taste两个字符---------利用 [] 來搜尋集合字元<br />
+     grep -n '[^g]oo' 123.txt搜索前面不为g的oo-----------向選擇 [^] <br />
+     grep -n '[0-9]' 123.txt 搜索有0-9的数字<br />
+     grep -n '^the' 123.txt 搜索以the为行首-----------行首搜索^<br />
+     grep -n '^[^a-zA-Z]' 123.txt 搜索不以英文字母开头<br />
+     grep -n '[a-z]$' 123.txt搜索以a-z结尾的行---------- 行尾搜索$<br />
+     grep -n 'g..d' 123.txt搜索开头g结尾d字符----------任意一個字元 . <br />
+     grep -n 'ooo*' 123.txt搜索至少有两个oo的字符---------重複字元 *<br />
+    sed文本流编辑器利用脚本命令来处理文本文件<br />
+    awd模式扫描和处理语言<br />
+     nl 123.txt | sed '2,5d' 删除第二到第五行的内容<br />
+    diff比较文件的差异<br />
+    cmp比较两个文件是否有差异<br />
+    patch修补文件<br />
+    pr要打印的文件格式化<br />
+      
+</div>
+  <div><br />
+      帐号管理<br />
+      /etc/passwd系统帐号信息<br />
+      /etc/shadow帐号密码信息经MD5 32位加密<br />
+        
+    在密码栏前面加『 * 』『 ! 』禁止使用某帐号<br />
+      /etc/group系统群组信息<br />
+      /etc/gshadow<br />
+      newgrp改变登陆组<br />
+      useradd &amp; adduser建立新用户 ---------&gt; useradd -m test 自动建立用户的登入目录<br />
+      useradd -m -g pgroup test ---------&gt;指定所属级<br />
+      /etc/default/useradd 相关设定<br />
+      /etc/login.defsUID/GID 有關的設定<br />
+      passwd更改密码 -----------&gt; passwd test<br />
+      usermod 修改用户帐号<br />
+      userdel 删除帐号 -----------&gt;userdel -r test<br />
+      chsh更换登陆系统时使用的SHELL [-l]显示可用的SHELL;[-s]修改自己的SHELL<br />
+      chfn改变finger指令显示的信息<br />
+      finger查找并显示用户信息<br />
+      id显示用户的ID -----------&gt; id test<br />
+      groupadd 添加组<br />
+      groupmod 与usermod类似<br />
+      groupdel 删除组<br />
+      su test更改用户 su -进入root,且使用root的环境变量<br />
+      sudo以其他身份来执行指令<br />
+      visudo编辑/etc/sudoers加入一行『 test ALL=(ALL) ALL 』<br />
+      %wheel ALL = (ALL) ALL系统里所有wheel群组的用户都可用sudo<br />
+    %wheel ALL = (ALL) NOPASSWD: ALLwheel群组所有用户都不用密码NOPASSWD<br />
+    User_Alias ADMPW = vbird, dmtsai, vbird1, vbird3加入ADMPW组<br />
+    ADMPW ALL = NOPASSWD: !/usr/bin/passwd, /usr/bin/passwd [A-Za-z]*, \<br />
+    !/usr/bin/passwd root可以更改使用者密码,但不能更改root密码 (在指令前面加入 ! 代表不可)<br />
+    PAM (Pluggable Authentication Modules, 嵌入式模組)<br />
+    who &amp; w看谁在线<br />
+    last最近登陆主机的信息<br />
+    lastlog最近登入的時間读取 /var/log/lastlog <br />
+    talk与其他用户交谈<br />
+    write发送信息write test [ctrl]+d 发送<br />
+    mesg设置终端机的写入权限mesg n 禁止接收mesg y <br />
+    wall向所有用户发送信息wall this is q test<br />
+    mail写mail <br />
+    /etc/default/useradd家目录默认设置</div>
+  <div>quota显示磁盘已使用的空间与限制quota -guvs -----&gt;秀出目前 root 自己的 quota 限制值<br />
+      quota -vu 查询<br />
+    quotacheck 检查磁盘的使用空间与限制quotacheck -avug -----&gt;將所有的在 /etc/mtab 內，含有 quota 支援的 partition 進行掃瞄<br />
+    [-m] 强制扫描 <br />
+    quota一定要是独立的分区,要有quota.user和quota.group两件文件,在/etc/fstab添加一句:<br />
+    /dev/hda3 /home ext3 defaults,usrquota,grpquota 1 2<br />
+    chmod 600 quota*设置完成,重启生效<br />
+    edquota编辑用户或群组的quota [u]用户,[g]群组,[p]复制,[t]设置宽限期限 <br />
+    edquota -a yangedquota -p yang -u young -----&gt;复制<br />
+    quotaon开启磁盘空间限制quotaon -auvg --------&gt;啟動所有的具有 quota 的 filesystem<br />
+    quotaoff 关闭磁盘空间限制quotaoff -a --------&gt;關閉了 quota 的限制<br />
+    repquota -av查閱系統內所有的具有 quota 的 filesystem 的限值狀態</div>
+  <div>Quota 從開始準備 filesystem 的支援到整個設定結束的主要的步驟大概是：<br />
+    1、設定 partition 的 filesystem 支援 quota 參數：<br />
+    由於 quota 必須要讓 partition 上面的 filesystem 支援才行，一般來說， 支援度最好的是 ext2/ext3 ，<br />
+    其他的 filesystem 類型鳥哥我是沒有試過啦！ 啟動 filesystem 支援 quota 最簡單就是編輯 /etc/fstab ，<br />
+    使得準備要開放的 quota 磁碟可以支援 quota 囉；<br />
+    2、建立 quota 記錄檔：<br />
+    剛剛前面講過，整個 quota 進行磁碟限制值記錄的檔案是 aquota.user/aquota.group， <br />
+    要建立這兩個檔案就必須要先利用 quotacheck 掃瞄才行喔！<br />
+    3、編輯 quota 限制值資料：<br />
+    再來就是使用 edquota 來編輯每個使用者或群組的可使用空間囉；<br />
+    4、重新掃瞄與啟動 quota ：<br />
+    設定好 quota 之後，建議可以再進行一次 quotacheck ，然後再以 quotaon 來啟動吧！</div>
+  <div><br />
+      开机流程简介<br />
+      1、載入 BIOS 的硬體資訊，並取得第一個開機裝置的代號； <br />
+      2、讀取第一個開機裝置的 MBR 的 boot Loader (亦即是 lilo, grub, spfdisk 等等) 的開機資訊； <br />
+      3、載入 Kernel 作業系統核心資訊， Kernel 開始解壓縮，並且嘗試驅動所有硬體裝置； <br />
+      4、Kernel 執行 init 程式並取得 run-level 資訊； <br />
+      5、init 執行 /etc/rc.d/rc.sysinit 檔案； <br />
+      6、啟動核心的外掛模組 (/etc/modprobe.conf)； <br />
+      7、init 執行 run-level 的各個批次檔( Scripts )； <br />
+      8、init 執行 /etc/rc.d/rc.local 檔案； <br />
+      9、執行 /bin/login 程式，並等待使用者登入； <br />
+      10、登入之後開始以 Shell 控管主機。 </div>
+  <div>在/etc/rc.d/rc3.d內,以S开头的为开机启动,以K开头的为关闭,接着的数字代表执行顺序</div>
+  <div>GRUB vga设定<br />
+      彩度\解析度 640x480 800x600 1024x768 1280x1024 bit <br />
+      2567697717737758 bit <br />
+     3276878478779079315 bit <br />
+     6553678578879179416 bit <br />
+     16.8M78678979279532 bit </div>
+  <div><br />
+    ./configure检查系统信息./configure --help | more 帮助信息<br />
+    make clean清除之前留下的文件<br />
+    make编译<br />
+    make install 安装</div>
+  <div>rpm -q -----&gt;查询是否安装rpm -ql ------&gt;查询该套件所有的目录<br />
+    rpm -qi -----&gt;查询套件的说明资料rpm -qc[d] -----&gt;设定档与说明档<br />
+    rpm -ivh ----&gt;安装rpm -V --------&gt;查看套件有否更动过<br />
+    rpm -e ------&gt;删除rpm -Uvh -------&gt;升级安装 <br />
+    --nodeps -----&gt;强行安装--test -----&gt;测试安装</div>
+  <div><font size="3"><font face="Times New Roman"></div>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<script language="javascript" src="index.js"></script>
+</body>
+</html>

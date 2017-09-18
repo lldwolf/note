@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+
+	<script type="text/javascript" src="../../../mylib/js/css.js"></script>
+
+	<title>C#.net使用手册</title>
+</head>
+<body>
+	<p id="title">
+		与WinForm交互
+	</p>
+
+	<h1>在WPF中使用WinForm控件</h1>
+	<p>需要使用 WindowsFormsHost 控件，要使用该控件，需添加相应引用。下面是引用的定义</p>
+	<pre class="code" data-type="csharp">Namespace:  System.Windows.Forms.Integration
+Assembly:  WindowsFormsIntegration (in WindowsFormsIntegration.dll)
+XMLNS for XAML: http://schemas.microsoft.com/winfx/2006/xaml/presentation, http://schemas.microsoft.com/netfx/2007/xaml/presentation</pre>
+	<p>WindowsFormsIntegration.dll 位于 %ProgramFiles%\Reference Assemblies\Microsoft\Framework 目录下，请根据 .NET Framework 的版本添加相应引用</p>
+	<p>示例如下，在WPF中使用一个 WinForm 的 Button 控件。</p>
+	<pre class="code" data-type="xml">&lt;Window x:Class=&quot;WpfDemo.ControlDemo.WinFormControlWindow&quot;
+        xmlns=&quot;http://schemas.microsoft.com/netfx/2007/xaml/presentation&quot;
+        xmlns:x=&quot;http://schemas.microsoft.com/winfx/2006/xaml&quot;
+        xmlns:WinForms=&quot;clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms&quot;
+        Title=&quot;WinFormControlWindow&quot; Height=&quot;300&quot; Width=&quot;300&quot;&gt;
+    &lt;Grid&gt;
+        &lt;Grid.RowDefinitions&gt;
+            &lt;RowDefinition Height=&quot;*&quot;&gt;&lt;/RowDefinition&gt;
+        &lt;/Grid.RowDefinitions&gt;
+        &lt;WindowsFormsHost  x:Name=&quot;controlHost&quot; Grid.Row=&quot;0&quot;&gt;
+            &lt;WinForms:Button x:Name=&quot;btnTest&quot; Text=&quot;Test&quot; Click=&quot;Button_Click&quot;&gt;&lt;/WinForms:Button&gt;
+        &lt;/WindowsFormsHost&gt;
+    &lt;/Grid&gt;
+&lt;/Window&gt;</pre>
+	<p>如需在程序中设置要使用的 WinForm 控件，只需要设置 WindowsFormsHost.Child 为需要的 WinForm 控件。</p>
+	<h1>在WinForm中使用WPF控件</h1>
+	<p>在 WinForm 中使用 WPF 控 件，同样需要引用 WindowsFormsIntegration.dll。使用 ElementHost 控件，将其 Child 属性设置为需要的 WPF 控件即可。</p>
+
+</body>
+</html>

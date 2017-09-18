@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<title>路径问题总结</title>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+<p id="title">ASP.NET路径问题总结</p>
+
+<p><span class="MsoNormal">这是我页面请求链接http://localhost/MyWeb/Store/Page1.aspx?ddddd=9。下面是通过相应方法显示的路径，对比一下应该可以找到你想要的取得路径的方法。</p>
+<table style="width:80%">
+  <TBODY>
+    <TR>
+      <th vAlign=top>方法</th>
+      <th vAlign=top>返回值</th>
+    </TR>
+    <TR>
+      <TD vAlign=top width=561 colSpan=2><P><STRONG>Request.RawUrl</STRONG></P></TD>
+    </TR>
+    <TR>
+      <TD vAlign=top width=561><P align=left>原始 URL 定义为 URL 中域信息之后的部分。在 URL 字符串 http://www.contoso.com/articles/recent.aspx 中，原始 URL 为/articles/recent.aspx。原始 URL 包括查询字符串（如果存在）。</P></TD>
+      <TD vAlign=top width=561><P align=left>/MyWeb/Store/Page1.aspx?ddddd=9</P></TD>
+    </TR>
+    <TR>
+      <TD vAlign=top width=561 colSpan=2><P><STRONG>Request.Path</STRONG></P></TD>
+    </TR>
+    <TR>
+      <TD vAlign=top width=561><P align=left>当前请求的虚拟路径。</P></TD>
+      <TD vAlign=top width=561><P align=left>/MyWeb/Store/Page1.aspx</P></TD>
+    </TR>
+    <TR>
+      <TD vAlign=top width=561 colSpan=2><P><STRONG>Request.PathInfo</STRONG></P></TD>
+    </TR>
+    <TR>
+      <TD vAlign=top width=561><P align=left>对于URL Http://www.contoso.com/virdir/page.html/tail，PathInfo 值为/tail。</P></TD>
+      <TD vAlign=top width=561><P align=left>&nbsp;</P></TD>
+    </TR>
+    <TR>
+      <TD vAlign=top width=561 colSpan=2><P align=left><STRONG>Request.CurrentExecutionFilePath </STRONG><STRONG>和</STRONG><STRONG>?Request.FilePath</STRONG></P></TD>
+    </TR>
+    <TR>
+      <TD vAlign=top width=561><P align=left>CurrentExecutionFilePath 在重定向方案（如 Execute 和 Transfer）中返回当前所执行页的正确文件路径。当客户端重定向到另一页时，FilePath 将返回初始页的路径；CurrentExecutionFilePath 返回子页的路径。</P></TD>
+      <TD vAlign=top width=561><P align=left>/MyWeb/Store/Page1.aspx</P></TD>
+    </TR>
+    <TR>
+      <TD vAlign=top width=561 colSpan=2><P align=left><STRONG>Request.PhysicalApplicationPath</STRONG></P></TD>
+    </TR>
+    <TR>
+      <TD vAlign=top width=561><P align=left>获取当前正在执行的服务器应用程序的根目录的物理文件系统路径。（应用程序的跟目录）</P></TD>
+      <TD vAlign=top width=561><P align=left>k:\MyWeb\MyWeb\</P></TD>
+    </TR>
+    <TR>
+      <TD vAlign=top width=561 colSpan=2><P align=left><STRONG>Request.PhysicalPath</STRONG></P></TD>
+    </TR>
+    <TR>
+      <TD vAlign=top width=561><P align=left>获取与请求的 URL 相对应的物理文件系统路径。</P></TD>
+      <TD vAlign=top width=561><P align=left>k:\MyWeb\MyWeb\Store\Page1.aspx</P></TD>
+    </TR>
+    <TR>
+      <TD vAlign=top width=561 colSpan=2><P 
+align=left><STRONG>Request.ApplicationPath</STRONG></P></TD>
+    </TR>
+    <TR>
+      <TD vAlign=top width=561><P align=left>获取服务器上 ASP.NET 应用程序的虚拟应用程序根路径。</P></TD>
+      <TD vAlign=top width=561><P align=left>/MyWeb</P></TD>
+    </TR>
+    <TR>
+      <TD vAlign=top width=561 colSpan=2><P 
+align=left><STRONG>AppDomain.CurrentDomain.BaseDirectory</STRONG></P></TD>
+    </TR>
+    <TR>
+      <TD vAlign=top width=561><P align=left>获取基目录，它由程序集冲突解决程序用来探测程序集。</P></TD>
+      <TD vAlign=top width=561><P align=left>k:/MyWeb/MyWeb/</P></TD>
+    </TR>
+    <TR>
+      <TD vAlign=top width=561 colSpan=2><P 
+align=left><STRONG>AppDomain.CurrentDomain.RelativeSearchPath</STRONG></P></TD>
+    </TR>
+    <TR>
+      <TD vAlign=top width=561><P align=left>获取相对于基目录的路径，在此程序集冲突解决程序应探测专用程序集。</P></TD>
+      <TD vAlign=top width=561><P align=left>Bin</P></TD>
+    </TR>
+    <TR>
+      <TD vAlign=top width=561 colSpan=2><P align=left><STRONG>Assembly.CodeBase</STRONG></P></TD>
+    </TR>
+    <TR>
+      <TD vAlign=top width=561><P align=left>获取最初指定的程序集的位置</P></TD>
+      <TD vAlign=top width=561><P align=left>file:///k:/MyWeb/MyWeb/bin/MyWeb.DLL</P></TD>
+    </TR>
+    <TR>
+      <TD vAlign=top width=561 colSpan=2><P align=left><STRONG>Assembly.Location</STRONG></P></TD>
+    </TR>
+    <TR>
+      <TD vAlign=top width=561><P align=left>如果包含清单的已加载文件没有被影像复制，则获取该文件的基本代码格式的位置。</P></TD>
+      <TD vAlign=top width=561><P align=left>c:\windows\microsoft.net\framework\v1.1.4322\temporary asp.net files\myweb\a6aa4523\7564b5f7\assembly\dl2\19cb75f7\002a8314_c272c601\myweb.dll</P></TD>
+    </TR>
+    <TR>
+      <TD vAlign=top width=561 colSpan=2><P align=left><STRONG>Request.Server.MapPath()</STRONG> </P></TD>
+    </TR>
+    <TR>
+      <TD vAlign=top width=561><P align=left>将指定的虚拟路径映射到物理路径。</P></TD>
+      <TD vAlign=top width=561><P align=left>&nbsp;</P></TD>
+    </TR>
+  </TBODY>
+</TABLE>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+
+</body>
+</html>

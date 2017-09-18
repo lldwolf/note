@@ -1,0 +1,95 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+Preparing to use the OLE DB interface</TITLE>
+</HEAD>
+<BODY>
+<A NAME="BABCCHID"></A><h1>Preparing to use the OLE DB interface</h1>
+<A NAME="TI465"></A><p>Before you define the interface and connect to a data provider
+via the OLE DB: <A NAME="TI466"></A>
+<ol>
+</li>
+<li class=ds>Install and configure the database
+server, network, and client software.</li>
+<li class=ds>Install the OLE DB interface. </li>
+<li class=ds>Install the OLE DB data provider that accesses your
+data source.</li>
+<li class=ds>Install Microsoft's Data Access Components
+software on your machine.</li>
+<li class=ds>If required, define the OLE DB data source.
+</li>
+</ol>
+</p>
+<A NAME="TI467"></A><h4>Step 1: install and configure the data server</h4>
+<A NAME="TI468"></A><p>You must install and configure the database server as well
+as install the network software and client software.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To install and configure the database server,
+network, and client software:</p>
+<ol><li class=fi>
+Make sure the appropriate database software
+is installed and running on its server.<br><br>
+You must obtain the database server software from your database
+vendor. For installation instructions, see your database vendor's
+documentation.<br><br></li>
+<li class=ds>
+Make sure the required network software (such
+as TCP/IP) is installed and running on your computer and
+is properly configured so that you can connect to the data server
+at your site. You must install the network communication driver
+that supports the network protocol and operating system platform
+you are using.<br><br>
+For installation and configuration instructions,
+see your network or data source administrator.<br><br></li>
+<li class=ds>
+If required, install the appropriate client software
+on each client computer on which InfoMaker is installed. <br><br><p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Client software requirements </span> <A NAME="TI469"></A>To determine client software requirements, see your database
+vendor's documentation. </p>
+<A NAME="TI470"></A>To connect to a data source for the PB OLE DB provider for
+Informix, you must have the Informix Connect 9.21.TC1 client SDK
+version 2.30 or higher.</p>
+</li></ol>
+<br><A NAME="TI471"></A><h4>Step 2: install the OLE DB interface</h4>
+<A NAME="TI472"></A><p>When prompted to do so by the InfoMaker Setup program, select
+the OLE DB interface. </p>
+<A NAME="TI473"></A><p>For instructions, see the<i> InfoMaker
+Installation Guide</i>
+.</p>
+<A NAME="TI474"></A><h4>Step 3: install the OLE DB data provider</h4>
+<A NAME="TI475"></A><p>You need to install the OLE DB provider that accesses your
+database. You can install one or more of the OLE DB data providers
+shipped with InfoMaker, or you can install data providers from
+another vendor. </p>
+<A NAME="TI476"></A><h4>Step 4: install the Microsoft Data Access Components
+software</h4>
+<A NAME="TI477"></A><p>The InfoMaker OLE DB interface requires the functionality
+of the Microsoft Data Access Components software (MDAC). The installation
+of MDAC is not part of the InfoMaker installation. You must perform
+this installation separately by executing the file mdac_typ.exe
+found in the Support directory. </p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>OLE DB data providers installed with Microsoft Data
+Access Components</span> <A NAME="TI478"></A>When you execute the mdac_typ file, several Microsoft
+OLE DB data providers are automatically installed, including the
+following:<A NAME="TI479"></A>
+<ul>
+<li class=fi>Microsoft OLE DB
+Provider for ODBC (MSDASQL)</li>
+<li class=ds>Microsoft OLE DB Provider for SQL Server (SQLOLEDB) 
+</li>
+</ul>
+</p>
+<A NAME="TI480"></A><h4>Step 5: define the OLE DB data source</h4>
+<A NAME="TI481"></A><p>Once the OLE DB data provider is installed, you may have to
+define the OLE DB data source the data provider will access. How
+you define the data source depends on the OLE DB data provider you
+are using and the vendor who provided it. </p>
+<A NAME="TI482"></A><p>To define a data source for one of the OLE DB data providers
+shipped with InfoMaker, use the MERANT OLE DB Administrator. This
+utility is named PBadmin and can be found in \Program Files\Sybase\Shared\MerantOLEDB. </p>
+<A NAME="TI483"></A><p>If you are connecting to an ODBC data provider (such as Microsoft's
+OLE DB Provider for ODBC), you must define the ODBC data source
+as you would if you were using a direct ODBC connection. To define
+an ODBC data source, use Microsoft's ODBC Data Source Administrator.
+This utility can be accessed via the Control Panel in Windows or
+via the Database painter.</p>
+

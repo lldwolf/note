@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>System.Drawing.Design</title>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+<script language="javascript">
+function GetTitleNo()
+{
+	document.write("N." + t1);
+	t1 += 1;
+}
+
+function GetCurTitleNo()
+{
+	document.write("N." + (t1 - 1));
+}
+</script>
+</head>
+
+<body>
+<script language="javascript">
+var t1 = 1;
+</script>
+<p id="title">System.Drawing.Design</p>
+
+<h1><script language="javascript">GetTitleNo();</script> 目录</h1>
+<table style="width:80%" >
+  <tr>
+    <th width="30%">类</th>
+    <th width="70%">简介</th>
+  </tr>
+  <tr>
+    <td><a href="#IWindowsFormsEditorService">IWindowsFormsEditorService</a></td>
+    <td>为 UITypeEditor 提供一个接口，用于显示 Windows 窗体，或者在设计模式下在属性网格控件的下拉区域中显示控件。</td>
+  </tr>
+  <tr>
+    <td><a href="#UITypeEditor">UITypeEditor</a></td>
+    <td>提供可用于设计值编辑器的基类，这些编辑器可提供用户界面 (UI)，用来表示和编辑所支持的数据类型的对象值。</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+<h1><script language="javascript">GetTitleNo();</script> IWindowsFormsEditorService</h1>
+<p>为 UITypeEditor 提供一个接口，用于显示 Windows 窗体，或者在设计模式下在属性网格控件的下拉区域中显示控件。</p>
+<p>该接口有如下三个公开方法：</p>
+<table style="width:80%">
+	<tr>
+		<th width="30%">名称</th>
+		<th width="70%">说明</th>
+	</tr>
+	<tr>
+		<td>CloseDropDown </td>
+		<td>关闭所有以前打开的下拉控件区域。 </td>
+	</tr>
+	<tr>
+		<td>DropDownControl  </td>
+		<td>在提供此服务的属性网格的值字段下方的下拉区域中显示指定控件。</td>
+	</tr>
+	<tr>
+		<td>ShowDialog </td>
+		<td>显示指定的 Form。</td>
+	</tr>
+</table>
+<p>可在UITypeEditor.EditValue方法中得到获取该接口，如下所示</p>
+<pre class="code" data-type="csharp">public override object EditValue(System.ComponentModel.ITypeDescriptorContext context, System.IServiceProvider provider, object value)
+{
+	...
+	IWindowsFormsEditorService edSvc = (IWindowsFormsEditorService)provider.GetService(typeof(IWindowsFormsEditorService));
+	...
+}</pre>
+<h1><script language="javascript">GetTitleNo();</script> UITypeEditor</h1>
+<p>UITypeEditor 类提供一种基类，可以从该基类派生和进行扩展，以便为设计时环境实现自定义类型编辑器。在文本框值编辑器不足以有效地选择某些类型的值的情况下，自定义类型编辑器非常有用。</p>
+<p>若要实现自定义设计时 UI 类型编辑器，必须执行下列步骤： </p>
+<ul>
+	<li>定义一个从 UITypeEditor 派生的类。</li>
+	<li>重写 EditValue 方法以处理用户界面、用户输入操作以及值的分配。</li>
+	<li>重写 GetEditStyle 方法，以便将编辑器将使用的编辑器样式的类型通知给“属性”窗口。</li>
+</ul>
+<p>通过执行下列步骤，可以为在“属性”窗口中绘制值的表示形式添加附加支持： </p>
+<ul>
+	<li>重写 GetPaintValueSupported 方法以指示编辑器支持显示值的表示形式。</li>
+	<li>重写 PaintValue 方法以实现该值的表示形式的显示。</li>
+</ul>
+<p>如果编辑器应具有初始化行为，则重写 UITypeEditor 构造函数方法。</p>
+<p>下面是一个例子，用来制作一个角度的设计器：</p>
+<p><a href="demo/UITypeEditor.zip">角度编辑器</a></p>
+<p>实现的编辑效果如下图所示:</p>
+<img src="images/angle_control.jpg" />
+
+<p>&nbsp;</p>
+
+</body>
+</html>

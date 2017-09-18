@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+	<script type="text/javascript" src="../../mylib/js/css.js"></script>
+	<title>Android Note</title>
+</head>
+
+<body>
+	<p id="title">学习过程</p>
+	<h1>简要回顾</h1>
+	<ol>
+		<li>如何在 Android Studio 中新建项目</li>
+		<li>四大组件：Activity, Service, Broadcast Receiver, Content Provider</li>
+		<li>第一个程序，src 下的 java 目录和 res 目录</li>
+		<li>如何打印 log</li>
+		<li>Log 过滤器</li>
+		<li>新建 Activity</li>
+		<li>简单布局，res 目录，LinearLayout</li>
+		<li>注册 Activity (AndroidManifest.xml)，添加 intent-filter 响应系统启动事件使之成为启动 Activity</li>
+		<li>为按钮注册事件
+			<ul>
+				<li>button.setOnClickListener</li>
+				<li>new View.OnClickListener</li>
+				<li>override onClick</li>
+			</ul>
+		</li>
+		<li>Toast 使用，Toast.makeText</li>
+		<li>使用 Menu，res 目录，新建 layout, activity override onCreateOptionsMenu, getMenuInflate().inflate()</li>
+		<li>onOptionsItemSelected, 响应菜单事件, switch(item.getItemId)</li>
+		<li>finish, 销毁 Activity</li>
+		<li>Intent
+			<ul>
+				<li>显式切换 Activity，startActivity(intent)</li>
+				<li>隐式切换 Activity，AndroidManifest.xml, action, category, new Intent(action), intent.addCategory(category)</li>
+				<li>打开浏览器，Intent.ACTION_VIEW</li>
+				<li>注册针对 Intent.ACTION_VIEW 的 Activity, 可以响应系统浏览器请求</li>
+				<li>打开拨号，Intent.ACTION_DIAL</li>
+				<li>向下一个活动传递数据，intent.putExtra(key, value), getIntent().getStringExtra</li>
+				<li>返回数据给上一个活动<br />
+				startActivityForResult(intent, request_code)
+				<br />
+				intent.putExtra(), setResult(RESULT_OK, intent), finish
+				<br />
+				override onActivityResult, switch(request_code), if (resultCode == RESULT_OK)
+				<br />
+				override onBackPressed
+				</li>Intent 生命周期，Create, Resume, Pause, Stop, Destroy, Restart</li>
+				<li>Activity 回收前保存临时状态 onSaveInstanceState</li>
+				<li>Activity 4种启动模式：standard, singleTop, singleTask, singleInstance</li>
+			</ul>
+			
+		</li>
+		<li></li>
+		<li></li>
+		<li></li>
+		<li></li>
+	</ol>
+	
+</body>
+</html>

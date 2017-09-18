@@ -1,0 +1,38 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+Optimizing libraries</TITLE>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+</HEAD>
+<BODY>
+<A NAME="X-ref345205685"></A>
+<h1>优化 libraries</h1>
+<A NAME="TI778"></A>
+<p>这个功能不常用，它用来消除存储时产生的文件碎片，从而达到优化性能的目的。</p>
+<A NAME="TI779"></A>
+<p><strong>优化</strong>只会影响磁盘的存储性能，而不会影响对象本身，对象不会因为本操作而重新编译。</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> 优化库的步骤如下：（翻到这里我不想翻了，反正平时也不用）</p>
+<ol><li class=fi>
+In either Tree view or List view, choose
+the library you want to optimize.<br><br></li>
+<li class=ds>
+Select Library&gt;Optimize from the menu
+bar.<br><br>
+<i>or</i>
+<br><br>
+Select Optimize from the library's popup menu.<br><br>
+InfoMaker reorganizes the library structure to optimize object
+and data storage and index locations. Note that InfoMaker does
+not change the modification date for the library entries. InfoMaker saves
+the unoptimized version as a backup file in the same directory.<br><br>
+The optimized file is created with the default permissions
+for the drive where it is stored. On some systems new files are
+not shareable by default. If you see save of object failed or link
+error messages after optimizing, check the permissions assigned
+to the PBL. <br><br><p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>If you do not want a backup file</span> <A NAME="TI780"></A>If you do not want to save a backup copy of the library, clear
+the Save Optimized Backups checkbox in the Library painter's
+Design&gt;Options tab dialog. If you clear this option, the
+new setting remains in effect until you change it.</p>
+</li></ol>
+<br>

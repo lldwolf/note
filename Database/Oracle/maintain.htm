@@ -1,0 +1,318 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<script language="javascript" src="css.js"></script>
+<title>第五章 数据库维护</title>
+</head>
+
+<body>
+<h1 align="center">第五章 数据库维护</h1>
+<h2><a href="#5_1">5.1 数据库备份</a></h2>
+<h2><a href="#5_2">5.2 恢复数据库</a></h2>
+<h2><a name="5_1"></a>5.1 数据库备份</h2>
+<h3>5.1.1 命令行方式</h3>
+<p>Oracle提供exp.exe来对数据库进行备份，其所在目录为%ORACLE_HOME%\ora92\bin，其格式如下：</p>
+<p>exp 用户名/口令@服务名 参数表</p>
+<p>参数格式如下:</p>
+<p>格式: EXP KEYWORD=value 或 KEYWORD=(value1,value2,...,valueN)</p>
+<p> 例程: EXP SCOTT/TIGER GRANTS=Y TABLES=(EMP,DEPT,MGR)
+  或 TABLES=(T1: P1,T1: P2)，如果 T1 是分区表</p>
+<p>USERID 必须是命令行中的第一个参数。</p>
+<table width="100%" >
+  <tr>
+    <th width="25%">关键字</th>
+    <th width="25%">说明（默认）</th>
+    <th width="25%">关键字</th>
+    <th width="25%">说明（默认）</th>
+  </tr>
+  <tr>
+    <td>USERID</td>
+    <td>用户名/口令@服务名</td>
+    <td>FULL</td>
+    <td>导出整个文件（N）</td>
+  </tr>
+  <tr>
+    <td>BUFFER </td>
+    <td>数据缓冲区大小</td>
+    <td>OWNER </td>
+    <td>所有者用户名列表</td>
+  </tr>
+  <tr>
+    <td>FILE </td>
+    <td>输出文件 (EXPDAT.DMP)</td>
+    <td>TABLES </td>
+    <td>表名称列表</td>
+  </tr>
+  <tr>
+    <td>COMPRESS </td>
+    <td>导入到一个区 (Y)</td>
+    <td>RECORDLENGTH </td>
+    <td>IO 记录的长度</td>
+  </tr>
+  <tr>
+    <td>GRANTS </td>
+    <td>导出权限 (Y)</td>
+    <td>INCTYPE </td>
+    <td>增量导出类型</td>
+  </tr>
+  <tr>
+    <td>INDEXES </td>
+    <td>导出索引 (Y)</td>
+    <td>RECORD </td>
+    <td>跟踪增量导出 (Y)</td>
+  </tr>
+  <tr>
+    <td>DIRECT </td>
+    <td>直接路径 (N)</td>
+    <td>TRIGGERS </td>
+    <td>导出触发器 (Y)</td>
+  </tr>
+  <tr>
+    <td>LOG </td>
+    <td>屏幕输出的日志文件</td>
+    <td>STATISTICS </td>
+    <td>分析对象 (ESTIMATE)</td>
+  </tr>
+  <tr>
+    <td>ROWS </td>
+    <td>导出数据行 (Y)</td>
+    <td>PARFILE </td>
+    <td>参数文件名</td>
+  </tr>
+  <tr>
+    <td>CONSISTENT </td>
+    <td>交叉表的一致性 (N)</td>
+    <td>CONSTRAINTS </td>
+    <td>导出的约束条件 (Y)</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>OBJECT_CONSISTENT </td>
+    <td>只在对象导出期间设置为读的事务处理 (N)</td>
+    <td>FEEDBACK </td>
+    <td>每 x 行的显示进度 (0)</td>
+  </tr>
+  <tr>
+    <td>FILESIZE </td>
+    <td>每个转储文件的最大大小</td>
+    <td>FLASHBACK_SCN </td>
+    <td>用于将会话快照设置回以前状态的 SCN</td>
+  </tr>
+  <tr>
+    <td>FLASHBACK_TIME </td>
+    <td>用于获取最接近指定时间的 SCN 的时间</td>
+    <td>QUERY </td>
+    <td>用于导出表的子集的 select 子句</td>
+  </tr>
+  <tr>
+    <td>RESUMABLE </td>
+    <td>遇到与空格相关的错误时挂起 (N)</td>
+    <td>RESUMABLE_NAME </td>
+    <td>用于标识可恢复语句的文本字符串</td>
+  </tr>
+  <tr>
+    <td>RESUMABLE_TIMEOUT </td>
+    <td>RESUMABLE 的等待时间</td>
+    <td>TTS_FULL_CHECK </td>
+    <td>对 TTS 执行完整的或部分相关性检查</td>
+  </tr>
+  <tr>
+    <td>TABLESPACES </td>
+    <td>要导出的表空间列表</td>
+    <td>TRANSPORT_TABLESPACE </td>
+    <td>导出可传输的表空间元数据 (N)</td>
+  </tr>
+  <tr>
+    <td>TEMPLATE </td>
+    <td>调用 iAS 模式导出的模板名</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+<p>例程：</p>
+<p>数据库服务名：OEMREP</p>
+<pre>--导出整个数据库至c:\oemrep.dmp文件
+exp system/password@oemrep file=c:/oemrep.dmp full=y
+
+--导出pp用户的数据到c:\pp.dmp
+exp system/password@oemrep file=c:/pp.dmp owner=(pp)
+
+--导出表table1, table2到c:\table.dmp
+exp system/password@oemrep file=c:/pp.dmp TABLES=(table1,table2)</pre>
+<h3>5.1.2 图形界面方式 </h3>
+<p>第一步、使用管理员账号登录到OMS</p>
+<p><img src="images/015.jpg" width="516" height="301"></p>
+<p>如果无法启动，可能有以下几个原因：</p>
+<ul>
+  <li>用户名或口令错误</li>
+  <li>未启动ORACEL服务“OracleOraHome92ManagementServer”</li>
+</ul>
+<p>第二步、配置首选身份证明</p>
+<p>打开OMS菜单上的“配置”-&gt;“首选项”-&gt;“首选身份证明”</p>
+<p>首先是配置TEST数据库的首选身份证明：</p>
+<p><img src="images/016.jpg" width="518" height="450"></p>
+<p>然后是配置服务器auto80的首选身份证明，这里使用的是操作系统用户 Administrator：</p>
+<p><img src="images/017.jpg" width="518" height="450"> </p>
+<p>注意：此处的操作系统用户必须有“登录为批处理作业”的权限，不幸的是，默认情况下 Administrator 用户无该权限，授权方法为打开“开始”-&gt;“管理工具”-&gt;“本地安全策略”-&gt;“本地策略”-&gt;“用户权利指派”，找到“作为批处理作业登录”项，将 administrator 用户加入，如下图所示：</p>
+<p><img src="images/018.jpg" width="401" height="376"> </p>
+<p>如果操作系统用户没有该权限，在备份过程中ORACLE会报告错误：“目标节点的节点首选身份证明无效或具有的权限不足以完成该操作。在 Windows 平台上, 为 Windows 目标指定的节点身份证明应具有 &quot;登录为批处理作业&quot; 的权限。”</p>
+<p>第三步、备份数据库</p>
+<p>打开OMS菜单“工具”-&gt;“数据库工具”-&gt;“备份管理”-&gt;“备份”：</p>
+<p><img src="images/019.jpg" width="601" height="431"></p>
+<p><img src="images/020.jpg" width="601" height="431"></p>
+<p><img src="images/021.jpg" width="593" height="404"></p>
+<p><img src="images/022.jpg" width="601" height="431"></p>
+<p><img src="images/023.jpg" width="601" height="431"></p>
+<p><img src="images/024.jpg" width="601" height="431"></p>
+<p><img src="images/025.jpg" width="601" height="431"></p>
+<p><img src="images/026.jpg" width="601" height="431"></p>
+<p><img src="images/027.jpg" width="450" height="450"></p>
+<p>确认后开始备份，弹出提示窗口：</p>
+<p><img src="images/028.jpg" width="388" height="159"></p>
+<p>此时打开OMS的“作业”窗口，可看到如下的作业列表：</p>
+<p><img src="images/029.jpg" width="447" height="72"></p>
+<p>双击可查看其详细资料：</p>
+<p><img src="images/030.jpg" width="660" height="420"></p>
+<p>最后完成后的状态如下：</p>
+<p><img src="images/031.jpg" width="660" height="420"></p>
+<h2><a name="5_2"></a>5.2 导入数据库内容</h2>
+<h3>5.2.1 命令行导入</h3>
+<p>Oracle提供imp.exe来对数据库进行备份，其所在目录为%ORACLE_HOME%\ora92\bin，其格式如下：</p>
+<p>imp 用户名/口令@服务名 参数表</p>
+<p>参数格式如下:</p>
+<p>格式: IMP KEYWORD=value 或 KEYWORD=(value1,value2,...,valueN)</p>
+<p>USERID 必须是命令行中的第一个参数。</p>
+<table width="100%" >
+  <tr>
+    <th width="25%">关键字</th>
+    <th width="25%">说明（默认）</th>
+    <th width="25%">关键字</th>
+    <th width="25%">说明（默认）</th>
+  </tr>
+  <tr>
+    <td>USERID </td>
+    <td>用户名/口令 </td>
+    <td>FULL </td>
+    <td>导入整个文件 (N)</td>
+  </tr>
+  <tr>
+    <td>BUFFER </td>
+    <td>数据缓冲区大小 </td>
+    <td>FROMUSER </td>
+    <td>所有人用户名列表</td>
+  </tr>
+  <tr>
+    <td>FILE </td>
+    <td>输入文件 (EXPDAT.DMP) </td>
+    <td>TOUSER </td>
+    <td>用户名列表</td>
+  </tr>
+  <tr>
+    <td>SHOW </td>
+    <td>只列出文件内容 (N) </td>
+    <td>TABLES </td>
+    <td>表名列表</td>
+  </tr>
+  <tr>
+    <td>IGNORE </td>
+    <td>忽略创建错误 (N) </td>
+    <td>RECORDLENGTH </td>
+    <td>IO 记录的长度</td>
+  </tr>
+  <tr>
+    <td>GRANTS </td>
+    <td>导入权限 (Y) </td>
+    <td>INCTYPE </td>
+    <td>增量导入类型</td>
+  </tr>
+  <tr>
+    <td>INDEXES </td>
+    <td>导入索引 (Y) </td>
+    <td>COMMIT </td>
+    <td>提交数组插入 (N)</td>
+  </tr>
+  <tr>
+    <td>ROWS </td>
+    <td>导入数据行 (Y) </td>
+    <td>PARFILE </td>
+    <td>参数文件名</td>
+  </tr>
+  <tr>
+    <td>LOG </td>
+    <td>屏幕输出的日志文件 </td>
+    <td>CONSTRAINTS </td>
+    <td>导入限制 (Y)</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>DESTROY </td>
+    <td>覆盖表空间数据文件 (N)</td>
+    <td>INDEXFILE </td>
+    <td>将表/索引信息写入指定的文件</td>
+  </tr>
+  <tr>
+    <td>SKIP_UNUSABLE_INDEXES </td>
+    <td>跳过不可用索引的维护 (N)</td>
+    <td>FEEDBACK </td>
+    <td>每 x 行显示进度 (0)</td>
+  </tr>
+  <tr>
+    <td>TOID_NOVALIDATE </td>
+    <td>跳过指定类型 ID 的验证</td>
+    <td>FILESIZE </td>
+    <td>每个转储文件的最大大小</td>
+  </tr>
+  <tr>
+    <td> STATISTICS </td>
+    <td>始终导入预计算的统计信息</td>
+    <td>RESUMABLE </td>
+    <td>在遇到有关空间的错误时挂起 (N)</td>
+  </tr>
+  <tr>
+    <td>RESUMABLE_NAME </td>
+    <td>用来标识可恢复语句的文本字符串</td>
+    <td>RESUMABLE_TIMEOUT </td>
+    <td>RESUMABLE 的等待时间</td>
+  </tr>
+  <tr>
+    <td>COMPILE </td>
+    <td>编译过程, 程序包和函数 (Y)</td>
+    <td>STREAMS_CONFIGURATION </td>
+    <td>导入 Streams 的一般元数据 (Y)</td>
+  </tr>
+  <tr>
+    <td>STREAMS_INSTANITATION </td>
+    <td>导入 Streams 的实例化元数据 (N)</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+<p>列关键字仅用于可传输的表空间<br>
+  TRANSPORT_TABLESPACE 导入可传输的表空间元数据 (N)<br>
+  TABLESPACES 将要传输到数据库的表空间<br>
+  DATAFILES 将要传输到数据库的数据文件<br>
+TTS_OWNERS 拥有可传输表空间集中数据的用户</p>
+<p>&nbsp; </p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<script language="javascript" src="index.js"></script> 
+</body>
+</html>

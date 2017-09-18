@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<title>国际化</title>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+<p id="title">国际化</p>
+
+<ol>
+  <li>跟以前一样做界面，只是注意，把所有需要有多语言界面的文字都用&lt;asp:*&gt;服务器控件来做，例如使用&lt;asp:label&gt;
+<pre class="code" data-type="xml">asp:Label runat=&quot;server&quot; ID=&quot;lbLoginName&quot; Text=&quot;姓 名&quot; /&gt;</pre></li>
+  <li> 做完以后，在Solution Explorer里选中这个文件，选Tools-＞Generate Local Resource</li>
+  <li>你会发现生成了一个目录，App_LocalResources；这个目录里多了一个resx的文件。比如你的aspx文件是default.aspx，它就会生成一个叫做default.aspx.resx的文件。</li>
+  <li>打开这个文件看看，原来在label中的那些文字都跑到这里来了</li>
+  <li>打开原来的aspx文件看看source，会发现源码变了：
+<pre class="code" data-type="xml">%@ Page Language=&quot;c#&quot; Inherits=&quot;PCAS._default&quot; CodeFile=&quot;default.aspx.cs&quot; meta:resourcekey=&quot;PageResource1&quot; %&gt;
+...
+&lt;asp:Label runat=&quot;server&quot; ID=&quot;lbLoginName&quot; Text=&quot;姓 名&quot; meta:resourcekey=&quot;lbLoginNameResource1&quot; /&gt;</pre>
+如果是其他的控件上的文字，基本上也是会自动生成的。比如button和gridview之类<br />
+注意这里：meta:resourcekey=&quot;PageResource1&quot; 和meta:resourcekey=&quot;Localize1Resource1&quot; 这就表示这里的文字是从资源中读取的</li>
+
+  <li>OK现在来做另一种语言的资源文件。很简单，copy Default.aspx.resx再paste一下，然后rename为Default.aspx.en-us.resx注意en-us是你要做的语言的名字。有人说我怎么知道那个语言叫什么名字呢？很简单，打开ie，tools-＞internet options -＞ languages -＞ 
+add，方框中间的就是了。</li>
+  <li>现在开始编辑其他资源的文字。打开Default.aspx.en-us.resx，对照着原来的内容，把里面的内容改成英语的。</li>
+  <li>到此为止，我们就完成了第一阶段。ASP.Net会根据用户的语言偏好来选择显示的语言。把IE里的设置改一下，在我们刚说过的地方改成en-us，打开这一页看看？如果是法语，恭喜你。如果不是，回头重做……</li>
+  <li>下一步，我们要允许用户选择自己的语言，而不是自动。我们会用cookie存取用户的选择。在Application级别，我们读取这个 cookie并设置适当的culture和uiculture。当然，第一次进来的时候，我们还是要读取浏览器的设置，这个可以从 Request.UserLanguages中获得。在Global.asax中添加如下代码
+<pre class="code" data-type="xml">%@ Application Language=&quot;C#&quot; %&gt;
+&lt;%@ Import Namespace=&quot;System.Threading&quot; %&gt;
+&lt;%@ Import Namespace=&quot;System.Globalization&quot; %&gt;
+
+&lt;script runat=&quot;server&quot;&gt;
+
+...
+
+private string[] SupportedLanguages = new string[] { &quot;en-us&quot;, &quot;zh-cn&quot; };
+public const string LANGUAGE_COOKIE_NAME = &quot;UserLanguage&quot;;
+protected void Application_AcquireRequestState(Object sender, EventArgs e)
+{
+    HttpCookie languageCookie = Request.Cookies[LANGUAGE_COOKIE_NAME];
+    string language = string.Empty;
+    if (languageCookie == null)
+    {
+        string[] userLanguages = Request.UserLanguages;
+        int index;
+        for (int i = 0; i &lt; userLanguages.Length; i++)
+        {
+            index = Array.IndexOf(SupportedLanguages, userLanguages[i].Split(';')[0]);
+            if (index &gt;= 0)
+            {
+                language = SupportedLanguages[index];
+                break;
+            }
+        }
+
+        if (language == string.Empty)
+        {
+            language = SupportedLanguages[0];
+        }
+
+        HttpCookie cookie = new HttpCookie(LANGUAGE_COOKIE_NAME, language);
+        cookie.Expires = Convert.ToDateTime(&quot;2020-12-1&quot;);
+        Response.AppendCookie(cookie);
+    }
+    else
+    {
+        language = languageCookie.Value;
+    }
+
+    CultureInfo culture = new CultureInfo(language);
+    Thread.CurrentThread.CurrentUICulture = culture;
+    
+}
+
+...
+
+&lt;/script&gt;</pre>
+注意，在此我设定了cookie的有效期，如果不设有效期的话，该cookie只会保存在session中，不会保存到硬盘上。</li>
+  <li>然后我们要有一页让用户选择语言，比如我们用两个button来做。在点击这个button之后，我们要设置这个cookie为适当的语言：
+<pre class="code" data-type="csharp">protected void SetLanguage(string language)
+{
+    Response.Cookies[ASP.global_asax.LANGUAGE_COOKIE_NAME].Value = language;
+    Response.Cookies[ASP.global_asax.LANGUAGE_COOKIE_NAME].Expires = Convert.ToDateTime(&quot;2020-1-1&quot;);
+    CultureInfo culture = new CultureInfo(language);
+    System.Threading.Thread.CurrentThread.CurrentUICulture = culture;
+    Server.Transfer(Request.Path);        
+}
+
+protected void btnEnglish_Click(object sender, EventArgs e)
+{
+    this.SetLanguage(&quot;en-us&quot;);
+}</pre>
+注意，在此我设定了cookie的有效期，如果不设有效期的话，该cookie只会保存在session中，不会保存到硬盘上。
+注意最后的Server.Transfer(Request.Path) ，这是为了重新读取这一页，这样这一页也会显示新选择的语言。</li>
+  <li>最后我们要去掉ASP.Net的自动选择。从Default.aspx中去除：
+  <pre class="code" data-type="csharp">Culture="auto" UICulture="auto" </pre></li>
+</ol>
+
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+
+</body>
+</html>

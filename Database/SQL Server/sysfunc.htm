@@ -1,0 +1,186 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<script language="javascript" src="css.js"></script>
+<title>系统函数</title>
+</head>
+
+<body>
+<h1>第N章 系统函数
+
+</h1>
+<table width="100%" >
+  <tr>
+    <th width="20%">函数名</th>
+    <th width="80%">说明</th>
+  </tr>
+  <tr>
+    <td>app_name</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>case</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>cast</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>coalesce</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>CollationProperty</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>convert</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>current_timestamp</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>current_user</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>DataLength</td>
+    <td>用于确定任意数据类型表达式的长度，包括image、text、ntext类型的长度</td>
+  </tr>
+  <tr>
+    <td>@@error</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>fn_helpcollations</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>fn_servershareddrives</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>fn_virtualfilestats</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>FormatMessage</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>GetAnsiNull</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>host_id</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>host_name</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>ident_current</td>
+    <td>IDENT_CURRENT<B>('</B><I>table_name</I><B>')</B>，返回某表最后插入的identity列的值，<a href="#identity">备注</a>。</td>
+  </tr>
+  <tr>
+    <td>ident_incr</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>ident_seed</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>@@identity</td>
+    <td>最后插入的identity列的值，<a href="#identity">备注</a>。</td>
+  </tr>
+  <tr>
+    <td>identity(function)</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>isdate</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>isnull</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>isnumeric</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>newid</td>
+    <td><p>用来生成一个<B>uniqueidentifier</B>类型的唯一值</p>
+    <p>select newid() </p></td>
+  </tr>
+  <tr>
+    <td>nullif</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>ParseName</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>Permissions</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>@@rowcount</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>rowcount_big</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>scope_identity</td>
+    <td>无参数，返回在一个范围(scope)内插入的identity列的值，<a href="#identity">备注</a>。</td>
+  </tr>
+  <tr>
+    <td>ServerProperty</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>SessionProperty</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>session_user</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>stats_date</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>system_user</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>@@trancount</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>user_name</td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+<h2><a name="identity"></a>scope_identity、ident_current和@@identity的区别</h2>
+<p>ident_current返回某张表的最后插入的标识列的值，不受scope和session的限制</p>
+<p>scope_identity返回任意表的identity列最后插入的值，仅限于当前scope和session</p>
+<p>@@identity返回任意表的identity列最后插入的值，不受scope和session的限制</p>
+<p>例如有两张表T1和T2，T1上有一个插入触发器，插入时会同时插入T2表，这样在插入T1表时就会有两个scope：对T1的插入、触发器对T2的插入</p>
+<p>&nbsp;</p>
+<p>&nbsp; </p>
+<script language="javascript" src="index.js"></script>
+</body>
+</html>

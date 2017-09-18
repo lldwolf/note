@@ -1,0 +1,279 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+Setting database preferences</TITLE>
+</HEAD>
+<BODY>
+<A NAME="X-ref346966539"></A><h1>Setting database preferences</h1>
+<A NAME="TI1265"></A><h4>How to set</h4>
+<A NAME="TI1266"></A><p>The way you set connection-related database preferences in InfoMaker varies, as
+summarized in the following table:</p>
+<A NAME="TI1267"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI1268"></A>Database preference</th>
+<th align="left" valign=bottom><A NAME="TI1269"></A>Set in development environment by editing</th>
+</tr>
+<tr><td valign=top><A NAME="TI1270"></A>AutoCommit</td>
+<td valign=top><A NAME="TI1271"></A>Database Profile Setup dialog box for
+your connection</td>
+</tr>
+<tr><td valign=top><A NAME="TI1272"></A>Lock</td>
+<td valign=top><A NAME="TI1273"></A>Database Profile Setup dialog box for
+your connection</td>
+</tr>
+<tr><td valign=top><A NAME="TI1274"></A>Shared Database Profiles</td>
+<td valign=top><A NAME="TI1275"></A>Database Preferences property sheet</td>
+</tr>
+<tr><td valign=top><A NAME="TI1276"></A>Connect DB at Startup</td>
+<td valign=top><A NAME="TI1277"></A>Database Preferences property sheet</td>
+</tr>
+<tr><td valign=top><A NAME="TI1278"></A>Connect to Default Profile</td>
+<td valign=top><A NAME="TI1279"></A>Database Preferences property sheet</td>
+</tr>
+<tr><td valign=top><A NAME="TI1280"></A>Read Only</td>
+<td valign=top><A NAME="TI1281"></A>Database Preferences property sheet</td>
+</tr>
+<tr><td valign=top><A NAME="TI1282"></A>Keep Connection Open</td>
+<td valign=top><A NAME="TI1283"></A>Database Preferences property sheet</td>
+</tr>
+<tr><td valign=top><A NAME="TI1284"></A>Use Extended Attributes</td>
+<td valign=top><A NAME="TI1285"></A>Database Preferences property sheet</td>
+</tr>
+<tr><td valign=top><A NAME="TI1286"></A>SQL Terminator Character</td>
+<td valign=top><A NAME="TI1287"></A>Database Preferences property sheet</td>
+</tr>
+</table>
+<A NAME="TI1288"></A><p>The following sections give the steps for setting database
+preferences in the development environment.</p>
+<A NAME="TI1289"></A><h4>For more information</h4>
+<A NAME="TI1290"></A><p>For information about using a specific database preference,
+see its description in the online Help.</p>
+<A NAME="TI1291"></A><h2>Setting database preferences in the development
+environment</h2>
+<A NAME="TI1292"></A><p>There are two ways to set database preferences in the InfoMaker development environment
+on <i>all</i>
+ supported development platforms, depending
+on the preference you want to set:<A NAME="TI1293"></A>
+<ul>
+<li class=fi>Set AutoCommit and Lock (Isolation Level) in the Database
+Profile Setup dialog box for your connection</li>
+<li class=ds>Set all other database preferences in the Database
+Preferences property sheet in the Database painter
+</li>
+</ul>
+</p>
+<A NAME="X-ref350078942"></A><h3>Setting AutoCommitand Lock in the database profile</h3>
+<A NAME="TI1294"></A><p>The AutoCommit and Lock (Isolation Level) preferences are
+properties of the default Transaction object, SQLCA. For AutoCommit
+and Lock to take effect in the InfoMaker development environment,
+you must specify them <i>before</i>
+ you connect to
+a database. Changes to these preferences after the connection occurs have
+no effect on the current connection.</p>
+<A NAME="TI1295"></A><p>To set AutoCommit and Lock before InfoMaker connects to your
+database, you specify their values in the Database Profile Setup
+dialog box for your connection.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To set AutoCommit and Lock (Isolation Level) in
+a database profile:</p>
+<ol><li class=fi>
+Display the Database Profiles dialog box.<br><br></li>
+<li class=ds>
+Click the plus sign (+) to the left of
+the interface you are using.<br><br>
+<i>or</i>
+<br><br>
+Double-click the interface name.<br><br>
+The list expands to display the database profiles defined
+for your interface.<br><br></li>
+<li class=ds>
+Select the name of the profile you want and click
+Edit.<br><br>
+The Database Profile Setup dialog box for the selected profile
+displays.<br><br></li>
+<li class=ds>
+On the Connection tab page, supply values for
+one or both of the following:<A NAME="TI1296"></A>
+<ul>
+<li class=fi><b>Isolation
+Level</b>   If your database supports the use of locking and isolation
+levels, select the isolation level you want to use for this connection
+from the Isolation Level dropdown listbox. (The Isolation Level
+dropdown listbox contains valid lock values for your interface.) </li>
+<li class=ds><b>AutoCommit Mode</b>   The setting of AutoCommit controls whether InfoMaker issues
+SQL statements outside (True) or inside (False) the scope of a transaction. <i>If
+your database supports it</i>
+, select the AutoCommit Mode
+checkbox to set AutoCommit to True or clear the AutoCommit Mode
+checkbox (the default) to set AutoCommit to False.
+</li>
+</ul>
+
+                        <br><br>
+For example, in addition to values for basic connection parameters (Server,
+Login ID, Password, and Database), the Connection tab page for the
+following Sybase Adaptive Server Enterprise profile named Sales shows
+nondefault settings for Isolation Level and AutoCommit Mode.<br><br><p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Preview tab not available in InfoMaker</span> <A NAME="TI1297"></A>PowerScript connection syntax does not apply to InfoMaker applications. Therefore,
+the Database Profile Setup dialog box in InfoMaker does <i>not</i>
+ include
+a Preview tab for copying PowerScript connection syntax into a script.</p>
+<br><img src="images/cn7auto.gif"><br>
+</li>
+<li class=ds>
+Click OK to close the Database Profile Setup dialog
+box.<br><br>
+InfoMaker saves your settings in the database profile entry
+in the registry.<br><br>
+For example, here is the database profile entry for Sales.
+The Lock and AutoCommit settings are shown in bold.<pre>[Default] 					[value not set]</pre>
+<pre>AutoCommit 				 	"TRUE"</pre>
+<pre>Database					"Sales"</pre>
+<pre>DatabasePassword "00"</pre>
+<pre>DBMS				 "SYC Sybase Adaptive Server Enterprise"</pre>
+<pre>DbParm				 "Release"</pre>
+<pre><i>Lock				 "3"</i> </pre>
+<pre>LogId				 "login"</pre>
+<pre>LogPassword	 "pass"</pre>
+<pre>Prompt				 "0"</pre>
+<pre>ServerName	 "Sales"</pre>
+<br><br></li></ol>
+<br><A NAME="X-ref350168098"></A><h3>Setting preferencesin the Database Preferences property sheet</h3>
+<A NAME="TI1298"></A><p>To set the following connection-related database preferences,
+complete the Database Preferences property sheet in the InfoMaker Database
+painter:<A NAME="TI1299"></A>
+<ul>
+<li class=fi>Shared Database Profiles</li>
+<li class=ds>Connect to Default Profile</li>
+<li class=ds>Read Only</li>
+<li class=ds>Keep Connection Open</li>
+<li class=ds>Use Extended Attributes</li>
+<li class=ds>SQL Terminator Character</li>
+<li class=ds>Connect DB at Startup (InfoMaker only)
+</li>
+</ul>
+</p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Other database preferences</span> <A NAME="TI1300"></A>The Database Preferences property sheet also lets you set
+other database preferences that affect the behavior of the Database
+painter itself.</p>
+<A NAME="TI1301"></A>For information about the other preferences
+you can set in the Database Preferences property sheet, see the <i>User's
+Guide</i>
+.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To set connection-related preferences in the Database
+Preferences property sheet:</p>
+<ol><li class=fi>
+Open the Database painter.<br><br></li>
+<li class=ds>
+Select Design&gt;Options from the menu bar.<br><br>
+The Database Preferences property sheet displays. If necessary,
+click the General tab to display the General property page.<br><br><br><img src="images/cn7dbprf.gif"><br>
+</li>
+<li class=ds>
+Specify values for one or more of the following
+connection-related database preferences:<br><br><A NAME="TI1302"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI1303"></A>Preference</th>
+<th align="left" valign=bottom><A NAME="TI1304"></A>Description</th>
+<th align="left" valign=bottom><A NAME="TI1305"></A>For details, see</th>
+</tr>
+<tr><td valign=top><A NAME="TI1306"></A>Shared Database Profiles</td>
+<td valign=top><A NAME="TI1307"></A>Specifies the pathname of the file containing
+the database profiles you want to share. You can type the pathname
+or click Browse to display it</td>
+<td valign=top><A NAME="TI1308"></A><A HREF="connimp34.htm#CCJCEIDC">"Sharing database profiles"</A></td>
+</tr>
+<tr><td valign=top><A NAME="TI1309"></A>Connect to Default Profile</td>
+<td valign=top><A NAME="TI1310"></A>Controls whether the Database painter establishes
+a connection to a database using a default profile when the painter
+is invoked. If not selected, the Database painter opens without establishing
+a connection to a database</td>
+<td valign=top><A NAME="TI1311"></A>Connect to Default Profile in online Help</td>
+</tr>
+<tr><td valign=top><A NAME="TI1312"></A>Read Only</td>
+<td valign=top><A NAME="TI1313"></A>Specifies whether InfoMaker should update
+the extended attribute system tables and any other tables in your database.
+Select or clear the Read Only checkbox as follows:<A NAME="TI1314"></A>
+<ul>
+<li class=fi><b>Select the checkbox</b>   Does not update the extended attribute system tables or any
+other tables in your database. You <i>cannot</i>
+ modify (update)
+information in the extended attribute system tables or any other
+database tables from the Report and Form painters when the Read
+Only checkbox is selected</li>
+<li class=ds><b>Clear the checkbox</b>   (Default) Updates the extended attribute system tables and
+any other tables in your database
+</li>
+</ul>
+</td>
+<td valign=top><A NAME="TI1315"></A>Read Only in the online Help</td>
+</tr>
+<tr><td valign=top><A NAME="TI1316"></A>Keep Connection Open</td>
+<td valign=top><A NAME="TI1317"></A>When you connect to a database in PowerBuilder
+without using a database profile, specifies when PowerBuilder closes
+the connection. Select or clear the Keep Connection Open checkbox
+as follows:<A NAME="TI1318"></A>
+<ul>
+<li class=fi><b>Select
+the checkbox</b>   (Default) Stays connected to the database throughout your
+session and closes the connection when you exit</li>
+<li class=ds><b>Clear the checkbox</b>   Opens the connection only when a painter requests it and closes
+the connection when you close a painter or finish compiling a script
+</li>
+</ul>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>PowerBuilder only</span> <A NAME="TI1319"></A>Keep Connection Open has no effect in InfoMaker, DataWindow
+Builder, or when you use a database profile in PowerBuilder to connect.</p>
+</td>
+<td valign=top><A NAME="TI1320"></A>Keep Connection Open in the online Help</td>
+</tr>
+<tr><td valign=top><A NAME="TI1321"></A>Use Extended Attributes</td>
+<td valign=top><A NAME="TI1322"></A>Specifies whether InfoMaker should create
+and use the extended attribute system tables. Select or clear the
+Use Extended Attributes checkbox as follows:<A NAME="TI1323"></A>
+<ul>
+<li class=fi><b>Select the checkbox</b>   (Default) Creates and uses the extended attribute system tables</li>
+<li class=ds><b>Clear the checkbox</b>   Does <i>not</i>
+ create the extended attribute system
+tables
+</li>
+</ul>
+</td>
+<td valign=top><A NAME="TI1324"></A>Use Extended Attributes in the online
+Help</td>
+</tr>
+<tr><td valign=top><A NAME="TI1325"></A>SQL Terminator Character</td>
+<td valign=top><A NAME="TI1326"></A>Specifies the SQL statement terminator
+character used by the Database Administration painter in InfoMaker<A NAME="TI1327"></A>The default terminator character is a semicolon (;). If you
+are creating stored procedures and triggers in the ISQL view of
+the database painter, change the terminator character to one that
+you do not expect to use in the stored procedure or trigger syntax
+for your DBMS. A good choice is the backquote (`) character</td>
+<td valign=top><A NAME="TI1328"></A>SQL Terminator Character in the online
+Help</td>
+</tr>
+<tr><td valign=top><A NAME="TI1329"></A>Connect DB at Startup</td>
+<td valign=top><A NAME="TI1330"></A>Specifies when InfoMaker connects to the
+database. Select or clear the Connect DB at Startup checkbox as follows:<A NAME="TI1331"></A>
+<ul>
+<li class=fi><b>Select the checkbox</b>   The next time you start InfoMaker, it automatically connects
+to the database at startup and stays connected throughout the session until
+you exit</li>
+<li class=ds><b>Clear the checkbox</b>   (Default) The next time you start InfoMaker, it connects
+to the database only when you open a painter requiring a connection
+</li>
+</ul>
+</td>
+<td valign=top><A NAME="TI1332"></A>Connect DB at Startup in the online Help</td>
+</tr>
+</table>
+</li>
+<li class=ds>
+Do one of the following:<A NAME="TI1333"></A>
+<ul>
+<li class=fi>Click Apply to apply the preference settings to
+the current connection without closing the Database Preferences
+property sheet.</li>
+<li class=ds>Click OK to apply the preference settings to the
+current connection and close the Database Preferences property sheet.
+</li>
+</ul>
+
+                        <br><br>
+InfoMaker saves your preference settings in the pb.ini database
+section of the registry.<br><br></li></ol>
+<br>

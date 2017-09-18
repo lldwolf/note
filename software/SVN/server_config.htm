@@ -1,0 +1,62 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>服务器安装</title>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+<p id="title">第1章 服务器安装</p>
+<hr />
+<h1>安装 </h1>
+<h2>安装Apache</h2>
+<p>到网站上下载apache安装即可，请参考我写的apache安装的相关章节，我在此用到的版本是2.2.8</p>
+<h2>N.1.2 安装 Subversion 服务器程序</h2>
+<p>可到官方网站 <a href="http://subversion.tigris.org">http://subversion.tigris.org</a> 下载最新的安装程序，我在此用到的版本是1.4.6，安装过程序没什么特殊的地方，一直Next即可。</p>
+<h2>N.1.3 安装 TortoiseSVN 客户端程序 </h2>
+<p>可到官方网站  <a href="http://tortoisesvn.net">http://tortoisesvn.net</a> 下载最新版本安装，这主要是用于SVN的客户端程序，服务器端可以不安装。但通过TortoiseSVN，可以使用图形界面完成一些配置。</p>
+<h2>N.2 建立版本库</h2>
+<p>使用SVN服务器，所有的功能均通过命令行方式实现，I like。</p>
+<p>首先，建立版本库的根目录，例如，我建立 c:\svn_prj 作为版本库的根目录。</p>
+<p>然后，在命令行窗口中键入命令</p>
+<pre>svnadmin create c:\svn_prj\project1 </pre>
+<p>即可在 c:\svg_prj 下建立一个版本库 project1。 </p>
+<p>svnadmin命令位于SVN安装目录的bin目录下，不过安装后该目录即被加入到系统路径中。</p>
+<p>如果使用
+TortoiseSVN，则可以先建立空目录 c:\svn_prj\project1，然后在 project1 文件夹上使用右键菜单【TortoiseSVN】-【Create Repository here...】，然后选择版本库模式，这时使用默认的FSFS即可，即可创建成功。</p>
+<h2>N.3 运行独立服务器</h2>
+<p>在命令窗口中输入</p>
+<pre>svnserve --daemon </pre>
+<p>即可启动subvision服务，它在端口3690等待请求。--daemon选项告诉 svnserve 以守护进程方式运行，这样在手动终止之前不会退出。注意不要关闭命令行窗口，关闭窗口会把 svnserve 停止。</p>
+<p>为了验证svnserve正常工作，使用【TortoiseSVN】 -&gt; 【Repo-browser】 来查看版本库。在弹出的 URL 对话框中输入：</p>
+<p>svn://localhost/svn_prj/project1</p>
+<p>即可看见版本库的目录树结构，只不过这时project1是个空库。</p>
+<p>也可以使用--root选项设置根位置来限制服务器的访问目录，从而增加安全性和节约输入svnserve URL的时间：</p>
+<pre>svnserve --daemon --root c:\svn_prj </pre>
+<p>那么 Repo-browser 中的URL可缩减为：</p>
+<pre>svn://localhost/project1</pre>
+<h2>N.4 配置用户和权限 </h2>
+<p>编辑 c:\svn_prj\project1\conf\svnserve.conf 文件，将</p>
+<pre># password-db = passwd</pre>
+<p>改为</p>
+<pre>password-db = passwd</pre>
+<p>注意，前面不能有空格。然后修改同目录下的passwd文件，增加账号，如下所示：</p>
+<pre>[users]
+#harry = harryssecret
+#sally = sallyssecret
+lld = password</pre>
+<p>这样我们就增加了一个用户，其用户名为lld，口令为password。</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<script type="text/javascript" src="index.js"></script>
+</body>
+</html>

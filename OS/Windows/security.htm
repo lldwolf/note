@@ -1,0 +1,115 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+<title>安全篇</title>
+</head>
+
+<body>
+<h1>第N章 安全篇</h1>
+<hr>
+<h2><a href="#clear_doubtful_files">N.1 如何清除机器上的可疑文件</a></h2>
+<h2><a href="#default_share">N.2 取消及启用默认共享 </a></h2>
+<h2><a href="#change_user_login">N.3 如何换个用户名后重新登录别的电脑 </a></h2>
+<h2><a href="virus.htm">N.4 病毒、木马清除手记</a> </h2>
+<h2><a href="#anti_virus_software">N.5 杀毒软件性能测试 </a></h2>
+<h2><a href="#unlock_registry">N.6 解除注册表锁定</a></h2>
+<h2><a href="#xp_login_failure">N.7 XP中“登录失败：未授予用户在此计算机上的请求登录类型”的解决</a></h2>
+<h2><a name="clear_doubtful_files"></a>N.1 如何清除机器上的可疑文件</h2>
+<p>一般采用以下几个方法：</p>
+<p>1、查看注册表中的</p>
+<ul>
+  <li>HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Run</li>
+  <li>HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run</li>
+  <li> HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\RunServices</li>
+  <li>HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\policies\Explorer\Run</li>
+  <li> HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Windows 下的 AppInit_DLLs</li>
+  <li>HKEY_LOCAL_MACHINE\Software\Microsoft\Windows NT\CurrentVersion\Winlogon 下的 Userinit 值 </li>
+</ul>
+<p>下有没有可疑的进程</p>
+<p>2、结束掉任务管理器里的可疑进程，如果结束不掉的话，使用如下的DOS命令：</p>
+<pre>ntsd -c q -p PID</pre>
+<p>PID为要结束进程的PID，在任务管理器中可以查到，除了system和smss.exe，别的进程都可以被这个命令干掉，然后删掉相应的文件，根据经验，这些文件一般放在%SYSTEM%\system32目录下</p>
+<p>3、或者重启进入安全模式，删除相应的执行文件，一般在安全模式下，木马蠕虫之类不会自动启动，这时可以删掉，不过我曾遇到过一个NetLib.exe蠕虫，它是随着一个Windwos服务自动启动的，而且在正常模式下还结束不掉，这时需要先在安全模式中禁用，然后重启进入正常模式，删掉这个文件。</p>
+<p>4、在查找可疑文件时，要关掉文件夹选项中的“隐藏系统文件项”，并打开“显示全部文件”</p>
+<p>5、有些可疑文件删不胜删，删了后还会自动再建立一个，而且你也不知道它到底是怎么建立的，这时你可以把它删掉后，新建一个名称完全一样的文件。</p>
+<p>6、以防万一，搜一下注册表，把跟可疑文件有关的项删掉</p>
+<p>7、检查自动启动的系统服务项，如有可疑的（这个凭经验，一般情况下如果装的是中文操作系统，则系统说明为英文的话，则要仔细查看，还有大名鼎鼎的灰鸽子之类），则禁止。</p>
+<p>8、如果还是搞不掂，请重装机器，并默哀。</p>
+<h2><a name="default_share"></a>N.2 取消及启用默认共享</h2>
+<p>使用net share命令，使用net help share命令获取其帮助如下：</p>
+<pre>NET SHARE sharename
+          sharename=drive:path [/USERS:number | /UNLIMITED]
+                               [/REMARK:"text"]
+                               [/CACHE:Manual | Automatic | No ]
+          sharename [/USERS:number | /UNLIMITED]
+                    [/REMARK:"text"]
+                    [/CACHE:Manual | Automatic | No ]
+          {sharename | devicename | drive:path} /DELETE
+
+NET SHARE 使网络用户可以使用某一服务器上的资源。 当不带选项使用本命令
+时，它会列出该计算机上正在被共享的所有资源。对于每一种资源，Windows 都
+会报告其设备名或路径名，以及与之相关的描述性注释。
+
+sharename          指共享资源的网络名。输入 NET SHARE 和一个共享名只会显示那个共享的有关信息。
+drive:path         指定将被共享的目录的绝对路径。
+/USERS:number      设置可以同时访问共享资源的最大用户数。
+/UNLIMITED         指定用户可以同时访问共享资源的不受限制的数目。
+/REMARK:"text"     添加一个有关资源的描述性注释，应将文本包含在引号中。
+devicename         指一个或多个被共享名所共享的打印机 (LPT1: 至 LPT9:)。
+/DELETE            终止资源的共享。
+/CACHE:Automatic   启用脱机客户缓存和自动重新集成
+/CACHE:Manual      启用脱机客户缓存和手动重新集成
+/CACHE:No          告诉客户脱机缓存不合适</pre>
+<p>删除及启用默认共享的命令如下：</p>
+<pre>--删除默认共享
+net share C$ /del
+
+--启用默认共享
+net share C$=C:\</pre>
+<h2><a name="change_user_login"></a>N.3 如何换个用户名后重新登录别的电脑 </h2>
+<pre>net use /delete *</pre>
+<p>然后再访问</p>
+<h2><a name="anti_virus_software"></a>N.5 杀毒软件性能测试 </h2>
+<p>测试杀毒软件的性能代码:</p>
+<pre>X5O!P%@AP[4\PZX54(P^)7CC)7}$EICAR-STANDARD-ANTIVIRUS-TEST-FILE!$H+H*</pre>
+<p>  把上面这段代码复制到记事本里，保存为文本文件，然后静观杀毒软件之变。</p>
+<ul>
+  <li> 特等:复制完代码后便提示内存有病毒</li>
+  <li> 优等:刚保存完就提示病毒(或者直接删除)</li>
+  <li> 中等:保存后几秒提示病毒(或者直接删除) </li>
+  <li> 下等:需自己启动病毒扫描查杀才提示病毒(或者直接删除) </li>
+  <li> 劣等:无论怎么扫描都无法提示病毒(或者直接删除)</li>
+</ul>
+<h2><a name="unlock_registry"></a>N.6 解除注册表锁定</h2>
+<p>制作a.reg，内容如下：</p>
+<pre>REGEDIT4
+[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\System]
+"DisableRegistryTools"=dword:00000000</pre>
+<p>双击导入</p>
+<h2><a name="xp_login_failure"></a>N.7 XP中“登录失败：未授予用户在此计算机上的请求登录类型”的解决</h2>
+<p>（1）总是显示错误提示“未授权用户在此计算机上的的请求登陆类型” （登录者win2000\winxp\win2003)</p>
+<p> 错误提示“没有访问资源的权限”（登录者win98）</p>
+<p>原因：是guest在策略中的用户权限中被禁止从网络登录所致，以及（2）中提到的错误。（注：XP默认，win2003不默认）</p>
+<p>解决方法：配置本地安全策略：\安全设置\本地策略\用户权限分配\中的“拒绝从网络访问这台计算机”，把guest删除、保存即可。</p>
+<p>（2）系统登录窗口默认以guest用户登录，无法更改。</p>
+<p>原因：是XP的安全策略中网络访问中的“本地帐户的共享和安全模式”的身份验证默认是本地用户作为来宾进行验证，即一视同仁，来者皆“客”。（如 XP加入域后则默认为本地用户进行自我验证，且对telnet及终端服务登录之类的交互式登录无效）（注：XP默认，win2003不默认）</p>
+<p>解决方法：打开本地安全策略\安全设置\本地策略\安全选项\，更改该策略设置。<br>
+</p>
+<p>（3）出现登录窗口，但无论用什么用户都不能登录。</p>
+<p>原因：禁用来宾帐户，并且“网络访问：本地帐户的共享和安全模式”安全选项被设置为“仅来宾”。这时则由 Microsoft 网络服务器（SMB 服务）执行的那些网络登录将会失败。即使你知道管理员用户以及密码都没用，所有的登录都没有反应。（这种情况似乎问的人较多）</p>
+<p>解决方法：更改上面所说的禁止项。如激活guest用户、设置“本地帐户的共享和安全模式”<br>
+  为经典模式。<br>
+</p>
+<p>（4）有登录窗口，知道某XP的管理员用户名，密码为空（XP在安装时建立用户不提示建立密码），但不能登录。总是出现“用户帐户限制”的错误提示，登录终端服务也出现类似提示。</p>
+<p>原因：因为安全的缘故，本地安全策略默认“使用空白密码的本地帐户只允许进行控制台登录”，也即只能从本地登录，^e^ ~``只能通过连接该计算机的键盘登录，不能以非物理接触方式登录。 也许有的人说，我试了用某密码为空的用户登录，也可以登录。^e^ ~` 那是因为guest用户没有禁制，在你的该用户登录失败后，自动用guest用户尝试，如果该共享是允许的话就可以登录，否则一样不行。</p>
+<p>解决方法：打开本地安全策略\安全设置\本地策略\安全选项\，把该设置禁用。建议保留该默认安全设置。</p>
+<p>更新组策略 gpupdate</p>
+<p></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<script language="javascript" src="index.js"></script>
+</body>
+</html>

@@ -1,0 +1,87 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+How your InfoMaker environment is managed</TITLE>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312"></HEAD>
+<BODY>
+<A NAME="X-ref304001355"></A><h1>管理InfoMaker工作环境</h1>
+<A NAME="TI605"></A><p>Your InfoMaker configuration information is stored in both
+the IM.INI file and the registry. When you start InfoMaker, it
+looks in the registry and the InfoMaker initialization file to
+set up your environment.</p>
+<A NAME="TI606"></A><h2>About the registry</h2>
+<A NAME="TI607"></A><p>Some InfoMaker features require the use of the IM.INI file,
+but many features now use the registry to get and store configuration
+information. Normally, you should not need to access or modify items
+in the registry.</p>
+<A NAME="TI608"></A><p>Information related to your preferences (such as the way you
+have arranged your views in the painters and the shortcut keys you
+have defined for InfoMaker menu items) is stored in<br> Hkey_Current_User/Software/Sybase/InfoMaker/8.0<i></i>
+. </p>
+<A NAME="TI609"></A><p>Installation-related information is stored in Hkey_Local_Machine/Software/Sybase/InfoMaker/8.0<i></i>
+.</p>
+<A NAME="TI610"></A><h2>About the initialization file</h2>
+<A NAME="TI611"></A><p>The initialization file is a text file that contains variables
+that specify your InfoMaker preferences. These preferences include
+information such as the last database you connected to and the PBL
+you are using. When you perform certain actions in InfoMaker, InfoMaker writes
+your preferences to the initialization file automatically. </p>
+<A NAME="TI612"></A><h4>Specifying preferences</h4>
+<A NAME="TI613"></A><p>Normally, you do not need to edit the initialization file.
+You can specify all your preferences by taking an action, such as
+resizing a window or opening a new application, or by selecting
+Design&gt;Options from one of the painters. But sometimes
+a variable does not appear by default in the options sheet for the painter.
+In this case, you can use a text editor to modify the variable in
+the appropriate section of the initialization file.</p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Editing the initialization file</span> <A NAME="TI614"></A>Do not use a text editor to edit the InfoMaker initialization
+file or any preferences file while InfoMaker is running. InfoMaker caches
+the contents of initialization files in memory and overwrites your
+edited InfoMaker initialization file when it exits, ignoring changes.</p>
+<A NAME="TI615"></A><h4>Format of INI files</h4>
+<A NAME="TI616"></A><p>The InfoMaker initialization file uses the Windows INI file
+format. It has three types of elements:<A NAME="TI617"></A>
+<ul>
+<li class=fi>Section names, which are enclosed in square brackets</li>
+<li class=ds>Keywords, which are the names of preference settings</li>
+<li class=ds>Values, which are numeric or text strings, assigned
+as the value of the associated keyword
+</li>
+</ul>
+</p>
+<A NAME="TI618"></A><p>A variable can be listed with no value specified, in which
+case the default is used.</p>
+<A NAME="TI619"></A><p>Some sections are always present by default, but others are
+created only when you specify different preferences. If you specify
+preferences for another painter or tool, InfoMaker creates a new
+section for it at the end of the file.</p>
+<A NAME="TI620"></A><h4>Where the initialization file is kept</h4>
+<A NAME="TI621"></A><p>The initialization file is called IM.INI and is installed
+in the same directory as the InfoMaker executable file.</p>
+<A NAME="TI622"></A><h4>Telling InfoMaker where your initialization
+file is</h4>
+<A NAME="TI623"></A><p>You can keep your initialization file in another location
+and tell InfoMaker where it can find it by specifying the location
+in the System Options dialog box. You may want to do this if you
+use more than one version of InfoMaker or if you are running InfoMaker over
+a network.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To record your initialization path:</p>
+<ol><li class=fi>
+Select Tools&gt;System Options from
+the menu bar.<br><br></li>
+<li class=ds>
+On the General tab page, enter the path of your
+initialization file in the Initialization Path textbox.<br><br>
+InfoMaker records the path in the Windows registry.<br><br></li></ol>
+<br><A NAME="TI624"></A><h4>How InfoMaker finds the initialization file</h4>
+<A NAME="TI625"></A><p>InfoMaker looks in the Windows Registry for a path to the
+file, and then looks for the file in the directory where InfoMaker is
+installed. If InfoMaker cannot find the initialization file using
+the path in the Registry, it clears the path value.</p>
+<A NAME="TI626"></A><h4>If the initialization file is missing</h4>
+<A NAME="TI627"></A><p>If InfoMaker does not find the initialization file when it
+starts up, it recreates it. However, if you want to retain any preferences
+you have set, such as database profiles, keep a backup copy of your
+initialization file. The recreated file has the default preferences.</p>
+

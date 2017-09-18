@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+	<script type="text/javascript" src="../../../mylib/js/css.js"></script>
+	<title>C#.net使用手册</title>
+</head>
+<body>
+	<p id="title">控件</p>
+
+	<h1>控件索引</h1>
+	<p>WPF控件的继承关系如下（以 System.Windows.Controls.Control 为基类）</p>
+	<ul>
+		<li style="list-style-type: upper-roman">System.Activities.Presentation.Toolbox.ToolboxControl</li>
+		<li style="list-style-type: upper-roman">System.Windows.Controls.Calendar</li>
+		<li style="list-style-type: upper-roman"><a href="#content_control">System.Windows.Controls.ContentControl</a>
+			<ul>
+				<li style="list-style-type: disc"><a href="#type_presenter">System.Activities.Presentation.View.TypePresenter</a></li>
+				<li style="list-style-type: disc">System.Activities.Presentation.WorkflowElementDialog
+					<ul>
+						<li style="list-style-type: circle">System.Activities.Presentation.DynamicArgumentDialog</li>
+					</ul>
+				</li>
+				<li style="list-style-type: disc">System.Activities.Presentation.WorkflowItemPresenter</li>
+				<li style="list-style-type: disc">System.Activities.Presentation.WorkflowItemsPresenter</li>
+				<li style="list-style-type: disc">System.Activities.Presentation.WorkflowViewElement
+					<ul>
+						<li style="list-style-type: circle">System.Activities.Presentation.ActivityDesigner</li>
+					</ul>
+				</li>
+				<li style="list-style-type: disc">System.Windows.Controls.DataGridCell</li>
+				<li style="list-style-type: disc"><a href="#frame">System.Windows.Controls.Frame</a></li>
+				<li style="list-style-type: disc"><a href="#group_item">System.Windows.Controls.GroupItem</a></li>
+				<li style="list-style-type: disc"><a href="#HeaderedContentControl">System.Windows.Controls.HeaderedContentControl</a>
+					<ul>
+						<li style="list-style-type: circle">System.Windows.Controls.Expander</li>
+						<li style="list-style-type: circle">System.Windows.Controls.GroupBox</li>
+						<li style="list-style-type: circle">System.Windows.Controls.TabItem</li>
+					</ul>
+				</li>
+				<li style="list-style-type: disc">System.Windows.Controls.Label</li>
+				<li style="list-style-type: disc">System.Windows.Controls.ListBoxItem
+					<ul>
+						<li style="list-style-type: circle">System.Windows.Controls.ComboBoxItem</li>
+						<li style="list-style-type: circle">System.Windows.Controls.ListViewItem</li>
+					</ul>
+				</li>
+				<li style="list-style-type: disc">System.Windows.Controls.Primitives.ButtonBase
+					<ul>
+						<li style="list-style-type: circle">System.Windows.Controls.Button
+							<ul>
+								<li>System.Activities.Presentation.PropertyEditing.EditModeSwitchButton</li>
+								<li>System.Windows.Controls.Primitives.CalendarButton</li>
+								<li>System.Windows.Controls.Primitives.CalendarDayButton</li>
+								<li>System.Windows.Controls.Ribbon.RibbonButton</li>
+							</ul>
+						</li>
+						<li style="list-style-type: circle">System.Windows.Controls.GridViewColumnHeader</li>
+						<li style="list-style-type: circle">System.Windows.Controls.Primitives.DataGridColumnHeader</li>
+						<li style="list-style-type: circle">System.Windows.Controls.Primitives.DataGridRowHeader</li>
+						<li style="list-style-type: circle">System.Windows.Controls.Primitives.RepeatButton</li>
+						<li style="list-style-type: circle">System.Windows.Controls.Primitives.ToggleButton
+							<ul>
+								<li>System.Windows.Controls.CheckBox
+									<ul>
+										<li>System.Windows.Controls.Ribbon.RibbonCheckBox</li>
+									</ul>
+								</li>
+								<li>System.Windows.Controls.RadioButton
+									<ul>
+										<li>System.Windows.Controls.Ribbon.RibbonRadioButton</li>
+									</ul>
+								</li>
+								<li>System.Windows.Controls.Ribbon.RibbonToggleButton</li>
+							</ul>
+						</li>
+					</ul>
+				</li>
+				<li style="list-style-type: disc">System.Windows.Controls.Primitives.StatusBarItem</li>
+				<li style="list-style-type: disc">System.Windows.Controls.Ribbon.RibbonControl</li>
+				<li style="list-style-type: disc">System.Windows.Controls.Ribbon.RibbonGalleryItem</li>
+				<li style="list-style-type: disc">System.Windows.Controls.Ribbon.RibbonTabHeader</li>
+				<li style="list-style-type: disc">System.Windows.Controls.ScrollViewer</li>
+				<li style="list-style-type: disc">System.Windows.Controls.ToolTip
+					<ul>
+						<li style="list-style-type: circle">System.Windows.Controls.Ribbon.RibbonToolTip</li>
+					</ul>
+				</li>
+				<li style="list-style-type: disc">System.Windows.Controls.UserControl
+					<ul>
+						<li style="list-style-type: circle">System.Activities.Presentation.Expressions.ExpressionActivityEditor
+							<ul>
+								<li>System.Activities.Presentation.Expressions.TextualExpressionEditor</li>
+							</ul>
+						</li>
+						<li style="list-style-type: circle">System.Activities.Presentation.View.DesignerView</li>
+						<li style="list-style-type: circle">System.Activities.Presentation.View.ExpressionTextBox</li>
+					</ul>
+				</li>
+				<li style="list-style-type: disc">System.Windows.Window
+					<ul>
+						<li style="list-style-type: circle">System.Windows.Controls.Ribbon.RibbonWindow</li>
+						<li style="list-style-type: circle">System.Windows.Navigation.NavigationWindow</li>
+					</ul>
+				</li>
+			</ul>
+		</li>
+		<li style="list-style-type: upper-roman">System.Windows.Controls.DataGridRow</li>
+		<li style="list-style-type: upper-roman">System.Windows.Controls.DatePicker</li>
+		<li style="list-style-type: upper-roman">System.Windows.Controls.FlowDocumentReader</li>
+		<li style="list-style-type: upper-roman">System.Windows.Controls.FlowDocumentScrollViewer</li>
+		<li style="list-style-type: upper-roman"><a href="#itemscontrol">System.Windows.Controls.ItemsControl</a>
+			<ul>
+				<li style="list-style-type: disc">System.Windows.Controls.HeaderedItemsControl
+					<ul>
+						<li style="list-style-type: circle">System.Windows.Controls.MenuItem
+							<ul>
+								<li>System.Windows.Controls.Ribbon.RibbonMenuItem
+									<ul>
+										<li>System.Windows.Controls.Ribbon.RibbonApplicationMenuItem</li>
+										<li>System.Windows.Controls.Ribbon.RibbonSplitMenuItem
+											<ul>
+												<li>System.Windows.Controls.Ribbon.RibbonApplicationSplitMenuItem</li>
+											</ul>
+										</li>
+									</ul>
+								</li>
+							</ul>
+						</li>
+						<li style="list-style-type: circle">System.Windows.Controls.Ribbon.RibbonGalleryCategory</li>
+						<li style="list-style-type: circle">System.Windows.Controls.Ribbon.RibbonGroup</li>
+						<li style="list-style-type: circle">System.Windows.Controls.Ribbon.RibbonTab</li>
+						<li style="list-style-type: circle">System.Windows.Controls.ToolBar</li>
+						<li style="list-style-type: circle">System.Windows.Controls.TreeViewItem</li>
+					</ul>
+				</li>
+				<li style="list-style-type: disc">System.Windows.Controls.Primitives.DataGridCellsPresenter</li>
+				<li style="list-style-type: disc">System.Windows.Controls.Primitives.DataGridColumnHeadersPresenter</li>
+				<li style="list-style-type: disc">System.Windows.Controls.Primitives.MenuBase
+					<ul>
+						<li style="list-style-type: circle">System.Windows.Controls.ContextMenu
+							<ul>
+								<li>System.Windows.Controls.Ribbon.RibbonContextMenu</li>
+							</ul>
+						</li>
+						<li style="list-style-type: circle">System.Windows.Controls.Menu
+							<ul>
+								<li>System.Windows.Controls.Ribbon.RibbonMenuButton
+									<ul>
+										<li>System.Windows.Controls.Ribbon.RibbonApplicationMenu</li>
+										<li>System.Windows.Controls.Ribbon.RibbonComboBox</li>
+										<li>System.Windows.Controls.Ribbon.RibbonFilterMenuButton</li>
+										<li>System.Windows.Controls.Ribbon.RibbonSplitButton</li>
+									</ul>
+								</li>
+							</ul>
+						</li>
+					</ul>
+				</li>
+				<li style="list-style-type: disc">System.Windows.Controls.Primitives.Selector
+					<ul>
+						<li style="list-style-type: circle">System.Windows.Controls.ComboBox</li>
+						<li style="list-style-type: circle">System.Windows.Controls.ListBox
+							<ul>
+								<li><a href="#listview">System.Windows.Controls.ListView</a></li>
+							</ul>
+						</li>
+						<li style="list-style-type: circle">System.Windows.Controls.Primitives.MultiSelector
+							<ul>
+								<li>System.Windows.Controls.DataGrid</li>
+							</ul>
+						</li>
+						<li style="list-style-type: circle">System.Windows.Controls.Ribbon.Ribbon</li>
+						<li style="list-style-type: circle">System.Windows.Controls.TabControl</li>
+					</ul>
+				</li>
+				<li style="list-style-type: disc">System.Windows.Controls.Primitives.StatusBar</li>
+				<li style="list-style-type: disc">System.Windows.Controls.Ribbon.RibbonContextualTabGroupItemsControl</li>
+				<li style="list-style-type: disc">System.Windows.Controls.Ribbon.RibbonControlGroup</li>
+				<li style="list-style-type: disc">System.Windows.Controls.Ribbon.RibbonGallery</li>
+				<li style="list-style-type: disc">System.Windows.Controls.Ribbon.RibbonQuickAccessToolBar</li>
+				<li style="list-style-type: disc">System.Windows.Controls.Ribbon.RibbonTabHeaderItemsControl</li>
+				<li style="list-style-type: disc">System.Windows.Controls.TreeView</li>
+			</ul>
+		</li>
+		<li style="list-style-type: upper-roman">System.Windows.Controls.KeyTipControl</li>
+		<li style="list-style-type: upper-roman">System.Windows.Controls.PasswordBox</li>
+		<li style="list-style-type: upper-roman">System.Windows.Controls.Primitives.CalendarItem</li>
+		<li style="list-style-type: upper-roman">System.Windows.Controls.Primitives.DocumentViewerBase
+			<ul>
+				<li style="list-style-type: disc">System.Windows.Controls.DocumentViewer</li>
+				<li style="list-style-type: disc">System.Windows.Controls.FlowDocumentPageViewer</li>
+			</ul>
+		</li>
+		<li style="list-style-type: upper-roman">System.Windows.Controls.Primitives.RangeBase
+			<ul>
+				<li style="list-style-type: disc">System.Windows.Controls.Primitives.ScrollBar</li>
+				<li style="list-style-type: disc">System.Windows.Controls.ProgressBar</li>
+				<li style="list-style-type: disc">System.Windows.Controls.Slider</li>
+			</ul>
+		</li>
+		<li style="list-style-type: upper-roman">System.Windows.Controls.Primitives.ResizeGrip</li>
+		<li style="list-style-type: upper-roman">System.Windows.Controls.Primitives.TextBoxBase
+			<ul>
+				<li style="list-style-type: disc">System.Windows.Controls.RichTextBox</li>
+				<li style="list-style-type: disc">System.Windows.Controls.TextBox
+					<ul>
+						<li style="list-style-type: circle">System.Windows.Controls.Primitives.DatePickerTextBox</li>
+						<li style="list-style-type: circle">System.Windows.Controls.Ribbon.RibbonTextBox</li>
+					</ul>
+				</li>
+			</ul>
+		</li>
+		<li style="list-style-type: upper-roman">System.Windows.Controls.Primitives.Thumb
+			<ul>
+				<li style="list-style-type: disc">System.Windows.Controls.GridSplitter</li>
+			</ul>
+		</li>
+		<li style="list-style-type: upper-roman">System.Windows.Controls.Ribbon.RibbonContextualTabGroup</li>
+		<li style="list-style-type: upper-roman">System.Windows.Controls.Ribbon.RibbonTwoLineText</li>
+		<li style="list-style-type: upper-roman">System.Windows.Controls.Separator
+			<ul>
+				<li style="list-style-type: disc">System.Windows.Controls.Ribbon.RibbonSeparator</li>
+			</ul>
+		</li>
+		<li style="list-style-type: upper-roman">System.Windows.Controls.StickyNoteControl</li>
+	</ul>
+	<h1>使用说明</h1>
+	<h2>Content Control</h2>
+	<p>ContentControl 可包含任意的CLR对象（如 string 或 DateTime）或 UIElement 对象（如 Rectangle 或 Panel）。</p>
+	<p>
+		<img alt="" src="images/content_control_sample.png" /></p>
+
+	<p>
+		<pre class="code" data-type="xml" data-collapsed="true" title="XAML">&lt;!--Create a Button with a string as its content.--&gt;
+&lt;Button&gt;This is string content of a Button&lt;/Button&gt;
+
+&lt;!--Create a Button with a DateTime object as its content.--&gt;
+&lt;Button xmlns:sys=&quot;clr-namespace:System;assembly=mscorlib&quot;&gt;
+  &lt;sys:DateTime&gt;2004/3/4 13:6:55&lt;/sys:DateTime&gt;
+&lt;/Button&gt;
+
+&lt;!--Create a Button with a single UIElement as its content.--&gt;
+&lt;Button&gt;
+  &lt;Rectangle Height=&quot;40&quot; Width=&quot;40&quot; Fill=&quot;Blue&quot;/&gt;
+&lt;/Button&gt;
+
+&lt;!--Create a Button with a panel that contains multiple objects 
+as its content.--&gt;
+&lt;Button&gt;
+  &lt;StackPanel&gt;
+    &lt;Ellipse Height=&quot;40&quot; Width=&quot;40&quot; Fill=&quot;Blue&quot;/&gt;
+    &lt;TextBlock TextAlignment=&quot;Center&quot;&gt;Button&lt;/TextBlock&gt;
+  &lt;/StackPanel&gt;
+&lt;/Button&gt;
+</pre>
+	</p>
+
+	<p>
+		<pre class="code" data-type="csharp" data-collapsed="true" title="C# Code">// Create a Button with a string as its content.
+Button stringContent = new Button();
+stringContent.Content = &quot;This is string content of a Button&quot;;
+
+// Create a Button with a DateTime object as its content.
+Button objectContent = new Button();
+DateTime dateTime1 = new DateTime(2004, 3, 4, 13, 6, 55);
+
+objectContent.Content = dateTime1;
+
+// Create a Button with a single UIElement as its content.
+Button uiElementContent = new Button();
+
+Rectangle rect1 = new Rectangle();
+rect1.Width = 40;
+rect1.Height = 40;
+rect1.Fill = Brushes.Blue;
+uiElementContent.Content = rect1;
+
+// Create a Button with a panel that contains multiple objects  
+// as its content.
+Button panelContent = new Button();
+StackPanel stackPanel1 = new StackPanel();
+Ellipse ellipse1 = new Ellipse();
+TextBlock textBlock1 = new TextBlock();
+
+ellipse1.Width = 40;
+ellipse1.Height = 40;
+ellipse1.Fill = Brushes.Blue;
+
+textBlock1.TextAlignment = TextAlignment.Center;
+textBlock1.Text = &quot;Button&quot;;
+
+stackPanel1.Children.Add(ellipse1);
+stackPanel1.Children.Add(textBlock1);
+
+panelContent.Content = stackPanel1;</pre>
+	</p>
+
+	<h2>TypePresenter</h2>
+	<p>TypePresenter 是用来显示 .net 数据类型列表的，在业务开发中似乎用不到</p>
+	<h2>Frame</h2>
+	<p>用于 Silverlight 中的页面</p>
+	<a id="group_item"></a>
+	<h2>GroupItem</h2>
+	<h2>HeaderedContentControl</h2>
+	<p>带有标题的控件，除了继承自 ContentControl 的 Content 属性，添加了一个 Header 属性</p>
+
+	<pre class="code" data-type="xml" data-collapsed="true" title="XAML 示例">&lt;Style TargetType=&quot;HeaderedContentControl&quot;&gt;
+  &lt;Setter Property=&quot;Template&quot;&gt;
+    &lt;Setter.Value&gt;
+      &lt;ControlTemplate TargetType=&quot;{x:Type HeaderedContentControl}&quot;&gt;
+        &lt;StackPanel&gt;
+          &lt;Grid&gt;
+            &lt;Rectangle Stroke=&quot;{TemplateBinding Background}&quot;/&gt;
+            &lt;ContentPresenter ContentSource=&quot;Header&quot;/&gt;
+          &lt;/Grid&gt;
+          &lt;Grid&gt;
+            &lt;Rectangle Fill=&quot;{TemplateBinding Background}&quot;/&gt;
+            &lt;ContentPresenter ContentSource=&quot;Content&quot;/&gt;
+          &lt;/Grid&gt;
+        &lt;/StackPanel&gt;
+      &lt;/ControlTemplate&gt;
+    &lt;/Setter.Value&gt;
+  &lt;/Setter&gt;
+&lt;/Style&gt;
+
+&lt;HeaderedContentControl Background=&quot;LightBlue&quot;
+                        Header=&quot;Header&quot;
+                        Content=&quot;This is the content&quot;/&gt;</pre>
+
+	<a id="itemscontrol"></a>
+	<h2>ItemsControl</h2>
+	<p>所有列表控件的基类，也可以直接使用。下例可生成如下界面</p>
+	<img alt="" src="images/items_control_sample.png" />
+	<p>
+		<pre class="code" data-type="xml" data-collapsed="true" title="XAML">&lt;Window x:Class=&quot;WpfApplication1.MainWindow&quot;
+		xmlns=&quot;http://schemas.microsoft.com/winfx/2006/xaml/presentation&quot;
+		xmlns:x=&quot;http://schemas.microsoft.com/winfx/2006/xaml&quot;
+		xmlns:local=&quot;clr-namespace:WpfApplication1&quot;
+		Title=&quot;MainWindow&quot;
+		Height=&quot;350&quot;
+		Width=&quot;400&quot;&gt;
+	&lt;Window.Resources&gt;
+		&lt;x:ArrayExtension x:Key=&quot;myTodoList&quot;
+						  Type=&quot;local:ToDo&quot;&gt;
+			&lt;local:ToDo Priority=&quot;2&quot;
+						TaskName=&quot;Shopping&quot;
+						Description=&quot;Tesco&quot; /&gt;
+			&lt;local:ToDo Priority=&quot;2&quot;
+						TaskName=&quot;Laundry&quot; /&gt;
+			&lt;local:ToDo Priority=&quot;1&quot;
+						TaskName=&quot;Email&quot; /&gt;
+			&lt;local:ToDo Priority=&quot;3&quot;
+						TaskName=&quot;Clean&quot;
+						Description=&quot;Clean my office&quot; /&gt;
+			&lt;local:ToDo Priority=&quot;1&quot;
+						TaskName=&quot;Dinner&quot; /&gt;
+			&lt;local:ToDo Priority=&quot;2&quot;
+						TaskName=&quot;Proposals&quot; /&gt;
+		&lt;/x:ArrayExtension&gt;
+	&lt;/Window.Resources&gt;
+	&lt;Grid&gt;
+		&lt;ItemsControl Margin=&quot;10&quot;
+					  ItemsSource=&quot;{Binding Source={StaticResource myTodoList}}&quot;&gt;
+			&lt;!--The ItemsControl has no default visual appearance.
+			Use the Template property to specify a ControlTemplate to define
+			the appearance of an ItemsControl. The ItemsPresenter uses the specified
+			ItemsPanelTemplate (see below) to layout the items. If an
+			ItemsPanelTemplate is not specified, the default is used. (For ItemsControl,
+			the default is an ItemsPanelTemplate that specifies a StackPanel.--&gt;
+			&lt;ItemsControl.Template&gt;
+				&lt;ControlTemplate TargetType=&quot;ItemsControl&quot;&gt;
+					&lt;Border BorderBrush=&quot;Aqua&quot;
+							BorderThickness=&quot;1&quot;
+							CornerRadius=&quot;15&quot;&gt;
+						&lt;ItemsPresenter /&gt;
+					&lt;/Border&gt;
+				&lt;/ControlTemplate&gt;
+			&lt;/ItemsControl.Template&gt;
+			&lt;!--Use the ItemsPanel property to specify an ItemsPanelTemplate
+			that defines the panel that is used to hold the generated items.
+			In other words, use this property if you want to affect
+			how the items are laid out.--&gt;
+			&lt;ItemsControl.ItemsPanel&gt;
+				&lt;ItemsPanelTemplate&gt;
+					&lt;WrapPanel /&gt;
+				&lt;/ItemsPanelTemplate&gt;
+			&lt;/ItemsControl.ItemsPanel&gt;
+			&lt;!--Use the ItemTemplate to set a DataTemplate to define
+			the visualization of the data objects. This DataTemplate
+			specifies that each data object appears with the Proriity
+			and TaskName on top of a silver ellipse.--&gt;
+			&lt;ItemsControl.ItemTemplate&gt;
+				&lt;DataTemplate&gt;
+					&lt;DataTemplate.Resources&gt;
+						&lt;Style TargetType=&quot;TextBlock&quot;&gt;
+							&lt;Setter Property=&quot;FontSize&quot;
+									Value=&quot;18&quot; /&gt;
+							&lt;Setter Property=&quot;HorizontalAlignment&quot;
+									Value=&quot;Center&quot; /&gt;
+						&lt;/Style&gt;
+					&lt;/DataTemplate.Resources&gt;
+					&lt;Grid&gt;
+						&lt;Ellipse Fill=&quot;Silver&quot; /&gt;
+						&lt;StackPanel&gt;
+							&lt;TextBlock Margin=&quot;3,3,3,0&quot;
+									   Text=&quot;{Binding Path=Priority}&quot; /&gt;
+							&lt;TextBlock Margin=&quot;3,0,3,7&quot;
+									   Text=&quot;{Binding Path=TaskName}&quot; /&gt;
+						&lt;/StackPanel&gt;
+					&lt;/Grid&gt;
+				&lt;/DataTemplate&gt;
+			&lt;/ItemsControl.ItemTemplate&gt;
+			&lt;!--Use the ItemContainerStyle property to specify the appearance
+			of the element that contains the data. This ItemContainerStyle
+			gives each item container a margin and a width. There is also
+			a trigger that sets a tooltip that shows the description of
+			the data object when the mouse hovers over the item container.--&gt;
+			&lt;ItemsControl.ItemContainerStyle&gt;
+				&lt;Style&gt;
+					&lt;Setter Property=&quot;Control.Width&quot;
+							Value=&quot;100&quot; /&gt;
+					&lt;Setter Property=&quot;Control.Margin&quot;
+							Value=&quot;5&quot; /&gt;
+					&lt;Style.Triggers&gt;
+						&lt;Trigger Property=&quot;Control.IsMouseOver&quot;
+								 Value=&quot;True&quot;&gt;
+							&lt;Setter Property=&quot;Control.ToolTip&quot;
+									Value=&quot;{Binding RelativeSource={x:Static RelativeSource.Self}, Path=Content.Description}&quot; /&gt;
+						&lt;/Trigger&gt;
+					&lt;/Style.Triggers&gt;
+				&lt;/Style&gt;
+			&lt;/ItemsControl.ItemContainerStyle&gt;
+		&lt;/ItemsControl&gt;
+	&lt;/Grid&gt;
+&lt;/Window&gt;</pre>
+	</p>
+	<p>
+		<pre class="code" data-type="csharp" data-collapsed="true" title="ToDo 类定义">public class ToDo
+{
+	public string TaskName { get; set; }
+	public int Priority { get; set; }
+	public string Description { get; set; }
+}</pre>
+	</p>
+	<a id="listview"></a>
+	<h2>ListView</h2>
+	<h3>以 Card 方式显示列表</h3>
+	<p>本例将一个 Person 对象列表显示为以下样式：</p>
+	<p>
+		<img alt="" src="images/listview_card.png" /></p>
+	<p>
+		<pre class="code" data-type="xml" data-collapsed="true" title="XAML">&lt;Window x:Class=&quot;WpfDemo.ControlDemo.ListViewCardWindow&quot;
+		xmlns=&quot;http://schemas.microsoft.com/winfx/2006/xaml/presentation&quot;
+		xmlns:x=&quot;http://schemas.microsoft.com/winfx/2006/xaml&quot;
+		xmlns:model=&quot;clr-namespace:WpfDemo.DataBinding.Models&quot;
+		Title=&quot;ListViewCardWindow&quot;
+		Height=&quot;500&quot;
+		Width=&quot;480&quot;&gt;
+	&lt;Window.Resources&gt;
+		&lt;x:ArrayExtension x:Key=&quot;personList&quot;
+						  Type=&quot;model:Person&quot;&gt;
+			&lt;model:Person Name=&quot;Lindong&quot;
+						  Gender=&quot;M&quot;
+						  Birthday=&quot;1978-08-19&quot; /&gt;
+			&lt;model:Person Name=&quot;Jay&quot;
+						  Gender=&quot;M&quot;
+						  Birthday=&quot;1986-09-21&quot; /&gt;
+			&lt;model:Person Name=&quot;Ziwei&quot;
+						  Gender=&quot;F&quot;
+						  Birthday=&quot;1988-09-21&quot; /&gt;
+			&lt;model:Person Name=&quot;Yvonne&quot;
+						  Gender=&quot;F&quot;
+						  Birthday=&quot;1984-09-21&quot; /&gt;
+		&lt;/x:ArrayExtension&gt;
+	&lt;/Window.Resources&gt;
+	&lt;Grid&gt;
+		&lt;ListView ItemsSource=&quot;{StaticResource ResourceKey=personList}&quot;&gt;
+			<span style="background-color:aquamarine">&lt;ListView.ItemsPanel&gt;
+				&lt;ItemsPanelTemplate&gt;
+					&lt;WrapPanel Width=&quot;{Binding RelativeSource={RelativeSource AncestorType=Window, AncestorLevel=1}, Path=Width}&quot; /&gt;
+				&lt;/ItemsPanelTemplate&gt;
+			&lt;/ListView.ItemsPanel&gt;</span>
+			&lt;ListView.ItemTemplate&gt;
+				&lt;DataTemplate&gt;
+					&lt;Border Margin=&quot;2&quot; 
+							BorderBrush=&quot;DarkBlue&quot;
+							BorderThickness=&quot;2&quot;&gt;
+						&lt;Grid&gt;
+							&lt;Grid.RowDefinitions&gt;
+								&lt;RowDefinition Height=&quot;25&quot; /&gt;
+								&lt;RowDefinition Height=&quot;25&quot; /&gt;
+								&lt;RowDefinition Height=&quot;25&quot; /&gt;
+							&lt;/Grid.RowDefinitions&gt;
+							&lt;Grid.ColumnDefinitions&gt;
+								&lt;ColumnDefinition Width=&quot;80&quot; /&gt;
+								&lt;ColumnDefinition Width=&quot;140&quot; /&gt;
+							&lt;/Grid.ColumnDefinitions&gt;
+							&lt;TextBlock Grid.Row=&quot;0&quot;
+									   Grid.Column=&quot;0&quot;&gt;Name:&lt;/TextBlock&gt;
+							&lt;TextBlock Grid.Row=&quot;1&quot;
+									   Grid.Column=&quot;0&quot;&gt;Gender:&lt;/TextBlock&gt;
+							&lt;TextBlock Grid.Row=&quot;2&quot;
+									   Grid.Column=&quot;0&quot;&gt;Birthday:&lt;/TextBlock&gt;
+							&lt;TextBlock Grid.Row=&quot;0&quot;
+									   Grid.Column=&quot;1&quot;
+									   Text=&quot;{Binding Path=Name}&quot; /&gt;
+							&lt;TextBlock Grid.Row=&quot;1&quot;
+									   Grid.Column=&quot;1&quot;
+									   Text=&quot;{Binding Path=Gender}&quot; /&gt;
+							&lt;TextBlock Grid.Row=&quot;2&quot;
+									   Grid.Column=&quot;1&quot;
+									   Text=&quot;{Binding Path=Birthday}&quot; /&gt;
+						&lt;/Grid&gt;
+					&lt;/Border&gt;
+				&lt;/DataTemplate&gt;
+			&lt;/ListView.ItemTemplate&gt;
+		&lt;/ListView&gt;
+	&lt;/Grid&gt;
+&lt;/Window&gt;</pre>
+	</p>
+	<p class="note">其中有如下几点值得注意：<br />
+		<br />
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1. ListView.ItemsPanel.ItemsPanelTemplate 设为 WrapPanel，这是改变 ListView 内容排列方式的关键。<br />
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2. 将 WrapPanel 的宽度动态绑定为窗口的宽度，这样可保证折行显示。<br />
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3. ListView.ItemTemplate.DataTemplate 决定了每项如何显示，在此以 Grid 布局将其显示为卡片式。
+	</p>
+	<h1>其它控件</h1>
+	<h2>Popup</h2>
+	<p>有时我们需要在界面上的指定位置显示一些元素，类似于 WinForm 时代的隐藏 Panel，或网页中的隐藏 DIV。但在 WPF 中，貌似只有 Canvas 布局能够做到这一点，但仅为了这个简单目的就使用 Canvas 显示不合算，因为 Canvas 布局实在是难以维护。这时就需要用到 Popup 控件，下面是一个 Popup 控件的例子，点击按钮时将会在鼠标位置显示指定的控件</p>
+
+	<pre class="code" data-type="xml" data-collapsed="true" title="XAML">&lt;Window x:Class=&quot;WpfSkill.MainWindow&quot;
+        xmlns=&quot;http://schemas.microsoft.com/winfx/2006/xaml/presentation&quot;
+        xmlns:x=&quot;http://schemas.microsoft.com/winfx/2006/xaml&quot;
+        Title=&quot;MainWindow&quot;
+        Height=&quot;350&quot;
+        Width=&quot;525&quot;&gt;
+    &lt;StackPanel&gt;
+        &lt;Button x:Name=&quot;btnPopup&quot; Click=&quot;Button_Click&quot;&gt;
+            &lt;StackPanel&gt;
+                &lt;TextBlock&gt;Display Your Popup Text&lt;/TextBlock&gt;
+            &lt;/StackPanel&gt;
+        &lt;/Button&gt;
+        &lt;Popup Name=&quot;myPopup&quot;
+               Placement=&quot;Mouse&quot;
+               AllowsTransparency=&quot;True&quot;
+               PopupAnimation=&quot;Scroll&quot;&gt;
+            &lt;TextBlock Name=&quot;myPopupText&quot;
+                       Background=&quot;LightBlue&quot;
+                       Foreground=&quot;Blue&quot;&gt;
+        Popup Text
+            &lt;/TextBlock&gt;
+        &lt;/Popup&gt;
+    &lt;/StackPanel&gt;
+&lt;/Window&gt;</pre>
+	<p>Button_Click 方法可以简单地这样写</p>
+	<p>
+		<pre class="code" data-type="csharp">this.myPopup.IsOpen = !this.myPopup.IsOpen;</pre>
+	</p>
+	<h1>Common Logic</h1>
+	<h2>清除所有 TextBox 内容</h2>
+
+	<pre class="code" data-type="csharp" data-collapsed="true" title="示例">public void ClearTextBox(FrameworkElement owner)
+{
+	foreach (var child in LogicalTreeHelper.GetChildren(owner))
+	{
+		if (child is TextBox)
+		{
+			(child as TextBox).Text = string.Empty;
+		}
+		else if (child is FrameworkElement)
+		{
+			ClearTextBox(child as FrameworkElement);
+		}
+	}
+}</pre>
+
+
+</body>
+</html>

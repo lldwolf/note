@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>DevExpress.XtraGrid.GridControl</title>
+<script type="text/javascript" src="../../../mylib/js/css.js"></script>
+
+<style type="text/css">
+.first_class {font-family:宋体; font-weight:bold; font-size:16px; text-align:center; layout-flow:vertical-ideographic}
+.second_class {font-weight: bold}
+</style>
+</head>
+
+<body>
+<p id="title">GridControl - Appearance</p>
+<p>很多外观属性默认使用父控件的设置，例如，GridColumn 默认使用 GridView 的设置。一般情况下，只需在子控件中设置与父控件不同的外观属性。</p>
+<p>首先，对外观项目作一个分组，如下所示：</p>
+<table width="90%">
+	<tbody>
+	<tr>
+		<th>一级分类</th>
+		<th>二级分类</th>
+		<th>三级分类</th>
+		<th>设置方式</th>
+	</tr>
+	<tr>
+		<td rowspan="3" class="first_class">标 题 栏</td>
+		<td rowspan="3" class="second_class">标题</td>
+		<td>字体</td>
+		<td>
+			<ul>
+				<li>GridView
+					<ul>
+						<li>Apperance.HeaderPanel.Font</li>
+					</ul>
+				</li>
+			</ul>
+		</td>
+	</tr>
+	<tr>
+		<td>对齐方式</td>
+		<td>
+			<ul>
+				<li>GridView
+					<ul>
+						<li>Apperance.HeaderPanel.TextOptions.HAlignment: 水平对齐</li>
+						<li>Apperance.HeaderPanel.TextOptions.VAlignment: 垂直对齐</li>
+					</ul>
+				</li>
+			</ul>
+		</td>
+	</tr>
+	<tr>
+		<td>是否自动换行</td>
+		<td>
+			<ul>
+				<li>GridView
+					<ul>
+						<li>Apperance.HeaderPanel.TextOptions.WorkWrap: 设为 Wrap 即可自动换行</li>
+						<li>ColumnPanelRowHeight: 设定标题栏高度</li>
+					</ul>
+				</li>
+			</ul>
+		</td>
+	</tr>
+	<tr>
+		<td rowspan="2" class="first_class">分组栏</td>
+		<td rowspan="2" class="second_class">显示控制</td>
+		<td>是否显示</td>
+		<td>
+			<ul>
+				<li>GridView.OptionsView.ShowGroupPanel</li>
+			</ul>
+		</td>
+	</tr>
+	<tr>
+		<td>显示文本</td>
+		<td>
+			<ul>
+				<li>GridView.GroupPanelText</li>
+			</ul>
+		</td>
+	</tr>
+	</tbody>
+</table>
+<h2>分组</h2>
+<h3>分组栏(Group Panel)</h3>
+<p>通过 GridView.OptionsView.ShowGroupPanel 属性控制其是否显示</p>
+<p>通过 GridView.GroupPanelText 属性控制其显示文本的内容，默认为：Drag a column header here to group by that column</p>
+<h3>控制</h3>
+<p>通过 GridView.OptionsCustomization.AllowGroup 属性设置其是否支持分组操作，如果设为 false，即使分组栏显示，你仍然不能通过拖动列头至分组栏来分组。</p>
+<script type="text/javascript" src="grid_index.js"></script>
+</body>
+</html>

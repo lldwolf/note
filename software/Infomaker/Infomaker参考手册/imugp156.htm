@@ -1,0 +1,105 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+Case</TITLE>
+</HEAD>
+<BODY>
+<A NAME="CAICHIAA"></A><A NAME="TI6213"></A><h1>Case</h1>
+<A NAME="TI6214"></A><p>
+<FORM>
+<INPUT
+ TYPE = "BUTTON"
+ VALUE = "Examples"
+ onClick = "window.location = 'imugp156.htm#EX8';">
+<INPUT
+  TYPE = "BUTTON"
+ VALUE = "See also"
+ onClick = "window.location = 'imugp156.htm#SA8';">
+</FORM>
+</p>
+<h3>Description</h3><A NAME="TI6215"></A><p>Tests the values of a column or expression and returns values
+based on the results of the test.</p>
+
+<h3>Syntax</h3><pre><b>Case</b> ( <i>column</i> WHEN <i>value1</i> THEN <i>result1</i> { WHEN <i>value2</i> THEN <i>result2</i> <br> 	{ ... } } { ELSE <i>resultelse</i> } ) </pre>
+<A NAME="TI6216"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI6217"></A>Argument</th>
+<th align="left" valign=bottom><A NAME="TI6218"></A>Description</th>
+</tr>
+<tr><td valign=top><A NAME="TI6219"></A><i>column</i></td>
+<td valign=top><A NAME="TI6220"></A>The column or expression whose values
+you want to test. <i>Column</i> can be the column
+name or the column number preceded by a pound sign (#). <i>Column</i> can
+also be an expression that includes a reference to the column. <i>Column</i> is
+compared to each <i>valuen</i></td>
+</tr>
+<tr><td valign=top><A NAME="TI6221"></A>WHEN (optional)</td>
+<td valign=top><A NAME="TI6222"></A>Introduces a value-result pair. At least
+one WHEN is required</td>
+</tr>
+<tr><td valign=top><A NAME="TI6223"></A><i>valuen</i></td>
+<td valign=top><A NAME="TI6224"></A>One or more values that you want to compare
+to values of <i>column</i>. A value can be:<A NAME="TI6225"></A><A NAME="TI6226"></A>
+<ul>
+<li class=fi>A single value</li>
+<li class=ds>A list of values separated by commas (for example,
+2, 4, 6, 8)</li>
+<li class=ds>A TO clause (for example, 1 TO 20)</li>
+<li class=ds>IS followed by a relational operator and comparison
+value (for example, IS&gt;5)</li>
+<li class=ds>Any combination of the above with an implied OR
+between expressions (for example, 1,3,5,7,9,27 TO 33, IS&gt;42)
+</li>
+</ul>
+</td>
+</tr>
+<tr><td valign=top><A NAME="TI6227"></A>THEN</td>
+<td valign=top><A NAME="TI6228"></A>Introduces the result to be returned
+when <i>column</i> matches the corresponding <i>valuen</i></td>
+</tr>
+<tr><td valign=top><A NAME="TI6229"></A><i>resultn</i></td>
+<td valign=top><A NAME="TI6230"></A>An expression whose value is returned
+by Case for the corresponding <i>valuen</i>. All <i>resultn</i> values
+must have the same data type</td>
+</tr>
+<tr><td valign=top><A NAME="TI6231"></A>ELSE (optional)</td>
+<td valign=top><A NAME="TI6232"></A>Specifies that for any values of <i>column</i> that
+do not match the values of <i>valuen</i> already specified,
+Case returns <i>resultelse</i></td>
+</tr>
+<tr><td valign=top><A NAME="TI6233"></A><i>resultelse</i></td>
+<td valign=top><A NAME="TI6234"></A>An expression whose value is returned
+by Case when the value of <i>column</i> does not match
+any WHEN <i>valuen</i> expression</td>
+</tr>
+</table>
+
+<h3>Return Values</h3><A NAME="TI6235"></A><p>The data type of <i>resultn</i>. Returns the
+result you specify in <i>resultn</i>.</p>
+
+<h3>Usage</h3><A NAME="TI6236"></A><p>If more than one WHEN clause matches <i>column</i>,
+Case returns the result of the first matching one<i>.</i></p>
+
+<A NAME="EX8"></A><h3>Examples</h3><A NAME="TI6237"></A><p>This expression for the Background.Color property
+of a Salary column returns values that represent red when an employee's
+salary is greater than $70,000, green when an employee's
+salary is greater than $50,000, and blue otherwise:<pre><i>Case</i> (salary WHEN IS &gt;70000 THEN RGB(255,0,0) WHEN IS<br> &gt;50000 THEN RGB(0,255,0) ELSE RGB(0,0,255))</pre>
+</p>
+<A NAME="TI6238"></A><p>This expression for the Background.Color property
+of an employee Id column returns red for Id 101, gray for Id 102,
+and black for all other Id numbers:<pre><i>Case</i> (emp_id WHEN 101 THEN 255 WHEN 102 THEN<br> RGB(100,100,100) ELSE 0)</pre>
+</p>
+<A NAME="TI6239"></A><p>This expression for the Format property of the Marital_status
+column returns Single, Married, and Unknown based on the data value
+of the Marital_status column for an employee:<pre><i>Case</i> (marital_status WHEN 'S'THEN 'Single' WHEN 'M' THEN<br> 'Married' ELSE 'Unknown')</pre>
+</p>
+
+<A NAME="SA8"></A><h3>See Also</h3><A NAME="TI6240"></A><p><A NAME="TI6241"></A>
+<ul>
+<li class=fi><A HREF="imugp148.htm#X-ref350653848">"Example 3: creating
+a row indicator"</A></li>
+<li class=ds><A HREF="imugp183.htm#CAIDFCIA">If</A> 
+</li>
+</ul>
+</p>
+
+

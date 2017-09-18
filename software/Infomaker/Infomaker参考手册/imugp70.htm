@@ -1,0 +1,74 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+Sorting rows </TITLE>
+</HEAD>
+<BODY>
+<A NAME="BFCDHDGD"></A><h1>Sorting rows </h1>
+<A NAME="TI2803"></A><p>You can use an ORDER BY clause in the SQL SELECT statement
+for the report to sort the data that is retrieved from the database.
+If you do this, the DBMS itself does the sorting and the rows are
+brought into InfoMaker already sorted. </p>
+<A NAME="TI2804"></A><p>However, you might want to sort the rows after they are retrieved.
+For example, you might want to:<A NAME="TI2805"></A>
+<ul>
+<li class=fi>Offload
+the processing from the DBMS</li>
+<li class=ds>Sort on an expression, which may not be allowed
+in the SELECT statement but is allowed in InfoMaker
+</li>
+</ul>
+</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To sort the rows:</p>
+<ol><li class=fi>
+Select Rows&gt;Sort from the menu
+bar.<br><br><br><img src="images/Filt02.gif"><br>
+</li>
+<li class=ds>
+Drag the columns that you want to sort the rows
+on to the Columns box, and specify whether you want to sort in ascending
+or descending order.<br><br>
+The order of the columns determines the precedence of the
+sort. To reorder the columns, drag them up or down in the list.
+To delete a column from the sort columns list, drag the column outside
+the dialog box.<br><br></li>
+<li class=ds>
+You can also specify expressions to sort on: for
+example, if you have two columns, Revenues and Expenses, you can
+sort on the expression <i>Revenues - Expenses</i>
+.<br><br>
+To specify an expression to sort on, double-click a column
+name in the Columns box, modify the expression in the Modify Expression
+dialog box, and click OK.<br><br>
+You return to the Specify Sort Columns dialog box with the
+expression displayed.<br><br><p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>If you change your mind </span> <A NAME="TI2806"></A>You can remove a column or expression from the sorting specification
+by simply dragging it and releasing it outside the Columns box.</p>
+</li>
+<li class=ds>
+Click OK when you have specified all the sort
+columns and expressions.<br><br></li></ol>
+<br><A NAME="TI2807"></A><h2>Suppressing repeating values</h2>
+<A NAME="TI2808"></A><p>When you sort on a column, you may have several rows with
+the same value in one column. In this case, you may want to suppress
+the repeating values in that column.</p>
+<A NAME="TI2809"></A><p>When you suppress a repeating value, the value displays at
+the start of each new page and, if you are using groups, each time
+a value changes in a higher group.</p>
+<A NAME="TI2810"></A><p>For example, if you have sorted employees by department ID,
+you might want to suppress all but the first occurrence of each
+department ID in the report:</p>
+<br><img src="images/Filt04.gif">
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To suppress repeating values:</p>
+<ol><li class=fi>
+Select Rows&gt;Suppress Repeating
+Values from the menu bar.<br><br>
+The Specify Repeating Value Suppression List dialog box displays:<br><br><br><img src="images/Filt05.gif"><br>
+</li>
+<li class=ds>
+Drag the columns whose repeated values you want
+to suppress from the Source Data box to the Suppression List box
+and click OK.<br><br><p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>If you change your mind</span> <A NAME="TI2811"></A>You can remove a column from the suppression list by simply
+dragging it and releasing it outside the Suppression List box.</p>
+</li></ol>
+<br>

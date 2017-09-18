@@ -1,0 +1,84 @@
+﻿<!DOCTYPE html>
+<html lang="zh-cn" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta charset="utf-8" />
+	<script type="text/javascript" src="../../mylib/js/css.js"></script>
+	<title>SonarQube Note</title>
+</head>
+<body>
+	<p id="title">C# 测试覆盖率分析</p>
+	<h1>OpenCover</h1>
+	<p>使用开源项目 <a href="https://github.com/OpenCover/opencover">OpenCover</a> 来生成 Integration Test 或 Unit Test 的 coverage report.</p>
+	<h2>OpenCover 参数</h2>
+	<pre>OpenCover.Console.exe 参数</pre>
+	<table style="width:85%">
+		<tr>
+			<th>参数</th>
+			<th>说明</th>
+		</tr>
+		<tr>
+			<td> -register:[user]</td>
+			<td>可选，但如果当前用户没有 administrator 权限，则必须使用
+				<br />
+				<pre>-register:user</pre>
+			</td>
+		</tr>
+		<tr>
+			<td>-target:&lt;target application&gt;</td>
+			<td>必选，指定用于测试的程序</td>
+		</tr>
+		<tr>
+			<td>-targetargs:&lt;arguments for the target process&gt;</td>
+			<td>用于启动测试程序的参数，如果是使用 NUnit 进行 Unit Test，该参数即为需启动的包含 NUnit Test Cases 的项目</td>
+		</tr>
+		<tr>
+			<td>-output:&lt;path to file&gt;</td>
+			<td>指定测试结果的输出路径，测试结果为 xml 格式</td>
+		</tr>
+		<tr>
+			<td>-filter:&lt;space separated filters&gt;</td>
+			<td>用于指定要测试或不要测试的 Assembly/Class。格式为
+				<br />
+				<pre>±[module-filter]class-filter</pre>
+				如果不指定，则相当于 filter 为 +[*]*
+				<br /><br />
+				下面表示测试所有 Assembly 以 My 开头，类名不包含 Test 的情况
+				<br />
+				<pre>-filter:"+[My*]* -[*]*Test*"</pre>
+			</td>
+		</tr>
+		<tr>
+			<td>-regex</td>
+			<td>指定 filter 使用正则表达式进行过滤</td>
+		</tr>
+	</table>
+	<p class="note">即使是使用反射调用的方法，也会被统计进来。所以从理论上讲，我们可以为非 public 方法写 Unit Test 程序。</p>
+	<h2>示例</h2>
+	<h3>Integration Test</h3>
+	<pre>@echo off
+set nunit_path="C:\software\dotNet\NUnit-2.6.4\bin\nunit-console-x86.exe"
+set opencover_home="C:\software\sonar\opencover.4.5.3522"
+set report_dir=c:\temp\open_cover_report
+set app_path=C:\Work\SonarTest\Assembly\SonarNUnit.dll
+%opencover_home%\OpenCover.Console.exe -register:user -target:%app_path% -filter:"+[Sonar*]* -[OpenCover.T*]*" -output:%report_dir%\opencovertests.xml</pre>
+	<h3>Unit Test</h3>
+	<pre>@echo off
+set nunit_path="C:\software\dotNet\NUnit-2.6.4\bin\nunit-console-x86.exe"
+set opencover_home="C:\software\sonar\opencover.4.5.3522"
+set report_dir=c:\temp\open_cover_report
+set app_path=C:\Work\SonarTest\Assembly\SonarNUnit.dll
+%opencover_home%\OpenCover.Console.exe -register:user -target:%nunit_path% -targetargs:"%app_path% /noshadow" -filter:"+[*]* -[*]*Form*" -output:%report_dir%\opencovertests.xml
+</pre>
+	<p class="note">上例中忽略了所有包含 Form 的类。如果要在 filter 参数中使用 -，+ 也是必须的，使用 +[*]* 表示包含所有类。但是忽略掉的类仍然作为分母来计算覆盖率，所以这样会降低 Unit Test Coverage。</p>
+	<h1>Sonar Integration</h1>
+	<p>最终我们还是需要将分析报告上传至 Sonar。可在 sonar-project.properties 中指定 OpenCover 的报告路径，如下所示</p>
+	<pre class="code" data-type="properties">sonar.cs.nunit.reportsPaths=C:/temp/test_report/nunit_test_result.xml
+sonar.cs.opencover.reportsPaths=C:/temp/open_cover_report/opencovertests.xml</pre>
+	<p><img alt="" src="img/dotnet_coverage.png" /></p>
+	<h1>限制</h1>
+	<p>截止目前（2016-3-18）为止，不支持在 SoanrQube 中显示 Unit Test 的详细执行结果，例如，你点进 Tests 链接，你不会发现哪个成功了，哪个失败了。SonarQube 方面的解释是 NUnit test report 不支持从结果到代码的映。下面是几个链接</p>
+	<p><a href="https://jira.sonarsource.com/browse/SONARNTEST-17">https://jira.sonarsource.com/browse/SONARNTEST-17">https://jira.sonarsource.com/browse/SONARNTEST-17">https://jira.sonarsource.com/browse/SONARNTEST-17</a></p>
+	<p><a href="http://stackoverflow.com/questions/29117785/no-drilldown-from-sonarqube-unit-test-success-widget">http://stackoverflow.com/questions/29117785/no-drilldown-from-sonarqube-unit-test-success-widget</a></p>
+	<p>这个我觉得有点偷懒，你至少得告诉我哪个 Case 成功哪个失败也好啊。</p>
+</body>
+</html>

@@ -1,0 +1,192 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>触发器</title>
+<script language="javascript" src="css.js"></script>
+</head>
+
+<body>
+<h1>第N章 触发器</h1>
+<hr />
+<h2><a href="#create_trigger">N.1 基础知识</a></h2>
+<h2><a href="#query_trigger">N.2 查询触发器内容</a></h2>
+<h2><a href="#status_control">N.3 禁用或启用</a></h2>
+<h2><a name="create_trigger" id="create_trigger"></a>N.1 基础知识</h2>
+<h3>N.1.1 创建触发器 </h3>
+<p>下面的示例创建一个名为 <b>sales_warn</b> 的触发器，当书的销售总量达到 10 时，就产生错误 50010。然后执行 <b>sp_helptrigger</b> 列出表 <b>sales </b>中触发器的相关信息。</p>
+<pre>USE pubs
+CREATE TRIGGER sales_warn
+ON sales
+FOR after INSERT
+AS RAISERROR (50010, 16, 10)
+
+EXEC sp_helptrigger sales
+</pre>
+<p><strong>指定触发器何时激发</strong></p>
+<p>可指定以下两个选项之一来控制触发器何时激发： </p>
+<ul type="disc">
+  <li>AFTER 触发器在触发操作（INSERT、UPDATE 或 DELETE）后和处理完任何约束后激发。可通过指定 AFTER 或 FOR 关键字来请求 AFTER 触发器。因为 FOR 关键字与 AFTER 的效果相同，所以具有 FOR 关键字的触发器也归类为 AFTER 触发器。<br />
+    <br />
+  </li>
+  <li>INSTEAD OF 触发器代替触发动作进行激发，并在处理约束之前激发。 </li>
+</ul>
+<p>对于每个触发操作（UPDATE、DELETE 和 INSERT），每个表或视图只能有一个 INSTEAD OF 触发器。而一个表对于每个触发操作可以有多个 AFTER 触发器。</p>
+<h3>N.1.2 内部表</h3>
+<p>在触发器内部可使用如下两张内部表</p>
+<ul>
+  <li>inserted: 要插入的记录</li>
+  <li>deleted: 要删除的记录</li>
+</ul>
+<p>对于update触发器，同时可使用上面两张记录表</p>
+<h3>N.1.3 行式触发器</h3>
+<p>曾经以为SQL SERVER的触发器只能触发单行，也就是说如果一个delete触发器，如果同时删除多行时，只会对第一条记录触发，后来发现了不是人家SQL SERVER不支持，而是偶脑子笨没发现。</p>
+<p>其实inserted和deleted两张内部表存放了所有要插入或要删除的记录，可以用cursor逐次访问里面的每条记录，下面是一个示例，该触发器将要删除的记录转移到另一张表中：</p>
+<p>第一步，创建这两张表</p>
+<pre>create table table1([id] int primary key, [value] varchar(100))
+create table table2([id] int primary key, [value] varchar(100))</pre>
+<p>第二步，插入测试数据</p>
+<pre>declare @i int
+set @i = 1
+while @i <= 100
+begin
+	insert into table1([id], [value])
+	values(@i, cast(@i as varchar))
+
+	set @i = @i + 1
+end</pre>
+<p>创建table1的delete触发器</p>
+<pre>create trigger tr_d_table1 on table1 for delete
+as
+begin
+	declare @id int, @value varchar(100)
+	declare cur_del cursor local forward_only for
+	select [id], [value]
+	from deleted
+
+	open cur_del
+	fetch next from cur_del into @id, @value
+	while @@fetch_status = 0
+	begin
+		insert into table2([id], [value])
+		values(@id, @value)
+	
+		fetch next from cur_del into @id, @value
+	end
+
+	close cur_del
+	deallocate cur_del
+	
+end</pre>
+<p>现在对table1执行delete语句，发现所有被删除的记录都记录在在table2中了</p>
+<pre>delete from table1</pre>
+<h2><a name="query_trigger" id="query_trigger"></a>N.2 查询触发器内容</h2>
+<h3><a name="query_trigger_name" id="query_trigger_name"></a>N.2.1 查询表所使用的触发器</h3>
+<h4>N.2.1.1 使用系统存储过程</h4>
+<p><b>sp_helptrigger</b> [ <b>@tabname = </b>] <b>'</b><i>table</i><b>'</b> [ <b>, </b>[ <b>@triggertype = </b>] <b>'</b><i>type</i><b>' </b>]</p>
+<p><strong>参数</strong></p>
+<p>[<b>@tabname =</b>] <b>'</b><i>table</i><b>'</b></p>
+<p class="indent">是当前数据库中表的名称，将返回该表的触发器信息。<i>table</i> 的数据类型为 <b>nvarchar(776)</b>，没有默认值。</p>
+<p>[<b>@triggertype =</b>] <b>'</b><i>type</i><b>'</b></p>
+<p class="indent">是触发器的类型，将返回此类型触发器的信息。<i>type</i> 的数据类型为 <b>char(6)</b>，默认值为 NULL，并且可以是下列值之一。</p>
+<TABLE width=563>
+
+<TR VALIGN="top">
+<TH class=label width=43%>值</TH>
+<TH class=label width=57%>描述</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=43%><B>DELETE</B></TD>
+<TD width=57%>返回 DELETE 触发器信息。</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=43%><B>INSERT</B></TD>
+<TD width=57%>返回 INSERT 触发器信息。</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=43%><B>UPDATE</B></TD>
+<TD width=57%>返回 UPDATE 触发器信息。</TD>
+</TR>
+</TABLE>
+<p><strong>结果集</strong></p>
+<p>下表显示了结果集中包含的信息。</p>
+<TABLE width=595>
+
+<TR VALIGN="top">
+<TH class=label width=33%>列名</TH>
+<TH class=label width=24%>数据类型</TH>
+<TH class=label width=43%>描述</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><B>trigger_name</B></TD>
+<TD width=24%><B>sysname</B></TD>
+<TD width=43%>触发器的名称。</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><B>trigger_owner</B></TD>
+<TD width=24%><B>sysname</B></TD>
+<TD width=43%>触发器所有者的名称。</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><B>isupdate</B></TD>
+<TD width=24%><B>int</B></TD>
+<TD width=43%>1= UPDATE 触发器<BR>
+0= 不是 UPDATE 触发器</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><B>isdelete</B></TD>
+<TD width=24%><B>int</B></TD>
+<TD width=43%>1= DELETE 触发器<BR>
+0= 不是 DELETE 触发器</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><B>isinsert</B></TD>
+<TD width=24%><B>int</B></TD>
+<TD width=43%>1= INSERT 触发器<BR>
+0= 不是 INSERT 触发器</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><B>isafter</B></TD>
+<TD width=24%><B>int</B></TD>
+<TD width=43%>1= AFTER 触发器<BR>
+0= 不是 AFTER 触发器</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=33%><B>isinsteadof</B></TD>
+<TD width=24%><B>int</B></TD>
+<TD width=43%>1= INSTEAD OF 触发器<BR>
+0= 不是 INSTEAD OF 触发器</TD>
+</TR>
+</TABLE>
+<h4>N.2.1.2 使用系统表</h4>
+<pre>select a.name as trigger_name, c.name as trigger_owner
+from sysobjects a
+  inner join sysobjects b on b.name = 'table name' and b.id = a.parent_obj
+  inner join sysusers c on c.name = 'user name' and c.uid = b.uid
+where a.xtype = 'TR'</pre>
+<h3><a name="query_trigger_content" id="query_trigger_content"></a>N.2.2 查询触发器内容</h3>
+<h4>N.2.2.1 使用系统存储过程</h4>
+<pre>sp_helptext [trigger name] </pre>
+<h2><a name="status_control" id="status_control"></a>N.3 禁用或启用</h2>
+<h3><a name="query_status" id="query_status"></a>N.3.1 查询触发器状态</h3>
+<p>触发器的启用或禁用状态在系统表中没有体现，只是禁用的触发器，在触发器的文本内容最后有一行</p>
+<pre>alter table [user name].[table nam] disable trigger [trigger name]</pre>
+<h3><a name="disable_trigger" id="disable_trigger"></a>N.3.2 禁用触发器</h3>
+<pre>alter table [table nam] disable trigger [trigger name]</pre>
+<h3><a name="enable_trigger" id="enable_trigger"></a>N.3.3 启用触发器 </h3>
+<pre>alter table [table nam] enable trigger [trigger name]</pre>
+<h2>&nbsp;</h2>
+<p>&nbsp; </p>
+<script language="javascript" src="index.js"></script>
+</body>
+</html>

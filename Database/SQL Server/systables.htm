@@ -1,0 +1,858 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<script language="javascript" src="css.js"></script>
+<title>系统表解析 </title>
+</head>
+
+<body>
+<h1>第N章 系统表解析</h1>
+<hr>
+<h2>系统表</h2>
+<table width="90%" >
+  <tr>
+    <td width="20%"><a href="syscolumns">syscolumns</a></td>
+    <td width="20%">syscomments</td>
+    <td width="20%">sysdepends</td>
+    <td width="20%">sysfilegroups<br></td>
+    <td width="20%">sysfiles</td>
+  </tr>
+  <tr>
+    <td>sysfiles1<br></td>
+    <td>sysforeignkeys<br></td>
+    <td>sysfulltextcatalogs<br></td>
+    <td>sysfulltextnotify<br></td>
+    <td>sysindexes</td>
+  </tr>
+  <tr>
+    <td>sysindexkeys<br></td>
+    <td>sysmembers<br></td>
+    <td><a href="#sysobjects">sysobjects</a><br></td>
+    <td>syspermissions<br></td>
+    <td>sysproperties</td>
+  </tr>
+  <tr>
+    <td>sysprotects<br></td>
+    <td>sysreferences<br></td>
+    <td><a href="#systypes">systypes</a><br></td>
+    <td><a href="#sysusers">sysusers</a><br></td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+<p>系统表一般情况下不允许更改，如果在特定的情况下需要更改，需要先使用如下命令：</p>
+<pre>sp_configure 'allow updates', 1
+reconfigure with override</pre>
+<p>然后这可以使用update之类的语句进行更改。</p>
+<h2>系统视图</h2>
+<table width="90%" >
+  <tr>
+    <td width="20%"><a href="#sysconstraints">sysconstraints</a></td>
+    <td width="20%">&nbsp;</td>
+    <td width="20%">&nbsp;</td>
+    <td width="20%">&nbsp;</td>
+    <td width="20%">&nbsp;</td>
+  </tr>
+</table>
+<h2><a name="syscolumns"></a>N.1 syscolumns</h2>
+<p>表示表中的列</p>
+<table width="99%">
+  <tr>
+    <th width="20%">字段</th>
+    <th width="15%">类型</th>
+    <th width="5%">主键</th>
+    <th width="60%">说明</th>
+  </tr>
+  <tr>
+    <td>name</td>
+    <td>nvarchar</td>
+    <td align="center">&nbsp;</td>
+    <td>列名</td>
+  </tr>
+  <tr>
+    <td>id</td>
+    <td>int identity</td>
+    <td align="center">&nbsp;</td>
+    <td>所属表的id，对应sysobjects表的id字段</td>
+  </tr>
+  <tr>
+    <td>xtype</td>
+    <td>tinyint identity</td>
+    <td align="center">&nbsp;</td>
+    <td>字的数据类型，对应master..spt_datatype_info的ss_dtype字段，或master..systypes.xtype</td>
+  </tr>
+  <tr>
+    <td>typestat</td>
+    <td>tinyint identity</td>
+    <td align="center">&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>xusertype</td>
+    <td>smallint identity</td>
+    <td align="center">&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>length</td>
+    <td>smallint identity</td>
+    <td align="center">&nbsp;</td>
+    <td>字段的长度</td>
+  </tr>
+  <tr>
+    <td>xprec</td>
+    <td>tinyint identity</td>
+    <td align="center">&nbsp;</td>
+    <td>数字类型的位数（包括小数点后的位数）</td>
+  </tr>
+  <tr>
+    <td>xscale</td>
+    <td>tinyint identity</td>
+    <td align="center">&nbsp;</td>
+    <td>小数点后的位数</td>
+  </tr>
+  <tr>
+    <td>colid</td>
+    <td>smallint identity</td>
+    <td align="center">&nbsp;</td>
+    <td>列号，表示该列为表中的第几列</td>
+  </tr>
+  <tr>
+    <td>xoffset</td>
+    <td>smallint identity</td>
+    <td align="center">&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>bitpos</td>
+    <td>tinyint identity</td>
+    <td align="center">&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>reserved</td>
+    <td>tinyint identity</td>
+    <td align="center">&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>colstat</td>
+    <td>smallint identity</td>
+    <td align="center">&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>cdefault</td>
+    <td>int identity</td>
+    <td align="center">&nbsp;</td>
+    <td>默认值，使用关系syscolumns.cdefault = syscomments.id，可取出该列的默认值syscomments.text</td>
+  </tr>
+  <tr>
+    <td>domain</td>
+    <td>int identity</td>
+    <td align="center">&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>number</td>
+    <td>smallint identity</td>
+    <td align="center">&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>colorder</td>
+    <td>smallint identity</td>
+    <td align="center">&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>autoval</td>
+    <td>varbinary</td>
+    <td align="center">&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>offset</td>
+    <td>smallint identity</td>
+    <td align="center">&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>collationid</td>
+    <td>int identity</td>
+    <td align="center">&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>language</td>
+    <td>int identity</td>
+    <td align="center">&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>status</td>
+    <td>tinyint identity</td>
+    <td align="center">&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>type</td>
+    <td>tinyint identity</td>
+    <td align="center">&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>usertype</td>
+    <td>smallint identity</td>
+    <td align="center">&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>printfmt</td>
+    <td>varchar</td>
+    <td align="center">&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>prec</td>
+    <td>smallint identity</td>
+    <td align="center">&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>scale</td>
+    <td>int identity</td>
+    <td align="center">&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>iscomputed</td>
+    <td>int identity</td>
+    <td align="center">&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>isoutparam</td>
+    <td>int identity</td>
+    <td align="center">&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>isnullable</td>
+    <td>int identity</td>
+    <td align="center">&nbsp;</td>
+    <td>为1表示可为空，0表示不可为空</td>
+  </tr>
+  <tr>
+    <td>collation</td>
+    <td>nvarchar</td>
+    <td align="center">&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>tdscollation</td>
+    <td>binary</td>
+    <td align="center">&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+<h2><a name="sysobjects"></a>N.2 sysobjects</h2>
+<p>该表存放本库中的数据库对象信息，包括表、视图、存储过程等，常用字段解析如下：</p>
+<table width="99%">
+  <tr>
+    <th width="20%">字段</th>
+    <th width="15%">类型</th>
+    <th width="5%">主键</th>
+    <th width="60%">说明</th>
+  </tr>
+  <tr>
+    <td>name</td>
+    <td>nvarchar</td>
+    <td align="center">&nbsp;</td>
+    <td>数据库对象名，如表名、视图名等</td>
+  </tr>
+  <tr>
+    <td>id</td>
+    <td>int identity</td>
+    <td align="center">&nbsp;</td>
+    <td>其键值，其它表用其作外键</td>
+  </tr>
+  <tr>
+    <td>xtype</td>
+    <td>char</td>
+    <td align="center">&nbsp;</td>
+    <td><p>数据库对象的类型，其含义如下：</p>
+      <p>C = CHECK constraint<BR>
+        D = 缺省值（默认值）约束，其默认值可根据ID在syscomments.text属性中查<BR>
+        F = 外键约束<BR>
+L = Log<BR>
+FN = Scalar function<BR>
+IF = Inlined table-function<BR>
+P = 存储过程 <BR>
+PK = 主键 (type is K)<BR>
+RF = Replication filter stored procedure <BR>
+S = 系统表 <BR>
+TF = Table function<BR>
+TR = 触发器 <BR>
+U = 用户表 <BR>
+UQ = UNIQUE constraint (type is K)<BR>
+V = 视图 <BR>
+X = Extended stored procedure</p>
+    </td>
+  </tr>
+  <tr>
+    <td>uid</td>
+    <td>smallint identity</td>
+    <td align="center">&nbsp;</td>
+    <td>该表的所属用户</td>
+  </tr>
+  <tr>
+    <td>info</td>
+    <td>smallint identity</td>
+    <td align="center">&nbsp;</td>
+    <td>保留。仅限内部使用。</td>
+  </tr>
+  <tr>
+    <td>status</td>
+    <td>int identity</td>
+    <td align="center">&nbsp;</td>
+    <td>保留。仅限内部使用。</td>
+  </tr>
+  <tr>
+    <td>base_schema_ver</td>
+    <td>int identity</td>
+    <td align="center">&nbsp;</td>
+    <td>保留。仅限内部使用。</td>
+  </tr>
+  <tr>
+    <td>replinfo</td>
+    <td>int identity</td>
+    <td align="center">&nbsp;</td>
+    <td>保留。供复制使用。</td>
+  </tr>
+  <tr>
+    <td>parent_obj</td>
+    <td>int identity</td>
+    <td align="center">&nbsp;</td>
+    <td>若对象为主键，则表示该主键所属表的id<br>
+    <br>
+    若对象为触发器，则表示该触发器所属的表</td>
+  </tr>
+  <tr>
+    <td>crdate</td>
+    <td>datetime</td>
+    <td align="center">&nbsp;</td>
+    <td>创建时间</td>
+  </tr>
+  <tr>
+    <td>ftcatid</td>
+    <td>smallint identity</td>
+    <td align="center">&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>schema_ver</td>
+    <td>int identity</td>
+    <td align="center">&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>stats_schema_ver</td>
+    <td>int identity</td>
+    <td align="center">&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>type</td>
+    <td>char</td>
+    <td align="center">&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>userstat</td>
+    <td>smallint identity</td>
+    <td align="center">&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>sysstat</td>
+    <td>smallint identity</td>
+    <td align="center">&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>indexdel</td>
+    <td>smallint identity</td>
+    <td align="center">&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>refdate</td>
+    <td>datetime</td>
+    <td align="center">&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>version</td>
+    <td>int identity</td>
+    <td align="center">&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>deltrig</td>
+    <td>int identity</td>
+    <td align="center">&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>instrig</td>
+    <td>int identity</td>
+    <td align="center">&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>updtrig</td>
+    <td>int identity</td>
+    <td align="center">&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>seltrig</td>
+    <td>int identity</td>
+    <td align="center">&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>category</td>
+    <td>int identity</td>
+    <td align="center">&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>cache</td>
+    <td>smallint identity</td>
+    <td align="center">&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+<p>有一个系统函数 object_id(object_name)，可以取出对象的ID，例如取出表 table1 的ID：</p>
+<pre>select object_id('table1')</pre>
+<p>可用系统存储过程“sp_pkeys”取表的主键，其格式如下：</p>
+<pre>exec sp_pkeys '表名', '用户名'  --用户名可省略，默认为登录用户</pre>
+<p>取出数据格式如下：</p>
+<table width="99%">
+  <tr>
+    <th>TABLE_QUALIFIER</th>
+    <th>TABLE_OWNER</th>
+    <th>TABLE_NAME</th>
+    <th>COLUMN_NAME</th>
+    <th>KEY_SEQ</th>
+    <th>PK_NAME</th>
+  </tr>
+  <tr>
+    <td>数据库名</td>
+    <td>所有者</td>
+    <td>表名</td>
+    <td>主键列名</td>
+    <td>列号</td>
+    <td>主键名</td>
+  </tr>
+</table>
+<h2><a name="SYSUSERS"></a>N.3 SYSUSERS</h2>
+<p>存放该库的用户</p>
+<table width="99%">
+  <tr>
+    <th width="20%">字段</th>
+    <th width="15%">类型</th>
+    <th width="5%">主键</th>
+    <th width="60%">说明</th>
+  </tr>
+  <tr>
+    <td>uid</td>
+    <td>smallint identity</td>
+    <td align="center">&nbsp;</td>
+    <td>主键，用作其它表的外键</td>
+  </tr>
+  <tr>
+    <td>status</td>
+    <td>smallint identity</td>
+    <td align="center">&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>name</td>
+    <td>nvarchar</td>
+    <td align="center">&nbsp;</td>
+    <td>用户名，不过不是登录数据库时的登录名</td>
+  </tr>
+  <tr>
+    <td>sid</td>
+    <td>varbinary</td>
+    <td align="center">&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>roles</td>
+    <td>varbinary</td>
+    <td align="center">&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>createdate</td>
+    <td>datetime</td>
+    <td align="center">&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>updatedate</td>
+    <td>datetime</td>
+    <td align="center">&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>altuid</td>
+    <td>smallint identity</td>
+    <td align="center">&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>password</td>
+    <td>varbinary</td>
+    <td align="center">&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>gid</td>
+    <td>smallint identity</td>
+    <td align="center">&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>environ</td>
+    <td>varchar</td>
+    <td align="center">&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>hasdbaccess</td>
+    <td>int identity</td>
+    <td align="center">&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>islogin</td>
+    <td>int identity</td>
+    <td align="center">&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>isntname</td>
+    <td>int identity</td>
+    <td align="center">&nbsp;</td>
+    <td>是否为windows系统用户</td>
+  </tr>
+  <tr>
+    <td>isntgroup</td>
+    <td>int identity</td>
+    <td align="center">&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>isntuser</td>
+    <td>int identity</td>
+    <td align="center">&nbsp;</td>
+    <td>是否为windows系统用户</td>
+  </tr>
+  <tr>
+    <td>issqluser</td>
+    <td>int identity</td>
+    <td align="center">&nbsp;</td>
+    <td>是否为SQL SERVER用户 </td>
+  </tr>
+  <tr>
+    <td>isaliased</td>
+    <td>int identity</td>
+    <td align="center">&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>issqlrole</td>
+    <td>int identity</td>
+    <td align="center">&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>isapprole</td>
+    <td>int identity</td>
+    <td align="center">&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+<h2><a name="sysconstraints"></a>N.4 sysconstraints</h2>
+<p>存放表的约束条件</p>
+<table width="99%">
+  <tr>
+    <th width="20%">字段</th>
+    <th width="15%">类型</th>
+    <th width="5%">主键</th>
+    <th width="60%">说明</th>
+  </tr>
+  <tr>
+    <td>constid</td>
+    <td>int identity</td>
+    <td align="center">&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>id</td>
+    <td>int identity</td>
+    <td align="center">&nbsp;</td>
+    <td>表的ID, <a href="#sysobjects">sysobjects</a>.id </td>
+  </tr>
+  <tr>
+    <td>colid</td>
+    <td>smallint identity</td>
+    <td align="center">&nbsp;</td>
+    <td><a href="#syscolumns">syscolumns</a>.colid</td>
+  </tr>
+  <tr>
+    <td>spare1</td>
+    <td>tinyint identity</td>
+    <td align="center">&nbsp;</td>
+    <td>保留</td>
+  </tr>
+  <tr>
+    <td>status</td>
+    <td>int identity</td>
+    <td align="center">&nbsp;</td>
+    <td><P>1 = PRIMARY KEY constraint.<BR>
+      2 = UNIQUE KEY constraint.<BR>
+      3 = FOREIGN KEY constraint.<BR>
+  4 = CHECK constraint.<BR>
+  5 = DEFAULT constraint.<BR>
+  16 = Column-level constraint.<BR>
+  32 = Table-level constraint.</P></td>
+  </tr>
+  <tr>
+    <td>actions</td>
+    <td>int identity</td>
+    <td align="center">&nbsp;</td>
+    <td>保留</td>
+  </tr>
+  <tr>
+    <td>error</td>
+    <td>int identity</td>
+    <td align="center">&nbsp;</td>
+    <td>保留</td>
+  </tr>
+</table>
+<h2><a name="systypes"></a>N.5 systypes </h2>
+<table width="99%">
+  <tr>
+    <th width="20%">字段</th>
+    <th width="15%">类型</th>
+    <th width="5%">主键</th>
+    <th width="60%">说明</th>
+  </tr>
+  <tr>
+    <td>name</td>
+    <td>nvarchar</td>
+    <td align="center">&nbsp;</td>
+    <td>名称</td>
+  </tr>
+  <tr>
+    <td>xtype</td>
+    <td>tinyint identity</td>
+    <td align="center">&nbsp;</td>
+    <td>代号，可重复，例如231，但重复的其status和usertype不同</td>
+  </tr>
+  <tr>
+    <td>status</td>
+    <td>tinyint identity</td>
+    <td align="center">&nbsp;</td>
+    <td>类型<br>
+	<ul>
+	  <li>0：在声明时不需要声明长度的类型，如int, datatime等</li>
+	  <li>1：SQL SERVER自定义的一些类型，声明时不需要带长度，如sysname, timestamp </li>
+	  <li>2：在声明时需要声明长度的类型，如char, varchar等</li>
+	</ul></td>
+  </tr>
+  <tr>
+    <td>xusertype</td>
+    <td>smallint identity</td>
+    <td align="center">&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>length</td>
+    <td>smallint identity</td>
+    <td align="center">&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>xprec</td>
+    <td>tinyint identity</td>
+    <td align="center">&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>xscale</td>
+    <td>tinyint identity</td>
+    <td align="center">&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>tdefault</td>
+    <td>int identity</td>
+    <td align="center">&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>domain</td>
+    <td>int identity</td>
+    <td align="center">&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>uid</td>
+    <td>smallint identity</td>
+    <td align="center">&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>reserved</td>
+    <td>smallint identity</td>
+    <td align="center">&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>collationid</td>
+    <td>int identity</td>
+    <td align="center">&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>usertype</td>
+    <td>smallint identity</td>
+    <td align="center">&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>variable</td>
+    <td>bit</td>
+    <td align="center">&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>allownulls</td>
+    <td>bit</td>
+    <td align="center">&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>type</td>
+    <td>tinyint identity</td>
+    <td align="center">&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>printfmt</td>
+    <td>varchar</td>
+    <td align="center">&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>prec</td>
+    <td>smallint identity</td>
+    <td align="center">&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>scale</td>
+    <td>tinyint identity</td>
+    <td align="center">&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>collation</td>
+    <td>nvarchar</td>
+    <td align="center">&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+<h2>N.100 在系统表中查询表的系统数据</h2>
+<table width="99%"  cellspacing="0" cellpadding="0">
+  <tr>
+    <th width="10%">数据</th>
+    <th width="15%">所用表</th>
+    <th width="75%">说明</th>
+  </tr>
+  <tr>
+    <td>表名</td>
+    <td>sysobjects</td>
+    <td>xtype 为 'U' 的记录，例如查询表“test_table” ：
+<pre>select * from sysobjects
+where name = 'test_table' and xtype = 'U'</pre></td>
+  </tr>
+  <tr>
+    <td>主键</td>
+    <td>&nbsp;</td>
+    <td>1、存储过程sp_pkeys
+<pre>sp_pkeys test_table</pre>
+2、使用系统表（好麻烦的）
+<pre>--创建测试表，使用两列作复合主键
+create table test_table(a int, b int, constraint pk_test_table primary key(a,b))
+
+--查找主键列
+select a.*
+from syscolumns a
+  inner join sysobjects b on b.id = a.id and b.xtype = 'U'
+  inner join sysusers c on b.uid = c.uid
+  inner join sysobjects d on d.xtype = 'PK' and d.parent_obj = b.id
+  inner join sysindexes e on e.id = b.id and e.name = d.name
+  inner join sysindexkeys f on f.id = b.id and f.indid = e.indid and f.colid = a.colid
+where c.name = 'dbo' and b.name = 'test_table'</pre></td>
+  </tr>
+  <tr>
+    <td>外键</td>
+    <td>&nbsp;</td>
+    <td>1、存储过程sp_fkeys
+<pre>sp_fkeys test_table</pre></td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+<p>&nbsp; </p>
+<p>&nbsp;</p>
+<script language="javascript" src="index.js"></script>
+</body>
+</html>

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+    <script type="text/javascript" src="../../mylib/js/css.js"></script>
+    <title>log4j2</title>
+</head>
+
+<body>
+    <p id="title">log4j2</p>
+    <h1>第一个程序</h1>
+    <p>相比较 log4j，log4j2 使用上有些许变化，以下是我使用 log4j2 的示例</p>
+    <ol>
+        <li>
+            <p>新建 Maven 项目，在 pom.xml 中引用 log4j2 如下</p>
+            <pre class="code" data-type="xml">&lt;dependency&gt;
+	&lt;groupId&gt;org.apache.logging.log4j&lt;/groupId&gt;
+	&lt;artifactId&gt;log4j-api&lt;/artifactId&gt;
+	&lt;version&gt;2.8.1&lt;/version&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt;
+	&lt;groupId&gt;org.apache.logging.log4j&lt;/groupId&gt;
+	&lt;artifactId&gt;log4j-core&lt;/artifactId&gt;
+	&lt;version&gt;2.8.1&lt;/version&gt;
+&lt;/dependency&gt;
+</pre>
+        </li>
+        <li>
+            <p>log4j2 支持包括 json 在内的各种各样的配置文件，但我还是习惯 properties 文件，在 java source 根目录下建立 log4j2.properties 如下所示：</p>
+            <pre class="code" data-type="properties">status = error
+dest = err
+name = PropertiesConfig
+ 
+property.filename = /tmp/my.log
+ 
+filter.threshold.type = ThresholdFilter
+filter.threshold.level = debug
+ 
+appender.console.type = Console
+appender.console.name = STDOUT
+appender.console.layout.type = PatternLayout
+appender.console.layout.pattern = %d %p %C [%t] %m%n
+ 
+appender.rolling.type = RollingFile
+appender.rolling.name = RollingFile
+appender.rolling.fileName = ${filename}
+appender.rolling.filePattern = /tmp/my-%d{MM-dd-yy-HH-mm-ss}-%i.log.gz
+appender.rolling.layout.type = PatternLayout
+appender.rolling.layout.pattern = %d %p %C [%t] %m%n
+appender.rolling.policies.type = Policies
+# 如果你想以系统运行时间作为 log 文件分割方式则加上注掉的配置
+#appender.rolling.policies.time.type = TimeBasedTriggeringPolicy
+#appender.rolling.policies.time.interval = 2
+#appender.rolling.policies.time.modulate = true
+appender.rolling.policies.size.type = SizeBasedTriggeringPolicy
+appender.rolling.policies.size.size=2MB
+appender.rolling.strategy.type = DefaultRolloverStrategy
+appender.rolling.strategy.max = 5
+ 
+# 对于 my.sample namespace 下的类则应用如下配置
+logger.rolling.name = my.sample
+logger.rolling.level = debug
+logger.rolling.additivity = false
+logger.rolling.appenderRef.rolling.ref = RollingFile
+logger.rolling.appenderRef.stdout.ref = STDOUT
+
+# 默认使用的配置
+rootLogger.level = info
+rootLogger.appenderRef.stdout.ref = STDOUT
+rootLogger.appenderRef.rolling.ref = RollingFile
+</pre>
+        </li>
+        <li>
+            <p>调用方式如下所示：</p>
+            <pre class="code" data-type="java">
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+private static final Logger logger = LogManager.getLogger(Test.class);
+	
+public static void main(String[] args) throws IOException {
+	logger.info("Start");
+	logger.debug("debug");
+}</pre>
+        </li>
+    </ol>
+</body>
+</html>

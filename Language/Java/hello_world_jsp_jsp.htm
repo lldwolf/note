@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<title>Hello World —— JSP - JSP</title>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+<p id="title">Hello World —— JSP - JSP</p>
+
+<p>在本例中，则JSP1传递一个“name”参数给JSP2，JSP2显示“Hello [name]！”</p>
+<p>JSP1关键代码如下所示：</p>
+<pre>&lt;a href=&quot;hello/jsp_jsp.jsp?name=Peter&quot; target=&quot;_blank&quot;&gt;JSP to JSP&lt;/a&gt;</pre>
+<p>JSP2关键代码如下所示：</p>
+<pre>&lt;%
+	String name = request.getParameter(&quot;name&quot;);
+	out.println(&quot;&lt;p style='color:blue;'&gt;Hello &quot; + name + &quot;!&lt;/p&gt;&quot;); 
+%&gt;</pre>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+
+</body>
+</html>

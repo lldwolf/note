@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+<title>C# 开发笔记</title>
+</head>
+<body>
+<p id="title">自定义代码段（Snippet）</p>
+<h1>概述</h1>
+<p>本段讲述如何定义一个简单的代码段，并如何将它导入到 Visual Studio 中</p>
+<ol>
+	<li>创建一个 .snippet 文件
+	<div id="accordion-snippet-sample">
+<p><a href="#">Snippet 内容</a></p>
+<pre class="code" data-type="xml">CodeSnippets xmlns=&quot;http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet&quot;&gt;
+	&lt;CodeSnippet Format=&quot;1.0.0&quot;&gt;
+		&lt;Header&gt;
+			&lt;Title&gt;Snippet for Notify Object&lt;/Title&gt;
+			&lt;Shortcut&gt;notify_object&lt;/Shortcut&gt;
+		&lt;/Header&gt;
+		&lt;Snippet&gt;
+			&lt;Code Language=&quot;CSharp&quot;&gt;
+				&lt;![CDATA[class MyNotifyObject : BaseNotifyObject]]&gt;
+			&lt;/Code&gt;
+		&lt;/Snippet&gt;
+	&lt;/CodeSnippet&gt;
+&lt;/CodeSnippets&gt;</pre></div>
+	</li>
+	<li>打开菜单 Tools -&lt; Code Snippets Manager (快捷键 Ctrl + KB)，可使用 Add 功能添加新的目录，也可以使用 Import 功能直接导入 Snippet 文件</li>
+</ol>
+<p>可通过删除目录来删除自定义的 Snippet.</p>
+<h1>代码段特性实现</h1>
+<h2>使用范围</h2>
+<p>限定代码段的使用范围，例如，代码段是用在类中，还是方法中。</p>
+<p>该功能由 Code 的 Kind 属性实现</p>
+<table style="width:700">
+	<tbody>
+		<tr>
+			<th>Kind 值</th>
+			<th>说明</th>
+		</tr>
+		<tr>
+			<td>method body</td>
+			<td>方法体，须插在方法中</td>
+		</tr>
+		<tr>
+			<td>method decl</td>
+			<td>方法声明，须插在 class 级</td>
+		</tr>
+		<tr>
+			<td>type decl</td>
+			<td>Snippet 是一个类型声明，所以，必须插在 class 或 namespace 级</td>
+		</tr>
+		<tr>
+			<td>file</td>
+			<td>Snippet 是一个独立的代码文件，须插入在 namespace 级</td>
+		</tr>
+		<tr>
+			<td>any</td>
+			<td>可插入任何位置</td>
+		</tr>
+	</tbody>
+</table>
+<p>事实上，这只是一个提示性的设置，并不能做到在不该出现的位置插入 Snippet</p>
+<h2>用户自定义项</h2>
+<p>例如，使用 for 代码段后，用户可以定义循环变量的名字。</p>
+<p>Literial 标签和 Object 标签用来定义 Snippet 中的可替换部分。</p>
+<p>其中 Literal 用于标识 Snippet 内部使用的变量名，类名，常量值等。而 Object 常用来标识定义在 Snippet 外部的变量引用。</p>
+<p>例如，通常情况下 for 中使用的都是 Literal，而 switch 中使用的则是 Object。但没有严格限制，相比 Literal，Object 有一个必填项为 Type，需要说明引用变量的类型</p>
+<div id="accordion-replacement">
+<p><a href="#">Snippet Replacement</a></p>
+<pre class="code" data-type="xml">CodeSnippets xmlns=&quot;http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet&quot;&gt;
+    &lt;CodeSnippet Format=&quot;1.0.0&quot;&gt;
+        &lt;Header&gt;
+            &lt;Title&gt;Create a data adapter&lt;/Title&gt;
+            &lt;Description&gt;Creates a SqlDataAdapter object.&lt;/Description&gt;
+            &lt;Author&gt;Microsoft Corporation&lt;/Author&gt;
+            &lt;Shortcut&gt;createadapter&lt;/Shortcut&gt;
+        &lt;/Header&gt;
+        &lt;Snippet&gt;
+            &lt;Declarations&gt;
+                &lt;Literal&gt;
+                    &lt;ID&gt;SQL&lt;/ID&gt;
+                    &lt;ToolTip&gt;Replace with a SQL connection string.&lt;/ToolTip&gt;
+                    &lt;Default&gt;&quot;SQL connection string&quot;&lt;/Default&gt;
+                &lt;/Literal&gt;
+                &lt;Object&gt;
+                    &lt;ID&gt;Connection&lt;/ID&gt;
+                    &lt;Type&gt;System.Data.SqlClient.SqlConnection&lt;/Type&gt;
+                    &lt;ToolTip&gt;Replace with a connection object in your application.&lt;/ToolTip&gt;
+                    &lt;Default&gt;dcConnection&lt;/Default&gt;
+                &lt;/Object&gt;
+            &lt;/Declarations&gt;
+            &lt;Code Language=&quot;CSharp&quot;&gt;
+                &lt;![CDATA[
+                    daCustomers = new SqlClient.SqlDataAdapter();
+                    selectCommand = new SqlClient.SqlCommand($SQL$);
+                    daCustomers.SelectCommand = selectCommand;
+                    daCustomers.SelectCommand.Connection = $Connection$;
+                ]]&gt;
+            &lt;/Code&gt;
+        &lt;/Snippet&gt;
+    &lt;/CodeSnippet&gt;
+&lt;/CodeSnippets&gt;</pre></div>
+<p>对于 Literal 和 Object，都支持可选的 Function 成员，Function 用于实现当插入 Snippet 时将会自动触发的操作。一般情况下，如果声明了 Function，则其 Editable 应设为 false，意即该内容将自动生成。</p>
+<p>Snippet 支持3个函数</p>
+<ul>
+	<li>GenerateSwitchCases(EnumerationLiteral)：自动生成枚举类型 EnumerationLiteral 的 case 语句</li>
+	<li>ClassName()：返回 Snippet 所在位置的类名，例如，可用来自动生成构造函数</li>
+	<li>SimpleTypeName(TypeName)：返回指定 TypeName 在上下文中的最简形式，可使代码变得更简洁。例如，声明类型为 System.Collections.Generic.List&lt;string&gt; 时，那么如果 System.Collections.Generic 已经在 using 列表中，则该表达式将自动变为最简形式 List&lt;string&gt;</li>
+</ul>
+<p>下面是3个函数的示例</p>
+<div id="accordion-GenerateSwitchCases">
+<p><a href="#">GenerateSwitchCases 示例</a></p>
+<pre class="code" data-type="xml">CodeSnippets xmlns=&quot;http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet&quot;&gt;
+    &lt;CodeSnippet Format=&quot;1.0.0&quot;&gt;
+        &lt;Header&gt;
+            &lt;Title&gt;switch&lt;/Title&gt; 
+            &lt;Shortcut&gt;switch&lt;/Shortcut&gt; 
+            &lt;Description&gt;Code snippet for switch statement&lt;/Description&gt; 
+            &lt;Author&gt;Microsoft Corporation&lt;/Author&gt; 
+            &lt;SnippetTypes&gt;
+                &lt;SnippetType&gt;Expansion&lt;/SnippetType&gt; 
+            &lt;/SnippetTypes&gt;
+        &lt;/Header&gt;
+        &lt;Snippet&gt;
+            &lt;Declarations&gt;
+                &lt;Literal&gt;
+                    &lt;ID&gt;expression&lt;/ID&gt; 
+                    &lt;ToolTip&gt;Expression to switch on&lt;/ToolTip&gt; 
+                    &lt;Default&gt;switch_on&lt;/Default&gt; 
+                &lt;/Literal&gt;
+                &lt;Literal Editable=&quot;false&quot;&gt;
+                    &lt;ID&gt;cases&lt;/ID&gt; 
+                    &lt;Function&gt;GenerateSwitchCases($expression$)&lt;/Function&gt; 
+                    &lt;Default&gt;default:&lt;/Default&gt; 
+                &lt;/Literal&gt;
+            &lt;/Declarations&gt;
+            &lt;Code Language=&quot;csharp&quot;&gt;
+                &lt;![CDATA[
+                    switch ($expression$)
+                    {
+                        $cases$
+                    }
+                ]]&gt;
+            &lt;/Code&gt;
+        &lt;/Snippet&gt;
+    &lt;/CodeSnippet&gt;
+&lt;/CodeSnippets&gt;</pre></div>
+
+<div id="accordion-ClassName">
+<p><a href="#">ClassName 示例</a></p>
+<pre class="code" data-type="xml">CodeSnippets xmlns=&quot;http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet&quot;&gt;
+    &lt;CodeSnippet Format=&quot;1.0.0&quot;&gt;
+        &lt;Header&gt;
+            &lt;Title&gt;Common constructor pattern&lt;/Title&gt; 
+            &lt;Shortcut&gt;ctor&lt;/Shortcut&gt; 
+            &lt;Description&gt;Code Snippet for a constructor&lt;/Description&gt;
+            &lt;Author&gt;Microsoft Corporation&lt;/Author&gt; 
+            &lt;SnippetTypes&gt;
+                &lt;SnippetType&gt;Expansion&lt;/SnippetType&gt;
+            &lt;/SnippetTypes&gt;
+        &lt;/Header&gt;
+        &lt;Snippet&gt;
+            &lt;Declarations&gt;
+                &lt;Literal&gt;
+                    &lt;ID&gt;type&lt;/ID&gt; 
+                    &lt;Default&gt;int&lt;/Default&gt; 
+                &lt;/Literal&gt;
+                &lt;Literal&gt;
+                    &lt;ID&gt;name&lt;/ID&gt; 
+                    &lt;Default&gt;field&lt;/Default&gt; 
+                &lt;/Literal&gt;
+                &lt;Literal default=&quot;true&quot; Editable=&quot;false&quot;&gt;
+                    &lt;ID&gt;classname&lt;/ID&gt; 
+                    &lt;ToolTip&gt;Class name&lt;/ToolTip&gt; 
+                    &lt;Function&gt;ClassName()&lt;/Function&gt; 
+                    &lt;Default&gt;ClassNamePlaceholder&lt;/Default&gt; 
+                &lt;/Literal&gt;
+            &lt;/Declarations&gt;
+            &lt;Code Language=&quot;vjsharp&quot; Format=&quot;CData&quot;&gt;
+                &lt;![CDATA[ 
+                    public $classname$ ($type$ $name$)
+                    {
+                        this._$name$ = $name$;
+                    }
+                    private $type$ _$name$;
+                ]]&gt;
+            &lt;/Code&gt;
+        &lt;/Snippet&gt;
+    &lt;/CodeSnippet&gt;
+&lt;/CodeSnippets&gt;</pre></div>
+
+<div id="accordion-SimpleTypeName">
+<p><a href="#">SimpleTypeName 示例</a></p>
+<pre class="code" data-type="xml">CodeSnippets xmlns=&quot;http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet&quot;&gt;
+    &lt;CodeSnippet Format=&quot;1.0.0&quot;&gt;
+        &lt;Header&gt;
+            &lt;Title&gt;Console_WriteLine&lt;/Title&gt; 
+            &lt;Shortcut&gt;cw&lt;/Shortcut&gt; 
+            &lt;Description&gt;Code snippet for Console.WriteLine&lt;/Description&gt; 
+            &lt;Author&gt;Microsoft Corporation&lt;/Author&gt; 
+            &lt;SnippetTypes&gt;
+                &lt;SnippetType&gt;Expansion&lt;/SnippetType&gt; 
+            &lt;/SnippetTypes&gt;
+        &lt;/Header&gt;
+        &lt;Snippet&gt;
+            &lt;Declarations&gt;
+                &lt;Literal Editable=&quot;false&quot;&gt;
+                    &lt;ID&gt;SystemConsole&lt;/ID&gt; 
+                    &lt;Function&gt;SimpleTypeName(global::System.Console)&lt;/Function&gt; 
+                &lt;/Literal&gt;
+            &lt;/Declarations&gt;
+            &lt;Code Language=&quot;csharp&quot;&gt;
+                &lt;![CDATA[ 
+                    $SystemConsole$.WriteLine();
+                ]]&gt;
+            &lt;/Code&gt;
+        &lt;/Snippet&gt;
+    &lt;/CodeSnippet&gt;
+&lt;/CodeSnippets&gt;</pre></div>
+
+<h2>自动导入 Namespace 和 Assembly</h2>
+<p>仅在VB中支持</p>
+<p>&nbsp;</p>
+
+</body>
+</html>

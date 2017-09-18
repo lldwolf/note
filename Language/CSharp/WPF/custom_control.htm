@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+	<script type="text/javascript" src="../../../mylib/js/css.js"></script>
+	<title>WPF</title>
+</head>
+
+<body>
+	<p id="title">自定义控件</p>
+	<h1>概述</h1>
+	<p>自定义控件可基于 UserControl 或 Control。</p>
+	<ul>
+		<li>Control: 常用于对现有控件的修改</li>
+		<li>UserControl: 常用于将现有控件组合为一个新控件</li>
+	</ul>
+	<p>如果需要创建自定义控件，在创建 Project 时就需要注意，根据情况，可将 Project 创建为如下类型：</p>
+	<ul>
+		<li>WPF Application</li>
+		<li>WPF User Control Library</li>
+		<li>WPF Custom Control Library</li>
+	</ul>
+	<h1>一个图标按钮的实现</h1>
+	<p>首先，我要先创建一个如下的自定义控件：图标按扭。它显示为一个同时带有图标和文件的按钮。</p>
+	<p>如果我们直接使用 XAML 实现，大体代码如下所示：</p>
+	<pre class="code" data-type="xml">&lt;Button&gt;
+	&lt;StackPanel HorizontalAlignment=&quot;Center&quot;
+				Orientation=&quot;Horizontal&quot;&gt;
+		&lt;Image Source=&quot;Images/report.png&quot; /&gt;
+		&lt;TextBlock Margin=&quot;5&quot;&gt;Image 1&lt;/TextBlock&gt;
+	&lt;/StackPanel&gt;
+&lt;/Button&gt;</pre>
+	<p>如果要大量地使用这种样式，我希望能定义一个 ImageButton，然后 XAML 可以写成如下的简洁样式：</p>
+	<pre class="code" data-type="xml">&lt;ImageButton Caption=&quot;FFFFF&quot; Image=&quot;Images/report.png&quot; /&gt;</pre>
+	<p>最经济的方式是继承现有的 Button 控件。这就需要创建一个 WPF Custom Control，我将其命名为 ImageButton</p>
+	<h2>ImageButton 类</h2>
+	<p>以需求而言，我们仅需要定义两个新属性，Caption 和 Image，一个放文本，一个放图片。因为是用于控件并需要支持绑定，所以需要声明为依赖属性。关键代码如下所示（基本是敲下 propdp 即可自动生成了）</p>
+	<pre class="code" data-type="csharp" data-collapsed="true" title="ImageButton.cs">public class ImageButton : Button
+{
+	static ImageButton()
+	{
+		DefaultStyleKeyProperty.OverrideMetadata(typeof(ImageButton), new FrameworkPropertyMetadata(typeof(ImageButton)));
+	}
+
+	public ImageButton()
+	{
+		if (DesignerProperties.GetIsInDesignMode(this))
+		{
+			this.Image = new BitmapImage(new Uri("Images/report.png", UriKind.Relative));
+		}
+	}
+
+	public ImageSource Image
+	{
+		get { return base.GetValue(ImageProperty) as ImageSource; }
+		set { base.SetValue(ImageProperty, value); }
+	}
+	public static readonly DependencyProperty ImageProperty =
+		DependencyProperty.Register("Image", typeof(ImageSource), typeof(ImageButton), null);
+
+
+	public string Caption
+	{
+		get { return (string)GetValue(CaptionProperty); }
+		set { SetValue(CaptionProperty, value); }
+	}
+
+	// Using a DependencyProperty as the backing store for Caption.  This enables animation, styling, binding, etc...
+	public static readonly DependencyProperty CaptionProperty =
+		DependencyProperty.Register("Caption", typeof(string), typeof(ImageButton), new PropertyMetadata("Button"));
+
+
+}</pre>
+	<p class="note">在此我们直接使用了 ImageSource 作为 Image 的类型，如果使用其它类型（如　string），则需要一个 Converter 并在 Control Template 中使用</p>
+	<h2>Control Template</h2>
+	<p>Visual Studio 向导会自动在 Themes 目录下创建 Generic.xaml，并且为我的 ImageButton 生成了如下样式：</p>
+	<pre class="code" data-type="xml">&lt;Style TargetType=&quot;{x:Type local:ImageButton}&quot;&gt;
+    &lt;Setter Property=&quot;Template&quot;&gt;
+        &lt;Setter.Value&gt;
+            &lt;ControlTemplate TargetType=&quot;{x:Type local:ImageButton}&quot;&gt;
+                &lt;Border Background=&quot;{TemplateBinding Background}&quot;
+                        BorderBrush=&quot;{TemplateBinding BorderBrush}&quot;
+                        BorderThickness=&quot;{TemplateBinding BorderThickness}&quot;&gt;
+                &lt;/Border&gt;
+            &lt;/ControlTemplate&gt;
+        &lt;/Setter.Value&gt;
+    &lt;/Setter&gt;
+&lt;/Style&gt;</pre>
+	<p>这就是 ImageButton 将要用到的样式，既然我们是要用 Button 做基类，所以简单方法就是直接用 Button 的 Control Template 替换，然后再加上我们的修改即可。</p>
+	<p>有很多方法可以拿到 Button 的 Control Template 定义，如果只用 Visual Studio 的话 （我现在用的是 2012），可以在设计界面加个按钮，然右使用右键菜单 Edit Template -&gt; Edit a Copy，Button 完整的 Control Template 就有了，把它复制到 Generic.xaml 并替换掉原先的就好了。</p>
+	<p>因为我们要改的内容属于 Control Template 范畴，所以，我们需要关注下面这部分：</p>
+	<pre class="code" data-type="xml">&lt;ControlTemplate TargetType=&quot;{x:Type Button}&quot;&gt;
+	&lt;Themes:ButtonChrome x:Name=&quot;Chrome&quot;
+							BorderBrush=&quot;{TemplateBinding BorderBrush}&quot;
+							Background=&quot;{TemplateBinding Background}&quot;
+							RenderMouseOver=&quot;{TemplateBinding IsMouseOver}&quot;
+							RenderPressed=&quot;{TemplateBinding IsPressed}&quot;
+							RenderDefaulted=&quot;{TemplateBinding IsDefaulted}&quot;
+							SnapsToDevicePixels=&quot;true&quot;&gt;
+		&lt;ContentPresenter HorizontalAlignment=&quot;{TemplateBinding HorizontalContentAlignment}&quot;
+							Margin=&quot;{TemplateBinding Padding}&quot;
+							RecognizesAccessKey=&quot;True&quot;
+							SnapsToDevicePixels=&quot;{TemplateBinding SnapsToDevicePixels}&quot;
+							VerticalAlignment=&quot;{TemplateBinding VerticalContentAlignment}&quot; /&gt;
+	&lt;/Themes:ButtonChrome&gt;
+	...
+&lt;/ControlTemplate&gt;</pre>
+	<p>首先需要将目标类型改成我们定义的 ImageButton，然后用我们需要的内容替换掉 ContentPresenter 即可，如下所示：</p>
+	<pre class="code" data-type="xml">&lt;ControlTemplate <span style="background-color:aquamarine">TargetType=&quot;{x:Type local:ImageButton}&quot;&gt;</span>
+	&lt;Themes:ButtonChrome x:Name=&quot;Chrome&quot;
+							BorderBrush=&quot;{TemplateBinding BorderBrush}&quot;
+							Background=&quot;{TemplateBinding Background}&quot;
+							RenderMouseOver=&quot;{TemplateBinding IsMouseOver}&quot;
+							RenderPressed=&quot;{TemplateBinding IsPressed}&quot;
+							RenderDefaulted=&quot;{TemplateBinding IsDefaulted}&quot;
+							SnapsToDevicePixels=&quot;true&quot;&gt;
+		<span style="background-color:aquamarine">
+		&lt;StackPanel HorizontalAlignment=&quot;Center&quot;
+					VerticalAlignment=&quot;Center&quot;
+					Orientation=&quot;Horizontal&quot;&gt;
+			&lt;Image Source=&quot;{TemplateBinding Image}&quot;
+					Height=&quot;16&quot;
+					Width=&quot;16&quot;
+					Stretch=&quot;Uniform&quot; /&gt;
+			&lt;TextBlock Margin=&quot;5&quot; Text=&quot;{TemplateBinding Caption}&quot; /&gt;
+		&lt;/StackPanel&gt;</span>
+	&lt;/Themes:ButtonChrome&gt;
+	...
+&lt;/ControlTemplate&gt;</pre>
+	<p>这里我们使用了 TemplateBinding 来实现控件属性的绑定。</p>
+	<p>我们用 StackPanel 在取代了 ContentPresenter，也意味着我们的 ImageButton 不再支持自定义任意的按钮内容。我们为了眼前这棵树木，不得不放弃整座森林了^_^</p>
+	<p class="note">很多人会有冲会将这个 Control Template 的定义移到自己喜欢的地方去。目前建义不要这么做，因为 Generic.xaml 意味的控件的默认样式，如果移到其它地方可能会导制运行时效果不正常。</p>
+</body>
+</html>

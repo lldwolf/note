@@ -1,0 +1,359 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+Alphabetical listing</TITLE>
+</HEAD>
+<BODY>
+<A NAME="TI5963"></A><h1>Chapter 21  DataWindow Expression and InfoMaker Functions</h1>
+<A NAME="TI5964"></A><h4>About this chapter</h4>
+<A NAME="TI5965"></A><p>This chapter provides syntax, descriptions, and examples of
+the functions you can use in expressions in the DataWindow painter
+and in InfoMaker's Report painter and Form painter. </p>
+<A NAME="TI5966"></A><h4>Contents</h4>
+<A NAME="TI5967"></A><p>After a short introduction and several examples, the functions
+are listed alphabetically.</p>
+<A NAME="BFCDFAJD"></A><h1>Using DataWindow expression and InfoMaker functions</h1>
+<A NAME="TI5968"></A><p>DataWindow expression functions and InfoMaker functions are
+the same functions. In the DataWindow painter (in PowerBuilder and
+other environments) and in InfoMaker's Report and Form
+painters, you can use these functions in expressions for computed
+fields, filters, validation rules, and graphed data, with some exceptions. </p>
+<A NAME="TI5969"></A><p>The dialog boxes in which you define expressions include a
+listbox that lists the available functions and their arguments.
+The dialog boxes make it easy to insert the function into the expression.</p>
+<A NAME="TI5970"></A><p>For information about expressions, see <A HREF="imugp143.htm#CAIBEHFJ">Chapter 20, "Operators
+and Expressions"</A>.</p>
+<A NAME="TI5971"></A><h4>Return values for functions and expressions</h4>
+<A NAME="TI5972"></A><p>DataWindow and InfoMaker expressions can return the following
+data types:<A NAME="TI5973"></A>
+<ul>
+<li class=fi>Double</li>
+<li class=ds>String</li>
+<li class=ds>DateTime</li>
+<li class=ds>Time
+</li>
+</ul>
+</p>
+<A NAME="TI5974"></A><p>Within an expression, a function can return other data types
+(such as boolean, date, or integer) but the final value of an expression
+is converted to one of the four data types.</p>
+<A NAME="TI5975"></A><h4>Restrictions for aggregate functions</h4>
+<A NAME="TI5976"></A><p>An aggregate function is a function (such as Avg, Max, StDev,
+and Sum) that operates on a range of values in a column. When you
+use an aggregate function, some restrictions apply. You cannot use
+an aggregate function:   </p>
+<A NAME="TI5977"></A><p><A NAME="TI5978"></A>
+<ul>
+<li class=fi>In a filter</li>
+<li class=ds>In a validation rule</li>
+<li class=ds>As an argument for another aggregate function
+</li>
+</ul>
+</p>
+<A NAME="TI5979"></A><p>When you use aggregate functions, they cancel the effect of
+setting Retrieve Rows As Needed. To do the aggregation, the report always
+retrieves all rows.</p>
+<A NAME="TI5980"></A><h4>Formatting for the locally correct display of
+numbers</h4>
+<A NAME="TI5981"></A><p>No matter what country you are creating objects and developing
+an application in, you must use U.S. number notation in numbers
+or number masks in display formats, edit masks, and DataWindow and InfoMaker expressions.
+This means that when you specify a number or number mask, use a
+comma as the thousands delimiter and period for the decimal place. </p>
+<A NAME="TI5982"></A><p>Numbers display appropriately in whatever countries you deploy
+applications in. During execution, the locally correct symbols for
+numbers display (because the international Control Panel settings
+are used) when numbers are interpreted. For example, in countries
+where comma represents the decimal place and period represents thousands,
+users see numbers in those formats during execution.</p>
+<A NAME="TI5983"></A><p>For information about the locally correct
+display of dates and day names, see <A HREF="imugp244.htm#CAIBCDBE">String</A> and <A HREF="imugp172.htm#CAICGEEJ">DayName</A>.</p>
+<A NAME="TI5984"></A><h1>Four examples</h1>
+<A NAME="X-ref350671311"></A><h2>Example 1: counting NULL values in a column</h2>
+<A NAME="TI5985"></A><p>A NULL value is a marker used to fill a place in a column
+where data is missing for any reason. The value may not be applicable,
+or it may be missing or unknown. When a database table is created,
+each column in the table either allows NULL values or does not allow
+them. The column or set of columns that define the primary key cannot
+allow NULL values. Sometimes it is useful to know how many NULL
+values there are in a particular column.</p>
+<A NAME="TI5986"></A><h4>What you want to do</h4>
+<A NAME="TI5987"></A><p>You are working with the Fin_code table in the Enterprise
+Application Sample Database. The Fin_code table has three
+columns:</p>
+<A NAME="TI5988"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI5989"></A>Column</th>
+<th align="left" valign=bottom><A NAME="TI5990"></A>What the column is</th>
+<th align="left" valign=bottom><A NAME="TI5991"></A>Allows NULL values?</th>
+</tr>
+<tr><td valign=top><A NAME="TI5992"></A>Code</td>
+<td valign=top><A NAME="TI5993"></A>Unique financial identifier (primary
+key)</td>
+<td valign=top><A NAME="TI5994"></A>No</td>
+</tr>
+<tr><td valign=top><A NAME="TI5995"></A>Type</td>
+<td valign=top><A NAME="TI5996"></A>Code type: expense or revenue</td>
+<td valign=top><A NAME="TI5997"></A>No</td>
+</tr>
+<tr><td valign=top><A NAME="TI5998"></A>Description</td>
+<td valign=top><A NAME="TI5999"></A>Code description: the department incurring
+the expense or getting the revenue</td>
+<td valign=top><A NAME="TI6000"></A>Yes</td>
+</tr>
+</table>
+<A NAME="TI6001"></A><p>You create a report using the Code and Description columns.
+You want to know the number of NULL values in the Description column.</p>
+<A NAME="TI6002"></A><h4>How to do it</h4>
+<A NAME="TI6003"></A><p>In the report, you create a computed field that uses functions
+to display the number of NULL values in the Description column.</p>
+<A NAME="TI6004"></A><p>For the sake of demonstrating the use of functions, the following
+computed fields are created in the Summary band of the report (with
+text objects that tell you what information each computed field
+is providing):<pre>Count(description for all)</pre>
+</p>
+<A NAME="TI6005"></A><p>which counts the number of descriptions (that are not NULL);<pre>Sum(If(IsNull(description), 1, 0))</pre>
+</p>
+<A NAME="TI6006"></A><p>which returns a 1 if the description column is NULL, a 0 if
+the description column is NOT NULL, and then adds the total;<pre>Count(id for all)</pre>
+</p>
+<A NAME="TI6007"></A><p>which counts the number of IDs (which is also the number of
+rows);<pre>Sum(If(IsNull(description), 1, 1))</pre>
+</p>
+<A NAME="TI6008"></A><p>which adds the number of NULLs and NOT NULLs in the description
+column (which is the total number of rows) and should match the
+result of the <br> Count( id for all ) function; and<pre>IsNull(description)</pre>
+</p>
+<A NAME="TI6009"></A><p>which evaluates whether the last row in the table has a description
+that is NULL. The return value of the IsNull function is TRUE or
+FALSE.</p>
+<A NAME="TI6010"></A><h4>What you get</h4>
+<A NAME="TI6011"></A><p>Here's the design for the report.</p>
+<br><img src="images/dwfct01.gif">
+<A NAME="TI6012"></A><p>Here's the report showing eight descriptions,
+three of which are NULL and five of which are not NULL. The last
+description for Id=8 is NULL.</p>
+<br><img src="images/dwfct02.gif">
+<A NAME="X-ref350653531"></A><h2>Example 2: counting male and female employees</h2>
+<A NAME="TI6013"></A><p>Example 1 demonstrates the use of the Sum and Count functions.
+Sum and Count are two examples of a class of functions called aggregate
+functions.</p>
+<A NAME="TI6014"></A><p>An aggregate function is a function that operates on a range
+of values in a column. The aggregate functions are:</p>
+<A NAME="TI6015"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><td valign=top><A NAME="TI6016"></A>Avg</td>
+<td valign=top><A NAME="TI6017"></A>Large</td>
+<td valign=top><A NAME="TI6018"></A>Mode</td>
+<td valign=top><A NAME="TI6019"></A>Sum</td>
+</tr>
+<tr><td valign=top><A NAME="TI6020"></A>Count</td>
+<td valign=top><A NAME="TI6021"></A>Last</td>
+<td valign=top><A NAME="TI6022"></A>Percent</td>
+<td valign=top><A NAME="TI6023"></A>Var</td>
+</tr>
+<tr><td valign=top><A NAME="TI6024"></A>CumulativePercent</td>
+<td valign=top><A NAME="TI6025"></A>Max</td>
+<td valign=top><A NAME="TI6026"></A>Small</td>
+<td valign=top><A NAME="TI6027"></A>VarP</td>
+</tr>
+<tr><td valign=top><A NAME="TI6028"></A>CumulativeSum</td>
+<td valign=top><A NAME="TI6029"></A>Median</td>
+<td valign=top><A NAME="TI6030"></A>StDev</td>
+<td valign=top><A NAME="TI6031"></A></td>
+</tr>
+<tr><td valign=top><A NAME="TI6032"></A>First</td>
+<td valign=top><A NAME="TI6033"></A>Min</td>
+<td valign=top><A NAME="TI6034"></A>StDevP</td>
+<td valign=top><A NAME="TI6035"></A></td>
+</tr>
+</table>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>About crosstab functions</span> <A NAME="TI6036"></A>Although the crosstab functions (CrosstabAvg, CrosstabCount,
+CrosstabMax, CrosstabMin, and CrosstabSum) behave like aggregate
+functions, they are not included on the list because they are for
+crosstabs only and are designed to work in the crosstab matrix.</p>
+<A NAME="TI6037"></A><p>A few restrictions apply to the use of aggregate functions.
+You cannot use an aggregate function:<A NAME="TI6038"></A>
+<ul>
+<li class=fi>In a filter</li>
+<li class=ds>In a validation rule</li>
+<li class=ds>As an argument for another aggregate function
+</li>
+</ul>
+</p>
+<A NAME="TI6039"></A><p>This example demonstrates the use of the Sum aggregate function.</p>
+<A NAME="TI6040"></A><h4>What you want to do</h4>
+<A NAME="TI6041"></A><p>Using the Employee table in the Enterprise Application Sample
+Database as the data source, you create a report using at least
+the Emp_id and the Sex columns. You want the report to
+display the number of male employees and female employees in the
+company.</p>
+<A NAME="TI6042"></A><h4>How to do it</h4>
+<A NAME="TI6043"></A><p>In the summary band in the workspace, add two computed fields
+to the report that use the Sum and If functions:<pre>Sum(If(sex = "M", 1, 0))</pre>
+</p>
+<A NAME="TI6044"></A><p>which counts the number of males in your company;<pre>Sum(If(sex = "F", 1, 0))</pre>
+</p>
+<A NAME="TI6045"></A><p>which counts the number of females in your company.</p>
+<A NAME="TI6046"></A><p>You can also add a Page computed field (by clicking the Page
+computed field button) in the footer band to display the page number
+and total pages at the bottom of each page of the report.</p>
+<A NAME="TI6047"></A><h4>What you get</h4>
+<A NAME="TI6048"></A><p>Here's what the design of the report looks like.</p>
+<br><img src="images/dwfct03.gif">
+<A NAME="TI6049"></A><p>Here's the last page of the report, with the
+total number of males and females in the company displayed.</p>
+<br><img src="images/dwfct04.gif">
+<A NAME="TI6050"></A><h4>If you now want more information</h4>
+<A NAME="TI6051"></A><p>What if you decide that you also want to know the number of
+males and females in each department in the company?</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To display the males and females in each department:</p>
+<ol><li class=fi>
+Select Design&gt;Data Source from
+the menu bar so that you can edit the data source.<br><br></li>
+<li class=ds>
+Select Design&gt;Select tables from the
+menu bar and open the Department table in the Select painter workspace,
+which currently displays the Employee table with the Emp_id
+and Sex columns selected.<br><br></li>
+<li class=ds>
+Select the department_dept_name
+column to add it to your data source.<br><br></li>
+<li class=ds>
+Select Rows&gt;Create Group from the menu
+bar to create a group and group by department name.<br><br></li>
+<li class=ds>
+In the trailer group band, add two additional
+computed fields:<br><br>
+<pre>Sum(If(sex = "M", 1, 0) for group 1)</pre>
+<br><br>
+which counts the number of males in each department;<pre>Sum(If(sex = "F", 1, 0) for group 1)</pre>
+<br><br>
+which counts the number of females in each department.<br><br></li></ol>
+<br><A NAME="TI6052"></A><p>Here's what the design of the grouped report looks
+like.</p>
+<br><img src="images/dwfct05.gif">
+<A NAME="TI6053"></A><p>Here's the last page of the report with the number
+of males and females in the shipping department displayed, followed
+by the total number of males and females in the company.</p>
+<br><img src="images/dwfct06.gif">
+<A NAME="X-ref350653848"></A><h2>Example 3: creating a row indicator</h2>
+<A NAME="TI6054"></A><p>This example demonstrates the use of several functions: Bitmap,
+Case, CurrentRow, GetRow, and RGB.</p>
+<A NAME="TI6055"></A><p>The example is presented in PowerBuilder's DataWindow
+painter, which is the same as InfoMaker's Report painter.
+You can use all the functions shown in the example in the Report
+painter. However, because you can change the current row and change
+data in a DataWindow object (which you cannot do in a report), the
+example is more interesting to consider in a DataWindow object. </p>
+<A NAME="TI6056"></A><h4>What you want to do</h4>
+<A NAME="TI6057"></A><p>Using the Employee table in the Enterprise Application Sample
+Database, you create a DataWindow object using the Emp_id,
+Emp_fname, Emp_lname, and Salary columns.</p>
+<A NAME="TI6058"></A><p>In the DataWindow painter, you want to display a number of
+items such as the number of the current row, an arrow that is an
+indicator of the current row, and the salary for an employee with
+a background color that depends on what the salary is.</p>
+<A NAME="TI6059"></A><h4>How to do it</h4>
+<A NAME="TI6060"></A><p>In the workspace, add the following:<A NAME="TI6061"></A>
+<ul>
+<li class=fi>A computed field CurrentRow( ) which displays the
+number of the current row</li>
+<li class=ds>A picture object, which is a right-arrow, for which
+you define an expression for the arrow's visible property:<pre>If(CurrentRow()= GetRow(), 1, 0)</pre>
+<br>
+The expression results in an arrow displaying in the current
+row and no arrow displaying in other rows.<br></li>
+<li class=ds>A computed field using the If, CurrentRow, and GetRow
+functions:<pre>If(CurrentRow() = GetRow(),"Current","Not current")</pre>
+<br>
+which displays the word "Current" when the row is the current
+row and "Not current" for all other rows<br></li>
+<li class=ds>A computed field (typed on one line) using the Bitmap,
+CurrentRow, and GetRow functions:<pre>Bitmap(If(CurrentRow()= GetRow(), "c:\sampl\ex\code\indicatr.bmp", " "))</pre>
+<br>
+which displays an arrow bitmap for the current row and no
+bitmap for all other rows<br></li>
+<li class=ds>An expression for the Background.Color property
+of the salary column:<br>
+<pre>Case(salary WHEN IS &gt;60000 THEN RGB(192,192,192)</pre>
+<pre>WHEN IS &gt;40000 THEN RGB(0,255,0) ELSE<br> RGB(255,255,255))</pre>
+<br><br>
+The expression results in a salary above $40,000
+displaying in green, a salary above $60,000 displaying
+in gray, and all other salaries displaying in white.<br>
+</li>
+</ul>
+</p>
+<A NAME="TI6062"></A><h4>What you get</h4>
+<A NAME="TI6063"></A><p>Here's what the design of the DataWindow object looks
+like:</p>
+<br><img src="images/dwfct09.gif">
+<A NAME="TI6064"></A><p>Here's what the data looks like with the second row
+current.</p>
+<br><img src="images/dwfct10.gif">
+<A NAME="TI6065"></A><p>Notice that the number of the current row is 2; the first
+row and the third row are "Not current" (and therefore display no
+bitmap); and the second row, which is the current row, displays
+the arrow row indicator.</p>
+<A NAME="TI6066"></A><p>On your screen, the salary in the first row has a green background
+because it is more than $40,000; the salary in the second
+row has a gray background because it's more than $60,000;
+and the salary in the third row has a white background, which matches
+the background of the DataWindow object.</p>
+<A NAME="X-ref351281467"></A><h2>Example 4: displaying all data when a column allows NULLs</h2>
+<A NAME="TI6067"></A><p>When you create an arithmetic expression that has a NULL value,
+the value of the expression is NULL. This makes sense, since NULL
+means essentially undefined and the expression is undefined, but
+sometimes this fact can interfere with what you want to display.</p>
+<A NAME="TI6068"></A><h4>What you want to do</h4>
+<A NAME="TI6069"></A><p>A table in your database has four columns: Id, Corporation,
+Address1, and Address2. The Corporation, Address1, and Address2
+columns allow NULLs. Using this table as the data source, you create
+a report using the four columns. You now want the report to
+display both parts of the address, separated by a comma.</p>
+<A NAME="TI6070"></A><p>You create a computed field to concatenate Address1 and Address2
+with a comma separator. Here's the expression that defines
+the computed field:<pre>address1 + ", " + address2</pre>
+</p>
+<A NAME="TI6071"></A><p>When you preview the report, if either Address1 or Address2
+is NULL, no part of the address displays--because the value
+of the expression is NULL. To display a part of the address, you
+need to create a computed field that forces evaluation even if Address2
+is NULL. Note that we assume that Address2 has data only if Address1
+has data for a particular row.</p>
+<A NAME="TI6072"></A><h4>How to do it</h4>
+<A NAME="TI6073"></A><p>In the detail band, create a computed field that uses the
+If and IsNull functions:<pre>If(IsNull(address1 + address2), address1, address1 </pre>
+<pre>+ ", " + address2)</pre>
+</p>
+<A NAME="TI6074"></A><p>The computed field says this: if the concatenation of the
+addresses is NULL (because address2 is NULL), then display address1,
+and if it is not NULL, display both parts of the address separated
+by a comma.</p>
+<A NAME="TI6075"></A><h4>What you get</h4>
+<A NAME="TI6076"></A><p>Here's what the design of the report looks like.
+It includes both the computed field that does not work and the one
+that does.</p>
+<br><img src="images/dwfct11.gif">
+<A NAME="TI6077"></A><p>When you preview the report, notice that the first computed
+field displays NULL for ABC Corporation and XYZ Corporation. The
+second computed field displays the first part of the address, which
+is not NULL.</p>
+<br><img src="images/dwfct12.gif">
+<A NAME="TI6078"></A><h2>Other examples</h2>
+<A NAME="TI6079"></A><p>In InfoMaker, to see some examples of using functions, examine
+the reports and forms in TUTOR_IM.PBL, which is InfoMaker's
+sample library. The reports and forms were created using data in
+the Enterprise Application Server Demo Database.</p>
+<A NAME="TI6080"></A><p>Look carefully at the reports whose names begin with <i>attrib_</i>
+.
+Each report is a good example of the use of functions in expressions.
+And look at the design of each report and form in the sample library
+to see the use of functions in other ways.</p>
+<A NAME="TI6081"></A><h4>For more information</h4>
+<A NAME="TI6082"></A><p>For examples of using expressions to control the value of
+properties at execution time, see <A HREF="imugp72.htm#BFCBCADF">Chapter 8, "Highlighting Information
+in Reports and Forms"</A>.</p>
+<A NAME="TI6083"></A><p>For an example of the use of each InfoMaker function, see
+the function descriptions that follow. </p>
+<A NAME="TI6084"></A><h1>Alphabetical listing</h1>
+<A NAME="TI6085"></A><p></p>
+<A NAME="TI6086"></A>

@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>特性</title>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+<p id="title">特性</p>
+
+<h1>概述 </h1>
+<p>这是C#中特有的功能之一。作为初学者，一开始并不会注意到这个功能。我是在使用C#1年多以后才注意到它。特性的使用很常见，只不过平时我们都不怎么去注意而已。下面我举几个特性的例子。</p>
+<p>这个特性与类中的特性概念不同，如果用英语的话，在此的特性英文为attribute，而类中的特性的英文为property。在自动生成的代码中经常看到到包括在[]之内的内容，那就是特性了。</p>
+<p>使用VS.net IDE建造的工程中，都有一个AssemblyInfo.cs文件，里面全都是针对当前Assembly定义的一些特性，例如，下面的语句定义了产品的版本号：</p>
+<pre class="code" data-type="csharp">[assembly: AssemblyVersion(&quot;1.0.*&quot;)]</pre>
+<p>如果要声明一个可序列化的类，最简单的做法是使用Serializable特性，如下例所示：</p>
+<pre class="code" data-type="csharp">[Serializable]
+public class AnyClass
+{
+	...
+}</pre>
+<p>在编码过程中，如果有个类/方法不想再继续使用，又不想从代码中删掉，可使用Obsolete特性，例如：</p>
+<pre class="code" data-type="csharp">[Obsolete(&quot;该类已不能继续使用，请使用升级版本！&quot;)]
+public class UnusedClass
+{
+}</pre>
+<p>这样，在编译时使用UnusedClass的代码会提示警告错误。</p>
+<p>具有 DllImport 特性的类将声明如下：</p>
+<pre class="code" data-type="csharp">[DllImport] public class MyDllimportClass { ... }</pre>
+<p>有关更多信息，请参见 DllImportAttribute 类。</p>
+<p>许多特性都带参数，而这些参数可以是定位（未命名）参数也可以是命名参数。任何定位参数都必须按特定顺序指定并且不能省略，而命名参数是可选的且可以按任意顺序指定。首先指定定位参数。例如，这三个特性是等效的：</p>
+<pre class="code" data-type="csharp">[DllImport(&quot;user32.dll&quot;, SetLastError=false, ExactSpelling=false)]
+[DllImport(&quot;user32.dll&quot;, ExactSpelling=false, SetLastError=false)]
+[DllImport(&quot;user32.dll&quot;)]</pre>
+<p>第一个参数（DLL 名称）是定位参数并且总是第一个出现，其他参数为命名参数。在此例中，两个命名参数都默认为false，因此它们可以省略（有关默认参数值的信息，请参见各个特性的文档）。</p>
+<p>在一个声明中可以放置多个特性，可分开放置，也可放在同一组括号中：</p>
+<pre class="code" data-type="csharp">bool AMethod([In][Out]ref double x);
+bool AMethod([Out][In]ref double x);
+bool AMethod([In,Out]ref double x);</pre>
+<p> 某些特性对于给定实体可以指定多次。此类可多次使用的特性的一个示例是 Conditional：</p>
+<pre class="code" data-type="csharp">[Conditional(&quot;DEBUG&quot;), Conditional(&quot;TEST1&quot;)] 
+void TraceMethod() {...}</pre>
+<p>使用特性，我们可以使用反射机制在运行时得到我们定义在程序对象上的一些信息，从面执行相应的动作。</p>
+<h1>开发自定义特性</h1>
+<p>自定义特性必须继承System.Attribute类。如下所示：</p>
+<pre class="code" data-type="csharp">using System;
+public class HelpAttribute : Attribute
+{
+}</pre>
+<p>这样我们就可以所该特性附加到类定义上，如下所示：</p>
+<pre class="code" data-type="csharp">[Help()]
+public class AnyClass
+{
+}</pre>
+<p>在使用特性时，类名后面的Attribute可以省略，VS.net会自动加上Attribute后缀，省不省略Attribute看你个人的习惯，不过，看了这么多代码，没发现哪个程序员主动加上Attribute后缀的习惯。</p>
+<p>刚才我们那个自定义特性完全为空，通过下面的代码，我们为它加上一些说明。</p>
+<pre class="code" data-type="csharp">using System;
+public class HelpAttribute : Attribute
+{
+    public HelpAttribute(String Description_in)
+    {
+        this.description = Description_in;
+    }
+    protected String description;
+    public String Description 
+    {
+        get 
+        {
+            return this.description;
+                 
+        }            
+    }    
+}
+[Help(&quot;this is a do-nothing class&quot;)]
+public class AnyClass
+{
+}</pre>
+<p>这样，AnyClass就有了一个可以在运行期得到的信息“this is a do-nothing class”。</p>
+<h1>特性的控制</h1>
+<p>AtributeUsage是C#中内置的一个特性类，它用于描述特性类的适用范围及其它一些控制信息。它有如下3个特性：</p>
+<p><strong>ValidOn</strong></p>
+<p>指示特性类的适用范围，是应用在Assembly上，还是应用在class上，还是其它的一些程序对象上。</p>
+<p><strong>AllowMultiple</strong></p>
+<p>指示是否可以对程序对象进行多重定义，这个会在下面进行详细解释。</p>
+<p><strong>Inhertied</strong></p>
+<p>指示特性信息是否可以被继承，这个会在下面进行详细解释。</p>
+<p>下面是一个使用AttributeUsage的例子：</p>
+<pre class="code" data-type="csharp">using System;
+[AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false) ]
+public class HelpAttribute : Attribute
+{
+    public HelpAttribute(String Description_in)
+    {
+        this.description = Description_in;
+    }
+    protected String description;
+    public String Description
+    {
+        get 
+        {
+            return this.description;
+        }            
+    }    
+}</pre>
+<p>首先，上例定义了该特性只能应用在类上，如果将其应用在其它对象（如函数）上，则会引发编译错误。</p>
+<p>AtributeTargets枚举用来定义特性的适用范围，我们可以使用AttributeTargets.All来表示特性可以应用在所有的程序对象上，AttributeTargets枚举有以下可选值：</p>
+<ul>
+  <li>Assembly,</li>
+  <li>Module,</li>
+  <li>Class,</li>
+  <li>Struct,</li>
+  <li>Enum,</li>
+  <li>Constructor,</li>
+  <li>Method,</li>
+  <li>Property,</li>
+  <li>Field,</li>
+  <li>Event,</li>
+  <li>Interface,</li>
+  <li>Parameter,</li>
+  <li>Delegate,</li>
+  <li>All = Assembly | Module | Class | Struct | Enum | Constructor | Method | Property | Field | Event | Interface | Parameter | Delegate, </li>
+  <li>ClassMembers = Class | Struct | Enum | Constructor | Method | Property | Field | Event | Delegate | Interface )</li>
+</ul>
+<p>下面我们通过例子来详细解释一下AttributeUsage的AllowMultiple和Inherited特性的用法。首先，我们定义我们的测试类如下：</p>
+<pre class="code" data-type="csharp">[Help(&quot;BaseClass&quot;)] 
+public class Base
+{
+}
+
+public class Derive :  Base
+{
+}</pre>
+<p>对于AloowMultiple和Inherited特性，它们共有如下4种组合</p>
+<ul>
+  <li>[AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false ]</li>
+  <li>[AttributeUsage(AttributeTargets.Class, AllowMultiple = true, Inherited = false ]</li>
+  <li>[AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true ]</li>
+  <li>[AttributeUsage(AttributeTargets.Class, AllowMultiple = true, Inherited = true ]</li>
+</ul>
+<p><strong>组合1</strong></p>
+<p>如果查询Derive类的Help信息，因为Inherited为false，无法获取。</p>
+<p><strong>组合2</strong></p>
+<p>同组合1一样，无法获取Derive类的Help信息</p>
+<p><strong>组合3、4</strong></p>
+<p>组合3和组合4都能取到Drive类的Help信息，为了说明组合3和组合4的区别，我们重新定义测试类如下：</p>
+<pre class="code" data-type="csharp">[Help(&quot;BaseClass&quot;)] 
+public class Base
+{
+}
+[Help(&quot;DeriveClass&quot;)] 
+public class Derive :  Base
+{
+}</pre>
+<p>在组合3下，对Derive类我们只能取到一条Help信息，因为Inherited为false，所以Base类的Help信息被覆盖。而对组合4，我们可以取到两条Help信息，除了本身的Help信息外，我们还能取到来自Base类的信息。</p>
+<h1>参数</h1>
+<p>对特性，有两种参数传递方式，按位置和按名称，为了说明这两种方式，我们定义如下的测试类：</p>
+<div id="accordion-test-class">
+<p><a href="#">测试类</a></p>
+<pre class="code" data-type="csharp">[AttributeUsage(AttributeTargets.Class, AllowMultiple = false,
+ Inherited = false)]
+public class HelpAttribute : Attribute
+{
+    public HelpAttribute(String Description_in)
+    {
+        this.description = Description_in;
+        this.verion = &quot;No Version is defined for this class&quot;;
+    }
+    protected String description;
+    public String Description
+    {
+        get 
+        {
+            return this.description;
+        }
+    }
+    protected String version;
+    public String Version
+    {
+        get 
+        {
+            return this.version;
+        }
+        //if we ever want our attribute user to set this property, 
+        //we must specify set method for it 
+        set 
+        {
+            this.verion = value;
+        }
+    }
+}
+[Help(&quot;This is Class1&quot;)]
+public class Class1
+{
+}
+
+[Help(&quot;This is Class2&quot;, Version = &quot;1.0&quot;)]
+public class Class2
+{
+}
+
+[Help(&quot;This is Class3&quot;, Version = &quot;2.0&quot;, 
+ Description = &quot;This is do-nothing class&quot;)]
+public class Class3
+{
+}</pre></div>
+<p>我们加了一个特性信息Version，它是按名称赋值的，对这种类型的参数，需要为它定义set方法，若无set方法，在按名称传递参数时会出错，上例的Class3在编译时将会报错。而Description特性则是按位置传递的，一般而言，按位置传递的参数是特性的必需参数，而按名称传递的参数是可选参数。</p>
+<p>参数的类型可以为如下类型：</p>
+<ul>
+  <li>bool,</li>
+  <li>byte,</li>
+  <li>char,</li>
+  <li>double,</li>
+  <li>float</li>
+  <li>int,</li>
+  <li>long,</li>
+  <li>short,</li>
+  <li>string</li>
+  <li>System.Type</li>
+  <li>object</li>
+  <li>内置的公用enum，一维数组</li>
+</ul>
+<h1> 特性标识符</h1>
+<p>假如我们想在整个assembly使用自定义特性，或者我们对所有函数的返回值使用自定义特性，该怎么办呢？</p>
+<p>我们可以显示地使用特性标识符来解决这个问题，例如，使用下面的代码可以在整个assembly内使用Help特性</p>
+<pre class="code" data-type="csharp">[assembly: Help(&quot;this a do-nothing assembly&quot;)]</pre>
+<p>可用的标识符如下所示：</p>
+<ul>
+  <li>assembly</li>
+  <li>module</li>
+  <li>type</li>
+  <li>method</li>
+  <li>property</li>
+  <li>event</li>
+  <li>field</li>
+  <li>param</li>
+  <li>return</li>
+</ul>
+<h1>在运行时查询特性</h1>
+<p>要在运行时查询特性信息，需要用到反射(Relection)机制。下面我们定义测试类如下：</p>
+<pre class="code" data-type="csharp">using System;
+using System.Reflection;
+using System.Diagnostics;
+
+//attaching Help attribute to entire assembly
+[assembly : Help(&quot;This Assembly demonstrates custom attributes 
+ creation and their run-time query.&quot;)]
+
+//our custom attribute class
+public class HelpAttribute : Attribute
+{
+    public HelpAttribute(String Description_in)
+    {
+        //
+        // TODO: Add constructor logic here
+        this.description = Description_in;
+        //
+    }
+    protected String description;
+    public String Description
+    {
+        get 
+        {
+            return this.deescription;
+                 
+        }            
+    }    
+}
+//attaching Help attribute to our AnyClass
+[HelpString(&quot;This is a do-nothing Class.&quot;)]
+public class AnyClass
+{
+//attaching Help attribute to our AnyMethod
+    [Help(&quot;This is a do-nothing Method.&quot;)]
+    public void AnyMethod()
+    {
+    }
+//attaching Help attribute to our AnyInt Field
+    [Help(&quot;This is any Integer.&quot;)]
+    public int AnyInt;
+}</pre>
+<h2>查询Assembly特性</h2>
+<pre class="code" data-type="csharp">private void GetAssemblyAttribute()
+{
+	HelpAttribute HelpAttr;
+
+	//Querying Assembly Attributes
+	String assemblyName;
+	Process p = Process.GetCurrentProcess();
+	assemblyName = p.ProcessName + &quot;.exe&quot;;
+
+	string str = &quot;&quot;;
+	Assembly a = Assembly.LoadFrom(assemblyName);
+
+	foreach (Attribute attr in a.GetCustomAttributes(true))
+	{
+		HelpAttr = attr as HelpAttribute;
+		if (null != HelpAttr)
+		{
+			str += &quot;Description of &quot; + assemblyName + &quot;:\n&quot; + HelpAttr.Description;
+		}
+	}
+	MessageBox.Show(str);
+}</pre>
+<h2>查询程序对象的特性</h2>
+<pre class="code" data-type="csharp">private void GetEntityAttribute()
+{
+	Type type = typeof(AnyClass);
+	HelpAttribute HelpAttr;
+	string str = "";
+
+	//Querying Class Attributes
+	foreach (Attribute attr in type.GetCustomAttributes(true))
+	{
+		HelpAttr = attr as HelpAttribute;
+		if (null != HelpAttr)
+		{
+			str += "Description of AnyClass:\n" + HelpAttr.Description + "\n";
+		}
+	}
+	//Querying Class-Method Attributes  
+	foreach(MethodInfo method in type.GetMethods())
+	{
+		foreach (Attribute attr in method.GetCustomAttributes(true))
+		{
+			HelpAttr = attr as HelpAttribute;
+			if (null != HelpAttr)
+			{
+				str += "Description of " + method.Name + ":\n" + HelpAttr.Description + "\n"; 
+			}
+		}
+	}
+	//Querying Class-Field (only public) Attributes
+	foreach(FieldInfo field in type.GetFields())
+	{
+		foreach (Attribute attr in field.GetCustomAttributes(true))
+		{
+			HelpAttr= attr as HelpAttribute;
+			if (null != HelpAttr)
+			{
+				str += "Description of " + field.Name + ":\n" + HelpAttr.Description + "\n";
+			}
+		}
+	}
+
+	MessageBox.Show(str);
+
+}</pre>
+<h1>示例代码</h1>
+<p><a href="demo/AttributeTest.zip">示例代码</a></p>
+<h1>预定义特性</h1>
+<table style="width:95%">
+  <tr>
+    <th width="30%">特性</th>
+    <th width="70%">说明</th>
+  </tr>
+  <tr>
+    <td>System.AttributeUsageAttribute</td>
+    <td>用于描述特性的特性，用于开发自定义特性时使用。设定自定义特性的应用范围、是否允许多特性、是否允许派生类继承等。</td>
+  </tr>
+  <tr>
+    <td>System.CLSCompliantAttribute</td>
+    <td>指定程序元素是否符合CLS规范，参数为true或false，默认为false，例如uint数据类型不符合CLS规范。</td>
+  </tr>
+  <tr>
+    <td>System.SerializableAttribute</td>
+    <td>放在类前，表示该类支持序列化</td>
+  </tr>
+  <tr>
+    <td>System.ComponentModel.BrowsableAttribute</td>
+    <td>指定控件的属性是否出现在设计器的属性列表中</td>
+  </tr>
+  <tr>
+    <td>System.ComponentModel.DesignerSerializationVisibilityAttribute</td>
+    <td>指定控件的属性是否出现在初始化的 InitializeComponent 方法中。</td>
+  </tr>
+  <tr>
+    <td>System.Diagnostics.ConditionalAttribute</td>
+    <td>可指定类或方法仅在特定编译参数指定的情况下生效。例如在方法前加上 [Conditional("DEBUG")] 则表示该方法仅在 DEBUG 环境下有效</td>
+  </tr>
+  <tr>
+    <td>System.Diagnostics.DebuggerStepThroughAttribute</td>
+    <td>指定在 VS 中 Debug 时，即使使用 Step Into 指定，也不会进入设置了该特性的方法</td>
+  </tr>
+  <tr>
+    <td>System.NonSerializedAttribute</td>
+    <td>当使用二进制（BinaryFormatter）或Soap（SoapFormatter）方式进行序列化时，可使用该特性阻止对某些成员进行序列化。该特性仅可应用于类的 filed 成员。
+	<pre class="code" data-type="csharp">[field: NonSerialized]
+public event EventHandler MyEvent;</pre>
+如果使用XML（XmlSerializer ）方式进行序列化，需使用 XmlIgnoreAttribute 特性。</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+<p>&nbsp; </p>
+<p>&nbsp; </p>
+
+</body>
+</html>

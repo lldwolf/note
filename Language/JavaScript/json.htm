@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<title>JSON</title>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+<p id="title">JSON</p>
+
+<h1>简介 </h1>
+<p>JSON(JavaScript Object Notation) 是一种轻量级的数据交换格式。易于人阅读和编写。同时也易于机器解析和生成。它基于JavaScript。 JSON采用完全独立于语言的文本格式，但是也使用了类似于C语言家族的习惯（包括C, C++, C#, Java, JavaScript, Perl, Python等）。这些特性使JSON成为理想的数据交换语言。</p>
+<p>上面的写法是官腔写法，俗称装B，你不理解也无所谓。</p>
+<p>下面的代码声明了一个JSON对象：</p>
+<pre>var people =
+  { &quot;programmers&quot;: [
+    { &quot;firstName&quot;: &quot;Brett&quot;, &quot;lastName&quot;:&quot;McLaughlin&quot;, &quot;email&quot;: &quot;brett@newInstance.com&quot; },
+    { &quot;firstName&quot;: &quot;Jason&quot;, &quot;lastName&quot;:&quot;Hunter&quot;, &quot;email&quot;: &quot;jason@servlets.com&quot; },
+    { &quot;firstName&quot;: &quot;Elliotte&quot;, &quot;lastName&quot;:&quot;Harold&quot;, &quot;email&quot;: &quot;elharo@macfaq.com&quot; }
+   ],
+  &quot;authors&quot;: [
+    { &quot;firstName&quot;: &quot;Isaac&quot;, &quot;lastName&quot;: &quot;Asimov&quot;, &quot;genre&quot;: &quot;science fiction&quot; },
+    { &quot;firstName&quot;: &quot;Tad&quot;, &quot;lastName&quot;: &quot;Williams&quot;, &quot;genre&quot;: &quot;fantasy&quot; },
+    { &quot;firstName&quot;: &quot;Frank&quot;, &quot;lastName&quot;: &quot;Peretti&quot;, &quot;genre&quot;: &quot;christian fiction&quot; }
+   ],
+  &quot;musicians&quot;: [
+    { &quot;firstName&quot;: &quot;Eric&quot;, &quot;lastName&quot;: &quot;Clapton&quot;, &quot;instrument&quot;: &quot;guitar&quot; },
+    { &quot;firstName&quot;: &quot;Sergei&quot;, &quot;lastName&quot;: &quot;Rachmaninoff&quot;, &quot;instrument&quot;: &quot;piano&quot; }
+   ]
+  }</pre>
+<p>可使用如下代码进行访问：</p>
+<pre>people.programmers[0].lastName</pre>
+<p>下例演示了一个最简单的写法：</p>
+<pre>var people = { &quot;firstName&quot;: &quot;Brett&quot;, &quot;lastName&quot;:&quot;McLaughlin&quot;, &quot;email&quot;: &quot;brett@newInstance.com&quot; };
+alert(people.firstName);</pre>
+<p>上面JSON对象都是作为键值对的形式使用的，实际上，JSON对象也可以作为线性数组初始化的，如下所示：</p>
+<pre>var people = [ &quot;John&quot;, &quot;Tom&quot;, &quot;Mary&quot; ];
+alert(people[0]);
+alert(people.toJSONString());</pre>
+<h1>json.js </h1>
+<p>JSON官方网站提供的一个开源的JSON解析器和字符串转换器<a href="downloads/json.zip">json.js</a>，使用它可以轻松地将JSON对象转换为字符串，如下所示：</p>
+<pre>people.toJSONString();</pre>
+<p>并不仅限于JSON对象，json.js提供了如下函数：</p>
+<pre>array.toJSONString()，
+boolean.toJSONString() ，
+date.toJSONString()，
+number.toJSONString()，    
+object.toJSONString()，
+string.toJSONString(): </pre>
+<p>可以将这些对象都转为json文本串</p>
+<p>还有一个string.parseJSON()函数，可以将文本串解析成JSON对象或array，如下所示</p>
+<pre>var str='[&quot;0&quot;,&quot;1&quot;]';
+var obj = str.parseJSON();
+document.write(obj[0]);
+document.write(obj[1]);</pre>
+<p>&nbsp;</p>
+  
+</body>
+</html>

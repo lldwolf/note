@@ -1,0 +1,57 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>创建XML文档的注意事项</title>
+<script language="javascript" src="css.js"></script>
+</head>
+
+<body>
+<h1>第N章 创建XML文档的注意事项</h1>
+<hr />
+<h2>N.1 正文部分</h2>
+<ol>
+  <li>XML区分大小写</li>
+  <li> 必须有一个根元素，包括所有其它元素，如下的写法是错误的</li>
+  <pre>&lt;Basic/&gt;
+&lt;Next&gt;&lt;/Next&gt;</pre>
+正确的写法应该是这样子
+<pre>&lt;Basic&gt;
+&lt;Next&gt;&lt;/Next&gt;
+&lt;/Basic&gt;</pre>
+  <li>XML中有五种预定义的实体</li>
+  <table width="80%">
+  	<tr>
+		<th width="50%">实体</th>
+		<th width="50%">对应字符</th>
+	</tr>
+  	<tr>
+		<td>&amp;lt;</td>
+		<td>&lt;</td>
+	</tr>
+  	<tr>
+		<td>&amp;gt;</td>
+		<td>&gt;</td>
+	</tr>
+  	<tr>
+		<td>&amp;amp;</td>
+		<td>&amp;</td>
+	</tr>
+  	<tr>
+		<td>&amp;apos;</td>
+		<td>'</td>
+	</tr>
+  	<tr>
+		<td>&amp;quot;</td>
+		<td>&quot;</td>
+	</tr>
+  </table>
+  <li></li>
+</ol>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp; </p>
+<script language="javascript" src="index.js"></script>
+</body>
+</html>

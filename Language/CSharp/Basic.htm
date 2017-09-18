@@ -1,0 +1,1850 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+	<script type="text/javascript" src="../../mylib/js/css.js"></script>
+	<title>C#语言基础</title>
+</head>
+<body>
+	<p id="title">第二章 C#语言基础</p>
+
+	<h1>2.1 数据类型 </h1>
+	<h2>2.1.1 基本数据类型 </h2>
+	<table style="width: 99%">
+		<tbody>
+			<tr>
+				<th style="width: 15%">大类 </th>
+				<th style="width: 15%">类型 </th>
+				<th style="width: 30%">范围 </th>
+				<th style="width: 20%">大小 </th>
+				<th style="width: 20%">.NET FrameWork 类型 </th>
+			</tr>
+			<tr>
+				<td style="width: 15%" rowspan="9">整型
+				</td>
+				<td style="width: 15%">&nbsp;
+				</td>
+				<td style="width: 30%">-128 到 127
+				</td>
+				<td style="width: 20%">有符号 8 位整数
+				</td>
+				<td style="width: 20%">System.SByte
+				</td>
+			</tr>
+			<tr>
+				<td style="width: 15%">byte
+				</td>
+				<td style="width: 30%">0 到 255
+				</td>
+				<td style="width: 20%">无符号 8 位整数
+				</td>
+				<td style="width: 20%">System.Byte
+				</td>
+			</tr>
+			<tr>
+				<td style="width: 15%">char
+				</td>
+				<td style="width: 30%">U+0000 到 U+ffff
+				</td>
+				<td style="width: 20%">16 位 Unicode 字符
+				</td>
+				<td style="width: 20%">System.Char
+				</td>
+			</tr>
+			<tr>
+				<td style="width: 15%">short
+				</td>
+				<td style="width: 30%">-32,768 到 32,767
+				</td>
+				<td style="width: 20%">有符号 16 位整数
+				</td>
+				<td style="width: 20%">System.Int16
+				</td>
+			</tr>
+			<tr>
+				<td style="width: 15%">ushort
+				</td>
+				<td style="width: 30%">0 到 65,535
+				</td>
+				<td style="width: 20%">无符号 16 位整数
+				</td>
+				<td style="width: 20%">System.UInt16
+				</td>
+			</tr>
+			<tr>
+				<td style="width: 15%">int
+				</td>
+				<td style="width: 30%">-2,147,483,648 到 2,147,483,647
+				</td>
+				<td style="width: 20%">有符号 32 位整数
+				</td>
+				<td style="width: 20%">System.Int32
+				</td>
+			</tr>
+			<tr>
+				<td style="width: 15%">uint
+				</td>
+				<td style="width: 30%">0 到 4,294,967,295
+				</td>
+				<td style="width: 20%">无符号 32 位整数
+				</td>
+				<td style="width: 20%">System.UInt32
+				</td>
+			</tr>
+			<tr>
+				<td style="width: 15%">long
+				</td>
+				<td style="width: 30%">-9,223,372,036,854,775,808 到 9,223,372,036,854,775,807
+				</td>
+				<td style="width: 20%">有符号 64 位整数
+				</td>
+				<td style="width: 20%">System.Int64
+				</td>
+			</tr>
+			<tr>
+				<td style="width: 15%">ulong
+				</td>
+				<td style="width: 30%">0 到 18,446,744,073,709,551,615
+				</td>
+				<td style="width: 20%">无符号 64 位整数
+				</td>
+				<td style="width: 20%">System.UInt64
+				</td>
+			</tr>
+			<tr>
+				<td style="width: 15%" rowspan="2">浮点型
+				</td>
+				<td style="width: 15%">float
+				</td>
+				<td style="width: 30%">±1.5e10^-45 到 ±3.4e10^38
+				</td>
+				<td style="width: 20%">7位
+				</td>
+				<td style="width: 20%">System.Single
+				</td>
+			</tr>
+			<tr>
+				<td style="width: 15%">double
+				</td>
+				<td style="width: 30%">±5.0e10^-324 到 ± 1.7e10^308
+				</td>
+				<td style="width: 20%">15到16位
+				</td>
+				<td style="width: 20%">System.Double
+				</td>
+			</tr>
+			<tr>
+				<td style="width: 15%">布尔型
+				</td>
+				<td style="width: 15%">bool
+				</td>
+				<td style="width: 30%">true 和 false
+				</td>
+				<td style="width: 20%">&nbsp;
+				</td>
+				<td style="width: 20%">System.Boolean
+				</td>
+			</tr>
+			<tr>
+				<td style="width: 15%">字符串型
+				</td>
+				<td style="width: 15%">string
+				</td>
+				<td style="width: 30%">&nbsp;
+				</td>
+				<td style="width: 20%">任意长度
+				</td>
+				<td style="width: 20%">System.String
+				</td>
+			</tr>
+			<tr>
+				<td style="width: 15%">对象类型
+				</td>
+				<td style="width: 15%">object
+				</td>
+				<td style="width: 30%">&nbsp;
+				</td>
+				<td style="width: 20%">&nbsp;
+				</td>
+				<td style="width: 20%">System.Object
+				</td>
+			</tr>
+		</tbody>
+	</table>
+	<h2>2.1.2 转义字符 </h2>
+	<table style="width: 99%">
+		<tbody>
+			<tr>
+				<th style="width: 30%">转义符 </th>
+				<th style="width: 70%">说明 </th>
+			</tr>
+			<tr>
+				<td style="width: 30%">一般字符
+				</td>
+				<td style="width: 70%">除 . $ ^ { [ ( | ) * + ? \ 外，其他字符与自身匹配。
+				</td>
+			</tr>
+			<tr>
+				<td style="width: 30%">\a
+				</td>
+				<td style="width: 70%">与响铃（警报）\u0007 匹配。
+				</td>
+			</tr>
+			<tr>
+				<td style="width: 30%">\b
+				</td>
+				<td style="width: 70%">如果在 [] 字符数组中，则与退格符 \u0008 匹配；如果不是这种情况，请参见本表后面的“注意”部分。
+				</td>
+			</tr>
+			<tr>
+				<td style="width: 30%">\t
+				</td>
+				<td style="width: 70%">与 Tab 符 \u0009 匹配。
+				</td>
+			</tr>
+			<tr>
+				<td style="width: 30%">\r
+				</td>
+				<td style="width: 70%">与回车符 \u000D 匹配。
+				</td>
+			</tr>
+			<tr>
+				<td style="width: 30%">\v
+				</td>
+				<td style="width: 70%">与垂直 Tab 符 \u000B 匹配。
+				</td>
+			</tr>
+			<tr>
+				<td style="width: 30%">\f
+				</td>
+				<td style="width: 70%">与换页符 \u000C 匹配。
+				</td>
+			</tr>
+			<tr>
+				<td style="width: 30%">\n
+				</td>
+				<td style="width: 70%">与换行符 \u000A 匹配。
+				</td>
+			</tr>
+			<tr>
+				<td style="width: 30%">\e
+				</td>
+				<td style="width: 70%">与 Esc 符 \u001B 匹配。
+				</td>
+			</tr>
+			<tr>
+				<td style="width: 30%">\040
+				</td>
+				<td style="width: 70%">将 ASCII 字符匹配为八进制数（最多三位）；如果没有前导零的数字只有一位数或者与捕获组号相对应，则该数字为后向引用。例如，字符 \040 表示空格。
+				</td>
+			</tr>
+			<tr>
+				<td style="width: 30%">\x20
+				</td>
+				<td style="width: 70%">使用十六进制表示形式（恰好两位）与 ASCII 字符匹配。
+				</td>
+			</tr>
+			<tr>
+				<td style="width: 30%">\cC
+				</td>
+				<td style="width: 70%">与 ASCII 控制字符匹配；例如，\cC 为 Ctrl-C。
+				</td>
+			</tr>
+			<tr>
+				<td style="width: 30%">\u0020
+				</td>
+				<td style="width: 70%">使用十六进制表示形式（恰好四位）与 Unicode 字符匹配。
+				</td>
+			</tr>
+			<tr>
+				<td style="width: 30%">\
+				</td>
+				<td style="width: 30%">在后面带有不识别为转义符的字符时，与该字符匹配。例如，\* 与 \x2A 相同。
+				</td>
+			</tr>
+		</tbody>
+	</table>
+	<h2>2.1.3 枚举类型</h2>
+	<p>声明语法大致如下：</p>
+	<pre class="code" data-type="csharp">[attributes] [modifiers] enum identifier [:base-type] {enumerator-list} [;]</pre>
+	<p>其中attributes是附加的声明信息</p>
+	<p>modifiers可取下列值：private、protected、public、internal</p>
+	<p>base-type指定分配给每个枚举数的存储大小的基础类型。可以是除 char 类型外的整型之一。默认为 int。</p>
+	<p>枚举元素的默认基础类型为 int。默认情况下，第一个枚举数的值为 0，后面每个枚举数的值依次递增 1。例如：</p>
+	<pre class="code" data-type="csharp">enum Days {Sat, Sun, Mon, Tue, Wed, Thu, Fri};</pre>
+	<p>在此枚举中，Sat 为 0，Sun 为 1，Mon 为 2，依此类推。枚举数可以具有重写默认值的初始值设定项。例如：</p>
+	<pre class="code" data-type="csharp">enum Days {Sat=1, Sun, Mon, Tue, Wed, Thu, Fri};</pre>
+	<p>在此枚举中，强制元素序列从 1 而不是 0 开始。</p>
+	<p>enum E 的默认值为表达式 (E)0 产生的值。</p>
+	<p>基础类型指定为每个枚举数分配的存储大小。但是，从 enum 类型到整型的转换需要用显式类型转换来完成。例如，下列语句使用从 enum 到 int 的显式转换，将枚举数
+		Sun 赋给 int 类型的变量：
+	</p>
+	<pre class="code" data-type="csharp">int x = (int) Days.Sun;
+Days day = (Days)x;</pre>
+	<h2>2.1.4 对象类型</h2>
+	<p>即使用 new 运算符创建的对象，它的内存管理类似于C中的指针，例如下面的代码：</p>
+	<pre class="code" data-type="csharp">object obj1 = new object();
+<br>object obj2 = obj1;
+<br>obj1 = null;</pre>
+	<p>执行完上述代码后，obj2可不是null，只是切断了obj1与内存中对象的联系而已，类似于如下图形（暂缺）：</p>
+	<p>&nbsp; </p>
+	<h2>2.1.5 字符串操作</h2>
+	<p>字符串拷贝</p>
+	<p>string s = string.Copy("sss")</p>
+	<h2>大整数运算</h2>
+	<p>使用 System.Numerics.BigInteger 进行大整数运得，几乎没有长度限制（但毕竟要限于 CPU 和 内存）。下例展示了如何计算 1000!</p>
+	<pre class="code" data-type="csharp">BigInteger total = new BigInteger(1);
+
+for (int i = 2; i <= 1000; i++)
+{
+	total = total * i;
+}
+
+Console.WriteLine("1000! = " + total.ToString());</pre>
+    <h2>浮点数</h2>
+    <h3>精度损失</h3>
+    <p>double 的精度为 15 位，float 的精度为 7 位。在内部因使用近似表示法，与实际值有所差异，我称为精度损失。例如 0.5 在内部可能表示为 0.49999999999</p>
+    <p>float 和 double 都会面临精度损失问题，所以在做金融方面的运算时建议使用 decimal。</p>
+    <h3>四舍五入</h3>
+    <p>因为浮数的精度损失，所在在使用 Math.Round 进行四舍五入运算时可能与预期结果不符。例如 Math.Round(0.5M) 结果为 0。如果需要严格按照显示值来进行舍入操作，需使用如下参数（简直是个 Bug）</p>
+    <pre class="code" data-type="csharp">Math.Round(0.5M, MidpointRounding.AwayFromZero);</pre>
+	<h2>2.1.6 一些值得注意的地方</h2>
+	<h3>2.1.6.1 赋16进制值</h3>
+	<pre class="code" data-type="csharp">int a = 0xA1;</pre>
+	<h3>2.1.6.2 如何在字符串中加入特殊字符</h3>
+	<p>字符串两端由字符 &quot; 括起，如果想在字符串中加入 &quot; 字符时，使用转义字符 \&quot;，对 \ 字符同理使用 \\。</p>
+	<p>除了 &quot; 外，其它的转义字符均可用 @ 关键字来简化处理，下面两行代码的功能相同：</p>
+	<pre class="code" data-type="csharp">string str1 = &quot;c:\\a.txt&quot;;
+string str2 = @&quot;c:\a.txt&quot;;</pre>
+	<h3>2.1.6.3 判断空字符串</h3>
+	<pre class="code" data-type="csharp">string str = &quot;&quot;;
+if (&quot;&quot;.Equals(str))
+{
+  ...
+}
+
+if (str == string.Empty)
+{
+  ...
+}</pre>
+	<h3>2.1.6.4 整数除法运算 </h3>
+	<p>整数作除运算结果赋给整型变时，采用去尾法</p>
+	<pre class="code" data-type="csharp">int a = 11 / 12; 		//结果为0</pre>
+    
+	<h1>2.2 类型转换 </h1>
+	<h2>2.2.1 默认类型转换 </h2>
+	<pre class="code" data-type="csharp">byte a = 1;
+int b = a;</pre>
+	<h2>2.2.2 强制类型转换</h2>
+	<pre class="code" data-type="csharp">int a = 1;
+byte b = (byte)a;</pre>
+	<h2>2.2.3 Convert类</h2>
+	<p>该类的静态成员函数提供了常见的数据类型间的转换。有如下值得注意的地方：</p>
+	<ul>
+		<li>将浮点型转为整型时使用的是四舍五入</li>
+		<li>凡实现了IConvertible接口的类均可使用Convert相应的静态方法转换</li>
+		<li>可使用ChangeType静态方法实现所有的简单类型以及IConvert实现类的转换，示例如下：
+			<pre class="code" data-type="csharp">Double d = -2.545;
+int i = (int)Convert.ChangeType(d, typeof(int));
+
+Console.WriteLine(&quot;The double value {0} when converted to an int becomes {1}&quot;, d, i);
+
+string s = &quot;12/12/98&quot;;
+DateTime dt = (DateTime)Convert.ChangeType(s, typeof(DateTime));
+
+Console.WriteLine(&quot;The string value {0} when converted to a Date becomes {1}&quot;, s, dt);
+
+Console.Read();</pre>
+		</li>
+	</ul>
+	<h2>2.2.4 将字符串转为数值</h2>
+	<p>数值型和布尔型都有一个Parse静态成员函数，用来将字符串转为对应的值：</p>
+	<pre class="code" data-type="csharp">//一般解析
+int a = int.Parse(&quot;100&quot;);
+bool b = bool.Parse(&quot;true&quot;);
+
+//解析16进制字符串
+int a = int.Parse(&quot;ff&quot;, System.Globalization.NumberStyles.HexNumber);
+
+//解析带千分位的货币类型
+double a = double.Parse(&quot;1,234.00&quot;, System.Globalization.NumberStyles.Currency);
+
+//解析带货币符号的字符串
+System.Globalization.NumberFormatInfo info = new System.Globalization.NumberFormatInfo();
+info.CurrencySymbol = &quot;$&quot;;
+double a = double.Parse(&quot;$10.00&quot;,  System.Globalization.NumberStyles.Currency, info);
+
+//解析科学计数法字符串
+double a = double.Parse(&quot;1.5e3&quot;, System.Globalization.NumberStyles.Float);	//表示1.5 * 10^3 = 1500</pre>
+	<h2>2.2.5 将数字转为字符串</h2>
+	<pre class="code" data-type="csharp">int a = 100;
+//一般转换
+string str1 = a.toString();
+
+//转换为16进制字符串
+string str2 = Convert.toString(a, 16)
+
+//转换为千分位分隔符金额方式
+double d = 10000;
+string str3 = d.ToString("#,##0.00");</pre>
+	<p>所有的数字类均有ToString()方法，里面可带一个格式化字符串，格式化字符串分为两类：</p>
+	<ul>
+		<li>标准数字格式串：标准数字格式字符串用于格式化通用数值类型。标准数字格式字符串采用 Axx 的形式，其中 A 是称为格式说明符的字母型字符，xx 是称为精度说明符的可选整数。精度说明符的范围从
+			0 到 99，并且影响结果中的位数。</li>
+		<li>自定义数字格式串：任何包含一个以上字母字符（包括空白）的数字格式字符串都被解释为自定义数字格式字符串。 </li>
+	</ul>
+	<a id="format_string"></a>
+
+	<h3>2.2.5.1 标准数字格式串</h3>
+	<p>以下有个精度说明符，是指跟在格式化字符串后面的字符，例如 p3 表示精度为3的百分数，例如 15.234%</p>
+
+	<table style="width: 95%">
+		<tr>
+			<th style="width: 150px">格式说明符 </th>
+			<th style="width: 150px">名称 </th>
+			<th>说明 </th>
+		</tr>
+		<tr>
+			<td>
+				<p>C 或 c</p>
+			</td>
+			<td>
+				<p>货币</p>
+			</td>
+			<td>
+				<p>数字转换为表示货币金额的字符串。转换由当前 NumberFormatInfo 对象的货币格式信息控制。 </p>
+				<p>精度说明符指示所需的小数位数。如果省略精度说明符，则使用当前 NumberFormatInfo 对象给定的默认货币精度。</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p>D 或 d</p>
+			</td>
+			<td>
+				<p>十进制数</p>
+			</td>
+			<td>
+				<p>只有整型才支持此格式。数字转换为十进制数字 (0-9) 的字符串，如果数字为负，则前面加负号。 </p>
+				<p>精度说明符指示结果字符串中所需的最少数字个数。如果需要的话，则用零填充该数字的左侧，以产生精度说明符给定的数字个数。</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p>E 或 e</p>
+			</td>
+			<td>
+				<p>科学记数法（指数）</p>
+			</td>
+			<td>
+				<p>数字转换为“-d.ddd…E+ddd”或“-d.ddd…e+ddd”形式的字符串，其中每个“d”表示一个数字 (0-9)。如果该数字为负，则该字符串以减号开头。小数点前总有一个数字。
+				</p>
+				<p>精度说明符指示小数点后所需的位数。如果省略精度说明符，则使用默认值，即小数点后六位数字。 </p>
+				<p>格式说明符的大小写指示在指数前加前缀“E”还是“e”。指数总是由正号或负号以及最少三位数字组成。如果需要，用零填充指数以满足最少三位数字的要求。</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p>F 或 f</p>
+			</td>
+			<td>
+				<p>定点</p>
+			</td>
+			<td>
+				<p>数字转换为“-ddd.ddd…”形式的字符串，其中每个“d”表示一个数字 (0-9)。如果该数字为负，则该字符串以减号开头。 </p>
+				<p>精度说明符指示所需的小数位数。如果忽略精度说明符，则使用当前 NumberFormatInfo 对象给定的默认数值精度。</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p>G 或 g</p>
+			</td>
+			<td>
+				<p>常规</p>
+			</td>
+			<td>
+				<p>根据数字类型以及是否存在精度说明符，数字会转换为定点或科学记数法的最紧凑形式。如果精度说明符被省略或为零，则数字的类型决定默认精度，如下表所示。 </p>
+				<ul>
+					<li>
+						<p><b>Byte</b> 或 <b>SByte</b>：3</p>
+					</li>
+					<li>
+						<p><b>Int16</b> 或 <b>UInt16</b>：5</p>
+					</li>
+					<li>
+						<p><b>Int32</b> 或 <b>UInt32</b>：10</p>
+					</li>
+					<li>
+						<p><b>Int64</b> 或 <b>UInt64</b>：19</p>
+					</li>
+					<li>
+						<p><b>Single</b>：7</p>
+					</li>
+					<li>
+						<p><b>Double</b>：15</p>
+					</li>
+					<li>
+						<p><b>Decimal</b>：29</p>
+					</li>
+				</ul>
+				<p>如果用科学记数法表示数字时指数大于 -5 而且小于精度说明符，则使用定点表示法；否则使用科学记数法。如果要求有小数点，并且忽略尾部零，则结果包含小数点。如果精度说明符存在，并且结果的有效数字位数超过指定精度，则通过舍入删除多余的尾部数字。
+				</p>
+				<p>上述规则有一个例外：如果数字是<b> Decimal</b> 而且省略精度说明符时。在这种情况下总使用定点表示法并保留尾部零。</p>
+				<p>使用科学记数法时，如果格式说明符是“G”，结果的指数带前缀“E”；如果格式说明符是“g”，结果的指数带前缀“e”。 </p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p>N 或 n</p>
+			</td>
+			<td>
+				<p>数字</p>
+			</td>
+			<td>
+				<p>数字转换为“-d,ddd,ddd.ddd…”形式的字符串，其中“-”表示负数符号（如果需要），“d”表示数字 (0-9)，“,”表示数字组之间的千位分隔符，“.”表示小数点符号。实际的负数模式、数字组大小、千位分隔符以及十进制分隔符由当前
+					NumberFormatInfo 对象指定。
+				</p>
+				<p>精度说明符指示所需的小数位数。如果忽略精度说明符，则使用当前 NumberFormatInfo 对象给定的默认数值精度。</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p>P 或 p</p>
+			</td>
+			<td>
+				<p>百分比</p>
+			</td>
+			<td>
+				<p>数字转换为由 NumberFormatInfo.PercentNegativePattern 或 NumberFormatInfo.PercentPositivePattern
+					属性定义的、表示百分比的字符串，前者用于数字为负的情况，后者用于数字为正的情况。已转换的数字乘以 100 以表示为百分比。
+				</p>
+				<p>精度说明符指示所需的小数位数。如果忽略精度说明符，则使用当前 NumberFormatInfo 对象给定的默认数值精度。</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p>R 或 r</p>
+			</td>
+			<td>
+				<p>往返过程</p>
+			</td>
+			<td>
+				<p>只有 Single 和 Double 类型支持此格式。往返过程说明符保证转换为字符串的数值再次被分析为相同的数值。使用此说明符格式化数值时，首先使用常规格式对其进行测试：<b>Double</b>
+					使用 15 位精度，<b>Single</b> 使用 7 位精度。如果此值被成功地分析回相同的数值，则使用常规格式说明符对其进行格式化。但是，如果此值未被成功地分析为相同数值，则它这样格式化：<b>Double</b>
+					使用 17 位精度，<b>Single</b> 使用 9 位精度。
+				</p>
+				<p>虽然此处可以存在精度说明符，但它将被忽略。使用此说明符时，往返过程优先于精度。 </p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p>X 或 x</p>
+			</td>
+			<td>
+				<p>十六进制数</p>
+			</td>
+			<td>
+				<p>只有整型才支持此格式。数字转换为十六进制数字的字符串。格式说明符的大小写指示对大于 9 的十六进制数字使用大写字符还是小写字符。例如，使用“X”产生“ABCDEF”，使用“x”产生“abcdef”。
+				</p>
+				<p>精度说明符指示结果字符串中所需的最少数字个数。如果需要的话，则用零填充该数字的左侧，以产生精度说明符给定的数字个数。 </p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p>任何其他单个字符</p>
+			</td>
+			<td>
+				<p>（未知说明符）</p>
+			</td>
+			<td>
+				<p>（未知说明符将引发运行库格式异常。）</p>
+			</td>
+		</tr>
+	</table>
+	<h3>2.2.5.2 标准格式化字符串的输出示例</h3>
+	<p><b>货币</b></p>
+	<table style="width: 95%">
+		<tr>
+			<th>格式字符串 </th>
+			<th>区域性 </th>
+			<th>数据类型 </th>
+			<th>值 </th>
+			<th>输出 </th>
+		</tr>
+		<tr>
+			<td>
+				<p>C</p>
+			</td>
+			<td>
+				<p>en-US</p>
+			</td>
+			<td>
+				<p>Double </p>
+			</td>
+			<td>
+				<p>12345.6789</p>
+			</td>
+			<td>
+				<p>$12,345.68</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p>C</p>
+			</td>
+			<td>
+				<p>de-DE</p>
+			</td>
+			<td>
+				<p><b>Double</b> </p>
+			</td>
+			<td>
+				<p>12345.678</p>
+			</td>
+			<td>
+				<p>12.345,68 �</p>
+			</td>
+		</tr>
+	</table>
+	<p><b>十进制数</b></p>
+	<table style="width: 95%">
+		<tr>
+			<th>格式字符串 </th>
+			<th>区域性 </th>
+			<th>数据类型 </th>
+			<th>值 </th>
+			<th>输出 </th>
+		</tr>
+		<tr>
+			<td>
+				<p>D</p>
+			</td>
+			<td>
+				<p>en-US</p>
+			</td>
+			<td>
+				<p>Int32 </p>
+			</td>
+			<td>
+				<p>12345</p>
+			</td>
+			<td>
+				<p>12345</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p>D8</p>
+			</td>
+			<td>
+				<p>en-US</p>
+			</td>
+			<td>
+				<p><b>Int32</b> </p>
+			</td>
+			<td>
+				<p>12345</p>
+			</td>
+			<td>
+				<p>00012345</p>
+			</td>
+		</tr>
+	</table>
+	<p><b>科学记数法（指数）</b></p>
+	<table style="width: 95%">
+		<tr>
+			<th>格式字符串 </th>
+			<th>区域性 </th>
+			<th>数据类型 </th>
+			<th>值 </th>
+			<th>输出 </th>
+		</tr>
+		<tr>
+			<td>
+				<p>E</p>
+			</td>
+			<td>
+				<p>en-US</p>
+			</td>
+			<td>
+				<p><b>Double</b> </p>
+			</td>
+			<td>
+				<p>12345.6789</p>
+			</td>
+			<td>
+				<p>1.234568E+004</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p>E10</p>
+			</td>
+			<td>
+				<p>en-US</p>
+			</td>
+			<td>
+				<p><b>Double</b> </p>
+			</td>
+			<td>
+				<p>12345.6789</p>
+			</td>
+			<td>
+				<p>1.2345678900E+004</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p>E</p>
+			</td>
+			<td>
+				<p>fr-FR</p>
+			</td>
+			<td>
+				<p><b>Double</b> </p>
+			</td>
+			<td>
+				<p>12345.6789</p>
+			</td>
+			<td>
+				<p>1,234568E+004</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p>e4</p>
+			</td>
+			<td>
+				<p>en-US</p>
+			</td>
+			<td>
+				<p><b>Double</b> </p>
+			</td>
+			<td>
+				<p>12345.6789</p>
+			</td>
+			<td>
+				<p>1.2346e+004</p>
+			</td>
+		</tr>
+	</table>
+	<p><b>定点</b></p>
+	<table style="width: 95%">
+		<tr>
+			<th>格式字符串 </th>
+			<th>区域性 </th>
+			<th>数据类型 </th>
+			<th>值 </th>
+			<th>输出 </th>
+		</tr>
+		<tr>
+			<td>
+				<p>F</p>
+			</td>
+			<td>
+				<p>en-US</p>
+			</td>
+			<td>
+				<p><b>Double</b> </p>
+			</td>
+			<td>
+				<p>12345.6789</p>
+			</td>
+			<td>
+				<p>12345.68</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p>F</p>
+			</td>
+			<td>
+				<p>es-ES</p>
+			</td>
+			<td>
+				<p><b>Double</b> </p>
+			</td>
+			<td>
+				<p>12345.6789</p>
+			</td>
+			<td>
+				<p>12345,68</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p>F0</p>
+			</td>
+			<td>
+				<p>en-US</p>
+			</td>
+			<td>
+				<p><b>Double</b> </p>
+			</td>
+			<td>
+				<p>12345.6789</p>
+			</td>
+			<td>
+				<p>123456</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p>F6</p>
+			</td>
+			<td>
+				<p>en-US</p>
+			</td>
+			<td>
+				<p><b>Double</b> </p>
+			</td>
+			<td>
+				<p>12345.6789</p>
+			</td>
+			<td>
+				<p>12345.678900</p>
+			</td>
+		</tr>
+	</table>
+	<p><b>常规</b></p>
+	<table style="width: 95%">
+		<tr>
+			<th>格式字符串 </th>
+			<th>区域性 </th>
+			<th>数据类型 </th>
+			<th>值 </th>
+			<th>输出 </th>
+		</tr>
+		<tr>
+			<td>
+				<p>G</p>
+			</td>
+			<td>
+				<p>en-US</p>
+			</td>
+			<td>
+				<p><b>Double</b> </p>
+			</td>
+			<td>
+				<p>12345.6789</p>
+			</td>
+			<td>
+				<p>12345.6789</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p>G7</p>
+			</td>
+			<td>
+				<p>en-US</p>
+			</td>
+			<td>
+				<p><b>Double</b> </p>
+			</td>
+			<td>
+				<p>12345.6789</p>
+			</td>
+			<td>
+				<p>12345.68</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p>G</p>
+			</td>
+			<td>
+				<p>en-US</p>
+			</td>
+			<td>
+				<p><b>Double</b> </p>
+			</td>
+			<td>
+				<p>0.0000023</p>
+			</td>
+			<td>
+				<p>2.3E-6</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p>G</p>
+			</td>
+			<td>
+				<p>en-US</p>
+			</td>
+			<td>
+				<p><b>Double</b> </p>
+			</td>
+			<td>
+				<p>0.0023</p>
+			</td>
+			<td>
+				<p>0.0023</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p>G2</p>
+			</td>
+			<td>
+				<p>en-US</p>
+			</td>
+			<td>
+				<p><b>Double</b> </p>
+			</td>
+			<td>
+				<p>1234</p>
+			</td>
+			<td>
+				<p>1.2E3</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p>G</p>
+			</td>
+			<td>
+				<p>en-US</p>
+			</td>
+			<td>
+				<p><b>Double</b> </p>
+			</td>
+			<td>
+				<p>Math.PI</p>
+			</td>
+			<td>
+				<p>3.14159265358979</p>
+			</td>
+		</tr>
+	</table>
+	<p><b>数字</b></p>
+	<table style="width: 95%">
+		<tr>
+			<th>格式字符串 </th>
+			<th>区域性 </th>
+			<th>数据类型 </th>
+			<th>值 </th>
+			<th>输出 </th>
+		</tr>
+		<tr>
+			<td>
+				<p>N</p>
+			</td>
+			<td>
+				<p>en-US</p>
+			</td>
+			<td>
+				<p><b>Double</b> </p>
+			</td>
+			<td>
+				<p>12345.6789</p>
+			</td>
+			<td>
+				<p>12,345.68</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p>N</p>
+			</td>
+			<td>
+				<p>sv-SE</p>
+			</td>
+			<td>
+				<p><b>Double</b> </p>
+			</td>
+			<td>
+				<p>12345.6789</p>
+			</td>
+			<td>
+				<p>12 345,68</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p>N4</p>
+			</td>
+			<td>
+				<p>en-US</p>
+			</td>
+			<td>
+				<p><b>Double</b> </p>
+			</td>
+			<td>
+				<p>123456789</p>
+			</td>
+			<td>
+				<p>123,456,789.0000</p>
+			</td>
+		</tr>
+	</table>
+	<p><b>百分比</b></p>
+	<table style="width: 95%">
+		<tr>
+			<th>格式字符串 </th>
+			<th>区域性 </th>
+			<th>数据类型 </th>
+			<th>值 </th>
+			<th>输出 </th>
+		</tr>
+		<tr>
+			<td>
+				<p>P</p>
+			</td>
+			<td>
+				<p>en-US</p>
+			</td>
+			<td>
+				<p><b>Double</b> </p>
+			</td>
+			<td>
+				<p>.126</p>
+			</td>
+			<td>
+				<p>12.60 %</p>
+			</td>
+		</tr>
+	</table>
+	<p><b>往返过程</b></p>
+	<table style="width: 95%">
+		<tr>
+			<th>格式字符串 </th>
+			<th>区域性 </th>
+			<th>数据类型 </th>
+			<th>值 </th>
+			<th>输出 </th>
+		</tr>
+		<tr>
+			<td>
+				<p>r</p>
+			</td>
+			<td>
+				<p>en-US</p>
+			</td>
+			<td>
+				<p><b>Double</b> </p>
+			</td>
+			<td>
+				<p>Math.PI</p>
+			</td>
+			<td>
+				<p>3.141592653589793</p>
+			</td>
+		</tr>
+	</table>
+	<p><b>十六进制数</b></p>
+	<table style="width: 95%">
+		<tr>
+			<th>格式字符串 </th>
+			<th>区域性 </th>
+			<th>数据类型 </th>
+			<th>值 </th>
+			<th>输出 </th>
+		</tr>
+		<tr>
+			<td>
+				<p>x</p>
+			</td>
+			<td>
+				<p>en-US</p>
+			</td>
+			<td>
+				<p><b>Int32</b> </p>
+			</td>
+			<td>
+				<p>0x2c45e</p>
+			</td>
+			<td>
+				<p>2c45e</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p>X</p>
+			</td>
+			<td>
+				<p>en-US</p>
+			</td>
+			<td>
+				<p><b>Int32</b> </p>
+			</td>
+			<td>
+				<p>0x2c45e</p>
+			</td>
+			<td>
+				<p>2C45E</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p>X8</p>
+			</td>
+			<td>
+				<p>en-US</p>
+			</td>
+			<td>
+				<p><b>Int32</b> </p>
+			</td>
+			<td>
+				<p>0x2c45e</p>
+			</td>
+			<td>
+				<p>0002C45E</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p>x</p>
+			</td>
+			<td>
+				<p>en-US</p>
+			</td>
+			<td>
+				<p><b>Int32</b> </p>
+			</td>
+			<td>
+				<p>123456789</p>
+			</td>
+			<td>
+				<p>75bcd15</p>
+			</td>
+		</tr>
+	</table>
+	<h3>2.2.5.3 自定义格式化字符串</h3>
+	<table style="width: 95%">
+		<tr>
+			<th>格式说明符 </th>
+			<th>名称 </th>
+			<th>说明 </th>
+		</tr>
+		<tr>
+			<td>
+				<p>0</p>
+			</td>
+			<td>
+				<p>零占位符</p>
+			</td>
+			<td>
+				<p>如果格式化的值在格式字符串中出现“0”的位置有一个数字，则此数字被复制到结果字符串中。小数点前最左边的“0”的位置和小数点后最右边的“0”的位置确定总在结果字符串中出现的数字范围。
+				</p>
+				<p>“00”说明符使得值被舍入到小数点前最近的数字，其中零位总被舍去。例如，用“00”格式化 34.5 将得到值 35。</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p>#</p>
+			</td>
+			<td>
+				<p>数字占位符</p>
+			</td>
+			<td>
+				<p>如果格式化的值在格式字符串中出现“#”的位置有一个数字，则此数字被复制到结果字符串中。否则，结果字符串中的此位置不存储任何值。 </p>
+				<p>请注意，如果“0”不是有效数字，此说明符永不显示“0”字符，即使“0”是字符串中唯一的数字。如果“0”是所显示的数字中的有效数字，则显示“0”字符。 </p>
+				<p>“##”格式字符串使得值被舍入到小数点前最近的数字，其中零总被舍去。例如，用“##”格式化 34.5 将得到值 35。</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p>.</p>
+			</td>
+			<td>
+				<p>小数点</p>
+			</td>
+			<td>
+				<p>格式字符串中的第一个“.”字符确定格式化的值中的小数点分隔符的位置；任何其他“.”字符被忽略。 </p>
+				<p>用作小数点分隔符的实际字符由控制格式化的 <b>NumberFormatInfo</b> 的 NumberDecimalSeparator 属性确定。</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p>,</p>
+			</td>
+			<td>
+				<p>千位分隔符和数字比例换算</p>
+			</td>
+			<td>
+				<p>“,”字符可作为千位分隔符说明符和数字比例换算说明符。 </p>
+				<p>千位分隔符说明符：如果在两个数字占位符（0 或 #）之间指定一个或多个“,”字符用于设置数字整数位的格式，则在输出的整数部分中每个数字组之间插入一个组分隔符字符。
+				</p>
+				<p>当前 NumberFormatInfo 对象的 NumberGroupSeparator 和 NumberGroupSizes 属性将确定用作数字组分隔符的字符以及每个数字组的大小。例如，如果使用字符串“#,#”和固定区域性对数字
+					1000 进行格式化，则输出为“1,000”。
+				</p>
+				<p>数字比例换算说明符：如果在紧邻显式或隐式小数点的左侧指定一个或多个“,”字符，则每出现一个数字比例换算说明符便将要格式化的数字除以 1000。例如，如果使用字符串“0,,”对数字
+					1000000000 进行格式化，则输出为“100”。
+				</p>
+				<p>可以在同一格式字符串中使用千位分隔符说明符和数字比例换算说明符。例如，如果使用字符串“#,0,,”和固定区域性对数字 10000000000 进行格式化，则输出为“1,000”。
+				</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p>%</p>
+			</td>
+			<td>
+				<p>百分比占位符</p>
+			</td>
+			<td>
+				<p>在格式字符串中出现“%”字符将导致数字在格式化之前乘以 100。适当的符号插入到数字本身在格式字符串中出现“%”的位置。使用的百分比字符由当前的 <b>NumberFormatInfo</b>
+					类确定。
+				</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p>E0</p>
+				<p>E+0</p>
+				<p>E-0</p>
+				<p>e0</p>
+				<p>e+0</p>
+				<p>e-0</p>
+			</td>
+			<td>
+				<p>科学记数法</p>
+			</td>
+			<td>
+				<p>如果“E”、“E+”、“E-”、“e”、“e+”或“e-”中的任何一个字符串出现在格式字符串中，而且后面紧跟至少一个“0”字符，则数字用科学记数法来格式化，在数字和指数之间插入“E”或“e”。跟在科学记数法指示符后面的“0”字符数确定指数输出的最小位数。“E+”和“e+”格式指示符号字符（正号或负号）应总是置于指数前面。“E”、“E-”、“e”或“e-”格式指示符号字符仅置于负指数前面。</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p>\</p>
+			</td>
+			<td>
+				<p>转义符</p>
+			</td>
+			<td>
+				<p>在 C# 和 C++ 中，反斜杠字符使格式字符串中的下一个字符被解释为转义序列。它与传统的格式化序列一起使用，如“\n”（换行）。</p>
+				<p>在某些语言中，转义符本身用作文本时必须跟在转义符之后。否则，编译器将该字符理解为转义符。使用字符串“\\”显示“\”。</p>
+				<p>请注意，Visual Basic 中不支持此转义符，但是 <b>ControlChars</b> 提供相同的功能。</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p>'ABC'</p>
+				<p>"ABC"</p>
+			</td>
+			<td>
+				<p>字符串</p>
+			</td>
+			<td>
+				<p>引在单引号或双引号中的字符被复制到结果字符串中，而且不影响格式化。</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p>;</p>
+			</td>
+			<td>
+				<p>部分分隔符</p>
+			</td>
+			<td>
+				<p>“;”字符用于分隔格式字符串中的正数、负数和零各部分。</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p>其他</p>
+			</td>
+			<td>
+				<p>所有其他字符</p>
+			</td>
+			<td>
+				<p>所有其他字符被复制到结果字符串中，而且不影响格式化。</p>
+			</td>
+		</tr>
+	</table>
+	<h3>2.2.5.4 自定义格式化字符串示例</h3>
+	<table style="width: 95%">
+		<tr>
+			<th>格式字符串 </th>
+			<th>数据类型 </th>
+			<th>值 </th>
+			<th>输出 </th>
+		</tr>
+		<tr>
+			<td>
+				<p>#####</p>
+			</td>
+			<td>
+				<p><b>Double</b> </p>
+			</td>
+			<td>
+				<p>123</p>
+			</td>
+			<td>
+				<p>123</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p>00000</p>
+			</td>
+			<td>
+				<p><b>Double</b> </p>
+			</td>
+			<td>
+				<p>123</p>
+			</td>
+			<td>
+				<p>00123</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p>(###) ### - ####</p>
+			</td>
+			<td>
+				<p><b>Double</b> </p>
+			</td>
+			<td>
+				<p>1234567890</p>
+			</td>
+			<td>
+				<p>(123) 456 – 7890</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p>#.##</p>
+			</td>
+			<td>
+				<p><b>Double</b> </p>
+			</td>
+			<td>
+				<p>1.2</p>
+			</td>
+			<td>
+				<p>1.2</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p>0.00</p>
+			</td>
+			<td>
+				<p><b>Double</b> </p>
+			</td>
+			<td>
+				<p>1.2</p>
+			</td>
+			<td>
+				<p>1.20</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p>00.00</p>
+			</td>
+			<td>
+				<p><b>Double</b> </p>
+			</td>
+			<td>
+				<p>1.2</p>
+			</td>
+			<td>
+				<p>01.20</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p>#,#</p>
+			</td>
+			<td>
+				<p><b>Double</b> </p>
+			</td>
+			<td>
+				<p>1234567890</p>
+			</td>
+			<td>
+				<p>1,234,567,890</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p>#,,</p>
+			</td>
+			<td>
+				<p><b>Double</b> </p>
+			</td>
+			<td>
+				<p>1234567890</p>
+			</td>
+			<td>
+				<p>1235</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p>#,,,</p>
+			</td>
+			<td>
+				<p><b>Double</b> </p>
+			</td>
+			<td>
+				<p>1234567890</p>
+			</td>
+			<td>
+				<p>1</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p>#,##0,,</p>
+			</td>
+			<td>
+				<p><b>Double</b> </p>
+			</td>
+			<td>
+				<p>1234567890</p>
+			</td>
+			<td>
+				<p>1,235</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p>#0.##%</p>
+			</td>
+			<td>
+				<p><b>Double</b> </p>
+			</td>
+			<td>
+				<p>0.086</p>
+			</td>
+			<td>
+				<p>8.6%</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p>0.###E+0</p>
+			</td>
+			<td>
+				<p><b>Double</b> </p>
+			</td>
+			<td>
+				<p>86000</p>
+			</td>
+			<td>
+				<p>8.6E+4</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p>0.###E+000</p>
+			</td>
+			<td>
+				<p><b>Double</b> </p>
+			</td>
+			<td>
+				<p>86000</p>
+			</td>
+			<td>
+				<p>8.6E+004</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p>0.###E-000</p>
+			</td>
+			<td>
+				<p><b>Double</b> </p>
+			</td>
+			<td>
+				<p>86000</p>
+			</td>
+			<td>
+				<p>8.6E004</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p>[##-##-##]</p>
+			</td>
+			<td>
+				<p><b>Double</b> </p>
+			</td>
+			<td>
+				<p>123456</p>
+			</td>
+			<td>
+				<p>[12-34-56]</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p>##;(##)</p>
+			</td>
+			<td>
+				<p><b>Double</b> </p>
+			</td>
+			<td>
+				<p>1234</p>
+			</td>
+			<td>
+				<p>1234</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p>##;(##)</p>
+			</td>
+			<td>
+				<p><b>Double</b> </p>
+			</td>
+			<td>
+				<p>-1234</p>
+			</td>
+			<td>
+				<p>(1234)</p>
+			</td>
+		</tr>
+	</table>
+	<h2>2.2.6 字符串与byte[]的转换</h2>
+	<p>将字符串转为byte[]</p>
+	<pre class="code" data-type="csharp">string str = "abcdefg";
+ byte[] buf = System.Text.Encoding.Default.GetBytes(str);</pre>
+	<p>将byte[]转为字符串</p>
+	<pre class="code" data-type="csharp">string s = System.Text.Encoding.Default.GetString(buf);</pre>
+	<p>byte[] 与 base64string 的相互转换</p>
+	<pre class="code" data-type="csharp">byte[] bytes = Convert.FromBase64String(base64string);
+string str = Convert.ToBase64String(bytes);</pre>
+	<h2>2.2.7 获取字符的ASCII码值</h2>
+	<pre class="code" data-type="csharp">int ascii = Convert.ToInt32('a');
+
+//以16进制形式获取
+string ascii_code = Convert.ToInt32('a', 16).ToString();</pre>
+	<h2>2.2.8 BitConverter类</h2>
+	<p>该类实现了简单类型(如byte, int, double)和byte数组的转换, 例如, 一个double型变量的长度为8字节, 若想得到这些字节的值, 使用如下代码:</p>
+	<pre class="code" data-type="csharp">double d = "1.2";
+byte[] bs = BitConverter.GetBytes(d);</pre>
+	<p>使用BitConverter类还能够实现byte和sbyte, int和uint, 甚至long和double间的转换. </p>
+	<h2>2.2.9 格式化日期</h2>
+	<p>使用默认Culture，使用如下代码，不同的格式串结果如下表所示：</p>
+	<pre class="code" data-type="csharp">DateTime dt = new DateTime(2011, 2, 15, 13, 55, 25, 120);
+Debug.WriteLine(dt.ToString("d"));
+Debug.WriteLine(dt.ToString("D"));
+Debug.WriteLine(dt.ToString("f"));
+Debug.WriteLine(dt.ToString("F"));
+Debug.WriteLine(dt.ToString("g"));
+Debug.WriteLine(dt.ToString("G"));
+Debug.WriteLine(dt.ToString("m"));
+Debug.WriteLine(dt.ToString("o"));
+Debug.WriteLine(dt.ToString("r"));
+Debug.WriteLine(dt.ToString("s"));
+Debug.WriteLine(dt.ToString("t"));
+Debug.WriteLine(dt.ToString("T"));
+Debug.WriteLine(dt.ToString("u"));
+Debug.WriteLine(dt.ToString("U"));
+Debug.WriteLine(dt.ToString("y"));</pre>
+	<table style="width: 90%">
+		<tr>
+			<th>Format pattern </th>
+			<th>Associated property/description </th>
+			<th style="width: 250">Sample </th>
+		</tr>
+		<tr>
+			<td>d
+			</td>
+			<td>
+				<span><a href="http://msdn.microsoft.com/en-us/library/system.globalization.datetimeformatinfo.shortdatepattern.aspx">ShortDatePattern</a> </span>
+			</td>
+			<td>2/15/2011
+			</td>
+		</tr>
+		<tr>
+			<td>D
+			</td>
+			<td>
+				<span><a href="http://msdn.microsoft.com/en-us/library/system.globalization.datetimeformatinfo.longdatepattern.aspx">LongDatePattern</a> </span>
+			</td>
+			<td>Tuesday, February 15, 2011
+			</td>
+		</tr>
+		<tr>
+			<td>f
+			</td>
+			<td>Full date and time (long date and short time)
+			</td>
+			<td>Tuesday, February 15, 2011 1:55 PM
+			</td>
+		</tr>
+		<tr>
+			<td>F
+			</td>
+			<td>
+				<span><a href="http://msdn.microsoft.com/en-us/library/system.globalization.datetimeformatinfo.fulldatetimepattern.aspx">FullDateTimePattern</a> </span>(long date and long time)
+			</td>
+			<td>Tuesday, February 15, 2011 1:55:25 PM
+			</td>
+		</tr>
+		<tr>
+			<td>g
+			</td>
+			<td>General (short date and short time)
+			</td>
+			<td>2/15/2011 1:55 PM
+			</td>
+		</tr>
+		<tr>
+			<td>G
+			</td>
+			<td>General (short date and long time)
+			</td>
+			<td>2/15/2011 1:55:25 PM
+			</td>
+		</tr>
+		<tr>
+			<td>m, M
+			</td>
+			<td>
+				<span><a href="http://msdn.microsoft.com/en-us/library/system.globalization.datetimeformatinfo.monthdaypattern.aspx">MonthDayPattern</a> </span>
+			</td>
+			<td>February 15
+			</td>
+		</tr>
+		<tr>
+			<td>o, O
+			</td>
+			<td>Round-trip date/time pattern; with this format pattern, the formatting or parsing
+				operation always uses the invariant culture
+			</td>
+			<td>2011-02-15T13:55:25.1200000
+			</td>
+		</tr>
+		<tr>
+			<td>r, R
+			</td>
+			<td>
+				<span><a href="http://msdn.microsoft.com/en-us/library/system.globalization.datetimeformatinfo.rfc1123pattern.aspx">RFC1123Pattern</a> </span>; with this format pattern, the formatting or parsing
+				operation always uses the invariant culture
+			</td>
+			<td>Tue, 15 Feb 2011 13:55:25 GMT
+			</td>
+		</tr>
+		<tr>
+			<td>s
+			</td>
+			<td>
+				<span><a href="http://msdn.microsoft.com/en-us/library/system.globalization.datetimeformatinfo.sortabledatetimepattern.aspx">SortableDateTimePattern</a> </span>(based on ISO 8601) using local time; with
+				this format pattern, the formatting or parsing operation always uses the invariant
+				culture
+			</td>
+			<td>2011-02-15T13:55:25
+			</td>
+		</tr>
+		<tr>
+			<td>t
+			</td>
+			<td>
+				<span><a href="http://msdn.microsoft.com/en-us/library/system.globalization.datetimeformatinfo.shorttimepattern.aspx">ShortTimePattern</a> </span>
+			</td>
+			<td>1:55 PM
+			</td>
+		</tr>
+		<tr>
+			<td>T
+			</td>
+			<td>
+				<span><a href="http://msdn.microsoft.com/en-us/library/system.globalization.datetimeformatinfo.longtimepattern.aspx">LongTimePattern</a> </span>
+			</td>
+			<td>1:55:25 PM
+			</td>
+		</tr>
+		<tr>
+			<td>u
+			</td>
+			<td>
+				<span><a href="http://msdn.microsoft.com/en-us/library/system.globalization.datetimeformatinfo.universalsortabledatetimepattern.aspx">UniversalSortableDateTimePattern</a> </span>using the format for universal time
+				display; with this format pattern, the formatting or parsing operation always uses
+				the invariant culture
+			</td>
+			<td>2011-02-15 13:55:25Z
+			</td>
+		</tr>
+		<tr>
+			<td>U
+			</td>
+			<td>Full date and time (long date and long time) using universal time
+			</td>
+			<td>Tuesday, February 15, 2011 5:55:25 AM
+			</td>
+		</tr>
+		<tr>
+			<td>y, Y
+			</td>
+			<td>
+				<span><a href="http://msdn.microsoft.com/en-us/library/system.globalization.datetimeformatinfo.yearmonthpattern.aspx">YearMonthPattern</a> </span>
+			</td>
+			<td>February, 2011
+			</td>
+		</tr>
+	</table>
+	<h2>2.2.10 隐式类型转换</h2>
+	<p>short型可以直接赋值给int型而不会引起编译错误，这是通过隐式类型转换实现的。下面的代码演示了如何实现隐式类型转换</p>
+	<pre class="code" data-type="csharp">class Program
+{
+	static void Main(string[] args)
+	{
+		TestWrapper wrapper = new TestWrapper();
+		Test pojo = wrapper;
+		Console.WriteLine(pojo);
+		Console.Read();
+	}
+}
+
+class Test
+{
+}
+
+class TestWrapper
+{
+	public Test testPojo { get; set; }
+
+	public static implicit operator Test(TestWrapper wrapper)
+	{
+		return wrapper.testPojo;
+	}
+}</pre>
+	<h1>2.3 数组</h1>
+	<h2>2.3.1 基本用法</h2>
+	<p>一维数组的声明方法如下：</p>
+	<pre class="code" data-type="csharp">int[] int_array = new int[4];
+int[] a1 = new int[]{1, 2, 3};</pre>
+	<h2>2.3.2 多维数组 </h2>
+	<p>下面的代码声明了一个4 * 4二维数组：</p>
+	<pre class="code" data-type="csharp">string[,] a1 = new string[4, 4];</pre>
+	<p>声明多维数组有两种方式，一种如上所示，还有一种如下：</p>
+	<pre class="code" data-type="csharp">int[][] j1;
+j1[0] = new int[3];
+j1[1] = new int[4];
+j1[2] = new int[5];</pre>
+	<p>其中数组a1称之为矩形数组，j1称之为交错形数组，因为a1每一维的长度是相同的，而j1可以不同。</p>
+	<p>如果要取多维数组某个维度的长度，使用 GetUpperBound 函数</p>
+	<pre class="code" data-type="csharp">// 取第1个维度的长度
+int len1 = a1.GetUpperBound(0);
+
+// 取第2个维度的长度
+int len1 = a1.GetUpperBound(1);</pre>
+	<h2>2.3.3 数组的默认值 </h2>
+	<table style="width: 99%">
+		<tr>
+			<th style="width: 50%">类型 </th>
+			<th style="width: 50%">默认值 </th>
+		</tr>
+		<tr>
+			<td>数值型
+			</td>
+			<td>0
+			</td>
+		</tr>
+		<tr>
+			<td>字符型
+			</td>
+			<td>'\0'
+			</td>
+		</tr>
+		<tr>
+			<td>布尔型
+			</td>
+			<td>false
+			</td>
+		</tr>
+		<tr>
+			<td>字符串和对象
+			</td>
+			<td>NULL
+			</td>
+		</tr>
+	</table>
+	<p>也就是说，对于字符串或对象数组，创建数组时并未调用组内成的构造函数。</p>
+	<h1>2.4 循环语句</h1>
+	<pre class="code" data-type="csharp">do
+{
+} while(条件)</pre>
+	<pre class="code" data-type="csharp">foreach (type identifier in expression)</pre>
+	<h1>2.5 一些关键字的用法</h1>
+	<h2>2.5.1 using 关键字</h2>
+	<p>using 语句定义一个范围，在此范围的末尾将处理对象。</p>
+	<p>using (expression | type identifier = initializer) statement<br>
+		其中： </p>
+	<p>expression
+		<br>
+		希望在退出 using 语句时调用 Dispose 的表达式。
+		<br>
+		type
+		<br>
+		identifier 的类型。
+		<br>
+		identifier
+		<br>
+		type 类型的名称或标识符。定义一个以上 type 类型的 identifier 是可以的。在每一个 identifier = initializer
+		的前边都有一个逗号。
+		<br>
+		initializer
+		<br>
+		创建对象的表达式。
+		<br>
+		statement
+		<br>
+		嵌入的语句或要执行的语句。
+		<br>
+		备注<br>
+		在 using 语句中创建一个实例，确保退出 using 语句时在对象上调用 Dispose。当到达 using 语句的末尾，或者如果在语句结束之前引发异常并且控制离开语句块，都可以退出
+		using 语句。
+	</p>
+	<p>实例化的对象必须实现 System.IDisposable 接口。</p>
+	<p>示例</p>
+	<pre class="code" data-type="csharp">// cs_using_statement.cs
+// compile with /reference:System.Drawing.dll
+using System.Drawing;
+class a
+{
+   public static void Main()
+   {
+      using (Font MyFont = new Font("Arial", 10.0f), MyFont2 = new Font("Arial", 10.0f))
+      {
+         // use MyFont and MyFont2
+      }   // compiler will call Dispose on MyFont and MyFont2
+
+      Font MyFont3 = new Font("Arial", 10.0f);
+      using (MyFont3)
+      {
+         // use MyFont3
+      }   // compiler will call Dispose on MyFont3
+
+   }
+}</pre>
+	<h1>2.6 函数</h1>
+	<h2>2.6.1 参数</h2>
+	<h3>2.6.1.1 输出参数和引用参数</h3>
+	<p>C#中参数传递默认为传值，在参数声明前加入 ref 或 out 关键字为传址,声明：</p>
+	<p>function_name(ref int a)</p>
+	<p>使用：</p>
+	<pre class="code" data-type="csharp">function_name(ref 变量名）</pre>
+	<p>ref 和 out 的区别是 ref 类型在使用前一定要赋初值，而 out 类型则无此限制。而在方法内部，out 类型认为是未赋初值的，所以使用前一定要赋初值。而且在方法返回前，每个
+		out 参数都要赋值。
+	</p>
+	<p>注意：与C++不同，在C#中，string型参数如果不使用ref标明的话，仍为传值方式。而数组和对象则默认为传址方式。</p>
+	<h3>2.6.1.3 不定个数参数</h3>
+	<p>用 params 修饰符声明的参数是参数数组。如果形参表包含一个参数数组，则该参数数组必须位于该列表的最后而且它必须是一维数组类型。例如，类型 string[]
+		和 string[][] 可用作参数数组的类型，但是类型 string[,] 不能。不可能将 params 修饰符与 ref 和 out 修饰符组合起来使用。
+	</p>
+	<p>下例显示了如何将转入不定个数的字符组成一个字符串输出:</p>
+	<pre class="code" data-type="csharp">private static string ConnectChar(params char[] cs)
+{
+	string str = &quot;&quot;;
+	for(int i = 0; i &lt; cs.Length; i++)
+		str += cs[i];
+		
+	return str;
+}
+
+public static void Main()
+{
+	Console.WriteLine(ConnectChar('a', 'b', 'c'));
+	Console.Read();
+}</pre>
+</body>
+</html>

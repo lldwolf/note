@@ -1,0 +1,65 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>调试技巧</title>
+<script language="javascript" src="css.js"></script>
+</head>
+
+<body>
+<h1>第N章 调试技巧</h1>
+<hr />
+<p> 1. 使用Mozilla firefox的jsdebugger插件。这个我不再多说了，最经典的js调试工具。在线调试远程站点的javascript效果非常棒。</p>
+<p> 2. 把问题隔离，建立本地的html文件和js文件，使用ms script debug调试工具来调试。如果js模块比较独立，可以使用这个工具的。如果写hta的项目，这个工具当然是首选了。</p>
+<p> 3. httpWatch 这是一个ie下的插件，非常好用，能够监视ie中的任何http会话，并能够看到http会话的原文。可以通过这个工具了解你的程序有没有和服务器产生会话，参数＆返回的数据到底是什么。</p>
+<p> 4. 在网页内建立用于调试的textarea</p>
+<p> 可以在网页内建立一个textarea来接受你想运行的js语句，然后加一个按钮使用js的eval函数执行你输入的代码。这种方式非常适合在线调试，网页出错后写代码输出页面内的对象值。建议写一些dump工具函数配合使用，效果更佳。我非常喜欢这种方式，可以随时使用开关打开页面内隐藏的textarea进行调试，感觉很像给一台服务器接上了终端，然后使用shell可以做任何事情 函数可以在这里重新定义，可以任意操作界面中的任何元素，调用任何对象的任何函数，输出任何你需要的运行时刻值。</p>
+<p> 5. 使用异常(exception)和断言(assert)</p>
+<p> 使用try{}catch(e){}结构不光可以屏蔽出错信息，让界面更友好。我们的程序可以使用异常、抛出异常来构建一种更好的出错处理机制。</p>
+<p> 有这样一个故事，我在使用string.localeCompare函数时随手写了这样的代码：</p>
+<pre>var iRe = str1.localeCompare(str2);
+switch(iRe){
+0: return ....
+1: return ....
+-1:return ....
+defalut:throw "error:localeCompare return other value"
+}</pre>
+<p>  写完就忘了，没想到我的同事在linux下使用firefox时，异常被抛出了，然后我们得知：linux firefox下localeCompare返回的不只是0/1/-1,而是返回一个具体值.<br />
+  这个异常抛出有效的检测出了代码的不完美。</p>
+<p> firefox下的异常dump后能得到较为详细的调用栈信息，这一点非常好。IE的异常信息没有这么详细。</p>
+<p> 异常和断言也可以结合成为一个非常有效的调试工具。</p>
+<p> 断言(assert)是在其他语言中的一种很有效的调试工具，常常以这种形式出现：</p>
+<pre>assert( &lt;条件&gt; ) ;</pre>
+<p> 在程序处于debug状态，当条件为假时，系统中止运行并报告这个断言。由于断言是我们自己定义的，所以我们可以很容易的判断出出错的地方，进而找到bug所在。<br />
+  javascript语言没有提供宏，也没有提供assert，我们可以这样模拟</p>
+<pre>if(_is_debug) assert = function(expression , strLable)
+{
+	if( !expression ) 
+		throw Error(strLable);
+}
+else 
+	assert = function(){};//_is_debug是一个全局变量</pre>
+<p>  
+  这样可以实现在发生&quot;不可能的事情&quot;的时候，让程序在调试模式下抛出异常，在发布版本中不作理会。</p>
+<p> 可以这样输出当前栈的调用信息,弥补刚才提到的IE中异常对象没有栈信息的缺陷:</p>
+<pre>function callStackInfo()
+{
+	var s="",line="";
+	var cer=arguments.callee.caller;
+	while(cer)
+	{
+		var sf=cer.toString();
+		s+=line+sf.substring(sf.indexOf('function'),sf.indexOf('{'))+"\n";
+		line=".."+line;
+		cer=cer.caller;
+	}
+	return s;
+}</pre>
+<p>本文只就javascript在web开发，特别是在ajax方面的开发做了一些讨论，主要在于管窥如何更好的使用“纯javascript”。web开发还有很多其他方面，比如xml和Dom等实际上和javascript息息相关，但是本文没有涉及，还请见谅。欢迎各位朋友就我的讨论多提意见。</p>
+<p>转:http://bbs.chinaunix.net/viewthread.php?tid=690254&amp;extra=page%3D1%26filter%3Ddigest<br />
+</p>
+<p>&nbsp;</p>
+<p>&nbsp; </p>
+<script language="javascript" src="index.js"></script>
+</body>
+</html>

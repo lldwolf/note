@@ -1,0 +1,59 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+Ceiling</TITLE>
+</HEAD>
+<BODY>
+<A NAME="CAICEBIG"></A><A NAME="TI6242"></A><h1>Ceiling</h1>
+<A NAME="TI6243"></A><p>
+<FORM>
+<INPUT
+ TYPE = "BUTTON"
+ VALUE = "Examples"
+ onClick = "window.location = 'imugp157.htm#EX9';">
+<INPUT
+  TYPE = "BUTTON"
+ VALUE = "See also"
+ onClick = "window.location = 'imugp157.htm#SA9';">
+</FORM>
+</p>
+<h3>Description</h3><A NAME="TI6244"></A><p>Retrieves the smallest whole number that is greater than or
+equal to a specified limit.</p>
+
+<h3>Syntax</h3><pre><b>Ceiling</b> ( <i>n</i> )</pre>
+<A NAME="TI6245"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI6246"></A>Argument</th>
+<th align="left" valign=bottom><A NAME="TI6247"></A>Description</th>
+</tr>
+<tr><td valign=top><A NAME="TI6248"></A><i>n</i></td>
+<td valign=top><A NAME="TI6249"></A>The number for which you want the smallest
+whole number that is greater than or equal to it</td>
+</tr>
+</table>
+
+<h3>Return Values</h3><A NAME="TI6250"></A><p>The data type of <i>n</i>. Returns the smallest
+whole number that is greater than or equal to <i>n</i>.</p>
+
+<A NAME="EX9"></A><h3>Examples</h3><A NAME="TI6251"></A><p>These expressions both return - 4:<pre><i>Ceiling</i> (-4.2)<br> <br> <i>Ceiling</i> (-4.8)</pre>
+</p>
+<A NAME="TI6252"></A><p>This expression for a computed field returns ERROR
+if the value in discount_amt is greater than the smallest
+whole number that is greater than or equal to discount_factor
+times price. Otherwise, it returns discount_amt:<pre>If(discount_amt &lt;= <i>Ceiling</i> (discount_factor * price),<br> String(discount_amt), "ERROR")</pre>
+</p>
+<A NAME="TI6253"></A><p>To pass this validation rule, the value in discount_amt
+must be less than or equal to the smallest whole number that is
+greater than or equal to discount_factor times price:<pre>discount_amt &lt;= <i>Ceiling</i> (discount_factor * price)</pre>
+</p>
+
+<A NAME="SA9"></A><h3>See Also</h3><A NAME="TI6254"></A><p><A NAME="TI6255"></A>
+<ul>
+<li class=fi><A HREF="imugp184.htm#CAIDGFDE">Int</A></li>
+<li class=ds><A HREF="imugp232.htm#CAIDFBID">Round</A></li>
+<li class=ds><A HREF="imugp250.htm#CAIDGGEE">Truncate</A></li>
+<li class=ds>
+</li>
+</ul>
+</p>
+
+

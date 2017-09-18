@@ -1,0 +1,53 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+Describe</TITLE>
+</HEAD>
+<BODY>
+<A NAME="DWFDescribe"></A><A NAME="TI6631"></A><h1>Describe</h1>
+<A NAME="TI6632"></A><p>
+<FORM>
+<INPUT
+ TYPE = "BUTTON"
+ VALUE = "Examples"
+ onClick = "window.location = 'imugp175.htm#EX27';">
+</FORM>
+</p>
+<h3>Description</h3><A NAME="TI6633"></A><p></p>
+<A NAME="TI6634"></A><p>Reports the values of properties of a report or form object
+and the controls within the object. Each column and graphic control
+in the report or form has a set of properties. You specify one or
+more properties as a string and Describe returns the values of the
+properties. </p>
+
+<h3>Syntax</h3><pre><b>Describe</b> ( <i>propertylist</i> )</pre>
+<A NAME="TI6635"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI6636"></A>Argument</th>
+<th align="left" valign=bottom><A NAME="TI6637"></A>Description</th>
+</tr>
+<tr><td valign=top><A NAME="TI6638"></A><i>propertylist</i></td>
+<td valign=top><A NAME="TI6639"></A>A string whose value is a blank-separated
+list of properties or Evaluate functions. </td>
+</tr>
+</table>
+
+<h3>Return Values</h3><A NAME="TI6640"></A><p>String. Returns a string that includes a value for each property
+or Evaluate function. A newline character (~n) separates the value
+of each item in <i>propertylist</i>.</p>
+<A NAME="TI6641"></A><p>If <i>propertylist</i> contains an invalid item,
+Describe returns an exclamation point (!) for that item and ignores
+the rest of <i>propertylist</i>. Describe returns
+a question mark (?) if there is no value for a property.</p>
+
+<h3>Usage</h3><A NAME="TI6642"></A><p>Specifying the values for <i>propertylist</i> can
+be complex. For information and examples, see the <i>DataWindow
+Reference</i>
+ in the DataWindow collection PowerBuilder documentation
+set.</p>
+
+<A NAME="EX27"></A><h3>Examples</h3><A NAME="TI6643"></A><p>This expression for a computed field in the header
+band of a DataWindow object displays the DataWindow object's
+SELECT statement:<pre><i>Describe</i> ("DataWindow.Table.Select")</pre>
+</p>
+
+

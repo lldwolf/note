@@ -1,0 +1,480 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+OLE objects and the OLE presentation style </TITLE>
+</HEAD>
+<BODY>
+<A NAME="BFCDDHAJ"></A><h1>OLE objects and the OLE presentation style </h1>
+<A NAME="TI4344"></A><p>Whether you insert an OLE object into a report or create
+a new report using the OLE presentation style, you are working
+with an OLE container object within the report. </p>
+<A NAME="TI4345"></A><h4>Similarities</h4>
+<A NAME="TI4346"></A><p>They have these characteristics in common:<A NAME="TI4347"></A>
+<ul>
+<li class=fi><b>Icon or contents</b>    The report can display the OLE object as an icon or it can
+display an image of the contents when display of contents is supported by
+the server.</li>
+<li class=ds><b>Data from the report</b>    You specify which report columns you want to transfer
+to the OLE object. The data that is sent to the OLE server replaces the
+OLE object template specified in the painter.
+</li>
+</ul>
+</p>
+<A NAME="TI4348"></A><h4>Differences</h4>
+<A NAME="TI4349"></A><p>The OLE object in a report and the OLE presentation style
+have these main differences:<A NAME="TI4350"></A>
+<ul>
+<li class=fi><b>Associating the object with rows</b>   When the OLE object is added to a report, it can be associated
+with individual rows, groups of rows, or all rows. In the presentation
+style, the OLE object is always associated with all rows.</li>
+<li class=ds><b>Properties view</b>   The property sheet for an OLE object has different property
+pages and some different properties from the OLE report. For example,
+the property sheet for an OLE object in a report does not contain detailed
+print specification settings because these are set in the report's own
+property sheet. However, it does have settings related to the position of
+the OLE object within the report. 
+</li>
+</ul>
+</p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Not all servers are appropriate</span> <A NAME="TI4351"></A>The features of the OLE server application determine whether
+it can provide useful information in a report.</p>
+<A NAME="TI4352"></A>If the server doesn't support display of contents,
+it won't be useful for objects associated with rows. The
+user will see only the icon. Some servers support the display of
+contents, but the view is scaled too small to be readable even when the
+object is activated.</p>
+<A NAME="TI4353"></A><h4>In this section</h4>
+<A NAME="TI4354"></A><p>This section includes procedures for:<A NAME="TI4355"></A>
+<ul>
+<li class=fi>Adding an OLE object to a report</li>
+<li class=ds>Using the OLE presentation style</li>
+<li class=ds>Defining the OLE object</li>
+<li class=ds>Previewing the report</li>
+<li class=ds>Specifying report data for the OLE object
+</li>
+</ul>
+</p>
+<A NAME="CCJCFIDF"></A><h2>Adding an OLE object to a report </h2>
+<A NAME="TI4356"></A><p>To add an OLE object to a report, you begin by specifying
+where you want the OLE object and opening the Insert Object dialog
+box so you can define the OLE object. </p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Adding an ActiveX control</span> <A NAME="TI4357"></A>Adding an ActiveX control to a report is similar to adding
+an OLE object. Both exist within the report with other controls,
+such as columns, computed fields, and text controls. Use the following procedure
+whether you want to add an OLE object or an ActiveX control to an
+existing report. </p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To place an OLE object in a report:</p>
+<ol><li class=fi>
+Open the report that will contain the
+OLE object.<br><br></li>
+<li class=ds>
+Select Insert&gt;Control&gt;OLE Object
+from the menu bar.<br><br>
+<i>or</i>
+<br><br>
+From the toolbar, click the Object dropdown arrow and
+select the OLE button (<i>not</i>
+ OLE Database Blob).<br><br></li>
+<li class=ds>
+Click where you want the OLE object.<br><br>
+InfoMaker displays the Insert Object dialog box.<br><br>
+To use
+the Insert Object dialog box, see <A HREF="imugp104.htm#BFCBGDEJ">"Defining the OLE object"</A>.<br><br></li></ol>
+<br><A NAME="TI4358"></A><h2>Using the OLE presentation style</h2>
+<A NAME="TI4359"></A><p>Use the OLE presentation style to create a report that
+consists of a single OLE object. The following procedure creates
+the new report and opens the Insert Object dialog box.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To create a new report using the OLE presentation
+style:</p>
+<ol><li class=fi>
+In the New dialog box, select OLE 2.0 from
+the Object tab and click OK.<br><br></li>
+<li class=ds>
+Select data for the report as you do for any report.<br><br>
+For more information about selecting data,
+see <A HREF="imugp42.htm#BFCDDADG">Chapter 4, "Defining Reports "</A>.<br><br></li>
+<li class=ds>
+Specify how the OLE object will use the report's
+data on the Specify OLE Data page:<br><br><br><img src="images/Oledw2.gif"><br>
+
+You can drag the columns you want the OLE object to use to
+the Target Data box. You can also control the grouping of data and
+edit the expression for a column. If you want to, you can change
+these specifications later.<br><br>
+For more information, see <A HREF="imugp104.htm#BFCBHDHD">"Specifying data for the
+OLE object"</A>.<br><br></li>
+<li class=ds>
+Click Next, and then click Finish.<br><br>
+InfoMaker displays the Insert Object dialog box in which
+you define the OLE object.<br><br>
+To use the Insert Object dialog box, see <A HREF="imugp104.htm#BFCBGDEJ">"Defining the OLE object"</A>.<br><br></li></ol>
+<br><A NAME="BFCBGDEJ"></A><h2>Defining the OLE object</h2>
+<A NAME="TI4360"></A><p>You define the OLE object in the Insert Object dialog box.
+It has three tab pages:</p>
+<A NAME="TI4361"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI4362"></A>If you want to</th>
+<th align="left" valign=bottom><A NAME="TI4363"></A>Select this tab page</th>
+</tr>
+<tr><td valign=top><A NAME="TI4364"></A>Embed an OLE server object in the report</td>
+<td valign=top><A NAME="TI4365"></A>Create New</td>
+</tr>
+<tr><td valign=top><A NAME="TI4366"></A>Link or embed the contents of an existing
+file as an OLE object so that it can be activated using the application
+that created it</td>
+<td valign=top><A NAME="TI4367"></A>Create From File</td>
+</tr>
+<tr><td valign=top><A NAME="TI4368"></A>Insert an ActiveX control in the report</td>
+<td valign=top><A NAME="TI4369"></A>Insert Control</td>
+</tr>
+</table>
+<A NAME="TI4370"></A><p>This section contains procedures for each of these selections.</p>
+<A NAME="CCJBBFEG"></A><h4>Create New</h4>
+<A NAME="TI4371"></A><p>Use the following procedure if you want to embed a new OLE
+server object.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To embed a new OLE server object using the Create
+New tab:</p>
+<ol><li class=fi>
+Select the Create New tab.<br><br></li>
+<li class=ds>
+In the Object Type box, highlight the OLE server
+you want to use.<br><br>
+You can click Browse to get information about the server from
+the registry.<br><br></li>
+<li class=ds>
+Optionally display the OLE object as an icon by
+doing one of the following:<A NAME="TI4372"></A>
+<ul>
+<li class=fi>Check
+Display as Icon to display the server application's default
+icon in the control.</li>
+<li class=ds>Check Display as Icon and then select Change Icon
+to supply a nondefault icon and icon label.
+</li>
+</ul>
+
+                    <br><br></li>
+<li class=ds>
+Click OK.<br><br>
+The OLE object is inserted in your report and the OLE
+server is activated. Depending on the OLE server and whether or
+not you have already specified how the OLE object will use the report's
+data, the object may be empty or may show an initial presentation
+of the OLE object. Close the server application and, if you are
+inserting an OLE object in a report, specify the object's
+properties (see <A HREF="imugp104.htm#CIADJDGD">"Specifying properties for
+OLE objects"</A>).<br><br></li></ol>
+<br><A NAME="TI4373"></A><h4>Create From File</h4>
+<A NAME="TI4374"></A><p>Use the following procedure if you want to link or embed the
+contents of an existing file as an OLE object so that it can be
+activated using the application that created it. Most of the steps
+in this procedure are the same as those for embedding a new OLE
+server object.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To link or embed an existing object using the
+Create From File tab:</p>
+<ol><li class=fi>
+Select the Create From File tab.<br><br></li>
+<li class=ds>
+Specify the filename in the File Name box. If
+you do not know the name of the file, click the Browse button and
+select a file in the dialog box.<br><br></li>
+<li class=ds>
+To create a link to the file, rather than embed
+a copy of the object in the control, select the Link checkbox.<br><br></li>
+<li class=ds>
+Click OK.<br><br>
+The OLE object is inserted in your report and the OLE
+server is activated. Depending on the OLE server and whether or
+not you have already specified how the OLE object will use the report's
+data, the object may be empty or may show an initial presentation
+of the OLE object. Close the server application and, if you are
+inserting an OLE object in a report, specify the object's
+properties (see <A HREF="imugp104.htm#CIADJDGD">"Specifying properties for
+OLE objects"</A>).<br><br></li></ol>
+<br><A NAME="TI4375"></A><h4>Insert Control</h4>
+<A NAME="TI4376"></A><p>Use the following procedure if you want to insert an ActiveX
+control (OLE custom control) in the report.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To insert an ActiveX control using the Insert
+Control tab:</p>
+<ol><li class=fi>
+Select the Insert Control tab.<br><br></li>
+<li class=ds>
+In the Control Type box, highlight the ActiveX
+control you want to use.<br><br>
+<i>or</i>
+<br><br>
+If the ActiveX control you want has not been registered,
+click Register New. <br><br>
+If you select an existing ActiveX control, you can click Browse
+to get more information about it. ActiveX controls are self-documenting. InfoMaker gets
+the property, event, and function information from the ActiveX control
+itself via the registry.<br><br>
+If you click Register New, you will be prompted for the file
+that contains the registration information for the ActiveX control.<br><br></li>
+<li class=ds>
+Click OK.<br><br></li>
+<li class=ds>
+If you did not specify how the OLE object will
+use the report's data when you created the report,
+do so on the Data property page. <br><br>
+If you have inserted an ActiveX control that does not display
+data, such as the Clock control, you don't need to transfer
+data to it.<br><br>
+For more information, see <A HREF="imugp104.htm#BFCBHDHD">"Specifying data for the
+OLE object"</A>.<br><br></li></ol>
+<br><A NAME="CIADJDGD"></A><h4>Specifying properties for
+OLE objects</h4>
+<A NAME="TI4377"></A><p>For OLE objects, you need to specify how the OLE object will
+use the report's data. If you used the OLE presentation
+style, you did this when you created the report. </p>
+<A NAME="TI4378"></A><p>If you are inserting an OLE object in an existing report,
+you can also associate the object with the current row. If you are
+using the OLE presentation style, the OLE object is always associated
+with all rows.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To specify properties for an OLE object:</p>
+<ol><li class=fi>
+Select the Data property page in the Properties
+view.<br><br></li>
+<li class=ds>
+Specify how the OLE object will use the report's
+data.<br><br>
+For more information, see <A HREF="imugp104.htm#BFCBHDHD">"Specifying data for the
+OLE object"</A>.<br><br></li>
+<li class=ds>
+(Optional) To associate the object with the current
+row, select the Position property page and change the value in the
+Layer box to Band. <br><br></li>
+<li class=ds>
+Click OK when you have finished.<br><br>
+<br><br></li></ol>
+<br><A NAME="BFCBHDHD"></A><h2>Specifying data for the OLE object</h2>
+<A NAME="TI4379"></A><p>You set data specifications for an OLE object in a report on
+the Data property page in the Properties view. You can also use
+the Data property page to modify the data specifications you made
+in the wizard for a report using the OLE presentation style. </p>
+<A NAME="TI4380"></A><h4>What the data is for</h4>
+<A NAME="TI4381"></A><p>When an OLE object is part of a report, you can specify
+that some or all of the data the report retrieves be transferred
+to the OLE object too. You can specify expressions instead of the
+actual columns so that the data is grouped, aggregated, or processed
+in some way before being transferred.</p>
+<A NAME="TI4382"></A><p>The way the OLE object uses the data depends on the server.
+For example, data transferred to Microsoft Excel is displayed as
+a spreadsheet. Data transferred to Microsoft Graph populates its
+datasheet, which becomes the data being graphed. </p>
+<A NAME="TI4383"></A><p>Some ActiveX controls don't display data, so you
+would not transfer any data to them. </p>
+<A NAME="TI4384"></A><h4>Group By and Target Data boxes</h4>
+<A NAME="TI4385"></A><p>Two boxes on the Data property page list data columns or expressions:<A NAME="TI4386"></A>
+<ul>
+<li class=fi><b>Group By</b>   Specifies how InfoMaker groups the data it transfers to the OLE
+object. Aggregation functions in the target data expressions use
+the groupings specified here.</li>
+<li class=ds><b>Target Data</b>   Specifies the data that you want to transfer to the OLE object. 
+</li>
+</ul>
+</p>
+<A NAME="TI4387"></A><h4>Populating the Group By and Target Data boxes</h4>
+<A NAME="TI4388"></A><p>If you are using the OLE presentation style, you populated
+the Group By and Target Data boxes when you created the report.
+If you placed an OLE object in an existing report, the boxes
+are empty. You use the browse buttons next to the Group By and Target
+Data boxes to open dialog boxes where you can select the data you
+want to use or modify your selections.</p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Modifying source data</span> <A NAME="TI4389"></A>You can't modify the source data for the report on
+the Data property page. Select Design&gt;Data Source from
+the menu bar if you need to modify the data source.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To select or modify how data will be grouped in
+the OLE object:</p>
+<ol><li class=fi>
+Click the Browse button next to the Group
+By box.<br><br></li>
+<li class=ds>
+In the Modify Group By dialog box, drag one or
+more columns from the Source Data box to the Group By box.<br><br>
+You can rearrange columns and specify an expression instead
+of the column name if you need to. For more information, see the
+next procedure.<br><br></li></ol>
+<br><p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To select or modify which data columns display
+in the OLE object:</p>
+<ol><li class=fi>
+Click the Browse button next to the Target
+Data box.<br><br></li>
+<li class=ds>
+In the Modify Target Data dialog box, drag one
+or more columns from the Source Data box to the Target Data box.<br><br>
+The same source column can appear in both the Group By and
+Target Data box.<br><br></li>
+<li class=ds>
+If necessary, change the order of columns by dragging
+them up or down within the Target Data box.<br><br>
+The order of the columns and expressions is important to the
+OLE server. You need to know how the server will use the data to
+choose the order. <br><br></li>
+<li class=ds>
+Double-click an item in the Target Data box to
+specify an expression instead of a column.<br><br>
+ In the Modify Expression dialog box, you can edit the expression
+or use the Functions or Columns boxes and the operator buttons to
+select elements of the expression. For example, you may want to
+specify an aggregation function for a column. Use the range <i>for
+object</i>
+ if you use an aggregation function; for example, <b>sum
+(salary for object)</b>. <br><br>
+For more information about using operators, expressions, and
+functions, see Part 6, "Reference".<br><br></li></ol>
+<br><p><b>Example of a completed Data property page</b>   This example of the Data property page specifies two columns
+to transfer to Microsoft Graph: city and salary. Graph expects the
+first column to be the categories and the second column to be the
+data values. The second column is an aggregate so that the graph
+will show the sum of all salaries in each city:</p>
+<br><img src="images/oledw1.gif">
+<A NAME="TI4390"></A><h4>Specifying a value for Rows</h4>
+<A NAME="TI4391"></A><p>The last setting on the Data property page specifies how the
+OLE object is associated with rows in the report. The selection
+(all rows, current row, or page) usually corresponds with the band
+where you placed the OLE object, as explained in this table. If
+you used the OLE presentation style to create the report, this
+setting does not display on the property page: the OLE object is always
+associated with all the rows in the report.</p>
+<A NAME="TI4392"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI4393"></A>Range of rows</th>
+<th align="left" valign=bottom><A NAME="TI4394"></A>When to use it</th>
+</tr>
+<tr><td valign=top><A NAME="TI4395"></A>All</td>
+<td valign=top><A NAME="TI4396"></A>When the OLE object is in the summary,
+header, or footer band, or the foreground or background layer<A NAME="TI4397"></A>Rows must be All and Layer must be Foreground or Background if
+you want the user to be able to activate the object<A NAME="TI4398"></A>Target data for all rows is transferred to the object</td>
+</tr>
+<tr><td valign=top><A NAME="TI4399"></A>Current Row</td>
+<td valign=top><A NAME="TI4400"></A>When the OLE object is in the detail
+band<A NAME="TI4401"></A>There is an instance of the OLE object for every row. Target
+data for a single row is transferred to each object<A NAME="TI4402"></A>Because ActiveX controls must be in the foreground or background
+layer, they cannot be associated with individual rows in the detail
+band</td>
+</tr>
+<tr><td valign=top><A NAME="TI4403"></A>Page</td>
+<td valign=top><A NAME="TI4404"></A>When the OLE object is in the group header
+or trailer, foreground, or background<A NAME="TI4405"></A>Target data for the rows on the current page is transferred
+to the OLE object</td>
+</tr>
+</table>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Range of rows and activating the object</span> <A NAME="TI4406"></A>When the range of rows is Current Row or Page, the user <i>cannot</i>
+ activate
+the OLE object. The user can see contents of the object in the form
+of an image presented by the server but cannot activate it.</p>
+<A NAME="TI4407"></A>If you want the user to activate the object, Rows must be
+set to All and Layer on the Position property page must be Foreground
+or Background.</p>
+<A NAME="TI4408"></A><h4>Additional settings on the property sheet</h4>
+<A NAME="TI4409"></A><p>The Options property page for the OLE object's property
+sheet has some additional settings. These settings display on the
+General property page for OLE reports. This table describes
+the settings you can make:</p>
+<A NAME="TI4410"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI4411"></A>Property</th>
+<th align="left" valign=bottom><A NAME="TI4412"></A>Effect</th>
+</tr>
+<tr><td valign=top><A NAME="TI4413"></A>Client Name</td>
+<td valign=top><A NAME="TI4414"></A>A name for the OLE object that some server
+applications use in the title bar of their window<A NAME="TI4415"></A>Corresponds to the ClientName Report property</td>
+</tr>
+<tr><td valign=top><A NAME="TI4416"></A>Activation</td>
+<td valign=top><A NAME="TI4417"></A>How the OLE object is activated<A NAME="TI4418"></A>
+<ul>
+<li class=fi><b>Double click</b>    When the user double-clicks on the object, the server application
+is activated<br>
+Activation is only possible when the report that contains
+the OLE object is embedded in a form<br>
+</li>
+</ul>
+</td>
+</tr>
+<tr><td valign=top><A NAME="TI4419"></A>Contents</td>
+<td valign=top><A NAME="TI4420"></A>Whether the object in the OLE container
+is linked or embedded. The default is Any, which allows either method</td>
+</tr>
+<tr><td valign=top><A NAME="TI4421"></A>Display Type</td>
+<td valign=top><A NAME="TI4422"></A>What the OLE container displays. You
+can choose:<A NAME="TI4423"></A>
+<ul>
+<li class=fi><b>Manual</b>    Display a representation of the object, reduced to fit within
+the container</li>
+<li class=ds><b>Icon</b>    Display the icon associated with the data. This is usually
+an icon provided by the server application
+</li>
+</ul>
+</td>
+</tr>
+<tr><td valign=top><A NAME="TI4424"></A>Link Update</td>
+<td valign=top><A NAME="TI4425"></A>When the object in the OLE container
+is linked, the method for updating link information. Choices are:<A NAME="TI4426"></A>
+<ul>
+<li class=fi><b>Automatic</b>    If the link is broken and InfoMaker cannot find the linked
+file, it displays a dialog box in which the user can specify the
+file</li>
+<li class=ds><b>Manual</b>    If the link is broken, the object cannot be activated
+</li>
+</ul>
+</td>
+</tr>
+</table>
+<A NAME="TI4427"></A><h2>Previewing the report</h2>
+<A NAME="TI4428"></A><p>Previewing the report lets you see how the OLE object
+displays the data from the report. You can preview in the Preview
+view or in preview mode</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To preview the report with the OLE object
+in preview mode:</p>
+<ol><li class=fi>
+Select File&gt;Run/Preview
+from the menu bar.<br><br>
+<i>or</i>
+<br><br>
+Click the Run/Preview button on the PowerBar.<br><br></li>
+<li class=ds>
+Select Rows&gt;Retrieve from the menu bar.<br><br>
+The report retrieves rows from the database and replaces
+the initial presentation of the OLE object with an image of the
+data that the OLE server provides.<br><br></li></ol>
+<br><A NAME="TI4429"></A><h2>Activating and editing the OLE object</h2>
+<A NAME="TI4430"></A><h4>In the Design view</h4>
+<A NAME="TI4431"></A><p>InfoMaker stores an initial presentation of the OLE object
+that it displays before data is retrieved and in newly inserted
+rows. When you activate the OLE object in the Design view, you are
+editing the initial presentation of the OLE object. Any changes
+you make and save affect only this initial presentation. After rows
+are retrieved and data transferred to the OLE object, an object
+built using the data replaces the initial presentation.</p>
+<A NAME="TI4432"></A><h4>In preview</h4>
+<A NAME="TI4433"></A><p>InfoMaker displays the initial presentation of the OLE object
+while it is retrieving rows and then replaces it with the retrieved
+data. You cannot activate the OLE object when you preview the report.
+If you add the report to a form, you can activate the OLE object
+when you run the form. </p>
+<A NAME="TI4434"></A><p>For more information, see <A HREF="imugp103.htm#BFCDHAEF">"Activating OLE objects"</A>.</p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Saving as a PSR</span> <A NAME="TI4435"></A>You can save the object with its data by saving the report as
+a Powersoft report (PSR). Select File&gt;Save As File or File&gt;Save
+Rows As from the menu bar.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To activate the OLE object in the container in
+the Design view:</p>
+<ol><li class=fi>
+Select Open from the container's
+popup menu.<br><br>
+Selecting Open from an ActiveX control's popup menu
+has no effect. ActiveX controls are always active.<br><br></li></ol>
+<br><A NAME="TI4436"></A><h2>Changing the object in the control</h2>
+<A NAME="TI4437"></A><p>In the Report painter, you can change or remove the OLE object
+in the OLE container object.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To delete the OLE object in the container:</p>
+<ol><li class=fi>
+Select Delete from the container's
+popup menu.<br><br>
+The container object is now empty and cannot be activated.<br><br></li></ol>
+<br><p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To change the OLE object in the container:</p>
+<ol><li class=fi>
+Select Insert from the container's
+popup menu.<br><br>
+InfoMaker displays the Insert Object dialog box.<br><br></li>
+<li class=ds>
+Choose one of the tabs and specify the type of
+object you want to insert, as you did when you defined the object.<br><br></li>
+<li class=ds>
+Click OK.<br><br></li></ol>
+<br>

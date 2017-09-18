@@ -1,0 +1,255 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+Using the ODBC interface</TITLE>
+</HEAD>
+<BODY>
+<A NAME="CCJBAIJJ"></A><h1>Using the ODBC interface</h1>
+<A NAME="TI138"></A><p>You can access a wide variety of ODBC data sources in InfoMaker.
+This section describes what you need to know to use ODBC connections
+to access your data in InfoMaker.</p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>ODBC drivers and data sources</span> <A NAME="TI139"></A>For a complete list of the ODBC drivers supplied
+with InfoMaker and the data sources they access, see "Database
+Interfaces" in online Help.</p>
+<A NAME="TI140"></A><h2>What is ODBC?</h2>
+<A NAME="TI141"></A><h4>The ODBC API</h4>
+<A NAME="TI142"></A><p><strong>Open Database Connectivity</strong> (<strong>ODBC</strong>)
+is a standard application programming interface (API) developed
+by Microsoft. It allows a single application to access a variety
+of data sources for which ODBC-compliant drivers exist. The application
+uses Structured Query Language (SQL) as the standard data access language.</p>
+<A NAME="TI143"></A><p>The ODBC API defines the following:<A NAME="TI144"></A>
+<ul>
+<li class=fi>A library of ODBC function calls that connect to the data
+source, execute SQL statements, and retrieve results</li>
+<li class=ds>A standard way to connect and log in to a DBMS</li>
+<li class=ds>SQL syntax based on the X/Open and SQL
+Access Group (SAG) CAE specification (1992)</li>
+<li class=ds>A standard representation for data types</li>
+<li class=ds>A standard set of error codes
+</li>
+</ul>
+</p>
+<A NAME="TI145"></A><h4>Accessing ODBC data sources</h4>
+<A NAME="TI146"></A><p>Applications that provide an ODBC interface, like InfoMaker,
+can access data sources for which an ODBC driver exists. An <strong>ODBC
+data source driver</strong> is a dynamic link library (DLL) that
+implements ODBC function calls. The application invokes the ODBC
+driver to access a particular data source.</p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>For up-to-date information</span> <A NAME="TI147"></A>As connectivity to additional ODBC data sources is supported
+in future releases of InfoMaker, updated information will be available
+from the <A HREF="http://support.sybase.com">Sybase Customer Service and Support Web site</A>
+. You should
+also check the Release Notes for the latest information about ODBC drivers
+provided with your edition of InfoMaker.</p>
+<A NAME="TI148"></A><h2>Using ODBC in InfoMaker</h2>
+<A NAME="TI149"></A><h4>What you can do</h4>
+<A NAME="TI150"></A><p>All ODBC connectivity features are available in InfoMaker.
+You can:<A NAME="TI151"></A>
+<ul>
+<li class=fi>Connect to an Adaptive Server Anywhere standalone database (including the EAS Demo DB)
+using the Adaptive Server Anywhere ODBC driver and the ODBC interface</li>
+<li class=ds>Create and delete local Adaptive Server Anywhere databases<br>
+For instructions, see the <i>InfoMaker
+User's Guide</i>
+<i></i>
+.<br></li>
+<li class=ds>Use Sybase-supplied MERANT ODBC drivers to access
+your data<br>
+For a list of the ODBC drivers supplied, see
+"Database Interfaces" in online Help.<br></li>
+<li class=ds>Use Level 1 or higher ODBC-compliant drivers obtained
+from vendors other than Sybase to access your data<br>
+See <A HREF="connimp8.htm#CCJCBJCC">"Obtaining ODBC drivers"</A>.<br></li>
+<li class=ds>Use Microsoft's ODBC Data Source Administrator
+to define ODBC data sources<br>
+See <A HREF="connimp10.htm#CCJBICIG">"About defining ODBC data
+sources"</A>.<br>
+</li>
+</ul>
+</p>
+<A NAME="TI152"></A><h2>Components of an ODBC connection</h2>
+<A NAME="TI153"></A><h4>How an ODBC connection is made</h4>
+<A NAME="TI154"></A><p>When you access an ODBC data source in InfoMaker, your connection
+goes through several layers before reaching the data source. It
+is important to understand that each layer represents a separate
+component of the connection, and that each component may come from
+a different vendor.</p>
+<A NAME="TI155"></A><p>Because ODBC is a standard API, InfoMaker uses the same interface
+to access every ODBC data source. As long as a driver is ODBC compliant, InfoMaker can
+access it through the ODBC interface to the ODBC Driver Manager.
+The development environment and the ODBC interface work together
+as the application component.</p>
+<A NAME="TI156"></A><p>The following diagrams show the general components of an ODBC connection. </p>
+<br><img src="images/Cnw2odb.gif">
+<A NAME="TI157"></A><h4>Component descriptions</h4>
+<A NAME="TI158"></A><p>The following table gives the provider and a brief description
+of each ODBC component shown in the diagram:</p>
+<A NAME="TI159"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI160"></A>Component</th>
+<th align="left" valign=bottom><A NAME="TI161"></A>Provider</th>
+<th align="left" valign=bottom><A NAME="TI162"></A>What it does</th>
+</tr>
+<tr><td valign=top><A NAME="TI163"></A>Application</td>
+<td valign=top><A NAME="TI164"></A>Sybase</td>
+<td valign=top><A NAME="TI165"></A>Calls ODBC functions to submit SQL statements,
+catalog requests, and retrieve results from a data source<A NAME="TI166"></A>InfoMaker uses the same ODBC interface to access all ODBC
+data sources</td>
+</tr>
+<tr><td valign=top><A NAME="TI167"></A>ODBC Driver Manager</td>
+<td valign=top><A NAME="TI168"></A>Microsoft</td>
+<td valign=top><A NAME="TI169"></A>Installs, loads, and unloads drivers
+for an application</td>
+</tr>
+<tr><td valign=top><A NAME="TI170"></A>Driver</td>
+<td valign=top><A NAME="TI171"></A>Driver vendor</td>
+<td valign=top><A NAME="TI172"></A>Processes ODBC function calls, submits
+SQL requests to a particular data source, and returns results to
+an application<A NAME="TI173"></A>If necessary, translates an application's request so
+that it conforms to the SQL syntax supported by the backend database<A NAME="TI174"></A>See <A HREF="connimp8.htm#CCJBHAJC">"Types of ODBC drivers"</A></td>
+</tr>
+<tr><td valign=top><A NAME="TI175"></A>Data source</td>
+<td valign=top><A NAME="TI176"></A>DBMS or database vendor</td>
+<td valign=top><A NAME="TI177"></A>Stores and manages data for an application. Consists
+of the data to be accessed and its associated DBMS, operating system,
+and (if present) network software that accesses the DBMS</td>
+</tr>
+</table>
+<A NAME="CCJBHAJC"></A><h2>Types of ODBC drivers</h2>
+<A NAME="TI178"></A><p>When InfoMaker is connected to an ODBC data source, you may
+see messages from the ODBC driver that include the words <i>single-tier</i>
+ or <i>multiple-tier</i>
+.
+These terms refer to the two types of drivers defined by the ODBC
+standard:<A NAME="TI179"></A>
+<ul>
+<li class=fi>Single-tier driver</li>
+<li class=ds>Multiple-tier driver
+</li>
+</ul>
+</p>
+<A NAME="TI180"></A><h4>Single-tier driver</h4>
+<A NAME="TI181"></A><p>A <strong>single-tier ODBC driver</strong> processes
+both ODBC functions and SQL statements. In other words, a single-tier
+driver includes the data access software required to manage the
+data source file and catalog tables.</p>
+<A NAME="TI182"></A><p>An example of a single-tier ODBC driver is one that accesses
+Xbase files, such as the MERANT dBASE ODBC driver.</p>
+<br><img src="images/Cnw2drv.gif">
+<A NAME="TI183"></A><h4>Multiple-tier driver</h4>
+<A NAME="TI184"></A><p>A <strong>multiple-tier ODBC driver</strong> processes
+ODBC functions, but sends SQL statements to the database engine
+for processing. Unlike the single-tier driver, a multiple-tier driver
+does not include the data access software required to manage the
+data directly.</p>
+<A NAME="TI185"></A><p>An example of a multiple-tier ODBC driver is the Sybase Adaptive Server Anywhere driver.</p>
+<br><img src="images/Cnw2drs.gif">
+<A NAME="TI186"></A><h2>Ensuring the proper ODBC driver conformance levels</h2>
+<A NAME="TI187"></A><p>You can access data in InfoMaker with ODBC drivers obtained
+from vendors <i>other</i>
+ than Sybase, such as DBMS
+vendors.</p>
+<A NAME="TI188"></A><p>An ODBC driver obtained from another vendor must meet certain conformance
+requirements to ensure that it works properly with InfoMaker. This
+section describes how to make sure your driver meets these requirements.</p>
+<A NAME="TI189"></A><h3>What are ODBC conformance levels?</h3>
+<A NAME="TI190"></A><p>InfoMaker can access many data sources for which ODBC-compliant
+drivers exist. However, ODBC drivers manufactured by different vendors
+may vary widely in the functions they provide.</p>
+<A NAME="TI191"></A><p>To ensure a standard level of compliance with the ODBC interface,
+and to provide a means by which application vendors can determine
+if a specific driver provides the functions they need, ODBC defines
+conformance levels for drivers in two areas:<A NAME="TI192"></A>
+<ul>
+<li class=fi><b>API</b>   Deals with supported ODBC function calls</li>
+<li class=ds><b>SQL grammar</b>   Deals with supported SQL statements and SQL data types
+</li>
+</ul>
+</p>
+<A NAME="TI193"></A><h4>API conformance levels</h4>
+<A NAME="TI194"></A><p>ODBC defines three API conformance levels, in order of increasing functionality:<A NAME="TI195"></A>
+<ul>
+<li class=fi><b>Core</b>   A set of core API functions that corresponds to the functions
+in the ISO Call Level Interface (CLI) and X/Open CLI specification </li>
+<li class=ds><b>Level 1</b>   Includes all Core API functions as well as several extended functions
+usually available in an OLTP relational DBMS</li>
+<li class=ds><b>Level 2</b>   Includes all Core and Level 1 API functions as well as additional extended
+functions
+</li>
+</ul>
+</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To ensure the proper ODBC driver API conformance
+level:</p>
+<ol><li class=fi>
+It is recommended that the ODBC drivers
+you use with InfoMaker meet <i>Level 1 or higher</i>
+ API
+conformance requirements. However, InfoMaker may also work with
+drivers that meet Core level API conformance requirements.<br><br></li></ol>
+<br><A NAME="TI196"></A><h4>SQL conformance levels</h4>
+<A NAME="TI197"></A><p>ODBC defines three SQL grammar conformance levels, in order
+of increasing functionality:<A NAME="TI198"></A>
+<ul>
+<li class=fi><b>Minimum</b>   A set of SQL statements and data types that meets a basic
+level of ODBC conformance </li>
+<li class=ds><b>Core</b>   Includes all Minimum SQL grammar as well as additional statements
+and data types that roughly correspond to the X/Open and
+SAG CAE specification (1992) </li>
+<li class=ds><b>Extended</b>   Includes all Minimum and Core SQL grammar as well as an extended
+set of statements and data types that support common DBMS extensions
+to SQL
+</li>
+</ul>
+</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To ensure the proper ODBC driver SQL conformance
+level:</p>
+<ol><li class=fi>
+It is recommended that the ODBC drivers
+you use with InfoMaker meet <i>Core or higher</i>
+ SQL
+conformance requirements. However, InfoMaker may also work with
+drivers that meet Minimum level SQL conformance requirements.<br><br></li></ol>
+<br><A NAME="CCJCBJCC"></A><h2>Obtaining ODBC drivers</h2>
+<A NAME="TI199"></A><h4>Two sources</h4>
+<A NAME="TI200"></A><p>There are two ways that you can obtain ODBC drivers for use
+with InfoMaker: <A NAME="TI201"></A>
+<ul>
+<li class=fi><b>From Sybase (recommended)</b>   Install one or more of the ODBC drivers shipped with InfoMaker.
+You can do this when you first install InfoMaker, or later. </li>
+<li class=ds><b>From another vendor</b>   InfoMaker lets you access data with <i>any</i>
+ Level
+1 or higher ODBC-compliant drivers obtained from a vendor other
+than Sybase. In most cases, these drivers will work with InfoMaker.
+</li>
+</ul>
+</p>
+<A NAME="CCJDBHFG"></A><h2>Getting help with ODBC drivers</h2>
+<A NAME="TI202"></A><p>To ensure that you have up-to-date and accurate information
+about using your ODBC driver with InfoMaker, get help as needed
+by doing one or more of the following: </p>
+<A NAME="TI203"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI204"></A>To get help on</th>
+<th align="left" valign=bottom><A NAME="TI205"></A>Do this</th>
+</tr>
+<tr><td valign=top><A NAME="TI206"></A>Using the ODBC Data Source Administrator </td>
+<td valign=top><A NAME="TI207"></A>Click the Help button on each tab </td>
+</tr>
+<tr><td valign=top><A NAME="TI208"></A>Completing the ODBC setup dialog box
+for your driver</td>
+<td valign=top><A NAME="TI209"></A>Click the Help button (if present) in
+the ODBC setup dialog box for your driver</td>
+</tr>
+<tr><td valign=top><A NAME="TI210"></A>Using Adaptive Server Anywhere</td>
+<td valign=top><A NAME="TI211"></A>See the Adaptive Server Anywhere documentation</td>
+</tr>
+<tr><td valign=top><A NAME="TI212"></A>Using an ODBC driver obtained from a
+vendor other than Sybase</td>
+<td valign=top><A NAME="TI213"></A>See the vendor's documentation
+for that driver</td>
+</tr>
+<tr><td valign=top><A NAME="TI214"></A>Troubleshooting your ODBC connection</td>
+<td valign=top><A NAME="TI215"></A>Check for a technical document that describes
+how to connect to your ODBC data source. Updated information about
+connectivity issues is available on the <A HREF="http://support.sybase.com">Sybase Customer Service and Support Web site</A></td>
+</tr>
+</table>
+

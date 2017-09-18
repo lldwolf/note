@@ -1,0 +1,270 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+About forms</TITLE>
+</HEAD>
+<BODY>
+<A NAME="X-ref386275937"></A><h1>About forms</h1>
+<A NAME="TI4746"></A><p>An InfoMaker <strong>form</strong> is an electronic
+document you use to enter data in a database. The form displays
+existing data from your database. You can change the existing data
+and add new data. You can also print a form. Each form has procedures
+associated with it, which include common database tasks such as delete,
+insert, and update.</p>
+<A NAME="TI4747"></A><h4>Why use a form for data entry</h4>
+<A NAME="TI4748"></A><p>In InfoMaker, you can enter data in your database in two
+ways:</p>
+<A NAME="TI4749"></A><p><A NAME="TI4750"></A>
+<ul>
+<li class=fi>In the Database painter,
+you can preview a table, change data or insert a new row of data,
+and update the database</li>
+<li class=ds>In the Form painter, you can run a form, change
+data or insert a new row of data, and update the database
+</li>
+</ul>
+</p>
+<A NAME="TI4751"></A><p>If you need to add or change data in your database frequently,
+making changes directly in the database tables is inefficient and
+time-consuming. A form is designed to make data entry easier and
+faster.</p>
+<A NAME="TI4752"></A><p>You can design a form so that you can see all columns of data
+on your screen. Your design can make data easy to view on the screen
+and easy to read if printed. And you can create edit styles and
+display formats to make it easier to enter and view data.</p>
+<A NAME="TI4753"></A><p>Here's the Employee table in the EAS Demo DB, which
+has 20 columns of data for 75 employees. When you view it in the
+Database painter, you can see only a few rows and columns of data
+at a time:</p>
+<br><img src="images/dfrm01.gif">
+<A NAME="TI4754"></A><p>Changing data or entering data for a new employee directly
+in the Employee table is difficult. To see other columns, you need
+to scroll (or InfoMaker scrolls for you as you tab from column
+to column), and you can never see all the data for an employee at
+one time.</p>
+<A NAME="TI4755"></A><p>Instead, you could use the following form to enter or change
+employee data. The form uses InfoMaker's Freeform form
+style. When you run the form, here is what it looks like:</p>
+<br><img src="images/dfrm02.gif">
+<A NAME="TI4756"></A><p>You can use this form to change data easily. You can also
+insert data for a new employee: click the Insert button and a blank
+form displays. You can see all the data for each employee at one
+time, and with additional enhancements, the presentation of the
+data can be improved for printing.</p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Forms in InfoMaker and in an InfoMaker application</span> <A NAME="TI4757"></A>After you design a form, you can use it within InfoMaker.
+You can also take the form, package it in an InfoMaker application
+with other forms and reports you have created, and distribute your
+application.</p>
+<A NAME="TI4758"></A>For example, you could create an Employee Data application
+that includes the Employee Data form and many employee reports that
+are important to your organization. When users run the application,
+they get up-to-date reports and they can update the Employee database.</p>
+<A NAME="TI4759"></A>For information about creating InfoMaker applications,
+see <A HREF="imugp127.htm#BFCBEJEA">Chapter 17, "Working with Applications"</A>.</p>
+<A NAME="X-ref353158729"></A><h2>About the Form painter's PainterBar</h2>
+<A NAME="TI4760"></A><p>The Form painter's PainterBar provides buttons for
+performing common activities you might do when creating or altering
+a form definition. There is also a menu item corresponding to most
+buttons.</p>
+<A NAME="X-ref306625030"></A><h2>About creating new forms</h2>
+<A NAME="TI4761"></A><p>When you create a new form with InfoMaker, you always specify
+the data source and form style of the form. Then you define the
+data for the form, and InfoMaker generates the basic form.</p>
+<A NAME="TI4762"></A><p>Once you have the basic form, you can name the form and save
+it. Then you can continue to enhance the form to make it easier
+to use.</p>
+<A NAME="TI4763"></A><p>The following discussion introduces you to a few form concepts
+and terms. When you are ready to create a particular type of form,
+you can follow the steps for the type.</p>
+<A NAME="TI4764"></A><h4>New Form dialog box</h4>
+<A NAME="TI4765"></A><p>You specify the data source and form style in the New Form
+dialog box:</p>
+<br><img src="images/dfrm04.gif">
+<A NAME="TI4766"></A><h4>Data sources</h4>
+<A NAME="TI4767"></A><p>The data source you use determines how InfoMaker retrieves
+data for your form. You can select one of three data sources when
+you create a form:</p>
+<A NAME="TI4768"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI4769"></A>Data source</th>
+<th align="left" valign=bottom><A NAME="TI4770"></A>Pick this data source when</th>
+</tr>
+<tr><td valign=top><A NAME="TI4771"></A>Quick Select</td>
+<td valign=top><A NAME="TI4772"></A>The data is from tables that are connected
+through a key, and you need only to sort and limit data</td>
+</tr>
+<tr><td valign=top><A NAME="TI4773"></A>SQL Select</td>
+<td valign=top><A NAME="TI4774"></A>The data is from tables that are not
+connected through a key, or you want more control over the SQL SELECT
+statement generated for the data source</td>
+</tr>
+<tr><td valign=top><A NAME="TI4775"></A>Query</td>
+<td valign=top><A NAME="TI4776"></A>The data has been defined as a query</td>
+</tr>
+</table>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>For master/detail forms</span> <A NAME="TI4777"></A>You always use the Quick Select data source for master/detail
+forms.</p>
+<A NAME="TI4778"></A><p>For complete information about data sources,
+see <A HREF="imugp47.htm#CFHDGEIA">"Defining the data source "</A>.</p>
+<A NAME="TI4779"></A><h4>Form styles</h4>
+<A NAME="TI4780"></A><p>A <strong>form style</strong> is a predefined way of
+presenting and processing information in a form. Each form you build
+in InfoMaker is based on an existing form style.</p>
+<A NAME="TI4781"></A><p>InfoMaker provides four built-in form styles:</p>
+<A NAME="TI4782"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI4783"></A>Form</th>
+<th align="left" valign=bottom><A NAME="TI4784"></A>What it shows</th>
+</tr>
+<tr><td valign=top><A NAME="TI4785"></A>Freeform </td>
+<td valign=top><A NAME="TI4786"></A>One row of data at a time</td>
+</tr>
+<tr><td valign=top><A NAME="TI4787"></A>Grid </td>
+<td valign=top><A NAME="TI4788"></A>Rows of data in a grid</td>
+</tr>
+<tr><td valign=top><A NAME="TI4789"></A>Master/Detail One-To-Many </td>
+<td valign=top><A NAME="TI4790"></A>One item in a freeform area at the top
+and a grid with details about the item at the bottom</td>
+</tr>
+<tr><td valign=top><A NAME="TI4791"></A>Master/Detail Many-To-One </td>
+<td valign=top><A NAME="TI4792"></A>Many items in a grid at the top and a
+freeform area with details about an item at the bottom</td>
+</tr>
+</table>
+<A NAME="TI4793"></A><p>In addition to the built-in form styles, PowerBuilder developers
+in your organization can develop custom form styles to meet your
+organization's needs. Custom form styles also display in
+the New Form dialog box.</p>
+<A NAME="TI4794"></A><p>For information about creating custom form
+styles, talk to PowerBuilder developers in your organization.</p>
+<A NAME="TI4795"></A><h4>Actions in a form style</h4>
+<A NAME="TI4796"></A><p>Each form style has a set of predefined actions. An <strong>action</strong> is
+a procedure you can attach to buttons you place in a form. Usually
+a style includes the common database actions (insert, update, and
+delete rows). Each of InfoMaker's built-in form styles
+has these database actions and additional actions that are useful
+and appropriate to the form style.</p>
+<A NAME="TI4797"></A><p>For example, you can place a button in a form and then attach
+the Print action to it. After you run the form, you can print the
+current data by clicking the button:</p>
+<br><img src="images/dfrm05.gif">
+<br><img src="images/dfrm06.gif">
+<A NAME="TI4798"></A><p>Actions are also available through the toolbar and menu items
+when you run a form.</p>
+<A NAME="TI4799"></A><h2>Freeform forms</h2>
+<A NAME="TI4800"></A><p>You use freeform forms for basic data maintenance.</p>
+<A NAME="TI4801"></A><p>In freeform forms, you see one row of data at a time. You
+can arrange the information any way you want. When you run the form,
+you can add, modify, and delete rows of data.</p>
+<A NAME="TI4802"></A><p>For example, the following form is a freeform form that allows
+you to view and update customer information. This form uses all
+columns in the Customer table in the EAS Demo DB.</p>
+<A NAME="TI4803"></A><p>After a few enhancements have been made to the basic form,
+here is the freeform form with data:</p>
+<br><img src="images/dfrm07.gif">
+<A NAME="X-ref386276023"></A><h2>Grid forms</h2>
+<A NAME="TI4804"></A><p>You use grid forms for basic data maintenance where you want
+to be able to view and update more than one row of data at a time.</p>
+<A NAME="TI4805"></A><p>The data in a grid form displays in a rigid grid. When running
+a grid form, you can resize and reorder columns.</p>
+<A NAME="TI4806"></A><p>For example, the following form is a grid form that allows
+you to view information for many customers at a time. This form
+uses all columns in the Customer table in the EAS Demo DB:</p>
+<br><img src="images/dfrm08.gif">
+<A NAME="TI4807"></A><h3>Working in a grid form</h3>
+<A NAME="TI4808"></A><p>When you design and run a grid form, you can resize and reorder
+columns. </p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To resize a column:</p>
+<ol><li class=fi>
+Position the pointer at a column boundary.<br><br>
+The pointer changes shape to a 2-headed arrow.<br><br></li>
+<li class=ds>
+Drag the mouse to move the boundary.<br><br></li>
+<li class=ds>
+Release the mouse button when the column is the
+correct width. <br><br></li></ol>
+<br><p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To reorder columns:</p>
+<ol><li class=fi>
+Select a column heading.<br><br>
+InfoMaker selects the column and displays a line representing
+the column border:<br><br><br><img src="images/dfrm09.gif"><br>
+</li>
+<li class=ds>
+Drag the column left or right.<br><br></li>
+<li class=ds>
+Release the mouse button to drop the column into
+place.<br><br></li></ol>
+<br><A NAME="X-ref386276059"></A><h2>Master/Detail One-To-Many forms</h2>
+<A NAME="TI4809"></A><p>Frequently, you may have data in one table that is related
+to data in another table in a one-to-many relationship. For example:</p>
+<A NAME="TI4810"></A><p><A NAME="TI4811"></A>
+<ul>
+<li class=fi>You maintain information
+about departments and their employees. In <i>one</i>
+ department
+there are <i>many</i>
+ employees. That is, there is
+a one-to-many relationship between departments and employees.</li>
+<li class=ds>You maintain information about your customers and
+their orders. <i>One</i>
+ customer typically has <i>many</i>
+ orders.
+There is a one-to-many relationship between customers and orders.
+</li>
+</ul>
+</p>
+<A NAME="TI4812"></A><p>You may want to display this type of relationship in a form.
+Such a form is called a master/detail one-to-many form.</p>
+<A NAME="TI4813"></A><p>For example, the following form displays information about
+one department at the top and all of that department's
+employees at the bottom:</p>
+<br><img src="images/dfrm10.gif">
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>About the ID column</span> <A NAME="TI4814"></A>Note the department's ID in the master table at the
+top of the form. Although you cannot see the department's
+ID in the detail table at the bottom of the form, it's
+there. The ID has been hidden by moving grid boundaries to cover
+the ID column. Since all the ID values are the same, hiding the
+values is useful.</p>
+<A NAME="TI4815"></A>If the detail table did not include the ID, the form would
+not be updatable. If you forget to include necessary columns, InfoMaker prompts
+you.</p>
+<A NAME="TI4816"></A><p>The following dialog box shows the database tables that handle
+the data on this form: the Department table and the Employee table
+in the EAS Demo DB. The Department table is the master table, and
+the Employee table is the detail table.</p>
+<A NAME="TI4817"></A><p>Note that there is a primary/foreign key relationship
+between the tables: the Dept_id column in the Employee
+table has the same values as the Dept_id column in the
+Department table:</p>
+<br><img src="images/dfrm11.gif">
+<A NAME="X-ref386276041"></A><h2>Master/Detail Many-To-One forms</h2>
+<A NAME="TI4818"></A><p>You might have a lot of information about a particular class
+of entities, such as customers, employees, or parts. You might want
+to be able to scroll easily through a list of the entities (the <i>many</i>
+),
+then see the details for <i>one</i>
+ of them. You do
+that in a master/detail many-to-one form.</p>
+<A NAME="TI4819"></A><p>Typically, you select one or two columns for the master table
+(enough for you to identify the entity, such as customer or employee)
+and the rest of the columns pertaining to the entity for the detail
+table.</p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Selecting columns for the master and detail areas</span> <A NAME="TI4820"></A>In a master/detail many-to-one form, you usually
+pick one or two columns for the master area and many columns for
+the detail area, and you change data or insert new data in the detail
+area only. The data in the master area is usually updated with a
+different form. To be able to insert new rows in the master area or
+detail area, you must include all columns that have been defined
+in the database as requiring values.</p>
+<A NAME="TI4821"></A>For information about defining data so that
+a form can update a database, see <A HREF="imugp116.htm#X-ref386528994">"Defining data so that
+a form can update a database"</A>.</p>
+<A NAME="TI4822"></A><p>For example, the following form lists all customers at the
+top (the master area) and the details for the selected customer
+at the bottom (the detail area):</p>
+<br><img src="images/dfrm12.gif">
+<A NAME="TI4823"></A><p>Both the master and detail areas use the Customer table in
+the EAS Demo DB. The Company_name and Id columns were chosen
+for the master table, and all columns were chosen for the detail
+table. </p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>About the Id column</span> <A NAME="TI4824"></A>Since the Id column is the primary key, you must select the
+Id column to make the detail part for the form updatable, but you
+can delete it from the detail part.</p>
+

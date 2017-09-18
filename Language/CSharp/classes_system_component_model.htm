@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>System.ComonentModel</title>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+<script language="javascript">
+function GetTitleNo()
+{
+	t1 += 1;
+	document.write("N." + t1);
+	t2 = 0;
+}
+
+function GetCurTitleNo()
+{
+	document.write("N." + t1);
+}
+
+function WriteTitleNo2()
+{
+	t2 += 1;
+	document.write("N." + t1 + "." + t2);
+}
+
+</script>
+</head>
+
+<body>
+<script language="javascript">
+var t1 = 0;
+var t2 = 0;
+</script>
+
+<p id="title">System.ComponentModel</p>
+
+<h1><script language="javascript">GetTitleNo();</script> 目录</h1>
+<table style="width:80%" >
+  <tr>
+    <th width="30%">类</th>
+    <th width="70%">简介</th>
+  </tr>
+  <tr>
+    <td><a href="#TypeConverter">TypeConterter</a></td>
+    <td>提供一种将值的类型转换为其他类型以及访问标准值和子属性的统一方法。</td>
+  </tr>
+  <tr>
+    <td><a href="#TypeDescriptor">TypeDescriptor</a></td>
+    <td>提供有关组件属性 (Attribute) 的信息，如组件的属性 (Attribute)、属性 (Property) 和事件。无法继承此类。 </td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+<h1><script language="javascript">GetTitleNo();</script> TypeConverter</h1>
+<h2><script language="javascript">GetCurTitleNo();</script>.1 创建</h2>
+<p>TypeConverter不能使用构造函数创建实例，而是使用工厂方法：</p>
+<pre class="code" data-type="csharp">TypeConverter System.ComponentModel.TypeDescriptor.GetConverter(Type)</pre>
+<h2><script language="javascript">GetCurTitleNo();</script>.2 检测</h2>
+<p>使用TypeConverter能够检查两个类型是否能够相互转换，例如：</p>
+<pre class="code" data-type="csharp">System.ComponentModel.TypeConverter converter = TypeDescriptor.GetConverter(typeof(int));
+Console.WriteLine(converter.CanConvertTo(typeof(System.Collections.ArrayList)));
+Console.WriteLine(converter.CanConvertTo(typeof(string)));</pre>
+<p>第一个检测结果为false，第二个为true，因为int能够转成string，却不能转成ArrayList。</p>
+<h2><script language="javascript">GetCurTitleNo();</script>.3 转换</h2>
+<p>将某个值换换为另一类型的值，如下所示，将int转换为string：</p>
+<pre class="code" data-type="csharp">System.ComponentModel.TypeConverter converter = TypeDescriptor.GetConverter(typeof(int));
+Console.WriteLine(converter.ConvertTo(1234, typeof(string)));</pre>
+<h2><script language="javascript">GetCurTitleNo();</script>.4 获取枚举值列表</h2>
+<p>如下代码演示了如何获取枚举类型中定义的枚举值：</p>
+<pre class="code" data-type="csharp">private enum EnumA
+{
+    aa,
+    bb,
+    cc
+}
+static void Main(string[] args)
+{
+    System.ComponentModel.TypeConverter converter = TypeDescriptor.GetConverter(typeof(EnumA));
+    System.Collections.ICollection collection = converter.GetStandardValues();
+    System.Collections.IEnumerator enumerator = collection.GetEnumerator();
+    while (enumerator.MoveNext())
+    {
+        Console.WriteLine(enumerator.Current);
+    }
+    Console.Read();
+}</pre>
+<p>如果是其它类型，例如int, string之类，GetStandardValues返回null。另外，对于枚举值，使用GetStandardValuesExclusive()方法返回的值为true。</p>
+<h1><script language="javascript">GetTitleNo();</script> TypeDescriptor</h1>
+<h2><script language="javascript">WriteTitleNo2();</script> GetEditor 方法</h2>
+<p>获取在属性窗口中，该属性是否使用了自定义的UITypeEditor继承类，如果不是，返回null。</p>
+<p>&nbsp;</p>
+
+</body>
+</html>

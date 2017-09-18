@@ -1,0 +1,483 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head>
+    <title>数据绑定</title>
+	<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+<body>
+<p id="title">数据绑定（Data Binding）</p>
+
+<h1>绪论</h1>
+<p>何为数据绑定，为什么需要数据绑定？</p>
+<p>首先我们先设想一下如何实现如下需求：我们需要做一个窗体，它负责显示一个人员的信息，信息需要从数据库中加载，用户可以进行编辑并保存。</p>
+<p>首先，我们要画出这个界面，所有的输入项，对应界面上的文本框，检查框，列表框……</p>
+<p>然后，本着OO原则，我们要声明一个对象来映射人员信息（诸如姓名、生日、性别……）</p>
+<p>再然后呢……如何把对象内容显示到界面，如何把界面输入映射回对象？</p>
+<p>一种简单的做法时写如下的代码：</p>
+<pre class="code" data-type="csharp">//对象到界面
+obj.Name = txtName.Text;
+obj.Gender = radioButtonMale.Checked ? "M" : "F";
+...
+
+//界面到对象
+txtName.Text = obj.Name;
+radioButtonMale.Checked = obj.Gender == "M";
+...</pre>
+<p>这种机械式的代码写多了，不免有种充动，有没有一种机制，能够自动地完成这些机械活儿啊？很幸运，.net framework实现了这种机制，这就是数据绑定。</p>
+<p>凡是从 System.Windows.Forms.Control 继承下来的控件，都有一个 DataBindings 属性，里面存放的就是绑定在该控件上的所有属性。为什么是个集合对象呢？很简单，可以绑定控件的多个属性嘛。</p>
+<h1>实现 INotifyPropertyChanged 接口</h1>
+<h2>INotifyPropertyChanged 接口的标准示例实现</h2>
+<p>INotifyPropertyChanged 接口是实现数据绑定的对象必须实现的接口。该接口的功能是将对象的改变映射到界面。如果不实现该接口，对象改变后，界面不会相应地改变。</p>
+<p>示例代码，其中蓝色部分标识了 INotifyPropertyChanged 接口相关的代码。</p>
+<pre class="code" data-type="csharp">public class BindingPojo : INotifyPropertyChanged
+{
+	private DateTime dateTimeValue;
+	public DateTime DateTimeValue
+	{
+		get { return this.dateTimeValue; }
+		set
+		{
+			this.dateTimeValue = value;
+			<span style="color: Blue">this.NotifyPropertyChanged("DateTimeValue");</span>
+		}
+	}
+
+	private string stringValue;
+	public string StringValue
+	{
+		get { return this.stringValue; }
+		set
+		{
+			this.stringValue = value;
+			<span style="color: Blue">this.NotifyPropertyChanged("StringValue");</span>
+		}
+	}
+
+	private bool boolValue;
+	public bool BoolValue
+	{
+		get { return this.boolValue; }
+		set
+		{
+			this.boolValue = value;
+			<span style="color: Blue">this.NotifyPropertyChanged("BoolValue");</span>
+		}
+	}
+<span style="color: Blue">
+	#region INotifyPropertyChanged Members
+
+	private void NotifyPropertyChanged(String info)
+	{
+		if (PropertyChanged != null)
+		{
+			PropertyChanged(this, new PropertyChangedEventArgs(info));
+		}
+	}
+
+	public event PropertyChangedEventHandler PropertyChanged;
+
+	#endregion
+</span>
+}</pre>
+<h2>序列化问题</h2>
+<p>当对象绑定到界面后，对象的 PropertyChanged 事件将会自动绑定到 System.ComponentModel.ReflectPropertyDescriptor 类的（这是一个非公开类） OnINotifyPropertyChanged 方法。因为 ReflectPropertyDescriptor 为不可序列化类，对象将无法序列化。当试图序列化时，将会出现如下异常：</p>
+<pre class="code" data-type="csharp">Type 'System.ComponentModel.ReflectPropertyDescriptor' in Assembly 'System, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089' is not marked as serializable.</pre>
+<h1>绑定到界面</h1>
+<h2>绑定单个对象</h2>
+<p>如果控件实现了 DataBindings 属性，通常情况下即可使用数据绑定。如下代码所示：</p>
+<pre class="code" data-type="csharp">this.BindingPojo = new BindingPojo();
+this.txtStringBinding.DataBindings.Add("Text", this.BindingPojo, "StringValue");
+this.dtDateBinding.DataBindings.Add("DateTime", this.BindingPojo, "DateTimeValue");
+this.chkBoolBinding.DataBindings.Add("Checked", this.BindingPojo, "BoolValue");</pre>
+<p>从以上代码可以看出，通过数据绑定，界面控件的编辑属性将与对象的属性绑定在一起，并实现数据的双向映射。</p>
+<h2>绑定对象集合</h2>
+<p>绑定对象集合与绑定单个对象并无明显区别，通常情况下，支持对象集合的控件通常使用 <i>DataSource</i> 属性，将其关联到对象集合即可。</p>
+<p>因此，对于支持对象集合绑定的控件，更简捷的方式是直接对其 DataSource 属性赋值。</p>
+<h2>绑定非 INotifyPropertyChanged 的实现类</h2>
+<p>如果确实不想实现该接口，可使用 PropertyDescriptor.AddValueChanged 方法实现绑定，并使用 PropertyDescriptor.SetValue 进行赋值（PS：一种挺变态的实现方式，但这样的对象是可以序列化的）</p>
+<pre class="code" data-type="csharp">//类声明
+[Serializable]
+public class BindingPojoWithoutNotify
+{
+	private static Random r = new Random((int)(DateTime.Now.Ticks));
+
+	public string StringValue { get; set; }
+
+	public BindingPojoWithoutNotify()
+	{
+		StringValue = System.Guid.NewGuid().ToString();
+	}
+}
+
+//绑定实现
+this.BindingPojo = new BindingPojoWithoutNotify();
+this.textBox1.DataBindings.Add("Text", this.BindingPojo, "StringValue");
+
+PropertyDescriptorCollection props = TypeDescriptor.GetProperties(this.BindingPojo);
+PropertyDescriptor prop = props["StringValue"];
+prop.AddValueChanged(this.BindingPojo, (sender, e) => this.textBox2.Text = Helper.PrintObj(this.BindingPojo));
+
+//赋值操作
+PropertyDescriptorCollection props = TypeDescriptor.GetProperties(this.BindingPojo);
+PropertyDescriptor prop = props["StringValue"];
+prop.SetValue(this.BindingPojo, System.Guid.NewGuid().ToString());</pre>
+<p>不过，对于 INotifyPropertyChanged 的实现类，如果使用 PropertyDescriptor.SetValue 方法对其成员赋值，将会引发两次 PropertyChanged 事件。</p>
+<h1>类型适配</h1>
+<p>在上面的例子中，对象与控件的绑定是有限制的，那就是对象属性必须与控件属性有相同的数据类型。但试想如下的情况：</p>
+<p>需要使用TextBox控件来绑定对象的一个数字属性IntValue，但TextBox的对应属性Text为string类型。</p>
+<p>在这种情况下，如果强行绑定，对象属性会显示在TextBox中，但不会反映TextBox中做的改变，即不能Text内容不会反写回对象。</p>
+<p>在这种情况下，我们需要用到类型适配器。</p>
+<h2>简单类型适配</h2>
+<p>.net 默认提供两种默认的类型适配器：NumberFormatInfo和DateTimeFormatInfo，用来提供string与数字/日期格式的转换。下面的代码即为将一个数字属性与TextBox的Text属性绑定</p>
+<pre class="code" data-type="csharp">this.txtInt.DataBindings.Add("Text", this.bindingPojo, "IntValue", true, DataSourceUpdateMode.OnPropertyChanged, null, null, new NumberFormatInfo());</pre>
+<h2>定制 Format 和 Parse</h2>
+<p>我们实际上使用的Binding对象完成数据绑定（以前的绑定代码实际上隐式创建了相应的Binding对象），通过Binding对象的Format事件和Parse事件，我们可以实现定制的类型转换。</p>
+<ul>
+    <li>Format 事件：在将对象属性传递到控件属性时触发</li>
+    <li>Parse 事件：在将控件属性传递到对象属性时触发</li>
+</ul>
+<p>下面的例子说明了如何将一个 bool 型属性绑定到一个 ComboBox，为 true 时 ComboBox 显示为 Yes，为 false 时显示为 No。</p>
+<p><b>定制Binding对象</b></p>
+<pre class="code" data-type="csharp">using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Windows.Forms;
+
+namespace DataBindingTest.Model
+{
+	public class BoolYesNoBinding : Binding
+	{
+		public BoolYesNoBinding(string propertyName, object dataSource, string dataMember)
+			: base(propertyName, dataSource, dataMember)
+		{
+			this.Format += new ConvertEventHandler(this.BoolYesNoBinding_Format);
+			this.Parse += new ConvertEventHandler(this.BoolYesNoBinding_Parse);
+		}
+
+		private void BoolYesNoBinding_Parse(object sender, ConvertEventArgs e)
+		{
+			if (e.Value is string)
+			{
+				e.Value = Convert.ToString(e.Value) == "Yes";
+			}
+		}
+
+		private void BoolYesNoBinding_Format(object sender, ConvertEventArgs e)
+		{
+			if (e.Value is bool)
+			{
+				e.Value = Convert.ToBoolean(e.Value) ? "Yes" : "No";
+			}
+		}
+	}
+}</pre>
+<p><b>绑定代码</b></p>
+<pre class="code" data-type="csharp">this.cbBoolean.DataBindings.Add(new BoolYesNoBinding("Text", this.bindingPojo, "BoolValue"));   //cbBoolean 为 ComboBox 对象，有两个下拉项 "Yes"，"No"</pre>
+<h2>继承 TypeConverter</h2>
+<p>设想一下更复杂的情况，需要在 TextBox 中显示一个数字范围，如图所示：</p>
+<img src="images/type_converter_binding.png" alt="" />
+<p>绑定的对象为如下类型</p>
+<pre class="code" data-type="csharp">using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
+using System.Text;
+
+namespace DataBindingTest.Model
+{
+	public class IntRange : INotifyPropertyChanged
+	{
+		public IntRange(int minValue, int maxValue)
+		{
+			this.minValue = minValue;
+			this.maxValue = maxValue;
+		}
+
+		private Random random = new Random((int)DateTime.Now.Ticks);
+		public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+		private void NotifyPropertyChanged(String info)
+		{
+			if (PropertyChanged != null)
+			{
+				PropertyChanged(this, new PropertyChangedEventArgs(info));
+			}
+		}
+
+		private int minValue;
+		public int MinValue
+		{
+			get { return this.minValue; }
+			set
+			{
+				this.minValue = value;
+				this.NotifyPropertyChanged("MinValue");
+			}
+		}
+
+		private int maxValue;
+		public int MaxValue
+		{
+			get { return this.maxValue; }
+			set
+			{
+				this.maxValue = value;
+				this.NotifyPropertyChanged("MaxValue");
+			}
+		}
+	}
+}</pre>
+<p>在此情况下，我们需要手工实现一个 SystemSystem.ComponentModel.TypeConverter 的继承类，实现自定义的 IntRange 对象与 string (TextBox.Text) 的相互转换，该继承类实现如下：</p>
+<pre class="code" data-type="csharp">using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
+using System.Text;
+
+namespace DataBindingTest.Model
+{
+	public class IntRangeTypeConverter : TypeConverter
+	{
+		public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
+		{
+			if (sourceType == typeof(string))
+			{
+				return true;
+			}
+			return base.CanConvertFrom(context, sourceType);
+		}
+
+		public override bool CanConvertTo(ITypeDescriptorContext context, Type destinationType)
+		{
+			if (destinationType == typeof(string))
+			{
+				return true;
+			}
+			return base.CanConvertTo(context, destinationType);
+		}
+
+		public override object ConvertFrom(ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
+		{
+			if (value is string)
+			{
+				string[] ss = (value as string).Split('-');
+				IntRange intRange = new IntRange(Convert.ToInt32(ss[0]), Convert.ToInt32(ss[1]));
+				return intRange;
+			}
+			return base.ConvertFrom(context, culture, value);
+		}
+
+		public override object ConvertTo(ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value, Type destinationType)
+		{
+			if (destinationType == typeof(string) && value is IntRange)
+			{
+				IntRange intRange = value as IntRange;
+				return intRange.MinValue + "-" + intRange.MaxValue;
+			}
+			return base.ConvertTo(context, culture, value, destinationType);
+		}
+	}
+}</pre>
+<p>然后将在 IntRange 类的声明前加上 TypeConverter 特性，如下所示：</p>
+<pre class="code" data-type="csharp">[TypeConverter(typeof(IntRangeTypeConverter))]
+public class IntRange : INotifyPropertyChanged
+...</pre>
+<p>IntRange 类型与 string 将会实现双向传递。</p>
+<h1>集合对象</h1>
+<h2>常用数据源及说明</h2>
+<table style="width:90%">
+    <tr>
+        <th>&nbsp</th>
+        <th>复杂类型</th>
+        <th>新增</th>
+        <th>修改</th>
+        <th>删除</th>
+        <th>数据校验</th>
+        <th>Comments</th>
+    </tr>
+    <tr>
+        <th style="text-align:left">List&lt;T&gt;/ArrayList/Array</th>
+        <td>Y</td>
+        <td>N</td>
+        <td>Y</td>
+        <td>N</td>
+        <td>Manual</td>
+        <td>常用于简单的数据展示</td>
+    </tr>
+    <tr>
+        <th style="text-align:left">BindingList&lt;T&gt;</th>
+        <td>Y</td>
+        <td>Y</td>
+        <td>Y</td>
+        <td>Y</td>
+        <td>Manual</td>
+        <td>实现简单，定制灵活，是使用自定义对象作为数据源的推荐选择</td>
+    </tr>
+    <tr>
+        <th style="text-align:left">CollectionBase + IBindingList</th>
+        <td>Y</td>
+        <td>Manual</td>
+        <td>Manual</td>
+        <td>Manual</td>
+        <td>Manual</td>
+        <td>可实现最灵活的配置，但主要是用与 .net 1.1，.net 2.0 版本以后可以使用BindingList&lt;T&gt;取代</td>
+    </tr>
+    <tr>
+        <th style="text-align:left">DataTable</th>
+        <td>N</td>
+        <td>Y</td>
+        <td>Y</td>
+        <td>Y</td>
+        <td>Y</td>
+        <td>实现简单，功能强大。配合其Select方法可实现高效率的查询</td>
+    </tr>
+    <tr>
+        <th style="text-align:left">DataView</th>
+        <td>N</td>
+        <td>N</td>
+        <td>N</td>
+        <td>N</td>
+        <td>Y</td>
+        <td>仅用于数据展示</td>
+    </tr>
+</table>
+<h2>对象集合中对象初始化</h2>
+<p>在某些情况下，我们需要在创建对象时根据上下文初始化一些值，这在使用代码创建对象时没什么问题，但如果是通过界面创建的（例如用户可以在DataGridView中添加新行），通常调用的是对象的无参构造函数，我们如何实现这一点呢？</p>
+<p>我在这里只重点介绍一下最常用的BindingList和DataTable的解决方案。</p>
+<h3>BindingList</h3>
+<p>重载其 AddNewCore 方法</p>
+<pre class="code" data-type="csharp">protected override object AddNewCore()
+{
+    BindingPojo pojo = base.AddNewCore() as BindingPojo;
+
+    //添加需要的初始化逻辑
+
+    return pojo;
+}</pre>
+<p>或者使用 AddingNew 事件</p>
+<pre class="code" data-type="csharp">private void BindingPojoList_AddingNew(object sender, AddingNewEventArgs e)
+{
+	BindingPojo pojo = new BindingPojo();
+	
+	//添加初始化逻辑
+	
+	e.NewObject = pojo;
+}</pre>
+<h3>DataTable</h3>
+<p>使用 TableNewRow 事件</p>
+<pre class="code" data-type="csharp">private void DataTable_TableNewRow(object sender, DataTableNewRowEventArgs e)
+{
+	//使用 e.Row 初始化其内容
+}
+</pre>
+<h2>对象集合中的删除/修改事件</h2>
+<p>类似于对象初始化，某些情况下我们需要监听对象集合中的删除/修改事件。</p>
+<h3>BindingList</h3>
+<p>对于删除操作，需重载其 RemoveItem 方法和 ClearItems 方法</p>
+<pre class="code" data-type="csharp">protected override void RemoveItem(int index)
+{
+	//添加删除逻辑
+	
+	base.RemoveItem(index);
+}
+
+protected override void ClearItems()
+{
+	//添加删除逻辑
+	
+	base.ClearItems();
+}</pre>
+<p>鉴于我们通常会实现 INotifyPropertyChanged 接口，因此，可以使用 PropertyChanged 来监听修改事件。</p>
+<p>另外，可通过重载 OnListChanged 函数覆盖所有的删除/修改操作。</p>
+<pre class="code" data-type="csharp">protected override void OnListChanged(ListChangedEventArgs e)
+{
+	//自用逻辑
+	base.OnListChanged(e);
+}</pre>
+<p>可通过 e.ListChangedType 来判断其操作类型。</p>
+<h3>DataTable</h3>
+<p>使用 RowDeleted 或 RowDeleting 事件来监听删除操作，使用 RowChanged 或 RowChanging 事件来监听修改事件。</p>
+<h1>常见问题</h1>
+<h2>跨线程访问</h2>
+<p>如果用于绑定的源对象存在多线程访问的情况，会引发跨线程访问异常，异常信息如下：</p>
+<pre class="code" data-type="csharp">Cross-thread operation not valid: Control 'XXXX' accessed from a thread other than the thread it was created on.</pre>
+<p>需要将对该对象写操作位置加入 InvokeRequired 判断，如下所示：</p>
+<pre class="code" data-type="csharp">private void RefreshPojoData()
+{
+	if (this.InvokeRequired) 
+	{
+		this.Invoke(new MethodInvoker(this.RefreshPojoData));
+	}
+	else
+	{
+		this.BindingPojo.ChangeRandomValue();
+	}
+}</pre>
+<h2>类间属性依赖</h2>
+<p>通常发生在 Composite 模式下，子对象的属性存在相互依赖。</p>
+<pre class="code" data-type="csharp">using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace DataBindingTest.Model
+{
+	public class CrossTestMain
+	{
+		public CrossTestMain()
+		{
+			this.Child1 = new CrossTestChild1();
+			this.Child2 = new CrossTestChild2(this);
+		}
+
+		public CrossTestChild1 Child1 { get; set; }
+		public CrossTestChild2 Child2 { get; set; }
+
+		public void RefreshData()
+		{
+			this.Child1.StringValue = System.Guid.NewGuid().ToString();
+		}
+
+	}
+
+	public class CrossTestChild1 : BaseBindingPojo
+	{
+		private string stringValue;
+		public string StringValue
+		{
+			get { return this.stringValue; }
+			set
+			{
+				this.stringValue = value;
+				this.NotifyPropertyChanged("StringValue");
+			}
+		}
+	}
+
+	public class CrossTestChild2 : BaseBindingPojo
+	{
+		private CrossTestMain owner;
+		public CrossTestChild2(CrossTestMain owner)
+		{
+			this.owner = owner;
+			this.owner.Child1.PropertyChanged += new System.ComponentModel.PropertyChangedEventHandler(this.Child1_PropertyChanged);
+		}
+
+		private void Child1_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+		{
+			this.NotifyPropertyChanged("StringValue");
+		}
+
+		public string StringValue
+		{
+			get { return this.owner.Child1.StringValue; }
+		}
+	}
+}</pre>
+<h2>可视性</h2>
+<p>如果绑定的控件 Visible 属性被设为 False 后，绑定的值将不会被赋到控件的属性中。如 TextBox 的 Text 属性将保持为空。</p>
+<h1>示例下载</h1>
+<p><a href="demo/DataBindingTest.zip">DataBindingTest.zip</a></p>
+
+</body>
+</html>

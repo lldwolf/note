@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>电子邮件</title>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+<p id="title">电子邮件</p>
+
+<h1>概述</h1>
+<p>操纵电子邮件需要使用的 .net 类库为 System.Web.Mail。</p>
+<p>下面的代码为一个发送电子邮件的简单代码，邮件从lldwolf@163.com发送至lldwolf@sina.com，邮件标题为“Test email”，邮件内容为“Hello, world”，同时将“c:\1.zip”作为附件。</p>
+<pre class="code" data-type="csharp">MailMessage Message = new MailMessage();
+Message.To = &quot;lldwolf@sina.com&quot;;					//收信人
+Message.From = &quot;lldwolf@163.com&quot;;					//发信人
+Message.Subject = &quot;Test email&quot;;						//邮件标题
+Message.Body = &quot;Hello, world&quot;;						//邮件体
+
+//注释中用于发送外网
+Message.Fields.Add(&quot;http://schemas.microsoft.com/cdo/configuration/smtpauthenticate&quot;, &quot;1&quot;);
+Message.Fields.Add(&quot;http://schemas.microsoft.com/cdo/configuration/sendusername&quot;, &quot;lldwolf@163.com&quot;) ;//'发件人邮箱用户名
+Message.Fields.Add(&quot;http://schemas.microsoft.com/cdo/configuration/sendpassword&quot;, &quot;123456&quot;) ;//'发件人邮箱密码
+
+SmtpMail.SmtpServer = &quot;smtp.163.com&quot;;
+
+//添加附件
+MailAttachment atta = new MailAttachment(@&quot;c:\1.zip&quot;, MailEncoding.Base64);
+Message.Attachments.Add(atta);
+
+SmtpMail.Send(Message);</pre>
+<TABLE width=801>
+
+<TR VALIGN="top">
+<TH align=left width=32%>Constant</TH>
+<TH align=left width=68%>Value</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=32%><B>cdoAutoPromoteBodyParts</B></TD>
+<TD width=68%>"http://schemas.microsoft.com/cdo/configuration/autopromotebodyparts"</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=32%><B>cdoFlushBuffersOnWrite</B></TD>
+<TD width=68%>"http://schemas.microsoft.com/cdo/configuration/flushbuffersonwrite"</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=32%><B>cdoHTTPCookies</B></TD>
+<TD width=68%>"http://schemas.microsoft.com/cdo/configuration/httpcookies"</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=32%><B>cdoLanguageCode</B></TD>
+<TD width=68%>"http://schemas.microsoft.com/cdo/configuration/languagecode"</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=32%><B>cdoNNTPAccountName</B></TD>
+<TD width=68%>"http://schemas.microsoft.com/cdo/configuration/nntpaccountname"</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=32%><B>cdoNNTPAuthenticate</B></TD>
+<TD width=68%>"http://schemas.microsoft.com/cdo/configuration/nntpauthenticate"</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=32%><B>cdoNNTPConnectionTimeout</B></TD>
+<TD width=68%>"http://schemas.microsoft.com/cdo/configuration/nntpconnectiontimeout"</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=32%><B>cdoNNTPServer</B></TD>
+<TD width=68%>"http://schemas.microsoft.com/cdo/configuration/nntpserver"</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=32%><B>cdoNNTPServerPickupDirectory</B></TD>
+<TD width=68%>"http://schemas.microsoft.com/cdo/configuration/nntpserverpickupdirectory"</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=32%><B>cdoNNTPServerPort</B></TD>
+<TD width=68%>"http://schemas.microsoft.com/cdo/configuration/nntpserverport"</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=32%><B>cdoNNTPUseSSL</B></TD>
+<TD width=68%>"http://schemas.microsoft.com/cdo/configuration/nntpusessl"</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=32%><B>cdoPostEmailAddress</B></TD>
+<TD width=68%>"http://schemas.microsoft.com/cdo/configuration/postemailaddress"</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=32%><B>cdoPostPassword</B></TD>
+<TD width=68%>"http://schemas.microsoft.com/cdo/configuration/postpassword"</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=32%><B>cdoPostUserName</B></TD>
+<TD width=68%>"http://schemas.microsoft.com/cdo/configuration/postusername"</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=32%><B>cdoPostUserReplyEmailAddress</B></TD>
+<TD width=68%>"http://schemas.microsoft.com/cdo/configuration/postuserreplyemailaddress"</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=32%><B>cdoPostUsingMethod</B></TD>
+<TD width=68%>"http://schemas.microsoft.com/cdo/configuration/postusing"</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=32%><B>cdoSaveSentItems</B></TD>
+<TD width=68%>"http://schemas.microsoft.com/cdo/configuration/savesentitems"</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=32%><B>cdoSendEmailAddress</B></TD>
+<TD width=68%>"http://schemas.microsoft.com/cdo/configuration/sendemailaddress"</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=32%><B>cdoSendPassword</B></TD>
+<TD width=68%>"http://schemas.microsoft.com/cdo/configuration/sendpassword"</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=32%><B>cdoSendUserName</B></TD>
+<TD width=68%>"http://schemas.microsoft.com/cdo/configuration/sendusername"</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=32%><B>cdoSendUserReplyEmailAddress</B></TD>
+<TD width=68%>"http://schemas.microsoft.com/cdo/configuration/senduserreplyemailaddress"</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=32%><B>cdoSendUsingMethod</B></TD>
+<TD width=68%>"http://schemas.microsoft.com/cdo/configuration/sendusing"</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=32%><B>cdoSMTPAccountName</B></TD>
+<TD width=68%>"http://schemas.microsoft.com/cdo/configuration/smtpaccountname"</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=32%><B>cdoSMTPAuthenticate</B></TD>
+<TD width=68%>"http://schemas.microsoft.com/cdo/configuration/smtpauthenticate"</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=32%><B>cdoSMTPConnectionTimeout</B></TD>
+<TD width=68%>"http://schemas.microsoft.com/cdo/configuration/smtpconnectiontimeout"</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=32%><B>cdoSMTPServer</B></TD>
+<TD width=68%>"http://schemas.microsoft.com/cdo/configuration/smtpserver"</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=32%><B>cdoSMTPServerPickupDirectory</B></TD>
+<TD width=68%>"http://schemas.microsoft.com/cdo/configuration/smtpserverpickupdirectory"</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=32%><B>cdoSMTPServerPort</B></TD>
+<TD width=68%>"http://schemas.microsoft.com/cdo/configuration/smtpserverport"</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=32%><B>cdoSMTPUseSSL</B></TD>
+<TD width=68%>"http://schemas.microsoft.com/cdo/configuration/smtpusessl"</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=32%><B>cdoURLGetLatestVersion</B></TD>
+<TD width=68%>"http://schemas.microsoft.com/cdo/configuration/urlgetlatestversion"</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=32%><B>cdoURLProxyBypass</B></TD>
+<TD width=68%>"http://schemas.microsoft.com/cdo/configuration/urlproxybypass"</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=32%><B>cdoURLProxyServer</B></TD>
+<TD width=68%>"http://schemas.microsoft.com/cdo/configuration/urlproxyserver"</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=32%><B>cdoUseMessageResponseText</B></TD>
+<TD width=68%>"http://schemas.microsoft.com/cdo/configuration/usemessageresponsetext"</TD>
+</TR>
+</TABLE>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp; </p>
+
+</body>
+</html>

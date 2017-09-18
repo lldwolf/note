@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+    <title>使用数据库</title>
+    <script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+    <p id="title">使用数据库</p>
+
+    <h1>连接数据库</h1>
+    <p>连接数据库时，需要数据库厂商提供的JAVA引擎，这实在是一个比较无奈的事情。</p>
+    <p>连接数据库的语法如下所示：</p>
+    <pre class="code" data-type="java">import java.sql.Connection;
+import java.sql.DriverManager;
+...
+Class.forName("类名").newInstance();
+Connection con = DriverManager.getConnection("连接字符串", "用户名", "口令");</pre>
+    <p>下表提供了常用数据库的JAVA引擎及连接字符串</p>
+    <table style="width: 100%" border="0" cellspacing="0" cellpadding="0">
+        <tr>
+            <th style="width: 10%">数据库</th>
+            <th style="width: 15%">驱动提供者</th>
+            <th style="width: 35%">驱动类</th>
+            <th style="width: 40%">连接字符串</th>
+        </tr>
+        <tr>
+            <td rowspan="2"><a href="download/sqlserver.zip">SQL Server </a></td>
+            <td>Microsoft</td>
+            <td>com.microsoft.jdbc.sqlserver.SQLServerDriver</td>
+            <td>jdbc:microsoft:sqlserver://服务器名或IP:端口号(默认为1433);<br />
+                DatabaseName=pubs;<br />
+                SelectMethod=cursor</td>
+        </tr>
+        <tr>
+            <td>jTDS</td>
+            <td>net.sourceforge.jtds.jdbc.Driver</td>
+            <td>jdbc:jtds:sqlserver://服务器名或IP:端口号(默认为1433)/数据库名</td>
+        </tr>
+        <tr>
+            <td>ORACLE</td>
+            <td>Oracle (需使用 ojdbc14.jar)</td>
+            <td>oracle.jdbc.driver.OracleDriver</td>
+            <td>jdbc:oracle:thin:@服务器名或IP:端口号(默认为1521):数据库SID</td>
+        </tr>
+        <tr>
+            <td>ODBC</td>
+            <td>Sun</td>
+            <td>sun.jdbc.odbc.JdbcOdbcDriver</td>
+            <td>jdbc:odbc:数据源名称</td>
+        </tr>
+    </table>
+    <p>下面是一个连接本地SQL SERVER的pubs库的程序：</p>
+    <pre class="code" data-type="java">import java.sql.Connection;
+import java.sql.DriverManager;
+...
+Class.forName(&quot;com.microsoft.jdbc.sqlserver.SQLServerDriver&quot;).newInstance();
+Connection con = DriverManager.getConnection(
+	&quot;jdbc:microsoft:sqlserver://127.0.0.1:1433;DatabaseName=pubs;SelectMethod=cursor&quot;, 
+	&quot;sa&quot;, 
+	&quot;sa&quot;);</pre>
+    <h2>SQL Server</h2>
+    <p>如果要使用Windows 身份验证方式连接SQL Server，使用微软的开发包我还没找出来，使用jTDS的话，连接字符串可以这样写：</p>
+    <pre class="code" data-type="java">Connection connection = 
+	DriverManager.getConnection(
+		&quot;jdbc:jtds:sqlserver://localhost:1433/pubs;domain=a&quot;, 
+		&quot;administrator&quot;, 
+		&quot;liulindong&quot;);</pre>
+    <p>因为我的电脑不在域中，所在domain我是随便写的，但不能为空，后面两个参数是windows的用户名和口令，呵呵。</p>
+    <h2>Sybase</h2>
+    <p>在此使用 jconn4.jar 作为驱动</p>
+    <h3>常规连接</h3>
+    <pre class="code" data-type="java">Class.forName("com.sybase.jdbc4.jdbc.SybDriver");
+
+String connStr = "jdbc:sybase:Tds:[server_name/ip]:[port_no]/[db_name]";
+String userName = "sa";
+String pwd = "password";
+String connectionProperties = null;
+
+Connection con = DriverManager.getConnection(connStr, userName, pwd);</pre>
+    <h3>加密口令连接</h3>
+    <p>数据库设置了需要使用加密方式传送数据库口令</p>
+    <pre class="code" data-type="java">Class.forName("com.sybase.jdbc4.jdbc.SybDriver");
+
+String connStr = "jdbc:sybase:Tds:[server_name/ip]:[port_no]/[db_name]";
+String userName = "sa";
+String pwd = "password";
+
+Properties props = new Properties();
+props.put("user", userName);
+props.put("password", pwd);
+props.put("ENCRYPT_PASSWORD", "true");
+props.put("CHARSET", "iso_1");
+props.put("JCONNECT_VERSION", "6");
+
+Connection con = DriverManager.getConnection(connStr, props);</pre>
+    <p>上例中的 CHARSET 参数可从 server 的启动日志中找到如下的输出：</p>
+    <pre>on top of default character set:
+     'iso_1' (ID = 1).</pre>
+
+    <h1>执行SELECT语句</h1>
+    <p>下面是一个简单的例子，它连接本机的SQL SERVER pubs库，输出authors表的全部内容。</p>
+    <pre class="code" data-type="java">package example;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSetMetaData;
+import java.sql.ResultSet;
+import java.sql.Statement;
+
+public class Test {
+	
+	public static void main(String[] args) throws Exception
+	{
+		Class.forName(&quot;com.microsoft.jdbc.sqlserver.SQLServerDriver&quot;).newInstance();
+		Connection con = DriverManager.getConnection(
+			&quot;jdbc:microsoft:sqlserver://127.0.0.1:1433;DatabaseName=pubs;SelectMethod=cursor&quot;, 
+			&quot;sa&quot;, 
+			&quot;sa&quot;);
+		Statement st = con.createStatement();
+		String sql = &quot;select * from authors&quot;;
+		ResultSet rs = st.executeQuery(sql);
+		ResultSetMetaData meta_data = rs.getMetaData();
+		
+		for(int i_col = 1; i_col &lt;= meta_data.getColumnCount(); i_col++)
+		{
+			System.out.print(meta_data.getColumnLabel(i_col) + &quot;\t\t&quot;);
+		}
+		System.out.println();
+		
+		while(rs.next())
+		{
+			for(int i_col = 1; i_col &lt;= meta_data.getColumnCount(); i_col++)
+			{
+				System.out.print(rs.getString(i_col) + &quot;\t\t&quot;);
+			}
+			System.out.println();
+		}
+		rs.close();
+		st.close();
+	}
+
+}</pre>
+    <p>从上例中，我们可获知如下几点内容：</p>
+    <ol>
+        <li>使用java.sql.Statement.executeQuery来执行SELECT语句</li>
+        <li>它返回一个ResultSet类型，使用next()方法遍历</li>
+        <li>使用ResultSetMetaData来获取结果集的一些统计信息，如列名、列数、列类型等</li>
+        <li>使用ResultSetMetaData和ResultSet的get*()类的成员函数时，如果以整数值作为索引，则索引值从1开始。</li>
+    </ol>
+    <p>注意：ResultSet没有提供方法可以获取结果集的记录条数，所以，如果想要获取记录条数，需要使用count()函数自己去查。网上有些人提出的所谓解决方法并不好用，说明如下：</p>
+    <ol>
+        <li>使用ResltSet.last()和ResultSet.getRow()以获取记录条数，但很可惜，有些JDBC的驱动并不实现last()函数，例如JDBC-ODBC、SQL Server，其实这些JDBC驱动不实现除next()外的所有的定位操作，包括：first()、last()、previous()、absolute()等</li>
+        <li>使用对next()方法进行计数，方法可行，但且不说效率如何，只说我们获取了结果集，并不是只是为了得到一个结果集记录条数的。循环完了，我们怎么回去呢，因为对某些JDBC驱动，可并不提供first()方法哦。</li>
+    </ol>
+    <h1>执行DML语句</h1>
+    <p>使用Statement.executeUpdate()方法或Statement.execute()方法</p>
+    <h1>参数化SQL</h1>
+    <p>使用PreparedStatement对象</p>
+    <pre class="code" data-type="java">PreparedStatement pstmt = con.prepareStatement("UPDATE EMPLOYEES SET SALARY = ? WHERE ID = ?");
+pstmt.setBigDecimal(1, 153833.00)
+pstmt.setInt(2, 110592)
+</pre>
+    <h1>使用存储过程</h1>
+    <h2>带返回参数的存储过程</h2>
+    <p>针对如下的表：</p>
+    <pre class="code" data-type="java">create table test_table(a int, b int) </pre>
+    <p>有如下存储过程</p>
+    <pre class="code" data-type="java">create procedure [sp_test]
+	@a int, @b int, @count int output
+with recompile
+as
+	set nocount on
+	insert into test_table(a, b) values(@a, @b)
+	select @count = count(*) from test_table
+go</pre>
+    <p>Java的示例代码如下所示：</p>
+    <pre class="code" data-type="java">import java.sql.*;
+...
+Connection conn = ...;	//获取Connection
+String sql = "exec sp_test ?, ?, ?";
+CallableStatement st = conn.prepareCall(sql);
+st.setInt(1, 10);	//设置输入参数
+st.setInt(2, 10);
+st.registerOutParameter(3, Types.INTEGER);	//设置输出参数
+st.execute();
+System.out.println(st.getInt(3));		//获取输出参数的值</pre>
+    <h2>返回结果集的存储过程</h2>
+    <p>这个简单，直接使用executeQuery()即可。也不一定用CallableStatement对象，Statement(如果没参数)和PrepareStatement均可。</p>
+    <h2>返回结果集的函数</h2>
+    <p>创建测试表</p>
+    <pre class="code" data-type="sql">create table test_table (test_id number(10), test_value varchar2(10));
+insert into test_table values(1, 'test 1');
+insert into test_table values(2, 'test 2');</pre>
+    <p>创建测试函数</p>
+    <pre class="code" data-type="sql">CREATE OR replace FUNCTION test_func(startId int)
+RETURN SYS_REFCURSOR 
+IS 
+  cur_test SYS_REFCURSOR; 
+BEGIN
+  open cur_test for
+  with A as (select test_id, test_value from test_table where test_id >= startId)
+  select * from A;
+  
+  RETURN cur_test; 
+END;</pre>
+    <pre class="code" data-type="java">package lld.test.db;
+
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+
+import oracle.jdbc.OracleTypes;
+
+public class CursorFunctionTest {
+	public static void main(String[] args) throws Exception {
+		Class.forName("oracle.jdbc.driver.OracleDriver");
+		int startId = 0;
+
+		Connection connection = DriverManager.getConnection("jdbc:oracle:thin:@[server_host]:[port_no]:[SID]", "user_name", "password");
+		CallableStatement stmt = connection.prepareCall("{ ? = call test_func(?) }");
+		stmt.registerOutParameter(1, OracleTypes.CURSOR);
+		stmt.setInt(2, startId);
+		stmt.execute();
+		ResultSet rs = (ResultSet) stmt.getObject(1);
+		ResultSetMetaData meta_data = rs.getMetaData();
+
+		// print the column list
+		for(int i_col = 1; i_col <= meta_data.getColumnCount(); i_col++)
+		{
+			System.out.print(meta_data.getColumnLabel(i_col) + "\t\t");
+		}
+		
+		System.out.println();
+		
+		while (rs.next()) {
+			System.out.println("test_id = " + rs.getInt("test_id") + ", test_value = " + rs.getString(2));
+		}
+
+		rs.close();
+		stmt.close();
+		connection.close();
+		System.out.println("Completed.");
+	}
+}
+</pre>
+    <h2>使用游标存储返回结果集的存储过程</h2>
+    <p>示例存储过程如下：</p>
+    <pre class="code" data-type="sql">CREATE OR replace procedure test_proc(startId int, cur_test out SYS_REFCURSOR)
+AS
+BEGIN
+  open cur_test for
+  with A as (select test_id, test_value from test_table where test_id >= startId)
+  select * from A;
+END;</pre>
+    <p>Java 调用如下所示：</p>
+    <pre class="code" data-type="java">package lld.test.db;
+
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+
+import oracle.jdbc.OracleTypes;
+
+public class CursorProcedureTest {
+	public static void main(String[] args) throws Exception {
+		Class.forName("oracle.jdbc.driver.OracleDriver");
+		int startId = 0;
+
+		Connection connection = DriverManager.getConnection("jdbc:oracle:thin:@[server_host]:[port_no]:[SID]", "user_name", "password");
+		CallableStatement stmt = connection.prepareCall("{ call test_proc(?,?) }");
+		stmt.setInt(1, startId);
+		stmt.registerOutParameter(2, OracleTypes.CURSOR);
+		stmt.execute();
+		ResultSet rs = (ResultSet) stmt.getObject(2);
+		ResultSetMetaData meta_data = rs.getMetaData();
+
+		// print the column list
+		for(int i_col = 1; i_col <= meta_data.getColumnCount(); i_col++)
+		{
+			System.out.print(meta_data.getColumnLabel(i_col) + "\t\t");
+		}
+		
+		System.out.println();
+		
+		while (rs.next()) {
+			System.out.println("test_id = " + rs.getInt("test_id") + ", test_value = " + rs.getString(2));
+		}
+
+		rs.close();
+		stmt.close();
+		connection.close();
+		System.out.println("Completed.");
+	}
+}
+</pre>
+    <h1>使用事务</h1>
+    <p>一般使用的步骤如下所示：</p>
+    <pre class="code" data-type="java">Connection conn = ...; 	//获取Connection对象
+conn.setAutoCommit(false);	//取消自动提交
+try
+{
+	...(数据库操作)
+	conn.commit();	//提交更改
+}
+catch(Exception ex)
+{
+	conn.rollback();	//回滚事务
+	ex.printStackTrace();
+}
+conn.setAutoCommit(true);	//恢复自动提交</pre>
+    <h1>操作大数据字段 </h1>
+    <p>大数据字段是指ORACLE下的BLOB、CLOB，SQL Server下的image、text等类型的字段。 </p>
+    <h2>示例表 </h2>
+    <p>假设有如下的SQL SERVER表</p>
+    <pre class="code" data-type="java">create table test_table(id int, content image)</pre>
+    <h2>引用的类</h2>
+    <pre class="code" data-type="java">import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;</pre>
+    <h2>插入</h2>
+    <pre class="code" data-type="java">Connection connection = ...	//获取连接
+String sql;
+sql = "insert into test_table(id, content) values(?, ?)";
+PreparedStatement st = connection.prepareStatement(sql);
+st.setInt(1, 20);
+String file_path = "c:/1.xls";	//要读取的文件
+
+//获取文件长度并分配空间
+File f = new File(file_path);
+byte[] data = new byte[(int)f.length()];
+
+//读取文件内容并插入
+FileInputStream fs = new FileInputStream("c:/1.xls");
+fs.read(data);
+st.setObject(2, data);
+st.executeUpdate();
+fs.close();</pre>
+    <h2>读取 </h2>
+    <pre class="code" data-type="java">Connection connection = ...	//获取连接
+String sql = "select content from test_table where id = 10";
+Statement st2 = connection.createStatement();
+ResultSet rs = st2.executeQuery(sql);
+rs.next();
+InputStream outStream = rs.getBinaryStream(1);
+FileOutputStream fw = new FileOutputStream("c:/2.xls", false);	//输出到c:\2.xls
+int buf_len = 1024;
+byte[] out_buf = new byte[buf_len];
+int read_len = outStream.read(out_buf);
+while(read_len > 0)
+{
+	fw.write(out_buf, 0, read_len);			
+	read_len = outStream.read(out_buf);
+}
+fw.flush();
+fw.close();
+outStream.close();</pre>
+    <h1>示例程序</h1>
+    <p><a href="example/SqlServerTest.zip">SQL SERVER 连接示例(Eclipse项目)</a></p>
+    <p><a href="example/OracleTest.zip">Oracle 连接示例</a></p>
+    <p><a href="example/ODBCTest.zip">ODBC 连接示例</a> </p>
+    <p>&nbsp;</p>
+    <p>&nbsp;</p>
+    <p>&nbsp;</p>
+
+</body>
+</html>

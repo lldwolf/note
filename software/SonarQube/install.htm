@@ -1,0 +1,85 @@
+﻿<!DOCTYPE html>
+
+<html lang="zh-cn" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta charset="utf-8" />
+	<script type="text/javascript" src="../../mylib/js/css.js"></script>
+	<title>SonarQube Note</title>
+</head>
+<body>
+	<p id="title">配置 SonarQube 服务器</p>
+	<h1>Overview</h1>
+	<h2>官方网站</h2>
+	<ul>
+		<li>Official URL: <a href="http://www.sonarqube.org/">http://www.sonarqube.org/</a></li>
+		<li>Document URL: <a href="http://docs.codehaus.org/display/SONAR/Documentation">http://docs.codehaus.org/display/SONAR/Documentation</a></li>
+	</ul>
+	<h2>各版本差异</h2>
+	<table style="width:800px">
+		<tr>
+			<td>版本</td>
+			<td>说明</td>
+		</tr>
+		<tr>
+			<td>4.4.x</td>
+			<td>最后一个支持 JDK 6 的版本</td>
+		</tr>
+		<tr>
+			<td>4.5.x</td>
+			<td>不再支持 JDK 6</td>
+		</tr>
+	</table>
+	<h1>安装</h1>
+	<ol>
+		<li>下载 SonarQube. 目前的下载地址为 <a href="http://www.sonarqube.org/downloads/">http://www.sonarqube.org/downloads/</a></li>
+		<li>一般情况下，解压后运行 bin 目录下的对应操作系统文件夹下的 StartSonar 即可</li>
+		<li>启动完成后, 可通过链接 http://localhost:9000 访问</li>
+	</ol>
+	<p>默认情况下，SonarQube 会自动安装并配置数据库(h2).</p>
+	<p>如果是 JRE 版本引起的问题，请参考下面的“配置”一节</p>
+	<h1>配置</h1>
+	<table style="width: 90%">
+		<tr>
+			<th>配置项</th>
+			<th>说明</th>
+		</tr>
+		<tr>
+			<td>JRE 路径配置</td>
+			<td>conf/wrapper.conf
+				<br />
+				找到行 <span style="color:blue">wrapper.java.command</span>, 将其改为需要的路径即可, 默认的配置为 
+				<pre>wrapper.java.command=java</pre>
+				我改成了
+				<pre>wrapper.java.command=C:/Program Files (x86)/Java/jdk1.7.0_25/bin/java</pre>
+			</td>
+		</tr>
+		<tr>
+			<td>数据库配置</td>
+			<td>conf/sonar.properties
+				<br />
+				默认情况下使用
+				<pre>sonar.jdbc.url:jdbc:h2:tcp://localhost:9092/sonar</pre>
+			</td>
+		</tr>
+		<tr>
+			<td>Web 端口号配置</td>
+			<td>conf/sonar.properties
+				<br />
+				sonar.web.port=9004
+			</td>
+		</tr>
+	</table>
+	<h1>升级</h1>
+	<p>安装好新版本进入页面 http://localhost:9000/setup 进行数据库升级</p>
+	<h1>故障排除</h1>
+	<h2>端口占用</h2>
+	<p>检查 log, 如果发现启动失败是因端口占用，如下所示：</p>
+	<pre>org.elasticsearch.transport.BindTransportException: Failed to bind to [9001]</pre>
+	<p>可使用如下命令检查端口占用情况并杀掉相应程序</p>
+	<pre>netstat -ano | more</pre>
+	<h2>Quality Profiles 不可用</h2>
+	<p>打开时显示错误：</p>
+	<pre>We're sorry, but something went wrong.</pre>
+	<p>这是因为 java 路径没配对，参考下上文中的 JRE 路径配置 部分</p>
+</body>
+</html>

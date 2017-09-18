@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+	<script type="text/javascript" src="../../mylib/js/css.js"></script>
+	<title>Java 练习题 - 加载 properties 文件</title>
+</head>
+
+<body>
+	<p id="title">Java 练习题 - 加载 properties 文件</p>
+	<h1>要求</h1>
+    <p>给定 properties 文件的路径, 读取其内容</p>
+    <h1>示例代码</h1>
+    <pre class="code" data-type="java">
+Properties properties = new Properties();
+		 
+//使用 Class Path 相对路径加载
+properties.load(AbstractTestCase.class.getClassLoader().getResourceAsStream("my.properties"));
+		 
+//使用绝对路径加载
+properties.load(new FileInputStream("c:/temp/1.properties"));
+
+//打印所有 property
+Enumeration&lt;?&gt; enumeration = properties.propertyNames();
+		
+while (enumeration.hasMoreElements()) {
+	String key = (String)enumeration.nextElement();
+	String value = (String)properties.getProperty(key);
+	System.out.println(String.format("%s=%s", key, value));
+}</pre>
+
+	</body>
+</html>

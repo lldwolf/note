@@ -1,0 +1,21 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>调试</title>
+<script type="text/javascript" src="css.js"></script>
+</head>
+
+<body>
+<h1>第N章 调试</h1>
+<hr />
+<p>使用DBMS_OUTPUT.put_line()</p>
+<p>这个命令并不是我们平常想象的那样，即时打印消息的。而是打印到内部缓冲区中，缓冲区的默认大小是20,000字节，最大大小是1,000,000字节，如果超出将会提示溢出错误，可以通出DBMS_OUTPUT.ENABLE和DBMS_OUTPUT.DISABLE命令启用或禁用缓冲区，并设置缓冲区大小。缺省是EABLE，如果调用了DISABLE，则缓冲区中的内容将会被冲掉，以后再调用PUT_LINE将没有任何影响。</p>
+<p>ENABLE语法</p>
+<p>PROCEDURE ENABLE(buffer_size IN INTEGER DEFAULT 20000);</p>
+<p>PROCEDURE DISABLE;  </p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<script type="text/javascript" src="index.js"></script>
+</body>
+</html>

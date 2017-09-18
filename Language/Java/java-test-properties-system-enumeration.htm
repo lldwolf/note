@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+	<script type="text/javascript" src="../../mylib/js/css.js"></script>
+	<title>Java 练习题 - 遍历所有系统属性</title>
+</head>
+
+<body>
+	<p id="title">Java 练习题 - 遍历所有系统属性</p>
+	<h1>要求</h1>
+    <p>遍历并打印所有的系统属性</p>
+    <h1>示例代码</h1>
+    <pre class="code" data-type="java">Properties properties = System.getProperties();
+Enumeration&lt;?&gt; enumeration = properties.propertyNames();
+
+while (enumeration.hasMoreElements()) {
+	String key = (String)enumeration.nextElement();
+	String value = (String)properties.getProperty(key);
+	System.out.println(String.format(&quot;%s=%s&quot;, key, value));
+}</pre>
+	</body>
+</html>

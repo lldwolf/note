@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>配置文件</title>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+<p id="title">配置文件</p>
+
+<p>针对Winform和ASP.NET有两种不同的配置文件，在Winform下为App.config文件，在ASP.NET中则为Web.config文件，对于这两个文件中的元素，.net提供了一组专门的类来进行操作。</p>
+<h1>App.config</h1>
+<h2>appSettings部分</h2>
+<p>假设App.config的文件内容如下所示：</p>
+<pre class="code" data-type="xml">?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; ?&gt;
+&lt;configuration&gt;
+  &lt;appSettings&gt;
+    &lt;add key=&quot;Key1&quot; value=&quot;Value1&quot; /&gt;
+    &lt;add key=&quot;Key2&quot; value=&quot;Value2&quot; /&gt;
+  &lt;/appSettings&gt;
+&lt;/configuration&gt;</pre>
+<p>可使用如下代码来读取appSettings中的值</p>
+<pre class="code" data-type="csharp">using System.Configuration;
+...
+Configuration config = ConfigurationManager.OpenExeConfiguration(null);
+Console.WriteLine(config.AppSettings.Settings[&quot;Key1&quot;].Value);
+Console.WriteLine(config.AppSettings.Settings[&quot;Key2&quot;].Value);
+Console.Read();</pre>
+<h1>Web.config</h1>
+<h2>appSettings部分</h2>
+<p>如果在web.config中有如下配置片断：</p>
+<pre class="code" data-type="xml">appSettings&gt;
+	&lt;add key=&quot;Key1&quot; value=&quot;Value1&quot; /&gt;
+	&lt;add key=&quot;Key2&quot; value=&quot;Value2&quot; /&gt;
+&lt;/appSettings&gt;</pre>
+<p>使用如下代码进行读取</p>
+<pre class="code" data-type="csharp">using System.Web.Configuration;
+...
+string key1 = WebConfigurationManager.AppSettings[&quot;Key1&quot;]</pre>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+
+</body>
+</html>

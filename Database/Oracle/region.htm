@@ -1,0 +1,62 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>区域</title>
+<script type="text/javascript" src="css.js"></script>
+</head>
+
+<body>
+<h1>第N章 区域</h1>
+<hr />
+<p>Oracle的区域设置主要关系到如下几个方面：</p>
+<ul>
+  <li><a href="#language">使用语言</a></li>
+  <li><a href="#date">日期</a></li>
+</ul>
+<p>在下面的示例中，更改客户端语言所用的方法为修改注册表项“HKLM\SOFTWARE\Oracle”和“HKLM\SOFTWARE\Oracle\HOME0”下的NLS_LANG项的值。</p>
+<h2><a name="language" id="language"></a>N.1 使用语言 </h2>
+<p>Oracle会根据所在的位置自动选择提示语言的类型。</p>
+<p>以 PL/SQL 作为测试平台，我们看一下如果客户端使用的语言在服务器不支持的情况下，会发生什么后果。这种情况通常出现于数据库为英文字符集，而客户端设置为中文的情况。</p>
+<p>情景一：Oracle数据库的字符集为WE8ISO8859P1，客户端字符集设为“SIMPLIFIED CHINESE_CHINA.WE8ISO8859P1”</p>
+<p>乱敲一通（保证是不能执行的），然后执行，画面如下所示：</p>
+<p><img src="images/059.JPG" width="183" height="122" /></p>
+<p>现在我把客户端字符集改成“SIMPLIFIED CHINESE_CHINA.ZHS16GBK”，现在执行错误语句的提示变成了下图：</p>
+<p><img src="images/060.JPG" width="207" height="122" /></p>
+<p>只有正确地设置了使用的语言，方可得到正确的结果，将前面的“SIMPLIFIED CHINESE”换成“AMERICAN”，其它的无所谓，即可看到正确的提示：</p>
+<p><img src="images/061.JPG" width="238" height="122" /></p>
+<p>这是因为Oracle会试图以指定的语言返回信息，但如果数据库本身不支持该语言，则会返回一些无意义的信息。关键在于将语言设置的与如下SQL语句的查询结果一致：</p>
+<pre>select * from nls_database_parameters where parameter = 'NLS_LANGUAGE'; </pre>
+<p>不过对于兼容的语言则不存在该问题，例如如果数据库字符集为ZHS16GBK，但客户端语言设为AMERICAN，会以正确的英文格式返回信息，因为中文兼容英文。</p>
+<h2><a name="date" id="date"></a>N.2 日期</h2>
+<p>我们先执行一下如下的SQL语句，看它返回的结果如何</p>
+<pre>select to_char(SYSDATE,'DD-MON-YY') from dual;</pre>
+<p>下表是其根据客户端语言设置不同而输出的结果</p>
+<table width="60%" >
+  <tr>
+    <th>语言</th>
+    <th>输出</th>
+  </tr>
+  <tr>
+    <td>AMERICAN</td>
+    <td>07-AUG-08</td>
+  </tr>
+  <tr>
+    <td>SIMPLIFIED CHINESE </td>
+    <td>07-8月-08</td>
+  </tr>
+</table>
+<p>输出如何尚是小事，关键它会影响到输入，以我自己的配置为例，执行如下SQL：</p>
+<pre>select * from nls_database_parameters where parameter = 'NLS_DATE_FORMAT'; </pre>
+<p>我的结果为“DD-MON-RR”，这就带来一个问题，我们看一下下面这三条SQL</p>
+<pre>select cast('01-AUG-06' AS date) from dual; 
+select cast('01-8月-06' AS date) from dual;
+select cast('2006-1-1' AS date) from dual;</pre>
+<p>当将语言设为AMERICAN时，第一条SQL能够正确执行，设为“SIMPLIFIED CHINESE”时，第二条SQL能够正确执行，否则都会提示错误“无效的月份”/“not a valid month”，而对于第三条，无论何种情况均提示错误“文字与格式字符串不匹配”/“literal does not match format string”。</p>
+<p>我们在注册表项HOME0中添加一项“NLS_DATE_FORMAT”，将其值设为“YYYY-MM-DD”，OK，现在第三条可以正确执行了，不过前两条全部都不行了，提示错误“在要求输入数字处找到非数字字符”/“文字与格式字符串不匹配”。</p>
+<p>这说明，在程序中直接使用CAST进行日期转换时有很大的限制，如果考虑到能够在多个国家使用的话，使用to_date函数来代替。</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<script type="text/javascript" src="index.js"></script>
+</body>
+</html>

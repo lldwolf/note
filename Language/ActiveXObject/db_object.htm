@@ -1,0 +1,129 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<title>数据库</title>
+<script language="javascript" src="css.js"></script>
+<style type="text/css">
+<!--
+.style1 {font-size: 18px}
+-->
+</style>
+</head>
+
+<body>
+<h1>第N章 数据库</h1>
+<hr>
+<h2>N.1 概述</h2>
+<p>主要使用的对象有如下几个：</p>
+<table width="90%"  border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <th width="30%">对象名</th>
+    <th width="70%">描述</th>
+  </tr>
+  <tr>
+    <td><a href="#connection">ADODB.Connection</a></td>
+    <td>数据库连接</td>
+  </tr>
+  <tr>
+    <td><a href="recordset">ADODB.RecordSet</a></td>
+    <td>XML结点，类似于.net中的System.XML.XmlNode</td>
+  </tr>
+</table>
+<h2><a name="connectoin"></a>N.2 ADODB.Connection </h2>
+<h3>N.2.1 连接字符串 </h3>
+<p>该对象的主要注意点在其连接字符串的设置，它使用的是ADO引擎，连接字符串的设置如下：</p>
+<table width="90%"  border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <th width="20%">数据库</th>
+    <th width="80%">连接字符串示例</th>
+  </tr>
+  <tr>
+    <td>Access</td>
+    <td>Provider=Microsoft.Jet.OLEDB.4.0;Data Source=databaseName;User ID=userName;Password=userPassWord</td>
+  </tr>
+  <tr>
+    <td>Sql Server </td>
+    <td>Provider=SQLOLEDB;Data Source=serverName;Initial Catalog=databaseName;User ID=userName;Password=userPassword</td>
+  </tr>
+  <tr>
+    <td>Oracle</td>
+    <td>Provider=MSDAORA;Data Sourse=serverName;User ID=userName;Password=userPassword;</td>
+  </tr>
+  <tr>
+    <td>ODBC</td>
+    <td>Provider=MADASQL;DSN=dsnName;UID=userName;PWD=userPassword;"</td>
+  </tr>
+</table>
+<p>设置连接字符串时，需将连接字符串赋给Connection对象的ConnectionString对象</p>
+<p class="style1"><a href="ADO%20Connection%20String.htm">更多的ADO连接字符串</a></p>
+<h3>N.2.2 数据库的打开与关闭</h3>
+<p>使用Connection对象的Open方法和Close方法，注意，Connection对象不能连续执行Open或Close方法。Open方法后，闭须执行Close，才能再次执行Open。</p>
+<h3>N.2.3 Execute方法</h3>
+<p>用来执行SQL指令，一般用来执行数据库更新SQL语句。也可执行查询SQL语句，但只能返回前向移动的RecordSet对象。</p>
+<h2><a name="recordset"></a>N.3 ADODB.RecordSet </h2>
+<p>最好用的数据库操作对象。</p>
+<h3>N.3.1 使用 </h3>
+<p>将其ActiveConnection属性设为正确的ADODB.Connection对象，使用Open方法执行SQL语句返回结果集。结果集的类型由CursorType属性确定，常用的有：</p>
+<ul>
+  <li>adOpenForwardOnly：前向移动的结果集</li>
+  <li>adOpenStatic：静态结果集，可双向移动，最常用</li>
+  <li>adOpenDynamic：动态结果集，可双向移动，功能没有吹得那么好。动态的意思是，取完结果集后，如果结果集中的内容被其它程序改变，它也能同步改变。</li>
+</ul>
+<p>使用MoveFirst, MoveNext, MovePrevious, MoveLast方法进行定位，还有一个Move方法，可精确指定移动指针到结果集中的第几条记录，它的调用方式如下：</p>
+<pre>Move 移动的记录行数（正数前移，负数后移）,[开始的移动位置，默认为开始位置]</pre>
+<p>使用Fields()属性取结果集中的值，如下所示：</p>
+<pre>msgbox record_set.Fields(0)			'取结果集中当前行的第一个字段值
+msgbox record_set.Fields("field_name")		'根据列名取结果集中当前行的某字段值</pre>
+<h2>N.100 示例</h2>
+<h3> N.100.1 将SQL查询结果生成至Excel</h3>
+<p>在Excel中建立如下宏</p>
+<pre>Sub ImportSql()
+
+    Dim conn As ADODB.Connection
+    Dim rs As ADODB.Recordset
+    Dim sql As String
+    Dim iRow As Integer
+    Dim I As Integer
+    
+    Set conn = New ADODB.Connection
+    Set rs = New Recordset
+    conn.ConnectionString = &quot;Provider=sqloledb;Data Source=(local);Initial Catalog=pubs;User ID=sa;Password=sa&quot;
+    Call conn.Open
+    Set rs.ActiveConnection = conn
+    rs.CursorType = adOpenStatic
+    
+    
+    sql = &quot;select * from authors&quot;
+    Call rs.Open(sql)
+    
+    iRow = 1
+    
+    For I = 0 To rs.Fields.Count - 1
+        ActiveSheet.Cells(iRow, I + 1) = rs.Fields(I).Name
+    Next I
+    
+    iRow = iRow + 1
+    
+    Call rs.MoveFirst
+    While Not rs.EOF
+        
+        For I = 0 To rs.Fields.Count - 1
+            ActiveSheet.Cells(iRow, I + 1) = rs(I)
+        Next I
+        rs.MoveNext
+        iRow = iRow + 1
+        
+    Wend
+    
+    Call ActiveSheet.Columns.AutoFit
+    
+    MsgBox &quot;生成完毕&quot;
+
+End Sub</pre>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<script language="javascript" src="index.js"></script>
+</body>
+</html>

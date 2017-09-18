@@ -1,0 +1,172 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>格式</title>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+<h1>第N章 单元格格式</h1>
+<hr />
+<h2><a href="#font">N.1 字体 </a></h2>
+<h2><a href="#alignment">N.2 对齐</a></h2>
+<h2><a href="#number">N.3 数字 </a></h2>
+<h2><a href="#borders">N.4 边框 </a></h2>
+<h2><a href="#color">N.5 图案</a> </h2>
+<h2><a href="#protection">N.6 保护</a></h2>
+<hr />
+<h2><a name="font" id="font"></a>N.1 字体 </h2>
+<p>获取方式为 Excel.Range.Font，下表展示了与字体有关的设置(全部是Font的子属性)</p>
+<table width="80%" >
+  <tr>
+    <th width="30%">属性</th>
+    <th width="70%">说明</th>
+  </tr>
+  <tr>
+    <td>Bold</td>
+    <td>是否粗体</td>
+  </tr>
+  <tr>
+    <td>Color</td>
+    <td>颜色，可通过RGB函数生成</td>
+  </tr>
+  <tr>
+    <td>ColorIndex</td>
+    <td>颜色索引号</td>
+  </tr>
+  <tr>
+    <td>Italic</td>
+    <td>是否斜体</td>
+  </tr>
+  <tr>
+    <td>Name</td>
+    <td>字体名称</td>
+  </tr>
+  <tr>
+    <td>Size</td>
+    <td>字体大小</td>
+  </tr>
+  <tr>
+    <td>Strikethrough</td>
+    <td>是否有删除线</td>
+  </tr>
+  <tr>
+    <td>Subscript</td>
+    <td>是否下标</td>
+  </tr>
+  <tr>
+    <td>Superscript</td>
+    <td>是否上标</td>
+  </tr>
+  <tr>
+    <td>Underline</td>
+    <td>下划线设置，设置值为Excel.XlUnderlineStyle，可设无下划线、单下划线、双下划线、会计用单下划线、会计用双下划线
+	</td>
+  </tr>
+</table>
+<h2><a name="alignment" id="alignment"></a>N.2 对齐 </h2>
+<p>下表展示了与对齐有关的属性（Excel.Range的子属性）</p>
+<table width="80%" >
+  <tr>
+    <th width="30%">属性</th>
+    <th width="70%">说明</th>
+  </tr>
+  <tr>
+    <td>HorizontalAlignment</td>
+    <td>水平对齐方式，值类型为Excel.XlHAlign</td>
+  </tr>
+  <tr>
+    <td>IndentLevel</td>
+    <td>缩进值</td>
+  </tr>
+  <tr>
+    <td>MergeCells</td>
+    <td>是否自动合并单元格</td>
+  </tr>
+  <tr>
+    <td>Orientation</td>
+    <td>旋转角度，单位为角度</td>
+  </tr>
+  <tr>
+    <td>ReadingOrder</td>
+    <td>文字方向</td>
+  </tr>
+  <tr>
+    <td>ShrinkToFit</td>
+    <td>是否缩小字体填充</td>
+  </tr>
+  <tr>
+    <td>VerticalAlignment</td>
+    <td>垂直对齐方式，值类型为Excel.XlVAlign</td>
+  </tr>
+  <tr>
+    <td>WrapText</td>
+    <td>是否自动换行</td>
+  </tr>
+</table>
+<h2><a name="number" id="number"></a>N.3 数字 </h2>
+<p>使用Excel.Range.NumberFormatLocal属性，具体的格式字符串可以到Excel中进行测试，最常用的一个是将单元格设为文本模式，如下所示</p>
+<p>Sheet1.Range(&quot;A1&quot;).NumberFormatLocal = &quot;@&quot;</p>
+<h2><a name="borders" id="borders"></a>N.4 边框 </h2>
+<p>通过Range.Borders获取边框线，这是一个集合，通过Excel.XlBordersIndex枚举来索引各个边，对每条边框线，有如下属性可设</p>
+<table width="80%" >
+  <tr>
+    <th width="30%">属性</th>
+    <th width="70%">说明</th>
+  </tr>
+  <tr>
+    <td>ColorIndex</td>
+    <td>颜色索引值</td>
+  </tr>
+  <tr>
+    <td>LineStyle</td>
+    <td>线型，其类型为Excel.XlLineStyle</td>
+  </tr>
+  <tr>
+    <td>Weight</td>
+    <td>线宽，其类型为Excel.XlBorderWeight</td>
+  </tr>
+</table>
+<h2><a name="color" id="color"></a>N.5 图案 </h2>
+<p>通过Range.Interior属性，对其有如下属性可设置</p>
+<table width="80%" >
+  <tr>
+    <th width="30%">属性</th>
+    <th width="70%">说明</th>
+  </tr>
+  <tr>
+    <td>ColorIndex</td>
+    <td>填充颜色索引值</td>
+  </tr>
+  <tr>
+    <td>Pattern</td>
+    <td>填充模式，常用的值为xlSolid，其它值自己到Excel中去录制吧</td>
+  </tr>
+  <tr>
+    <td>PatternColorIndex</td>
+    <td>填充模式的颜色索引，一般设为xlAutomatic</td>
+  </tr>
+</table>
+<h2><a name="protection" id="protection"></a>N.6 保护 </h2>
+<table width="80%" >
+  <tr>
+    <th width="30%">属性</th>
+    <th width="70%">说明</th>
+  </tr>
+  <tr>
+    <td>FormulaHidden</td>
+    <td>是否隐藏</td>
+  </tr>
+  <tr>
+    <td>Locked</td>
+    <td>是否保护</td>
+  </tr>
+</table>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+
+</body>
+</html>

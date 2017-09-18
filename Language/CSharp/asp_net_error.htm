@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+	<title>ASP.NET常见错误</title>
+	<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+	<p id="title">ASP.NET常见错误</p>
+	<h1>脚本错误</h1>
+	<h2>脚本错误：return 语句不能在函数之外</h2>
+	<p>一说这个问题，我要先吐上一盆血，再SM MS一千遍，方能泄我心头之恨。</p>
+	<p>使用VS2005开发时，在引用外部.js文件时常常碰到这个问题。</p>
+	<p>需要在VS.NET中把相应的JS文件打开，以格式 Unicode(UTF8 无签名) 方式另存，同时清空IE缓存，这个问题即可解决。</p>
+	<p>当时碰到这个问题我是一个头大，在Firefox中怎么测试都没问题，一到IE中就出这种鸟事。幸亏网上有高人啊，在此向其致敬。</p>
+	<h1>CSS错误 </h1>
+	<h2>CSS文件路径不正确</h2>
+	<p>这个问题属于Web开发中的基础问题，一般采用相对路径会出现这样的问题，或者样式文件写在了母版页里面，在内容页与母版页不在同一级目录下时会出现这样的问题。此时你要清楚Web中相对路径的规则，如果你不清楚，可以采用绝对路径的写法试试就知道是不是路径的问题了。</p>
+	<h2>CSS规则写法错误</h2>
+	<p>这个问题谁也帮不你，只能自己学习CSS的相关知识了。</p>
+	<h2>文件编码问题</h2>
+	<p>有时候，CSS样式放在aspx文件里有效，而放在独立的文件中无效，这样的问题如果不是路径问题，则就是编码问题造成的，可以将CSS文件用记事本打开，再另存为ANSI格式或者UTF-8格式即可。</p>
+	<h2>权限问题</h2>
+	<p>这种情况常见的现象是登录之前样式无效，登录之后才有效，这是典型的权限问题造成的。由于web.config配置了所有文件不允许匿名访问，才会出现这样的问题，解决方法就是将&lt;location&gt;标记将样式文件配置为允许匿名访问。例如：</p>
+	<pre class="code" data-type="xml">configuration&gt;
+   &lt;location path=&quot;允许匿名访问的文件夹名称或者文件路径&quot;&gt;
+      &lt;system.web&gt;
+         &lt;authorization&gt;
+            &lt;allow users=&quot;?&quot;/&gt;
+         &lt;/authorization&gt;
+      &lt;/system.web&gt;
+   &lt;/location&gt;
+&lt;/configuration&gt;</pre>
+	<h2>单击按钮样式失效</h2>
+	<p>这种情况最典型的原因是单击按钮事件里有类似Response.Write这样的语句，由于ASP.NET 2.0默认采用http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd文档类型定义，它就要求在&lt;!DOCTYPE html PUBLIC &quot;-//W3C//DTD XHTML 1.0 Transitional//EN&quot; &quot;http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd&quot;&gt;的前面不能有任何输出。这种问题的解决方法是采用ClientScriptManager输出，或者采用Literal控件输出内容。</p>
+	<h2>在ASP.NET 1.x里面起作用的样式到ASP.NET 2.0里面失效</h2>
+	<p>这种问题一般仍然是xhtml1造成的，由于http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd的样式规则与以前的不同，如要加单位，例如width:200;现在要写成width:200px;这种问题的解决方法就是要明确加上单位。</p>
+	<h2>脚本设置的样式无效</h2>
+	<p>由于xhtml1.DTD要求有单位，因此在设置对象样式的数值时，仍然要加上单位，如obj.style.width = &quot;200px&quot;。下面的代码在Firefox了是无效的（不要抱怨Firefox麻烦）</p>
+	<pre class="code" data-type="xml">!DOCTYPE html PUBLIC &quot;-//W3C//DTD XHTML 1.0 Transitional//EN&quot; &quot;http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd&quot;&gt;
+&lt;html xmlns=&quot;http://www.w3.org/1999/xhtml&quot;&gt;
+&lt;head&gt;
+  &lt;script type=&quot;text/javascript&quot;&gt;
+  //&lt;![CDATA[
+  function SetHeight()
+  {
+    document.getElementById(&quot;x&quot;).style.height=&quot;200&quot;
+  }
+  //]]&gt;
+  &lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;div id=&quot;x&quot; style=&quot;background:#DDD;height:auto;&quot;&gt;测试&lt;/div&gt;
+&lt;input type=&quot;button&quot; value=&quot;设置&quot; onclick=&quot;SetHeight()&quot; /&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+	<p>尽管上面在IE中正常，但在Firefox里面则会出现问题。正确写法为 </p>
+	<pre class="code" data-type="csharp">document.getElementById(&quot;x&quot;).style.height=&quot;200px&quot;</pre>
+	<p>&nbsp;</p>
+
+</body>
+</html>

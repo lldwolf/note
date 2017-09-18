@@ -1,0 +1,55 @@
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+	<script type="text/javascript" src="../../mylib/js/css.js"></script>
+	<title>Beyond Compare</title>
+</head>
+
+<body>
+	<h1>Beyond Compare</h1>
+	<hr />
+	<h2>在比较目录时，过滤不需要比较的文件</h2>
+	<p>列如，忽略 CVS, bin, obj 目录，以及所有的 .bak 文件</p>
+	<p>Seesion -> Session Settings -> Nmae Filters</p>
+	<img alt="" src="img/name_filter.png" />
+	<p>上述配置将会出现在工具栏的 Filters 中，大体格式如下：</p>
+	<pre>-*.class;-*.bak;-*.licx;-.cvsignore;-CVS\;-obj\;-bin\;-Assembly\;-Publish\;-test\</pre>
+	<h2>只显示不同的文件</h2>
+	<img alt="" src="img/show_diff.png" />
+	<h2>不比较空白字符</h2>
+	<img alt="" src="img/ignore_whitespace.png" />
+	<h2>放弃默认的快速比较方式，改用其于内容的比较</h2>
+	<p>Seesion -> Session Settings -> Comparison</p>
+	<img alt="" src="img/rule_comparison.png" />
+	<h2>导出比较结果（文件列表）</h2>
+	<p>点一下 "Expand All" 工具栏按钮展开全部，使用 “Session -> Folder Compare Report"</p>
+	<img alt="" src="img/compare_report.png" />
+	<h2>常用快捷键</h2>
+	<p>可通过 Tools - Customized Commands 自定义快捷键</p>
+	<table width="400">
+		<tbody>
+			<tr>
+				<th>Shortcut</th>
+				<th>Description</th>
+			</tr>
+			<tr>
+				<td>Ctrl + L</td>
+				<td>Copy to Left</td>
+			</tr>
+			<tr>
+				<td>Ctrl + R</td>
+				<td>Copy to Right</td>
+			</tr>
+			<tr>
+				<td>Ctrl + P</td>
+				<td>Previous difference</td>
+			</tr>
+			<tr>
+				<td>Ctrl + N</td>
+				<td>Next difference</td>
+			</tr>
+		</tbody>
+	</table>
+	<p>&nbsp;</p>
+</body>
+</html>

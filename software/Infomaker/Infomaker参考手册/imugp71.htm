@@ -1,0 +1,349 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+Grouping rows </TITLE>
+</HEAD>
+<BODY>
+<A NAME="BFCCEGIH"></A><h1>Grouping rows </h1>
+<A NAME="TI2812"></A><p>You can group related rows together and, optionally, calculate
+statistics for each group separately. For example, you might want
+to group employee information by department and get total salaries
+for each department.</p>
+<A NAME="TI2813"></A><h4>How groups are defined</h4>
+<A NAME="TI2814"></A><p>Each group is defined by one or more report columns. Each time the value in a grouping
+column changes, a <strong>break</strong> occurs and a new
+section begins.</p>
+<A NAME="TI2815"></A><p>For each group you can:<A NAME="TI2816"></A>
+<ul>
+<li class=fi>Display
+the rows in each section</li>
+<li class=ds>Specify the information you want displayed at the
+beginning and end of each section</li>
+<li class=ds>Specify page breaks after each break in the data</li>
+<li class=ds>Reset the page number after each break
+</li>
+</ul>
+</p>
+<A NAME="TI2817"></A><h4>Grouping example</h4>
+<A NAME="TI2818"></A><p>The following report retrieves employee information. It
+has one group defined, Dept_ID, so it groups rows into
+sections according to the value in the Dept_ID column.
+In addition, it displays:<A NAME="TI2819"></A>
+<ul>
+<li class=fi>Department
+ID before the first row for that department</li>
+<li class=ds>Totals and averages for salary and salary plus benefits
+(a computed column) for each department</li>
+<li class=ds>Grand totals for the company at the end
+</li>
+</ul>
+</p>
+<br><img src="images/Filt06.gif">
+<A NAME="TI2820"></A><h4>How to do it</h4>
+<A NAME="TI2821"></A><p>You can create a grouped report two ways:<A NAME="TI2822"></A>
+<ul>
+<li class=fi>Use the Group presentation style to create a grouped report from
+scratch.</li>
+<li class=ds>Take an existing tabular report and define grouping
+(<A HREF="imugp71.htm#BFCDHDBE">"Defining groups in an existing report"</A>).
+</li>
+</ul>
+</p>
+<A NAME="BFCCGFFF"></A><h2>Using the Group presentation style</h2>
+<A NAME="TI2823"></A><p>One of the report presentation styles, Group, is a shortcut
+to creating a grouped report. It generates a tabular report that
+has one group level and some other grouping properties defined.
+You can then further customize the report.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To create a basic grouped report using the
+Group presentation style:</p>
+<ol><li class=fi>
+Select File&gt;New from the menu
+bar.<br><br>
+The New dialog box displays.<br><br></li>
+<li class=ds>
+Choose the Object tab page and the Group presentation
+style, and click OK.<br><br></li>
+<li class=ds>
+Choose a data source and define the data.<br><br>
+You are prompted to define the grouping column(s).<br><br></li>
+<li class=ds>
+Drag the column(s) you want to group on from the
+Source Data box to the Columns box. <br><br><p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Multiple columns and multiple group levels</span> <A NAME="TI2824"></A>You can specify more than one column but all columns apply
+to group level one. You can define one group level at this point.
+Later you can define additional group levels.</p>
+
+In the following example, grouping will be by department,
+as specified by the dept_id column:<br><br><br><img src="images/Filt07.gif"><br>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>If you want to use an expression</span> <A NAME="TI2825"></A>If you want to use an expression, you can enter an expression
+as the Group Definition on the General page in the Properties view
+after you've finished using the Group Wizard. You can specify
+more than one grouping item expression for a group. A break occurs
+whenever the value concatenated from each column/expression
+changes.</p>
+</li>
+<li class=ds>
+Click Next.<br><br>
+InfoMaker suggests a header based on your data source. For
+example, if your data comes from the Employee table, InfoMaker uses
+the name of the table in the suggested header.<br><br></li>
+<li class=ds>
+Specify the Page Header text.<br><br></li>
+<li class=ds>
+If you want a page break each time a grouping
+value changes, select the New Page On Group Break box.<br><br></li>
+<li class=ds>
+If you want page numbering to restart at 1 each
+time a grouping value changes, select the Reset Page Number On Group
+Break box <i>and</i>
+ the New Page On Group Break box.<br><br></li>
+<li class=ds>
+Click Next.<br><br></li>
+<li class=ds>
+Select Color and Border settings and click Next.<br><br></li>
+<li class=ds>
+Review your specification and click Finish.<br><br>
+The report displays with the basic grouping properties
+set.<br><br></li></ol>
+<br><A NAME="TI2826"></A><p>This is an example of a Group style report:</p>
+<br><img src="images/Filt09.gif">
+<A NAME="TI2827"></A><h4>What InfoMaker does</h4>
+<A NAME="TI2828"></A><p>As a result of your specifications, InfoMaker generates a
+tabular report and:<A NAME="TI2829"></A>
+<ul>
+<li class=fi>Creates group header and trailer
+bands</li>
+<li class=ds>Places the column you chose as the grouping column
+in the group header band</li>
+<li class=ds>Sorts the rows by the grouping column</li>
+<li class=ds>Places the page header and the date (as a computed
+field) in the header band</li>
+<li class=ds>Places the page number and page count (as computed
+fields) in the footer band</li>
+<li class=ds>Creates sum computed fields for all numeric columns
+(the fields are placed in the group trailer and summary bands)
+</li>
+</ul>
+</p>
+<A NAME="TI2830"></A><p>Here is the preceding report in the Preview view:</p>
+<br><img src="images/Filt10.gif">
+<A NAME="TI2831"></A><h4>What you can do</h4>
+<A NAME="TI2832"></A><p>You can use any of the techniques available in a tabular report to
+modify and enhance the grouped report, such as moving controls,
+specifying display formats, and so on. In particular, see <A HREF="imugp71.htm#BFCDHDBE">"Defining groups in an existing report"</A> to learn more
+about the bands in a grouped report and how to add features especially
+suited for grouped reports (for example, add a second group
+level, define additional summary statistics, and so on).</p>
+<A NAME="BFCDHDBE"></A><h2>Defining groups in an existing report</h2>
+<A NAME="TI2833"></A><p>Instead of using the Group presentation style to create a
+grouped report from scratch, you can take an existing tabular report and
+define groups in it.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To add grouping to an existing report:</p>
+<ol><li class=fi>
+Start with a tabular report that retrieves
+all the columns you need.<br><br></li>
+<li class=ds>
+Specify the grouping columns.<br><br></li>
+<li class=ds>
+Sort the rows.<br><br></li>
+<li class=ds>
+(Optional) Rearrange the report.<br><br></li>
+<li class=ds>
+(Optional) Add summary statistics.<br><br></li>
+<li class=ds>
+(Optional) Sort the groups.<br><br></li></ol>
+<br><A NAME="TI2834"></A><p>Steps 2 through 6 are described next.</p>
+<A NAME="TI2835"></A><h3>Specifying the grouping columns</h3>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To specify the grouping columns:</p>
+<ol><li class=fi>
+In the Report painter, Select Rows&gt;Create
+Group from the menu bar.<br><br>
+The Specify Group Columns dialog box displays:<br><br><br><img src="images/filt11.gif"><br>
+</li>
+<li class=ds>
+Specify the group columns, as described in <A HREF="imugp71.htm#BFCCGFFF">"Using the Group presentation
+style"</A>. Set the Reset
+Page Count and New Page on Group Break properties on the General
+page in the Properties view.<br><br></li></ol>
+<br><A NAME="TI2836"></A><h4>Creating subgroups</h4>
+<A NAME="TI2837"></A><p>After defining your first group, you can define subgroups,
+which are groups within the group you just defined.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To define subgroups:</p>
+<ol><li class=fi>
+Select Rows&gt;Create Group from
+the menu bar and specify the column/expression for the
+subgroup.<br><br></li>
+<li class=ds>
+Repeat step 1 to define additional subgroups if
+you want.<br><br>
+You can specify as many levels of grouping as you need.<br><br></li></ol>
+<br><A NAME="TI2838"></A><h4>How groups are identified</h4>
+<A NAME="TI2839"></A><p>InfoMaker assigns each group a number (or level) when you
+create the group. The first group you specify becomes group 1, the
+primary group. The second group becomes group 2, a subgroup within
+group 1, and so on. </p>
+<A NAME="TI2840"></A><p>For example, say you defined two groups. The first group uses
+the dept_id column and the second group uses the status
+column.</p>
+<A NAME="TI2841"></A><h4>First group</h4>
+<A NAME="TI2842"></A><p></p>
+<br><img src="images/filt12.gif">
+<A NAME="TI2843"></A><h4>Second group</h4>
+<A NAME="TI2844"></A><p></p>
+<br><img src="images/filt13.gif">
+<A NAME="TI2845"></A><p>The rows will be grouped first by department (group 1). Within
+department, rows will be grouped by status (group 2). If you specify
+page breaks for the groups, a page break will occur when any of
+these values changes. </p>
+<A NAME="TI2846"></A><p>You use the group's number to identify it when defining
+summary statistics for the group, which is described later in this
+chapter.</p>
+<A NAME="TI2847"></A><h3>Sorting the rows</h3>
+<A NAME="TI2848"></A><p>InfoMaker does not sort the data when it creates a group.
+Therefore, if the data source is not sorted, you must sort the data
+by the same columns (or expressions) specified for the groups. </p>
+<A NAME="TI2849"></A><p>For example, if you are grouping by Dept_ID then
+Status as shown above, select Rows&gt;Sort from the menu bar
+and specify Dept_ID and then Status as sorting columns:</p>
+<br><img src="images/filt14.gif">
+<A NAME="TI2850"></A><p>You can also sort on additional rows if you want. For example,
+if you want to sort by employee ID within each group, specify Emp_ID
+as the third sorting column.</p>
+<A NAME="TI2851"></A><p>For more information about sorting, see <A HREF="imugp70.htm#BFCDHDGD">"Sorting rows "</A>.</p>
+<A NAME="TI2852"></A><h3>Rearranging the report</h3>
+<A NAME="TI2853"></A><p>When you create a group, InfoMaker creates two new bands
+for each group:<A NAME="TI2854"></A>
+<ul>
+<li class=fi>A group header band</li>
+<li class=ds>A group trailer band
+</li>
+</ul>
+</p>
+<A NAME="TI2855"></A><p>The bar identifying the band contains:</p>
+<A NAME="TI2856"></A><p><A NAME="TI2857"></A>
+<ul>
+<li class=fi>The number of the group</li>
+<li class=ds>The name of the band</li>
+<li class=ds>The name of each column that defines the group</li>
+<li class=ds>An arrow pointing to the band
+</li>
+</ul>
+</p>
+<br><img src="images/filt15.gif">
+<A NAME="TI2858"></A><p>You can include any control in the report (such as columns,
+text, and computed fields) in the header and trailer bands of a
+group.</p>
+<A NAME="TI2859"></A><h4>Using the group header band</h4>
+<A NAME="TI2860"></A><p>The contents of the group header band display at the top of
+each page and after each break in the data. </p>
+<A NAME="TI2861"></A><p>Typically, you use this band to identify each group. For example,
+you might move the grouping column from the detail band to the group
+header band, since it now serves to identify one group rather than
+each row.</p>
+<A NAME="TI2862"></A><p>For example, if you group the rows by department and include
+the department in the group header, the department will display
+before the first line of data each time the department changes. </p>
+<br><img src="images/filt16.gif">
+<A NAME="TI2863"></A><p>In the Preview view, you see this:</p>
+<br><img src="images/filt17.gif">
+<A NAME="TI2864"></A><h4>Using the group trailer band</h4>
+<A NAME="TI2865"></A><p>The contents of the group trailer display after the last row
+for each value that causes a break.</p>
+<A NAME="TI2866"></A><p>In the group trailer band, you specify the information you
+want displayed after the last line of identical data for each value
+in the group. Typically, you include summary statistics here, as
+described next.</p>
+<A NAME="BFCDIFCH"></A><h3>Adding summary statistics</h3>
+<A NAME="TI2867"></A><p>One of the advantages of creating a grouped report is
+that you can have InfoMaker calculate statistics for each group.
+To do that, you place computed fields that reference the group.
+Typically, you place these computed fields in the group's
+trailer band.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To add a summary statistic:</p>
+<ol><li class=fi>
+Select Insert&gt;Control&gt;Computed
+Field from the menu bar.<br><br></li>
+<li class=ds>
+Click in Design view where you want the statistic.<br><br>
+The Modify Expression dialog box displays.<br><br></li>
+<li class=ds>
+Specify the expression that defines the computed
+field (see below).<br><br></li>
+<li class=ds>
+Click OK.<br><br></li></ol>
+<br><p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>A shortcut to sum values </span> <A NAME="TI2868"></A>If you want to sum a numeric column, select the column in
+Design view and click the Sum button in the Controls dropdown toolbar. </p>
+<A NAME="TI2869"></A>InfoMaker automatically places a computed field in the appropriate
+band.</p>
+<A NAME="TI2870"></A><h4>Specifying the expression</h4>
+<A NAME="TI2871"></A><p>Typically, you will use aggregate and other functions in your
+summary statistic. InfoMaker lists functions you can use in the
+Functions box in the Modify Expression dialog box. When you are
+defining a computed field in a group header or trailer band, InfoMaker automatically
+lists forms of the functions that reference the group:</p>
+<br><img src="images/Filt19.gif">
+<A NAME="TI2872"></A><p>You can paste these templates into the expression, then replace
+the #x that is pasted in as the function argument with
+the appropriate column or expression.</p>
+<A NAME="TI2873"></A><p>For example, to count the employees in each department (group
+1), specify this expression in the group trailer band:<pre>Count( Emp_Id for group 1 )</pre>
+</p>
+<A NAME="TI2874"></A><p>To get the average salary of employees in a department, specify:<pre>Avg( Salary for group 1 )</pre>
+</p>
+<A NAME="TI2875"></A><p>To get the total salary of employees in a department, specify:<pre>Sum( Salary for group 1 )</pre>
+</p>
+<br><img src="images/Filt20.gif">
+<A NAME="TI2876"></A><p>When you run the report, you see this:</p>
+<br><img src="images/Filt21.gif">
+<A NAME="TI2877"></A><h3>Sorting the groups</h3>
+<A NAME="TI2878"></A><p>You can sort the groups in your report. For example, in
+a report showing employee information grouped by department,
+you might want to sort the departments (the groups) by total salary.</p>
+<A NAME="TI2879"></A><p>Typically, this involves aggregate functions, as described
+in <A HREF="imugp71.htm#BFCDIFCH">"Adding summary statistics"</A>.
+In the department salary example, you would sort the groups using
+the aggregate function Sum to calculate total salary in each department.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To sort the groups:</p>
+<ol><li class=fi>
+Place the mouse pointer on the group header
+bar (not inside the band) until the pointer becomes a double-headed
+arrow.<br><br></li>
+<li class=ds>
+Click.<br><br>
+The General property page for the group displays in the Properties
+view.<br><br></li>
+<li class=ds>
+Click the button next to the Group Sort box.<br><br><br><img src="images/filt21a.gif"><br>
+
+The Specify Sort Columns dialog box displays.<br><br></li>
+<li class=ds>
+Drag the column you want to sort the groups by
+from the Source Data box into the Columns box. <br><br>
+If you chose a numeric column, InfoMaker uses the Sum function
+in the expression; if you chose a non-numeric column, InfoMaker uses
+the Count function.<br><br>
+For example, if you chose the Salary column, InfoMaker specifies
+that the groups will be sorted by the expression <b>sum(salary
+for group 1)</b>:<br><br><br><img src="images/Filt22.gif"><br>
+</li>
+<li class=ds>
+Select ascending or descending sort as appropriate.<br><br></li>
+<li class=ds>
+If you want to modify the expression to sort on,
+double-click the column in the Columns box.<br><br>
+The Modify Expression dialog box displays.<br><br></li>
+<li class=ds>
+Specify the expression to sort on. <br><br>
+For example, to sort the department group (the first group
+level) on average salary, specify <b>avg(salary for
+group 1</b>):<br><br><br><img src="images/filt23.gif"><br>
+</li>
+<li class=ds>
+Click OK.<br><br>
+You return to the Specify Sort Columns dialog box with the
+expression displayed.<br><br></li>
+<li class=ds>
+Click OK.<br><br>
+When you run the report, the groups will be sorted on the
+expression you specified.<br><br></li></ol>
+<br>

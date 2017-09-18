@@ -1,0 +1,75 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>其它对象</title>
+<script type="text/javascript" src="css.js"></script>
+</head>
+
+<body>
+<h1>第N章 其它对象</h1>
+<hr />
+<h2>N.1 序列（Sequence） </h2>
+<h3>N.1.1 介绍</h3>
+<p>创建序列的语法如下：</p>
+<pre>CREATE SEQUENCE [schema .] sequence
+[{ { INCREMENT BY | START WITH } integer
+ | { MAXVALUE integer | NOMAXVALUE }
+ | { MINVALUE integer | NOMINVALUE }
+ | { CYCLE | NOCYCLE }
+ | { CACHE integer | NOCACHE }
+ | { ORDER | NOORDER }
+ } 
+ [ { INCREMENT BY | START WITH } integer
+ | { MAXVALUE integer | NOMAXVALUE }
+ | { MINVALUE integer | NOMINVALUE }
+ | { CYCLE | NOCYCLE }
+ | { CACHE integer | NOCACHE }
+ | { ORDER | NOORDER } 
+ ]...
+]
+;</pre>
+<p>可使用drop sequence删除序列</p>
+<p>可使用alter sequence修改序列</p>
+<pre>ALTER SEQUENCE [ schema. ]sequence
+  { INCREMENT BY integer
+  | { MAXVALUE integer | NOMAXVALUE }
+  | { MINVALUE integer | NOMINVALUE }
+  | { CYCLE | NOCYCLE }
+  | { CACHE integer | NOCACHE }
+  | { ORDER | NOORDER }
+  }
+    [ INCREMENT BY integer
+    | { MAXVALUE integer | NOMAXVALUE }
+    | { MINVALUE integer | NOMINVALUE }
+    | { CYCLE | NOCYCLE }
+    | { CACHE integer | NOCACHE }
+    | { ORDER | NOORDER }
+    ]... ;</pre>
+<h3>N.1.2 创建类似于SQL SERVER的自增型字段</h3>
+<p>方法一：用触发器</p>
+<p>建一个序列<br />
+  create sequence a_seq increment by 1 start with 100;<br />
+  建一个触发器, 自动+1<br />
+  create or replace trigger your_seq_tri<br />
+  before insert on your_table1 for each row<br />
+  declare<br />
+  next_id number;<br />
+  begin<br />
+  select your_seq.nextval into next_id from dual;<br />
+  :new.id := next_id;<br />
+  end;<br />
+</p>
+<p>方法二：建一个序列<br />
+  create sequence a_seq increment by 1 start with 100;<br />
+  在语句中+1<br />
+  　　 insert into tbl(id,....) values (a_seq.nextval,....)<br />
+</p>
+<h2></h2>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<script type="text/javascript" src="index.js"></script>
+</body>
+</html>

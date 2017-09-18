@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>Spring.NET初步</title>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+<p id="title">Spring.NET初步</p>
+
+<h1>概述</h1>
+<p>Spring开始流行时，我正在使用struts框架，我这个人比较懒，我觉得我既然能够使用struts就可以顺利完成任务，又何必再去用Spring。因此，从spring面世后的两年中，我一直也未去关心。</p>
+<p>后来我开始用.net开发，微软的开发接口又是傻瓜化的，我也不用去操心什么框架。直到最近，有人委托我做一个小项目，注明要用sprint.net，其实我这个人并不排斥新技术，只是有时缺少一个使用它的理由罢了，现在理由有了，我也就开始学习spring.net，做一个项目获得一些进步，这是我最喜欢的。</p>
+<p>按官方翻译，spring是一个轻量级的企业应用开发框架。中国的翻译总是喜欢弄得很玄，计算机的尤其如此。就是计算机业内人士，也有不少人看不懂这“轻量级”三个字（我就没看懂），至于开发框架云云，也是含糊不明，有点九阴真经的意思。我对所谓的轻量级是这样的理解的，程序中包含大量的配置文件（通常为XML文件）和接口（interface），spring就靠这两样东西构造完整个项目，因为全是虚的（不能指望靠接口和配置文件就能让程序跑起来），所以显得很轻，这种构造项目的方式容易给人一种错觉，那就是我只定义好接口，整个项目已经构造完了，剩下的任务不过是把这些接口一个个地实现掉，如此一来，项目架构搭建得很快，工作量也容易估计，项目进度也容易控制。肥皂泡总是绚丽的，但我想真的使用spring，也就是肥皂泡破灭的时候了。</p>
+<p>在我眼中，spring是软件工程的又一次实践。不过软件工程诞生至今已有二十多年了，用得好的公司似乎也没有几个。我倒不是对spring有啥偏见，我只是觉得，如果软件工程用得好的话，spring自然可以发挥出其威力，但如果软件工程本身不过关，spring不过是给人画的一个饼而已。</p>
+<p><a href="downloads/Spring.NET-1.0.2.msi">本地下载Spring.Net 1.0.2</a></p>
+<p>举例说明，spring的基本用法就是，首先，由系统设计人员设定接口如下</p>
+<pre class="code" data-type="csharp">interface STestInterface
+{
+	//获取一个字符串
+	string GetAString();
+}</pre>
+<p>并根据设计的接口编写程序，如下所示</p>
+<pre class="code" data-type="csharp">IApplicationContext ctx = ContextRegistry.GetContext();
+STestInterface t_interface = ctx.GetObject("GetAString") as STestInterface;
+MessageBox.Show(t_interface.GetAString());</pre>
+<p>然后，由接口人员实现类。</p>
+<p>这样，系统分析人员只负责设计，类实现人员只负责实现接口</p>
+<h1>第一个示例程序 </h1>
+<h2>配置文件 </h2>
+<p>首先，看一下app.config文件是怎么配的</p>
+<pre class="code" data-type="xml">?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; ?&gt;
+&lt;configuration&gt;
+    &lt;configSections&gt;
+        &lt;sectionGroup name=&quot;spring&quot;&gt;
+            &lt;section name=&quot;context&quot; type=&quot;Spring.Context.Support.ContextHandler, Spring.Core&quot;/&gt;
+            &lt;section name=&quot;objects&quot; type=&quot;Spring.Context.Support.DefaultSectionHandler, Spring.Core&quot; /&gt;
+        &lt;/sectionGroup&gt;
+        
+        &lt;section name=&quot;log4net&quot; type=&quot;log4net.Config.Log4NetConfigurationSectionHandler,log4net&quot; /&gt; 
+    &lt;/configSections&gt;
+	&lt;spring&gt;
+		&lt;context&gt;
+			&lt;resource uri=&quot;config://spring/objects&quot; /&gt; 
+			&lt;resource uri=&quot;file://objects.xml&quot; /&gt; 
+			&lt;resource uri=&quot;assembly://SpringTest/SpringTest/objects.xml&quot; /&gt;
+		&lt;/context&gt;
+		&lt;objects xmlns=&quot;http://www.springframework.net&quot;&gt;
+			&lt;object id=&quot;GetAString&quot; type=&quot;SpringTest.STestImplement, SpringTest&quot; /&gt;
+		&lt;/objects&gt;
+	&lt;/spring&gt;
+&lt;/configuration&gt;</pre>
+<p>下面对以上各部分进行解说。</p>
+<p>使用spring.net，不管三七二十一，首先要在app.config或web.config中添加以下配置项</p>
+<pre class="code" data-type="xml">configSections&gt;
+    &lt;sectionGroup name=&quot;spring&quot;&gt;
+        &lt;section name=&quot;context&quot; type=&quot;Spring.Context.Support.ContextHandler, Spring.Core&quot;/&gt;
+        &lt;section name=&quot;objects&quot; type=&quot;Spring.Context.Support.DefaultSectionHandler, Spring.Core&quot; /&gt;
+    &lt;/sectionGroup&gt;
+    
+    &lt;section name=&quot;log4net&quot; type=&quot;log4net.Config.Log4NetConfigurationSectionHandler,log4net&quot; /&gt; 
+&lt;/configSections&gt;</pre>
+<p>先不要问我啥意思，以后会讲，理不理解都无所谓，作为固定配置好了。下面的&lt;spring&gt;标签与上面&lt;sectionGroup name=&quot;spring&quot;&gt;对应，&lt;context&gt;和&lt;objects&gt;标签也分别与&lt;secion name=&quot;context&quot;&gt;和&lt;secion name=&quot;objects&quot;&gt;对应。</p>
+<p>其中&lt;context&gt;标签是用于指定在何处设置了接口和实现类的映射：</p>
+<p>第一种是在app.config文件内加入映射信息</p>
+<pre class="code" data-type="xml">resource uri=&quot;config://spring/objects&quot; /</pre>
+<p>下面的&lt;objects&gt;标签内即为接口和实现类的映射关系</p>
+<p>第二种是在外部文件中定义映射信息</p>
+<pre class="code" data-type="xml">resource uri=&quot;file://objects.xml&quot; /&gt; </pre>
+<p>本例如使用的映射文件objects.xml如下所示：</p>
+<pre class="code" data-type="xml">?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; ?&gt; 
+&lt;objects xmlns=&quot;http://www.springframework.net&quot;&gt;
+	&lt;object id=&quot;GetAString2&quot; type=&quot;SpringTest.STestImplement, SpringTest&quot; /&gt;
+&lt;/objects&gt;</pre>
+<p>该映射文件需要与编译生成的可执行文件放在同一目录下</p>
+<p>第三种是将xml映射文件作为“嵌入的资源”编译进应用程序</p>
+<pre class="code" data-type="xml">resource uri=&quot;assembly://SpringTest/SpringTest/objects.xml&quot; /&gt;</pre>
+<p>格式为 assembly://程序集名/命令空间名/xml文件名</p>
+<p>对于&lt;object&gt;标签，id属性用于标识该映射信息，在程序中引用，type表示实现类的描述，格式为&quot;带命名空间的全路径, 程序集名&quot; </p>
+<h2>在程序中调用</h2>
+<pre class="code" data-type="csharp">using Spring.Context;
+using Spring.Context.Support;
+...
+
+IApplicationContext ctx = ContextRegistry.GetContext();
+STestInterface t_interface = ctx.GetObject(&quot;GetAString&quot;) as STestInterface;
+MessageBox.Show(t_interface.GetAString());</pre>
+<h1>Obect的配置</h1>
+<h2>工厂方法 </h2>
+<h3>静态工厂方法 </h3>
+<p>在第一个程序中，我们已经用如如下的&lt;object&gt;配置方法</p>
+<pre class="code" data-type="xml">object id=&quot;GetAString&quot; type=&quot;SpringTest.STestImplement, SpringTest&quot; /&gt;</pre>
+<p>该配置适用于使用构造函数创建对象的情况，如果对象是使用静态工厂方法创建对象，需加一个属性factory-method。例如，有如下的工厂方法</p>
+<pre class="code" data-type="csharp">public class Factory
+{
+	public static STestImplement GetObject()
+	{
+		return new STestImplement();
+	}
+}</pre>
+<p>则配置文件中需更改如下</p>
+<pre class="code" data-type="xml">object id=&quot;GetAStringFromFactory&quot; type=&quot;SpringTest.Factory, SpringTest&quot; factory-method=&quot;GetObject&quot; /&gt;</pre>
+<p>在程序中使用方法如下：</p>
+<pre class="code" data-type="csharp">IApplicationContext ctx = ContextRegistry.GetContext();
+STestInterface t_interface = ctx.GetObject(&quot;GetAStringFromFactory&quot;) as STestInterface;
+MessageBox.Show(t_interface.GetAString());</pre>
+<h3>实例工厂方法 </h3>
+<p>若工厂方法由实例调用，如下例的工厂类所示：</p>
+<pre class="code" data-type="csharp">public class FactoryInstance
+{
+	public STestImplement GetObject()
+	{
+		return new STestImplement();
+	}
+}</pre>
+<p>在配置时需要配置两个&lt;object&gt;标签，如下所示：</p>
+<pre class="code" data-type="xml">object id=&quot;StringFactory&quot; type=&quot;SpringTest.FactoryInstance, SpringTest&quot; /&gt;
+&lt;object id=&quot;GetAStringFromFactoryInstance&quot; type=&quot;SpringTest.FactoryInstance, SpringTest&quot; factory-method=&quot;GetObject&quot; factory-object=&quot;StringFactory&quot; /&gt;</pre>
+<p>在程序中使用方法如下：</p>
+<pre class="code" data-type="csharp">IApplicationContext ctx = ContextRegistry.GetContext();
+STestInterface t_interface = ctx.GetObject(&quot;GetAStringFromFactoryInstance&quot;) as STestInterface;
+MessageBox.Show(t_interface.GetAString());</pre>
+<h2>Singleton和Prototype</h2>
+<p>Singleton对象在全局中最多只创建一次，而Prototype则是引用一次则创建一次，下面生成一个类，运行时可以查看以Singleton方式引用和以Prototype方式引用的区别：</p>
+<pre class="code" data-type="csharp">public class Singleton: STestInterface
+{
+	private static int Count = 0;
+
+	public Singleton()
+	{
+		Count++;
+	}
+
+	public string GetAString()
+	{
+		return Count.ToString();
+	}
+}</pre>
+<p>下面的标签是以singleton方式引用</p>
+<pre class="code" data-type="xml">object id=&quot;SingletonObject&quot; type=&quot;SpringTest.Singleton, SpringTest&quot; singleton=&quot;true&quot; /&gt;</pre>
+<p>下面的标签是以prototype方式引用</p>
+<pre class="code" data-type="xml">object id=&quot;PrototypeObject&quot; type=&quot;SpringTest.Singleton, SpringTest&quot; singleton=&quot;false&quot; /&gt;</pre>
+<p>下面是使用singleton方式</p>
+<pre class="code" data-type="csharp">IApplicationContext ctx = ContextRegistry.GetContext();
+STestInterface obj1 = ctx.GetObject(&quot;SingletonObject&quot;) as STestInterface;
+MessageBox.Show(obj1.GetAString());</pre>
+<p>下面是使用prototype方式</p>
+<pre class="code" data-type="csharp">IApplicationContext ctx = ContextRegistry.GetContext();
+STestInterface obj1 = ctx.GetObject(&quot;PrototypeObject&quot;) as STestInterface;
+MessageBox.Show(obj1.GetAString());</pre>
+<p>测试这两段代码，会发现使用singleton方式，每次传回的值不变，而prototype方式则每次加1。</p>
+<h1>积累</h1>
+<p>获取IObjectFactory的接口：</p>
+<pre class="code" data-type="csharp">IResource input = new FileSystemResource (&quot;objects.xml&quot;);
+IObjectFactory factory = new XmlObjectFactory(input);</pre>
+<p>获取IApplicationContext的接口，下例演示有多个配置文件的情况，单配置文件也可以和上例一样指定IResource参数：</p>
+<pre class="code" data-type="csharp">IApplicationContext context = new XmlApplicationContext(
+	&quot;file://objects.xml&quot;,
+	&quot;assembly://MyAssembly/MyProject/objects-dal-layer.xml&quot;);
+
+// of course, an IApplicationContext is also an IObjectFactory...
+IObjectFactory factory = (IObjectFactory) context;</pre>
+<p>在上例中，使用了一个嵌入的资源文件，引用格式为：assembly://&lt;AssemblyName&gt;/&lt;NameSpace&gt;/&lt;ResourceName&gt;。推荐的获取IObjectFactory和IApplicationContext接口的方法是使用一个.net的配置文件（winform: App.config 或 web: Web.config），下面是一个配置的例子：</p>
+<pre class="code" data-type="xml">spring&gt;
+  &lt;context type=&quot;Spring.Context.Support.XmlApplicationContext, Spring.Core&quot;&gt;
+    &lt;resource uri=&quot;file://objects.xml&quot;/&gt;
+    &lt;resource uri=&quot;assembly://MyAssembly/MyProject/objects-dal-layer.xml&quot;/&gt;
+  &lt;/context&gt;
+&lt;/spring&gt;</pre>
+<p>其中context的type属性是可选的，上例中使用的是默认值，不输的话效果相同。使用配置文件后，获取IApplicationContext接口的方法如下：</p>
+<pre class="code" data-type="csharp">IApplicationContext ctx = ContextRegistry.GetContext();</pre>
+<p>要使用配置文件来获取IApplicationContext接口，还需要在配置文件中作如下配置，以注册ContextRegistry：</p>
+<pre class="code" data-type="xml">configSections&gt;
+  &lt;sectionGroup name=&quot;spring&quot;&gt;
+    &lt;section name=&quot;context&quot; type=&quot;Spring.Context.Support.ContextHandler, Spring.Core&quot;/&gt;
+  &lt;/sectionGroup&gt;
+&lt;/configSections&gt;</pre>
+<p>下面是配置文件中的对象引用设置的例子：</p>
+<pre class="code" data-type="xml">objects xmlns=&quot;http://www.springframework.net&quot; 
+	xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; 
+	xsi:schemaLocation=&quot;http://www.springframework.net
+		http://www.springframework.net/xsd/spring-objects.xsd&quot;&gt;
+  &lt;object id=&quot;...&quot; type=&quot;...&quot;&gt;
+  ...
+  &lt;/object&gt;
+  &lt;object id=&quot;....&quot; type=&quot;...&quot;&gt;
+  ...
+  &lt;/object&gt;
+  ...
+&lt;/objects&gt;</pre>
+<p>下面的例子注册了Spring.Context.Support.DefaultSectionHandler，这样可以在一个应用程序中使用多个IApplicationContext接口：</p>
+<pre class="code" data-type="xml">configuration&gt;
+
+  &lt;configSections&gt;
+    &lt;sectionGroup name=&quot;spring&quot;&gt;
+      &lt;section name=&quot;context&quot; type=&quot;Spring.Context.Support.ContextHandler, Spring.Core&quot;/&gt;
+      &lt;section name=&quot;objects&quot; type=&quot;Spring.Context.Support.DefaultSectionHandler, Spring.Core&quot; /&gt;
+    &lt;/sectionGroup&gt;
+  &lt;/configSections&gt;
+
+  &lt;spring&gt;
+
+    &lt;context&gt;
+      &lt;resource uri=&quot;config://spring/objects&quot;/&gt;
+    &lt;/context&gt;
+       
+    &lt;objects&gt;
+        ...
+    &lt;/objects&gt;
+
+  &lt;/spring&gt;
+
+&lt;/configuration&gt;</pre>
+<p>下例是配置文件中创建对象的例子：</p>
+<pre class="code" data-type="xml">object id="exampleObject" type="Examples.ExampleObject, ExamplesLibrary"/&gt;</pre>
+<p>id属性用来在程序中通过引用该id来获取对象，type属性的第一段为要生成的对象的全路径，第二段为程序集(assembly)的名字。</p>
+<p>下例说明使用工厂方法创建对象：</p>
+<pre class="code" data-type="xml">object id=&quot;exampleObject&quot;
+      type=&quot;Examples.ExampleObjectFactory, ExamplesLibrary&quot;
+      factory-method=&quot;CreateInstance&quot;/&gt;</pre>
+<p>CreateInstance方法必须是一个静态方法。</p>
+<p>类似地使用非静态工厂方法创建对象，需指定一个工厂对象，而要创建对象的type属性须为空，如下例所示：</p>
+<pre class="code" data-type="xml">!-- the factory object, which contains an instance method called 'CreateInstance' --&gt;
+&lt;object id=&quot;exampleFactory&quot; type=&quot;...&quot;/&gt;
+&lt;!-- the object that is to be created by the factory object --&gt;
+&lt;object id=&quot;exampleObject&quot;
+      factory-method=&quot;CreateInstance&quot;
+      factory-object=&quot;exampleFactory&quot;/&gt;</pre>
+<h2>类模板</h2>
+<p>spring提供了类模板的功能，类似于C++，不过据说C#.net 2.0也提供了该功能，下面是例子，首先定义好模板类，如下：</p>
+<pre class="code" data-type="csharp">namespace GenericsPlay
+{
+    public class FilterableList&lt;T&gt;
+    {
+        private List&lt;T&gt; list;
+        
+        private String name;
+
+        public List&lt;T&gt; Contents
+        {
+            get { return list; }
+            set { list = value; }
+        }
+
+        public String Name
+        {
+            get { return name; }
+            set { name = value; }
+        }
+        
+        public List&lt;T&gt; ApplyFilter(string filterExpression)
+        {
+            /// should really apply filter to list ;)
+            return new List&lt;T&gt;();
+        }
+
+    }
+}</pre>
+<p>使用模板类创建对象的XML片断如下：</p>
+<pre class="code" data-type="xml">object id=&quot;myFilteredIntList&quot; type=&quot;GenericsPlay.FilterableList&amp;lt;int&gt;, GenericsPlay&quot;&gt;
+  &lt;property name=&quot;Name&quot; value=&quot;My Integer List&quot;/&gt;
+&lt;/object&gt;</pre>
+<p>注意其中type属性中的&amp;lt;，可不是我的笔误，而是实际就需要如此，看上去怪怪的，这样写是为了XML解析出来不至于出毛病，未来的 spring 版本可能为解决这个问题吧，就现状而言，spring.net 建议使用别名的方案来使得XML配置文件看上去舒服点儿：</p>
+<pre class="code" data-type="xml">typeAliases&gt;
+ &lt;alias name=&quot;GenericDictionary&quot; type=&quot; System.Collections.Generic.Dictionary&amp;lt;,&gt;&quot; /&gt;
+ &lt;alias name=&quot;myDictionary&quot; type=&quot;System.Collections.Generic.Dictionary&amp;lt;int,string&gt;&quot; /&gt;
+&lt;/typeAliases&gt;</pre>
+<p>定义好别名后，前面的创建对象的XML片断就可以这样写了</p>
+<pre class="code" data-type="xml">object id=&quot;myGenericObject&quot; 
+        type=&quot;GenericsPlay.ExampleGenericObject&amp;lt;System.Collections.Generic.Dictionary&amp;lt;int , string&gt;&gt;, GenericsPlay&quot; /&gt;</pre>
+<p>呵呵，是不是更古怪了，还可以缩短点儿，像下面这样：</p>
+<pre class="code" data-type="xml">object id=&quot;myOtherGenericObject&quot; 
+        type=&quot;GenericsPlay.ExampleGenericObject&amp;lt;GenericDictionary&amp;lt;int , string&gt;&gt;, GenericsPlay&quot; /&gt;</pre>
+<p>嗯，还可以再短点儿：</p>
+<pre class="code" data-type="xml">object id=&quot;myOtherOtherGenericObject&quot; 
+        type=&quot;GenericsPlay.ExampleGenericObject&amp;lt;MyIntStringDictionary&gt;, GenericsPlay&quot; /&gt;</pre>
+<p>好了，不能再短了。</p>
+<h2>在配置文件中给类初始化类的属性值</h2>
+<p>设置属性值</p>
+<p>设置构造函数参数值</p>
+<p>初始化数组属性值</p>
+<p>内部类属性</p>
+<p>多个对象共享logging对象</p>
+<h2>IResource说明</h2>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+
+</body>
+</html>

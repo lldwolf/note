@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+	<script type="text/javascript" src="../../../mylib/js/css.js"></script>
+    <title>C#.net使用手册</title>
+</head>
+<body>
+    <p id="title">WCF 拦截</p>
+<h1>Client WCF 拦截器</h1>
+<p>通过如下步骤实现WCF拦截器</p>
+<h1>实现拦截器类</h1>
+<pre class="code" data-type="csharp">using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using System.ServiceModel.Dispatcher;
+using System.Text;
+using System.ServiceModel.Configuration;
+
+namespace Gollf.ServiceWrapper.Common
+{
+	public class WcfClientMessageInspector : BehaviorExtensionElement, IClientMessageInspector
+	{
+		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+		private const int LOG_LIMIT_LENGHT = 2 * 1024;
+
+		#region IClientMessageInspector Members
+
+		public void AfterReceiveReply(ref System.ServiceModel.Channels.Message reply, object correlationState)
+		{
+			log.Info(string.Format(&quot;Invoking webservice finished. Request No: {0}&quot;, correlationState));
+		}
+
+		public object BeforeSendRequest(ref System.ServiceModel.Channels.Message request, System.ServiceModel.IClientChannel channel)
+		{
+			string requestNo = System.Guid.NewGuid().ToString();
+			log.Info(string.Format(&quot;Start to invoke webservice, request no: {0}&quot;, requestNo));
+			
+			string requestContent = request.ToString();
+			if (requestContent.Length &lt;= LOG_LIMIT_LENGHT)
+			{
+				log.Info(string.Format(&quot;Request Content: \r\n{0}&quot;, requestContent));
+			}
+			else
+			{
+				log.Info(string.Format(&quot;Request Content: \r\n{0}&quot;, requestContent.Substring(0, LOG_LIMIT_LENGHT)));
+			}
+
+			return requestNo;
+		}
+
+		#endregion
+
+		public override Type BehaviorType
+		{
+			get { return typeof(WcfEndPointBehavior); }
+		}
+
+		protected override object CreateBehavior()
+		{
+			return new WcfEndPointBehavior();
+		}
+	}
+}</pre>
+<h1>拦截器注册类</h1>
+<pre class="code" data-type="csharp">using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.ServiceModel.Description;
+using System.Text;
+
+namespace Gollf.ServiceWrapper.Common
+{
+	public class WcfEndPointBehavior : IEndpointBehavior
+	{
+		#region IEndpointBehavior Members
+
+		public void AddBindingParameters(ServiceEndpoint endpoint, System.ServiceModel.Channels.BindingParameterCollection bindingParameters)
+		{
+			
+		}
+
+		public void ApplyClientBehavior(ServiceEndpoint endpoint, System.ServiceModel.Dispatcher.ClientRuntime clientRuntime)
+		{
+			WcfClientMessageInspector inspector = new WcfClientMessageInspector();
+			clientRuntime.MessageInspectors.Add(inspector);			
+		}
+
+		public void ApplyDispatchBehavior(ServiceEndpoint endpoint, System.ServiceModel.Dispatcher.EndpointDispatcher endpointDispatcher)
+		{
+			
+		}
+
+		public void Validate(ServiceEndpoint endpoint)
+		{
+			
+		}
+
+		#endregion
+	}
+}</pre>
+<h1>配置文件</h1>
+<pre class="code" data-type="xml">&lt;system.serviceModel&gt;
+<b>    &lt;extensions&gt;
+      &lt;behaviorExtensions&gt;
+        &lt;add name=&quot;clientInterceptors&quot; type=&quot;Gollf.ServiceWrapper.Common.WcfClientMessageInspector, Gollf.ServiceWrapper, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null&quot;/&gt;
+      &lt;/behaviorExtensions&gt;
+    &lt;/extensions&gt;</b>
+    &lt;behaviors&gt;
+      &lt;endpointBehaviors&gt;
+        &lt;behavior name=&quot;GollfServiceBehavior&quot;&gt;
+          <b>&lt;clientInterceptors /&gt;</b>
+          &lt;dataContractSerializer maxItemsInObjectGraph=&quot;6553600&quot; /&gt;
+        &lt;/behavior&gt;
+      &lt;/endpointBehaviors&gt;
+    &lt;/behaviors&gt;
+    &lt;bindings&gt;
+      &lt;basicHttpBinding&gt;
+        &lt;binding name=&quot;GollfServiceSoapBinding&quot; closeTimeout=&quot;00:10:00&quot;
+          openTimeout=&quot;00:10:00&quot; receiveTimeout=&quot;00:10:00&quot; sendTimeout=&quot;00:10:00&quot;
+          allowCookies=&quot;false&quot; bypassProxyOnLocal=&quot;false&quot; hostNameComparisonMode=&quot;StrongWildcard&quot;
+          maxBufferSize=&quot;65536000&quot; maxBufferPoolSize=&quot;524288000&quot; maxReceivedMessageSize=&quot;65536000&quot;
+          messageEncoding=&quot;Text&quot; textEncoding=&quot;utf-8&quot; transferMode=&quot;Buffered&quot;
+          useDefaultWebProxy=&quot;true&quot;&gt;
+          &lt;readerQuotas maxDepth=&quot;32&quot; maxStringContentLength=&quot;8192000&quot; maxArrayLength=&quot;16384000&quot;
+            maxBytesPerRead=&quot;409600&quot; maxNameTableCharCount=&quot;16384000&quot; /&gt;
+          &lt;security mode=&quot;Transport&quot;&gt;
+            &lt;transport clientCredentialType=&quot;None&quot; proxyCredentialType=&quot;None&quot;
+              realm=&quot;&quot; /&gt;
+            &lt;message clientCredentialType=&quot;UserName&quot; algorithmSuite=&quot;Default&quot; /&gt;
+          &lt;/security&gt;
+        &lt;/binding&gt;
+      &lt;/basicHttpBinding&gt;
+    &lt;/bindings&gt;
+    &lt;client&gt;
+      &lt;endpoint address=&quot;https://loanps1d.nam.nsroot.net:9045/DsSrv/services/DsCentralService?wsdl&quot;
+        binding=&quot;basicHttpBinding&quot; bindingConfiguration=&quot;GollfServiceSoapBinding&quot;
+        contract=&quot;DsCentralService.DsService&quot; name=&quot;DsCentralServicePort&quot;
+        <b>behaviorConfiguration=&quot;GollfServiceBehavior&quot;</b> /&gt;
+    &lt;/client&gt;
+  &lt;/system.serviceModel&gt;</pre>
+<h1>注意点</h1>
+<ul>
+	<li>在配置拦截器时，一定要使用完整的类型说明路径，否则会出现运行时错误</li>
+	<li>客户端拦截器需实现IClientMessageInspector接口</li>
+	<li>因为需要在配置文件中定义拦截器，所以需要继承自BehaviorExtensionElement类</li>
+	<li>需实现IEndpointBehavior接口注册拦截器</li>
+	<li>项目需引用</li>
+</ul>
+<h1>Server端拦截器</h1>
+<p>需实现IDispatchMessageInspector接口</p>
+</body>
+</html>

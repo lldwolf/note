@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>DevExpress.XtraGrid.GridControl</title>
+<script type="text/javascript" src="../../../mylib/js/css.js"></script>
+
+<style type="text/css">
+.first_class {font-family:宋体; font-weight:bold; font-size:16px; text-align:center; layout-flow:vertical-ideographic}
+.second_class {font-weight: bold}
+</style>
+</head>
+
+<body>
+<p id="title">GridControl - Group</p>
+<h2>Appearance Related</h2>
+<img alt="picture not found!" src="img/group_appearance.bmp" />
+<ul>
+    <li>A: OptionsView.ShowGroupExpandCollapseButtons, 是否显示展开/关闭图标</li>
+    <li>B: LevelIndent, 前置空白宽度</li>
+    <li>C: GroupFormat, 显示格式，默认为{0}: [#image]{1} {2}</li>
+</ul>
+<h2>RowHandle of Group Row</h2>
+<img alt="Picture not found!" src="img/group_row_handle.bmp" />
+<h2>判断某行是否为Group Row</h2>
+<pre>view.IsGroupRow(rowHandle);</pre>
+<h2>获取Group Row数量</h2>
+<p>无直接属性，需根据数据源判断。</p>
+<h2>获取Group Row对象</h2>
+<pre>for(int i = 1; i <= view.GroupCount; i++)
+{
+    object rowObj = view.GetRow(0 - i);
+}</pre>
+<h2>获取Group的展开状态</h2>
+<pre>view.GetRowExpanded(rowHandle)</pre>
+<h2>展开Group</h2>
+<pre>view.ExpandGroupRow(rowHandle);      //展开某行
+view.ExpandAllGroups();              //展开所有行</pre>
+<h2>折叠Group</h2>
+<pre>view.CollapseGroupRow(rowHandle);    //折叠某行
+view.CollapseAllGroups();            //折叠所有行</pre>
+<script type="text/javascript" src="grid_index.js"></script>
+</body>
+</html>

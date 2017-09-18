@@ -1,0 +1,55 @@
+﻿<!DOCTYPE html>
+
+<html lang="zh-cn" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta charset="utf-8" />
+	<script type="text/javascript" src="../../mylib/js/css.js"></script>
+	<title>SonarQube Note</title>
+</head>
+<body>
+	<p id="title">Issue Report</p>
+	<h1>插件配置</h1>
+	<p>可使用 <a href="http://docs.sonarqube.org/display/SONAR/Issues+Report+Plugin">Issues Report Plugin</a> 来生成分析报表。</p>
+	<p>可生成两种报表：</p>
+	<ul>
+		<li>Full Report: 包含全部的 Issue</li>
+		<li>Light Report: 仅包含新增的 Issue</li>
+	</ul>
+	<p>下载插件并复制到 SONARQUBE_HOME/extensions/plugins 目录后，重启 Sonar Service。</p>
+	<h1>使用</h1>
+	<h2>生成报表</h2>
+	<p>使用如下命令进行完整扫描</p>
+	<pre># Since SonarQube 4.0
+sonar-runner -Dsonar.analysis.mode=preview -Dsonar.issuesReport.html.enable=true
+ 
+# Prior to SonarQube 4.0
+sonar-runner -Dsonar.dryRun=true -Dsonar.issuesReport.html.enable=true</pre>
+	<p>使用如下命令进行增量扫描</p>
+	<pre># Since SonarQube 4.0
+sonar-runner -Dsonar.analysis.mode=incremental -Dsonar.issuesReport.html.enable=true
+ 
+# Prior to SonarQube 4.0, the files have to be manually listed
+sonar-runner -Dsonar.dryRun=true -Dsonar.issuesReport.html.enable=true -Dsonar.inclusions=myCobolProgram.cbl,...</pre>
+	<p>将生成 issues-report.html 和 issues-report-light.html。根据分析器不同，生成的文件位置稍有差异</p>
+	<ul>
+		<li>SonarQube Runner/Ant: .sonar/issues-report/</li>
+		<li>Maven: target/sonar/issues-report/</li>
+	</ul>
+	<p class="note">使用以上命令后，只生成报表，不会将分析结果上传。</p>
+	<h2>其它参数</h2>
+	<table style="width:800px">
+		<tr>
+			<td>参数</td>
+			<td>说明</td>
+		</tr>
+		<tr>
+			<td>sonar.issuesReport.console.enable</td>
+			<td>在分析过程中将分析结果打印在命令行输出上</td>
+		</tr>
+		<tr>
+			<td>sonar.issuesReport.lightModeOnly</td>
+			<td>仅生成 Light Report</td>
+		</tr>
+	</table>
+</body>
+</html>

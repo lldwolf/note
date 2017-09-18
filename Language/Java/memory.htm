@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+	<script type="text/javascript" src="../../mylib/js/css.js"></script>
+	<title>Java Note</title>
+</head>
+
+<body>
+	<p id="title">内存管理</p>
+	<h1>常用功能</h1>
+    <h2>启动参数</h2>
+    <p>可通过如下参数指定内存使用：</p>
+    <table style="width:800px">
+        <tr>
+            <th>参数</th>
+            <th>说明</th>
+            <th>示例</th>
+        </tr>
+        <tr>
+            <td>-Xms</td>
+            <td>最小分配内存</td>
+            <td>-Xms1024m</td>
+        </tr>
+        <tr>
+            <td>-Xmx</td>
+            <td>最大分配内存</td>
+            <td>-Xmx2048m</td>
+        </tr>
+        <tr>
+            <td>-XX:PermSize</td>
+            <td>初始 Perm 内存</td>
+            <td>-XX:PermSize=256M</td>
+        </tr>
+        <tr>
+            <td>-XX:MaxPermSize</td>
+            <td>最大 Perm 内存</td>
+            <td>-XX:MaxPermSize=512m</td>
+        </tr>
+        <tr>
+            <td>-D</td>
+            <td>自定义参数</td>
+            <td>-DMyParam=MyValue</td>
+        </tr>
+    </table>
+    <h1>内存模型</h1>
+    <p>JVM 内存分为如下几部分：</p>
+    <ul>
+        <li>
+            <header>Heap Memory</header>
+            <p>直接贴原文吧，怕翻不好。总之你平时用的 Java 对象都放在这里了，GC 也就只针对 Heap Memory 进行内存释放。</p>
+            <p>The heap memory is the runtime data area from which the Java VM allocates memory for all class instances and arrays. The heap may be of a fixed or variable size. The garbage collector is an automatic memory management system that reclaims heap memory for objects.</p>
+            <p>Heap Memory 包含如下三个区</p>
+            <ul>
+                <li>
+                    <header>Eden Space</header>
+                    The pool from which memory is initially allocated for most objects.
+                </li>
+                <li>
+                    <header>Survivor Space</header>
+                    The pool containing objects that have survived the garbage collection of the Eden space.
+                </li>
+                <li>
+                    <header>Tenured Generation</header>
+                    The pool containing objects that have existed for some time in the survivor space.
+                </li>
+            </ul>
+            <p>可以简略概述如下：对象初始化后都会放在 Eden Space 中，如果因存在对象因用而没有被 GC 回收掉的对象则会移到 Survivor Space 中，如果对象已在 Survivor Space 中存在了相当一段时间（钉子户?）,则会被移至 Tenured Generation 中，估计 GC 不会再在这里面浪费太多时间。感觉 GC 像拆迁公司。</p>
+        </li>
+        <li>
+            <header>Non-Heap Memory</header>
+            <p>这个用于存放要运行的代码，对象的结构信息（例如常量，变量，代码等）</p>
+            <p>Non-heap memory includes a method area shared among all threads and memory required for the internal processing or optimization for the Java VM. It stores per-class structures such as a runtime constant pool, field and method data, and the code for methods and constructors. The method area is logically part of the heap but, depending on the implementation, a Java VM may not garbage collect or compact it. Like the heap memory, the method area may be of a fixed or variable size. The memory for the method area does not need to be contiguous.</p>
+            <p>这又分为两个区</p>
+            <ul>
+                <li>
+                    <header>Permanent Generation (PermGen)</header>
+                    <p>存放着类、方法的定义</p>
+                    <p>The pool containing all the reflective data of the virtual machine itself, such as class and method objects. With Java VMs that use class data sharing, this generation is divided into read-only and read-write areas.The HotSpot Java VM also includes a code cache, containing memory that is used for compilation and storage of native code.</p>
+                </li>
+                <li>
+                    <header>Code Cache</header>
+                    The HotSpot Java VM also includes a code cache, containing memory that is used for compilation and storage of native code.
+                </li>
+            </ul>
+        </li>
+    </ul>
+    <h1>内存分析工具</h1>
+    <p>一般我在分析内存时使用如下工具</p>
+    <h2>JConsole</h2>
+    <p>使用 JConsole 查看应用运行的统计信息，<a href="jconsole.htm">点此查看详细说明</a></p>
+    <h2>Java VisualVM</h2>
+    <p>使用 Java VisualVM 查看更加详细的信息及导出内存 Heap Dump，<a href="jvisualvm.htm">点此查看详细说明</a></p>
+    <h2>MAT</h2>
+    <p>使用 MAT (<a href="http://www.eclipse.org/mat/">Memory Analyzer</a>) 可查看 Heap Dump 信息。MAT 可在 Eclipse 中直接从 Eclipse Market 安装。</p>
+    <p>安装完成后，可添加 Memory Analysis Perspective</p>
+    <p>进入 Memory Analysis Perspective，使用 File &rarr; Open Heap Dump 打开 Heap Dump 文件。如下图所示：</p>
+    <p><img alt="" src="images/mat-01.png" /></p>
+</body>
+</html>

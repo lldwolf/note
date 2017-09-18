@@ -1,0 +1,63 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+Positioning controls in a report</TITLE>
+</HEAD>
+<BODY>
+<A NAME="CAIDIAEE"></A><h1>Positioning controls in a report</h1>
+<A NAME="TI2105"></A><p>Each control has several properties that determine how it
+is positioned within the report:</p>
+<A NAME="TI2106"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI2107"></A>Property</th>
+<th align="left" valign=bottom><A NAME="TI2108"></A>Meaning</th>
+</tr>
+<tr><td valign=top><A NAME="TI2109"></A>Background</td>
+<td valign=top><A NAME="TI2110"></A>Control is behind other controls. It
+is not restricted to one band. This is useful for adding a watermark
+(such as the word CONFIDENTIAL) to the background of a report</td>
+</tr>
+<tr><td valign=top><A NAME="TI2111"></A>Band</td>
+<td valign=top><A NAME="TI2112"></A>Control is placed within one band. It
+cannot extend beyond the band's border</td>
+</tr>
+<tr><td valign=top><A NAME="TI2113"></A>Foreground</td>
+<td valign=top><A NAME="TI2114"></A>Control is in front of other controls.
+It is not restricted to one band</td>
+</tr>
+<tr><td valign=top><A NAME="TI2115"></A>Moveable</td>
+<td valign=top><A NAME="TI2116"></A>Control can be moved during execution
+and in preview. This is useful for designing layout</td>
+</tr>
+<tr><td valign=top><A NAME="TI2117"></A>Resizable</td>
+<td valign=top><A NAME="TI2118"></A>Control can be resized during execution
+and in preview. This is useful for designing layout</td>
+</tr>
+<tr><td valign=top><A NAME="TI2119"></A>HideSnaked</td>
+<td valign=top><A NAME="TI2120"></A>Control appears only in the first column
+on the page; in subsequent columns the control does not appear.
+This is only for newspaper columns, where the entire report snakes
+from column to column (set on the General page of the Properties view)</td>
+</tr>
+</table>
+<A NAME="TI2121"></A><h4>Default positioning</h4>
+<A NAME="TI2122"></A><p>InfoMaker uses the following defaults when placing new controls:</p>
+<A NAME="TI2123"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI2124"></A>Control</th>
+<th align="left" valign=bottom><A NAME="TI2125"></A>Default positioning</th>
+</tr>
+<tr><td valign=top><A NAME="TI2126"></A>Graph</td>
+<td valign=top><A NAME="TI2127"></A>Foreground, movable, resizable</td>
+</tr>
+<tr><td valign=top><A NAME="TI2128"></A>All other controls</td>
+<td valign=top><A NAME="TI2129"></A>Band, not movable, not resizable</td>
+</tr>
+</table>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To change the position of a control in a report:</p>
+<ol><li class=fi>
+Select Properties from the control's
+popup menu and then select the Position tab.<br><br></li>
+<li class=ds>
+From the Layer option dropdown listbox, select Background,
+Band, or Foreground.<br><br></li>
+<li class=ds>
+Select Resizable or Moveable as appropriate.<br><br></li></ol>
+<br>

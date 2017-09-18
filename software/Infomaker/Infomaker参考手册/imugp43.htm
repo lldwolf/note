@@ -1,0 +1,88 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+About reports</TITLE>
+</HEAD>
+<BODY>
+<A NAME="BFCEAGFF"></A>
+<h1>概述</h1>
+<A NAME="TI1209"></A>
+<p>报表提供了查看数据的不同方式，让你看得更爽一点。</p>
+<A NAME="TI1210"></A>
+<p>这些基本是废话，我不翻了。An InfoMaker report can also be mailing labels or many reports
+nested together on the same page. Freeform InfoMaker reports let
+you place text, data, lines, boxes, and pictures anywhere you want.</p>
+<A NAME="TI1211"></A>
+<h2>报表示例</h2>
+<A NAME="TI1212"></A>
+<p>下面这些例子用的都是EAS样本数据库。</p>
+<A NAME="TI1213"></A>
+<h4>Tabular报表</h4>
+<A NAME="TI1214"></A>
+<p>下面这种报表是最普通的报表，以行列方式显示数据：</p>
+<br><img src="images/defin04.gif">
+<A NAME="TI1215"></A>
+<h4>更加复杂的tabular报表</h4>
+<A NAME="TI1216"></A>
+<p>这种报表包括计算列（Salary Plus Benefits列）和一些用于美观的显示元素，例如那个<i>Confidential</i>水印：</p>
+<br><img src="images/defin05.gif">
+<A NAME="TI1217"></A>
+<h4>Grouped 报表（分组报表）</h4>
+<A NAME="TI1218"></A>
+<p>下面的报表根据部分（Department ID）对数据进行了分组，还包括分组汇总和全部汇总：</p>
+<br><img src="images/defin06.gif">
+<A NAME="TI1219"></A>
+<h4>Grid 报表（表格）</h4>
+<A NAME="TI1220"></A>
+<p>这种报表看起来和tabular样式差不多，不过grid样式是一种严格的行列格式。在查看数据时你可以改变列宽和列的顺序，grid报表也是一种常用的报表样式：</p>
+<br><img src="images/defin07.gif">
+<A NAME="TI1221"></A>
+<h4>图表</h4>
+<A NAME="TI1222"></A>
+<p>下面的报表列出了各部门的总薪水。图形以可视化的方式显示同样的数据，这样的方式看起来似乎更有成就感，而且比较容易比较各部门间的差别：</p>
+<br><img src="images/defin08.gif">
+<A NAME="TI1223"></A>
+<h4>Freeform 报表（自由式报表）</h4>
+<A NAME="TI1224"></A>
+<p>下面报表显示员工的信息，背景图片标识水印信息。</p>
+<br><img src="images/defin09.gif">
+<A NAME="TI1225"></A>
+<h4>Mailing labels（卡片报表）</h4>
+<A NAME="TI1226"></A>
+<p>下面报表使用卡片式显示姓名和地址信息，并且在每个卡片显示上一个LOGO图片。</p>
+<br><img src="images/defin10.gif">
+<A NAME="TI1227"></A><h4>N-up report</h4>
+<A NAME="TI1228"></A>
+<p>下面报表每一条记录占用4行，类似于freeform样式，n-up可以在报表上显示更多信息，或者显示周期性的信息，例如重复显示星期一到星期五的信息（5行）。</p>
+<br><img src="images/defin11.gif">
+<A NAME="TI1229"></A>
+<h4>Crosstab（交叉表）</h4>
+<A NAME="TI1230"></A>
+<p>下面报表在每行显示符合条件的员工数目，例如，在部门100中薪水在30000-39999的员工有3个：</p>
+<br><img src="images/defin12.gif">
+<A NAME="TI1231"></A>
+<h4>Composite report with nested reports（带子报表的复合报表）</h4>
+<A NAME="TI1232"></A>
+<p>下面是一张复合报表，它包括3张tabular报表，其中一张tabulary报表还包含一个图表：</p>
+<br><img src="images/defin13.gif">
+<A NAME="TI1233"></A>
+<h4>带子报表的Freeform报表</h4>
+<A NAME="TI1234"></A>
+<p>下面的Freeform报表列出了客户的所有信息，还包括一张子表，显示客户的订单记录。这也算是一张主细表的例子——一个客户有多个订单：</p>
+<br><img src="images/defin14.gif">
+<A NAME="BFCCCCIF"></A>
+<h2>报表与DataWindow对象的比较</h2>
+<A NAME="TI1235"></A><p>Reports are the same as the DataWindow objects that PowerBuilder users
+can create in the PowerBuilder DataWindow painter, except that they
+cannot be updated. When you create a report in the Report painter,
+you are actually creating a nonupdatable DataWindow object.</p>
+<A NAME="TI1236"></A><h4>About the term DataWindow</h4>
+<A NAME="TI1237"></A><p>The term DataWindow and report are often used interchangeably.
+Many of the examples in this book were captured in the PowerBuilder environment.
+In these examples, the title bar of a report will include the word
+DataWindow instead of Report. Sometimes
+dialog boxes use the word DataWindow instead of report.</p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>If you need update capabilities</span> <A NAME="TI1238"></A>If you need update capabilities, use the InfoMaker Form painter
+to create a form. Forms are for updating, whereas reports are read-only.</p>
+

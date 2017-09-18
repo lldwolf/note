@@ -1,0 +1,69 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+Correcting pipeline errors </TITLE>
+</HEAD>
+<BODY>
+<A NAME="BCDDCEGH"></A><h1>Correcting pipeline errors </h1>
+<A NAME="TI4709"></A><p>If the pipeline cannot pipe certain rows to the destination
+table for some reason, InfoMaker displays the error rows:</p>
+<br><img src="images/pipes270.gif">
+<A NAME="TI4710"></A><h4>What you see</h4>
+<A NAME="TI4711"></A><p>InfoMaker shows:<A NAME="TI4712"></A>
+<ul>
+<li class=fi>Name
+of the table in the destination database</li>
+<li class=ds>Pipeline operation you chose in the Option box</li>
+<li class=ds>Error messages to identify the problem with each
+row</li>
+<li class=ds>Data values in the error rows</li>
+<li class=ds>Source and destination column information
+</li>
+</ul>
+</p>
+<A NAME="TI4713"></A><h4>What you can do</h4>
+<A NAME="TI4714"></A><p>You can correct the error rows by changing one or more of
+their column values so the destination table will accept them; or
+you can ignore the error rows and return to the Data Pipeline painter
+workspace. If you return to the workspace, you cannot redisplay
+the error rows without re-executing the pipeline.</p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Before you return to the workspace</span> <A NAME="TI4715"></A>You may want to print the list of errors or save them in a
+file. Select File&gt;Print or File&gt;Save As from the
+menu bar.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To return to the Data Pipeline painter workspace
+without correcting errors:</p>
+<ol><li class=fi>
+Click the Design button.<br><br></li></ol>
+<br><p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To correct pipeline errors:</p>
+<ol><li class=fi>
+Change data values for the appropriate
+columns in the error rows.<br><br></li>
+<li class=ds>
+Click the Update DB button.<br><br>
+<i>or</i>
+<br><br>
+Select Design&gt;Update Database from the menu
+bar.<br><br>
+InfoMaker pipes rows in which errors were corrected to the
+destination table and displays any remaining errors.<br><br></li>
+<li class=ds>
+Repeat steps 1 and 2 until all errors are corrected.<br><br>
+The Data Pipeline painter workspace displays.<br><br></li></ol>
+<br><A NAME="TI4716"></A><h4>Viewing an error message</h4>
+<A NAME="TI4717"></A><p>Sometimes you cannot see an entire error message because the
+column isn't wide enough.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To view an error message</p>
+<ol><li class=fi>
+Move the pointer to the error message and
+press the right arrow key to scroll through it.<br><br>
+<i>or</i>
+<br><br>
+Drag the Error Message column border to the width needed.<br><br></li></ol>
+<br><p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Making the error messages shorter</span> <A NAME="TI4718"></A>For ODBC data sources, you can set the DBParm MsgTerse parameter
+in the destination database profile to make the error messages shorter.
+If you type <b>MsgTerse = 'Yes'</b>,
+then the SQLSTATE error number won't appear.</p>
+<A NAME="TI4719"></A>For more information on the MsgTerse DBParm,
+see the online Help.</p>
+

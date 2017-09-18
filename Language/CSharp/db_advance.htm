@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<title>高级数据库操作</title>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+<p id="title">高级数据库操作</p>
+
+<h1>将查询结果保存为XML文件</h1>
+<pre class="code" data-type="csharp">SqlConnection conn = new SqlConnection(&quot;user id=sa;data source=\&quot;.\&quot;;persist security info=True;initial catalog=northwind;password=sa;&quot;);
+string sql;
+sql = &quot;select firstname, lastname from employees&quot;;
+SqlDataAdapter adapter = new SqlDataAdapter(sql, conn);
+DataTable tb = new DataTable();
+tb.TableName = &quot;employee&quot;;
+adapter.Fill(tb);
+tb.WriteXml(@&quot;c:\1.xml&quot;);</pre>
+<p>文件内容如下所示：</p>
+<pre class="code" data-type="xml">?xml version=&quot;1.0&quot; standalone=&quot;yes&quot;?&gt;
+&lt;DocumentElement&gt;
+  &lt;employee&gt;
+    &lt;firstname&gt;Nancy&lt;/firstname&gt;
+    &lt;lastname&gt;Davolio&lt;/lastname&gt;
+  &lt;/employee&gt;
+  &lt;employee&gt;
+    &lt;firstname&gt;Andrew&lt;/firstname&gt;
+    &lt;lastname&gt;Fuller&lt;/lastname&gt;
+  &lt;/employee&gt;
+  &lt;employee&gt;
+    &lt;firstname&gt;Janet&lt;/firstname&gt;
+    &lt;lastname&gt;Leverling&lt;/lastname&gt;
+  &lt;/employee&gt;
+  &lt;employee&gt;
+    &lt;firstname&gt;Margaret&lt;/firstname&gt;
+    &lt;lastname&gt;Peacock&lt;/lastname&gt;
+  &lt;/employee&gt;
+&lt;/DocumentElement&gt;</pre>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+
+</body>
+</html>

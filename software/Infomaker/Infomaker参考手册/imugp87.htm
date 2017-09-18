@@ -1,0 +1,172 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+About graphs </TITLE>
+</HEAD>
+<BODY>
+<A NAME="X-ref299517487"></A><h1>About graphs </h1>
+<A NAME="TI3449"></A><p>Often the best way to display information is graphically.
+You can add a graph to a report and work with it there, or you can
+use the Graph presentation style to create a standalone graph.You
+can use graphs to supplement the numbers in a report or you can
+replace numbers with a graph.</p>
+<A NAME="TI3450"></A><p>InfoMaker provides many types of graphs and allows you to
+customize your graphs in many ways. Probably
+most of your use of graphs will be in a report--the
+source of the data for your graphs will be the database. </p>
+<A NAME="TI3451"></A><h2>Parts of a graph</h2>
+<A NAME="TI3452"></A><p>Here is a column graph created in InfoMaker that contains
+most major parts of a graph. It shows quarterly sales of three products:
+Stellar, Cosmic, and Galactic printers:</p>
+<br><img src="images/graph02.gif">
+<A NAME="TI3453"></A><h3>How data is represented</h3>
+<A NAME="TI3454"></A><p>Graphs display data points. To define graphs, you need to
+know how the data is represented. InfoMaker organizes data into
+three components:</p>
+<A NAME="TI3455"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI3456"></A>Component</th>
+<th align="left" valign=bottom><A NAME="TI3457"></A>Meaning</th>
+</tr>
+<tr><td valign=top><A NAME="TI3458"></A>Series</td>
+<td valign=top><p><b>A set of data points</b>   Each set of related data points makes up one series. In the
+preceding graph, there is a series for Stellar sales, another series
+for Cosmic sales, and another series for Galactic sales. Each series
+in a graph is distinguished by color, pattern, or symbol</p>
+</td>
+</tr>
+<tr><td valign=top><A NAME="TI3459"></A>Categories</td>
+<td valign=top><p><b>The major divisions of the
+data</b>   Series data are divided into categories, which are often non-numeric.
+In the preceding graph, the series are divided into four categories:
+Q1, Q2, Q3, and Q4. Categories represent values of the independent
+variable(s)</p>
+</td>
+</tr>
+<tr><td valign=top><A NAME="TI3460"></A>Values</td>
+<td valign=top><A NAME="TI3461"></A>The values for the data points (dependent
+variables)</td>
+</tr>
+</table>
+<A NAME="TI3462"></A><h3>Organization of a graph</h3>
+<A NAME="TI3463"></A><p>The following table lists the parts of a typical graph:</p>
+<A NAME="TI3464"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI3465"></A>Part of graph</th>
+<th align="left" valign=bottom><A NAME="TI3466"></A>What it is</th>
+</tr>
+<tr><td valign=top><A NAME="TI3467"></A>Title</td>
+<td valign=top><A NAME="TI3468"></A>An optional title for the graph. The
+title appears at the top of the graph</td>
+</tr>
+<tr><td valign=top><A NAME="TI3469"></A>Value axis</td>
+<td valign=top><A NAME="TI3470"></A>The axis of the graph along which the
+values of the dependent variable(s) are plotted. In a column graph,
+as shown in the preceding graph, the Value axis corresponds to the
+y axis in an XY presentation. But in other types of graphs, such
+as a bar graph, the Value axis can be along the x dimension</td>
+</tr>
+<tr><td valign=top><A NAME="TI3471"></A>Category axis</td>
+<td valign=top><A NAME="TI3472"></A>The axis along which are plotted the
+major divisions of the data, representing the independent variable(s).
+In the preceding graph, the Category axis corresponds to the x axis.
+It plots four categories: Q1, Q2, Q3, and Q4. These form the major
+divisions of data in the graph</td>
+</tr>
+<tr><td valign=top><A NAME="TI3473"></A>Series</td>
+<td valign=top><A NAME="TI3474"></A>A set of data points. There are three
+series in the preceding graph: Stellar, Cosmic, and Galactic. In
+bar and column charts, each series is represented by bars or columns
+of one color or pattern</td>
+</tr>
+<tr><td valign=top><A NAME="TI3475"></A>Series axis</td>
+<td valign=top><A NAME="TI3476"></A>The axis along which the series are plotted
+in three-dimensional (3D) graphs</td>
+</tr>
+<tr><td valign=top><A NAME="TI3477"></A>Legend</td>
+<td valign=top><A NAME="TI3478"></A>An optional listing of the series. The
+preceding graph contains a legend that shows how each series is
+represented in the graph</td>
+</tr>
+</table>
+<A NAME="TI3479"></A><h2>Types of graphs</h2>
+<A NAME="TI3480"></A><p>InfoMaker provides many types of graphs for you to choose
+from. You choose the type in the Define Graph Style dialog box or
+in the General page in the Properties view for the graph.</p>
+<br><img src="images/Graph03.gif">
+<A NAME="TI3481"></A><h3>Area, bar, column, and line graphs</h3>
+<A NAME="TI3482"></A><p>Area, bar, column, and line graphs are conceptually very similar.
+They differ only in how they physically represent the data values--whether
+they use areas, bars, columns, or lines to represent the values.
+All other properties are the same. Typically you use area and line
+graphs to display continuous data and use bar and column graphs
+to display noncontinuous data.</p>
+<A NAME="TI3483"></A><p>The only difference between a bar graph and a column graph
+is the orientation: in column graphs, values are plotted along the
+y axis and categories are plotted along the x axis. In bar graphs,
+values are plotted along the x axis and categories are plotted along
+the y axis.</p>
+<A NAME="TI3484"></A><h3>Pie graphs</h3>
+<A NAME="TI3485"></A><p>Pie graphs typically show one series of data points with each
+data point shown as a percentage of a whole. The following pie graph
+shows the sales for Stellar printers for each quarter. You can easily
+see the relative values in each quarter. (InfoMaker automatically
+calculates the percentages of each slice of the pie.)</p>
+<br><img src="images/Graph08.gif">
+<A NAME="TI3486"></A><p>You can have pie graphs with more than one series if you want;
+the series are shown in concentric circles. Multiseries pie graphs
+can be useful in comparing series of data.</p>
+<A NAME="TI3487"></A><h3>Scatter graphs</h3>
+<A NAME="TI3488"></A><p>Scatter graphs show xy data points. Typically you use scatter
+graphs to show the relationship between two sets of numeric values. Non-numeric values, such as string
+and DateTime data types, do not display correctly.</p>
+<A NAME="TI3489"></A><p>Scatter graphs do not use categories. Instead, numeric values
+are plotted along both axes--as opposed to other graphs,
+which have values along one axis and categories along the other
+axis.</p>
+<A NAME="TI3490"></A><p>For example, the following data shows the effect of speed
+on the mileage of a sedan:</p>
+<A NAME="TI3491"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI3492"></A>Speed</th>
+<th align="left" valign=bottom><A NAME="TI3493"></A>Mileage</th>
+</tr>
+<tr><td valign=top><A NAME="TI3494"></A>10</td>
+<td valign=top><A NAME="TI3495"></A>12</td>
+</tr>
+<tr><td valign=top><A NAME="TI3496"></A>20</td>
+<td valign=top><A NAME="TI3497"></A>18</td>
+</tr>
+<tr><td valign=top><A NAME="TI3498"></A>30</td>
+<td valign=top><A NAME="TI3499"></A>21</td>
+</tr>
+<tr><td valign=top><A NAME="TI3500"></A>40</td>
+<td valign=top><A NAME="TI3501"></A>23</td>
+</tr>
+<tr><td valign=top><A NAME="TI3502"></A>50</td>
+<td valign=top><A NAME="TI3503"></A>26</td>
+</tr>
+<tr><td valign=top><A NAME="TI3504"></A>60</td>
+<td valign=top><A NAME="TI3505"></A>26</td>
+</tr>
+<tr><td valign=top><A NAME="TI3506"></A>70</td>
+<td valign=top><A NAME="TI3507"></A>24</td>
+</tr>
+<tr><td valign=top><A NAME="TI3508"></A>80</td>
+<td valign=top><A NAME="TI3509"></A>20</td>
+</tr>
+</table>
+<A NAME="TI3510"></A><p>Here is the data in a scatter graph:</p>
+<br><img src="images/Graph09.gif">
+<A NAME="TI3511"></A><p>You can have multiple series of data in a scatter graph. In
+the above example, you might want to plot mileage versus speed for
+several makes of cars in the same graph.</p>
+<A NAME="TI3512"></A><h3>Three-dimensional graphs</h3>
+<A NAME="TI3513"></A><p>You can also create 3-dimensional (3D) graphs of area, bar,
+column, line, and pie graphs. In 3D graphs (except for 3D pie graphs),
+series are plotted along a third axis (the Series axis) instead
+of along the Category axis. You can specify the perspective to use
+to show the third dimension:</p>
+<br><img src="images/Graph11.gif">
+<A NAME="TI3514"></A><h3>Stacked graphs</h3>
+<A NAME="TI3515"></A><p>In bar and column graphs, you can choose to stack the bars
+and columns. In stacked graphs, each category is represented as
+one bar or column instead of as separate bars or columns for each
+series:</p>
+<br><img src="images/Graph12.gif">
+

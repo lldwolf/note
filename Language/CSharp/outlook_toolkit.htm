@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+    <title>C#.net使用手册</title>
+    <script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+<body>
+    <p id="title">Outlook 邮件助手</p>
+    <h1>Overview</h1>
+    <p>本章将示例如何开发一个邮件助手，对新收到的邮件进行自定义操作。例如：</p>
+    <ul>
+        <li>对于垃圾邮件，直接删除</li>
+        <li>对于不重要邮件，自动标为已读</li>
+        <li>对于重要邮件，弹出提醒</li>
+    </ul>
+    <h1>C# 编程</h1>
+    <p>需要解决如下几个问题</p>
+    <ol>
+        <li>如何连接到 Outlook</li>
+        <li>如何获得新收到的邮件</li>
+        <li>如何读取邮件的信息，例如标题，发送者，邮件正文等</li>
+        <li>如何对邮件进行操作，例如删除，标为已读等</li>
+    </ol>
+    <p>下面的代码演示了对上述问题的解决方案</p>
+    <pre class="code" data-type="csharp">using System;
+using Outlook = Microsoft.Office.Interop.Outlook;
+
+namespace Test
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Outlook.Application outlook = GetOutlookInstance();
+            
+            if (outlook != null)
+            {
+                System.Console.WriteLine("Get outlook successfully.");
+            }
+            else
+            {
+                System.Console.Error.WriteLine("Cannot get outlook!");
+                return;
+            }
+
+            AddMonitor(outlook);
+
+            System.Console.Read();
+        }
+
+        //连接到 Outlook
+        private static Outlook.Application GetOutlookInstance()
+        {
+            Outlook.Application outlook = (Outlook.Application)System.Runtime.InteropServices.Marshal.GetActiveObject("Outlook.Application");
+            return outlook;
+        }
+
+        //添加对新到邮件的监控
+        private static void AddMonitor(Outlook.Application outlook)
+        {
+            Outlook.NameSpace mapiNamespace = outlook.GetNamespace("MAPI");
+            Outlook.MAPIFolder inbox = mapiNamespace.GetDefaultFolder(Outlook.OlDefaultFolders.olFolderInbox);
+            inbox.Items.ItemAdd += Items_ItemAdd;
+        }
+
+        //读取邮件内容并进行相应处理
+        private static void Items_ItemAdd(object Item)
+        {
+            Outlook.MailItem mail = Item as Outlook.MailItem;
+
+            if (mail == null)
+            {
+                return;
+            }
+
+            Console.WriteLine(string.Format("Received Email at {0}\r\nSubject: {1}\nSender: {2}\nContent: \n {3}", mail.ReceivedTime, mail.Subject, mail.Sender.Name, mail.Body));
+
+            if (mail.Subject == "test")
+            {
+                mail.Delete();
+            }
+            else if (mail.Subject == "test1")
+            {
+                mail.UnRead = false;
+            }
+        }
+    }
+}</pre>
+    <h1>Outlook 设置</h1>
+    <p>外部程序试图读取 Outlook 内容时，Outlook 会弹出如下警示框：</p>
+    <p>
+        <img alt="" src="images/outlook-security-popup.png" /></p>
+    <p>可对注册表进行修改阻止弹出该警示框</p>
+    <p>感谢网上的大神找到的办法<a href="http://www.ryadel.com/en/how-to-stop-the-outlook-a-program-is-trying-to-access-pop-up/">How to stop the Outlook “A program is trying to access” pop-up messages</a></p>
+    <h2>Outlook 2013</h2>
+    <p>找到键 HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Office\15.0\Outlook\Security，如果没有则创建，并添加如下 DWORD 值</p>
+    <ul>
+        <li>CheckAdminSettings: 1</li>
+        <li>AdminSecurityMode: 3</li>
+        <li>PromptSimpleMAPISend : 2</li>
+        <li>PromptSimpleMAPINameResolve : 2</li>
+        <li>PromptSimpleMAPIOpenMessage : 2</li>
+        <li>PromptOOMCustomAction : 2</li>
+        <li>PromptOOMSend : 2</li>
+        <li>PromptOOMAddressBookAccess : 2</li>
+        <li>PromptOOMAddressInformationAccess : 2</li>
+        <li>PromptOOMMeetingTaskRequestResponse : 2</li>
+    </ul>
+    <p>再找到键 HKEY_CURRENT_USER\Software\Policies\Microsoft\Office\15.0\outlook\security，如果没有则创建，并添加如下 DWORD 值</p>
+    <ul>
+        <li>CheckAdminSettings: 1</li>
+        <li>AdminSecurityMode: 3</li>
+        <li>PromptSimpleMAPISend: 2</li>
+        <li>PromptSimpleMAPINameResolve: 2</li>
+        <li>PromptSimpleMAPIOpenMessage: 2</li>
+        <li>PromptOOMCustomAction: 2</li>
+        <li>PromptOOMSend: 2</li>
+        <li>PromptOOMAddressBookAccess: 2</li>
+        <li>PromptOOMAddressInformationAccess: 2</li>
+        <li>PromptOOMMeetingTaskRequestResponse: 2</li>
+    </ul>
+    <h2>Outlook 2010</h2>
+    <p>操作步骤与 Outlook 2013 相同，只是将 15.0 换为 14.0</p>
+
+</body>
+</html>

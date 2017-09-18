@@ -1,0 +1,55 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+RelativeTime</TITLE>
+</HEAD>
+<BODY>
+<A NAME="DWFRelativeTime"></A><A NAME="TI7595"></A><h1>RelativeTime</h1>
+<A NAME="TI7596"></A><p>
+<FORM>
+<INPUT
+ TYPE = "BUTTON"
+ VALUE = "Examples"
+ onClick = "window.location = 'imugp227.htm#EX79';">
+<INPUT
+  TYPE = "BUTTON"
+ VALUE = "See also"
+ onClick = "window.location = 'imugp227.htm#SA79';">
+</FORM>
+</p>
+<h3>Description</h3><A NAME="TI7597"></A><p>Obtains a time that occurs a specified number of seconds after
+or before another time within a 24-hour period.</p>
+
+<h3>Syntax</h3><pre><b>RelativeTime</b> ( <i>time</i>, <i>n</i> )</pre>
+<A NAME="TI7598"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI7599"></A>Argument</th>
+<th align="left" valign=bottom><A NAME="TI7600"></A>Description</th>
+</tr>
+<tr><td valign=top><A NAME="TI7601"></A><i>time</i></td>
+<td valign=top><A NAME="TI7602"></A>A time value</td>
+</tr>
+<tr><td valign=top><A NAME="TI7603"></A><i>n</i></td>
+<td valign=top><A NAME="TI7604"></A>A long number of seconds</td>
+</tr>
+</table>
+
+<h3>Return Values</h3><A NAME="TI7605"></A><p>Time. Returns the time that occurs <i>n</i> seconds
+after <i>time</i> if <i>n</i> is greater
+than 0. Returns the time that occurs <i>n</i> seconds
+before <i>time</i> if <i>n</i> is less
+than 0. The maximum return value is 23:59:59.</p>
+
+<A NAME="EX79"></A><h3>Examples</h3><A NAME="TI7606"></A><p>This expression returns 19:01:41:<pre><i>RelativeTime</i> (19:01:31, 10)</pre>
+</p>
+<A NAME="TI7607"></A><p>This expression returns 19:01:21:<pre><i>RelativeTime</i> (19:01:31, -10)</pre>
+</p>
+
+<A NAME="SA79"></A><h3>See Also</h3><A NAME="TI7608"></A><p><A NAME="TI7609"></A>
+<ul>
+<li class=fi><A HREF="imugp236.htm#CAICHBCB">SecondsAfter</A></li>
+<li class=ds> 
+</li>
+</ul>
+</p>
+
+

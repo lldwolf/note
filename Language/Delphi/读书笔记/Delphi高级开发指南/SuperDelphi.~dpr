@@ -1,0 +1,37 @@
+program SuperDelphi;
+
+uses
+  Forms,
+  MainFrm in 'MainFrm.pas' {Form1},
+  StringRefFrm in 'StringRefFrm.pas' {FrmStringRef},
+  ModuleFrm in 'ModuleFrm.pas' {Frm},
+  MemoStrFrm in 'MemoStrFrm.pas' {FrmMemoStr},
+  MemoryStreamFrm in 'MemoryStreamFrm.pas' {FrmMemoryStream},
+  CustomStreamFrm in 'CustomStreamFrm.pas' {FrmCustomStream},
+  ReadWriteFrm in 'ReadWriteFrm.pas' {FrmReadWrite},
+  ClassRTTIFrm in 'ClassRTTIFrm.pas' {FrmClassRTTI},
+  OrdTypeFrm in 'OrdTypeFrm.pas' {FrmOrdType},
+  MethodPointerRTTIFrm in 'MethodPointerRTTIFrm.pas' {FrmMethodPointerRTTI},
+  GetStringPropFrm in 'GetStringPropFrm.pas' {FrmGetStringProp},
+  EnumRTTIFrm in 'EnumRTTIFrm.pas' {FrmEnumRTTI},
+  SetTitleFrm in 'SetTitleFrm.pas' {Frm1};
+
+{$R *.res}
+
+begin
+  Application.Initialize;
+  Application.CreateForm(TForm1, Form1);
+  Application.CreateForm(TFrmStringRef, FrmStringRef);
+  Application.CreateForm(TFrm, Frm);
+  Application.CreateForm(TFrmMemoStr, FrmMemoStr);
+  Application.CreateForm(TFrmMemoryStream, FrmMemoryStream);
+  Application.CreateForm(TFrmCustomStream, FrmCustomStream);
+  Application.CreateForm(TFrmReadWrite, FrmReadWrite);
+  Application.CreateForm(TFrmClassRTTI, FrmClassRTTI);
+  Application.CreateForm(TFrmOrdType, FrmOrdType);
+  Application.CreateForm(TFrmMethodPointerRTTI, FrmMethodPointerRTTI);
+  Application.CreateForm(TFrmGetStringProp, FrmGetStringProp);
+  Application.CreateForm(TFrmEnumRTTI, FrmEnumRTTI);
+  Application.CreateForm(TFrm1, Frm1);
+  Application.Run;
+end.

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>JSP常用操作</title>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+<p id="title">JSP常用操作</p>
+
+<h1>N.1 下载</h1>
+<pre>String name = new String();
+name = &quot;report.xls&quot;;
+response.setContentType(&quot;unknown&quot;);
+response.addHeader(&quot;Content-Disposition&quot;, &quot;attachment;filename=\&quot;&quot; + name + &quot;\&quot;&quot;);
+
+try
+{
+	java.io.OutputStream    os  = response.getOutputStream();
+	java.io.FileInputStream fis = new java.io.FileInputStream(ReportFile);
+	
+	byte[] b = new byte[1024];
+	int i = 0;
+	
+	while((i = fis.read(b)) &gt; 0) 
+	{
+		os.write(b,0,i);
+	}
+	
+	fis.close();
+	os.flush();
+	os.close();
+}
+catch ( Exception e )
+{
+	e.printStackTrace();
+}</pre>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+
+</body>
+</html>

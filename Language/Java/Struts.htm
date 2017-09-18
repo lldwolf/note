@@ -1,0 +1,232 @@
+<html>
+<head>
+<title>Struts学习笔记</title>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+  <p id="title">第N章Struts学习笔记</p>
+  
+  <h1>基本知识 </h1>
+  <h2>N.1.1 需要的Struts包</h2>
+  <p>
+    从网上下载Struts的压缩包后，解开，把lib子目录下的所有.jar文件复制到自己应用程序的lib目录下。当然，或许有些用不到，但全放进来最起码不会出错。
+  </p>
+  <h2>N.1.2 web.xml配置文件</h2>
+  <p>
+    只要用Struts来搭建J2EE架构，web.xml的写法都差不多，我现在不用Struts的标签库，只用其最基本的功能，写法如下：
+  </p>
+  
+<pre>
+&lt;?xml version="1.0" encoding="ISO-8859-1"?&gt;
+
+&lt;!DOCTYPE web-app
+  PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.2//EN"
+  "http://java.sun.com/j2ee/dtds/web-app_2_2.dtd"&gt;
+
+&lt;web-app&gt;
+	&lt;display-name&gt;Struts Example Application&lt;/display-name&gt;
+
+  &lt;!-- Action Servlet Configuration --&gt;
+  &lt;servlet&gt;
+    &lt;servlet-name&gt;action&lt;/servlet-name&gt;
+    &lt;servlet-class&gt;org.apache.struts.action.ActionServlet&lt;/servlet-class&gt;
+    &lt;init-param&gt;
+      &lt;param-name&gt;config&lt;/param-name&gt;
+      &lt;param-value&gt;/WEB-INF/struts-config.xml&lt;/param-value&gt;
+    &lt;/init-param&gt;
+    &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
+  &lt;/servlet&gt;
+
+
+  &lt;!-- Action Servlet Mapping --&gt;
+  &lt;servlet-mapping&gt;
+    &lt;servlet-name&gt;action&lt;/servlet-name&gt;
+    &lt;url-pattern&gt;*.do&lt;/url-pattern&gt;
+  &lt;/servlet-mapping&gt;
+
+
+  &lt;!-- The Welcome File List --&gt;
+  &lt;welcome-file-list&gt;
+    &lt;welcome-file&gt;index.jsp&lt;/welcome-file&gt;
+  &lt;/welcome-file-list&gt;
+
+
+&lt;/web-app&gt;
+
+</pre>
+  <p>
+    也就是说所有以.do为后缀的请求都将发往org.apache.struts.action.ActionServlet，这个类包含在struts.jar中。
+    至于/WEB-INF/struts-config.xml，这是Struts用的配置文件，文件名和路径也可以由用户自定义，其实我写的这个是Struts的默认配置，即如果省略这个参数，Struts会自动把/WEB-INF/struts-config.xml作为配置文件，也可以指定多个配置文件，不同的配置文件以逗号","隔开。
+  </p>
+  
+  <h2>N.1.3 struts-config.xml</h2>
+  <p>
+    我们由简到难，先做一个空的struts-config.xml，再逐渐往里加功能，代码如下所示：
+  </p>
+  <pre>
+<font color=blue>&lt;?xml</font> <font color=red>version=</font>"<font color=red>1.0</font>" <font color=red>encoding=</font>"ISO-8859-1" <font color=blue>?&gt;</font>
+
+&lt;!DOCTYPE struts-config PUBLIC
+          "-//Apache Software Foundation//DTD Struts Configuration 1.1//EN"
+          "http://jakarta.apache.org/struts/dtds/struts-config_1_1.dtd"&gt;
+
+<font color=blue>&lt;struts-config&gt;</font>
+
+  <font color=blue>&lt;action-mappings&gt;</font>
+  <font color=blue>&lt;/action-mappings&gt;</font>
+
+<font color=blue>&lt;/struts-config&gt;</font>
+
+  </pre>
+  <p>
+    在以下的步骤我们就可以看到，我们如些向这个XML文件添加内容。其实空的文件连&lt;action-mappings&gt;也没有，但是这struts-config.xml里面最基本的标签，所以我先加进去了。
+  </p>
+
+  <h2>N.1.4 实现最简单的页面跳转</h2>
+  <p>
+    也就是说，我们要实现这么一个动作，它只是简单地从一个页面跳到另一个页面，功能和HTML页面中的静态链接完全一样。我们先在index.jsp中创建这么一个链接：
+  </p>
+  
+  <pre>
+  &lt;a href=&quot;jump.do&quot;&gt;点这里跳转到别的页面&lt;/a&gt;</pre>
+  <p>
+    然后在struts-config.xml中的&lt;action-mappings&gt;标签中加入如下&lt;action&gt;标签:
+  </p>
+  
+  <pre>
+    &lt;action    path=&quot;/jump&quot;
+	            forward=&quot;/success.jsp&quot;&gt;
+    &lt;/action&gt;</pre>
+  <p>OK，这个最简单的功能就实现了。其中，path属性表示客户端传来的链接请求，注意，这里并没有.do后缀。forward自然就是跳转的目标页面了。</p>
+
+  <h2>N.1.5 使用Servlet</h2>
+  <p>
+    我们先实现一个最简单的Servlet，它只是返回一个字符串“Hello, I come back!”给客户端，其代码如下：
+  </p>
+  <pre>
+//UseServlet.java
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse; 
+import org.apache.struts.action.Action;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
+import org.apache.struts.action.ActionForm;
+
+public class UseServlet extends Action {
+
+	public ActionForward execute(ActionMapping mapping,
+			 ActionForm form,
+			 HttpServletRequest request,
+			 HttpServletResponse response)	throws Exception 
+	{
+		request.setAttribute("test_value", "Hello, I come back!");
+		return mapping.findForward("return");
+	}
+
+}</pre>
+  <p>
+    Servlet必须是org.apache.struts.action.Action的子类并重载execute方法，execute方法返回一个org.apache.struts.action.ActionForward类，用于返回相应页面。在本例中我们使用mapping.findForward("return")来返回这个对象，至于字符串"return"，过会儿你可看到，这是我们定义在struts-config.xml中的一个标识。
+  </p>
+  <p>然后是定义struts-config.xml的&lt;action-mappings&gt;中的相应标签如下：</p>
+  <pre>
+    &lt;action path="/servlet" 
+    	type="UseServlet" 
+    	scope="request"&gt;
+    	&lt;forward name="return" path="/servlet_test.jsp"/&gt;
+    &lt;/action&gt;
+  </pre>
+  <p>其中type属性表示要使用的Servlet，scopen表示有效范围，值得注意的是&lt;forward&gt;子标签，其中的name属性"return"和servlet最后的mapping.findForward()的参数一致。</p>
+  <p>最后在index.jsp相应的加入：</p>
+  <pre>
+    &lt;a href="servlet.do"&gt;点这里使用Servlet&lt;/a&gt;
+  </pre>
+  
+  <h2>N.1.6 使用数据库</h2>
+  <p>
+    我们可以直接在struts-config.xml中的&lt;struts-config&gt;中指定数据库连接，方式如下：
+  </p>
+  <pre>
+ &lt;data-sources&gt;
+   &lt;data-source&gt;
+     &lt;set-property property="autoCommit"
+                      value="false"/&gt;
+     &lt;set-property property="description"
+                      value="Example Data Source Configuration"/&gt;
+     &lt;set-property property="driverClass"
+                      value="sun.jdbc.odbc.JdbcOdbcDriver"/&gt;
+     &lt;set-property property="maxCount"
+                      value="4"/&gt;
+     &lt;set-property property="minCount"
+                      value="2"/&gt;
+     &lt;set-property property="password"
+                      value=""/&gt;
+     &lt;set-property property="url"
+                      value="jdbc:odbc:test"/&gt;
+     &lt;set-property property="user"
+                      value=""/&gt;
+   &lt;/data-source&gt;
+ &lt;/data-sources&gt;
+  </pre>
+  <p>
+  本例中我使用的是JDBC-ODBC数据库连接，你需要事先建一个名为test的ODBC连接。然后你就可以在Servlet中以如下方式得到数据库连接：
+  </p>
+  <pre>
+	javax.sql.DataSource dataSource = getDataSource(request);
+	java.sql.Connection conn = dataSource.getConnection();</pre>
+  <p>
+  你可以在&lt;/data-sources&gt;中定义多个数据库连接，例如：
+  </p>
+  <pre>
+&lt;data-sources&gt;
+   &lt;data-source key="A"&gt;
+      ... properties as before ...
+   &lt;/data-source&gt;
+   &lt;data-source key="B"&gt;
+      ... properties as before ...
+   &lt;/data-source&gt;
+   ...
+&lt;/data-sources&gt;</pre>
+  <p>
+  然后以如下方式取得数据库连接：
+  </p>
+  <pre>
+      dataSourceA = getDataSource(request, "A");
+      dataSourceB = getDataSource(request, "B");</pre>
+<h1>N.2 中文环境配置</h1>
+<p>在默认情况下，用struts传送的中文都为乱码，例如将上传的中文字符串写入数据库时，一个笨办法时将每个中文串都使用如下函数转换一下：</p>
+<pre>public static String isoToGB(String src)
+{
+    String strRet=null;
+    try{
+      strRet = new String(src.getBytes("ISO_8859_1"),"GB2312");
+    }catch(Exception e)
+    {
+      
+    }
+    return strRet;
+}</pre>
+<p>不过还有一个更加一劳永逸的做法，方法如下：</p>
+<p>1、写一个ActionServlet的继承类如下：</p>
+<pre>import javax.servlet.http.*;
+import org.apache.struts.action.ActionServlet;
+
+public class MyAction extends ActionServlet {
+	
+	protected void process(
+			HttpServletRequest request, 
+			HttpServletResponse response) throws java.io.IOException, javax.servlet.ServletException {
+
+	    request.setCharacterEncoding("GB2312");//就加这一行一切都解决了
+	    super.process(request, response);
+	  }
+}</pre>
+<p>2、修改web.xml</p>
+<pre>    &lt;servlet-name&gt;action&lt;/servlet-name&gt;
+    &lt;servlet-class&gt;包.MyAction&lt;/servlet-class&gt;</pre>
+<p>&nbsp;</p>
+<script language="javascript" src="index.js"></script>
+</body>
+</html>
+ 	

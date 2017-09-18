@@ -1,0 +1,147 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+Large</TITLE>
+</HEAD>
+<BODY>
+<A NAME="CAIBCEJC"></A><A NAME="TI6891"></A><h1>Large</h1>
+<A NAME="TI6892"></A><p>
+<FORM>
+<INPUT
+ TYPE = "BUTTON"
+ VALUE = "Examples"
+ onClick = "window.location = 'imugp193.htm#EX45';">
+<INPUT
+  TYPE = "BUTTON"
+ VALUE = "See also"
+ onClick = "window.location = 'imugp193.htm#SA45';">
+</FORM>
+</p>
+<h3>Description</h3><A NAME="TI6893"></A><p>Finds a large value at a specified ranking in a column (for
+example, third- largest, fifth-largest) and returns the value of
+another column or expression based on the result.</p>
+
+<h3>Syntax</h3><pre><b>Large</b> ( <i>returnexp</i>, <i>column</i>, <i>ntop</i> { FOR <i>range</i> { DISTINCT { <i>expres1 </i><br> 	{, <i>expres2</i> {, ... } } } } } )</pre>
+<A NAME="TI6894"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI6895"></A>Argument</th>
+<th align="left" valign=bottom><A NAME="TI6896"></A>Description</th>
+</tr>
+<tr><td valign=top><A NAME="TI6897"></A><i>returnexp</i></td>
+<td valign=top><A NAME="TI6898"></A>The value you want returned when the
+large value is found. <i>Returnexp</i> includes a
+reference to a column, but not necessarily the column that is being
+evaluated for the largest value, so that a value is returned from
+the same row that contains the large value</td>
+</tr>
+<tr><td valign=top><A NAME="TI6899"></A><i>column</i></td>
+<td valign=top><A NAME="TI6900"></A>The column that contains the large value
+you are searching for. <i>Column</i> can be a column
+name or a column number preceded by a pound sign (#). <i>Column</i> can
+also be an expression that includes a reference to the column. The
+data type of <i>column</i> must be numeric</td>
+</tr>
+<tr><td valign=top><A NAME="TI6901"></A><i>ntop</i></td>
+<td valign=top><A NAME="TI6902"></A>The ranking of the large value in relation
+to the column's largest value. For example, when <i>ntop</i> is
+2, Large finds the second-largest value</td>
+</tr>
+<tr><td valign=top><A NAME="TI6903"></A>FOR <i>range</i>  (optional)</td>
+<td valign=top><A NAME="TI6904"></A>The data that will be included when the
+largest value is found. For most presentation styles, values for <i>range</i> are:<A NAME="TI6905"></A><A NAME="TI6906"></A>
+<ul>
+<li class=fi>ALL -- (Default)
+The largest of all values in <i>column</i></li>
+<li class=ds>GROUP <i>n</i> -- The largest
+of values in <i>column</i> in the specified group.
+Specify the keyword GROUP followed by the group number: for example,
+GROUP 1</li>
+<li class=ds>PAGE -- The largest of the values in <i>column</i> on
+a page
+</li>
+</ul>
+<A NAME="TI6907"></A>For Crosstabs, specify CROSSTAB for <i>range</i>:<A NAME="TI6908"></A><A NAME="TI6909"></A>
+<ul>
+<li class=fi>CROSSTAB -- (Crosstabs
+only) The largest of all values in <i>column</i> in
+the crosstab
+</li>
+</ul>
+<A NAME="TI6910"></A>For Graph and OLE objects, specify one of the following:<A NAME="TI6911"></A><A NAME="TI6912"></A>
+<ul>
+<li class=fi>GRAPH -- (Graphs
+only) The largest of values in <i>column</i> in the range
+specified for the Rows option</li>
+<li class=ds>OBJECT -- (OLE objects only) The largest
+of values in <i>column</i> in the range specified
+for the Rows option
+</li>
+</ul>
+</td>
+</tr>
+<tr><td valign=top><A NAME="TI6913"></A>DISTINCT (optional)</td>
+<td valign=top><A NAME="TI6914"></A>Causes Large to consider only the distinct
+values in <i>column</i> when determining the large
+value. For a value of <i>column</i>, the first row found
+with the value is used and other rows that have the same value are
+ignored</td>
+</tr>
+<tr><td valign=top><A NAME="TI6915"></A><i>expresn</i>  (optional)</td>
+<td valign=top><A NAME="TI6916"></A>One or more expressions that you need
+to evaluate to determine distinct rows. <i>Expresn</i> can
+be the name of a column, a function, or an expression</td>
+</tr>
+</table>
+
+<h3>Return Values</h3><A NAME="TI6917"></A><p>The data type of <i>returnexp</i>. Returns the <i>ntop</i>-largest
+value if it succeeds and -1 if an error occurs.</p>
+
+<h3>Usage</h3><A NAME="TI6918"></A><p>If you specify <i>range</i>, Large returns the
+value in <i>returnexp</i> when the value in <i>column</i> is
+the <i>ntop</i>-largest value in <i>range</i>.
+If you specify DISTINCT, Large returns <i>returnexp</i> when
+the value in <i>column</i> is the <i>ntop</i>-largest
+value of the distinct values in <i>column</i>, or
+if you specify <i>expresn</i>, the <i>ntop</i>-largest
+for each distinct value of <i>expresn</i>.</p>
+<A NAME="TI6919"></A><p>For graphs and OLE objects, you do not select the range when
+you call the function. The range has already been determined by
+the Rows setting on the Data property page (the Range property),
+and the aggregation function uses that range. Settings for Rows
+include:<A NAME="TI6920"></A>
+<ul>
+<li class=fi>For the Graph or
+OLE presentation style, Rows is always All</li>
+<li class=ds>For Graph controls, Rows can be All, Page, or Group</li>
+<li class=ds>For OLE controls, Rows can be All, Current Row,
+Page, or Group. The available choices depend on the layer the control
+occupies
+</li>
+</ul>
+</p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Max may be faster</span> <A NAME="TI6921"></A>If you do not need a return value from another column and
+you want to find the largest value (<i>ntop</i>  = 1),
+use Max; it is faster.</p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Not in validation rules or filter expressions</span> <A NAME="TI6922"></A>You cannot use this or other aggregate functions in validation
+rules or filter expressions.</p>
+<A NAME="TI6923"></A><p>Using an aggregate function cancels the effect of setting
+Retrieve Rows As Needed in the painter. To do the aggregation, a
+DataWindow object or report always retrieves all rows.</p>
+
+<A NAME="EX45"></A><h3>Examples</h3><A NAME="TI6924"></A><p>These expressions return the names of the salespersons
+with the three largest sales (sum_sales is the sum of the
+sales for each salesperson) in group 2, which might be the salesregion
+group. Note that sum_sales contains the values being compared,
+but Large returns a value in the name column:<pre><i>Large</i> (name, sum_sales, 1 for group 2)<br> <i>Large</i> (name, sum_sales, 2 for group 2)<br> <i>Large</i> (name, sum_sales, 3 for group 2)</pre>
+</p>
+<A NAME="TI6925"></A><p>This example reports the salesperson with the third-largest
+sales, considering only the first entry for each person:<pre><i>Large</i> (name, sum_sales, 3 for all DISTINCT sum_sales)</pre>
+</p>
+
+<A NAME="SA45"></A><h3>See Also</h3><A NAME="TI6926"></A><p><A NAME="TI6927"></A>
+<ul>
+<li class=fi><A HREF="imugp239.htm#CAIBCECF">Small</A> 
+</li>
+</ul>
+</p>
+
+

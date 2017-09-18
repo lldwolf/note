@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+    <script type="text/javascript" src="../../mylib/js/css.js"></script>
+    <title>Lucene</title>
+</head>
+
+<body>
+    <p id="title">Lucene</p>
+    <h1>第一个程序</h1>
+    <p>下面是我第一次使用 Lucene 的步骤，实现了 Index 和 Search 的功能</p>
+    <ol>
+        <li><p>下载 Lucene package</p></li>
+        <li><p>新建 Maven 项目，在 pom.xml 中引用 Lucene 如下</p>
+            <pre class="code" data-type="xml">&lt;dependency&gt;
+	&lt;groupId&gt;org.apache.lucene&lt;/groupId&gt;
+	&lt;artifactId&gt;lucene-core&lt;/artifactId&gt;
+	&lt;version&gt;6.6.0&lt;/version&gt;
+	&lt;scope&gt;compile&lt;/scope&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt;
+	&lt;groupId&gt;org.apache.lucene&lt;/groupId&gt;
+	&lt;artifactId&gt;lucene-analyzers-common&lt;/artifactId&gt;
+	&lt;version&gt;6.6.0&lt;/version&gt;
+	&lt;scope&gt;compile&lt;/scope&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt;
+	&lt;groupId&gt;org.apache.lucene&lt;/groupId&gt;
+	&lt;artifactId&gt;lucene-queryparser&lt;/artifactId&gt;
+	&lt;version&gt;6.6.0&lt;/version&gt;
+	&lt;scope&gt;compile&lt;/scope&gt;
+&lt;/dependency&gt;</pre>
+        </li>
+        <li><p>从下载的包中找到文档，在其快速学习中提到了 demo 中有 Index 和 Search 的两个实现类 IndexFiles 和 SearchFiles，将它们的代码复制到我的工程中</p></li>
+        <li><p>依托这两个类，建立了其测试调用，如下所示：</p>
+            <pre class="code" data-type="java">public class LuceneUtil {
+
+	public static void RefreshIndex(String srcFolder, String indexFolder) {
+		String[] args = {
+				"-docs",
+				srcFolder,
+				"-index",
+				indexFolder,
+				"-update"};
+		IndexFiles.main(args);
+	}
+
+	public static void SearchFiles(String srcFolder, String indexFolder, String keyword) throws Exception {
+		String[] args = {
+				"-docs",
+				srcFolder,
+				"-index",
+				indexFolder,
+				"-query",
+				keyword};
+		SearchFiles.main(args);
+	}
+
+	public static void main(String[] args) throws Exception {
+		RefreshIndex("c:\\temp\\docs", "c:\\temp\index");
+		SearchFiles("c:\\temp\\docs", "c:\\temp\index", "directory");
+	}
+
+}
+</pre>
+        </li>
+    </ol>
+</body>
+</html>

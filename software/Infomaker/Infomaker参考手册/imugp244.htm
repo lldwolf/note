@@ -1,0 +1,105 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+String</TITLE>
+</HEAD>
+<BODY>
+<A NAME="CAIBCDBE"></A><A NAME="TI7969"></A><h1>String</h1>
+<A NAME="TI7970"></A><p>
+<FORM>
+<INPUT
+ TYPE = "BUTTON"
+ VALUE = "Examples"
+ onClick = "window.location = 'imugp244.htm#EX96';">
+</FORM>
+</p>
+<h3>Description</h3><A NAME="TI7971"></A><p>Formats data as a string according to a specified display
+format mask. You can convert and format date, DateTime, numeric,
+and time data. You can also apply a display format to a string.</p>
+
+<h3>Syntax</h3><pre><b>String</b> ( <i>data</i> {, <i>format</i> } )</pre>
+<A NAME="TI7972"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI7973"></A>Argument</th>
+<th align="left" valign=bottom><A NAME="TI7974"></A>Description</th>
+</tr>
+<tr><td valign=top><A NAME="TI7975"></A><i>data</i></td>
+<td valign=top><A NAME="TI7976"></A>The data you want returned as a string
+with the specified formatting. <i>Data</i> can have
+a date, DateTime, numeric, time, or string data type</td>
+</tr>
+<tr><td valign=top><A NAME="TI7977"></A><i>format</i>  (optional)</td>
+<td valign=top><A NAME="TI7978"></A>A string of the display masks you want
+to use to format the data. The masks consist of formatting information
+specific to the data type of <i>data</i>. If <i>data</i> is
+type string, <i>format</i> is required<A NAME="TI7979"></A>The format string can consist of more than one mask, depending
+on the data type of <i>data</i>. Each mask is separated
+by a semicolon. See Usage for details on each data type</td>
+</tr>
+</table>
+
+<h3>Return Values</h3><A NAME="TI7980"></A><p>String. Returns <i>data</i> in the specified
+format if it succeeds and the empty string ("") if the data type
+of <i>data</i> does not match the type of display
+mask specified or <i>format</i> is not a valid mask.</p>
+
+<h3>Usage</h3><A NAME="TI7981"></A><p>For date, DateTime, numeric, and time data, the system's
+default format is used for the returned string if you don't
+specify a format. For numeric data, the default format is the [General] format.</p>
+<A NAME="TI7982"></A><p>For string data, a display format mask is required. (Otherwise,
+the function would have nothing to do.)</p>
+<A NAME="TI7983"></A><p>The format can consist of one or more masks:</p>
+<A NAME="TI7984"></A><p><A NAME="TI7985"></A>
+<ul>
+<li class=fi>Formats for date,
+DateTime, string, and time data can include one or two masks. The
+first mask is the format for the data; the second mask is the format
+for a null value.</li>
+<li class=ds>Formats for numeric data can have up to four masks.
+A format with a single mask handles both positive and negative data.
+If there are additional masks, the first mask is for positive values,
+and the additional masks are for negative, zero, and NULL values.
+</li>
+</ul>
+</p>
+<A NAME="TI7986"></A><p>A format can include color specifications.</p>
+<A NAME="TI7987"></A><p>If the display format doesn't match the data type,
+the attempt to apply the mask produces unpredictable results.</p>
+<A NAME="TI7988"></A><p>For information about localized deployment
+files, see <A HREF="imugp134.htm#CFHBBAEA">Chapter 18, "Deploying Your Application"</A>.</p>
+
+<A NAME="EX96"></A><h3>Examples</h3><A NAME="TI7989"></A><p>This expression returns Jan 31, 1999:<pre><i>String</i> (1999-01-31, "mmm dd, yyyy")</pre>
+</p>
+<A NAME="TI7990"></A><p>This expression returns Jan 31, 1999 6 hrs and 8
+min:<pre><i>String</i> (1999-01-31 06:08:00, 'mmm dd, yyyy, h "hrs <br> and" m "min"')</pre>
+</p>
+<A NAME="TI7991"></A><p>This expression:<pre><i>String</i> (nbr, "0000;(000);****;empty")</pre>
+</p>
+<A NAME="TI7992"></A><p>returns:</p>
+<A NAME="TI7993"></A><p><A NAME="TI7994"></A>
+<ul>
+<li class=fi>0123 if nbr is 123</li>
+<li class=ds>(123) if nbr is -123</li>
+<li class=ds>**** if nbr
+is 0</li>
+<li class=ds>empty if nbr is NULL
+</li>
+</ul>
+</p>
+<A NAME="TI7995"></A><p>This expression returns A-B-C:<pre><i>String</i> ("ABC", "@-@-@")</pre>
+</p>
+<A NAME="TI7996"></A><p>This expression returns A*B:<pre><i>String</i> ("ABC", "@*@")</pre>
+</p>
+<A NAME="TI7997"></A><p>This expression returns ABC:<pre><i>String</i> ("ABC", "@@@")</pre>
+</p>
+<A NAME="TI7998"></A><p>This expression returns a space:<pre><i>String</i> ("ABC", " ")</pre>
+</p>
+<A NAME="TI7999"></A><p>This expression returns 6 hrs and 8 min:<pre><i>String</i> (06:08:02,'h "hrs and" m "min"')</pre>
+</p>
+<A NAME="TI8000"></A><p>This expression returns 08:06:04 pm:<pre><i>String</i> (20:06:04, "hh:mm:ss am/pm")</pre>
+</p>
+<A NAME="TI8001"></A><p>This expression returns 8:06:04 am:<pre><i>String</i> (08:06:04, "h:mm:ss am/pm")</pre>
+</p>
+<A NAME="TI8002"></A><p>This expression returns 6:11:25.300000:<pre><i>String</i> (6:11:25.300000, "h:mm:ss.ffffff")</pre>
+</p>
+
+

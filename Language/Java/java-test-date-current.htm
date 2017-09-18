@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+    <script type="text/javascript" src="../../mylib/js/css.js"></script>
+    <title>Java 练习题 - 获取当前日期</title>
+</head>
+
+<body>
+    <p id="title">Java 练习题 - 获取当前日期</p>
+    <h1>要求</h1>
+    <p>使用 String.format 拼接字符串</p>
+    <h1>示例代码</h1>
+    <pre class="code" data-type="java">
+Calendar theDay = Calendar.getInstance();
+Date date = theDay.getTime();
+System.out.println(String.format("Today: %tc", date));</pre></body>
+</html>

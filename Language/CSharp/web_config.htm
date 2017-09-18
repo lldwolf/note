@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<title>Web.Config配置</title>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+<p id="title">Web.Config配置</p>
+
+<h1>&lt;configuration&gt;元素</h1>
+<p>这是CLR和 .NET Framework 应用程序所使用的每个配置文件中的根元素。它包括如下子元素：</p>
+<table style="width:80%">
+
+<TR VALIGN="top">
+<TH width=34%>元素</TH>
+<TH width=66%>说明</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%><A HREF="#startup">启动设置架构</A></TD>
+<TD width=66%>启动设置架构中的所有元素。</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%><A HREF="#runtime">运行库设置架构</A></TD>
+<TD width=66%>运行库设置架构中的所有元素。</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%><A HREF="gnconremotingsettingsschema.htm">远程处理设置架构</A></TD>
+<TD width=66%>远程处理设置架构中的所有元素。</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%><A HREF="gngrfnetworksettingsschema.htm">网络设置架构</A></TD>
+<TD width=66%>网络设置架构中的所有元素。</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%><A HREF="gngrfcryptographysettingsschema.htm">密码设置架构</A></TD>
+<TD width=66%>加密设置架构中的所有元素。</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%><A HREF="gngrfconfigurationsectionsschema.htm">配置节架构</A></TD>
+<TD width=66%>配置节设置架构中的所有元素。</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%><A HREF="gngrftracedebugsettingsschema.htm">跟踪和调试设置架构</A></TD>
+<TD width=66%>跟踪和调试设置架构中的所有元素。</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%><A HREF="gngrfaspnetconfigurationsectionschema.htm">ASP.NET 设置架构</A></TD>
+<TD width=66%>ASP.NET 配置架构中的所有元素。</TD>
+</TR>
+</table>
+<h1>启动设置架构 &lt;startup&gt; 元素 </h1>
+<p>启动设置指定应运行应用程序的公共语言运行库版本。它包括如下子元素：</p>
+<table style="width:80%">
+
+<TR VALIGN="top">
+<TH width=29%>元素</TH>
+<TH width=71%>说明</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%><a href="#requiredRuntime">&lt;requiredRuntime&gt;</a></TD>
+<TD width=71%>指定应用程序仅支持公共语言运行库 1.0 版。用运行库 1.1 版生成的应用程序应使用 <B>&lt;supportedRuntime&gt;</B> 元素。</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%><A HREF="#supportedRuntime">&lt;supportedRuntime&gt;</A></TD>
+<TD width=71%>指定此应用程序支持的公共语言运行库版本。</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%><A HREF="#startup">&lt;startup&gt;</A></TD>
+<TD width=71%>包含 <B>&lt;requiredRuntime&gt;</B> 和 <B>&lt;supportedRuntime&gt;</B> 元素。</TD>
+</TR>
+</table>
+<h2>&lt;requiredRuntime&gt; 元素</h2>
+<p>指定应用程序仅支持公共语言运行库 1.0 版。格式如下：</p>
+<PRE class=syntax><CODE><B class=cfe>&lt;requiredRuntime version=</B></CODE>"<I>runtime version</I>"<CODE><B class=cfe> safemode=</B></CODE>"<B>true</B><I>|</I><B>false</B>"<B>/</B>&gt;</PRE>
+<h3>可选属性</h3>
+<table cellspacing="0" class="dtTABLE">
+
+<TR VALIGN="top">
+<TH width=21%>属性</TH>
+<TH width=79%>说明</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=21%><B>version</B></TD>
+<TD width=79%>一个字符串值，它指定此应用程序支持的 .NET Framework 版本。该字符串值必须与 .NET Framework 安装根下的目录名称匹配。&nbsp;&nbsp;&nbsp;不分析该字符串值的内容。 </TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=21%><B>safemode</B></TD>
+<TD width=79%>指定运行库启动代码是否搜索注册表以确定运行库版本。指定下列值之一：
+<DL>
+<DT><B>true</B></DT>
+
+<DD>不在注册表中搜索。</dd>
+
+<DT><B>false</B></DT>
+
+<DD>在注册表中搜索。此为默认设置。</dd>
+</DL>
+</TD>
+</TR>
+</table>
+<h3>备注</h3>
+<p><B>version </B>属性字符串必须与指定的 .NET Framework 版本的安装文件夹名称匹配。不解释此字符串。如果运行库启动代码找不到匹配的文件夹，则不加载运行库；启动代码显示错误信息并退出。</p>
+<p><B>注意</B> Microsoft Internet Explorer 中承载的应用程序的启动代码忽略 <B>&lt;requiredRuntime&gt;</B> 元素</p>
+<h3>示例</h3>
+<pre class="code" data-type="xml">configuration&gt;
+   &lt;startup&gt;
+      &lt;requiredRuntime version=&quot;v1.0.3705&quot; safemode=&quot;true&quot;/&gt;
+   &lt;/startup&gt;
+&lt;/configuration&gt;</pre>
+<h3>配置文件</h3>
+<p>此元素可用于应用程序配置文件中。</p>
+<h2>&lt;supportedRuntime&gt; 元素</h2>
+<p>指定此应用程序支持的公共语言运行库版本。此元素应由用 .NET Framework 1.1 版或更高版本生成的所有应用程序使用。格式如下：</p>
+<p><CODE><B class=cfe>&lt;supportedRuntime version=</B></CODE>"<I>runtime version</I>"/&gt;</p>
+<table style="width:80%">
+
+<TR VALIGN="top">
+<TH width=21%>属性</TH>
+<TH width=79%>说明</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=21%><B>version</B></TD>
+<TD width=79%>一个字符串值，它指定此应用程序支持的 .NET Framework 版本。该字符串值必须与 .NET Framework 安装根下的目录名称匹配。不分析该字符串值的内容。</TD>
+</TR>
+</table>
+<h3>备注</h3>
+<p>version 属性字符串必须与指定的 .NET Framework 版本的安装文件夹名称匹配。不解释此字符串。</p>
+<p>如果应用程序配置文件中没有 &lt;supportedRuntime&gt; 元素，则使用用于生成该应用程序的运行库版本。</p>
+<p>如果支持多个运行库版本，则第一个元素应指定优先级最高的运行库版本，而最后一个元素应指定优先级最低的版本。</p>
+<p>注意 &lt;supportedRuntime&gt; 元素应由用运行库 1.1 版或更高版本生成的所有应用程序使用。只有为仅支持运行库 1.0 版而生成的应用程序应使用 &lt;requiredRuntime&gt; 元素</p>
+<h3>示例</h3>
+<p>以下示例显示如何在配置文件中指定支持的运行库版本。</p>
+<pre class="code" data-type="xml">configuration&gt;
+   &lt;startup&gt;
+      &lt;supportedRuntime version=&quot;v1.1.4122&quot;/&gt;
+      &lt;supportedRuntime version=&quot;v1.0.3705&quot;/&gt;
+   &lt;/startup&gt;
+&lt;/configuration&gt;</pre>
+<h3>配置文件</h3>
+<p>此元素可用于应用程序配置文件中。</p>
+<h1>运行库设置架构 &lt;runtime&gt;元素</h1>
+<p>运行库设置指定公共语言运行库如何处理垃圾回收和要在配置文件中使用的程序集版本。有如下子元素：</p>
+<table style="width:80%">
+
+<TR VALIGN="top">
+<TH width=29%>元素</TH>
+<TH width=71%>说明</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%><A HREF="#assemblyBinding">&lt;assemblyBinding&gt;</A></TD>
+<TD width=71%>包含有关程序集版本重定向和程序集位置的信息。</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%><A HREF="gngrfassemblyidentity.htm">&lt;assemblyIdentity&gt;</A></TD>
+<TD width=71%>包含有关程序集的标识信息。</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%><A HREF="gngrfbindingredirect.htm">&lt;bindingRedirect&gt;</A></TD>
+<TD width=71%>将一个程序集版本重定向到另一个版本。</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%><A HREF="gngrfcodebase.htm">&lt;codeBase&gt;</A></TD>
+<TD width=71%>指定运行库可以在何处找到程序集。</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%><A HREF="gngrfdependentassembly.htm">&lt;dependentAssembly&gt;</A></TD>
+<TD width=71%>封装每个程序集的绑定策略和程序集位置。</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%><A HREF="gngrfdevelopermodeelement.htm">&lt;developmentMode&gt;</A></TD>
+<TD width=71%>指定运行库是否在 DEVPATH 环境变量指定的目录中搜索程序集。</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%><A HREF="gngrfgcconcurrent.htm">&lt;gcConcurrent&gt;</A></TD>
+<TD width=71%>指定运行库是否同时运行垃圾回收。</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%><A HREF="gngrfprobing.htm">&lt;probing&gt;</A></TD>
+<TD width=71%>指定加载程序集时运行库搜索的子目录。</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%><A HREF="gngrfpublisherpolicy.htm">&lt;publisherPolicy&gt;</A></TD>
+<TD width=71%>指定运行库是否采用出版商策略。</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%><A HREF="gngrfqualifyassemblyelement.htm">&lt;qualifyAssembly&gt; 元素</A></TD>
+<TD width=71%>指定当使用程序集的部分名称时应动态加载的程序集全名。</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=29%><A HREF="gngrfruntime.htm">&lt;runtime&gt;</A></TD>
+<TD width=71%>包含有关程序集绑定和垃圾回收行为的信息。</TD>
+</TR>
+</table>
+<h2>&lt;assemblyBinding&gt; 元素</h2>
+<p>包含有关程序集版本重定向和程序集位置的信息。语法如下：</p>
+<p><CODE><B class=cfe>&lt;assemblyBinding xmlns=</B></CODE>"urn:schemas-microsoft-com:asm.v1" <CODE><B class=cfe>appliesTo</B></CODE>="v1.0.3705"<CODE><B class=cfe>&gt;</B></CODE> <CODE><B class=cfe>&lt;/assemblyBinding&gt;</B></CODE></p>
+<h3>必选属性</h3>
+<table style="width:80%">
+
+<TR VALIGN="top">
+<TH width=23%>属性</TH>
+<TH width=77%>说明</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=23%><B>xmlns</B></TD>
+<TD width=77%>指定程序集绑定所需的 XML 命名空间。使用字符串“urn:schemas-microsoft-com:asm.v1”作为值。</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=23%><B>appliesTo</B></TD>
+<TD width=77%>指定 .NET Framework 程序集重定向所应用的运行库版本。此可选属性使用 .NET Framework 版本号指示其适用的版本。如果没有指定 <B>appliesTo</B> 属性，<B>&lt;assemblyBinding&gt;</B> 元素将适用于 .NET Framework 的所有版本。<B>appliesTo</B> 属性是在 .NET Framework 1.1 版中引入的；.NET Framework 1.0 版将忽略该属性。这意味着，即使指定了 <B>appliesTo</B> 属性，在使用 .NET Framework 1.0 版时所有的 <B>&lt;assemblyBinding&gt;</B> 元素也都适用。</TD>
+</TR>
+</table>
+<h3>子元素</h3>
+<table style="width:80%">
+
+<TR VALIGN="top">
+<TH width=34%>元素</TH>
+<TH width=66%>说明</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%><A HREF="#dependentAssembly">&lt;dependentAssembly&gt;</A></TD>
+<TD width=66%>封装程序集的绑定策略和程序集位置。为每个程序集使用一个 <B>&lt;dependentAssembly&gt;</B> 标记。</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%><A HREF="gngrfprobing.htm">&lt;probing&gt;</A></TD>
+<TD width=66%>指定加载程序集时公共语言运行库搜索的子目录。</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%><A HREF="gngrfpublisherpolicy.htm">&lt;publisherPolicy&gt;</A></TD>
+<TD width=66%>指定运行库是否采用出版商策略。</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%><A HREF="gngrfqualifyassemblyelement.htm">&lt;qualifyAssembly&gt;</A></TD>
+<TD width=66%>指定当使用程序集的部分名称时应动态加载的程序集全名。</TD>
+</TR>
+</table>
+<h3>示例</h3>
+<p>下面的示例说明如何为两个程序集封装程序集信息。</p>
+<pre class="code" data-type="xml">configuration&gt;
+   &lt;runtime&gt;
+      &lt;assemblyBinding xmlns=&quot;urn:schemas-microsoft-com:asm.v1&quot;&gt;
+         &lt;dependentAssembly&gt;
+            &lt;assemblyIdentity name=&quot;myAssembly&quot;
+                              publicKeyToken=&quot;32ab4ba45e0a69a1&quot;
+                              culture=&quot;neutral&quot; /&gt;
+            &lt;!--Redirection and codeBase policy for myAssembly.--&gt;
+         &lt;/dependentAssembly&gt;
+         &lt;dependentAssembly&gt;
+            &lt;assemblyIdentity name=&quot;mySecondAssembly&quot;
+                              publicKeyToken=&quot;32ab4ba45e0a69a1&quot;
+                              culture=&quot;neutral&quot; /&gt;
+            &lt;!--Redirection and codeBase policy for mySecondAssembly.--&gt;
+         &lt;/dependentAssembly&gt;
+      &lt;/assemblyBinding&gt;
+   &lt;/runtime&gt;
+&lt;/configuration&gt;</pre>
+<h3>&lt;dependentAssembly&gt; 元素</h3>
+<p>封装每个程序集的绑定策略和程序集位置。为每个程序集使用一个 &lt;dependentAssembly&gt; 元素。包括如下子元素：</p>
+<table style="width:80%">
+
+<TR VALIGN="top">
+<TH width=34%>元素</TH>
+<TH width=66%>说明</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%><a href="#assemblyIdentity">&lt;assemblyIdentity&gt;</a></TD>
+<TD width=66%>包含关于该程序集的标识信息。此元素必须包含在每个 <B>&lt;dependentAssembly&gt;</B> 元素中。</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%><A HREF="#codeBase">&lt;codeBase&gt;</A></TD>
+<TD width=66%>如果计算机上未安装共享程序集，指定运行库可在何处找到共享程序集。</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%><A HREF="#bindingRedirect">&lt;bindingRedirect&gt;</A></TD>
+<TD width=66%>将一个程序集版本重定向到另一个版本。</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=34%><A HREF="#publisherPolicy">&lt;publisherPolicy&gt;</A></TD>
+<TD width=66%>指定运行库是否应用此程序集的出版商策略。</TD>
+</TR>
+</table>
+<h4>&lt;assemblyIdentity&gt; 元素</h4>
+<p>包含关于该程序集的标识信息。语法如下：</p>
+<p><CODE><B class=cfe>&lt;assemblyIdentity name=</B></CODE>"<I>assembly name</I>" <CODE><B class=cfe> publicKeyToken=</B></CODE>"<I>public key token</I>" <CODE><B class=cfe> culture=</B></CODE>"<I>assembly culture</I>"<CODE><B class=cfe>/&gt;</B></CODE></p>
+<h4>必选属性</h4>
+<table style="width:80%">
+
+<TR VALIGN="top">
+<TH width=23%>属性</TH>
+<TH width=77%>说明</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=23%><B>name</B></TD>
+<TD width=77%>程序集名称。</TD>
+</TR>
+</table>
+<h4>可选属性</h4>
+<table style="width:80%">
+
+<TR VALIGN="top">
+<TH width=23%>属性</TH>
+<TH width=77%>说明</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=23%><B>publicKeyToken</B></TD>
+<TD width=77%>指定程序集强名称的十六进制值。</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=23%><B>culture</B></TD>
+<TD width=77%>指定程序集的语言和国家/地区的字符串。</TD>
+</TR>
+</table>
+<h4>示例</h4>
+<p>下面的示例说明如何提供有关程序集的信息。</p>
+<pre class="code" data-type="xml">configuration&gt;
+   &lt;runtime&gt;
+      &lt;assemblyBinding xmlns=&quot;urn:schemas-microsoft-com:asm.v1&quot;&gt;
+         &lt;dependentAssembly&gt;
+            &lt;assemblyIdentity name=&quot;myAssembly&quot;
+                              publicKeyToken=&quot;32ab4ba45e0a69a1&quot;
+                              culture=&quot;neutral&quot; /&gt;
+            &lt;!--Redirection and codeBase policy for myAssembly.--&gt;
+         &lt;/dependentAssembly&gt;
+      &lt;/assemblyBinding&gt;
+   &lt;/runtime&gt;
+&lt;/configuration&gt;</pre>
+<h4>&lt;codeBase&gt; 元素</h4>
+<p>指定公共语言运行库可以在何处找到程序集。语法如下：</p>
+<p><CODE><B class=cfe>&lt;codeBase version=</B></CODE>"<I>Assembly version</I>" <CODE><B class=cfe> href=</B></CODE>"<I>URL of assembly</I>"<CODE><B class=cfe>/&gt;</B></CODE></p>
+<h4>必选属性</h4>
+<table style="width:80%">
+
+<TR VALIGN="top">
+<TH width=26%>属性</TH>
+<TH width=74%>说明</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=26%><B>version</B></TD>
+<TD width=74%>指定基本代码适用于哪个程序集版本。程序集版本号的格式是 <I>major.minor.build.revision</I>。版本号每一部分的有效值在 0 到 65535 之间。</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=26%><B>href</B></TD>
+<TD width=74%>指定运行库可在哪个 URL 处找到指定版本的程序集。</TD>
+</TR>
+</table>
+<h4>备注</h4>
+<p>为使运行库可在计算机配置文件或出版商策略文件中使用 &lt;codeBase&gt; 设置，该文件还必须重定向程序集版本。应用程序配置文件可在不重定向程序集版本的情况下拥有基本代码设置。确定要使用的程序集版本后，运行库应用确定版本的文件中的基本代码设置。如果未指示基本代码，运行库便以常用的方式寻找程序集。</p>
+<p>如果程序集具有强名称，则基本代码设置可以是本地 Intranet 或 Internet 上的任何地方。如果程序集为私有程序集，则基本代码设置必须是相对于应用程序目录的路径。</p>
+<p>对于没有强名称的程序集，则忽略版本，并且加载程序使用 &lt;dependentAssembly&gt; 内出现的第一个 &lt;codebase&gt;。如果应用程序配置文件中具有将绑定重定向到另一个程序集的项，则即使该程序集版本与绑定请求不匹配，重定向仍具有优先权。<br>
+</p>
+<h4>示例</h4>
+<p>下面的示例说明如何指定运行库可在何处找到程序集。</p>
+<pre class="code" data-type="xml">configuration&gt;
+   &lt;runtime&gt;
+      &lt;assemblyBinding xmlns=&quot;urn:schemas-microsoft-com:asm.v1&quot;&gt;
+         &lt;dependentAssembly&gt;
+            &lt;assemblyIdentity name=&quot;myAssembly&quot;
+                              publicKeyToken=&quot;32ab4ba45e0a69a1&quot;
+                              culture=&quot;neutral&quot; /&gt;
+            &lt;codeBase version=&quot;2.0.0.0&quot;
+                      href=&quot;http://www.litwareinc.com/myAssembly.dll&quot;/&gt;
+         &lt;/dependentAssembly&gt;
+      &lt;/assemblyBinding&gt;
+   &lt;/runtime&gt;
+&lt;/configuration&gt;</pre>
+<h4>配置文件</h4>
+<p>此元素可用于应用程序配置文件、计算机配置文件 (machine.config) 和出版商策略文件中。</p>
+<h4>N.3.1.1.3&lt;bindingRedirect&gt; 元素</h4>
+<p>将一个程序集版本重定向到另一个版本。语法如下：</p>
+<p><CODE><B class=cfe>&lt;bindingRedirect oldVersion=</B></CODE>"<I>old assembly version</I>" <CODE><B class=cfe> newVersion=</B></CODE>"<I>new assembly version</I>"<CODE><B class=cfe>/&gt;</B></CODE></p>
+<table style="width:80%">
+
+<TR VALIGN="top">
+<TH width=26%>属性</TH>
+<TH width=74%>说明</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=26%><B>oldVersion</B></TD>
+<TD width=74%>指定最初请求的程序集的版本。程序集版本号的格式是 <I>major.minor.build.revision</I>。此版本号的每一部分的有效值在 0 到 65535 之间。
+<P>还可以按下列格式指定版本范围：</P>
+
+<P><I>n.n.n.n </I><B>-</B><I> n.n.n.n</I></P>
+</TD>
+</TR>
+
+<TR VALIGN="top">
+<TD width=26%><B>newVersion</B></TD>
+<TD width=74%>指定要取代最初请求的版本而使用的程序集的版本（格式为：<I>n.n.n.n</I>）。</TD>
+</TR>
+</table>
+<h4>备注</h4>
+<p>针对具有强名称的程序集生成 .NET Framework 应用程序时，在默认情况下，即使可以使用新版本，应用程序在运行时仍使用该程序集版本。然而，可以配置应用程序以针对程序集的较新版本运行。有关运行库如何使用这些文件确定使用哪个程序集版本的详细信息，请参见运行库如何定位程序集。</p>
+<p>通过在一个 &lt;dependentAssembly&gt; 元素中包含多个 &lt;bindingRedirect&gt; 元素，可以重定向多个程序集版本。</p>
+<p>应用程序配置文件中的显式程序集绑定重定向需要安全权限。这适用于对 .NET Framework 程序集和来自第三方的程序集的重定向。通过在 SecurityPermission 类上设置 &lt;bindingRedirect&gt; 元素标记来授权。有关详细信息，请参见程序集绑定重定向安全权限。</p>
+<h4>示例</h4>
+<p>下面的示例说明如何将一个程序集版本重定向到另一个版本。</p>
+<pre class="code" data-type="xml">configuration&gt;
+   &lt;runtime&gt;
+      &lt;assemblyBinding xmlns=&quot;urn:schemas-microsoft-com:asm.v1&quot;&gt;
+         &lt;dependentAssembly&gt;
+            &lt;assemblyIdentity name=&quot;myAssembly&quot;
+                              publicKeyToken=&quot;32ab4ba45e0a69a1&quot;
+                              culture=&quot;neutral&quot; /&gt;
+            &lt;bindingRedirect oldVersion=&quot;1.0.0.0&quot;
+                             newVersion=&quot;2.0.0.0&quot;/&gt;
+         &lt;/dependentAssembly&gt;
+      &lt;/assemblyBinding&gt;
+   &lt;/runtime&gt;
+&lt;/configuration&gt;</pre>
+<h4>配置文件</h4>
+<p>此元素可用于应用程序配置文件、计算机配置文件 (machine.config) 和出版商策略文件中。</p>
+<h4>&lt;publisherPolicy&gt; 元素</h4>
+<p>指定运行库是否采用出版商策略。语法如下：</p>
+<p><CODE><B class=cfe>&lt;publisherPolicy apply=</B></CODE>"<B>yes</B><I>|</I><B>no</B>"/<CODE><B class=cfe>&gt;</B></CODE></p>
+<table style="width:80%">
+
+<TR VALIGN="top">
+<TH width=26%>属性</TH>
+<TH width=74%>说明</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=26%><B>Apply</B></TD>
+<TD width=74%>指定是否应用出版商策略。使用下列值之一：
+<DL>
+<DT><B>Yes</B></DT>
+
+<DD>应用出版商策略。此为默认设置。</dd>
+
+<DT><B>No</B></DT>
+
+<DD>不应用出版商策略。</dd>
+</DL>
+</TD>
+</TR>
+</table>
+<h4>备注</h4>
+<p>当组件供应商发布新版本的程序集时，供应商可以包含出版商策略，以便使用旧版本的应用程序现在使用新版本。</p>
+<p>可以指定在应用程序的配置文件中是为某个特定程序集还是为应用程序使用的所有程序集应用出版商策略： </p>
+<p>若要指定是否为特定的程序集应用出版商策略，请将 &lt;publisherPolicy&gt; 元素放置在 &lt;dependentAssembly&gt; 元素中。 <br>
+  若要指定是否为应用程序使用的所有程序集应用出版商策略，请将 &lt;publisherPolicy&gt; 元素放置在 &lt;assemblyBinding&gt; 元素中。 <br>
+  apply 属性的默认设置为 yes。将 apply 属性设置为 no 会重写任何以前的 yes 设置。例如，如果在应用程序范围的级别将 apply 设置为 no，则忽略任何特定于程序集的 apply 设置，即使它声明该值为 yes。这样，无论 &lt;publisherPolicy&gt; 元素何时出现在配置文件中，no 设置都是唯一的有用状态，原因是此设置更改默认值。</p>
+<p>如果一个应用程序要使用应用程序配置文件中的 &lt;publisherPolicy apply=&quot;no&quot;/&gt; 元素显式地忽略出版商策略，则需要相应的权限。通过在 SecurityPermission 类上设置 &lt;bindingRedirect&gt; 元素标记来授权。有关更多信息，请参见程序集绑定重定向安全权限。</p>
+<h4>示例</h4>
+<p>下面的示例为程序集 myAssembly 关闭了出版商策略。</p>
+<pre class="code" data-type="xml">configuration&gt;
+   &lt;runtime&gt;
+      &lt;assemblyBinding xmlns=&quot;urn:schemas-microsoft-com:asm.v1&quot;&gt;
+         &lt;dependentAssembly&gt;
+            &lt;assemblyIdentity name=&quot;myAssembly&quot;
+                                    publicKeyToken=&quot;32ab4ba45e0a69a1&quot;
+                                    culture=&quot;neutral&quot; /&gt;
+            &lt;publisherPolicy apply=&quot;no&quot;/&gt;
+         &lt;/dependentAssembly&gt;
+      &lt;/assemblyBinding&gt;
+   &lt;/runtime&gt;
+&lt;/configuration&gt;</pre>
+<p>下面的示例为应用程序使用的所有程序集关闭了出版商策略。</p>
+<pre class="code" data-type="xml">configuration&gt;
+   &lt;runtime&gt;
+      &lt;assemblyBinding xmlns=&quot;urn:schemas-microsoft-com:asm.v1&quot;&gt;
+         &lt;publisherPolicy apply=&quot;no&quot;/&gt;
+      &lt;/assemblyBinding&gt;
+   &lt;/runtime&gt;
+&lt;/configuration&gt;</pre>
+<h2>&lt;probing&gt; 元素</h2>
+<p>指定加载程序集时CLR要搜索的应用程序基子目录。语法如下：</p>
+<p><CODE><B class=cfe>&lt;probing privatePath=</B></CODE>"<I>paths</I>"<CODE><B class=cfe>/&gt;</B></CODE></p>
+<h3>必选属性</h3>
+<table style="width:80%">
+
+<TR VALIGN="top">
+<TH width=23%>属性</TH>
+<TH width=77%>说明</TH>
+</TR>
+
+<TR VALIGN="top">
+<TD width=23%><B>privatePath</B></TD>
+<TD width=77%>指定可能包含程序集的应用程序基目录的子目录。用分号分隔每个子目录。</TD>
+</TR>
+</table>
+<h3>示例</h3>
+<p>下面的示例说明如何指定运行库应在其中搜索程序集的应用程序基子目录。</p>
+<pre class="code" data-type="xml">configuration&gt;
+   &lt;runtime&gt;
+      &lt;assemblyBinding xmlns=&quot;urn:schemas-microsoft-com:asm.v1&quot;&gt;
+         &lt;probing privatePath=&quot;bin;bin2\subbin;bin3&quot;/&gt;
+      &lt;/assemblyBinding&gt;
+   &lt;/runtime&gt;
+&lt;/configuration&gt;</pre>
+<h1>&nbsp;</h1>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+
+</body>
+</html>

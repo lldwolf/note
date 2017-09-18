@@ -1,0 +1,1017 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+    <script type="text/javascript" src="../../mylib/js/css.js"></script>
+    <title>EXCEL的二次开发</title>
+    <style type="text/css">
+    </style>
+</head>
+
+<body>
+    <p id="title">Excel的二次开发</p>
+    <h2>引用Excel</h2>
+    <p>要在C#中使用Excel，首先要建立对Excel的引用，方法如下：</p>
+    <ol>
+        <li>确保Excel已安装</li>
+        <li>菜单“项目”-&gt;“添加引用”</li>
+        <li>打开“COM”控制面板</li>
+        <li>选择“Microsoft Excel 9.0 Object Library”(Excel2000，如果版本不同库的版本也不同)，点击确定</li>
+    </ol>
+    <p>添加完成后，C#会在解决方案资源管理器中添加一系列引用，并在成品目录中生成一系列的DLL文件。</p>
+    <p>如果使用Excel2000，引入的COM库的命名空间即为Excel，而使用Excel2003，则其命名空间为<code>Microsoft.Office.Interop.Excel</code>，其实这样更好，虽然更长些，但如果开发的程序中的有命名空间Excel的话不会冲突，例如，如果开发的程序中有命名空间MyName.Excel，则使用Excel2000 COM库的话就不好办了，因为引入的Excel 2000 COM库本身的命名空间就是Excel。</p>
+    <p>对于Excel2003，可使用如下引用方式：</p>
+    <pre class="code" data-type="csharp">using Excel = Microsoft.Office.Interop.Excel;</pre>
+    <h1>对Excel的操作</h1>
+    <h2>启动EXCEL </h2>
+    <div id="accordion-open-excel">
+        <p><a href="#">查看代码</a></p>
+        <pre class="sh_csharp">try
+{
+	xApp = (Excel.ApplicationClass)System.Runtime.InteropServices.Marshal.GetActiveObject("Excel.Application.11");
+}
+catch
+{
+	xApp = new Excel.ApplicationClass();
+}
+if(xApp == null) 
+{
+	MessageBox.Show("启动Excel失败, 可能Excel未能正确安装!", "提示", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+	return;
+}
+xApp.Visible = true;</pre>
+    </div>
+    <p>在上例中我们以标识&quot;Excel.Application.11&quot;来判断Excel进程是否已启用</p>
+    <div class="ui-widget">
+        <div class="ui-state-highlight ui-corner-all" style="margin-top: 20px; padding: 0 .7em;">
+            <p>
+                <span class="ui-icon ui-icon-info" style="float: left; margin-right: .3em;"></span>
+                <strong>注意：</strong> 默认情况下的Visible属性为false，所以如果要显示Excel的话，必须进行显式赋值。
+            </p>
+        </div>
+    </div>
+    <h2>在ASP.NET项目中使用Excel</h2>
+    <p>如果是在ASP.net项目中使用Excel的话，需要设置Excel COM对象的访问权限，如果未设置权限，则会报访问拒绝的错误。详细错误信息通常如下：</p>
+    <pre class="code" data-type="csharp">说明: 执行当前 Web 请求期间，出现未处理的异常。请检查堆栈跟踪信息，以了解有关该错误以及代码中导致错误的出处的详细信息。 
+异常详细信息: System.UnauthorizedAccessException: 拒绝访问。</pre>
+    <p>设置权限的方法是在Windows的运行框中输入dcomcnfg，打开Com管理。在EXCEL应用程序的安全中，分别添加ASPNET、IUSER、IWAM等用户的访问、运行和配置权限。</p>
+    <p>同时，如果要使用Excel生成文件，则需要设置相应目录的访问权限。若要授予 ASP.NET 对文件的写访问权，请在资源管理器中右击该文件，选择“属性”，然后选择“安全”选项卡。单击“添加”添加适当的用户或组。突出显示 ASP.NET 帐户，选中所需访问权限对应的框。</p>
+    <p>ASP.NET 未被授权访问所请求的资源。请考虑授予 ASP.NET 请求标识访问此资源的权限。ASP.NET 有一个在应用程序没有模拟时使用的基进程标识(通常，在 IIS 5 上为 {MACHINE}\ASPNET，在 IIS 6 上为网络服务)。如果应用程序正在通过 &lt;identity impersonate="true"/&gt; 模拟，则标识将为匿名用户(通常为 IUSR_MACHINENAME)或经过身份验证的请求用户。如果要使用administrator用户模拟，可在web.config中添加如下配置</p>
+    <pre class="code" data-type="xml">identity impersonate=&quot;true&quot; userName=&quot;administrator&quot; password=&quot;口令&quot;/&gt;</pre>
+    <p>使用administrator用户模拟，可以不做任何DCOM或目录的设置，即可访问Excel和Excel DCOM对象，实为解决此类问题的终极方法，但存在安全性上的隐患。如果不介意的话不妨一试。</p>
+    <h2>关闭Excel</h2>
+    <pre class="code" data-type="csharp">xApp.Quit();
+xApp = null;
+GC.Collect();
+</pre>
+    <p>如果只是调用xApp.Quit()，虽然可以关闭Excel，但打开进程列表查看会发现仍然残留着一个名为“EXCEL”的进程。只有加入后面两行代码，才会从内存中将EXCEL进程卸掉。GC.Collect()表示显示调用C#的垃圾内存回收功能。</p>
+    <p>不过如果EXCEL的处理过程复杂，中间有EXCEL对象作为参数在各个过程中传递的话，上述代码仍然不能把EXCEL进程结束，这时可使用如下方法：</p>
+    <pre class="code" data-type="csharp">using System.Diagnostics;
+...<br>foreach(Process p in Process.GetProcessesByName("EXCEL"))
+{
+	p.Kill();
+}
+</pre>
+    <p>不过这需要当前用户有Administrator权限。</p>
+    <p>如果想要精确地关闭由程序启动的Excel进程，可使用如下方法：</p>
+    <pre class="code" data-type="csharp">using System.Reflection;
+using System.Runtime.InteropServices;
+using Excel = Microsoft.Office.Interop.Excel;
+...
+
+protected void TestExcelKill()
+{
+	Excel.ApplicationClass xApp = new Microsoft.Office.Interop.Excel.ApplicationClass();
+	xApp.Visible = true;
+	xApp.DisplayAlerts = false;
+	xApp.Workbooks.Add(Missing.Value);
+	IntPtr t = new IntPtr(xApp.Hwnd);
+	int excel_id = 0;
+	GetWindowThreadProcessId(t, out excel_id);
+	System.Diagnostics.Process p = System.Diagnostics.Process.GetProcessById(excel_id);
+	p.Kill();
+}</pre>
+    <h2>不显示提示对话框</h2>
+    <p>在Excel中，进行一些操作时，默认情况下会弹出一些对话框，例如在另存文件时若文件名冲突、删除工作表等，使用如下指令可不显示这些对话框：</p>
+    <pre class="code" data-type="csharp">xApp.DisplayAlerts = false;</pre>
+    <h2>运行宏 </h2>
+    <p>有时候我们希望预先将宏编写好，然后直接用C#调用，演示入下：</p>
+    <h3>不带参数的宏</h3>
+    <p>宏程序如下：</p>
+    <pre class="code" data-type="csharp">Sub Macro1()
+
+    MsgBox "Hello"
+
+End Sub</pre>
+    <p>使用C#调用的方法如下：</p>
+    <pre class="code" data-type="csharp">Excel.Application xApp = new Excel.ApplicationClass();
+xApp.Visible = true;
+Excel.Workbook xBook = xApp.Workbooks.Open(
+	@&quot;c:\1.xls&quot;, Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value, 
+	Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value, 
+	Missing.Value, Missing.Value, Missing.Value);
+xApp.Run(&quot;Macro1&quot;, Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value, 
+	Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value, 
+	Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value, 
+	Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value, 
+	Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value, 
+	Missing.Value);</pre>
+    <h3>带参数的宏</h3>
+    <p>宏程序如下：</p>
+    <pre class="code" data-type="csharp">Sub Macro2(s As String)
+
+    MsgBox s
+    
+End Sub</pre>
+    <p>使用C#调用的方法如下：</p>
+    <pre class="code" data-type="csharp">Excel.Application xApp = new Excel.ApplicationClass();
+xApp.Visible = true;
+Excel.Workbook xBook = xApp.Workbooks.Open(
+	@&quot;c:\1.xls&quot;, Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value, 
+	Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value, 
+	Missing.Value, Missing.Value, Missing.Value);
+xApp.Run(&quot;Macro2&quot;, &quot;aaaaaaaaa&quot;, Missing.Value, Missing.Value, Missing.Value, Missing.Value, 
+	Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value, 
+	Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value, 
+	Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value, 
+	Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value, 
+	Missing.Value);</pre>
+    <h3>有返回值的宏 </h3>
+    <p>宏程序如下：</p>
+    <pre class="code" data-type="csharp">Function Macro3(a1 As Integer, a2 As Integer) As Integer
+
+    Macro3 = a1 + a2
+
+End Function</pre>
+    <p>使用C#调用的方法如下：</p>
+    <pre class="code" data-type="csharp">Excel.Application xApp = new Excel.ApplicationClass();
+xApp.Visible = true;
+Excel.Workbook xBook = xApp.Workbooks.Open(
+	@&quot;c:\1.xls&quot;, Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value, 
+	Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value, 
+	Missing.Value, Missing.Value, Missing.Value);
+object a = xApp.Run(&quot;Macro3&quot;, 1, 2, Missing.Value, Missing.Value, Missing.Value, 
+	Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value, 
+	Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value, 
+	Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value, 
+	Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value, 
+	Missing.Value);
+MessageBox.Show(a.ToString());</pre>
+    <p>如上三例所示，调用的宏的参数不能超过30个，Run函数的第一个参数为宏名，后面则是30个可选的参数。</p>
+    <h1>对工作薄(Workbook)的操作 </h1>
+    <h2>打开Excel文件（工作薄）</h2>
+    <pre class="code" data-type="csharp">using System.Reflection;
+...
+this.workbook = this.application.Workbooks.Open(@&quot;C:\Test.xls&quot;, Missing.Value, Missing.Value, Missing.Value, Missing.Value,
+		Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value);</pre>
+    <p>上述代码打开C盘下的Test.xls文件，Open函数一共有13个参数，其意义如下：</p>
+    <table style="width: 99%">
+        <tr>
+            <th width="20%">
+            参数名</td>
+    <th width="70%">
+            说明</td>
+    <th width="10%">
+            是否必需</td>
+        </tr>
+        <tr>
+            <td>FileName</td>
+            <td>要打开的文件名</td>
+            <td>是</td>
+        </tr>
+        <tr>
+            <td>UpdateLinks</td>
+            <td>
+                <p>指定文件中的链接的更新方式。如果省略本参数，则提示用户选择链接的更新方式。否则，该参数的取值应为如下的某个值。 </p>
+                <p>0 不更新任何引用。
+					<br>
+                    1 更新外部引用，但不更新远程引用。
+					<br>
+                    2 更新外部引用，但不更新外部引用。
+					<br>
+                    3 更新所有远程引用和外部引用。
+					<br>
+                </p>
+            </td>
+            <td>否</td>
+        </tr>
+        <tr>
+            <td>ReadOnly</td>
+            <td>如果为 True 则以只读模式打开工作簿。</td>
+            <td>否</td>
+        </tr>
+        <tr>
+            <td>Format</td>
+            <td>
+                <p>如果 Microsoft Excel 正在打开一个文本文件，则该参数用于指定分隔字符，如下表所示。如果省略本参数，则使用当前的分隔字符。</p>
+                <p>1 制表符
+					<br>
+                    2 逗号
+					<br>
+                    3 空格
+					<br>
+                    4 分号
+					<br>
+                    5 没有分隔符
+					<br>
+                    6 自定义字符（参阅 Delimiter 参数）   
+                </p>
+            </td>
+            <td>否</td>
+        </tr>
+        <tr>
+            <td>Password</td>
+            <td>该字符串为用于打开一个受保护工作簿的密码。如果省略该参数并且指定工作簿已设置密码，则提示用户输入密码。</td>
+            <td>否</td>
+        </tr>
+        <tr>
+            <td>WriteResPassword</td>
+            <td>该字符串为一个写保护工作簿的写入权密码。如果省略该参数并且指定工作簿已设置密码，则提示用户输入密码。</td>
+            <td>否</td>
+        </tr>
+        <tr>
+            <td>IgnoreReadOnlyRecommended</td>
+            <td>如果为 True 则设置 Microsoft Excel 不显示建议只读消息（如果该工作簿以“建议只读”选项保存）。</td>
+            <td>否</td>
+        </tr>
+        <tr>
+            <td>Origin</td>
+            <td>如果该文件为文本文件，则该参数用于指示该文件的来源于何种操作系统（以便对代码页和回车/换行（CR/LF）进行正确映射）。可为下列 XlPlatform 常量之一： xlMacintosh、xlWindows 或 xlMSDOS。如果省略本参数，则使用当前操作系统。</td>
+            <td>否</td>
+        </tr>
+        <tr>
+            <td>Delimiter</td>
+            <td>如果该文件为文本文件并且 Format 参数设为 6，则此参数用于指定用作分隔符的字符。例如，可使用 Chr(9) 代表制表符，使用“,”代表逗号，使用“;”代表分号或者使用自定义字符。如果该参数为字符串，则只使用该字符串的第一个字符。</td>
+            <td>否</td>
+        </tr>
+        <tr>
+            <td>Editable</td>
+            <td>如果该文件为 Microsoft Excel 4.0 加载宏，则该参数为 True 时可在可见窗口中打开该加载宏。如果该参数设为 False 或者省略该参数，则该加载宏以隐藏方式打开，并且不能设为可见。本选项不能应用于由 Microsoft Excel 5.0 或更高版本的 Microsoft Excel 创建的加载宏。如果该文件是 Excel 模板，则参数为 True 时，会打开指定模板进行编辑。参数为 False 时，可根据指定模板打开新的工作簿。默认值为 False。<br>
+            </td>
+            <td>否</td>
+        </tr>
+        <tr>
+            <td>Notify</td>
+            <td>如果该文件不能以可读写模式打开，则若该参数设为 True 可将该文件添加到文件通知列表。Microsoft Excel 将以只读模式打开该文件并轮询文件通知列表，当文件通知列表中的该文件可用时则通知用户。如果该参数设为 False，或者省略该参数，则不请求任何通知，并且不能打开任何不可用的文件。</td>
+            <td>否</td>
+        </tr>
+        <tr>
+            <td>Convert</td>
+            <td>打开文件时试用的第一个文件转换器的索引号。首先使用的是指定的文件转换器；如果该转换器不能识别此文件，则试用所有的转换器。转换器索引号由 FileConverters 方法所返回的转换器行号组成。</td>
+            <td>否</td>
+        </tr>
+        <tr>
+            <td>AddToMru</td>
+            <td>如果为 True 则将该工作簿添加到最近使用文件列表中。默认值为 False。</td>
+            <td>否</td>
+        </tr>
+    </table>
+    <p>其中Missing.Value表示使用默认值。</p>
+    <p>不过如果只是想打开一个excel文件查看而不想对其作任何修改的话，可调用操作系统功能打开文件：</p>
+    <pre class="code" data-type="csharp">//由Windows打开文件
+public static void OpenFile(string fileName)
+{
+	Process process = new Process();
+	process.StartInfo.FileName = fileName;
+	process.StartInfo.Verb = "Open";
+	process.StartInfo.CreateNoWindow = false;
+	process.Start();
+}</pre>
+    <h2>新建工作薄</h2>
+    <pre class="code" data-type="csharp">Excel.Workbook xBook = xApp.Workbooks.Add(Missing.Value);</pre>
+    <p>参数可以是一个Excel模板，缺省使用默认模板。</p>
+    <h2>保存工作薄</h2>
+    <p>可使用两种方式保存工作薄，一种是保存方式，代码如下：</p>
+    <pre class="code" data-type="csharp">xBook.Save();</pre>
+    <p>如果为新建文档，则保存在工作目录下，工作目录的设置请参考N.3.11。另一种是“另存为”方式，代码如下：</p>
+    <pre class="code" data-type="csharp">xBook.SaveAs(@&quot;C:\Test2.xls&quot;, Missing.Value, Missing.Value, Missing.Value, Missing.Value, <br>	Missing.Value, Excel.XlSaveAsAccessMode.xlExclusive, Missing.Value, Missing.Value, Missing.Value, Missing.Value);</pre>
+    <p>该函数一共有11个参数，意义如下：</p>
+    <table style="width: 99%" border="1">
+        <tr>
+            <th width="20%">
+            参数</td>
+    <th width="70%">
+            说明</td>
+    <th width="10%">
+            是否必需</td>
+        </tr>
+        <tr>
+            <td>Filename</td>
+            <td>该字符串表示要保存的文件名。可包含完整路径。如果不指定路径，Microsoft Excel 将文件保存到当前文件夹中。</td>
+            <td>是</td>
+        </tr>
+        <tr>
+            <td>FileFormat</td>
+            <td>可选 Variant 类型。保存文件时使用的文件格式。要得到有效选项的列表，请参阅 <a href="#XlFileFormat">FileFormat</a> 属性。对于已有文件，其默认格式是上次指定的文件格式；对于新文件，默认格式为当前使用的 Excel 版本格式。 </td>
+            <td>否</td>
+        </tr>
+        <tr>
+            <td>Password</td>
+            <td>它是一个区分大小写的字符串（最长不超过 15 个字符），用于指定文件的保护密码。 </td>
+            <td>否</td>
+        </tr>
+        <tr>
+            <td>WriteResPassword</td>
+            <td>该字符串表示文件的写保护密码。如果文件保存时带有密码，但打开文件时不输入密码，则该文件以只读模式打开。</td>
+            <td>否</td>
+        </tr>
+        <tr>
+            <td>ReadOnlyRecommended</td>
+            <td>如果为 True 则在打开文件时显示一条信息，提示该文件以只读模式打开。</td>
+            <td>否</td>
+        </tr>
+        <tr>
+            <td>CreateBackup</td>
+            <td>如果为 True 则创建备份文件。</td>
+            <td>否</td>
+        </tr>
+        <tr>
+            <td>AccessMode</td>
+            <td>工作簿访问方式。其类型为 <a href="#XlSaveAsAccessMode">XlSaveAsAccessMode</a> 常量。要更改访问方式，可使用 ExclusiveAccess 方法。</td>
+            <td>是</td>
+        </tr>
+        <tr>
+            <td>ConflictResolution</td>
+            <td>指定当工作簿为共享清单时更改冲突的处理方式。其类型为 <a href="#XlSaveConflictResolution">XlSaveConflictResolution</a> 常量。如果忽略本参数，则显示冲突处理对话框。<br>
+            </td>
+            <td>否</td>
+        </tr>
+        <tr>
+            <td>AddToMru</td>
+            <td>如果为 True 则将该工作簿添加到最近使用文件的列表中。默认值为 False。</td>
+            <td>否</td>
+        </tr>
+        <tr>
+            <td>TextCodePage</td>
+            <td>不在美国英语版的 Microsoft Excel 中使用。</td>
+            <td>否</td>
+        </tr>
+        <tr>
+            <td>TextVisualLayout</td>
+            <td>不在美国英语版的 Microsoft Excel 中使用。<br>
+            </td>
+            <td>否</td>
+        </tr>
+    </table>
+    <h1>对工作表(Worksheet)的操作</h1>
+    <h2>新建工作表</h2>
+    <pre class="code" data-type="csharp">xBook.Worksheets.Add(Missing.Value, Missing.Value, 1, Missing.Value);</pre>
+    <p>它的4个参数说明如下：</p>
+    <table style="width: 99%" border="1">
+        <tr>
+            <th width="20%">参数</th>
+            <th width="70%">说明</th>
+            <th width="10%">是否必需</th>
+        </tr>
+        <tr>
+            <td>Before</td>
+            <td>指定工作表对象，新建的工作表将置于此工作表之前。</td>
+            <td>否</td>
+        </tr>
+        <tr>
+            <td>After</td>
+            <td>指定工作表对象，新建的工作表将置于此工作表之后。</td>
+            <td>否</td>
+        </tr>
+        <tr>
+            <td>Count</td>
+            <td>要创建的工作表的数目。默认值为1。</td>
+            <td>否</td>
+        </tr>
+        <tr>
+            <td>Type</td>
+            <td>工作表类型。其类型为 <a href="#XlSheetType">XlSheetType</a> 常量，默认值为 XlSheetType.xlWorksheet。</td>
+            <td>否</td>
+        </tr>
+    </table>
+    <h2>删除工作表</h2>
+    <pre class="code" data-type="csharp">Excel.Worksheet xSheet = (Excel.Worksheet)xBook.Worksheets[1];
+//Excel.Worksheet xSheet = (Excel.Worksheet)xBook.Worksheets["Sheet1"];
+xSheet.Delete();</pre>
+    <p>不同于编程语言，EXCEL中所有数组的下标值均从1开始，而非从0开始。</p>
+    <h1>对单元格的操作</h1>
+    <h2>读取单元格内容</h2>
+    <pre class="code" data-type="csharp">string value = ((Excel.Range)xSheet.Cells[1, 1]).Value</pre>
+    <h2>修改单个单元格的内容</h2>
+    <pre class="code" data-type="csharp">Excel.Worksheet xSheet = (Excel.Worksheet)xBook.Worksheets[1];
+xSheet.Cells[1, 1] = &quot;abc&quot;; 
+
+//上面的方法是以文本的方式写入单元格，即使内容是数字
+//而在EXCEL中，如果你在单元格中输入数字的话，则单元格变为数据单元格
+//下面的语句为该功能的实现
+((Excel.Range)WorkSheet.Cells[行号, 列号).FormulaR1C1 = 123;</pre>
+    <p>Excel有一个自动根据输入内容调整显示的功能，例如，你想在单元格中写入字符串“0104”，会自动变成数字“104”，如果想要取消的话，有如下两种方式：</p>
+    <ol>
+        <li>将要写入的字符串前加一个单引号“'”，例如写入“'0104”，即是以字符串方式写入</li>
+        <li>将单元格的NumberFormatLocal属性设为“@”，这样即使写入的字符串是数据，也是作为文本处理（推荐使用）。</li>
+    </ol>
+    <h2>修改多个单元格的内容</h2>
+    <p>下面代码可生成九九乘法表：</p>
+    <pre class="code" data-type="csharp">string[,] strs = new string[9, 9];
+for(int i = 0; i < 9; i++)
+	for(int j = 0; j < 9; j++)
+		strs[i, j] = Convert.ToString((i + 1) * (j + 1));
+
+Excel.Workbook xBook = xApp.Workbooks.Add(Missing.Value);
+Excel.Worksheet xSheet = (Excel.Worksheet)xBook.Worksheets[1];
+xSheet.get_Range(xSheet.Cells[1, 1], xSheet.Cells[9, 9]).Value = strs;
+
+//这样可以以EXCEL默认格式写入单元格
+xSheet.get_Range(xSheet.Cells[2, 1], xSheet.Cells[2, 9]).FormulaArray = strs;
+</pre>
+    <p>使用多个单元格写入的速度远快于对单元格进行逐个写入，因此是提高生成Excel速度的一个重要途径。</p>
+    <div class="ui-widget">
+        <div class="ui-state-highlight ui-corner-all" style="margin-top: 20px; padding: 0 .7em;">
+            <p>
+                <span class="ui-icon ui-icon-info" style="float: left; margin-right: .3em;"></span>
+                <strong>注意：</strong> 在使用数组写入多个单元格内容时，每个单元格的字符串长度不能超过911，很奇怪的问题，在写入单个单元格时无此限制。
+            </p>
+        </div>
+    </div>
+    <h2>在工作表中查找单元格</h2>
+    <p>有一种方法是手工扫描整个工作表，即读取每一个单元格的内容并与查找内容比较，不过这样速度较慢。更快的方法是调用EXCEL的查找功能。主要使用Find函数和FindNext函数，使用方法如下：</p>
+    <pre class="code" data-type="csharp">Excel.Range r_find = sheet.Cells.Find("要查找的字符串", Missing.Value, Missing.Value, Missing.Value, 
+	Missing.Value, Excel.XlSearchDirection.xlNext, Missing.Value, Missing.Value);
+int FirstRow = 0, FirstCol = 0;
+int flag = 0;
+
+while(r_find != null)
+{
+	//记录下查找到的第一个
+	if(flag == 0)
+	{
+		FirstRow = r_find.Row;
+		FirstCol = r_find.Column;
+	}
+
+	flag++;
+
+	//......
+	
+	//接着上次查找到的位置继续找
+	r_find = sheet.Cells.FindNext(sheet.Cells[r_find.RowRow, r_find.RowColumn]);
+	
+	//如果回到开始位置表示已经查找结束，跳出循环
+	if(r_find.Row == FirstRow && r_find.Column == FirstCol)
+		break;
+}</pre>
+    <h2>替换单元格内容</h2>
+    <pre class="code" data-type="csharp">sheet.Cells.Replace(str_find, str_replace, Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value); </pre>
+    <h2>单元格的批注处理</h2>
+    <pre class="code" data-type="csharp">//读取批注值
+static public string GetComment(Excel.Range Range)
+{
+	if(Range.Comment != null)
+		return Range.Comment.Text(Missing.Value, Missing.Value, Missing.Value);
+	else
+		return null;
+}</pre>
+    <h1>对工作表格式的操作 </h1>
+    <h2>行高调整</h2>
+    <pre class="code" data-type="csharp">Excel.Application xApp = new Excel.ApplicationClass();
+xApp.Visible = true;
+Excel.Workbook xBook = xApp.Workbooks.Add(Missing.Value);
+Excel.Worksheet xSheet = xBook.Sheets[1] as Excel.Worksheet;
+
+//将第一行的行高调整为50
+(xSheet.Rows[1, Missing.Value] as Excel.Range).RowHeight = 50;
+
+//将第一行到第10行的行高调整为50
+(xSheet.Rows[&quot;1:10&quot;, Missing.Value] as Excel.Range).RowHeight = 50;
+
+//将第一行到第10行的行高调整为50
+xSheet.get_Range(xSheet.Cells[1, 1], xSheet.Cells[10, 1]).RowHeight = 50;</pre>
+
+
+    <h2>列宽调整</h2>
+    <h3>调整某一列的列宽</h3>
+    <pre class="code" data-type="csharp">Excel.Application xApp = new Excel.ApplicationClass();
+xApp.Visible = true;
+Excel.Workbook xBook = xApp.Workbooks.Add(Missing.Value);
+Excel.Worksheet xSheet = xBook.Sheets[1] as Excel.Worksheet;
+
+//调整第一列的列宽为50
+(xSheet.Cells[1,1] as Excel.Range).ColumnWidth = 50;
+
+//调整第一列到第5列的列宽为50
+xSheet.get_Range(xSheet.Cells[1, 1], xSheet.Cells[1, 5]).ColumnWidth = 50;</pre>
+    <h3>自动根据内容调整所有列的列宽</h3>
+    <pre class="code" data-type="csharp">xSheet.Columns.AutoFit();</pre>
+    <h2>表格线调整</h2>
+    <pre class="code" data-type="csharp">xSheet.Cells.Borders[Excel.XlBordersIndex.xlEdgeLeft].LineStyle = Excel.XlLineStyle.xlContinuous;
+xSheet.Cells.Borders[Excel.XlBordersIndex.xlEdgeLeft].Weight = Excel.XlBorderWeight.xlThin;
+xSheet.Cells.Borders[Excel.XlBordersIndex.xlEdgeLeft].ColorIndex = 15;</pre>
+    <h2>页眉设置</h2>
+    <h2>页脚设置</h2>
+    <h2>行操作</h2>
+    <h3>插入行</h3>
+    <pre class="code" data-type="csharp">//在第一行插入
+xSheet.Cells[1,1] = "第一行";
+xSheet.Cells[1,2] = "第一行";
+Excel.Range range = (Excel.Range)xSheet.Rows[1, Missing.Value];
+range.Insert(Excel.<a href="#XlInsertShiftDirection">XlInsertShiftDirection</a>.xlShiftDown);</pre>
+    <h3>删除行 </h3>
+    <pre class="code" data-type="csharp">xSheet.Cells[1, 1] = "a";
+xSheet.Cells[1, 2] = "b";
+xSheet.Cells[2, 1] = "c";
+Excel.Range range = (Excel.Range)xSheet.Cells[1, 1];
+((Excel.Range)xSheet.Rows[1, Missing.Value]).Delete(Excel.<a href="#XlDeleteShiftDirection">XlDeleteShiftDirection</a>.xlShiftUp);</pre>
+    <h2>列操作</h2>
+    <h3>插入新列 </h3>
+    <pre class="code" data-type="csharp">//在第一列插入
+sheet.Cells[1,1] = "第一列";
+Excel.Range range = sheet.get_Range(sheet.Cells[1, 1], sheet.Cells[1, 1]);
+range.Insert(Excel.<a href="#XlInsertShiftDirection">XlInsertShiftDirection</a>.xlShiftToRight);</pre>
+    <h3>删除列 </h3>
+    <p>这个比较奇怪，Worksheet.Columns属性我没研究明白怎么用，不过可用下面的代码模拟实现</p>
+    <pre class="code" data-type="csharp">xSheet.Cells[1, 1] = "第一列";
+xSheet.Cells[2, 1] = "第一列";
+xSheet.Cells[1, 2] = "第二列";
+xSheet.Cells[2, 2] = "第二列";
+xSheet.get_Range(xSheet.Cells[1, 1], xSheet.Cells[xSheet.UsedRange.Rows.Count, 1]).Delete(Excel.<a href="#XlDeleteShiftDirection">XlDeleteShiftDirection</a>.xlShiftToLeft);</pre>
+    <h2>内容拷贝</h2>
+    <pre class="code" data-type="csharp">Excel.Application xApp = new Excel.ApplicationClass();
+xApp.Visible = true;
+Excel.Workbook xBook = xApp.Workbooks.Add(Missing.Value);
+Excel.Worksheet xSheet = xBook.Sheets[1] as Excel.Worksheet;
+(xSheet.Cells[1,1] as Excel.Range).Value2 = &quot;AAAA&quot;;
+(xSheet.Cells[1,2] as Excel.Range).Value2 = &quot;BBBB&quot;;
+(xSheet.Cells[2,1] as Excel.Range).Value2 = &quot;CCCC&quot;;
+(xSheet.Cells[2,2] as Excel.Range).Value2 = &quot;DDDD&quot;;
+
+//复制A1:B2到A7
+Excel.Range range_object = xSheet.Cells[7, 1] as Excel.Range;
+xSheet.get_Range(xSheet.Cells[1, 1], xSheet.Cells[2, 2]).Copy(range_object);</pre>
+    <h2>插入分页符</h2>
+    <p>有时在生成EXCEL表时，为了使格式齐整，通常在固定的多少行后插入分页符，但用程序插入分页符时，在某些情况下（具体是什么样的情况不好说），在插入第一个分页符时会出错，报告“COMException”异常，因此在插入第一个分页符时需要特别处理一下，例如要在Range对象 obj_range 处插入分页符，使用如下代码：</p>
+    <pre class="code" data-type="csharp">obj_range.Select();
+if(this.worksheet.HPageBreaks.Count <= 1)
+{
+	obj_range.Value = "aaaa";
+	this.worksheet.HPageBreaks.Add(obj_range);			//插入分页符
+	obj_range.Value = "";
+}
+else
+	this.worksheet.HPageBreaks.Add(obj_range);			//插入分页符
+</pre>
+    <h2>颜色设置</h2>
+    <p>颜色索引值如下图所示：
+    </p>
+    <p>
+        <img src="images/color_index.jpg" width="257" height="171"></p>
+    <p>大部分情况下，使用ColorIndex属性更改颜色即可，部分情况下，需要使用Color属性，其值为一6字节整型，由前到后分别人B、G、R，与常见的RGB正好反着，例如下面的代码前单元格A1的颜色设为红色：</p>
+    <pre class="code" data-type="csharp">(xSheet.Cells[1,1] as Excel.Range).Font.Color = 0x0000ff;</pre>
+    <h3>前景色</h3>
+    <pre class="code" data-type="csharp">Excel.Application xApp = new Excel.ApplicationClass();
+xApp.Visible = true;
+Excel.Workbook xBook = xApp.Workbooks.Add(Missing.Value);
+Excel.Worksheet xSheet = xBook.Sheets[1] as Excel.Worksheet;
+(xSheet.Cells[1,1] as Excel.Range).Value2 = &quot;AAAA&quot;;
+
+//前景设为红色
+(xSheet.Cells[1,1] as Excel.Range).Font.ColorIndex = 3;</pre>
+    <h3>背景色</h3>
+    <pre class="code" data-type="csharp">xSheet.get_Range(xSheet.Cells[1, 1], xSheet.Cells[1, 4]).Interior.ColorIndex = 36; </pre>
+    <h2>打印设置</h2>
+    <h3>顶端标题行 </h3>
+    <p>以字符串形式表示，表示标题行的范围，使用Excel.Worksheet.PageSetup.PrintTitleRows属性。</p>
+    <h1>对单元格格式的操作</h1>
+    <h2>合并单元格 </h2>
+    <h3>是否为合并的单元格</h3>
+    <p>使用Excel.Range.MergeArea.Rows.Count和Excel.Range.MergeArea.Columns.Count属性，如果大于1则表示该单元格是合并的一类，数字为合并的行列数</p>
+    <h3>合并单元格 </h3>
+    <pre class="code" data-type="csharp">//合并A1到A10的单元格
+Excel.Application xApp = new Excel.ApplicationClass();
+xApp.Visible = true;
+Excel.Workbook xBook = xApp.Workbooks.Add(Missing.Value);
+Excel.Worksheet xSheet = xBook.Sheets[1] as Excel.Worksheet;
+xSheet.get_Range(xSheet.Cells[1, 1], xSheet.Cells[10, 1]).Merge(Missing.Value);</pre>
+    <h2>对齐</h2>
+    <p>使用Excel.Range的HorizontalAlignment和VerticalAlignment属性，其值分别为Excel.XlHAlign和Excel.XlVAlign枚举。</p>
+    <h1>对象操作 </h1>
+    <h2>插入图片</h2>
+    <p>下面的代码在单元格[2, 2]处插入一个图片：</p>
+    <pre class="code" data-type="csharp">Excel.Range range = (Excel.Range)xSheet.Cells[2,2];
+Image img = new Bitmap(@"C:\1.jpg");			//为了获取图片的大小
+xSheet.Shapes.AddPicture(
+	@"C:\1.jpg", 
+	Office.MsoTriState.msoFalse, Office.MsoTriState.msoTrue, 
+	Convert.ToSingle(range.Left), Convert.ToSingle(range.Top),
+	img.Width, img.Height);</pre>
+    <p>Excelsheet.Shapes.AddPicture() 参数说明：</p>
+    <table style="width: 99%">
+        <tr>
+            <th width="16%">参数</th>
+            <th width="16%">类型</th>
+            <th width="68%">说明</th>
+        </tr>
+        <tr>
+            <td>FileName</td>
+            <td>string</td>
+            <td>图片文件名</td>
+        </tr>
+        <tr>
+            <td>LinkToFile</td>
+            <td>Office.MsoTriState</td>
+            <td>若指定为 msoTrue，就建立图片与其源文件之间的链接。若指定为 msoFalse，就使图片成为与其源文件的相互独立的复制品。</td>
+        </tr>
+        <tr>
+            <td>SaveWithDocument</td>
+            <td>Office.MsoTriState</td>
+            <td>若为 msoTrue，则将链接图片和插入图片的文档一起保存；若为 msoFalse，则只在文档中保存链接信息。如果 LinkToFile 为 msoFalse，则本参数必须为 msoTrue。</td>
+        </tr>
+        <tr>
+            <td>Left, Top</td>
+            <td>float</td>
+            <td>以磅为单位给出图片左上角相对于文档左上角的位置</td>
+        </tr>
+        <tr>
+            <td>Width, Height</td>
+            <td>float</td>
+            <td>以磅为单位给出图片的宽度和高度 </td>
+        </tr>
+    </table>
+    <p>其实上例的Office.MsoTriState类型，可以简单地设为bool型值。</p>
+    <h2>下拉列表框</h2>
+    <p>下拉列表框的COM类为Excel.DropDown，一个工作表的所有列表框集合为Excel.DropDowns，使用如下方式获取：</p>
+    <pre class="code" data-type="csharp">//获取列表框集合
+Excel.DropDowns drops = (Excel.DropDowns)this.worksheet.DropDowns(Missing.Value);
+
+//获取第一个列表框
+Excel.DropDown d = (Excel.DropDown)drops.Item(1);</pre>
+    <p>列表框有如下常用的属性</p>
+    <table style="width: 90%">
+        <tr>
+            <th width="20%">属性名</th>
+            <th width="10%">数据类型</th>
+            <th width="70%">说明</th>
+        </tr>
+        <tr>
+            <td>LinkedCell</td>
+            <td>string</td>
+            <td>单元格链接</td>
+        </tr>
+        <tr>
+            <td>ListFillRange</td>
+            <td>string</td>
+            <td>数据源区域，如“Sheet2!A1:A5”</td>
+        </tr>
+        <tr>
+            <td>ListIndex</td>
+            <td>int</td>
+            <td>选中的索引，从1开始，设为0表示未选中任何项状态</td>
+        </tr>
+        <tr>
+            <td>PrintObject</td>
+            <td>bool</td>
+            <td>是否打印对象</td>
+        </tr>
+    </table>
+    <h1>图表操用</h1>
+    <p>示例数据如下所示</p>
+    <table style="width: 600px">
+        <tr>
+            <th>Location</th>
+            <th>Volumn</th>
+        </tr>
+        <tr>
+            <td>London</td>
+            <td style="text-align: right">40038000</td>
+        </tr>
+        <tr>
+            <td>Dubai</td>
+            <td style="text-align: right">26000000</td>
+        </tr>
+        <tr>
+            <td>New York</td>
+            <td style="text-align: right">13492000</td>
+        </tr>
+        <tr>
+            <td>DHAKA</td>
+            <td style="text-align: right">12000000</td>
+        </tr>
+        <tr>
+            <td>San Francisco</td>
+            <td style="text-align: right">9585000</td>
+        </tr>
+    </table>
+    <p>用如下 C# 程序生成图表</p>
+    <pre class="code" data-type="csharp">Excel.ChartObjects charts = sheet.ChartObjects() as Excel.ChartObjects;
+Excel.Range chartCell = (Excel.Range)sheet.Cells[1, 3];
+Excel.ChartObject chartObj = charts.Add(Convert.ToInt32(chartCell.Left), Convert.ToInt32(chartCell.Top), 300, 300) as Excel.ChartObject;
+Excel.Range range = sheet.get_Range(sheet.Cells[1, 1], sheet.Cells[6, 2]);
+Excel.Chart chart = chartObj.Chart;
+chart.ChartType = Excel.XlChartType.xlColumnClustered;
+chart.SetSourceData(range);
+chart.ChartTitle.Text = "My Chart";
+
+//make each bar display different color
+Excel.ChartGroup chartGroup = chart.ChartGroups(1) as Excel.ChartGroup;
+chartGroup.VaryByCategories = true;</pre>
+    <p>结果如下所示</p>
+    <p><img alt="" src="images/excel_chart_sample.png" /></p>
+    <h1>一些常用的设置</h1>
+    <p>一、Application.Visible</p>
+    <p>二、Application.DefaultFilePath 工作目录</p>
+    <p>三、Application.DisplayAlerts 是否显示提示信息</p>
+    <h1>字典</h1>
+    <h2>文件格式(Excel.XlFileFormat)</h2>
+    <table style="width: 99%">
+        <tr>
+            <th width="20%">值</th>
+            <th width="80%">说明</th>
+        </tr>
+        <tr>
+            <td>xlAddIn</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>xlCSV</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>xlCSVMac</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>xlCSVMSDOS</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>xlCSVWindows</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>xlCurrentPlatformText</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>xlDBF2</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>xlDBF3</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>xlDBF4</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>xlDIF</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>xlExcel2</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>xlExcel2FarEast</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>xlExcel3</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>xlExcel4</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>xlExcel4Workbook</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>xlExcel5</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>xlExcel7</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>xlExcel9795</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>xlHTML</td>
+            <td>HTML网页格式</td>
+        </tr>
+        <tr>
+            <td>xlIntlAddIn</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>xlIntlMacro</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>xlSYLK</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>xlTemplate</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>xlTextMac</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>xlTextMSDOS</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>xlTextPrinter</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>xlTextWindows</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>xlUnicodeText</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>xlWJ2WD1</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>xlWK1</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>xlWK1ALL</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>xlWK1FMT</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>xlWK3</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>xlWK4</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>xlWK3FM3</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>xlWKS</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>xlWorkbookNormal</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>xlWorks2FarEast</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>xlWQ1</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>xlWJ3</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>xlWJ3FJ3</td>
+            <td>&nbsp;</td>
+        </tr>
+    </table>
+    <h2>工作表类型（XlSheetType）</h2>
+    <table style="width: 99%">
+        <tr>
+            <th width="20%">值</th>
+            <th width="80%">说明</th>
+        </tr>
+        <tr>
+            <td>xlWorksheet</td>
+            <td>普通工作表</td>
+        </tr>
+        <tr>
+            <td>xlExcel4MacroSheet</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>xlExcel4IntlMacroSheet</td>
+            <td>&nbsp;</td>
+        </tr>
+    </table>
+    <h2>N.13.3工作薄访问方式（XlSaveAsAccessMode）</h2>
+    <table style="width: 99%">
+        <tr>
+            <th width="20%">值</th>
+            <th width="80%">说明</th>
+        </tr>
+        <tr>
+            <td>xlShared</td>
+            <td>共享</td>
+        </tr>
+        <tr>
+            <td>xlExclusive</td>
+            <td>独占方式</td>
+        </tr>
+        <tr>
+            <td>xlNoChange</td>
+            <td>不改变访问方式</td>
+        </tr>
+    </table>
+    <h2>保存文件冲突选选（XlSaveConflictResolution）</h2>
+    <table style="width: 99%">
+        <tr>
+            <th width="20%">值</th>
+            <th width="80%">说明</th>
+        </tr>
+        <tr>
+            <td>xlUserResolution</td>
+            <td>显示冲突处理对话框</td>
+        </tr>
+        <tr>
+            <td>xlLocalSessionChanges</td>
+            <td>自动接受本地用户的更改</td>
+        </tr>
+        <tr>
+            <td>xlOtherSessionChanges</td>
+            <td>接受其他用户的更改</td>
+        </tr>
+    </table>
+    <h2>方向</h2>
+    <h3>通用</h3>
+    <h3>插入（XlInsertShiftDirection）</h3>
+    <table style="width: 99%">
+        <tr>
+            <th width="20%">值</th>
+            <th width="80%">说明</th>
+        </tr>
+        <tr>
+            <td>xlShiftToRight</td>
+            <td>原列往右移</td>
+        </tr>
+        <tr>
+            <td>xlShiftDown</td>
+            <td>原行向下移</td>
+        </tr>
+    </table>
+    <h3>删除（XlDeleteShiftDirection）</h3>
+    <table style="width: 99%">
+        <tr>
+            <th width="20%">值</th>
+            <th width="80%">说明</th>
+        </tr>
+        <tr>
+            <td>xlShiftToLeft</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>xlShiftUp</td>
+            <td>&nbsp;</td>
+        </tr>
+    </table>
+    <h2>表格线相关</h2>
+    <h3>粗细</h3>
+    <p>Excel.XlBorderWeight</p>
+    <h3>样式</h3>
+    <p>Excel.XlLineStyle</p>
+    <h3>颜色</h3>
+    <p>Excel.XlColorIndex </p>
+    <h1>VS2005 调整</h1>
+    <h2>二义性问题 </h2>
+    <p>使用VS2005时，使用COM调用方式引用EXCEL库后，使用如下代码时会给出警告：</p>
+    <pre class="code" data-type="csharp">using Excel = Microsoft.Office.Interop.Excel;
+...
+Excel.Worksheet xSheet;
+...
+xSheet.Activate();</pre>
+    <p>最后一行代码有编译警告如下所示：</p>
+    <p>方法“Microsoft.Office.Interop.Excel._Worksheet.Activate()”和非方法“Microsoft.Office.Interop.Excel.DocEvents_Event.Activate”之间存在二义性。将使用方法组。 </p>
+    <p>该警告并不影响使用效果，如果想去掉该警告，使用如下代码：</p>
+    <pre class="code" data-type="csharp">(xSheet as Excel._Worksheet).Activate();</pre>
+    <p>注：我使用的是Excel 2003 </p>
+    <h1>使用ADO.NET引擎读取Excel</h1>
+    <p>对于数据格式规整的Excel表，也就是表的内容符合如下规范：Excel表中的数据格式如同数据库中的表，每条记录占据一行，其中第一行表示列名。则可以通过ADO.NET来读取Excel表中的数据，示例代码如下所示：</p>
+    <pre class="code" data-type="csharp">string strPath = @&quot;c:\Book1.xls&quot;;
+string mystring = &quot;Provider=Microsoft.Jet.OLEDB.4.0;Data Source = '&quot; + strPath + &quot;';Extended Properties=Excel 8.0&quot;;
+OleDbConnection conn = new OleDbConnection(mystring);
+string sql = &quot;select * from [Sheet1$]&quot;;
+OleDbDataAdapter adapter = new OleDbDataAdapter(sql, conn);
+DataTable tb = new DataTable();
+conn.Open();
+adapter.Fill(tb);
+this.dataGridView1.DataSource = tb;
+conn.Close();</pre>
+    <p>注意上面代码中的连接字符串，最后表示使用了Excel 8.0的引擎，不需要根据你实际的Excel版本去修改，修改了反而无法连接成功。例如，如果你安装的版本是Excel 2003，你将其改成了相应的Excel 11.0，则在连接数据库时提示未安装正确的ISAM。</p>
+    <h1>Excel Exception</h1>
+    <h2>Old format or invalid type library.</h2>
+    <p>It's possible that the installed office is English version, but the regional configuration of OS is set to non-English area.</p>
+    <p>&nbsp;</p>
+
+</body>
+</html>

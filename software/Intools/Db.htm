@@ -1,0 +1,34 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<script language="javascript" src="css.js"></script>
+<title>INtools的备份与恢复</title>
+</head>
+
+<body>
+<h1>第N章 INtools的备份与恢复</h1>
+<hr>
+<h2>N.1 使用INTOOLS的备份与恢复</h2>
+<p>在管理模块中，使用菜单命令backup进行备份，使用菜单命令Initialize进行恢复（其实就是INTOOLS安装目录下的init.exe文件）。</p>
+<p>对SQL SERVER版本，初始化一个库时要求如下的系统配置：</p>
+<ul>
+  <li>将操作的系统的默认字符集设为英文</li>
+  <li>将数据库的默认排序规则设为英文（LATIN1_GENERAL_CI_AS）</li>
+</ul>
+<p>如果因故初始化过程出错，清除步骤如下：</p>
+<p>1、打开SQL SERVER企业管理器</p>
+<p>2、删除失败用户所属的表、视图、存储过程，删除用户及对应登录</p>
+<p>3、删除该域对应的数据库文件，在数据库的属性窗口数据文件面板</p>
+<p>4、删除该域对应的文件组，在数据库的属性窗口文件组面板</p>
+<p>5、删除in_dbamn.project和in_dbamn.project_logo两表中的对应记录</p>
+<h2>N.2 使用SQL SERVER的备份/恢复功能</h2>
+<h3>N.2.1 使用备份文件</h3>
+<p>使用SQL SERVER将INTOOLS数据库备份成一个文件，恢复后需要使用T-SQL函数sp_change_users_login手工建立用户与登录的对应关系</p>
+<h3>N.2.2 使用数据库原始文件</h3>
+<p>如果服务器系统崩溃，可使用数据库的原始文件恢复数据库，使用的T-SQL函数为sp_attach_db，INTOOLS一般默认的主数据库文件为“*_PR.db”，使用这个文件恢复时根据出错提示加入相应的其它文件。</p>
+<p>&nbsp;</p>
+<script language="javascript" src="index.js"></script>
+</body>
+</html>

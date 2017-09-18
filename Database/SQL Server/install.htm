@@ -1,0 +1,34 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<title>安装过程中的问题处理</title>
+<script language="javascript" src="css.js"></script>
+</head>
+
+<body>
+<h1>第N章 安装过程中的问题处理</h1>
+<hr>
+<h2>N.1 提示重启 </h2>
+<p>安装SQL Server 遇到错误提示：</p>
+<p> 以前的某个程序安装已在安装计算机上创建挂起的文件操作。运行安装程序之前必须重新启动计算机!。</p>
+<p>打开注册表编辑器，在HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\ Control\Session Manager中找到PendingFileRenameOperations项目，并删除它。这样就可以清除安装暂挂项目。</p>
+<h2>N.2 登录方式修改</h2>
+<p>如果在安装时没有选择混和登录模式，如果不幸你安装的又是MSDE的话，可以使用如下方法：</p>
+<p>修改注册表项“SOFTWARE\Microsoft\MSSQLServer\MSSQLServer”的LoginMode键值为2，或使用如下的存储过程</p>
+<pre>xp_instance_regwrite N'HKEY_LOCAL_MACHINE', N'SOFTWARE\Microsoft\MSSQLServer\MSSQLServer', 'LoginMode', N'REG_DWORD', 2</pre>
+<p>然后重启。</p>
+<h2>N.3 提示要求使用强SA密码</h2>
+<p>在安装MSDE2000时，提示“为了安全起见，要求使用强SA密码。请使用SAPWD开关提供同一密码。有关详细信息，请参阅自述文件。安装程序将立即退出。”</p>
+<p>  遇到这个问题解决方法是：</p>
+<p> 找到msde安装目录下的setup.ini，打开修改成下面这个样子</p>
+<pre>[Options]
+SECURITYMODE=SQL
+SAPWD=www.pc51.net</pre>
+<p>其中SAPWD后的"<a>www.pc51.net</a>"是你的sa的密码。（你也可以改成你自己的）。
+  然后双击安装即可。 </p>
+<p>&nbsp;</p>
+<script language="javascript" src="index.js"></script>
+</body>
+</html>

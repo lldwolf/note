@@ -1,0 +1,63 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>使用技巧</title>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+<h1>第N章 使用技巧</h1>
+<hr />
+<h3><a href="#text_to_num">将存为文本的数字转换成数字</a></h3>
+<h3><a href="#combo_box">在单元格中使用下拉框</a></h3>
+<h3><a href="print_area">取消打印区域</a></h3>
+<h3><a href="#find">查找</a></h3>
+<h2><a name="text_to_num" id="text_to_num"></a>将存为文本的数字转换成数字</h2>
+<p>在“工具”菜单上，单击“选项”，再单击“错误检查”选项卡。 请确保选中了“允许后台错误检查”和“数字以文本形式存储”框。 选中任何在左上角有绿色错误指示符的单元格 。 在单元格旁边，单击出现的按钮 ，再单击“转换为数字”。 即可将存为文本的数字转换成数字格式。</p>
+<p>如果想批量地把单元格转换成数字，可遵循下列步骤：</p>
+<ol>
+  <li>在空白单元格中，输入数字 1。 </li>
+  <li> 选中单元格，并在“编辑”菜单上，单击“复制”。 </li>
+  <li> 选取需转换的存储为文本的数字范围。 </li>
+  <li> 在“编辑”菜单上，单击“选择性粘贴”。 </li>
+  <li> 在“运算”下，单击“乘”。 </li>
+  <li> 单击“确定”。 </li>
+  <li> 删除在第一步中输入的单元格的内容。 </li>
+</ol>
+<h2><a name="combo_box" id="combo_box"></a>在单元格中使用下拉框</h2>
+<h3>方法一</h3>
+<p>选中要插入下拉框的单元格，选择菜单“数据 - 有效性”，进行如下图所示的设置：</p>
+<p><img src="img/combo_box.jpg" width="408" height="312" /></p>
+<p>确定后即可看到对应单元格多了一个下拉列表框，下拉内容为“aa, bb, cc”。对应的VBA宏如下：</p>
+<pre>With Selection.Validation
+    .Delete
+    .Add Type:=xlValidateList, AlertStyle:=xlValidAlertStop, Operator:= _
+    xlBetween, Formula1:=&quot;aa, bb, cc&quot;
+    .IgnoreBlank = True
+    .InCellDropdown = True
+    .InputTitle = &quot;&quot;
+    .ErrorTitle = &quot;&quot;
+    .InputMessage = &quot;&quot;
+    .ErrorMessage = &quot;&quot;
+    .IMEMode = xlIMEModeNoControl
+    .ShowInput = True
+    .ShowError = True
+End With</pre>
+<h3>方法二</h3>
+<p>在工具栏中点鼠标右键，显示“窗体”工具条</p>
+<p>插入列表框</p>
+<p>在列表框中点鼠标右键，选中“设置控件格式”，在“控制”面板中，<strong>数据源区域</strong>表示列表框的数据来源单元格，如“$K$1:$K$4”，<strong>单元格链接</strong>表示选中的值为列表中的第几个值，如果想在某单元格显示选中的值的话，使用函数index，例如在表Sheet1的A1:A4为下拉列表值，B1为选中索引，要在Sheet2的A1单元格中显示选中的值，配置如下：</p>
+<p>列表框放在Sheet2中</p>
+<p>数据源区域：Sheet1!A1:A4</p>
+<p>单元格链接：Sheet1:B1</p>
+<p>Sheet2的A1配置：=Index(Sheet1!A1:A4, Sheet1!B1)</p>
+<h2><a name="print_area" id="print_area"></a>取消打印区域</h2>
+<p>有时用别人做的Excel表, 发现有的页即使有数据也打印不出来, 使用分页预览方式发现那些页是灰的, 这需要使用文件菜单下的打印区域-取消打印区域</p>
+<h2><a name="find" id="find"></a>查找</h2>
+<p>在查找时，“*”可用来表示通配符，但如果要查找“*”时，用转义字符“~”，即使用“~*”来查找“*”。</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+
+</body>
+</html>

@@ -1,0 +1,152 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+Var</TITLE>
+</HEAD>
+<BODY>
+<A NAME="CAIDJBFB"></A><A NAME="TI8116"></A><h1>Var</h1>
+<A NAME="TI8117"></A><p>
+<FORM>
+<INPUT
+ TYPE = "BUTTON"
+ VALUE = "Examples"
+ onClick = "window.location = 'imugp252.htm#EX104';">
+<INPUT
+  TYPE = "BUTTON"
+ VALUE = "See also"
+ onClick = "window.location = 'imugp252.htm#SA104';">
+</FORM>
+</p>
+<h3>Description</h3><A NAME="TI8118"></A><p>Calculates an estimate of the variance for the specified column.
+The variance is the square of the standard deviation.</p>
+
+<h3>Syntax</h3><pre><b>Var</b> ( <i>column</i> { FOR <i>range</i> { DISTINCT { <i>expres1</i> {, <i>expres2</i>  {, ... } } } } } )</pre>
+<A NAME="TI8119"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI8120"></A>Argument</th>
+<th align="left" valign=bottom><A NAME="TI8121"></A>Description</th>
+</tr>
+<tr><td valign=top><A NAME="TI8122"></A><i>column</i></td>
+<td valign=top><A NAME="TI8123"></A>The column for which you want an estimate
+for the variance of the values in the rows. <i>Column</i> can
+be the column name or the column number preceded by a pound sign
+(#). <i>Column</i> can also be an expression
+that includes a reference to the column. The data type of <i>column</i> must
+be numeric</td>
+</tr>
+<tr><td valign=top><A NAME="TI8124"></A>FOR <i>range</i>  (optional)</td>
+<td valign=top><A NAME="TI8125"></A>The data that will be included in the
+estimate of the variance. For most presentation styles, values for <i>range</i> are:<A NAME="TI8126"></A><A NAME="TI8127"></A>
+<ul>
+<li class=fi>ALL -- (Default)
+The estimate of the variance for all rows in <i>column</i></li>
+<li class=ds>GROUP <i>n</i> -- The estimate
+of the variance for rows in <i>column</i> in the specified
+group. Specify the keyword GROUP followed by the group number: for
+example, GROUP 1</li>
+<li class=ds>PAGE -- The estimate of the variance for
+the rows in <i>column</i> on a page
+</li>
+</ul>
+<A NAME="TI8128"></A>For Crosstabs, specify CROSSTAB for <i>range</i>:<A NAME="TI8129"></A><A NAME="TI8130"></A>
+<ul>
+<li class=fi>CROSSTAB -- (Crosstabs
+only) The estimate of the variance for all rows in <i>column</i> in
+the crosstab
+</li>
+</ul>
+<A NAME="TI8131"></A>For Graph and OLE objects, specify one of the following:<A NAME="TI8132"></A><A NAME="TI8133"></A>
+<ul>
+<li class=fi>GRAPH -- (Graphs
+only) The estimate of the variance for rows in <i>column</i> in
+the range specified for the Rows option</li>
+<li class=ds>OBJECT -- (OLE objects only) The estimate
+of the variance for rows in <i>column</i> in the range
+specified for the Rows option
+</li>
+</ul>
+</td>
+</tr>
+<tr><td valign=top><A NAME="TI8134"></A>DISTINCT (optional)</td>
+<td valign=top><A NAME="TI8135"></A>Causes Var to consider only the distinct
+values in <i>column</i> when determining the variance.
+For a value of <i>column</i>, the first row found with
+the value is used and other rows that have the same value are ignored</td>
+</tr>
+<tr><td valign=top><A NAME="TI8136"></A><i>expresn</i>  (optional)</td>
+<td valign=top><A NAME="TI8137"></A>One or more expressions that you want
+to evaluate to determine distinct rows. <i>Expresn</i> can
+be the name of a column, a function, or an expression</td>
+</tr>
+</table>
+
+<h3>Return Values</h3><A NAME="TI8138"></A><p>Double. Returns an estimate for the variance for <i>column</i>.
+If you specify <i>group</i>, Var returns an estimate
+for the variance for <i>column</i> within <i>group</i>.</p>
+
+<h3>Usage</h3><A NAME="TI8139"></A><p>If you specify <i>range</i>, Var returns an
+estimate for the variance for <i>column</i> within <i>range</i>.
+If you specify DISTINCT, Var returns the variance for the distinct values
+in <i>column</i> or if you specify <i>expresn</i>,
+the estimate for the variance of the rows in <i>column</i> where
+the value of <i>expresn</i> is distinct.</p>
+<A NAME="TI8140"></A><p>For graphs and OLE objects, you do not select the range when
+you call the function. The range has already been determined by
+the Rows setting on the Data property page (the Range property),
+and the aggregation function uses that range. Settings for Rows
+include:</p>
+<A NAME="TI8141"></A><p><A NAME="TI8142"></A>
+<ul>
+<li class=fi>For the Graph or OLE
+presentation style, Rows is always All.</li>
+<li class=ds>For Graph controls, Rows can be All, Page, or Group.</li>
+<li class=ds>For OLE controls, Rows can be All, Current Row,
+Page, or Group. The available choices depend on the layer the control
+occupies.
+</li>
+</ul>
+</p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <p><b>Estimating variance or calculating actual
+variance</b>   Var assumes that the values in <i>column</i> are
+a sample of the values in rows in the column in the database table.
+If you select all rows in the column in the SELECT statement, use
+VarP to compute the variance of a population.</p>
+<p><b>Not in validation rules or filter expressions</b>   You cannot use this or other aggregate functions in validation
+rules or filter expressions.</p>
+<A NAME="TI8143"></A><p>Using an aggregate function cancels the effect of setting
+Retrieve Rows As Needed in the painter. To do the aggregation, a
+DataWindow object or report always retrieves all rows.</p>
+
+<A NAME="EX104"></A><h3>Examples</h3><A NAME="TI8144"></A><p>These examples all assume that the SELECT statement
+did not retrieve all of the rows in the database table. Var is intended
+to work with a subset of rows, which is a sample of the full set
+of data.</p>
+<A NAME="TI8145"></A><p>This expression returns an estimate for the variance of the
+values in the column named salary:<pre><i>Var</i> (salary)</pre>
+</p>
+<A NAME="TI8146"></A><p>This expression returns an estimate for the variance
+of the values in the column named salary in group 1:<pre><i>Var</i> (salary for group 1)</pre>
+</p>
+<A NAME="TI8147"></A><p>This expression entered in the Value box on the Data
+property page in the graph's property sheet returns an
+estimate for the variance of the values in quantity column in the
+graph:<pre><i>Var</i> (quantity for graph)</pre>
+</p>
+<A NAME="TI8148"></A><p>This expression for a computed field in a crosstab
+returns an estimate for the variance of the values in the quantity
+column in the crosstab:<pre><i>Var</i> (quantity for crosstab)</pre>
+</p>
+<A NAME="TI8149"></A><p>Assuming a DataWindow object displays the order number,
+amount, and line items for each order, this computed field returns
+the estimate for the variance of the order amount for the distinct
+order numbers:<pre><i>Var</i> (order_amt for all DISTINCT order_nbr)</pre>
+</p>
+
+<A NAME="SA104"></A><h3>See Also</h3><A NAME="TI8150"></A><p><A NAME="TI8151"></A>
+<ul>
+<li class=fi><A HREF="imugp242.htm#CAICJGDJ">StDev</A></li>
+<li class=ds><A HREF="imugp253.htm#CAICBCBD">VarP</A>
+</li>
+</ul>
+</p>
+
+

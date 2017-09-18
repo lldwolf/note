@@ -1,0 +1,151 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+	<title>网络命令</title>
+	<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+	<p id="title">第N章 网络命令</p>
+	<h1>Ping </h1>
+	<p>Ping是个使用频率极高的实用程序，用于确定本地主机是否能与另一台主机交换（发送与接收）数据报。根据返回的信息，你就可以推断TCP/IP参数是否设置得正确以及运行是否正常。需要注意的是：成功地与另一台主机进行一次或两次数据报交换并不表示TCP/IP配置就是正确的，你必须执行大量的本地主机与远程主机的数据报交换，才能确信 TCP/IP的正确性。 </p>
+	<p>简单的说，Ping就是一个测试程序，如果Ping运行正确，你大体上就可以排除网络访问层、网卡、MODEM的输入输出线路、电缆和路由器等存在的故障，从而减小了问题的范围。但由于可以自定义所发数据报的大小及无休止的高速发送，Ping也被某些别有用心的人作为DDOS（拒绝服务攻击）的工具，前段时间Yahoo就是被黑客利用数百台可以高速接入互联网的电脑连续发送大量Ping数据报而瘫痪的。 </p>
+	<p>按照缺省设置，Windows上运行的Ping命令发送4个ICMP（网间控制报文协议）回送请求，每个32字节数据，如果一切正常，你应能得到4个回送应答。 </p>
+	<p>Ping 能够以毫秒为单位显示发送回送请求到返回回送应答之间的时间量。如果应答时间短，表示数据报不必通过太多的路由器或网络连接速度比较快。Ping还能显示 TTL（Time To Live存在时间）值，你可以通过TTL值推算一下数据包已经通过了多少个路由器：源地点TTL起始值（就是比返回TTL略大的一个2的乘方数）-返回时TTL值。例如，返回TTL值为119，那么可以推算数据报离开源地址的TTL起始值为128，而源地点到目标地点要通过9个路由器网段（128-119）；如果返回TTL值为246，TTL起始值就是256，源地点到目标地点要通过9个路由器网段。 </p>
+	<p>通过Ping检测网络故障的典型次序 </p>
+	<p>正常情况下，当你使用Ping命令来查找问题所在或检验网络运行情况时，你需要使用许多Ping命令，如果所有都运行正确，你就可以相信基本的连通性和配置参数没有问题；如果某些Ping命令出现运行故障，它也可以指明到何处去查找问题。下面就给出一个典型的检测次序及对应的可能故障： </p>
+	<p>ping 127.0.0.1——这个Ping命令被送到本地计算机的IP软件，该命令永不退出该计算机。如果没有做到这一点，就表示TCP/IP的安装或运行存在某些最基本的问题。 </p>
+	<p>ping 本机IP——这个命令被送到你计算机所配置的IP地址，你的计算机始终都应该对该Ping命令作出应答，如果没有，则表示本地配置或安装存在问题。出现此问题时，局域网用户请断开网络电缆，然后重新发送该命令。如果网线断开后本命令正确，则表示另一台计算机可能配置了相同的IP地址。 </p>
+	<p>ping 局域网内其他IP——这个命令应该离开你的计算机，经过网卡及网络电缆到达其他计算机，再返回。收到回送应答表明本地网络中的网卡和载体运行正确。但如果收到0个回送应答，那么表示子网掩码（进行子网分割时，将IP地址的网络部分与主机部分分开的代码）不正确或网卡配置错误或电缆系统有问题。 </p>
+	<p>ping 网关IP——这个命令如果应答正确，表示局域网中的网关路由器正在运行并能够作出应答。 </p>
+	<p>ping 远程IP——如果收到4个应答，表示成功的使用了缺省网关。对于拨号上网用户则表示能够成功的访问Internet（但不排除ISP的DNS会有问题）。 </p>
+	<p>ping localhost——localhost是个作系统的网络保留名，它是127.0.0.1的别名，每太计算机都应该能够将该名字转换成该地址。如果没有做到这一带内，则表示主机文件（/Windows/host）中存在问题。 </p>
+	<p>ping www.yahoo.com——对这个域名执行Ping命令，你的计算机必须先将域名转换成IP地址，通常是通过DNS服务器 如果这里出现故障，则表示DNS服务器的IP地址配置不正确或DNS服务器有故障（对于拨号上网用户，某些ISP已经不需要设置DNS服务器了）。顺便说一句：你也可以利用该命令实现域名对IP地址的转换功能。 </p>
+	<p>如果上面所列出的所有Ping命令都能正常运行，那么你对你的计算机进行本地和远程通信的功能基本上就可以放心了。但是，这些命令的成功并不表示你所有的网络配置都没有问题，例如，某些子网掩码错误就可能无法用这些方法检测到。 </p>
+	<p>Ping命令的常用参数选项 </p>
+	<p>ping IP -t——连续对IP地址执行Ping命令，直到被用户以Ctrl+C中断。 </p>
+	<p>ping IP -l 2000——指定Ping命令中的数据长度为2000字节，而不是缺省的32字节。 </p>
+	<p>ping IP -n——执行特定次数的Ping命令。 </p>
+	<h1><a name="Netstat" id="Netstat"></a>Netstat </h1>
+	<p>Netstat用于显示与IP、TCP、UDP和ICMP协议相关的统计数据，一般用于检验本机各端口的网络连接情况。 </p>
+	<p>如果你的计算机有时候接受到的数据报会导致出错数据删除或故障，你不必感到奇怪，TCP/IP可以容许这些类型的错误，并能够自动重发数据报。但如果累计的出错情况数目占到所接收的IP数据报相当大的百分比，或者它的数目正迅速增加，那么你就应该使用Netstat查一查为什么会出现这些情况了。 </p>
+	<p>Netstat的一些常用选项： </p>
+	<p>netstat -s——本选项能够按照各个协议分别显示其统计数据。如果你的应用程序（如Web浏览器）运行速度比较慢，或者不能显示Web页之类的数据，那么你就可以用本选项来查看一下所显示的信息。你需要仔细查看统计数据的各行，找到出错的关键字，进而确定问题所在。 </p>
+	<p>netstat -e——本选项用于显示关于以太网的统计数据。它列出的项目包括传送的数据报的总字节数、错误数、删除数、数据报的数量和广播的数量。这些统计数据既有发送的数据报数量，也有接收的数据报数量。这个选项可以用来统计一些基本的网络流量）。 </p>
+	<p>netstat -r——本选项可以显示关于路由表的信息，类似于后面所讲使用route print命令时看到的 信息。除了显示有效路由外，还显示当前有效的连接。 </p>
+	<p>netstat -a——本选项显示一个所有的有效连接信息列表，包括已建立的连接（ESTABLISHED），也包括监听连接请求（LISTENING）的那些连接。 </p>
+	<p>netstat -n——显示所有已建立的有效连接。 </p>
+	<p>Netstat的妙用 </p>
+	<p>经常上网的人一般都使用ICQ的，不知道你有没有被一些讨厌的人骚扰得不敢上线，想投诉却又不知从和下手？其实，你只要知道对方的IP，就可以向他所属的 ISP投诉了。但怎样才能通过ICQ知道对方的IP呢？如果对方在设置ICQ时选择了不显示IP地址，那你是无法在信息栏中看到的。其实，你只需要通过 Netstat就可以很方便的做到这一点：当他通过ICQ或其他的工具与你相连时（例如你给他发一条ICQ信息或他给你发一条信息），你立刻在 DOS Prompt下输入netstat -n或netstat -a就可以看到对方上网时所用的IP或ISP域名了。甚至连所用Port都完全暴露了，如果你想给他一些教训，这些信息已经足够…… </p>
+	<h1><a name="IPConfig" id="IPConfig"></a>IPConfig </h1>
+	<p>IPConfig 实用程序和它的等价图形用户界面——Windows 95/98中的WinIPCfg可用于显示当前的TCP/IP配置的设置值。这些信息一般用来检验人工配置的TCP/IP设置是否正确。但是，如果你的计算机和所在的局域网使用了动态主机配置协议（Dynamic Host Configuration Protocol，DHCP——Windows NT下的一种把较少的IP地址分配给较多主机使用的协议，类似于拨号上网的动态IP分配），这个程序所显示的信息也许更加实用。这时，IPConfig可以让你了解你的计算机是否成功的租用到一个IP地址，如果租用到则可以了解它目前分配到的是什么地址。了解计算机当前的IP地址、子网掩码和缺省网关实际上是进行测试和故障分析的必要项目。 </p>
+	<p>最常用的选项： </p>
+	<p>ipconfig——当使用IPConfig时不带任何参数选项，那么它为每个已经配置了的接口显示IP地址、子网掩码和缺省网关值 </p>
+	<p>ipconfig /all——当使用all选项时，IPConfig能为DNS和WINS服务器显示它已配置且所要使用的附加信息（如IP地址等），并且显示内置于本地网卡中的物理地址（MAC）。如果IP地址是从DHCP服务器租用的，IPConfig将显示DHCP服务器的IP地址和租用地址预计失效的日期（有关 DHCP服务器的相关内容请详见其他有关NT服务器的书籍或询问你的网管），其输出信息见图6的下半部分。 </p>
+	<p>ipconfig /release和ipconfig /renew——这是两个附加选项，只能在向DHCP服务器租用其IP地址的计算机上起作用。如果你输入 ipconfig /release，那么所有接口的租用IP地址便重新交付给DHCP服务器（归还IP地址）。如果你输入 ipconfig /renew，那么本地计算机便设法与DHCP服务器取得联系，并租用一个IP地址。请注意，大多数情况下网卡将被重新赋予和以前所赋予的相同的IP地址。 </p>
+	<p>如果你使用的是Windows 95/98，那么你应该更习惯使用 winipcfg而不是ipconfig，因为它是一个图形用户界面，而且所显示的信息与ipconfig相同，并且也提供发布和更新动态IP地址的选项 如果你购买了Windows NT Resource Kit（NT资源包），那么 Windows NT也包含了一个图形替代界面，该实用程序的名字是wntipcfg，和Windows 95/98的 winipcfg类似。 </p>
+	<h1><a name="ARP" id="ARP"></a>ARP（地址转换协议） </h1>
+	<p>ARP是一个重要的TCP/IP协议，并且用于确定对应IP地址的网卡物理地址。实用arp命令，你能够查看本地计算机或另一台计算机的ARP高速缓存中的当前内容。此外，使用arp命令，也可以用人工方式输入静态的网卡物理/IP地址对，你可能会使用这种方式为缺省网关和本地服务器等常用主机进行这项作，有助于减少网络上的信息量。 </p>
+	<p>按照缺省设置，ARP高速缓存中的项目是动态的，每当发送一个指定地点的数据报且高速缓存中不存在当前项目时，ARP便会自动添加该项目。一旦高速缓存的项目被输入，它们就已经开始走向失效状态。例如，在Windows NT网络中，如果输入项目后不进一步使用，物理/IP地址对就会在2至10 分钟内失效。因此，如果ARP高速缓存中项目很少或根本没有时，请不要奇怪，通过另一台计算机或路由器的ping命令即可添加。所以，需要通过arp命令查看高速缓存中的内容时，请最好先ping 此台计算机（不能是本机发送ping命令）。 </p>
+	<p>常用命令选项： </p>
+	<p>arp -a或arp -g——用于查看高速缓存中的所有项目。-a和-g参数的结果是一样的，多年来-g一直是UNIX平台上用来显示ARP高速缓存中所有项目的选项，而Windows用的是arp -a（-a可被视为all，即全部的意思），但它也可以接受比较传统的-g选项。 </p>
+	<p>arp -a IP——如果你有多个网卡，那么使用arp -a加上接口的IP地址，就可以只显示与该接口相关的ARP缓存项目。 </p>
+	<p>arp -s IP 物理地址——你可以向ARP高速缓存中人工输入一个静态项目。该项目在计算机引导过程中将保持有效状态，或者在出现错误时，人工配置的物理地址将自动更新该项目。 </p>
+	<p>arp -d IP——使用本命令能够人工删除一个静态项目。 </p>
+	<p>
+		<br />
+	</p>
+	<p>看到这里，你也许已经有些累了……其实对于一般用户来说也已经足够——你可以用ipconfig和ping命令来查看自己的网络配置并判断是否正确、可以用netstat查看别人与你所建立的连接并找出ICQ使用者所隐藏的IP信息、可以用arp查看网卡的MAC地址——这些已足已让你丢掉菜鸟的头衔。如果你并不满足，那就“硬着头皮”（下面的内容可能有些枯燥）继续Follow me…… </p>
+	<h1><a name="Tracert" id="Tracert"></a>Tracert </h1>
+	<p>当数据报从你的计算机经过多个网关传送到目的地时，Tracert命令可以用来跟踪数据报使用的路由（路径）。该实用程序跟踪的路径是源计算机到目的地的一条路径，不能保证或认为数据报总遵循这个路径。如果你的配置使用DNS，那么你常常会从所产生的应答中得到城市、地址和常见通信公司的名字。 Tracert是一个运行得比较慢的命令（如果你指定的目标地址比较远），每个路由器你大约需要给它15秒钟
+		<br />
+		Tracert的使用很简单，只需要在tracert后面跟一个IP地址或URL，Tracert会进行相应的域名转换的。Tracert一般用来检测故障的位置，你可以用 tracert IP在哪个环节上出了问题，虽然还是没有确定是什么问题，但它已经告诉了我们问题所在的地方，你也就可以很有把握的告诉别人 ——某某出了问题。 </p>
+	<h1><a name="Route" id="Route"></a>Route </h1>
+	<p>大多数主机一般都是驻留在只连接一台路由器的网段上。由于只有一台路由器，因此不存在使用哪一台路由器将数据报发表到远程计算机上去的问题，该路由器的IP地址可作为该网段上所有计算机的缺省网关来输入。 </p>
+	<p>但是，当网络上拥有两个或多个路由器时，你就不一定想只依赖缺省网关了。实际上你可能想让你的某些远程IP地址通过某个特定的路由器来传递，而其他的远程IP则通过另一个路由器来传递。 </p>
+	<p>在这种情况下，你需要相应的路由信息，这些信息储存在路由表中，每个主机和每个路由器都配有自己独一无二的路由表。大多数路由器使用专门的路由协议来交换和动态更新路由器之间的路由表。但在有些情况下，必须人工将项目添加到路由器和主机上的路由表中。Route就是用来显示、人工添加和修改路由表项目的。 </p>
+	<p>一般使用选项： </p>
+	<p>route print——本命令用于显示路由表中的当前项目，在单路由器网段上的输出结果如图12，由于用IP地址配置了网卡，因此所有的这些项目都是自动添加的。 </p>
+	<p>route add——使用本命令，可以将信路由项目添加给路由表。例如，如果要设定一个到目的网络209.98.32.33的路由，其间要经过5个路由器网段，首先要经过本地网络上的一个路由器，器IP为202.96.123.5，子网掩码为255.255.255.224，那么你应该输入以下命令： </p>
+	<p>route add 209.98.32.33 mask 255.255.255.224 202.96.123.5 metric 5 </p>
+	<p>route change——你可以使用本命令来修改数据的传输路由，不过，你不能使用本命令来改变数据的目的地。下面这个例子可以将数据的路由改到另一个路由器，它采用一条包含3个网段的更直的路径： </p>
+	<p>route add 209.98.32.33 mask 255.255.255.224 202.96.123.250 metric 3 </p>
+	<p>route delete——使用本命令可以从路由表中删除路由。例如：route delete 209.98.32.33
+		<br />
+	</p>
+	<h1><a name="NBTStat" id="NBTStat"></a>NBTStat </h1>
+	<p>NBTStat（TCP/IP上的NetBIOS统计数据）实用程序用于提供关于关于NetBIOS的统计数据。运用NetBIOS，你可以查看本地计算机或远程计算机上的NetBIOS名字表格。 </p>
+	<p>常用选项： </p>
+	<p>nbtstat -n——显示寄存在本地的名字和服务程序 </p>
+	<p>nbtstat -c——本命令用于显示NetBIOS名字高速缓存的内容。NetBIOS名字高速缓存用于寸放与本计算机最近进行通信的其他计算机的NetBIOS名字和IP地址对。 </p>
+	<p>nbtstat -r——本命令用于清除和重新加载NetBIOS名字高速缓存。 </p>
+	<p>nbtstat -a IP——通过IP显示另一台计算机的物理地址和名字列表，你所显示的内容就像对方计算机自己运行nbtstat -n一样 </p>
+	<p>nbtstat -s IP——显示实用其IP地址的另一台计算机的NetBIOS连接表。 </p>
+	<h1><a name="Net" id="Net"></a>Net </h1>
+	<h2>net view </h2>
+	<p>net view UNC——运用此命令，你可以查看目标服务器上的共享点名字。任何局域网里的人都可以发出此命令，而且不需要提供用户ID或口令。 UNC名字总是以\\开头，后面跟随目标计算机的名字。例如，net view \\lx就是查看主机名为lx的计算机的共享点（见图15）。 </p>
+	<h2>net use </h2>
+	<p>net use 本地盘符 目标计算机共享点——本命令用于建立或取消到达特定共享点的映像驱动器的连接（如果需要，你必须提供用户ID或口令）。例如，你输入net use f: \\lx\mp3就是将映像驱动器F:连接到\\lx\mp3共享点上，今后你直接访问F:就可以访问\\lx\mp3共享点，这和你右击“我的电脑”选择映射网络驱动器类似。 </p>
+	<p>net use /delete * : 可以切断当前机器与所有其他机器的连接, 这样就可以重新使用其它用户访问其它机器</p>
+	<h2>net start 和 net stop</h2>
+	<p>用于开始或停止服务，例如</p>
+	<pre>net start &quot;IIS Admin Service&quot;</pre>
+	<p>表示启动IIS Admin Service 服务 </p>
+	<h1><a name="nslookup" id="nslookup"></a>NsLookup</h1>
+	<pre>C:\>nslookup
+Default Server:  dns-chj.sh.cncnet.net
+Address:  210.22.70.3
+
+> sina.com.cn
+Server:  dns-chj.sh.cncnet.net
+Address:  210.22.70.3
+
+Non-authoritative answer:
+Name:    sina.com.cn
+Address:  202.108.33.32</pre>
+	<p>还可以查看邮件服务器的设置</p>
+	<pre>> set type=mx
+> sina.com.cn
+Server:  dns-chj.sh.cncnet.net
+Address:  210.22.70.3
+
+Non-authoritative answer:
+sina.com.cn     MX preference = 20, mail exchanger = freemx4.sinamail.sina.com.cn
+sina.com.cn     MX preference = 10, mail exchanger = freemx1.sinamail.sina.com.cn
+sina.com.cn     MX preference = 10, mail exchanger = freemx2.sinamail.sina.com.cn
+
+sina.com.cn     nameserver = ns1.sina.com.cn
+sina.com.cn     nameserver = ns2.sina.com.cn
+sina.com.cn     nameserver = ns3.sina.com.cn
+freemx1.sinamail.sina.com.cn    internet address = 202.108.3.230
+freemx2.sinamail.sina.com.cn    internet address = 202.108.3.231
+ns1.sina.com.cn internet address = 202.106.184.166
+ns2.sina.com.cn internet address = 61.172.201.254
+ns3.sina.com.cn internet address = 202.108.44.55</pre>
+	<h1><a name="set_ip_dns" id="set_ip_dns"></a>设置IP地址和DNS </h1>
+	<p>在DOS窗口下运行netsh，进入DOS下的网络配置状态，如下图所示：</p>
+	<p>
+		<img alt="" src="images/netcmd01.jpg" width="400" height="152" /></p>
+	<p>在IP模式下，可用show命令查看各种网络参数，要设置IP地址，应该使用show address命令查看一下当前的设置，如下图所示：</p>
+	<p>
+		<img alt="" src="images/netcmd02.jpg" width="673" height="153" /></p>
+	<p>要设置IP地址，使用set address命令，如下所示：</p>
+	<p>
+		<img alt="" src="images/netcmd03.jpg" width="646" height="54" />
+	</p>
+	<p>其中的“本地连接 2”是通过show address命令查得的。后面的参数分别为IP地址、子网掩码、网关、跃点数</p>
+	<p>使用show dns查看DNS的设置，使用set dns设置DNS，如下图所示：</p>
+	<p>
+		<img alt="" src="images/netcmd04.jpg" width="423" height="132" /></p>
+	<p><a href="security.htm">使用NetSh的详细介绍</a></p>
+	<h1>设置 Local LAN Proxy</h1>
+	<p>如果本地 Internet Option 中的 Connections Tab 不可用， 则使用如下方式解锁</p>
+	<ol>
+		<li>使用管理员身份启用命令行</li>
+		<li>键入命令 gpedit.msc</li>
+		<li>User Configuration &rarr; Network &rarr; Network Connections &rarr; Ability to Enable/Disable LAN connection，设为 "No configured"</li>
+	</ol>
+	
+</body>
+</html>

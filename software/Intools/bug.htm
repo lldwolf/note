@@ -1,0 +1,20 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<script language="javascript" src="css.js"></script>
+<title>INTOOLS的BUG</title>
+</head>
+
+<body>
+<h1>第N章 INTOOLS的BUG</h1>
+<h2>N.1 重位号的形成</h2>
+<p>现象：在同一个域中有多个重复的位号（一般为两个）</p>
+<p>发生原因：使用备分的DB文件恢复数据库时，对loop_name字段，其长度为50，恢复后，会自动填充空格，但对ORACLE数据库的SQL语句而言，如果不用RTRIM函数的话，只用回路号就会找不到相应的回路号，例如，新建回路“FI1001”时，数据库中有的是“FI1001&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;”(后面有很多空格)，于是INTOOLS会新建一个回路，因此便发生了回路号相同的情况。</p>
+<p>上述情况应该只出现于ORACLE数据库，因为对SQL SERVER，在查询字符串时会忽略后面的空格。</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<script language="javascript" src="index.js"></script>
+</body>
+</html>

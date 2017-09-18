@@ -1,0 +1,72 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<script language="javascript" src="css.js"></script>
+<title>使用文件系统信息(VBA)</title>
+</head>
+
+<body>
+<h1>第N章 使用文件系统信息(VBA)</h1>
+<h2>N.1 获取某文件夹下的所有文件名</h2>
+<pre>'取目录内的所有文件
+Private Sub GetFilesInDir(ByVal DirName As String, ByRef Files() As String)
+
+    Dim fs, f, f1, fc
+    Dim i As Integer, j As Integer
+    Set fs = CreateObject("Scripting.FileSystemObject")
+    Set f = fs.GetFolder(DirName)
+    Set fc = f.Files
+    
+    Dim all_file() As String
+    Dim dwg_count As Integer
+    
+    dwg_count = 0
+    ReDim all_file(fc.Count - 1)
+    
+    i = 0
+    For Each f1 In fc
+      '只取文件类型为.dwg的文件
+      If (UCase(Mid(f1, Len(f1) - 3, 4)) = ".DWG") Then
+        all_file(i) = f1
+        dwg_count = dwg_count + 1
+      End If
+      i = i + 1
+    Next
+    
+    ReDim Files(dwg_count - 1)
+    j = 0
+    For i = 0 To UBound(all_file)
+      If all_file(i) <> "" Then
+        Files(j) = all_file(i)
+        j = j + 1
+      End If
+    Next i
+    
+End Sub</pre>
+<h2>N.2 操作文本文件</h2>
+<pre>本示例使用 Write # 语句将行数据写入顺序文件。
+
+Open "TESTFILE" For Output As #1    ' 打开输出文件。
+Write #1, "Hello World", 234    ' 写入以逗号隔开的数据。
+Write #1,    ' 写入空白行。
+
+Dim MyBool, MyDate, MyNull, MyError
+' 赋值 Boolean、Date、Null 及 Error 等。
+MyBool = False : MyDate = #February 12, 1969# : MyNull = Null
+MyError = CVErr(32767)
+' Boolean 数据以 #TRUE# 或 #FALSE# 的格式写入。
+' 日期以通用日期格式写入，例如：#1994-07-13# 代表
+' 1994 年 1 月 13 日。Null 数据以 #NULL# 格式写入。 
+' Error 数据以 #ERROR 错误代号# 的格式写入。
+Write #1, MyBool ； " is a Boolean value"
+Write #1, MyDate ； " is a date"
+Write #1, MyNull ； " is a null value"
+Write #1, MyError ； " is an error value"
+Close #1    ' 关闭文件。</pre>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<script language="javascript" src="index.js"></script>
+</body>
+</html>

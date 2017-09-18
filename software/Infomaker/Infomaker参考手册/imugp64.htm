@@ -1,0 +1,658 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+Working with display formats </TITLE>
+</HEAD>
+<BODY>
+<A NAME="X-ref377802618"></A><h1>Working with display formats </h1>
+<A NAME="TI2255"></A><p>You can use display formats to customize the display of column
+data in a report or form. Display formats are masks in which
+certain characters have special significance. For example, you can
+display currency values preceded by a dollar sign, show dates with
+month names spelled out, and use a special color for negative numbers. InfoMaker comes
+with many predefined display formats. You can use them as is or
+define your own.</p>
+<A NAME="TI2256"></A><p>Here is a report without any display formats; all values
+display as they are stored in the database:</p>
+<br><img src="images/dwdis01.gif">
+<A NAME="TI2257"></A><p>Here the Phone, Salary, and Start Date columns use display
+formats so the data is easier to interpret:</p>
+<br><img src="images/Dwdis02.gif">
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Display formats not used for data entry</span> <A NAME="TI2258"></A>When users tab to a column containing a display format, InfoMaker removes
+the display format and displays the raw value for users to
+edit.</p>
+<A NAME="TI2259"></A>If you want to provide formatting used for
+data entry, you need to specify edit masks, as described in <A HREF="imugp65.htm#BFCBBIBJ">"Working with edit styles "</A>.</p>
+<A NAME="TI2260"></A><h2>Using display formats</h2>
+<A NAME="TI2261"></A><p>You work with display formats in the Database painter, the
+Form painter, and the Report painter.</p>
+<A NAME="TI2262"></A><h4>What you do in the Database painter</h4>
+<A NAME="TI2263"></A><p>In the Database painter, you can:<A NAME="TI2264"></A>
+<ul>
+<li class=fi>Create, modify, and delete named display formats<br>
+The named display formats are stored in the extended attribute
+system tables. Once you define a display format, it can be used
+by any column of the appropriate data type in the database.<br></li>
+<li class=ds>Assign display formats to columns and remove them
+from columns<br>
+These formats are used by default when you place the column
+in a report in the Report painter or a form in the Form painter.<br>
+</li>
+</ul>
+</p>
+<A NAME="TI2265"></A><h4>What you do in the Form and Report painters</h4>
+<A NAME="TI2266"></A><p>In the Form and Report painters, you can:<A NAME="TI2267"></A>
+<ul>
+<li class=fi>Accept the default display format assigned to a
+column in the Database painter</li>
+<li class=ds>Override the default display format with another
+named format stored in the extended attribute system tables</li>
+<li class=ds>Create an ad hoc, unnamed format to use with one
+specific column
+</li>
+</ul>
+</p>
+<A NAME="TI2268"></A><h4>Display formats and the extended attribute system
+tables</h4>
+<A NAME="TI2269"></A><p>Once you have placed a column in a report or form and
+have given it a display format (either the default format from the
+assignment made in the Database painter for the column or a format
+assigned in the Form or Report painter), there is no longer any link
+to the named format in the extended attribute system tables.</p>
+<A NAME="TI2270"></A><p>If the definition of the display format later changes in the
+extended attribute system tables, the format for the column in a report or
+form will not change. If you want to use the modified format, you
+can reapply it to the column in the Form or Report painter.</p>
+<A NAME="X-ref376851941"></A><h3>Working with displayformats in the Database painter</h3>
+<A NAME="TI2271"></A><p>Typically, you define display formats and associate them with
+columns in the Database painter, because display formats are properties
+of the data itself. Once you have associated a display format with
+a column in the Database painter, it is used by default each time
+the column is placed in a report or form.</p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Edit style takes precedence</span> <A NAME="TI2272"></A>If a column has an associated edit style, the edit style takes
+precedence over a display format unless you use an EditMask edit
+style and check the Use Format box on the Format property page.</p>
+<A NAME="TI2273"></A>For more information, see <A HREF="imugp65.htm#BFCBBIBJ">"Working with edit styles "</A>.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To create a new display format:</p>
+<ol><li class=fi>
+In the Database painter, select Object&gt;Insert&gt;Display
+Format from the menu bar.<br><br>
+The Display Format view displays.<br><br></li>
+<li class=ds>
+Name the display format and specify a data type.<br><br></li>
+<li class=ds>
+Define the display format using masks.<br><br>
+For information, see <A HREF="imugp64.htm#BFCCJFHF">"Defining display formats"</A>.<br><br></li></ol>
+<br><A NAME="TI2274"></A><p>You can use this display format with any column of the appropriate
+data type in the database.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To modify an existing display format:</p>
+<ol><li class=fi>
+In the Database painter, open the Extended
+Attributes view.<br><br></li>
+<li class=ds>
+In the Extended Attributes view, open the list
+of display formats.<br><br></li>
+<li class=ds>
+Position the pointer on the display format you
+want to modify, display the popup menu, and select Properties.<br><br></li>
+<li class=ds>
+In the Display Format view, modify the display
+format as desired.<br><br>
+For information, see <A HREF="imugp64.htm#BFCCJFHF">"Defining display formats"</A>.<br><br></li></ol>
+<br><p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To associate a display format with a column in
+the Database painter:</p>
+<ol><li class=fi>
+In the Database painter (Objects view),
+position the pointer on the column, select Properties from the popup
+menu, and select the Display tab in the Properties view.<br><br></li>
+<li class=ds>
+Select a format from the list in the Display Format
+box.<br><br>
+The column now has the selected format associated with it
+in the extended attribute system tables.<br><br></li></ol>
+<br><p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To remove a display format from a column in the
+Database painter:</p>
+<ol><li class=fi>
+In the Database painter (Objects view),
+position the pointer on the column, select Properties from the popup
+menu, and select the Display tab in the Properties view.<br><br></li>
+<li class=ds>
+Select (None) from the list in the Display Format
+box.<br><br>
+The display format is no longer associated with the column.<br><br></li></ol>
+<br><A NAME="TI2275"></A><h3>Working with display formats in the Report painter and
+Form painter</h3>
+<A NAME="TI2276"></A><p>Display formats you assign to a column in the Database painter
+are used by default when you place the column in a report or
+form. You can override the default format in the Report painter or Form
+painter by choosing another format from the extended attribute system
+tables or defining an ad hoc format for one specific column.</p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>About computed fields</span> <A NAME="TI2277"></A>You can assign display formats to computed fields using the
+same techniques as for columns in a table.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To specify a display format for a column in the Report painter or
+Form painter:</p>
+<ol><li class=fi>
+In the Report painter or Form painter, move
+the pointer to the column, select Properties from the column's
+popup menu, and then select the Format tab.<br><br>
+Information appropriate to the data type of the selected column
+displays. The currently used format displays in the Format box.
+All formats for the data type defined in the extended attribute
+system tables are listed in the popup list (displayed by clicking
+the button).<br><br></li>
+<li class=ds>
+Do one of the following:<A NAME="TI2278"></A>
+<ul>
+<li class=fi>Delete the display format.</li>
+<li class=ds>Select a format in the extended attribute system
+tables from the popup list.</li>
+<li class=ds>Create a format for the column by typing it in the
+Format box. For more information, see <A HREF="imugp64.htm#BFCCJFHF">"Defining display formats"</A>.
+</li>
+</ul>
+
+                        <br><br><p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Format not saved in the extended attribute system tables</span> <A NAME="TI2279"></A>If you create a format here, it is used only for the current
+column and is not saved in the extended attribute system tables.</p>
+</li></ol>
+<br><p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Shortcuts in the Report painter</span> <A NAME="TI2280"></A>To assign the Currency or Percent display format to a numeric
+column in a report, select the column, then click the Currency or
+Percent button in the PainterBar or select Format&gt;Currency
+or Format&gt;Percent from the menu bar.</p>
+<A NAME="TI2281"></A><h4>Customizing the toolbar</h4>
+<A NAME="TI2282"></A><p>You can add buttons to the PainterBar that assign a specified
+display format to selected columns in reports and forms.</p>
+<A NAME="TI2283"></A><p>For more information, see "Customizing toolbars"
+on page 54.</p>
+<A NAME="BFCCJFHF"></A><h2>Defining display formats</h2>
+<A NAME="TI2284"></A><p>Display formats are represented through <strong>masks</strong>,
+where certain characters have special significance. InfoMaker supports
+four kinds of display formats, each using different mask characters:<A NAME="TI2285"></A>
+<ul>
+<li class=fi>Numbers</li>
+<li class=ds>Strings</li>
+<li class=ds>Dates</li>
+<li class=ds>Times
+</li>
+</ul>
+</p>
+<A NAME="TI2286"></A><p>For example, in a string format mask, each @ represents
+a character in the string and all other characters represent themselves.
+So you can use the following mask to display phone numbers:	<pre>(@@@) @@@-@@@@</pre>
+</p>
+<A NAME="TI2287"></A><h4>Combining formats</h4>
+<A NAME="TI2288"></A><p>You can include different types of display format masks in
+a single format; use a space to separate the masks. For example,
+the following format section includes a date and time format:<pre>mmmm/dd/yyyy h:mm</pre>
+</p>
+<A NAME="TI2289"></A><h4>Using sections</h4>
+<A NAME="TI2290"></A><p>Each type of display format can have multiple sections, with
+each section corresponding to a form of the number, string, date,
+or time. Only one section is required; additional sections are optional
+and should be separated with semicolons (;).</p>
+<A NAME="TI2291"></A><p>The following format specifies different displays for positive
+and negative numbers (negative numbers will be displayed in parentheses):<pre>$#,##0;($#,##0)</pre>
+</p>
+<A NAME="TI2292"></A><h4>Using keywords</h4>
+<A NAME="TI2293"></A><p>Enclose display format keywords in square brackets. For example,
+you can use the keyword [General] when you want InfoMaker to
+determine the appropriate format for a number.</p>
+<A NAME="TI2294"></A><h4>Using colors</h4>
+<A NAME="TI2295"></A><p>You can define a color for each display format section by
+specifying a color keyword before the format. The color keyword
+is the name of the color, or a number that represents the color,
+enclosed in square brackets: [RED] or [255]. The
+number is usually used only when a color is required that is not
+provided by name.</p>
+<A NAME="TI2296"></A><p>The named color keywords are:</p>
+<A NAME="TI2297"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><td valign=top><A NAME="TI2298"></A><A NAME="TI2299"></A>
+<ul>
+<li class=fi>[BLACK]</li>
+<li class=ds>[BLUE]</li>
+<li class=ds>[CYAN]</li>
+<li class=ds>[GREEN]
+</li>
+</ul>
+</td>
+<td valign=top><A NAME="TI2300"></A><A NAME="TI2301"></A>
+<ul>
+<li class=fi>[MAGENTA]</li>
+<li class=ds>[RED]</li>
+<li class=ds>[WHITE]</li>
+<li class=ds>[YELLOW]
+</li>
+</ul>
+</td>
+</tr>
+</table>
+<A NAME="TI2302"></A><p>The formula for combining primary color values into a number
+is:<pre>256*256*<i>blue</i> + 256*<i>green</i> + <i>red</i><i>=</i><i>number</i></pre>
+</p>
+<A NAME="TI2303"></A><p>where the amount of each primary color is specified as a value
+from 0 to 255. For example, to specify cyan, substitute 255 for
+blue, 255 for green, and 0 for red. The result is 16776960.</p>
+<A NAME="TI2304"></A><p>The table below lists the blue, green, and red values you
+can use in the formula to create other colors:</p>
+<A NAME="TI2305"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI2306"></A>Blue</th>
+<th align="left" valign=bottom><A NAME="TI2307"></A>Green</th>
+<th align="left" valign=bottom><A NAME="TI2308"></A>Red</th>
+<th align="left" valign=bottom><A NAME="TI2309"></A>Number</th>
+<th align="left" valign=bottom><A NAME="TI2310"></A>Color</th>
+</tr>
+<tr><td valign=top><A NAME="TI2311"></A>0</td>
+<td valign=top><A NAME="TI2312"></A>0</td>
+<td valign=top><A NAME="TI2313"></A>255</td>
+<td valign=top><A NAME="TI2314"></A>255</td>
+<td valign=top><A NAME="TI2315"></A>Red</td>
+</tr>
+<tr><td valign=top><A NAME="TI2316"></A>0</td>
+<td valign=top><A NAME="TI2317"></A>255</td>
+<td valign=top><A NAME="TI2318"></A>0</td>
+<td valign=top><A NAME="TI2319"></A>65280</td>
+<td valign=top><A NAME="TI2320"></A>Green</td>
+</tr>
+<tr><td valign=top><A NAME="TI2321"></A>0</td>
+<td valign=top><A NAME="TI2322"></A>128</td>
+<td valign=top><A NAME="TI2323"></A>0</td>
+<td valign=top><A NAME="TI2324"></A>32768</td>
+<td valign=top><A NAME="TI2325"></A>Dark green</td>
+</tr>
+<tr><td valign=top><A NAME="TI2326"></A>255</td>
+<td valign=top><A NAME="TI2327"></A>0</td>
+<td valign=top><A NAME="TI2328"></A>0</td>
+<td valign=top><A NAME="TI2329"></A>16711680</td>
+<td valign=top><A NAME="TI2330"></A>Blue</td>
+</tr>
+<tr><td valign=top><A NAME="TI2331"></A>0</td>
+<td valign=top><A NAME="TI2332"></A>255</td>
+<td valign=top><A NAME="TI2333"></A>255</td>
+<td valign=top><A NAME="TI2334"></A>65535</td>
+<td valign=top><A NAME="TI2335"></A>Yellow</td>
+</tr>
+<tr><td valign=top><A NAME="TI2336"></A>0</td>
+<td valign=top><A NAME="TI2337"></A>128</td>
+<td valign=top><A NAME="TI2338"></A>128</td>
+<td valign=top><A NAME="TI2339"></A>32896</td>
+<td valign=top><A NAME="TI2340"></A>Brown</td>
+</tr>
+<tr><td valign=top><A NAME="TI2341"></A>255</td>
+<td valign=top><A NAME="TI2342"></A>255</td>
+<td valign=top><A NAME="TI2343"></A>0</td>
+<td valign=top><A NAME="TI2344"></A>16776960</td>
+<td valign=top><A NAME="TI2345"></A>Cyan</td>
+</tr>
+<tr><td valign=top><A NAME="TI2346"></A>192</td>
+<td valign=top><A NAME="TI2347"></A>192</td>
+<td valign=top><A NAME="TI2348"></A>192</td>
+<td valign=top><A NAME="TI2349"></A>12632256</td>
+<td valign=top><A NAME="TI2350"></A>Light gray</td>
+</tr>
+</table>
+<A NAME="TI2351"></A><h4>Using special characters</h4>
+<A NAME="TI2352"></A><p>To include a character in a mask that has special meaning
+in a display format, such as [, precede the character with
+a backslash (\). For example, to display a single quotation
+mark, enter \'.</p>
+<A NAME="TI2353"></A><h3>Number display formats</h3>
+<A NAME="TI2354"></A><p>A number display format can have up to four sections, with
+only the first being required:<pre>Positive-format;negative-format;zero-format;null-format</pre>
+</p>
+<A NAME="TI2355"></A><h4>Special characters</h4>
+<A NAME="TI2356"></A><p>Characters that have special meaning in number display formats
+are:</p>
+<A NAME="TI2357"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI2358"></A>Character</th>
+<th align="left" valign=bottom><A NAME="TI2359"></A>Meaning</th>
+</tr>
+<tr><td valign=top><A NAME="TI2360"></A>#</td>
+<td valign=top><A NAME="TI2361"></A>A number</td>
+</tr>
+<tr><td valign=top><A NAME="TI2362"></A>0</td>
+<td valign=top><A NAME="TI2363"></A>A required number; a number will display
+for every 0 in the mask</td>
+</tr>
+</table>
+<A NAME="TI2364"></A><p>Percent signs, decimal points, parentheses, and spaces display
+as entered in the mask. </p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Use at least one 0</span> <A NAME="TI2365"></A>In general, a number display format should include at least
+one 0. If users enter 0 in a field with the mask ###,
+the field will appear to be blank (unless you provide a zero-format
+section). If the mask is ###.##,
+only the period displays. If you want two decimal places to display
+even if both are 0, use the mask ##0.00. </p>
+<A NAME="TI2366"></A><h4>Number keywords</h4>
+<A NAME="TI2367"></A><p>You can use the following keywords as number display formats
+when you want InfoMaker to determine an appropriate format to use:<A NAME="TI2368"></A>
+<ul>
+<li class=fi>[General]</li>
+<li class=ds>[Currency]
+</li>
+</ul>
+</p>
+<A NAME="TI2369"></A><p>Note that [Currency(7)] and [Currency(n)] are
+legal edit masks, but they are <i>not</i>
+ legal display
+formats. </p>
+<A NAME="TI2370"></A><h4>Number and currency settings</h4>
+<A NAME="TI2371"></A><p>So that an application you build will run the same in whichever
+country it is deployed, masks (used in display formats and edit
+masks) and InfoMaker expressions require U.S. notation for numbers. That is,
+when you specify a number in a InfoMaker expression or in a number mask, a
+comma always represents the thousands delimiter and a period always
+represents the decimal place. You should also always use the $ sign
+to represent the symbol for currency.</p>
+<A NAME="TI2372"></A><p>At run time, the locally correct symbols are displayed for
+numbers and currency. The comma and period are replaced by the delimiters
+defined in the user's Number settings in the Regional or
+International Settings property sheet in the Control Panel. The $ sign
+in the mask is replaced by the local currency symbol as defined
+in the user's Currency setting in the Control Panel. For example,
+in countries where a comma represents the decimal place and a period represents
+thousands, users will see numbers in those formats. </p>
+<A NAME="TI2373"></A><h4>Percentages</h4>
+<A NAME="TI2374"></A><p>You should use caution when defining an edit mask for a percentage.
+When you enter a number in a column with a percent edit mask and
+tab off the column, InfoMaker divides the number by 100 and stores
+the result in the buffer. For example, if you enter 23, InfoMaker passes
+.23 to the buffer. When you retrieve from the database, InfoMaker multiplies
+the number by 100 and, if the mask is ##0%,
+displays 23%. </p>
+<A NAME="TI2375"></A><p>The data type for the column must be numeric or decimal to
+handle the result of a division by 100. If the column has an integer
+data type, a percentage entered as 333 is retrieved from the database
+as 300, and 33 is retrieved as 0.</p>
+<A NAME="TI2376"></A><p>If you use an edit mask with decimals, such as ##0.00%,
+the data type must have enough decimal places to handle the division.
+For example, if you enter 33.33, the data type for the column must
+have at least four decimal places because the result of the division
+is .3333. If the data type has only three decimal places, the percentage
+is retrieved as 33.30. </p>
+<A NAME="TI2377"></A><h4>Examples</h4>
+<A NAME="TI2378"></A><p>The following table shows how the values 5, -5, and
+.5 display when different format masks are applied:</p>
+<A NAME="TI2379"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI2380"></A>Sample format</th>
+<th align="left" valign=bottom><A NAME="TI2381"></A>5</th>
+<th align="left" valign=bottom><A NAME="TI2382"></A>-5</th>
+<th align="left" valign=bottom><A NAME="TI2383"></A>.5</th>
+</tr>
+<tr><td valign=top><A NAME="TI2384"></A>[General]</td>
+<td valign=top><A NAME="TI2385"></A>5</td>
+<td valign=top><A NAME="TI2386"></A>-5</td>
+<td valign=top><A NAME="TI2387"></A>0.5</td>
+</tr>
+<tr><td valign=top><A NAME="TI2388"></A>0</td>
+<td valign=top><A NAME="TI2389"></A>5</td>
+<td valign=top><A NAME="TI2390"></A>-5</td>
+<td valign=top><A NAME="TI2391"></A>1</td>
+</tr>
+<tr><td valign=top><A NAME="TI2392"></A>0.00</td>
+<td valign=top><A NAME="TI2393"></A>5.00</td>
+<td valign=top><A NAME="TI2394"></A>-5.00</td>
+<td valign=top><A NAME="TI2395"></A>0.50</td>
+</tr>
+<tr><td valign=top><A NAME="TI2396"></A>#,##0</td>
+<td valign=top><A NAME="TI2397"></A>5</td>
+<td valign=top><A NAME="TI2398"></A>-5</td>
+<td valign=top><A NAME="TI2399"></A>1</td>
+</tr>
+<tr><td valign=top><A NAME="TI2400"></A>#,##0.00</td>
+<td valign=top><A NAME="TI2401"></A>5.00</td>
+<td valign=top><A NAME="TI2402"></A>-5.00</td>
+<td valign=top><A NAME="TI2403"></A>0.50</td>
+</tr>
+<tr><td valign=top><A NAME="TI2404"></A>$#,##0;($#,##0)</td>
+<td valign=top><A NAME="TI2405"></A>$5</td>
+<td valign=top><A NAME="TI2406"></A>($5)</td>
+<td valign=top><A NAME="TI2407"></A>$1</td>
+</tr>
+<tr><td valign=top><A NAME="TI2408"></A>$#,##0;-$#,##0</td>
+<td valign=top><A NAME="TI2409"></A>$5</td>
+<td valign=top><A NAME="TI2410"></A>-$5</td>
+<td valign=top><A NAME="TI2411"></A>$1</td>
+</tr>
+<tr><td valign=top><A NAME="TI2412"></A>$#,##0;[RED]($#,##0)</td>
+<td valign=top><A NAME="TI2413"></A>$5</td>
+<td valign=top><A NAME="TI2414"></A>($5)</td>
+<td valign=top><A NAME="TI2415"></A>$1</td>
+</tr>
+<tr><td valign=top><A NAME="TI2416"></A>[Currency]</td>
+<td valign=top><A NAME="TI2417"></A>$5.00</td>
+<td valign=top><A NAME="TI2418"></A>($5.00)</td>
+<td valign=top><A NAME="TI2419"></A>$0.50</td>
+</tr>
+<tr><td valign=top><A NAME="TI2420"></A>$#,##0.00;($#,##0.00)</td>
+<td valign=top><A NAME="TI2421"></A>$5.00</td>
+<td valign=top><A NAME="TI2422"></A>($5.00)</td>
+<td valign=top><A NAME="TI2423"></A>$0.50</td>
+</tr>
+<tr><td valign=top><A NAME="TI2424"></A>$#,##0.00;[RED]($#,##0.00)</td>
+<td valign=top><A NAME="TI2425"></A>$5.00</td>
+<td valign=top><A NAME="TI2426"></A>($5.00)</td>
+<td valign=top><A NAME="TI2427"></A>$0.50</td>
+</tr>
+<tr><td valign=top><A NAME="TI2428"></A>##0%</td>
+<td valign=top><A NAME="TI2429"></A>500%</td>
+<td valign=top><A NAME="TI2430"></A>-500%</td>
+<td valign=top><A NAME="TI2431"></A>50%</td>
+</tr>
+<tr><td valign=top><A NAME="TI2432"></A>##0.00%</td>
+<td valign=top><A NAME="TI2433"></A>500.00%</td>
+<td valign=top><A NAME="TI2434"></A>-500.00%</td>
+<td valign=top><A NAME="TI2435"></A>50.00%</td>
+</tr>
+<tr><td valign=top><A NAME="TI2436"></A>0.00E+00</td>
+<td valign=top><A NAME="TI2437"></A>5.00E+00</td>
+<td valign=top><A NAME="TI2438"></A>-5.00E+00</td>
+<td valign=top><A NAME="TI2439"></A>5.00E-01</td>
+</tr>
+</table>
+<A NAME="TI2440"></A><h3>String display formats</h3>
+<A NAME="TI2441"></A><p>String display formats can have two sections. The first is
+required and contains the format for strings; the second is optional
+and specifies how to represent NULLs:<pre>string-format;null-format</pre>
+</p>
+<A NAME="TI2442"></A><p>In a string format mask, each at-sign (@) represents
+a character in the string and all other characters represent themselves.</p>
+<A NAME="TI2443"></A><h4>Example</h4>
+<A NAME="TI2444"></A><p>This format mask:<pre>[red](@@@) @@@-@@@@</pre>
+</p>
+<A NAME="TI2445"></A><p>displays the string 800YESCELT in red as:	<pre>(800) YES-CELT</pre>
+</p>
+<A NAME="TI2446"></A><h3>Date display formats</h3>
+<A NAME="TI2447"></A><p>Date display formats can have two sections. The first is required
+and contains the format for dates; the second is optional and specifies
+how to represent NULLs:<pre>date-format;null-format</pre>
+</p>
+<A NAME="TI2448"></A><h4>Special characters</h4>
+<A NAME="TI2449"></A><p>Characters that have special meaning in date display formats
+are:</p>
+<A NAME="TI2450"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI2451"></A>Character</th>
+<th align="left" valign=bottom><A NAME="TI2452"></A>Meaning</th>
+<th align="left" valign=bottom><A NAME="TI2453"></A>Example</th>
+</tr>
+<tr><td valign=top><A NAME="TI2454"></A>d</td>
+<td valign=top><A NAME="TI2455"></A>Day number with no leading zero</td>
+<td valign=top><A NAME="TI2456"></A>9</td>
+</tr>
+<tr><td valign=top><A NAME="TI2457"></A>dd</td>
+<td valign=top><A NAME="TI2458"></A>Day number with leading zero if appropriate</td>
+<td valign=top><A NAME="TI2459"></A>09</td>
+</tr>
+<tr><td valign=top><A NAME="TI2460"></A>ddd</td>
+<td valign=top><A NAME="TI2461"></A>Day name abbreviation</td>
+<td valign=top><A NAME="TI2462"></A>Mon</td>
+</tr>
+<tr><td valign=top><A NAME="TI2463"></A>dddd</td>
+<td valign=top><A NAME="TI2464"></A>Day name</td>
+<td valign=top><A NAME="TI2465"></A>Monday</td>
+</tr>
+<tr><td valign=top><A NAME="TI2466"></A>m</td>
+<td valign=top><A NAME="TI2467"></A>Month number with no leading zero</td>
+<td valign=top><A NAME="TI2468"></A>6</td>
+</tr>
+<tr><td valign=top><A NAME="TI2469"></A>mm</td>
+<td valign=top><A NAME="TI2470"></A>Month number with leading zero if appropriate</td>
+<td valign=top><A NAME="TI2471"></A>06</td>
+</tr>
+<tr><td valign=top><A NAME="TI2472"></A>mmm</td>
+<td valign=top><A NAME="TI2473"></A>Month name abbreviation</td>
+<td valign=top><A NAME="TI2474"></A>Jun</td>
+</tr>
+<tr><td valign=top><A NAME="TI2475"></A>mmmm</td>
+<td valign=top><A NAME="TI2476"></A>Month name</td>
+<td valign=top><A NAME="TI2477"></A>June</td>
+</tr>
+<tr><td valign=top><A NAME="TI2478"></A>yy</td>
+<td valign=top><A NAME="TI2479"></A>Two-digit year</td>
+<td valign=top><A NAME="TI2480"></A>97</td>
+</tr>
+<tr><td valign=top><A NAME="TI2481"></A>yyyy</td>
+<td valign=top><A NAME="TI2482"></A>Four-digit year</td>
+<td valign=top><A NAME="TI2483"></A>1997</td>
+</tr>
+</table>
+<A NAME="TI2484"></A><p>Colons, slashes, and spaces display as entered in the mask.</p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>About 2-digit years</span> <A NAME="TI2485"></A>If users specify a 2-digit year in a report or form, InfoMaker assumes
+the date is the 20th century if the year is greater than or equal
+to 50. If the year is less than 50, InfoMaker assumes the 21st
+century. For example:</p>
+<A NAME="TI2486"></A>	1/1/85 is interpreted as January 1, 1985. <br> 	1/1/40
+is interpreted as January 1, 2040.</p>
+<A NAME="TI2487"></A><h4>Date keywords</h4>
+<A NAME="TI2488"></A><p>You can use the following keywords as date display formats
+when you want InfoMaker to determine an appropriate format to use:<A NAME="TI2489"></A>
+<ul>
+<li class=fi>[ShortDate]</li>
+<li class=ds>[LongDate]
+</li>
+</ul>
+</p>
+<A NAME="TI2490"></A><p>The format used is determined by the regional settings for
+date in the registry. Note that [Date] is not
+a valid display format.</p>
+<A NAME="TI2491"></A><h4>Examples</h4>
+<A NAME="TI2492"></A><p>The following table shows how the date Friday, January 30,
+1998, displays when different format masks are applied:</p>
+<A NAME="TI2493"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI2494"></A>Format</th>
+<th align="left" valign=bottom><A NAME="TI2495"></A>Displays</th>
+</tr>
+<tr><td valign=top><A NAME="TI2496"></A>[red]m/d/yy</td>
+<td valign=top><A NAME="TI2497"></A>1/30/98 in red</td>
+</tr>
+<tr><td valign=top><A NAME="TI2498"></A>d-mmm-yy</td>
+<td valign=top><A NAME="TI2499"></A>30-Jan-98</td>
+</tr>
+<tr><td valign=top><A NAME="TI2500"></A>dd-mmmm</td>
+<td valign=top><A NAME="TI2501"></A>30-January</td>
+</tr>
+<tr><td valign=top><A NAME="TI2502"></A>mmm-yy</td>
+<td valign=top><A NAME="TI2503"></A>Jan-98</td>
+</tr>
+<tr><td valign=top><A NAME="TI2504"></A>dddd, mmm d, yyyy</td>
+<td valign=top><A NAME="TI2505"></A>Friday, Jan 30, 1998</td>
+</tr>
+</table>
+<A NAME="TI2506"></A><h3>Time display formats</h3>
+<A NAME="TI2507"></A><p>Time display formats can have two sections. The first is required
+and contains the format for times; the second is optional and specifies
+how to represent NULLs:<pre>time-format;null-format</pre>
+</p>
+<A NAME="TI2508"></A><h4>Special characters</h4>
+<A NAME="TI2509"></A><p>Characters that have special meaning in time display formats
+are:</p>
+<A NAME="TI2510"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI2511"></A>Character</th>
+<th align="left" valign=bottom><A NAME="TI2512"></A>Meaning</th>
+</tr>
+<tr><td valign=top><A NAME="TI2513"></A>h</td>
+<td valign=top><A NAME="TI2514"></A>Hour with no leading zero (for example,
+1)</td>
+</tr>
+<tr><td valign=top><A NAME="TI2515"></A>hh</td>
+<td valign=top><A NAME="TI2516"></A>Hour with leading zero if appropriate
+(for example, 01)</td>
+</tr>
+<tr><td valign=top><A NAME="TI2517"></A>m</td>
+<td valign=top><A NAME="TI2518"></A>Minute with no leading zero (must follow
+h or hh)</td>
+</tr>
+<tr><td valign=top><A NAME="TI2519"></A>mm</td>
+<td valign=top><A NAME="TI2520"></A>Minute with leading zero if appropriate
+(must follow h or hh)</td>
+</tr>
+<tr><td valign=top><A NAME="TI2521"></A>s</td>
+<td valign=top><A NAME="TI2522"></A>Second with no leading zero (must follow
+m or mm)</td>
+</tr>
+<tr><td valign=top><A NAME="TI2523"></A>ss</td>
+<td valign=top><A NAME="TI2524"></A>Second with leading zero (must follow
+m or mm)</td>
+</tr>
+<tr><td valign=top><A NAME="TI2525"></A>ffffff</td>
+<td valign=top><A NAME="TI2526"></A>Microseconds with no leading zeros. You
+can enter one to six f's; each f represents a fraction
+of a second (must follow s or ss)</td>
+</tr>
+<tr><td valign=top><A NAME="TI2527"></A>AM/PM</td>
+<td valign=top><A NAME="TI2528"></A>Two-character, uppercase abbreviation
+(AM or PM as appropriate)</td>
+</tr>
+<tr><td valign=top><A NAME="TI2529"></A>am/pm</td>
+<td valign=top><A NAME="TI2530"></A>Two-character, lowercase abbreviation
+(am or pm as appropriate)</td>
+</tr>
+<tr><td valign=top><A NAME="TI2531"></A>A/P</td>
+<td valign=top><A NAME="TI2532"></A>One-character, uppercase abbreviation
+(A or P as appropriate)</td>
+</tr>
+<tr><td valign=top><A NAME="TI2533"></A>a/p</td>
+<td valign=top><A NAME="TI2534"></A>One-character, lowercase abbreviation
+(a or p as appropriate)</td>
+</tr>
+</table>
+<A NAME="TI2535"></A><p>Colons, slashes, and spaces display as entered in the mask.</p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>24-hour format is the default</span> <A NAME="TI2536"></A>Times display in 24-hour format unless you specify AM/PM,
+am/pm, A/P, or a/p.</p>
+<A NAME="TI2537"></A><h4>Time keyword</h4>
+<A NAME="TI2538"></A><p>You can use the following keyword as a time display format:</p>
+<A NAME="TI2539"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI2540"></A>Keyword</th>
+<th align="left" valign=bottom><A NAME="TI2541"></A>Meaning</th>
+</tr>
+<tr><td valign=top><A NAME="TI2542"></A>[Time]</td>
+<td valign=top><A NAME="TI2543"></A>The time format specified in the Microsoft
+Windows Control Panel</td>
+</tr>
+</table>
+<A NAME="TI2544"></A><h4>Examples</h4>
+<A NAME="TI2545"></A><p>The following table shows how the time 9:45:33:234567 PM displays
+when different format masks are applied:</p>
+<A NAME="TI2546"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI2547"></A>Format</th>
+<th align="left" valign=bottom><A NAME="TI2548"></A>Displays</th>
+</tr>
+<tr><td valign=top><A NAME="TI2549"></A>h:mm AM/PM</td>
+<td valign=top><A NAME="TI2550"></A>9:45 PM</td>
+</tr>
+<tr><td valign=top><A NAME="TI2551"></A>hh:mm A/P</td>
+<td valign=top><A NAME="TI2552"></A>09:45 P</td>
+</tr>
+<tr><td valign=top><A NAME="TI2553"></A>h:mm:ss am/pm</td>
+<td valign=top><A NAME="TI2554"></A>9:45:33 pm</td>
+</tr>
+<tr><td valign=top><A NAME="TI2555"></A>h:mm</td>
+<td valign=top><A NAME="TI2556"></A>21:45</td>
+</tr>
+<tr><td valign=top><A NAME="TI2557"></A>h:mm:ss</td>
+<td valign=top><A NAME="TI2558"></A>21:45:33</td>
+</tr>
+<tr><td valign=top><A NAME="TI2559"></A>h:mm:ss:f</td>
+<td valign=top><A NAME="TI2560"></A>21:45:33:2</td>
+</tr>
+<tr><td valign=top><A NAME="TI2561"></A>h:mm:ss:fff</td>
+<td valign=top><A NAME="TI2562"></A>21:45:33:234</td>
+</tr>
+<tr><td valign=top><A NAME="TI2563"></A>h:mm:ss:ffffff</td>
+<td valign=top><A NAME="TI2564"></A>21:45:33:234567</td>
+</tr>
+<tr><td valign=top><A NAME="TI2565"></A>m/d/yy h:mm</td>
+<td valign=top><A NAME="TI2566"></A>1/30/98 21:45</td>
+</tr>
+</table>
+

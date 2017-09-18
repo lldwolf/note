@@ -1,0 +1,58 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+Operator precedence in DataWindow expressions </TITLE>
+</HEAD>
+<BODY>
+<A NAME="CAIBAFDCX"></A><h1>Operator precedence in DataWindow expressions </h1>
+<A NAME="TI5895"></A><p>To ensure predictable results, operators in a DataWindow expression
+are evaluated in a specific order of precedence. When operators
+have the same precedence, they are evaluated from left to right. </p>
+<A NAME="TI5896"></A><p>The following table lists the operators in descending order
+of precedence:</p>
+<A NAME="TI5897"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI5898"></A>Operator</th>
+<th align="left" valign=bottom><A NAME="TI5899"></A>Purpose</th>
+</tr>
+<tr><td valign=top><A NAME="TI5900"></A>( )</td>
+<td valign=top><A NAME="TI5901"></A>Grouping</td>
+</tr>
+<tr><td valign=top><A NAME="TI5902"></A>^</td>
+<td valign=top><A NAME="TI5903"></A>Exponentiation</td>
+</tr>
+<tr><td valign=top><A NAME="TI5904"></A>*, /</td>
+<td valign=top><A NAME="TI5905"></A>Multiplication and division</td>
+</tr>
+<tr><td valign=top><A NAME="TI5906"></A>+, -</td>
+<td valign=top><A NAME="TI5907"></A>Addition and subtraction; string concatenation</td>
+</tr>
+<tr><td valign=top><A NAME="TI5908"></A>IN,LIKE,BETWEEN</td>
+<td valign=top><A NAME="TI5909"></A>SQL SELECT statement conditions</td>
+</tr>
+<tr><td valign=top><A NAME="TI5910"></A>=, &gt;, &lt;, &lt;=, &gt;=, &lt;&gt;</td>
+<td valign=top><A NAME="TI5911"></A>Relational operators</td>
+</tr>
+<tr><td valign=top><A NAME="TI5912"></A>AND,OR</td>
+<td valign=top><A NAME="TI5913"></A>Logical and and logical or</td>
+</tr>
+<tr><td valign=top><A NAME="TI5914"></A>NOT</td>
+<td valign=top><A NAME="TI5915"></A>Logical negation</td>
+</tr>
+</table>
+<A NAME="TI5916"></A><h4>Overriding the precedence order</h4>
+<A NAME="TI5917"></A><p>Since expressions in parentheses are evaluated first, to override
+the precedence order, enclose expressions in parentheses. You can
+also use parentheses to clarify the order of evaluation. Within
+each set of parentheses, precedence order applies.</p>
+<A NAME="TI5918"></A><p>In the expression <b>x+y*a+b</b>, <b>y</b> is
+first multiplied by <b>a</b> (because
+multiplication has a higher precedence than addition). The result
+of the multiplication is then added to <b>x</b> and
+this result is then added to <b>b</b> (because
+the + operators are evaluated left to right).</p>
+<A NAME="TI5919"></A><p>To force evaluation in a different order, group expressions
+with parentheses. For example, in the expression <b>x+(y*(a+b))</b>,<b> a+b</b> is
+evaluated first. The sum  <b>a+b</b> is
+then multiplied by <b>y</b>, and this
+product is added to <b>x</b>.</p>
+

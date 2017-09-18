@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>TextEdit</title>
+<script type="text/javascript" src="../../../mylib/js/css.js"></script>
+</head>
+<body>
+<p id="title">TextEdit</p>
+
+<h1>基本信息</h1>
+<p>全路径：DevExpress.XtraEditors.TextEdit</p>
+<p>本控件可用作文本输入框。</p>
+<h1>常见操作</h1>
+<table width="90%">
+<tbody>
+	<tr>
+		<th>操作</th>
+		<th>实现方法</th>
+	</tr>
+	<tr>
+		<td>大写/小写模式</td>
+		<td>Properties.CharacterCasing</td>
+	</tr>
+	<tr>
+		<td>用作密码输入</td>
+		<td>Properties.PasswordChar，如设为 char.MinValue 则取消密码模式</td>
+	</tr>
+	<tr>
+		<td>选中文本</td>
+		<td>Select() 成员方法</td>
+	</tr>
+	<tr>
+		<td></td>
+		<td></td>
+	</tr>
+	<tr>
+		<td></td>
+		<td></td>
+	</tr>
+	<tr>
+		<td></td>
+		<td></td>
+	</tr>
+</tbody>
+</table>
+<h1>特殊操作</h1>
+<h2>用作数字输入</h2>
+<p>可有两种方式</p>
+<h3>方式一：自定义事件方法</h3>
+<p>将 Properties.Mask.MaskType 设为 Numeric</p>
+<p>EditValueChanging 事件</p>
+<pre>/// &lt;summary&gt;
+/// 
+/// &lt;/summary&gt;
+/// &lt;param name=&quot;sender&quot;&gt;控件&lt;/param&gt;
+/// &lt;param name=&quot;e&quot;&gt;&lt;/param&gt;
+/// &lt;param name=&quot;int_len&quot;&gt;整数部分长度&lt;/param&gt;
+/// &lt;param name=&quot;dec_len&quot;&gt;小数部分长度&lt;/param&gt;
+/// &lt;param name=&quot;allow_negotiative&quot;&gt;是否允许负数&lt;/param&gt;
+public static void LimitNumberEditInputLenght(object sender, DevExpress.XtraEditors.Controls.ChangingEventArgs e, int int_len, int dec_len, bool allow_negotiative)
+{
+	TextEdit editor = sender as TextEdit;
+	if (editor == null)
+		return;
+
+	string new_val = Convert.ToString(e.NewValue);
+	if (!allow_negotiative &amp;&amp; new_val.Contains(&quot;-&quot;))
+	{
+		e.Cancel = true;
+		return;
+	}
+
+	new_val = new_val.Replace(&quot;-&quot;, &quot;&quot;);
+	int p_dp = new_val.IndexOf('.');
+	int len1 = 0, len2 = 0;
+	if (p_dp &lt; 0)
+	{
+		len1 = new_val.Length;
+		len2 = 0;
+	}
+	else
+	{
+		len1 = p_dp;
+		len2 = new_val.Length - p_dp - 1;
+	}
+
+	if (len1 &gt; int_len || len2 &gt; dec_len)
+		e.Cancel = true;
+	else
+		e.Cancel = false;
+}</pre>
+<p>KeyUp事件，使其可允许为空值</p>
+
+</body>
+</html>

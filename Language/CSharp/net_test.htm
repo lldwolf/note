@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+	<script type="text/javascript" src="../css.js"></script>
+	<title>C# 笔记</title>
+</head>
+<body>
+	<p id="title">网格检测</p>
+	
+	<h1>检查响应时间</h1>
+	<div id="accordion-workbook-create">
+		<p><a href="#">查看代码</a></p>
+		<pre class="code" data-type="csharp">public static double PingTimeAverage(string host, int echoNum)
+{
+    long totalTime = 0;
+    int timeout = 500;
+    Ping pingSender = new Ping();
+
+    for (int i = 0; i < echoNum; i++)
+    {
+        PingReply reply = pingSender.Send(host, timeout);
+        if (reply.Status == IPStatus.Success)
+        {
+            totalTime += reply.RoundtripTime;
+        }
+    }
+    return totalTime / echoNum;
+}</pre></div>
+		
+</body>
+</html>

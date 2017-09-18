@@ -1,0 +1,127 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+Creating the extended attribute system tables in DB2 databases</TITLE>
+</HEAD>
+<BODY>
+<A NAME="CCJDFDBI"></A><h1>Creating the extended attribute system tables in DB2 databases</h1>
+<A NAME="TI1069"></A><p>This section describes how InfoMaker creates the extended
+attribute system tables in your DB2 database to store extended attribute
+information. It then explains how to use the DB2SYSPB.SQL script
+to create the extended attribute system tables outside InfoMaker.</p>
+<A NAME="TI1070"></A><p>You can use the DB2SYSPB.SQL script if you are connecting
+to the IBM DB2 family of databases through any of the following
+database interfaces:<A NAME="TI1071"></A>
+<ul>
+<li class=fi>ODBC
+interface </li>
+<li class=ds>Sybase DirectConnect interface
+</li>
+</ul>
+</p>
+<A NAME="CCJBAIEI"></A><h2>Creating the extended attribute system tables</h2>
+<A NAME="TI1072"></A><p>When you create or modify a table in InfoMaker, the information
+you provide is stored in five system tables in your database. These
+system tables contain extended attribute information such as the
+text to use for labels and column headings, validation rules, display
+formats, and edit styles. (These system tables are different from
+the system tables provided by your DB2 database.)</p>
+<A NAME="TI1073"></A><p>By default, the extended attribute system tables are created
+automatically the first time a user connects to the database using InfoMaker.</p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>When you use the DirectConnect interface</span> <A NAME="TI1074"></A>When you use the DirectConnect interface, the extended attribute
+system tables are <i>not</i>
+ created automatically.
+You must run the DB2SYSPB.SQL script to create the system tables
+as described in <A HREF="connimp29.htm#X-ref354461628">"Using the DB2SYSPB.SQL
+script"</A>. </p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To ensure that the extended attribute system tables
+are created with the proper access rights:</p>
+<ol><li class=fi>
+Make sure the first person to connect to
+the database with InfoMaker has sufficient authority to create
+tables and grant permissions to PUBLIC.<br><br>
+This means that the first person to connect to the database
+should log in as the database owner, database administrator, system
+user, system administrator, or system owner, as specified by your
+DBMS.<br><br></li></ol>
+<br><A NAME="X-ref354461628"></A><h2>Using the DB2SYSPB.SQL script</h2>
+<A NAME="TI1075"></A><h4>Why do this</h4>
+<A NAME="TI1076"></A><p>If you are a system administrator at a DB2 site, you may prefer
+to create the extended attribute system tables outside InfoMaker for
+two reasons:<A NAME="TI1077"></A>
+<ul>
+<li class=fi>The first user to connect
+to the DB2 database using InfoMaker may not have the proper authority
+to create tables.</li>
+<li class=ds>When InfoMaker creates the extended attribute system
+tables, it places them in the default tablespace. This may not be
+appropriate for your needs.
+</li>
+</ul>
+</p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>When using the DirectConnect interface</span> <A NAME="TI1078"></A>You <i>must</i>
+ create the extended attribute
+system tables outside InfoMaker if you are using the DirectConnect
+interface. You need to decide which database and tablespace should
+store the system tables. You may also want to grant update privileges
+only to specific developers or groups.</p>
+<A NAME="TI1079"></A><h4>What you do</h4>
+<A NAME="TI1080"></A><p>To create the extended attribute system tables, you run the
+DB2SYSPB.SQL script outside InfoMaker. This script contains SQL
+commands that create and initialize the system tables with the table
+owner and tablespace you specify.</p>
+<A NAME="TI1081"></A><h4>Where to find DB2SYSPB.SQL</h4>
+<A NAME="TI1082"></A><p>The DB2SYSPB.SQL script is in the \SERVER directory
+on the InfoMaker CD-ROM. This directory contains server-side installation
+components and is <i>not installed</i>
+ with InfoMaker on
+your computer. </p>
+<A NAME="TI1083"></A><p>You can access the DB2SYSPB.SQL script directly from your
+computer's CD-ROM drive or you can copy it to your computer.</p>
+<A NAME="TI1084"></A><p>Use the following procedure <i>from the database server</i>
+ to
+create the extended attribute system tables in a DB2 database outside InfoMaker.
+This procedure assumes you are accessing the DB2SYSPB.SQL script
+from the product CD in your computer's CD-ROM drive (drive
+D).</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To create the extended attribute system tables
+in a DB2 database outside InfoMaker:</p>
+<ol><li class=fi>
+Log in to the database server or gateway
+as the system administrator.<br><br></li>
+<li class=ds>
+Insert the InfoMaker CD-ROM into the computer's
+CD-ROM drive.<br><br></li>
+<li class=ds>
+Use any text editor to modify D:\SERVER\DB2SYSPB.SQL
+for your environment. You can do any of the following:<A NAME="TI1085"></A>
+<ul>
+<li class=fi>Change all instances of PBOwner
+to another name. <br><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Specifying SYSIBM is prohibited</span> <A NAME="TI1086"></A>You cannot specify SYSIBM as the table owner. This is prohibited
+by DB2.
+<br>
+</li>
+<li class=ds>Change all instances of database.tablespace to the
+appropriate value.</li>
+<li class=ds>Add appropriate SQL statement delimiters for the
+tool you are using to run the script.</li>
+<li class=ds>Remove comments and blank lines if necessary. 
+</li>
+</ul>
+
+                      <br><br><p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>PBCatalogOwner</span> <A NAME="TI1087"></A>If you changed PBOwner to another name in the DB2SYSPB.SQL script,
+you must specify the new owner name as the value for the PBCatalogOwner
+DBParm parameter in your database profile.</p>
+<A NAME="TI1088"></A>For instructions, see PBCatalogOwner in the
+online Help. </p>
+</li>
+<li class=ds>
+Save any changes you made to the DB2SYSPB.SQL
+script.<br><br></li>
+<li class=ds>
+Execute the DB2SYSPB.SQL script from the database
+server or gateway using the SQL tool of your choice.<br><br></li></ol>
+<br><A NAME="TI1089"></A><A NAME="TI1090"></A><p>This part describes how to establish, manage, and troubleshoot
+database connections. </p>
+

@@ -1,0 +1,95 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>控制语句</title>
+<script type="text/javascript" src="css.js"></script>
+</head>
+
+<body>
+<h1>第N章 控制语句</h1>
+<hr />
+<h2>N.1 变量声明 </h2>
+<p>格式如下：</p>
+<pre>Dim 变量名 As 数据类型</pre>
+<h2>N.2 函数声明</h2>
+<p>格式如下：</p>
+<pre>[Private | Public] Sub 函数名([ByVal | ByRef] 参数名 As 数据类型)
+[Private | Public] Function 函数名([ByVal | ByRef] 参数名 As 数据类型) As 返回值数据类型</pre>
+<p>对于有返回值的方法，设置返回值的语法为：</p>
+<pre>函数名 = 返回值</pre>
+<p>如果要手动退出函数，使用语句End或Exit Sub、Exit Function，如下所示：</p>
+<pre>End
+Exit Sub
+Exit Function</pre>
+<h2>N.3 流程控制语句</h2>
+<h3>N.3.1 分支</h3>
+<p>单行If格式：</p>
+<pre>If 条件 Then ...</pre>
+<p>常规If格格：</p>
+<pre>If 条件 Then
+...
+[ElseIf 条件 Then
+...]
+Else
+...
+End If</pre>
+<p>Case 格式：</p>
+<pre>Select Case 变量
+	Case 值1
+		...
+	Case 值2, 值3
+		...
+	Else
+		...
+End Select</pre>
+<h3>N.3.2 循环</h3>
+<p>While循环：</p>
+<pre>While 条件
+	[...]
+Wend</pre>
+<p>Loop循环</p>
+<pre>Do {While | Until} 条件
+	[...]
+	[Exit Do]
+	[...]
+Loop</pre>
+<p>For循环</p>
+<pre>For 计数变量 = 初始值 To 结束值 [Step 步长]
+	[...]
+	[Exit For]
+	[...]
+Next [计数变量]</pre>
+<p>For Each循环</p>
+<pre><strong>For Each</strong> <em>element</em> <strong>In</strong> <em>group</em>
+	[...]
+	[<strong>Exit For</strong>]
+	[...]
+<strong>Next</strong> [<em>element</em>]</pre>
+<h2>N.4 异常处理</h2>
+<p>有如下3种方式：</p>
+<pre>On Error GoTo <em>line</em> 
+
+On Error Resume Next
+
+On Error GoTo 0</pre>
+<p>对第一种方式，<em>line</em>可为行号或行标签，如果发生一个运行时错误，则控件会跳到 line，激活错误处理程序</p>
+<p>对第二种方式，说明当一个运行时错误发生时，控件转到紧接着发生错误的语句之后的语句，并在此继续运行。访问对象时要使用这种形式而不使用 On Error GoTo。</p>
+<p>对第三种方式，禁止当前过程中任何已启动的错误处理程序。</p>
+<p>在错误未发生的时候，为了防止错误处理程序代码运行，请像在下段程序中那样，在紧靠着错误处理程序的前面写入 Exit Sub、Exit Function 或 Exit Property 语句。</p>
+<pre>Sub InitializeMatrix(Var1, Var2, Var3, Var4)
+    On Error GoTo ErrorHandler
+    . . .
+    Exit Sub
+ErrorHandler:
+    . . .
+    Resume Next
+End Sub</pre>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<script type="text/javascript" src="index.js"></script>
+</body>
+</html>

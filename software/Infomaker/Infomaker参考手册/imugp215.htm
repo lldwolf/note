@@ -1,0 +1,49 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+Page</TITLE>
+</HEAD>
+<BODY>
+<A NAME="CAIDEFAD"></A><A NAME="TI7406"></A><h1>Page</h1>
+<A NAME="TI7407"></A><p>
+<FORM>
+<INPUT
+ TYPE = "BUTTON"
+ VALUE = "Examples"
+ onClick = "window.location = 'imugp215.htm#EX67';">
+<INPUT
+  TYPE = "BUTTON"
+ VALUE = "See also"
+ onClick = "window.location = 'imugp215.htm#SA67';">
+</FORM>
+</p>
+<h3>Description</h3><A NAME="TI7408"></A><p>Gets the number of the current page.</p>
+
+<h3>Syntax</h3><pre><b>Page</b> ( )</pre>
+
+<h3>Return Values</h3><A NAME="TI7409"></A><p>Long. Returns the number of the current page.</p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Calculating the page count</span> <A NAME="TI7410"></A>The vertical size of the paper less the top and bottom margins
+is used to calculate the page count. When the print orientation
+is landscape, the vertical size of the paper is the shorter dimension
+of the paper.</p>
+
+<A NAME="EX67"></A><h3>Examples</h3><A NAME="TI7411"></A><p>This expression returns the number of the current
+page:<pre><i>Page</i> ()</pre>
+</p>
+<A NAME="TI7412"></A><p>In the DataWindow object or report's footer
+band, this expression for a computed field displays a string showing
+the current page number and the total number of pages in the report.
+The result has the format Page <i>n</i> of <i>total</i>:<pre><i>'</i> Page ' +  <i>Page</i> () + ' of ' + PageCount()</pre>
+</p>
+
+<A NAME="SA67"></A><h3>See Also</h3><A NAME="TI7413"></A><p><A NAME="TI7414"></A>
+<ul>
+<li class=fi><A HREF="imugp216.htm#CAIDBHFH">PageAcross</A></li>
+<li class=ds><A HREF="imugp217.htm#CAICGICF">PageCount</A></li>
+<li class=ds><A HREF="imugp218.htm#CAICCAGI">PageCountAcross</A>
+</li>
+</ul>
+</p>
+
+

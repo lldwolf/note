@@ -1,0 +1,302 @@
+'<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+	<title>DOS批处理</title>
+	<script type="text/javascript" src="../../mylib/js/css.js"></script>
+	<style type="text/css">
+		<!--
+		.style1
+		{
+			font-size: 12px;
+		}
+		-->
+	</style>
+</head>
+
+<body>
+	<p id="title">DOS批处理</p>
+	<h1>知识点</h1>
+	<h2>参数</h2>
+    <h3>参数说明</h3>
+	<p>%0 表示命统本身，%1 表示第1个参数，%2 表示第2个参数，以此类推</p>
+	<p>%name% 表示系统参数，可以系统的环境变量中设定，也可以以如下方式设定在当前命统窗口中使用的系统参数：</p>
+	<pre>SET 变量名=变量值</pre>
+	<p class="note">双百分号是在引用变量的时候加，在设置时不需要使用</p>
+	<h3>常用的系统参数</h3>
+	<table style="width: 80%">
+		<tr>
+			<th>参数</th>
+			<th>说明</th>
+		</tr>
+		<tr>
+			<td>%PATH%</td>
+			<td>系统搜索路径，不同的路径以分号 ; 隔开，可使用以下命令在现在路径上添加自己的路径：
+				<pre>SET PATH=my_path;%PATH%</pre>
+			</td>
+		</tr>
+		<tr>
+			<td>%OS%</td>
+			<td>当前操作系统</td>
+		</tr>
+		<tr>
+			<td>%CD%</td>
+			<td>当前路径，即返回 cd 命令的运结果</td>
+		</tr>
+		<tr>
+			<td>%DATE%</td>
+			<td>当前日期</td>
+		</tr>
+		<tr>
+			<td>%TIME%</td>
+			<td>当前时间</td>
+		</tr>
+       <tr>
+			<td>%~dp0</td>
+			<td>运行的命令所在的路径，例如 c:\temp\test.bat 将返回 c:\temp</td>
+		</tr>
+        <tr>
+			<td>%0, %1, %2, ...</td>
+			<td>%0 表示命统本身，%1 表示第1个参数，%2 表示第2个参数，以此类推</td>
+		</tr>
+        <tr>
+            <td>%*</td>
+            <td>表示命令后的所有参数字符串</td>
+        </tr>
+	</table>
+    <h3>输入参数个数</h3>
+    <p>DOS 不接直提供参数个数的值，不过可通如如下方式变能实现</p>
+    <pre class="code" data-type="sh">if "%2"=="" (
+    echo No more than 2 args.
+) else (
+	echo more than 2 args.
+)</pre>
+    <p>若确实想获得参数个数，可通过如下代码获得</p>
+    <pre class="code" data-type="sh">set argC=0
+for %%x in (%*) do Set /A argC+=1
+
+echo %argC%</pre>
+	<h2>打印信息</h2>
+	<p>使用 echo 打印需要的提示信息</p>
+	<p>使用 REM 进行代码注释</p>
+	<p>@echo off/on 用于开关是否显示执行的命令及结果</p>
+    <p>可使用如下代码打印空行</p>
+    <pre class="code" data-type="sh">echo.</pre>
+    <p>可使用 ^ 作为转义符来打印特殊字符，例如</p>
+    <pre class="code" data-type="sh">echo ^></pre>
+    <p>可使用如下代码以指定颜色打印</p>
+    <pre class="code" data-type="sh">@echo off
+SETLOCAL EnableDelayedExpansion
+for /F "tokens=1,2 delims=#" %%a in ('"prompt #$H#$E# &amp; echo on &amp; for %%b in (1) do rem"') do (
+  set "DEL=%%a"
+)
+
+:: 白底绿字
+call :ColorText 0A "Green"
+echo.
+goto :eof
+
+:ColorText
+echo off
+&lt;nul set /p ".=%DEL%" &gt; "%~2"
+findstr /v /a:%1 /R "^$" "%~2" nul
+del "%~2" &gt; nul 2&gt;&amp;1
+goto :eof</pre>
+	<h2>变量</h2>
+    <h3>简单使用</h3>
+	<pre class="code" data-type="sh">set AA=Hello
+echo %AA%</pre>
+    <h3>数学运算</h3>
+    <pre class="code" data-type="sh">set a=1
+set /A a+=1
+echo %a%</pre>
+	<h2>注释</h2>
+	<pre class="code" data-type="sh">:: commetns
+REM comments</pre>
+    <h2>IF 语句</h2>
+    <p>基本的 IF...ELSE... 如下所示</p>
+    <pre class="code" data-type="sh">set c=a
+
+if "%c%"=="a" (
+	echo yes
+) else if "%c%" == "b" (
+    echo na
+) else (
+    echo no
+)</pre>
+    <p>DOS 不支持 else if 语句，所以如果有需要可在 else 块中进行嵌套。如果嵌套太多请结合使用 IF 和 GOTO</p>
+    <p>可将多个 IF 写在一行进行 AND 逻辑，如下所示</p>
+    <pre class="code" data-type="sh">set c=a
+set d=b
+
+if "%c%"=="a" IF "%d%"=="a" (
+	echo yes
+)</pre>
+    <p>如需进行反判断，需使用 IF NOT 语句</p>
+    <p>如果需要在比较字符串时忽略大小写，可使用 /i 参数，如下所示</p>
+    <pre class="code" data-type="sh">set c=a
+
+if /i "%c%"=="A" (
+	echo yes
+)</pre>
+    <p>如果想进行数字比较，需使用专门的数字比较操作符，如下所示</p>
+    <pre class="code" data-type="sh">set c=1
+
+if %c% LSS 5 (
+	echo yes
+)</pre>
+    <p>可用的数字比较操作符如下所示</p>
+    <pre>EQU - 等于
+NEQ - 不等于
+LSS - 小于
+LEQ - 小于或等于
+GTR - 大于
+GEQ - 大于或等于</pre>
+    <h2>For 循环</h2>
+    <pre class="code" data-type="sh">set list=A B C
+for %%s in (%list%) do (
+	echo %%s
+)</pre>
+    <p>默认会按空格分组, 如果想使用其它分隔符, 如下所示:</p>
+    <pre class="code" data-type="sh">@echo off
+set list="A;B;C"
+for /F "delims=;" %%s in (%list%) do (
+	echo %%s
+)</pre>
+    <p>好像只打印了第一个:(</p>
+    <p>使用 for 循环，可以使用如下方式打印所有的输入参数</p>
+    <pre class="code" data-type="sh">for %%s in (%*) do (
+	echo %%s
+)</pre>
+    <p>有关 FOR 循环的更详细用法, 可参考以下链接</p>
+    <ul>
+        <li><a href="https://ss64.com/nt/for_l.html">FOR /L 数字循环</a></li>
+        <li><a href="https://ss64.com/nt/for_f.html">FORM /F 文件/文本 循环</a></li>
+    </ul>
+    <h2>子函数</h2>
+    <pre class="code" data-type="sh">@echo off
+call :sub_func "arg1"
+call :sub_func "arg2"
+
+goto :eof
+
+:sub_func
+echo argument is "%~1"
+goto :eof</pre>
+    <h2>检查执行结果</h2>
+    <p>下面代码如果执行失败则打印失败信息</p>
+    <pre class="code" data-type="sh">@ECHO OFF
+cmd/c dir xxxxx &gt; nul 2&gt;1
+
+if errorlevel 1 (
+    call :error &quot;Failed!"
+    goto :eof
+)
+
+ECHO Success.
+goto :eof
+
+:error
+ECHO %~1
+goto :eof</pre>
+    <p>上面 errorlevel 1 表示如果 errorlevel >= 1。如果想精确判断结果是否为 1，则使用</p>
+    <pre class="code" data-type="sh">if %errorlevel%==1</pre>
+    <h2>读取用户输入</h2>
+    <pre class="code" data-type="sh">set /p c=input a value:
+echo %c%</pre>
+    <h2>连续执行</h2>
+    <p>有时将多个 bat 放在同一个 bat 中执行时，第一个 bat 执行完就结束了。可以使用 cmd /c 连续执行，如下所示</p>
+    <pre class="code" data-type="sh">cmd /c 1.bat
+cmd /c 2.bat</pre>
+    <h2>不打开命令行窗后</h2>
+    <pre class="code" data-type="sh">START /B 1.bat</pre>
+    <p><a href="https://www.computerhope.com/starthlp.htm">START 详细用法</a></p>
+    <h2>退出</h2>
+    <pre class="code" data-type="sh">::退出执行但不关闭 Command 窗口
+exit /b 1</pre>
+    <h1>常用代码段</h1>
+    <h2>检查文件/文件夹是否存在</h2>
+    <pre class="code" data-type="sh">IF EXIST [folder] (
+    RD /S/Q [folder]
+)</pre>
+    <h2>不显示输出及错误输出</h2>
+    <pre class="code" data-type="sh">dir xxxxx &gt; nul 2&gt;1</pre>
+    <h2>msbuild 结果检测</h2>
+    <pre class="code" data-type="sh">@echo off
+SET PATH=C:\Windows\Microsoft.NET\Framework\v4.0.30319;%PATH%
+@echo on
+msbuild /property:Configuration=Release C:\temp\ConsoleApplication2\ConsoleApplication2.sln
+@echo off
+set BUILD_STATUS=%ERRORLEVEL% 
+if %BUILD_STATUS%==0 goto end 
+if not %BUILD_STATUS%==0 goto fail 
+ 
+:fail 
+echo FAIL!!!
+exit /b 1 
+ 
+:end 
+echo success!
+exit /b 0 </pre>
+	<h1>杂项</h1>
+	<h2>自动运行</h2>
+	<p>设置注册表项HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Command Processor下的AutoRun的值，可以使得开启DOS窗口后自动运行该命令，例如：将其值设为"color 3e"，则开启DOS窗口后自动变为绿底黄字。</p>
+	<h2>命令列表</h2>
+	<table style="width: 80%">
+		<tr>
+			<th style="width: 25%"><span class="style1">命令</span></th>
+			<th style="width: 75%"><span class="style1">说明</span></th>
+		</tr>
+		<tr>
+			<td><a href="#assoc">assoc</a></td>
+			<td>显示或修改文件扩展名关联</td>
+		</tr>
+		<tr>
+			<td>CD</td>
+			<td>切换目录</td>
+		</tr>
+		<tr>
+			<td><a href="#color">color</a></td>
+			<td>改变前景色和背景色（WIN2000新增）</td>
+		</tr>
+		<tr>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+		</tr>
+	</table>
+	<h2>命令详细解释</h2>
+	<h4><a id="assoc"></a>assoc</h4>
+	<p>显示或修改文件扩展名关联</p>
+	<pre>ASSOC [.ext[=[fileType]]]
+
+  .ext      指定跟文件类型关联的文件扩展名
+  fileType  指定跟文件扩展名关联的文件类型</pre>
+	<p>键入 ASSOC 而不带参数，显示当前文件关联。如果只用文件扩展名调用 ASSOC，则显示那个文件扩展名的当前文件关联。如果不为文件类型指定任何参数，命令会删除文件扩展名的关联。</p>
+	<p>例如: </p>
+	<pre>Assoc .pl=PerlScript 
+Ftype PerlScript=perl.exe %1 %* </pre>
+	<p>允许你启用以下Perl脚本: </p>
+	<pre>script.pl 1 2 3 </pre>
+	<p>如果不想键入扩展名，则键入以下字符串: </p>
+	<pre>set PATHEXT=.pl;%PATHEXT% </pre>
+	<p>被启动的脚本如下: </p>
+	<pre>script 1 2 3 </pre>
+	<h4><a id="color"></a>color</h4>
+	<p>用法:Color [attr] 其中attr为指定控制台输出的颜色属性 </p>
+	<p>颜色属性由两个十六进制数字指定—— 第一个为背景，第二个则为前景。每个数字可以为以下任何值之一:</p>
+	<pre>    0 = 黑色       8 = 灰色
+    1 = 蓝色       9 = 淡蓝色
+    2 = 绿色       A = 淡绿色
+    3 = 浅绿色     B = 淡浅绿
+    4 = 红色       C = 淡红色
+    5 = 紫色       D = 淡紫色
+    6 = 黄色       E = 淡黄色
+    7 = 白色       F = 亮白色</pre>
+	<p>如果没有给定任何参数，该命令会将颜色还原到CMD.EXE启动时的颜色。这个值来自当前控制台窗口、/T 命令行命令选项或DefaultColor注册表值。 </p>
+	<p>如果用相同的前景和背景颜色来执行Color命令，Color命令会将ErrorLevel设置为1。 </p>
+	<p>例如: "Color fc" 在亮白色上产生亮红色，试着输入一个“Color 02”，哈哈……你的屏幕的显示变成了黑底绿字，再也不是一成不变的黑底白字了</p>
+	<p>&nbsp; </p>
+	<p>&nbsp; </p>
+
+</body>
+</html>

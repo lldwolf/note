@@ -1,0 +1,137 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+Max</TITLE>
+</HEAD>
+<BODY>
+<A NAME="CAIECDJC"></A><A NAME="TI7179"></A><h1>Max</h1>
+<A NAME="TI7180"></A><p>
+<FORM>
+<INPUT
+ TYPE = "BUTTON"
+ VALUE = "Examples"
+ onClick = "window.location = 'imugp205.htm#EX57';">
+<INPUT
+  TYPE = "BUTTON"
+ VALUE = "See also"
+ onClick = "window.location = 'imugp205.htm#SA57';">
+</FORM>
+</p>
+<h3>Description</h3><A NAME="TI7181"></A><p>Gets the maximum value in the specified column.</p>
+
+<h3>Syntax</h3><pre><b>Max</b> ( <i>column</i> { FOR <i>range </i>{ DISTINCT { <i>expres1</i> {, <i>expres2</i> {, ... } } } } } )</pre>
+<A NAME="TI7182"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI7183"></A>Argument</th>
+<th align="left" valign=bottom><A NAME="TI7184"></A>Description</th>
+</tr>
+<tr><td valign=top><A NAME="TI7185"></A><i>column</i></td>
+<td valign=top><A NAME="TI7186"></A>The column for which you want the maximum
+value. <i>Column</i> can be the column name or the
+column number preceded by a pound sign (#). <i>Column</i> can
+also be an expression that includes a reference to the column. The
+data type of <i>column</i> must be numeric</td>
+</tr>
+<tr><td valign=top><A NAME="TI7187"></A>FOR <i>range</i>  (optional)</td>
+<td valign=top><A NAME="TI7188"></A>The data that will be included when the
+maximum value is found. For most presentation styles, values for <i>range</i> are:<A NAME="TI7189"></A><A NAME="TI7190"></A>
+<ul>
+<li class=fi>ALL -- (Default)
+The maximum value of all rows in <i>column</i></li>
+<li class=ds>GROUP <i>n</i> -- The maximum
+value of rows in <i>column</i> in the specified group.
+Specify the keyword GROUP followed by the group number: for example,
+GROUP 1</li>
+<li class=ds>PAGE -- The maximum value of the rows in <i>column</i> on
+a page
+</li>
+</ul>
+<A NAME="TI7191"></A>For Crosstabs, specify CROSSTAB for <i>range</i>:<A NAME="TI7192"></A><A NAME="TI7193"></A>
+<ul>
+<li class=fi>CROSSTAB -- (Crosstabs
+only) The maximum value of all rows in <i>column</i> in
+the crosstab
+</li>
+</ul>
+<A NAME="TI7194"></A>For Graph and OLE objects, specify one of the following:<A NAME="TI7195"></A><A NAME="TI7196"></A>
+<ul>
+<li class=fi>GRAPH -- (Graphs
+only) The maximum value in <i>column</i> in the range
+specified for the Rows option</li>
+<li class=ds>OBJECT -- (OLE objects only) The maximum
+value in <i>column</i> in the range specified for
+the Rows option
+</li>
+</ul>
+</td>
+</tr>
+<tr><td valign=top><A NAME="TI7197"></A>DISTINCT (optional)</td>
+<td valign=top><A NAME="TI7198"></A>Causes Max to consider only the distinct
+values in <i>column</i> when determining the largest
+value. For a value of <i>column</i>, the first row found
+with the value is used and other rows that have the same value are
+ignored</td>
+</tr>
+<tr><td valign=top><A NAME="TI7199"></A><i>expresn</i>  (optional)</td>
+<td valign=top><A NAME="TI7200"></A>One or more expressions that you want
+to evaluate to determine distinct rows. <i>Expresn</i> can
+be the name of a column, a function, or an expression</td>
+</tr>
+</table>
+
+<h3>Return Values</h3><A NAME="TI7201"></A><p>The data type of the column. Returns the maximum value in
+the rows of <i>column</i>. If you specify <i>range</i>,
+Max returns the maximum value in <i>column</i> in <i>range</i>.</p>
+
+<h3>Usage</h3><A NAME="TI7202"></A><p>If you specify <i>range</i>, Max determines
+the maximum value in <i>column</i> in <i>range</i>. If
+you specify DISTINCT, Max returns the maximum distinct value in <i>column</i>, or
+if you specify <i>expresn</i>, the maximum distinct
+value in <i>column</i> where the value of <i>expresn</i> is
+distinct.</p>
+<A NAME="TI7203"></A><p>For graphs and OLE objects, you do not select the range when
+you call the function. The range has already been determined by
+the Rows setting on the Data property page (the Range property),
+and the aggregation function uses that range. Settings for Rows
+include:</p>
+<A NAME="TI7204"></A><p><A NAME="TI7205"></A>
+<ul>
+<li class=fi>For the Graph or OLE
+presentation style, Rows is always All.</li>
+<li class=ds>For Graph controls, Rows can be All, Page, or Group.</li>
+<li class=ds>For OLE controls, Rows can be All, Current Row,
+Page, or Group. The available choices depend on the layer the control
+occupies.
+</li>
+</ul>
+</p>
+<A NAME="TI7206"></A><p>NULL values are ignored and are not considered in determining
+the maximum.</p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Not in validation rules or filter expressions</span> <A NAME="TI7207"></A>You cannot use this or other aggregate functions in validation
+rules or filter expressions.</p>
+<A NAME="TI7208"></A><p>Using an aggregate function cancels the effect of setting
+Retrieve Rows As Needed in the painter. To do the aggregation, a
+DataWindow object or report always retrieves all rows.</p>
+
+<A NAME="EX57"></A><h3>Examples</h3><A NAME="TI7209"></A><p>This expression returns the maximum of the values
+in the age column on the page:<pre><i>Max</i> (age for page)</pre>
+</p>
+<A NAME="TI7210"></A><p>This expression returns the maximum of the values
+in column 3 on the page:<pre><i>Max</i> (#3 for page)</pre>
+</p>
+<A NAME="TI7211"></A><p>This expression returns the maximum of the values
+in the column named age in group 1:<pre><i>Max</i> (age for group 1)</pre>
+</p>
+<A NAME="TI7212"></A><p>Assuming a DataWindow object displays the order number,
+amount, and line items for each order, this computed field returns
+the maximum of the order amount for the distinct order numbers:<pre><i>Max</i> (order_amt for all DISTINCT order_nbr)</pre>
+</p>
+
+<A NAME="SA57"></A><h3>See Also</h3><A NAME="TI7213"></A><p><A NAME="TI7214"></A>
+<ul>
+<li class=fi><A HREF="imugp208.htm#CAICGFBB">Min</A></li>
+<li class=ds> 
+</li>
+</ul>
+</p>
+
+

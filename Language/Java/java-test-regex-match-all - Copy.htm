@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+	<script type="text/javascript" src="../../mylib/js/css.js"></script>
+	<title>Java 练习题 - 调用 main 函数</title>
+</head>
+
+<body>
+	<p id="title">Java 练习题 - 调用 main 函数</p>
+	<h1>要求</h1>
+    <p>在 Java 中调用某个类的 main 函数</p>
+    <h1>示例代码</h1>
+    <pre class="code" data-type="java">
+public class A{
+    public static void main(String[] args)
+    {
+        //Main code
+    }
+}
+
+public class B{
+    void someMethod()
+    {
+        String[] args = {"a", "b"};
+        A.main(args);
+        System.out.println("Back to someMethod()");
+    }
+}</pre>
+	</body>
+</html>

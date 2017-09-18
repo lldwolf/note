@@ -1,0 +1,224 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+About crosstabs </TITLE>
+</HEAD>
+<BODY>
+<A NAME="X-ref352128827"></A><h1>About crosstabs </h1>
+<A NAME="TI3857"></A><p>Cross tabulation is a useful technique for analyzing data.
+By presenting data in a spreadsheet-like grid, a crosstab lets users view
+summary data instead of a long series of rows and columns. For example,
+in a sales report you might want to summarize the quarterly unit
+sales of each product.</p>
+<A NAME="TI3858"></A><p>In InfoMaker, you create crosstabs by using the Crosstab
+presentation style. When data is retrieved into the report,
+the crosstab processes all the data and presents the summary information
+that you have defined for it.</p>
+<A NAME="TI3859"></A><h4>An example</h4>
+<A NAME="TI3860"></A><p>Crosstabs are easiest to understand through an example. Consider
+the Printer table in the EAS Demo DB. It records quarterly unit sales
+of printers made by sales representatives in one year (this is the
+same data that was used to illustrate graphs in the preceding chapter):</p>
+<A NAME="TI3861"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI3862"></A>Rep</th>
+<th align="left" valign=bottom><A NAME="TI3863"></A>Quarter</th>
+<th align="left" valign=bottom><A NAME="TI3864"></A>Product</th>
+<th align="left" valign=bottom><A NAME="TI3865"></A>Units</th>
+</tr>
+<tr><td valign=top><A NAME="TI3866"></A>Simpson</td>
+<td valign=top><A NAME="TI3867"></A>Q1</td>
+<td valign=top><A NAME="TI3868"></A>Stellar</td>
+<td valign=top><A NAME="TI3869"></A>12</td>
+</tr>
+<tr><td valign=top><A NAME="TI3870"></A>Jones</td>
+<td valign=top><A NAME="TI3871"></A>Q1</td>
+<td valign=top><A NAME="TI3872"></A>Stellar</td>
+<td valign=top><A NAME="TI3873"></A>18</td>
+</tr>
+<tr><td valign=top><A NAME="TI3874"></A>Perez</td>
+<td valign=top><A NAME="TI3875"></A>Q1</td>
+<td valign=top><A NAME="TI3876"></A>Stellar</td>
+<td valign=top><A NAME="TI3877"></A>15</td>
+</tr>
+<tr><td valign=top><A NAME="TI3878"></A>Simpson</td>
+<td valign=top><A NAME="TI3879"></A>Q1</td>
+<td valign=top><A NAME="TI3880"></A>Cosmic</td>
+<td valign=top><A NAME="TI3881"></A>33</td>
+</tr>
+<tr><td valign=top><A NAME="TI3882"></A>Jones</td>
+<td valign=top><A NAME="TI3883"></A>Q1</td>
+<td valign=top><A NAME="TI3884"></A>Cosmic</td>
+<td valign=top><A NAME="TI3885"></A>5</td>
+</tr>
+<tr><td valign=top><A NAME="TI3886"></A>Perez</td>
+<td valign=top><A NAME="TI3887"></A>Q1</td>
+<td valign=top><A NAME="TI3888"></A>Cosmic</td>
+<td valign=top><A NAME="TI3889"></A>26</td>
+</tr>
+<tr><td valign=top><A NAME="TI3890"></A>Simpson</td>
+<td valign=top><A NAME="TI3891"></A>Q1</td>
+<td valign=top><A NAME="TI3892"></A>Galactic</td>
+<td valign=top><A NAME="TI3893"></A>6</td>
+</tr>
+<tr><td valign=top><A NAME="TI3894"></A>Jones</td>
+<td valign=top><A NAME="TI3895"></A>Q1</td>
+<td valign=top><A NAME="TI3896"></A>Galactic</td>
+<td valign=top><A NAME="TI3897"></A>2</td>
+</tr>
+<tr><td valign=top><A NAME="TI3898"></A>Perez</td>
+<td valign=top><A NAME="TI3899"></A>Q1</td>
+<td valign=top><A NAME="TI3900"></A>Galactic</td>
+<td valign=top><A NAME="TI3901"></A>1</td>
+</tr>
+<tr><td valign=top><A NAME="TI3902"></A>.</td>
+<td valign=top><A NAME="TI3903"></A>.</td>
+<td valign=top><A NAME="TI3904"></A>.</td>
+<td valign=top><A NAME="TI3905"></A>.</td>
+</tr>
+<tr><td valign=top><A NAME="TI3906"></A>.</td>
+<td valign=top><A NAME="TI3907"></A>.</td>
+<td valign=top><A NAME="TI3908"></A>.</td>
+<td valign=top><A NAME="TI3909"></A>.</td>
+</tr>
+<tr><td valign=top><A NAME="TI3910"></A>.</td>
+<td valign=top><A NAME="TI3911"></A>.</td>
+<td valign=top><A NAME="TI3912"></A>.</td>
+<td valign=top><A NAME="TI3913"></A>.</td>
+</tr>
+<tr><td valign=top><A NAME="TI3914"></A>Simpson</td>
+<td valign=top><A NAME="TI3915"></A>Q4</td>
+<td valign=top><A NAME="TI3916"></A>Stellar</td>
+<td valign=top><A NAME="TI3917"></A>30</td>
+</tr>
+<tr><td valign=top><A NAME="TI3918"></A>Jones</td>
+<td valign=top><A NAME="TI3919"></A>Q4</td>
+<td valign=top><A NAME="TI3920"></A>Stellar</td>
+<td valign=top><A NAME="TI3921"></A>24</td>
+</tr>
+<tr><td valign=top><A NAME="TI3922"></A>Perez</td>
+<td valign=top><A NAME="TI3923"></A>Q4</td>
+<td valign=top><A NAME="TI3924"></A>Stellar</td>
+<td valign=top><A NAME="TI3925"></A>36</td>
+</tr>
+<tr><td valign=top><A NAME="TI3926"></A>Simpson</td>
+<td valign=top><A NAME="TI3927"></A>Q4</td>
+<td valign=top><A NAME="TI3928"></A>Cosmic</td>
+<td valign=top><A NAME="TI3929"></A>60</td>
+</tr>
+<tr><td valign=top><A NAME="TI3930"></A>Jones</td>
+<td valign=top><A NAME="TI3931"></A>Q4</td>
+<td valign=top><A NAME="TI3932"></A>Cosmic</td>
+<td valign=top><A NAME="TI3933"></A>52</td>
+</tr>
+<tr><td valign=top><A NAME="TI3934"></A>Perez</td>
+<td valign=top><A NAME="TI3935"></A>Q4</td>
+<td valign=top><A NAME="TI3936"></A>Cosmic</td>
+<td valign=top><A NAME="TI3937"></A>48</td>
+</tr>
+<tr><td valign=top><A NAME="TI3938"></A>Simpson</td>
+<td valign=top><A NAME="TI3939"></A>Q4</td>
+<td valign=top><A NAME="TI3940"></A>Galactic</td>
+<td valign=top><A NAME="TI3941"></A>3</td>
+</tr>
+<tr><td valign=top><A NAME="TI3942"></A>Jones</td>
+<td valign=top><A NAME="TI3943"></A>Q4</td>
+<td valign=top><A NAME="TI3944"></A>Galactic</td>
+<td valign=top><A NAME="TI3945"></A>3</td>
+</tr>
+<tr><td valign=top><A NAME="TI3946"></A>Perez</td>
+<td valign=top><A NAME="TI3947"></A>Q4</td>
+<td valign=top><A NAME="TI3948"></A>Galactic</td>
+<td valign=top><A NAME="TI3949"></A>6</td>
+</tr>
+</table>
+<A NAME="TI3950"></A><p>This information can be summarized in a crosstab. Here is
+a crosstab that shows unit sales by printer for each quarter:</p>
+<br><img src="images/cros02.gif">
+<A NAME="TI3951"></A><p>The first-quarter sales of Cosmic printers displays in the
+first data cell (as you can see from the data in the Printer table
+shown before the crosstab, in Q1 Simpson sold 33 units, Jones sold
+5 units, and Perez sold 26 units--totaling 64 units). InfoMaker calculates
+each of the other data cells the same way.</p>
+<A NAME="TI3952"></A><p>To create this crosstab, all you have to do is tell InfoMaker which
+database columns contain the raw data for the crosstab and InfoMaker does
+all the data summarization automatically.</p>
+<A NAME="TI3953"></A><h4>What crosstabs do</h4>
+<A NAME="TI3954"></A><p>Crosstabs perform two-dimensional analysis:<A NAME="TI3955"></A>
+<ul>
+<li class=fi>The first dimension is displayed as columns across
+the crosstab.<br>
+In the preceding crosstab, it is the quarter, whose values
+are in the Quarter column in the database table.<br></li>
+<li class=ds>The second dimension is displayed as rows down the
+crosstab.<br>
+In the preceding crosstab, it is the type of printer, whose
+values are in the Product column in the database table.<br>
+</li>
+</ul>
+</p>
+<A NAME="TI3956"></A><p>Each cell in a crosstab is the intersection of a column (the
+first dimension) and a row (the second dimension). The numbers that
+appear in the cells are calculations based on both dimensions. In
+the preceding crosstab, it is the sum of unit sales for the quarter
+in the corresponding column and printer in the corresponding row.</p>
+<A NAME="TI3957"></A><p>Crosstabs also include summary statistics. The preceding crosstab
+totals the sales for each quarter in the last row and the total
+sales for each printer in the last column.</p>
+<A NAME="TI3958"></A><h4>How crosstabs are implemented in InfoMaker</h4>
+<A NAME="TI3959"></A><p>Crosstabs in InfoMaker are implemented as grid reports.
+Because crosstabs are grid reports, you can resize and reorder
+columns when you run the crosstab.</p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Running a crosstab</span> <A NAME="TI3960"></A>You can run a crosstab by previewing it in the Report painter
+and by running it from an executable file.</p>
+<A NAME="TI3961"></A><h2>Two types of crosstabs</h2>
+<A NAME="TI3962"></A><p>There are two types of crosstabs:<A NAME="TI3963"></A>
+<ul>
+<li class=fi>Dynamic</li>
+<li class=ds>Static
+</li>
+</ul>
+</p>
+<A NAME="TI3964"></A><h4>Dynamic crosstabs</h4>
+<A NAME="TI3965"></A><p>With <strong>dynamic crosstabs</strong>, InfoMaker builds
+all the columns and rows in the crosstab dynamically when you run
+the crosstab. The number of columns and rows in the crosstab match
+the data that exists at execution time.</p>
+<A NAME="TI3966"></A><p>Using the preceding crosstab as an example, if a new printer
+was added to the database after the crosstab was saved, there would
+be an additional row in the crosstab when it is run. Similarly,
+if one of the quarter's results was deleted from the database
+after the crosstab was saved, there would be one less column in
+the crosstab when it is run.</p>
+<A NAME="TI3967"></A><p>By default, crosstabs you build are dynamic.</p>
+<A NAME="TI3968"></A><h4>Static crosstabs</h4>
+<A NAME="TI3969"></A><p><strong>Static crosstabs</strong> are quite different.</p>
+<A NAME="TI3970"></A><p>With static crosstabs, InfoMaker establishes the columns
+in the crosstab based on the data in the database when you <i>define</i>
+ the
+crosstab (it does this by retrieving data from the database when
+you initially define the crosstab). No matter what values are in
+the database when you later run the crosstab, the crosstab will
+always have the same columns as when you defined it.</p>
+<A NAME="TI3971"></A><p>Using the preceding crosstab as an example, if there were
+four quarters in the database when you defined and saved the crosstab,
+there would always be four columns (Q1, Q2, Q3, and Q4) in the crosstab
+at execution time, even if the number of columns changed in the
+database.</p>
+<A NAME="TI3972"></A><h4>Advantages of dynamic crosstabs</h4>
+<A NAME="TI3973"></A><p>In most cases, you will want to use dynamic crosstabs, for
+the following reasons:<A NAME="TI3974"></A>
+<ul>
+<li class=fi>You
+can define dynamic crosstabs very quickly because no database access
+is required at definition time.</li>
+<li class=ds>Dynamic crosstabs always use the current data to
+build the columns and rows in the crosstab. Static crosstabs show
+a snapshot of columns as they were when the crosstab was defined.</li>
+<li class=ds>Dynamic crosstabs are easy to modify: all properties
+for the dynamically built columns are replicated during execution
+automatically. With static crosstabs, you must work with one column
+at a time.
+</li>
+</ul>
+</p>
+

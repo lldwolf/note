@@ -1,0 +1,37 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+Len</TITLE>
+</HEAD>
+<BODY>
+<A NAME="DWFLen"></A><A NAME="TI7013"></A><h1>Len</h1>
+<A NAME="TI7014"></A><p>
+<FORM>
+<INPUT
+ TYPE = "BUTTON"
+ VALUE = "Examples"
+ onClick = "window.location = 'imugp198.htm#EX50';">
+</FORM>
+</p>
+<h3>Description</h3><A NAME="TI7015"></A><p>Reports the length of a string.</p>
+
+<h3>Syntax</h3><pre><b>Len</b> ( <i>string</i> )</pre>
+<A NAME="TI7016"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI7017"></A>Argument</th>
+<th align="left" valign=bottom><A NAME="TI7018"></A>Description</th>
+</tr>
+<tr><td valign=top><A NAME="TI7019"></A><i>string</i></td>
+<td valign=top><A NAME="TI7020"></A>The string for which you want the length</td>
+</tr>
+</table>
+
+<h3>Return Values</h3><A NAME="TI7021"></A><p>Long. Returns a long containing the length of <i>string</i> if
+it succeeds and -1 if an error occurs.</p>
+
+<A NAME="EX50"></A><h3>Examples</h3><A NAME="TI7022"></A><p>This expression returns 0:<pre><i>Len</i> ("")</pre>
+</p>
+<A NAME="TI7023"></A><p>This validation rule tests that the value the user
+entered is fewer than 20 characters:<pre><i>Len</i> (GetText()) &lt; 20</pre>
+</p>
+
+

@@ -1,0 +1,51 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+Now</TITLE>
+</HEAD>
+<BODY>
+<A NAME="CAIBGAFI"></A><A NAME="TI7385"></A><h1>Now</h1>
+<A NAME="TI7386"></A><p>
+<FORM>
+<INPUT
+ TYPE = "BUTTON"
+ VALUE = "Examples"
+ onClick = "window.location = 'imugp213.htm#EX65';">
+<INPUT
+  TYPE = "BUTTON"
+ VALUE = "See also"
+ onClick = "window.location = 'imugp213.htm#SA65';">
+</FORM>
+</p>
+<h3>Description</h3><A NAME="TI7387"></A><p>Obtains the current time based on the system time of the client
+machine.</p>
+
+<h3>Syntax</h3><pre><b>Now</b> ( )</pre>
+
+<h3>Return Values</h3><A NAME="TI7388"></A><p>Time. Returns the current time based on the system time of
+the client machine.</p>
+
+<h3>Usage</h3><A NAME="TI7389"></A><p>Use Now to compare a time to the system time or to display
+the system time on the screen. The timer interval specified for
+the report or form determines the frequency at which the value of
+Now is updated. For example, if the timer interval is 1 second,
+it is updated every second.</p>
+
+<A NAME="EX65"></A><h3>Examples</h3><A NAME="TI7390"></A><p>This expression returns the current system time:<pre><i>Now</i> ()</pre>
+</p>
+<A NAME="TI7391"></A><p>This expression sets the column value to 8:00 when
+the current system time is before 8:00 and to the current time if
+it is after 8:00:<pre>If(<i>Now</i> () &lt; 08:00:00, '08:00:00', String(<i>Now</i> ()))</pre>
+</p>
+
+<A NAME="SA65"></A><h3>See Also</h3><A NAME="TI7392"></A><p><A NAME="TI7393"></A>
+<ul>
+<li class=fi><A HREF="imugp183.htm#CAIDFCIA">If</A></li>
+<li class=ds><A HREF="imugp255.htm#CAICAIAI">Year</A></li>
+<li class=ds> 
+</li>
+</ul>
+</p>
+
+

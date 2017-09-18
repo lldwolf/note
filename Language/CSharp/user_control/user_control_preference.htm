@@ -1,0 +1,63 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>定义控件的外观</title>
+<script type="text/javascript" src="../css.js"></script>
+</head>
+
+<body>
+<h1>N.1 定义控件的外观</h1>
+<hr />
+<p>定义控件的外观，主要是重载它的OnPaint函数，该函数中定义了如何绘制控件。有关绘图的详细操作，可参考本书的GDI绘图一章。</p>
+<p>要注意的是绘图时使用的坐标为相对于控件的坐标，即坐标系是建立在控件上的，以左上角为原点，X向右递增，Y向下递增。</p>
+<p>下面仅给出一个例子，模拟绘制一个文本框（只有外观）。</p>
+<pre>public class MyTextBox : Control
+{
+	public MyTextBox()
+	{
+		this.Init();
+	}
+
+	private void Init()
+	{
+		this.Size = new Size(200, 100);
+		this.BackColor = Color.White;
+	}
+
+	private void DrawMe(Graphics g)
+	{
+		Pen pen = new Pen(Color.FromArgb(0x81, 0x7f, 0x82));
+		g.DrawLine(pen, new Point(0, 0), new Point(this.Width - 2, 0));
+		g.DrawLine(pen, new Point(0, 0), new Point(0, this.Height - 2));
+
+		pen = new Pen(Color.FromArgb(0x40, 0x42, 0x41));
+		g.DrawLine(pen, new Point(1, 1), new Point(this.Width - 3, 1));
+		g.DrawLine(pen, new Point(1, 1), new Point(1, this.Height - 3));
+
+		pen = new Pen(Color.FromArgb(0xd5, 0xd1, 0xc8));
+		g.DrawLine(pen, new Point(1, this.Height - 2), new Point(this.Width - 2, this.Height - 2));
+		g.DrawLine(pen, new Point(this.Width - 2, 1), new Point(this.Width - 2, this.Height - 2));
+
+		pen = new Pen(Color.White);
+		g.DrawLine(pen, new Point(0, this.Height - 1), new Point(this.Width - 1, this.Height - 1));
+		g.DrawLine(pen, new Point(this.Width - 1, 0), new Point(this.Width - 1, this.Height - 1));
+
+		Brush brush = new SolidBrush(this.BackColor);
+		g.FillRectangle(brush, new Rectangle(2, 2, this.Width - 4, this.Height - 4));
+
+	}
+
+	protected override void OnPaint(PaintEventArgs e)
+	{
+		base.OnPaint(e);
+
+		this.DrawMe(e.Graphics);
+	}
+}</pre>
+<p>效果如下图所示：</p>
+<p><img src="images/user_control_textbox_preference.jpg" width="300" height="187" /></p>
+<p>&nbsp;</p>
+<p style="text-align:center "><a href="user_controls.htm">返回</a></p>
+</body>
+</html>

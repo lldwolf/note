@@ -1,0 +1,156 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+Creating an application</TITLE>
+</HEAD>
+<BODY>
+<A NAME="X-ref307909502"></A><h1>Creating an application</h1>
+<A NAME="TI5336"></A><p>When you create an application, all the reports, forms, and
+pipelines you include must be in one library (PBL). In the Library
+painter, you can move or copy reports, forms, and pipelines from
+one library to another as needed.</p>
+<A NAME="TI5337"></A><p>For information about moving or copying objects,
+see <A HREF="imugp22.htm#CAICGJAJ">Chapter 2, "Working with Libraries"</A>.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To create an application:</p>
+<ol><li class=fi>
+Connect to the database that the executable
+will use.<br><br></li>
+<li class=ds>
+Open the Library painter and the library containing
+the objects you want to include in the application.<br><br></li>
+<li class=ds>
+Select Design&gt;Create Executable from
+the menu bar.<br><br>
+If you are creating your first application in the current
+library, the Create Executable dialog box displays.<br><br><br><img src="images/wwapp010.gif"><br>
+
+If you have created applications in the current library before,
+a message box displays asking whether you want to reuse the objects
+in the most recently created application and avoid starting from
+scratch.<br><br>
+For information, see <A HREF="imugp130.htm#X-ref308517796">"Reusing an application"</A>.<br><br></li>
+<li class=ds>
+Enter a title that will be used in the title bar
+of the running application.<br><br></li>
+<li class=ds>
+Name your application's executable file
+by filling in the Executable File Name box.<br><br>
+The filename you supply is the name of the executable file
+that will be created. You can use a short or long filename with
+or without spaces. Be sure to retain the EXE file extension.<br><br></li>
+<li class=ds>
+To specify the location of the executable file,
+click the Browse button and navigate to the correct folder.<br><br></li>
+<li class=ds>
+Click the Browse button next to the Executable
+Icon box to assign an icon to the executable file.<br><br>
+The Select Icon dialog box displays.<br><br></li>
+<li class=ds>
+Navigate to an ICO file and click Open.<br><br>
+The icon you choose will be used if you create a shortcut
+for the executable file and when you minimize the executable.<br><br>
+You return to the Create Executable dialog box. The following
+example shows the dialog box filled in.<br><br><br><img src="images/Wwapp020.gif"><br>
+</li>
+<li class=ds>
+Click Next.<br><br>
+The Select Items dialog box displays listing all the reports,
+forms, and pipelines in the library you are using for your application.<br><br></li>
+<li class=ds>
+Select the reports, forms, and pipelines you want
+to package in the application.<br><br><br><img src="images/wwapp030.gif"><br>
+</li>
+<li class=ds>
+Click Next.<br><br>
+The Executable Items dialog box displays, listing all reports,
+forms, and pipelines you have selected for the executable file:<br><br><br><img src="images/wwapp040.gif"><br>
+
+In the Executable Items dialog box, you can define the properties
+of a toolbar button for any of the items in the executable. Then
+in the application you can run the report, form, or pipeline by
+simply clicking the toolbar button.<br><br>
+By default, InfoMaker creates an Objects menu in the application
+that lists all reports, forms, and pipelines. If you do not specify
+button text for an object, the object name displays in the Objects
+menu.<br><br>
+InfoMaker also creates a File menu in the application. You
+can select File&gt;Open Form, File&gt;Open Report, or
+File&gt;Open Pipeline and then select a form, report, or pipeline
+from the list that displays. <br><br><p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>To quickly prototype an application</span> <A NAME="TI5338"></A>The remaining steps describe how to define text, MicroHelp,
+and pictures for the application's toolbar buttons. You
+can create an application quickly by clicking Finish now. After
+you test your prototype, you can reuse the application definition
+and finish the remaining steps (which define the toolbar buttons).</p>
+</li>
+<li class=ds>
+If you want a toolbar button for a report, form,
+or pipeline, specify a picture for the button, the text you want
+to show on the button, and MicroHelp text that displays when the
+button is clicked:<br><br>
+<A NAME="TI5339"></A>
+<ol>
+</li>
+<li class=ds>Select the report,
+form, or pipeline in the Executable Items dialog box.</li>
+<li class=ds>In the Picture dropdown listbox, select the picture
+you want to display in the button for the report, form, or pipeline.
+The image you choose displays next to the listbox.</li>
+<li class=ds>In the Text box, type the text you want to display
+in the button for the report, form, or pipeline. Up to 14 characters
+will display on a button.</li>
+<li class=ds>In the MicroHelp box, type the MicroHelp text you
+want to display when the user of the executable selects the button:<br><img src="images/wwapp050.gif">
+
+</li>
+</ol>
+<br><br>
+Most of the time you should provide text for a button. If
+no button text is provided, the object name displays as the button
+text and in the list of objects in the Objects menu.<br><br></li>
+<li class=ds>
+If you want to omit a report from the list of
+reports in the generated application so that users cannot run it
+as a standalone report, select the report and then select the Hide
+Report checkbox. This is useful for reports that have been included
+only to support a:<A NAME="TI5340"></A>
+<ul>
+<li class=fi>DropDownDataWindow edit
+style</li>
+<li class=ds>Report added to a form</li>
+<li class=ds>Report nested in another report
+</li>
+</ul>
+
+                    <br><br></li>
+<li class=ds>
+When you have defined all the toolbar items, click
+Finish.<br><br></li></ol>
+<br><A NAME="TI5341"></A><h4>What happens</h4>
+<A NAME="TI5342"></A><p>InfoMaker creates two files:</p>
+<A NAME="TI5343"></A><p><A NAME="TI5344"></A>
+<ul>
+<li class=fi>The executable file
+with the name you supplied.</li>
+<li class=ds>An initialization file with the same name. For example,
+if you created the executable file SALES.EXE, InfoMaker also creates
+a file named SALES.INI. The initialization file records which database
+is used by the executable file.
+</li>
+</ul>
+</p>
+<A NAME="TI5345"></A><p>For information about running an application,
+see <A HREF="imugp131.htm#X-ref307909508">"Running an application"</A>.</p>
+<A NAME="TI5346"></A><h4>Identifying your application</h4>
+<A NAME="TI5347"></A><p>By default, InfoMaker includes brand information to identify
+your application when a user displays the Help&gt;About window.
+You can make modify the application's initialization file
+to customize the information that identifies your application.</p>
+<A NAME="TI5348"></A><p>For information, see <A HREF="imugp131.htm#BFCBEBHJ">"Identifying your application"</A>.</p>
+<A NAME="TI5349"></A><h4>An application includes a query governor</h4>
+<A NAME="TI5350"></A><p>InfoMaker includes a query governor in an InfoMaker application automatically.
+The query governor lets you specify the maximum number of rows to
+be retrieved and the maximum time for retrieval.</p>
+<A NAME="TI5351"></A><p>For more information, see <A HREF="imugp131.htm#BFCCBCCI">"Using the query governor
+in an application"</A>.</p>
+

@@ -1,0 +1,27 @@
+BODY {
+	SCROLLBAR-FACE-COLOR: #dddddd; SCROLLBAR-HIGHLIGHT-COLOR: #eeeeee; SCROLLBAR-SHADOW-COLOR: #777777; COLOR: #000000; SCROLLBAR-TRACK-COLOR: #e9e5c9; FONT-FAMILY: Verdana, Geneva, Arial, Helvetica, sans-serif; SCROLLBAR-DARKSHADOW-COLOR: #000000; SCROLLBAR-BASE-COLOR: #000000; scrollbar-3d-light-color: #000000
+}
+A {
+	FONT-SIZE: 10px; COLOR: #222288; FONT-FAMILY: Verdana, Geneva, Arial, Helvetica, sans-serif; TEXT-DECORATION: none
+}
+A:hover {
+	FONT-SIZE: 10px; COLOR: #3333cc; FONT-FAMILY: Verdana, Geneva, Arial, Helvetica, sans-serif; TEXT-DECORATION: none
+}
+.toplvl {
+	FONT-WEIGHT: bold; FONT-SIZE: 10px; CURSOR: pointer; COLOR: #222288; FONT-FAMILY: Verdana, Geneva, Arial, Helvetica, sans-serif
+}
+.seclvl {
+	FONT-SIZE: 10px; CURSOR: pointer; COLOR: #222288; FONT-FAMILY: Verdana, Geneva, Arial, Helvetica, sans-serif
+}
+.tab {
+	BORDER-TOP: #d0d0d0 1px solid; FONT-WEIGHT: bold; FONT-SIZE: 10px; BACKGROUND: #eeeeee; COLOR: #000000; BORDER-BOTTOM: #000000 1px solid; FONT-FAMILY: Verdana, Geneva, Arial, Helvetica, sans-serif
+}
+.tabselected {
+	BORDER-RIGHT: #000000 1px solid; BORDER-TOP: #000000 1px solid; FONT-WEIGHT: bold; FONT-SIZE: 10px; BACKGROUND: #ffffff; BORDER-LEFT: #000000 1px solid; COLOR: #000000; BORDER-BOTTOM: 0px; FONT-FAMILY: Verdana, Geneva, Arial, Helvetica, sans-serif
+}
+UL {
+	FONT-SIZE: 10px; COLOR: #000000; FONT-FAMILY: Verdana, Geneva, Arial, Helvetica, sans-serif
+}
+.normaltxt {
+	FONT-SIZE: 10px; COLOR: #000000; FONT-FAMILY: Verdana, Geneva, Arial, Helvetica, sans-serif
+}

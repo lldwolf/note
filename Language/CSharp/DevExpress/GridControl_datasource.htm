@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>DevExpress.XtraGrid.GridControl</title>
+<script type="text/javascript" src="../../../mylib/js/css.js"></script>
+
+<style type="text/css">
+.first_class {font-family:宋体; font-weight:bold; font-size:16px; text-align:center; layout-flow:vertical-ideographic}
+.second_class {font-weight: bold}
+</style>
+</head>
+
+<body>
+<p id="title">GridControl - DataSource</p>
+
+<h1>Overview</h1>
+<h2>设置</h2>
+<p>通过 GridControl.DataSource 属性可设置其数据源。凡实现 System.ComponentModel.IBindingList 的接口的对象均可作为其数据源。</p>
+<p>不过，作为 IBindingList 的成员对象（例如, DataTable 的成员对象为 DataRow），可选择性的实现如下接口：</p>
+<ul>
+	<li>IEditableObject：支持编辑、取消编辑、提交编辑的功能</li>
+	<li>IDataErrorInfo：支持数据验证功能，具体参见“数据验证”部分</li>
+</ul>
+<p>C# 中提供的常用数据源对象有：DataTable, List&lt;T&gt;, ArrayList，BindingList&lt;T&gt;。其中，DataRow 实现了 IEditableObject 和 IDataErrorInfo 接口</p>
+
+<h2>Common DataSource</h2>
+<p><b>常用数据源及说明</b></p>
+<table width="90%">
+    <tr>
+        <th>&nbsp</th>
+        <th>复杂类型</th>
+        <th>新增</th>
+        <th>修改</th>
+        <th>删除</th>
+        <th>数据校验</th>
+        <th>Comments</th>
+    </tr>
+    <tr>
+        <th style="text-align:left">List&lt;T&gt;/ArrayList/Array</th>
+        <td>Y</td>
+        <td>N</td>
+        <td>Y</td>
+        <td>N</td>
+        <td>Manual</td>
+        <td>常用于简单的数据展示</td>
+    </tr>
+    <tr>
+        <th style="text-align:left">BindingList&lt;T&gt;</th>
+        <td>Y</td>
+        <td>Y</td>
+        <td>Y</td>
+        <td>Y</td>
+        <td>Manual</td>
+        <td>实现简单，定制灵活，是使用自定义对象作为数据源的推荐选择</td>
+    </tr>
+    <tr>
+        <th style="text-align:left">CollectionBase + IBindingList</th>
+        <td>Y</td>
+        <td>Manual</td>
+        <td>Manual</td>
+        <td>Manual</td>
+        <td>Manual</td>
+        <td>可实现最灵活的配置，但主要是用与 .net 1.1，.net 2.0 版本以后可以使用BindingList&lt;T&gt;取代</td>
+    </tr>
+    <tr>
+        <th style="text-align:left">DataTable</th>
+        <td>N</td>
+        <td>Y</td>
+        <td>Y</td>
+        <td>Y</td>
+        <td>Y</td>
+        <td>实现简单，功能强大。</td>
+    </tr>
+    <tr>
+        <th style="text-align:left">DataView</th>
+        <td>N</td>
+        <td>N</td>
+        <td>N</td>
+        <td>N</td>
+        <td>Y</td>
+        <td>仅用于数据展示</td>
+    </tr>
+</table>
+<h2>取值</h2>
+<p>数据源改变后，可通过 GridControl.RefreshDataSource 方法刷新数据源</p>
+<p>初学者经常遇到的一个困惑就是如何从 GridControl 中获取数据源本身的信息。数据源中的列并不一定都显示在表格中，GridView 中提供了 GetRow, GetRowCellValue, GetRowCellDisplayText 这三个方法</p>
+<ul>
+	<li>GetRowCellDisplayText：获取指定单元格显示的文本，这个最简单</li>
+	<li>GetRowCellValue：获取指定单元格的实际值，实际值与显示值时有可能不一样的，GridControl 为实现这一点提供了相当丰富的功能。例如：对于 bool 型值，可能显示文本为 Yes/No。该函数返回类型为 object，开发人员许手工转换为实际值。</li>
+	<li>GetRow：获取指定行对象，返回类型为 object，须手工转换为实际类型。例如，如果数据源类型为 DataTable，返回的类型为 DataRowView（不是 DataRow，切记，可通过 DataRowView.Row 获取对应的 DataRow 对象），如果数据源为 List&lt;T&gt;，则返回的类型为 T</li>
+</ul>
+<p>作为参数，行标识(RowHandle)为 int 型，从0开始计数，我们可通过 GridView.FocusedRowHandle 取焦点所在行，但值得注意的是，对于新插入的行，RowHandle的值为一个很大的负数（-2147483647，即FFFFFFFF）。</p>
+<p>作为参数，列标识可为 GridColumn 对象或对应的 FieldName，</p>
+<h1>BindingList&lt;T&gt;</h1>
+<h2>Overview</h2>
+<p>DevExpress 中的实例使用CollectionBase作为自定义IBindingList实现的基类。实际上，使用BindingList&lt;T&gt;更加简单。</p>
+<p>BindingList对于POJO类型没有要求，不需要实现某些特定的接口。但要注意，需绑定到Grid的字段，必须声明为Property（有getter方法）</p>
+<h2>AddNewCore</h2>
+<p>每当在Grid中新加一行时，BindingList&lt;T&gt;会自动创建一个对象并加到List中。由于调用的是无参构造函数，因此如果需要对新建对象进行初始化，需重载AddNewCore方法，示例代码如下：</p>
+<pre>class TestPojo
+{
+	public string Id { get; set; }
+}
+
+class TestPojoList : BindingList&lt;TestPojo&gt;
+{
+	protected override object AddNewCore()
+	{
+		TestPojo pojo = base.AddNewCore() as TestPojo;
+		pojo.Id = System.Guid.NewGuid().ToString();
+		return pojo;
+	}
+}</pre>
+<p>有时需要完全重写AddNewCore方法。例如如果需要在生成新行时，加入的对象是子类，示例代码如下：</p>
+<pre>class TestPojo
+{
+	public string Id { get; set; }
+}
+
+class SubTestPojo : TestPojo
+{
+}
+
+class TestPojoList : BindingList&lt;TestPojo&gt;
+{
+	protected override object AddNewCore()
+	{
+		SubTestPojo pojo = new SubTestPojo();
+		pojo.Id = System.Guid.NewGuid().ToString();
+		this.Items.Add(pojo);
+		return pojo;
+	}
+}</pre>
+<h1>复杂数据类型</h1>
+<h2>显示图片</h2>
+<pre>DataTable tb = new DataTable();
+DataColumn col = tb.Columns.Add(&quot;img&quot;, typeof(byte[]));   //一定要显式声明类型
+DataColumn co2 = tb.Columns.Add(&quot;txt&quot;, typeof(string));			
+
+Stream fs = File.OpenRead(@&quot;C:\file.png&quot;);
+Image img = Image.FromStream(fs);
+DataRow row = tb.NewRow();
+MemoryStream ms = new MemoryStream();
+img.Save(ms, ImageFormat.Jpeg);
+ms.Seek(0, SeekOrigin.Begin);
+byte[] buf = new byte[ms.Length];
+ms.Read(buf, 0, buf.Length);
+row[0] = buf;
+row[1] = &quot;1\r\n2\r\n3&quot;;
+tb.Rows.Add(row);
+this.gridControl1.DataSource = tb;</pre>
+<h1>Common Interface</h1>
+<h2>IEditableObject</h2>
+<p>实现IEditableObject接口后，用户可通过按两下ESC键取消当前更改。DataTable 自动实现该接口。BindingList的实现可参考下例</p>
+<p><a href="sample/GridControl_IEditableObject.zip">Sample Code With BindingList&lt;T&gt;</a></p>
+<h2>IDataErrorInfo - Support Error Notification</h2>
+<script type="text/javascript" src="grid_index.js"></script>
+</body>
+</html>

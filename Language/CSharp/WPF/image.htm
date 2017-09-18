@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+	<script type="text/javascript" src="../../../mylib/js/css.js"></script>
+	<title>C#.net使用手册</title>
+</head>
+<body>
+	<p id="title">图形图象</p>
+
+
+	<h1>Image 标签</h1>
+	<h2>使用资源</h2>
+	<p>在 Resources 目录下加入 logo.PNG 图象文件，将其 Build Action 设为 Resource</p>
+	<pre class="code" data-type="xml">&lt;Image Source=&quot;/GollfTookit;component/Resources/logo.PNG&quot; Stretch=&quot;None&quot; /&gt;</pre>
+	<h2>使用 Converter 进行绑定</h2>
+	<pre class="code" data-type="csharp">public class ExtLargeImageConverter : IValueConverter
+	{
+		object IValueConverter.Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+		{
+			return new BitmapImage(new Uri(string.Format("/WpfApplication1;component/Resources/{0}.png", value), UriKind.RelativeOrAbsolute));
+		}
+	}</pre>
+	
+<pre class="code" data-type="xml">&lt;local:ExtSmallImageConverter x:Key=&quot;smallIconConverter&quot; /&gt;
+&lt;Image Width=&quot;16&quot;
+				Height=&quot;16&quot;
+				Stretch=&quot;Uniform&quot;
+				Source=&quot;{Binding Path=MyFiel Converter={StaticResource smallIconConverter}}&quot; /&gt;</pre>
+	<h2>图像模糊的处理方法</h2>
+	<p>在wpf中使用Image时，时常会出现图像模糊的情况，有两种方法可以解决这一问题： </p>
+	<p>1.设置Image的SnapsToDevicePixels属性为true。</p>
+	<pre class="code" data-type="xml">&lt;Image Source=&quot;images/OrderedList.png&quot; Width=&quot;20&quot; Height=&quot;20&quot; SnapsToDevicePixels=&quot;True&quot; /&gt;</pre>
+	<p>2.设置附加属性RenderOptions.BitmapScalingMode="NearestNeighbor"</p>
+	<pre class="code" data-type="xml">&lt;Image Source=&quot;images/OrderedList.png&quot; Width=&quot;20&quot; Height=&quot;20&quot; RenderOptions.BitmapScalingMode=&quot;NearestNeighbor&quot; /&gt;</pre>
+	<p>这个附加属性也可以放在window中，这样就对整个窗体的所有image对象都起作用了。</p>
+	<pre class="code" data-type="xml">&lt;WindowRenderOptions.BitmapScalingMode=&quot;NearestNeighbor&quot; /&gt;</pre>
+
+</body>
+</html>

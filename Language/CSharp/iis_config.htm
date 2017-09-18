@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>IIS配置</title>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+<p id="title">IIS配置</p>
+
+<h1>IIS配置</h1>
+<h2>安装IIS </h2>
+<p>首先要保证操作系统已安装IIS，对于Windows系统的服务器版操作系统，默认安装包括IIS，而对于个人版操作系统，则默认情况下不安装IIS。因此，首先需要检查你的操作系统是否已安装了IIS。判断方式为在控制面板的管理工具中看看有没有“Internet 服务管理器”这一项。如果没有的话，表示IIS尚未安装。</p>
+<p>安装方式为在控制面板的“添加/删除程序”中，选择“添加/删除Windows组件”，选择“Internet信息服务(IIS)”项即可</p>
+<h2>安装ASP.NET</h2>
+<p>正常的安装流程为先安装IIS，再安装.net framework，如果顺序装反了，则在运行ASP.NET程序时会提示：</p>
+<pre data-type="output">用于运行 ASP.NET 的进程帐户必须具有对 IIS 元数据库(如 IISservernameW3SVC)的读访问权。</pre>
+<p>补救措施为运行如下命令：</p>
+<pre class="code" data-type="csharp">aspnet_regiis -i</pre>
+<p>aspnet_regiis.exe位于路径“C:\WINNT\Microsoft.NET\Framework\v2.0.50727”下（视操作系统路径和.net版本不同而异），该命令的完整帮助如下所示：</p>
+<pre data-type="output">在本地计算机上安装和卸载 ASP.NET 的管理实用工具(2.0.50727)。
+Copyright (c) Microsoft Corporation. All rights reserved.
+
+
+                               -- ASP.NET 注册选项 --
+
+-i          安装此版本的 ASP.NET，并更新 IIS 元数据库根处的脚本映射和根以下的所有脚本映射。将现有的较低版本的脚本映射升级到此版本。
+
+-ir         安装此版本的 ASP.NET，仅注册。请不要更新 IIS 中的脚本映射。
+
+-iru        安装此版本的 ASP.NET。如果有任何现有的应用程序使用 ASP.NET，则不会更新 IIS 中的脚本映射。
+
+-enable     使用 -i、-ir 或 -r 指定 -enable 以后，将在 IIS 安全控制台(IIS 6.0 或更高版本)中启用ASP.NET。
+
+-disable    使用 -i、-ir 或 -r 指定 -disable 以后，将在 IIS 安全控制台(IIS 6.0或更高版本)中禁用ASP.NET。
+
+-s &lt;path&gt;   在指定的路径以递归方式安装此版本的脚本映射。
+            例如，aspnet_regiis.exe -s W3SVC/1/ROOT/SampleApp1
+
+-sn &lt;path&gt;  在指定的路径以非递归方式安装此版本的脚本映射。
+
+-r          安装此版本的 ASP.NET，并更新 IIS
+            元数据库根处的脚本映射和根以下的所有脚本映射。无论原始版本是什么，都将现有的脚本映射升级到此版本。
+
+-u          卸载此版本的 ASP.NET。将此版本现有的脚本映射重新映射到相应计算机上安装的其余 ASP.NET 版本中最高的版本。
+
+-ua         卸载计算机上所有版本的 ASP.NET。
+
+-k &lt;path&gt;   从指定的路径中以递归方式移除所有版本的 ASP.NET 的所有脚本映射。
+            例如，aspnet_regiis.exe -k W3SVC/1/ROOT/SampleApp1
+
+-kn &lt;path&gt;  从指定的路径中以非递归方式移除所有版本的 ASP.NET 的所有脚本映射。
+
+-lv         列出计算机上安装的所有版本的 ASP.NET，状态和安装路径也一并列出。
+
+-lk         列出所有 IIS 元数据库键的所有路径(连同版本在内)，ASP.NET 的脚本映射是在这些元数据库键进行的。那些从父键继承了
+            ASP.NET 脚本映射的键不会显示。
+
+-c          将此版本的客户端脚本安装到每个 IIS 站点目录的 aspnet_client 子目录中。
+
+-e          从每个 IIS 站点目录的 aspnet_client 子目录中移除此版本的客户端脚本。
+
+
+-ea         从每个 IIS 站点目录的 aspnet_client 子目录中移除所有版本的客户端脚本。
+
+-ga &lt;user&gt;  为指定的用户或用户组授予权限，使其可以访问 IIS 元数据库和 ASP.NET 使用的其他目录。
+
+
+
+                                  -- 配置加密选项 --
+
+-pe 节       对配置节进行加密。可选参数:
+            [-prov provider] 使用此提供程序进行加密。
+            [-app virtual-path]
+            在此虚拟路径加密。虚拟路径必须以正斜杠开头。如果此虚拟路径为“/”，则表示站点的根目录。如果未指定 -app，则对根目录下的
+            web.config 进行加密。
+            [-site site-name-or-ID] 在 -app 中指定的虚拟路径的站点。如果未指定，将使用默认网站。
+            [-location sub-path] 位置子路径。
+            [-pkm] 对 machine.config 而不是 web.config 进行加密/解密。
+
+-pd 节       对配置节进行解密。可选参数:
+            [-app virtual-path]
+            在此虚拟路径解密。虚拟路径必须以正斜杠开头。如果此虚拟路径为“/”，则表示站点的根目录。如果未指定 -app，则对根目录下的
+            web.config 进行解密。
+            [-site site-name-or-ID] 在 -app 中指定的虚拟路径的站点。如果未指定，将使用默认网站。
+            [-location sub-path] 位置子路径。
+            [-pkm] 对 machine.config 而不是 web.config 进行加密/解密。
+
+-pef 节 web-app-physical-dir
+            对配置节进行加密。可选参数:
+            [-prov provider] 使用此提供程序进行加密。
+
+-pdf 节 web-app-physical-dir
+            对配置节进行解密。
+
+-pc 容器      在 ContainerName 中创建一个 RSA 密钥对。可选参数:
+            [-size key-size] Key-size。默认值为 1024。
+            [-pku] 是用户容器而不是计算机容器。
+            [-exp] 使私钥可导出。
+            [-csp provider] 要使用的 Csp 提供程序。
+
+-pz 容器      删除 ContainerName。可选参数:
+            [-pku] 是用户容器而不是计算机容器。
+
+-pi 容器文件    从 Xml 文件中导入一个 RSA 密钥对。可选参数:
+            [-pku] 是用户容器而不是计算机容器。
+            [-exp] 创建可导出的密钥。
+            [-csp provider] 要使用的 Csp 提供程序。
+
+-px 容器文件    向 Xml 文件导出一个 RSA 密钥对。可选参数:
+            [-pku] 是用户容器而不是计算机容器。
+            [-pri] 包括私钥。
+            [-csp provider] 要使用的 Csp 提供程序。
+
+-pa 容器帐户    向容器中添加对帐户的访问。参数:
+            [-pku] 是用户容器而不是计算机容器。
+            [-csp provider] 要使用的 Csp 提供程序。
+            [-full] 添加完全访问(默认为读访问)。
+
+-pr 容器帐户    从容器中移除对帐户的访问。参数:
+            [-pku] 是用户容器而不是计算机容器。
+            [-csp provider] 要使用的 Csp 提供程序。
+
+
+
+                                 -- 配置远程访问选项 --
+
+-config+    启用对配置的远程访问。
+
+-config-    禁用对配置的远程访问。</pre>
+<p>常用选项：</p>
+<ul>
+  <li>-i：重新安装ASP.NET</li>
+  <li>-lv：查看按装的ASP.NET版本号</li>
+</ul>
+<div class="tableSection">
+  <table style="width:100%">
+    <tbody>
+      <tr>
+        <th>选项 </th>
+        <th>说明 </th>
+      </tr>
+      <tr>
+        <td><p><b>-c</b> </p></td>
+        <td><p>将 ASP.NET 的客户端脚本（如客户端验证脚本）安装到每个 Internet 信息服务 (IIS) 站点目录的 aspnet_client 子目录中。</p>
+            <p>只安装与 Aspnet_regiis.exe 关联的 ASP.NET 版本的客户端脚本。</p></td>
+      </tr>
+      <tr>
+        <td><p><b>-disable</b> </p></td>
+        <td><p>在 IIS 安全控制台中禁用 ASP.NET。</p>
+            <p>此选项只能与 <b>-i</b>、<b>-ir</b> 或 <b>-r</b> 选项结合使用。此选项不能在 IIS 6.0 之前的 IIS 版本中使用。</p></td>
+      </tr>
+      <tr>
+        <td><p><b>-e</b> </p></td>
+        <td><p>从每个 IIS 站点目录的 aspnet_client 子目录中移除 ASP.NET 的客户端脚本。</p>
+            <p>只移除与 Aspnet_regiis.exe 关联的 ASP.NET 版本的客户端脚本。</p></td>
+      </tr>
+      <tr>
+        <td><p><b>-ea</b> </p></td>
+        <td><p>从每个 IIS 站点目录的 aspnet_client 子目录中移除所有 ASP.NET 版本的客户端脚本。</p></td>
+      </tr>
+      <tr>
+        <td><p><b>-enable</b> </p></td>
+        <td><p>在 IIS 安全控制台中启用 ASP.NET。</p>
+            <p>此选项只能与 <b>-i</b>、<b>-ir</b> 或 <b>-r</b> 选项结合使用。此选项不能在 IIS 6.0 之前或 ASP.NET 2.0 版之前的版本中使用。</p></td>
+      </tr>
+      <tr>
+        <td><p><b>-ga</b> <span class="parameter">user</span></p></td>
+        <td><p>向指定用户授予 ASP.NET. 使用的 IIS 元数据库和其他目录的访问权限。</p>
+            <p>此选项不能在 ASP.NET 2.0 之前的版本中使用。</p></td>
+      </tr>
+      <tr>
+        <td><p><b>-i</b> </p></td>
+        <td><p>安装与 Aspnet_regiis.exe 关联的 ASP.NET 版本，并更新 IIS 元数据库根目录和根目录下的脚本映射。</p>
+            <p>只更新使用早期 ASP.NET 版本的应用程序的脚本映射。使用新版本的应用程序不受影响。</p></td>
+      </tr>
+      <tr>
+        <td><p><b>-ir</b> </p></td>
+        <td><p>安装与 Aspnet_regiis.exe 关联的 ASP.NET 版本，并仅在 IIS 中注册 ASP.NET。 </p>
+            <p>此选项不更新脚本映射。若要安装 ASP.NET 并更新脚本映射，请使用 <b>-i</b> 选项。</p></td>
+      </tr>
+      <tr>
+        <td><p><b>-k</b> <span class="parameter">path</span></p></td>
+        <td><p>在指定的应用程序根路径及其子目录中，从所有 ASP.NET 应用程序中移除所有 ASP.NET 版本的脚本映射。</p></td>
+      </tr>
+      <tr>
+        <td><p><b>-kn</b> <span class="parameter">path</span></p></td>
+        <td><p>仅在指定的应用程序根路径中，从 ASP.NET 应用程序中移除所有 ASP.NET 版本的脚本映射。</p>
+            <p>此选项不影响指定 <span class="parameter">path</span> 的子目录中的应用程序。</p></td>
+      </tr>
+      <tr>
+        <td><p><b>-lk</b> </p></td>
+        <td><p>列出包含 ASP.NET 脚本映射的所有 IIS 元数据库项的路径和版本。</p>
+            <p>不显示从父项继承 ASP.NET 脚本映射的项。</p></td>
+      </tr>
+      <tr>
+        <td><p><b>-lv</b> </p></td>
+        <td><p>列出计算机上安装的所有 ASP.NET 版本的状态和安装路径。</p></td>
+      </tr>
+      <tr>
+        <td><p><b>-norestart</b> </p></td>
+        <td><p>禁止在安装或更新 ASP.NET 脚本映射后重新启动万维网发布服务。如果不使用此选项，将回收所有应用程序池。</p>
+            <p>如果将手动重新启动 IIS 辅助进程，则将此选项与 <b>-i</b> 或 <b>-r</b> 选项一起使用。</p></td>
+      </tr>
+      <tr>
+        <td><p><b>-r</b> </p></td>
+        <td><p>更新 IIS 元数据库中及其下面的所有脚本映射，使其指向与 Aspnet_regiis.exe 关联的 ASP.NET ISAPI 版本。 </p>
+            <p>无论当前版本如何，都会更新现有的所有脚本映射，使其指向与 ASP.NET IIS 注册工具关联的 ASP.NET ISAPI 版本。</p></td>
+      </tr>
+      <tr>
+        <td><p><b>-s</b> <span class="parameter">path</span></p></td>
+        <td><p>将脚本映射（该脚本映射指向与 Aspnet_regiis.exe 关联的 ASP.NET ISAPI 版本）安装到指定应用程序根路径及其子目录下的所有 ASP.NET 应用程序中。更新指定的路径中及其下面使用早期 ASP.NET ISAPI 版本的所有现有脚本映射。</p></td>
+      </tr>
+      <tr>
+        <td><p><b>-sn</b> <span class="parameter">path</span></p></td>
+        <td><p>将脚本映射（该脚本映射指向与该工具关联的 ASP.NET ISAPI 版本）安装到指定应用程序根路径下的 ASP.NET 应用程序中。更新指定路径中使用早期 ASP.NET ISAPI 版本的所有现有脚本映射。</p>
+            <p>此选项不影响 <span class="parameter">path</span> 的子目录中的应用程序。</p></td>
+      </tr>
+      <tr>
+        <td><p><b>-u</b> </p></td>
+        <td><p>从计算机中卸载与 ASP.NET IIS 注册工具关联的 ASP.NET 版本。此 ASP.NET ISAPI 版本的现有脚本映射自动重新映射到其余已安装的 ASP.NET ISAPI 的最新版本。</p></td>
+      </tr>
+      <tr>
+        <td><p><b>-ua</b> </p></td>
+        <td><p>从计算机中卸载所有 ASP.NET 版本。</p></td>
+      </tr>
+      <tr>
+        <td><p><b>-?</b> </p></td>
+        <td><p>显示 ASP.NET IIS 注册工具的命令语法和选项。</p></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3>配置选项</h3>
+</div>
+<div class="subSection">
+    <div class="tableSection">
+      <table style="width:100%">
+        <tbody>
+          <tr>
+            <th>选项 </th>
+            <th>说明 </th>
+          </tr>
+          <tr>
+            <td><p><b>-config+</b> </p></td>
+            <td><p>允许对计算机上的 ASP.NET 配置进行远程访问。</p></td>
+          </tr>
+          <tr>
+            <td><p><b>-config-</b> </p></td>
+            <td><p>禁止对计算机上的 ASP.NET 配置进行远程访问。</p></td>
+          </tr>
+          <tr>
+            <td><p><b>-pa</b> <span class="parameter">container account</span></p></td>
+            <td><p>为指定用户或组 <span class="parameter">account</span> 授予访问指定项 <span 
+class="parameter">container</span> 的权限。此参数采用下面的可选修饰符：</p>
+                <ul>
+                  <li>
+                    <p><b>-pku</b>   将默认的计算机容器替换为用户指定的容器。</p>
+                  </li>
+                  <li>
+                    <p><b>-csp</b> <span class="parameter">provider</span>   指定要使用的容器提供程序。</p>
+                  </li>
+                  <li>
+                    <p><b>-full</b>   指定应该添加完全访问权限而不是默认的只读访问权限。</p>
+                  </li>
+              </ul></td>
+          </tr>
+          <tr>
+            <td><p><b>-pc</b> <span class="parameter">container</span></p></td>
+            <td><p>在指定容器中创建 RSA 公钥/私钥对。此参数采用下面的可选修饰符：</p>
+                <ul>
+                  <li>
+                    <p><b>-size</b> <span class="parameter">keySize</span>   指定密钥大小。默认值为 1024 字节。</p>
+                  </li>
+                  <li>
+                    <p><b>-pku</b>   将计算机上的默认密钥容器替换为用户指定的容器。</p>
+                  </li>
+                  <li>
+                    <p><b>-exp</b>   指定必须可以导出的私钥。</p>
+                  </li>
+                  <li>
+                    <p><b>-csp</b> <span 
+class="parameter">provider</span>   指定要使用的容器提供程序。</p>
+                  </li>
+              </ul></td>
+          </tr>
+          <tr>
+            <td><p><b>-pd</b> <span class="parameter">section</span></p></td>
+            <td><p>对配置节进行解密。此参数采用下面的可选参数：</p>
+                <ul>
+                  <li>
+                    <p><b>-app</b> <span class="parameter">virtualPath</span>   指定应该在包含路径的级别进行解密。</p>
+                  </li>
+                  <li>
+                    <p><b>-location</b> <span class="parameter">subPath</span>   指定要解密的子目录。</p>
+                  </li>
+                  <li>
+                    <p><b>-pkm</b>   指定应该对 Machine.config 而非 Web.config 文件进行解密。</p>
+                  </li>
+              </ul></td>
+          </tr>
+          <tr>
+            <td><p><b>-pdf</b> <span class="parameter">section webApplicationDirectory</span></p></td>
+            <td><p>对指定物理（非虚拟）目录中的 Web.config 文件的指定配置节进行解密。</p></td>
+          </tr>
+          <tr>
+            <td><p><b>-pe</b> <span class="parameter">section</span></p></td>
+            <td><p>对指定的配置节进行加密。此参数采用下面的可选修饰符：</p>
+                <ul>
+                  <li>
+                    <p><b>-prov</b> <span class="parameter">provider</span>   指定要使用的加密提供程序。</p>
+                  </li>
+                  <li>
+                    <p><b>-app</b> <span class="parameter">virtualPath</span>    指定应该在包含路径的级别进行加密。</p>
+                  </li>
+                  <li>
+                    <p><b>-location</b> <span class="parameter">subPath</span>   指定要加密的子目录。</p>
+                  </li>
+                  <li>
+                    <p><b>-pkm</b>   指定应该对 Machine.config 而非 Web.config 文件进行加密。</p>
+                  </li>
+              </ul></td>
+          </tr>
+          <tr>
+            <td><p><b>-pef</b> <span class="parameter">section webApplicationDirectory</span></p></td>
+            <td><p>对指定物理（非虚拟）目录中的 Web.config 文件的指定配置节进行加密。</p></td>
+          </tr>
+          <tr>
+            <td><p><b>-pi</b> <span class="parameter">container file</span></p></td>
+            <td><p>将 RSA 公钥/私钥对从指定的 XML <span class="parameter">file</span> 导入指定的 <span 
+class="parameter">container</span>。此参数采用下面的可选修饰符：</p>
+                <ul>
+                  <li>
+                    <p><b>-pku</b>   将默认的计算机容器替换为用户指定的容器。</p>
+                  </li>
+                  <li>
+                    <p><b>-exp</b>   指定可以导出私钥。</p>
+                  </li>
+                  <li>
+                    <p><b>-csp</b> <span 
+class="parameter">provider</span>   指定要使用的容器提供程序。</p>
+                  </li>
+              </ul></td>
+          </tr>
+          <tr>
+            <td><p><b>-pr</b> <span class="parameter">container account</span></p></td>
+            <td><p>移除指定的用户或组 <span class="parameter">account</span> 对指定的项 <span 
+class="parameter">container</span> 的访问权限。此参数采用下面的可选修饰符：</p>
+                <ul>
+                  <li>
+                    <p><b>-pku</b>   将默认的计算机容器替换为用户指定的容器。</p>
+                  </li>
+                  <li>
+                    <p><b>-csp</b> <span 
+class="parameter">provider</span>   指定要使用的容器提供程序。</p>
+                  </li>
+              </ul></td>
+          </tr>
+          <tr>
+            <td><p><b>-px</b> <span class="parameter">container file</span></p></td>
+            <td><p>将 RSA 公钥/私钥对从指定的容器导入指定的 XML 文件。此参数采用下面的可选修饰符：</p>
+                <ul>
+                  <li>
+                    <p><b>-pku</b>   将默认的计算机容器替换为用户指定的容器。</p>
+                  </li>
+                  <li>
+                    <p><b>-csp</b> <span 
+class="parameter">provider</span>   指定要使用的容器提供程序。</p>
+                  </li>
+              </ul></td>
+          </tr>
+          <tr>
+            <td><p><b>-pz</b> <span class="parameter">container</span></p></td>
+            <td><p>删除指定的密钥容器。此参数采用下面的可选修饰符：</p>
+                <ul>
+                  <li>
+                    <p><b>-pku</b>   将默认的计算机容器替换为用户指定的容器。</p>
+                  </li>
+              </ul></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+</div>
+<h1>错误解决</h1>
+<h2>a virtual directory not being configured as an application in IIS</h2>
+<h3>错误信息：</h3>
+<pre data-type="output">Configuration Error
+
+Description: An error occurred during the processing of a configuration file required to service this request. Please review the specific error details below and modify your configuration file appropriately.
+
+Parser Error Message: It is an error to use a section registered as allowDefinition='MachineToApplication' beyond application level. This error can be caused by a virtual directory not being configured as an application in IIS.
+
+Source Error:
+
+Line 49:   ...
+Line 50:   --&gt;
+Line 51:   &lt;authentication mode=&quot;Windows&quot; /&gt;
+Line 52:   &lt;!--   AUTHORIZATION
+Line 53:            This section sets ...
+
+Source File: c:\inetpub\wwwroot\somewhere\web.config   Line: 51</pre>
+<h3>错误原因：</h3>
+<p>安装asp.net应用程序时，有一个简单的方式是直接将asp.net程序复制到目标服务器，然后在IIS中设置好相应的虚拟目录即可。但是对某些版本的操作系统（如Windows 2003），如果不是将其复制到默认目录，如C:\Inetpub\wwwroot，则会出现该错误。</p>
+<h3>解决方案：</h3>
+<p>在IIS管理器中打开该虚拟目录的属性窗口，如下图所示：</p>
+<img src="images/iis_app_name.jpg" />
+<p>这里应用程序名为不可用状态，点击其右侧的“创建”按钮，即可解决该问题。</p>
+<p>&nbsp;</p>
+
+</body>
+</html>

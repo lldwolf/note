@@ -1,0 +1,83 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+ProfileString</TITLE>
+</HEAD>
+<BODY>
+<A NAME="CAIEBDBA"></A><A NAME="TI7536"></A><h1>ProfileString</h1>
+<A NAME="TI7537"></A><p>
+<FORM>
+<INPUT
+ TYPE = "BUTTON"
+ VALUE = "Examples"
+ onClick = "window.location = 'imugp223.htm#EX75';">
+<INPUT
+  TYPE = "BUTTON"
+ VALUE = "See also"
+ onClick = "window.location = 'imugp223.htm#SA75';">
+</FORM>
+</p>
+<h3>Description</h3><A NAME="TI7538"></A><p>Obtains the string value of a setting in the specified profile
+file.</p>
+
+<h3>Syntax</h3><pre><b>ProfileString</b> ( <i>filename</i>, <i>section</i>, <i>key</i>, <i>default</i> )</pre>
+<A NAME="TI7539"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI7540"></A>Argument</th>
+<th align="left" valign=bottom><A NAME="TI7541"></A>Description</th>
+</tr>
+<tr><td valign=top><A NAME="TI7542"></A><i>filename</i></td>
+<td valign=top><A NAME="TI7543"></A>A string whose value is the name of the
+profile file. If you do not specify a full path, ProfileString uses
+the operating system's standard file search order to find
+the file</td>
+</tr>
+<tr><td valign=top><A NAME="TI7544"></A><i>section</i></td>
+<td valign=top><A NAME="TI7545"></A>A string whose value is the name of a
+group of related values in the profile file. In the file, section
+names are in square brackets. Do not include the brackets in <i>section</i>. <i>Section</i> is
+not case-sensitive</td>
+</tr>
+<tr><td valign=top><A NAME="TI7546"></A><i>key</i></td>
+<td valign=top><A NAME="TI7547"></A>A string specifying the setting name
+in <i>section</i> whose value you want. The setting
+name is followed by an equal sign in the file. Do not include the
+equal sign in <i>key</i>. <i>Key</i> is
+not case-sensitive</td>
+</tr>
+<tr><td valign=top><A NAME="TI7548"></A><i>default</i></td>
+<td valign=top><A NAME="TI7549"></A>A string value that ProfileString will
+return if <i>filename</i> is not found, if <i>section</i> or <i>key</i> does
+not exist in <i>filename</i>, or if the value of <i>key</i> cannot
+be converted to an integer</td>
+</tr>
+</table>
+
+<h3>Return Values</h3><A NAME="TI7550"></A><p>String, with a maximum length of 4096 characters. Returns
+the string from <i>key</i> within <i>section</i> within <i>filename</i>.
+If <i>filename</i> is not found, <i>section</i> is
+not found in <i>filename</i>, or <i>key</i> is
+not found in <i>section</i>, ProfileString returns <i>default</i>.
+If an error occurs, it returns the empty string ("").</p>
+
+<h3>Usage</h3><A NAME="TI7551"></A><p>Use ProfileInt and ProfileString to get configuration settings
+from a profile file you have designed for your application.</p>
+
+<A NAME="EX75"></A><h3>Examples</h3><A NAME="TI7552"></A><p>This example uses the following section in PROFILE.INI
+file:<pre>[Employee]<br> Name="Smith"</pre>
+</p>
+<A NAME="TI7553"></A><p><pre>[Dept]<br> Name="Marketing"</pre>
+</p>
+<A NAME="TI7554"></A><p>This expression returns the string for the keyword
+Name in section Employee in file C:\PROFILE.INI. It returns
+None if the section or keyword does not exist. In this case it returns
+Smith:<pre><i>ProfileString</i> ("C:\PROFILE.INI", "Employee", "Name", <br> "None")</pre>
+</p>
+
+<A NAME="SA75"></A><h3>See Also</h3><A NAME="TI7555"></A><p><A NAME="TI7556"></A>
+<ul>
+<li class=fi><A HREF="imugp222.htm#CAIBBBJE">ProfileInt</A>
+</li>
+</ul>
+</p>
+
+<A NAME="TI7557"></A>

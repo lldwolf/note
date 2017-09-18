@@ -1,0 +1,321 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+Working in the Report painter </TITLE>
+</HEAD>
+<BODY>
+<A NAME="CAICEEJB"></A><h1>Working in the Report painter </h1>
+<A NAME="TI1671"></A><p>The Report painter provides six views related to the report you
+are working on. Interacting with these views is how you work in
+the Report painter.</p>
+<A NAME="TI1672"></A><p>The following picture shows a report in the Report painter with
+three views open: the Design view, the Preview view, and the Properties
+view.</p>
+<br><img src="images/Dwen01ai.gif">
+<p><b>Design view</b>   Shows a representation of the report and its controls.
+You use this view to design the layout and appearance of the report.
+Changes you make are immediately shown in the Preview view and the
+Properties view.</p>
+<p><b>Preview view</b>   Shows the report with data as it will appear at execution
+time. If the Print Preview toggle is selected, you see the report as
+it would appear when printed.</p>
+<p><b>Properties view</b>   Displays the property sheet for the currently selected control(s)
+in the report, for the currently selected band in the report,
+or for the report itself. You can view and change the values
+of properties in this view.</p>
+<A NAME="TI1673"></A><p>There are three other views available:</p>
+<p><b>Control List view</b>   List all controls in the report. Selecting controls in
+this view selects them in the Design view and the Properties view
+too. You can also sort controls by Control Name, Type, or Tag. </p>
+<p><b>Data view</b>   Displays the data that can be used to populate a report and
+allows manipulation of that data. </p>
+<p><b>Column Specifications view</b>   Shows a list of the columns in the data source. For the columns,
+you can add, modify, and delete initial values, validation expressions,
+and validation messages. You can also specify that you want a column
+to be included in a prompt for retrieval criteria during data retrieval.
+To add a column to the report, you can drag and drop the column
+from the Column Specifications view to Design view. For external
+or stored procedure data sources, you can add, delete, and edit
+columns (column name, type, and length).</p>
+<A NAME="CAICEIJC"></A><h2>Understanding the Report painter Design view</h2>
+<A NAME="TI1674"></A><p>With many presentation styles, the Report painter Design view
+is divided into areas called <strong>bands</strong>. Each
+band corresponds to a section of the displayed report.</p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Applicability of information</span> <A NAME="TI1675"></A>Some of the information presented in this section doesn't
+apply to all report presentation styles. </p>
+<A NAME="TI1676"></A><p>A report is divided into four bands: header, detail, summary,
+and footer. Each band is identified by a bar containing the name
+of the band above the bar and an arrow pointing to the band.</p>
+<A NAME="TI1677"></A><p>Here is the Design view for a tabular report:</p>
+<br><img src="images/dwen01.gif">
+<A NAME="TI1678"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI1679"></A>Band</th>
+<th align="left" valign=bottom><A NAME="TI1680"></A>Used to display</th>
+</tr>
+<tr><td valign=top><A NAME="TI1681"></A>Header</td>
+<td valign=top><A NAME="TI1682"></A>Information at the top of every screen
+or page, such as the name of the report or current date</td>
+</tr>
+<tr><td valign=top><A NAME="TI1683"></A>Detail</td>
+<td valign=top><A NAME="TI1684"></A>Data from the database or other data
+source</td>
+</tr>
+<tr><td valign=top><A NAME="TI1685"></A>Summary</td>
+<td valign=top><A NAME="TI1686"></A>Summary information that displays after
+all the data, such as totals and counts</td>
+</tr>
+<tr><td valign=top><A NAME="TI1687"></A>Footer</td>
+<td valign=top><A NAME="TI1688"></A>Information displayed at the bottom of
+every page or screen, such as page number and page count</td>
+</tr>
+</table>
+<A NAME="TI1689"></A><h3>About the header band</h3>
+<A NAME="TI1690"></A><p>The header band contains heading information that is displayed
+at the top of every screen or page. The presentation style determines
+the contents of the header band:<A NAME="TI1691"></A>
+<ul>
+<li class=fi>If the presentation style is Tabular, Grid, or N-Up, the headings
+defined for the columns in the Database painter display in the header
+band and the columns display on a single line across the detail
+band </li>
+<li class=ds>If the presentation style is Freeform, the header
+band is empty and labels display in the detail band next to each
+column
+</li>
+</ul>
+</p>
+<A NAME="TI1692"></A><p>You can specify additional heading information (such as a
+date) in the header band and can include pictures, graphic controls, and
+color to enhance the appearance of the band.</p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Displaying the current date</span> <A NAME="TI1693"></A>To include the current date in the header, you place a computed
+field that uses the Today InfoMaker function in the header band.</p>
+<A NAME="TI1694"></A>For information, see <A HREF="imugp56.htm#CAICBBCE">"Adding computed fields to
+a report"</A>.</p>
+<A NAME="TI1695"></A><h3>About the detail band</h3>
+<A NAME="TI1696"></A><p>The detail band displays the retrieved data. The number of
+rows of data that display in the report at one time is determined
+by the following expression: <pre><i>(Height of the report - Height of headers and footers) / <br> Height of the detail band</i></pre>
+</p>
+<A NAME="TI1697"></A><p>The presentation style determines the contents of the detail
+band: <A NAME="TI1698"></A>
+<ul>
+<li class=fi>If the presentation style is Tabular, Grid, N-Up,
+or Label, the detail band displays column names, representing the
+columns</li>
+<li class=ds>If the presentation style is Freeform, the labels
+defined for the columns in the Database painter display in the detail
+band with boxes for the data to the right 
+</li>
+</ul>
+</p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>How InfoMaker names the columns in the Design view</span> <A NAME="TI1699"></A>If the report uses one table, the names of the columns
+in the Design view are the same as the names in the table. </p>
+<A NAME="TI1700"></A>If the report uses more than one table, the names of the
+columns in the Design view are <i>tablename_columnname</i>
+. InfoMaker prefaces
+the name of the column with the table name to prevent ambiguity,
+since different tables can have columns with the same name.</p>
+<A NAME="TI1701"></A><p>When you design the detail band of a report, you can specify
+display information for each column of the report and add other
+controls, such as text, pictures, graphs, and drawing controls.</p>
+<A NAME="TI1702"></A><h3>About the summary and footer bands</h3>
+<A NAME="TI1703"></A><p>You use the summary and footer bands of the report the
+same way you use summary pages and page footers in a printed report:<A NAME="TI1704"></A>
+<ul>
+<li class=fi>The contents of the summary band display at the
+end, after all the detail rows; this band often summarizes information
+in the report</li>
+<li class=ds>The contents of the footer band display at the bottom
+of each screen or page of the report; this band often displays
+the page number and name of the report
+</li>
+</ul>
+</p>
+<A NAME="TI1705"></A><p>These bands can contain any information you want, including
+text, drawing controls, graphs, and computed fields containing aggregate
+totals.</p>
+<A NAME="BFCEACCI"></A><h2>Using the Report painter toolbars</h2>
+<A NAME="TI1706"></A><p>The Report painter contains three customizable PainterBars and
+a StyleBar. </p>
+<A NAME="TI1707"></A><p>For more information about using toolbars,
+see "Using toolbars" on page 52.</p>
+<A NAME="TI1708"></A><h4>PainterBars</h4>
+<A NAME="TI1709"></A><p>The PainterBars include buttons for standard operations (such
+as Open, Save, Undo) and for common reporting operations (such as
+Preview, Percent). They also include six dropdown toolbars, which
+are indicated by a small black triangle on the right part of a button:</p>
+<A NAME="TI1710"></A><p>These are the dropdown toolbars that are available:</p>
+<A NAME="TI1711"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI1712"></A>Dropdown Toolbar</th>
+<th align="left" valign=bottom><A NAME="TI1713"></A>Used to</th>
+</tr>
+<tr><td valign=top><A NAME="TI1714"></A>Background Color</td>
+<td valign=top><A NAME="TI1715"></A>Specify the background color of one or
+more selected controls</td>
+</tr>
+<tr><td valign=top><A NAME="TI1716"></A>Borders</td>
+<td valign=top><A NAME="TI1717"></A>Specify borders for one or more selected
+controls</td>
+</tr>
+<tr><td valign=top><A NAME="TI1718"></A>Foreground Color</td>
+<td valign=top><A NAME="TI1719"></A>Specify the foreground color of one or
+more selected controls. In a text control, the foreground color
+specifies the color of the text</td>
+</tr>
+<tr><td valign=top><A NAME="TI1720"></A>Layout</td>
+<td valign=top><A NAME="TI1721"></A>Specify the alignment, sizing, and spacing
+of selected controls</td>
+</tr>
+<tr><td valign=top><A NAME="TI1722"></A>Controls</td>
+<td valign=top><A NAME="TI1723"></A>Specify controls to add to a report</td>
+</tr>
+<tr><td valign=top><A NAME="TI1724"></A>Slide</td>
+<td valign=top><A NAME="TI1725"></A>Specify sliding for controls</td>
+</tr>
+</table>
+<A NAME="TI1726"></A><h4>StyleBar</h4>
+<A NAME="TI1727"></A><p>The StyleBar includes buttons for applying properties (such
+as bold) to selected text elements: </p>
+<br><img src="images/Dwen03.gif">
+<A NAME="BFCBCACJ"></A><h2>Using the Properties view in the Report painter</h2>
+<A NAME="TI1728"></A><p>Each part of the report (such as text, columns, computed
+fields, bands, graphs, even the report itself) has a set of
+properties appropriate to the part. The properties display in the
+Properties view.</p>
+<A NAME="TI1729"></A><p>You can use the Properties view to modify the parts of the report.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To use the Properties view to modify the parts
+of the report:</p>
+<ol><li class=fi>
+Position the mouse over the part you want
+to modify.<br><br></li>
+<li class=ds>
+Display the part's popup menu and select
+Properties.<br><br>
+If it's not already displayed, the Properties view
+displays. In any case, the view displays the properties of the currently
+selected control(s), band, or of the report itself. The contents
+of the Properties view changes as different controls are selected
+(made current).<br><br></li></ol>
+<br><A NAME="TI1730"></A><p>The following Properties view is for a column. It has seven
+tabbed property pages of information, which you access by clicking
+the appropriate tab. For example, if you want to choose an edit
+style for the column, you click the Edit tab. This brings the Edit
+property page to the front of the Properties view:</p>
+<br><img src="images/Dwen04.gif">
+<A NAME="TI1731"></A><p>When you want to modify the properties of part of a report,
+display the Properties view and pick the properties you want to
+change. Click the various tabs to change property pages.</p>
+<A NAME="BFCBFGBI"></A><h2>Selecting controls in the Report painter</h2>
+<A NAME="TI1732"></A><p>The Report painter provides several ways to select controls to
+act on. You can select multiple controls and act on all the selected
+controls as a unit. For example, you can move all of them or change
+the fonts used to display text for all of them.</p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Lasso selection</span> <A NAME="TI1733"></A>Use <strong>lasso selection</strong> when possible because
+it's fast and easy. Lasso selection is another name for
+the method described below for selecting neighboring multiple controls.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To select one control in a report in the Design
+view:</p>
+<ol><li class=fi>
+Click it.<br><br>
+The control displays with handles on it. Previously selected
+controls are no longer selected.<br><br></li></ol>
+<br><p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To select neighboring multiple controls in a report in
+the Design view (lasso selection):</p>
+<ol><li class=fi>
+Press and hold the left mouse button at
+one corner of the neighboring controls.<br><br></li>
+<li class=ds>
+Drag the mouse over the controls you want to select.<br><br>
+A bounding box (the lasso) displays.<br><br></li>
+<li class=ds>
+Release the mouse button.<br><br>
+All the controls in the bounding box are selected.<br><br></li></ol>
+<br><p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To select non-neighboring multiple controls in
+a report in the Design view:</p>
+<ol><li class=fi>
+Click the first control.<br><br></li>
+<li class=ds>
+Press and hold the ctrl key
+and click additional controls.<br><br>
+All the controls are selected.<br><br></li></ol>
+<br><p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To select controls by type or position in the report:</p>
+<ol><li class=fi>
+Do the following:<br><br><A NAME="TI1734"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI1735"></A>To select</th>
+<th align="left" valign=bottom><A NAME="TI1736"></A>Select this item from the menu bar</th>
+</tr>
+<tr><td valign=top><A NAME="TI1737"></A>All controls</td>
+<td valign=top><A NAME="TI1738"></A>Edit&gt;Select&gt;Select
+All</td>
+</tr>
+<tr><td valign=top><A NAME="TI1739"></A>All text</td>
+<td valign=top><A NAME="TI1740"></A>Edit&gt;Select&gt;Select
+Text</td>
+</tr>
+<tr><td valign=top><A NAME="TI1741"></A>All columns</td>
+<td valign=top><A NAME="TI1742"></A>Edit&gt;Select&gt;Select
+Columns</td>
+</tr>
+<tr><td valign=top><A NAME="TI1743"></A>Controls in relation to
+the currently selected control</td>
+<td valign=top><A NAME="TI1744"></A>Edit&gt;Select&gt;Select
+Above </td>
+</tr>
+<tr><td valign=top><A NAME="TI1745"></A>Edit&gt;Select&gt;Select
+Below </td>
+</tr>
+<tr><td valign=top><A NAME="TI1746"></A>Edit&gt;Select&gt;Select
+Left </td>
+</tr>
+<tr><td valign=top><A NAME="TI1747"></A>Edit&gt;Select&gt;Select
+Right</td>
+</tr>
+</table>
+</li></ol>
+<br><p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To select
+controls in a report in the Control List view:</p>
+<ol><li class=fi>
+Select View&gt;Control List from
+the menu bar.<br><br></li>
+<li class=ds>
+Click a control in the list.<br><br></li>
+<li class=ds>
+Press and hold the ctrl key
+and click additional controls if desired.<br><br></li></ol>
+<br><A NAME="TI1748"></A><h4>Displaying information about the selected control</h4>
+<A NAME="TI1749"></A><p>The name, x and y coordinates, width, and height of the selected
+control are displayed in the MicroHelp bar. If multiple controls
+are selected, <i>Group Selected</i>
+ displays in the
+Name area and the coordinates and size do not display.</p>
+<A NAME="BFCDFFHA"></A><h2>Resizing bands in the Report painter Design view</h2>
+<A NAME="TI1750"></A><p>You can change the size of any band in the report.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To resize a band in the Report painter Design view:</p>
+<ol><li class=fi>
+Position the pointer on the bar representing
+the band and drag the bar up or down to shrink or enlarge the band.<br><br></li></ol>
+<br><A NAME="BFCCHEEB"></A><h2>Using zoom in the Report painter</h2>
+<A NAME="TI1751"></A><p>You can zoom the display in and out in four views in the Report painter:
+the Design view, Preview view, Data View, and Column Specifications
+view. For example, if you are working with a large report, you
+can zoom out the Design view so you can see all of it on your screen.
+Or you can zoom in on a group of controls to better see their details.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To zoom the display in the Report painter:</p>
+<ol><li class=fi>
+Select the view you want to zoom (click
+in the view). You can zoom the Design view, Preview view, Data View,
+and Column Specifications view.<br><br></li>
+<li class=ds>
+Select Design&gt;Zoom from the menu bar.<br><br></li>
+<li class=ds>
+Select a built-in zoom percentage.<br><br>
+<i>or</i>
+<br><br>
+Set a custom zoom percentage by typing an integer in
+the Custom box.<br><br></li></ol>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Using the IntelliMouse pointing device</span> <A NAME="TI1752"></A>Using the IntelliMouse pointing device, you can also zoom
+a view larger or smaller by holding down the ctrl key
+while rotating the wheel.</p>
+<br><A NAME="BFCBGEJE"></A><h2>Undoing changes in the Report painter</h2>
+<A NAME="TI1753"></A><p>You can undo your change by pressing ctrl+z or
+selecting Edit&gt;Undo from the menu bar. Undo requests affect
+all views.</p>
+

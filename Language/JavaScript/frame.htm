@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<title>Frame</title>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+<p id="title">控制FRAME</p>
+
+<p>在frame子页面中，可使用 parent.frames[&quot;frame_name&quot;].form1 或  window.frames[&quot;frame_name&quot;].form1来访问其它子页面的元素</p>
+<p>frame的属性与window类似，例如，可用如下语句使frame的页面跳转：</p>
+<pre>window.frames[&quot;frame_name&quot;].location.href = &quot;www.lld.com&quot;;</pre>
+<p>frame本身亦有document属性，如下语句可以取一个frame的内部元素：</p>
+<pre>var frame = document.frames[&quot;frame1&quot;];
+alert(frame.document.all[&quot;p1&quot;].innerText);</pre>
+<p>&nbsp;</p>
+<script language="javascript" src="index.js"></script>
+</body>
+</html>

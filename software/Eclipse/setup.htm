@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+<title>安装及配置</title>
+</head>
+
+<body>
+<p id="title">第二章 Eclipse的安装及配置</p>
+<h1>2.1 安装</h1>
+<p>严格来说，Eclipse并不需要安装，你只需要到 <a href="http://www.eclipse.org">http://www.eclipse.org</a> 上下载一个Eclipse的最新版本并在本地解压即可。</p>
+<h1>2.2 系统参数配置</h1>
+<p>要运行Eclipse，需要JDK的支持，JDK的最新版本可从 <a href="http://java.sun.com">http://java.sun.com</a> 上得到。安装完JDK后，需添加或修改如下几个环境变量：</p>
+<ul>
+  <li>JAVA_HOME：JDK安装后的根目录，如 D:\java\jdk1.5</li>
+  <li>CLASSPATH：一些常用的JAVA类库路径，为 %JAVA_HOME%\lib</li>
+  <li>PATH：在最前面加入 %JAVA_HOME%\bin，之所以加在最前面是因为有些软件，例如ORACLE或VisiBroker等会加入自己的JRE路径，而操作系统在搜索时是按顺序来，加在最后有可能会使Eclipse找不到正确的程序。</li>
+</ul>
+    <h1>启动问题解决</h1>
+    <h2>与 JDK 版本兼容</h2>
+    <p>如果是 32 位的 Eclipse, 则需要使用 32 位的 JDK 启动, 反之亦然, 否则会在启动时报错</p>
+    <p>failed to load the jni shared library</p>
+    <p>可通过修改 eclipse.ini 来实现, 如下所示(位置很重要)</p>
+    <pre class="code" data-type="properties"><span class="emphasis">-vm
+C:\Program Files (x86)\Java\jdk1.8.0_45\bin\javaw.exe</span>
+-vmargs
+-Dosgi.requiredJavaVersion=1.7
+</pre>
+<p>&nbsp;</p>
+</body>
+</html>

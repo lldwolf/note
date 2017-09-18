@@ -1,0 +1,70 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>链接数据库</title>
+<script type="text/javascript" src="css.js"></script>
+</head>
+
+<body>
+<h1>第N章 分布式数据库</h1>
+<hr />
+<h2><a href="#link_db">N.1 链接数据库</a></h2>
+<h2><a href="#snapshot">N.2 快照 </a></h2>
+<hr />
+<h2><a name="link_db" id="link_db"></a>N.1 链接数据库</h2>
+<p>通过链接数据库，用户可以在一个数据库Context中，访问另外一个数据库Context，创建的语法如下所示：</p>
+<pre>CREATE [PUBLIC] DATABASE LINK Linkname
+[CONNECT TO username IDENTIFIED By password]
+[USING‘connectstring']</pre>
+<p>其中：</p>
+<ul>
+  <li>Linkname：数据库链接的名称</li>
+  <li>Username：用户帐户</li>
+  <li>password：口令</li>
+  <li>connectstring：远程数据库的连接串</li>
+</ul>
+<p>下面是一个示例：</p>
+<pre>create public database link mylink
+connect to demo identified by demo
+using 'in7ch'</pre>
+<p>访问链接数据库的语法为：</p>
+<pre>对象名@链接数据库名</pre>
+<p>示例如下所示：</p>
+<pre>select * from component@mylink</pre>
+<p>某些情况下，为了提供访问的的透明性，可使用同义词来封装远程对象。</p>
+<h2><a name="snapshot" id="snapshot"></a>N.2 快照 </h2>
+<p>在分布式环境中有一些公用的基表，这些基表存储在某个中央地址上，并建立了远程数据库的数据链接。但在访问远程对象时性能非常低。这时，可以使用快照，以提高使用远程数据库数据的应用程序的性能。快照为远程基表提供本地的复制，可以包含远程基表的全部和部分数据，并自动被刷新。创建快照需要ORACLE的分布式选件。</p>
+<p>快照可以基于多个基表的查询，可按照预先设置的时间间隔定期自动刷新。建立快照的语句如下：</p>
+<pre>CREATE SNAPSHOT snapshotname
+[STORAGE(STORAGE PARAMETERS)]
+[TABLESPACE tablespacename]
+[REFRESH [FAST/COMPLETE /FORCE］]
+as query</pre>
+<p>示例如下所示：</p>
+<pre>create snapshot myshot
+as 
+select * from process_function@mylink</pre>
+<p>在进行大量操作前，用户希望引用的快照的数据已经被刷新，这时可在应用程序中用手工刷新快照。ORACLE提供了DBMSsnapshot包允许用户手工刷新快照，调用REFRESH过程如下：</p>
+<pre>dbms_snapshot.refresh(snapshotname, refreshtype)</pre>
+<p>其中：refreshtype 刷新类型。</p>
+<p>若对所有快照进行刷新，可用过程：</p>
+<pre>dbms_snapshot.refreshall	</pre>
+<p>有关快照刷新这里多介绍一下，首先是三种刷新方式：</p>
+<ul>
+  <li>FAST：快速刷新，用snapshot log，只更新时间段变动部分，也就是说，对于快照的基对象，要求有实体化视图日志</li>
+  <li>COMPLETE：完全刷新，运行SQL语句 </li>
+  <li>FORCE：自动判断刷新，介于fast和complete之间</li>
+</ul>
+<p>可以在建立快照的时候指定刷新方式及时间，如下例所示：</p>
+<pre>create snapshot myshot3
+refresh fast start with sysdate + 1 / 1440 next sysdate + 1 / 144
+as 
+select * from process_function@mylink</pre>
+<p>上面的SQL表示快照在建立后的1分钟内刷新一次，然后每隔10分钟再刷新一次。使用的时间单位为天，所示 1/1440 天表示1分钟。</p>
+<p>也可以在建立快照后修改其刷新方式及时间，如下所示：</p>
+<pre>alter snapshot myshot refresh fast start with sysdate + 1 / 1440 next sysdate + 1 / 144</pre>
+<p>&nbsp;</p>
+<script type="text/javascript" src="index.js"></script>
+</body>
+</html>

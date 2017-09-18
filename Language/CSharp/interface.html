@@ -1,0 +1,47 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>接口</title>
+<script type="text/javascript" src="css.js"></script>
+</head>
+
+<body>
+<h1>第N章 接口</h1>
+<hr />
+<p>接口就是最虚的类，只有方法，没有成员变量。在接口显可以定义义虚属性，如下所示：</p>
+<pre>public interface Interface1
+{
+	int Property
+	{
+		get;
+		set;
+	}
+}</pre>
+<p>值得注意的是，如果使用Reflection方式来查看上面定义接口的成员，会发现有如下三个成员：</p>
+<table width="60%" >
+  <tr>
+    <th width="50%">成员名</th>
+    <th width="50%">类型</th>
+  </tr>
+  <tr>
+    <td>Property</td>
+    <td>Property</td>
+  </tr>
+  <tr>
+    <td>get_Property</td>
+    <td>Method</td>
+  </tr>
+  <tr>
+    <td>set_Property</td>
+    <td>Method</td>
+  </tr>
+</table>
+<p>这意味着在后台会自动生成get_Property和set_Property函数，换言之，如果你再在interface中声明一个不带任何参数的get_Property()方法的话，会提示编译错误：</p>
+<pre>类型&quot;Interface1&quot;已定义了一个名为&quot;get_Property&quot;的具有相同参数类型的成员</pre>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp; </p>
+<script type="text/javascript" src="index.js"></script>
+</body>
+</html>

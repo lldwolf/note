@@ -1,0 +1,47 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>CSS 优先级</title>
+<script type="text/javascript" src="css.js"></script>
+</head>
+
+<body>
+<h1>第N章 CSS 优先级</h1>
+<hr />
+<p>CSS2.1 中规定了关于 CSS 规则 Specificity（特异性）的计算方式，用一个四位的数字串（注：CSS2 中是用三位）来表示，最后以 Specificity 的高低判断 CSS 的优先权。</p>
+<p>Specificity 具体的计算规则：</p>
+<p> * 元素的 style 样式属性，加 1,0,0,0。<br />
+  * 每个 ID 选择符（#id），加 0,1,0,0。<br />
+  * 每个 class 选择符（.class）、每个属性选择符（例 [attr=”&quot;] ）、每个伪类（例 :hover），加 0,0,1,0。<br />
+  * 每个元素或伪元素（例 :firstchild）等，加 0,0,0,1。<br />
+  * 其他选择符（例 全局选择符 *，子选择符 &gt;），加 0,0,0,0。</p>
+<p>最后逐位相加数字串，得到最终的 Specificity 值，按照从左到右的顺序逐位比较。</p>
+<p>除了 Specificity 还有一些其他规则：</p>
+<p> * !important 声明的规则高于一切，如果 !important 声明冲突，则比较优先权。<br />
+  * 如果优先权一样，则按源码中“后来者居上”的原则。<br />
+  * 由继承而得到的样式属性不参与 specificity 的计算，低于一切其他规则（例 全局选择符 * ）。</p>
+<p>范例分析：</p>
+<p>h1 {color: red;}<br />
+  /* 只有一个普通元素加成，结果是 0,0,0,1 */<br />
+  body h1 {color: green;}<br />
+  /* 两个普通元素加成，结果是 0,0,0,2 */<br />
+  /*0,0,0,1 小于 0,0,0,2 ，后者胜出*/</p>
+<p>h2.grape {color: purple;}<br />
+  /* 一个普通元素、一个class选择符加成，结果是 0,0,1,1*/<br />
+  h2 {color: silver;}<br />
+  /*一个普通元素，结果是 0,0,0,1 */<br />
+  /*0,0,1,1 大于 0,0,0,1 ，前者胜出*/</p>
+<p>html &gt; body table tr[id=”totals”] td ul &gt; li {color: maroon;}<br />
+  /* 7个普通元素、一个属性选择符、两个其他选择符（子选择符 &gt;），结果是0,0,1,7 */<br />
+  li#answer {color: navy;}<br />
+  /* 一个ID选择符，一个普通选择符，结果是0,1,0,1 */<br />
+  /*0,0,1,7 小于 0,1,0,1，后者胜出*/<br />
+</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<script type="text/javascript" src="css.js"></script>
+</body>
+</html>

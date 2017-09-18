@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+<title>C# 笔记</title>
+</head>
+
+<body>
+<script type="text/javascript" src="accordion.js"></script>
+<p id="title">Open XML 概述</p>
+
+<p>支持 Office 2007 及以后的版本，使用内置的XML方式读写文档，不需要在本地安装Office。</p>
+<p>如果使用Open XML，需引用官方的 DocumentFormat.OpenXml 包。与COM方式相比，有以下很大的不同</p>
+<ul>
+	<li>难用多了（第一感觉，真心话……）</li>
+	<li>要以XML的视角来开发，例如，要在Excel中写一个单元格时，需要创建XML结果，设置XML属性，诸如此类</li>
+</ul>
+<p>新的 Office 文档，扩展名以 x 结尾的，即表示是以 Open XML 格式存储的，如 .docx, .xlsx, .pptx。有一个简单的方式可以查看XML的内容，即将文件的扩展名改为 .zip，然后就可以解开看里面的内容了。汗……</p>
+
+</body>
+</html>

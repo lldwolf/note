@@ -1,0 +1,212 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+About the InfoMaker extended attribute system tables</TITLE>
+</HEAD>
+<BODY>
+<A NAME="CCJDBDCC"></A><h1>About the InfoMaker extended attribute system tables</h1>
+<A NAME="TI1185"></A><p>InfoMaker uses a collection of five system tables (formerly
+known as the Powersoft repository) to store extended attribute information
+(such as display formats, validation rules, and font information)
+about tables and columns in your database. You can also define extended
+attributes when you create or modify a table in InfoMaker.</p>
+<A NAME="TI1186"></A><p>This section tells you how to:<A NAME="TI1187"></A>
+<ul>
+<li class=fi>Make sure the InfoMaker extended attribute system tables
+are created with the proper access rights when you log in to your
+database for the first time </li>
+<li class=ds>Display and open an InfoMaker extended attribute
+system table</li>
+<li class=ds>Understand the kind of information stored in the InfoMaker extended attribute
+system tables</li>
+<li class=ds>Control extended attribute system table access
+</li>
+</ul>
+</p>
+<A NAME="TI1188"></A><h2>Logging on to your database for the first time</h2>
+<A NAME="TI1189"></A><p>By default, InfoMaker creates the extended attribute system
+tables the first time you connect to a database.</p>
+<A NAME="TI1190"></A><p>To ensure that InfoMaker creates the extended attribute system
+tables with the proper access rights to make them available to all
+users, the first person to connect to the database with InfoMaker must
+log in with the proper authority.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To ensure proper creation of the InfoMaker extended
+attribute system tables:</p>
+<ol><li class=fi>
+Make sure the first person to connect to
+the database with InfoMaker has sufficient authority to create
+tables and grant permissions to PUBLIC.<br><br>
+This means that the first person to connect to the database
+should log in as the database owner, database administrator, system
+user, system administrator, or system owner, as specified by your
+DBMS.<br><br></li></ol>
+<br><p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Creating the extended attribute system tables when
+using the DirectConnect interface</span> <A NAME="TI1191"></A>When you are using the DirectConnect interface, the InfoMaker extended attribute
+system tables are <i>not</i>
+ created automatically
+the first time you connect to a database. You must run the DB2SYSPB.SQL
+script to create the system tables, as described in <A HREF="connimp29.htm#X-ref354461628">"Using the DB2SYSPB.SQL
+script"</A>. </p>
+<A NAME="TI1192"></A><h2>Displaying the InfoMaker extended attribute system
+tables</h2>
+<A NAME="TI1193"></A><p>InfoMaker updates the extended attribute system tables automatically whenever
+you change the information for a table or column. The InfoMaker extended
+attribute system tables are different from the system tables provided by
+your DBMS.</p>
+<A NAME="TI1194"></A><p>You can display and open InfoMaker extended attribute system
+tables in the Database painter just like other tables.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To display the InfoMaker extended attribute system
+tables:</p>
+<ol><li class=fi>
+In the Database painter, highlight Tables
+in the list of database objects for the active connection and select
+Show System Tables from the popup menu.<br><br><br><img src="images/cn6st.gif"><br>
+</li>
+<li class=ds>
+The InfoMaker extended attribute system tables
+and DBMS system tables display in the tables list, as follows:<A NAME="TI1195"></A>
+<ul>
+<li class=fi><b>InfoMaker system
+tables</b>   The five system tables are: pbcatcol, pbcatedt, pbcatfmt,
+pbcattbl, and pbcatvld.</li>
+<li class=ds><b>DBMS system tables</b>   The system tables supplied by the DBMS usually have a DBMS-specific
+prefix (such as <i>sys</i>
+ or <i>dbo</i>
+).<br><img src="images/cn6std.gif">
+
+</li>
+</ul>
+
+                      <br><br></li>
+<li class=ds>
+Display the contents of a InfoMaker system table
+in the Object Layout, Object Details, and/or Columns views.<br><br>
+For instructions, see the <i>InfoMaker
+User's Guide</i>
+.<br><br><p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Do not edit the extended attribute system tables</span> <A NAME="TI1196"></A>Do not change the values in the InfoMaker extended attribute
+system tables.</p>
+</li></ol>
+<br><A NAME="TI1197"></A><h2>Contents of the extended attribute system tables</h2>
+<A NAME="TI1198"></A><p>InfoMaker stores five types of extended attribute information
+in the system tables: </p>
+<A NAME="TI1199"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI1200"></A>This system table</th>
+<th align="left" valign=bottom><A NAME="TI1201"></A>Stores information about</th>
+<th align="left" valign=bottom><A NAME="TI1202"></A>That includes</th>
+</tr>
+<tr><td valign=top><A NAME="TI1203"></A>pbcatcol</td>
+<td valign=top><A NAME="TI1204"></A>Columns</td>
+<td valign=top><A NAME="TI1205"></A>Names, comments, headers, labels, case,
+initial value, and justification</td>
+</tr>
+<tr><td valign=top><A NAME="TI1206"></A>pbcatedt</td>
+<td valign=top><A NAME="TI1207"></A>Edit styles</td>
+<td valign=top><A NAME="TI1208"></A>Edit style names and definitions</td>
+</tr>
+<tr><td valign=top><A NAME="TI1209"></A>pbcatfmt</td>
+<td valign=top><A NAME="TI1210"></A>Display formats</td>
+<td valign=top><A NAME="TI1211"></A>Display format names and definitions</td>
+</tr>
+<tr><td valign=top><A NAME="TI1212"></A>pbcattbl</td>
+<td valign=top><A NAME="TI1213"></A>Tables</td>
+<td valign=top><A NAME="TI1214"></A>Name, owner, default fonts (for data,
+headings and labels), and comments</td>
+</tr>
+<tr><td valign=top><A NAME="TI1215"></A>pbcatvld</td>
+<td valign=top><A NAME="TI1216"></A>Validation rules</td>
+<td valign=top><A NAME="TI1217"></A>Validation rule names and definitions</td>
+</tr>
+</table>
+<A NAME="TI1218"></A><p>For more about the InfoMaker system tables, see the <i>InfoMaker
+User's Guide</i>
+.</p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Prefixes in system table names</span> <A NAME="TI1219"></A>For some databases, InfoMaker precedes the name of the system
+table with a default DBMS-specific prefix. For example, the names
+of InfoMaker system tables have the prefix DBO in a SQL Server
+database (such as DBO.pbcatcol), or SYSTEM in an ORACLE database
+(such as SYSTEM.pbcatfmt).</p>
+<A NAME="TI1220"></A>The preceding table gives the base name of each system table
+without the DBMS-specific prefix.</p>
+<A NAME="TI1221"></A><h2>Controlling system table access</h2>
+<A NAME="TI1222"></A><p>To control access to the InfoMaker system tables at your
+site, you can specify that InfoMaker not create or update the system
+tables or that the system tables be accessible only to certain users
+or groups.</p>
+<A NAME="TI1223"></A><p>You can control system table access by doing any of the following:<A NAME="TI1224"></A>
+<ul>
+<li class=fi><b>Setting Use Extended
+Attributes</b>   Set the Use Extended Attributes database preference in the
+Database Preferences property sheet in the Database painter.</li>
+<li class=ds><b>Setting Read Only</b>   Set the Read Only database preference in the Database Preferences
+property sheet in the Database painter.</li>
+<li class=ds><b>Granting permissions on the system
+tables</b>   Grant explicit permissions on the system tables to users or
+groups at your site.
+</li>
+</ul>
+</p>
+<A NAME="TI1225"></A><h3>Setting Use Extended Attributes or Read Only to
+control access</h3>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To control system table access by setting Use
+Extended Attributes or Read Only:</p>
+<ol><li class=fi>
+Select Design&gt;Options from the
+menu bar.<br><br>
+The Database Preferences property sheet displays. If necessary,
+click the General tab to display the General property page. (The
+Database Preferences dialog box in InfoMaker includes an additional
+option named Connect DB at Startup.)<br><br><br><img src="images/cn6dbprf.gif"><br>
+</li>
+<li class=ds>
+Set values for Use Extended Attributes or Read
+Only as follows:<br><br><A NAME="TI1226"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI1227"></A>Preference</th>
+<th align="left" valign=bottom><A NAME="TI1228"></A>What you do</th>
+<th align="left" valign=bottom><A NAME="TI1229"></A>Effect</th>
+</tr>
+<tr><td valign=top><A NAME="TI1230"></A>Use Extended Attributes</td>
+<td valign=top><A NAME="TI1231"></A>Clear the checkbox</td>
+<td valign=top><A NAME="TI1232"></A>Does not create the InfoMaker system tables
+if they do not exist. Instead, the Report and Form painters use
+the appropriate default values for extended attributes (such as
+headers, labels, and text color)<A NAME="TI1233"></A>If the InfoMaker system tables already exist, InfoMaker does
+not use them when you create a new report or form</td>
+</tr>
+<tr><td valign=top><A NAME="TI1234"></A>Read Only</td>
+<td valign=top><A NAME="TI1235"></A>Select the checkbox</td>
+<td valign=top><A NAME="TI1236"></A>If the InfoMaker system tables already exist, InfoMaker uses
+them when you create a new report or form, <i>but does not update
+them</i>
+. This is not limited to reporting tables. <A NAME="TI1237"></A>Therefore, you <i>cannot</i>
+ modify (update) information
+in the system tables or any other database tables in the Report
+and Form painters when the Read Only checkbox is selected</td>
+</tr>
+</table>
+</li>
+<li class=ds>
+Do one of the following:<A NAME="TI1238"></A>
+<ul>
+<li class=fi>Click Apply to apply the preference settings to
+the current connection and all future connections without closing
+the Database Preferences property sheet.</li>
+<li class=ds>Click OK to apply the preference settings to the
+current connection and all future connections and close the Database
+Preferences property sheet.
+</li>
+</ul>
+
+                        <br><br>
+InfoMaker saves your preference settings in the registry.<br><br></li></ol>
+<br><A NAME="TI1239"></A><h3>Granting permissions on system tables to control
+access</h3>
+<A NAME="TI1240"></A><p>If your DBMS supports SQL GRANT and REVOKE statements, you
+can control access to the InfoMaker system tables. The default
+authorization for each repository table is:</p>
+<A NAME="TI1241"></A><p><pre><b>GRANT</b> <b>SELECT</b>, <b>UPDATE</b>, <b>INSERT</b>, <b>DELETE ON</b> <i>table</i> <b>TO PUBLIC</b></pre>
+</p>
+<A NAME="TI1242"></A><p>After the system tables are created, you can (for example)
+control access to them by granting SELECT authority to end users
+and SELECT, UPDATE, INSERT, and DELETE authority to developers.</p>
+<A NAME="TI1243"></A><p>This technique offers security and flexibility that is enforced
+by the DBMS itself.</p>
+

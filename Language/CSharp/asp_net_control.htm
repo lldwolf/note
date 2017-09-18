@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<title>ASP.NET控件</title>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+<p id="title">ASP.NET 控件</p>
+
+<h1>注意事项</h1>
+<p>ASP.NET的大部分控件与HTML控件是一一对应的，需要注意的有以下几点。</p>
+<h2>&lt;asp:button&gt;</h2>
+<p>默认情况下，点击由&lt;asp:button&gt;生成的控件会自动提交一个服务器任务，因此其onClock属性对应的并不是客户端的脚本，而是服务器端的方法。对应客户端方法的属性为onClientClick属性。</p>
+<p>如果需要在客户端脚本中进行输入检查，例如在登录界面中如果未输入用户名，则应该提示用户输入，而不要提交到服务器端，取消服务器端任务的方式为onClientClick属性的格式为“return 函数名()”，只要客户端脚本返回值为false，则不会向服务器端提交任务。</p>
+<h1>DataGridView </h1>
+<p>说实话，我对这个控件没有任何感情可言，它唯一的亮点在于它能实现分页功能，但很可惜，在很久以前，网上早就有了针对这个问题的解决方案。牢骚发完了，做为微软大肆宣扬的一个控件，我在这里讲一些基本用法吧。是为题记。</p>
+<h2>关联数据</h2>
+<p>这个很简单，设置其DataSource属性即可，我一般用一个DataTable对象。</p>
+<h2>分页</h2>
+<p>这个可能是新生代程序员用它的最大原因，要实现分页，设置如下几个属性：</p>
+<ul>
+  <li>AllowPaging: 设为True</li>
+  <li>PageSize: 设为每页的行数 </li>
+</ul>
+<h2>排序</h2>
+<p>DataGridView支持点击页头自动排序，需设置如下属性</p>
+<ul>
+  <li>AllowSorting: True </li>
+</ul>
+<h2>自定义列</h2>
+<p>我们设置其DataSource属性后，默认情况下DataGridView就会原模原样地把DataTable内容显示出来，包括列头、数据。但有时我们想自定义要显示的列，就需要写一些代码了。</p>
+<p>首先，要自定义列，需要将其AutoGenerateColumns属性设为False，意思是您就歇着吧，创建列的工作就交给在下好了。</p>
+<p>然后，就是要创建所需要的列了，下面是一段示例代码，创建一列，显示数据源中“No”列：</p>
+<pre class="code" data-type="csharp">BoundField field = new BoundField();
+field.DataField = &quot;No&quot;;
+field.HeaderText = &quot;No&quot;;
+field.ItemStyle.Width = 100;
+this.GridView1.Columns.Add(field);</pre>
+<p>DataGridView支持如下几种列类型：</p>
+<table style="width:60%"  border="0">
+  <tr>
+    <th>类</th>
+    <th>说明</th>
+  </tr>
+  <tr>
+    <td>BoundField</td>
+    <td>普通文本列</td>
+  </tr>
+  <tr>
+    <td>ButtonField</td>
+    <td>按钮列</td>
+  </tr>
+  <tr>
+    <td>CheckBoxField</td>
+    <td>检查框列</td>
+  </tr>
+  <tr>
+    <td>CommandField</td>
+    <td>特殊按钮列，支持插入、删除、编辑、选择4种按钮</td>
+  </tr>
+  <tr>
+    <td>HyperLinkField</td>
+    <td>超链接列</td>
+  </tr>
+  <tr>
+    <td>ImageField</td>
+    <td>图象列</td>
+  </tr>
+</table>
+<h3>定义列头</h3>
+<p>设定其HeaderText属性</p>
+<h3>定义绑定字段</h3>
+<p>设定其DataField属列为列名</p>
+<h3>定义超链接的链接目标</h3>
+<p>HyperLinkField的NavigateUrl属性定义了要链接的对象，但很可惜，这是个静态的，也就是说，除非你想让表格中这一列的所有链接都指向同一个地方，否则这个属性就没有任何用处。</p>
+<p>真正有用的是DataNavigateUrlFields属性，可以将数据源中拿出一列来存放链接地址（链接地址列），然后将链接地址列名赋到该属性即可，下面为示例代码：</p>
+<pre class="code" data-type="csharp">HyperLinkField field = new HyperLinkField();
+field.DataTextField = &quot;Plant&quot;;
+field.HeaderText = &quot;Plant&quot;;
+field.ItemStyle.Width = 150;
+field.DataNavigateUrlFields = new string[] { &quot;URL&quot; };
+field.Target = &quot;_blank&quot;;
+this.GridView1.Columns.Add(field);</pre>
+<p>其中，数据源中有一列名为“URL”，存放了每行的链接地址。</p>
+<h1>TreeView</h1>
+<p>本控件需下载安装相应的控件，对应的命名空间为：</p>
+<pre class="code" data-type="csharp">Microsoft.Web.UI.WebControls</pre>
+<p>TreeNode.Text用来设置显示的文本。可使用TreeNode.NodeText属性存储额外信息，使用 TreeView.GetNodeFromIndex(TreeView.SelectedNodeIndex)来获取选中的节点</p>
+<p>要加入事件，使用：</p>
+<pre class="code" data-type="csharp">this.treeview1.SelectedIndexChange +=new SelectEventHandler(treeview1_SelectedIndexChange);</pre>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp; </p>
+
+</body>
+</html>

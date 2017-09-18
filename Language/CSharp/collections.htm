@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+	<title>C# 笔记 - 集合类</title>
+	<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+	<p id="title">集合类</p>
+	<h1>概述</h1>
+	<p>C# 提供了以下集合类型</p>
+	<ul>
+		<li>基本数组</li>
+		<li>
+			<header>System.Collections</header>
+			非范型集合类</li>
+		<li>
+			<header>System.Collections.Generic</header>
+			范型集合类</li>
+		<li>
+			<header>System.Collections.Concurrent</header>
+			线程安全集合类</li>
+	</ul>
+	<h1>常用接口</h1>
+	<table>
+		<tr>
+			<th>接口</th>
+			<th>说明</th>
+		</tr>
+		<tr>
+			<td>IEnumerable/IEnumerable&lt;T&gt;</td>
+			<td>支持枚举，即可用于 foreach 循环</td>
+		</tr>
+		<tr>
+			<td>ICollections</td>
+			<td>继承自 IEnumerable，动态集合，支持增删操作</td>
+		</tr>
+		<tr>
+			<td>IList/IList&lt;T&gt;</td>
+			<td>继承自 ICollections, 实现了索引器，可按下标索引，并实现了基于下标的增删操作</td>
+		</tr>
+		<tr>
+			<td>IDictionary&lt;K, V&gt;</td>
+			<td>哈希表</td>
+		</tr>
+	</table>
+	<h1>工具类</h1>
+	<p>Enumerable 可用来初始化集合，如下所示</p>
+
+	<pre class="code" data-type="csharp">//a list with the initial value is 100, 10 elemens
+List&lt;int&gt; list1 = Enumerable.Repeat(100, 10).ToList();
+
+//a list with the initial value from 0 to 9
+List&lt;int&gt; list2 = Enumerable.Range(0, 10).ToList();</pre>
+</body>
+</html>

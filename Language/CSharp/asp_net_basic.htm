@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<title>ASP.NET 基本操作 </title>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+<p id="title">ASP.NET 基本操作</p>
+
+<h1>页面跳转</h1>
+<p>this.Response.Redirect(&quot;login_fail.htm&quot;);</p>
+<p>如果要打开新页面，可用如下语句：</p>
+<pre class="code" data-type="csharp">this.Response.Write(&quot;&lt;script&gt;window.open(\&quot;login_fail.htm\&quot;);&lt;/script&gt;&quot;);</pre>
+<p>不过如果IE使用了屏蔽弹出窗口的插件，则会被屏蔽。</p>
+<h1>在HTML网页中插入C#代码</h1>
+<p>首先在.cs中创建一个<strong>public</strong>型的变量</p>
+<pre class="code" data-type="csharp">public int Lines;</pre>
+<p>在其page load事件中初始化</p>
+<pre class="code" data-type="csharp">this.Lines = 20;</pre>
+<p>在HTML页面中插入如下代码，生成一个20行的表格</p>
+<pre class="code" data-type="csharp">	&lt;table border=&quot;1&quot; bordercolor=&quot;#990099&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot;&gt;
+&lt;%
+	for(int i = 0; i &lt; this.Lines; i++)
+	{
+%&gt;
+		&lt;tr&gt;
+			&lt;td width=&quot;100%&quot;&gt;
+			&lt;%=i%&gt;
+			&lt;/td&gt;
+		&lt;/tr&gt;
+&lt;%}%&gt;
+	&lt;/table&gt;</pre>
+<h1>在页面间传递参数</h1>
+<h2>字符串参数(GET)</h2>
+<p>发送参数</p>
+<pre class="code" data-type="xml">A href=&quot;test.aspx?parm1=中文字符串&quot; target=&quot;_blank&quot; runat=&quot;server&quot;&gt;测试&lt;/A&gt; </pre>
+<p>接收参数</p>
+<p>string s = Request.QueryString[&quot;parm1&quot;];</p>
+<p>对于中文参数，在传递后会出现字符串截断的情况，解决方安有两种：</p>
+<ul>
+  <li>第一种方法：</li>
+</ul>
+<p>发送参数时先要Encode</p>
+<pre class="code" data-type="csharp">&quot;PotoList.aspx?repairgroup_name=&quot; + HttpUtility.UrlEncode(&quot;儿童房'&quot;)</pre>
+<p>然后接收参数时要用Decode</p>
+<pre class="code" data-type="csharp">string name = HttpUtility.Decode(Request.QueryString[&quot;repairgroup_name&quot;])</pre>
+<ul>
+  <li>第二种方法，修改web.config（推荐）</li>
+</ul>
+<pre class="code" data-type="csharp">    &lt;globalization 
+            requestEncoding=&quot;gb2312&quot; 
+            responseEncoding=&quot;gb2312&quot; 
+   /&gt;</pre>
+<h2>字符串参数(POST)</h2>
+<p>使用POST方式传递的参数，需使用如下方式接收：</p>
+<pre class="code" data-type="csharp">Request.Form[&quot;参数名&quot;]</pre>
+<p>如果要判断客户端的参数传递方式，需使用系统变量 Request.ServerVariables[&quot;REQUEST_METHOD&quot;]，例如：</p>
+<pre class="code" data-type="csharp">if(Request.ServerVariables[&quot;REQUEST_METHOD&quot;] == &quot;POST&quot;)
+{
+	...
+}else if(Request.ServerVariables[&quot;REQUEST_METHOD&quot;] == &quot;GET&quot;)
+{
+	...
+}</pre>
+<h2>对象型</h2>
+<p>如果想传递对象型参数，使用Session系统变量</p>
+<pre class="code" data-type="csharp">//发送
+Session[&quot;parm&quot;] = arr;
+
+//接收
+ArrayList arr = Session[&quot;parm&quot;] as ArrayList;<br>Session.Remove(&quot;parm&quot;);
+</pre>
+<h2>备注</h2>
+<p>HttpRequest类还提供了一个参数集合属性：Params，不管是使用GET方式还是POST方式提交的参数，都可以在这个集合中找到，甚至还可以检索ServerVariables 和 Cookies型参数</p>
+<p>对于客户端Form中的检查框（checkbox），读取到的参数为选中的值集合，值间以“,”间隔。</p>
+<p>对文上传文件的对话框，使用Request.Files参数获取。</p>
+<h1>同时刷新多个Frame</h1>
+<pre class="code" data-type="csharp">Response.Write(&quot;&lt;script language=\&quot;javascript\&quot;&gt;parent.frames[\&quot;wLeft\&quot;].location=\&quot;Group.aspx\&quot;&lt;/script&gt;&quot;);
+Response.Write(&quot;&lt;script language=\&quot;javascript\&quot;&gt;parent.frames[\&quot;wRight\&quot;].location=\&quot;Group2.aspx\&quot;&lt;/script&gt;&quot;);</pre>
+<h1>程序设计部分</h1>
+<h2>导入类库</h2>
+<pre class="code" data-type="xml">%@ Import namespace=&quot;Microsoft.Win32&quot; %&gt; </pre>
+<p>下面这些类库是属于缺省导入的：</p>
+<pre class="code" data-type="csharp">using System;
+using System.Collections;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Web;
+using System.Web.SessionState;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using System.Web.UI.HtmlControls;</pre>
+<h2>路径</h2>
+<p>Server.MapPath(&quot;.&quot;) 获取当前站点的实际绝对路径，如 C:\Inetpub\wwwroot，如果需要生成文件的话，需要使用该绝对路径。</p>
+<h1>
+下载文件
+</h1>
+<pre class="code" data-type="csharp">static public void DownloadFile(HttpResponse Response, string file_name)
+{
+	Response.ContentType = &quot;application/octet-stream&quot;;
+	Response.AddHeader(&quot;Content-Disposition&quot;,&quot;attachment; FileName=\&quot;&quot; + HttpUtility.UrlEncode(file_name, System.Text.Encoding.UTF8) + &quot;\&quot;&quot;); 
+	FileStream fs = new FileStream(file_name, FileMode.Open);
+	byte[] buf = new byte[fs.Length];
+	fs.Read(buf, 0, (int)fs.Length);
+	Response.BinaryWrite(buf);
+	Response.End();
+}</pre>
+<p>使用上面的代码可实现以下功能：</p>
+<ul>
+  <li>支持中文文件名</li>
+  <li>可以让IE直接下载文件，而不是在IE中打开。</li>
+</ul>
+<p>如果要下载的文件类型为浏览器支持打开的类型，如Excel、PDF等，则可以使用该段代码让用户下载文件，而不是在浏览器中打开。</p>
+<p>上面的代码要求先在服务器端生成要下载的文件，其实对于某些动态生成的简单格式文件（如文本文件），我们更希望不用在服务器端生成文件，而是直接在内存中生成，然后由用户下载，为了实现该目的，需要使用MemoryStream类。</p>
+<p>下面是一段示例代码，它将一个DataTable的内容生成一个CSV格式的文件（仅存在于内存中），然后由用户下载：</p>
+<pre class="code" data-type="csharp">/// &lt;summary&gt;
+/// 导出为CSV格式的MemoryStream, 不存为本地文件
+/// &lt;/summary&gt;
+/// &lt;param name=&quot;table&quot;&gt;&lt;/param&gt;
+public MemoryStream DataTableToCSVMemoryStream(DataTable table)
+{
+    MemoryStream sw = new MemoryStream();
+    Encoding encoder = Encoding.GetEncoding(&quot;gb2312&quot;);
+    byte[] buf;
+    byte[] buf_tab = encoder.GetBytes(&quot;,&quot;);
+    byte[] buf_return = encoder.GetBytes(&quot;\r\n&quot;);
+
+    //导出列头
+    for (int col = 0; col &lt; table.Columns.Count; col++)
+    {
+        buf = encoder.GetBytes(table.Columns[col].Caption);
+        sw.Write(buf, 0, buf.Length);
+        if (col != table.Columns.Count - 1)
+            sw.Write(buf_tab, 0, buf_tab.Length);
+    }
+    sw.Write(buf_return, 0, buf_return.Length);
+
+    //导出内容
+    for (int row = 0; row &lt; table.Rows.Count; row++)
+    {
+        for (int col = 0; col &lt; table.Columns.Count; col++)
+        {
+            buf = encoder.GetBytes(&quot;\&quot;&quot; + table.Rows[row][col].ToString().Trim() + &quot;\&quot;&quot;);
+            sw.Write(buf, 0, buf.Length);
+            if (col != table.Columns.Count - 1)
+                sw.Write(buf_tab, 0, buf_tab.Length);
+        }
+        sw.Write(buf_return, 0, buf_return.Length);
+
+    }
+
+    sw.Flush();
+    return sw;
+
+}
+
+private void DownloadReport()
+{
+    DataTable tb_rep;
+    
+    //(生成DataTable tb_rep的操作)...
+    
+    MemoryStream ms = this.DataTableToCSVMemoryStream(tb_rep);
+
+    this.Response.ContentType = &quot;application/octet-stream&quot;;
+    Response.AddHeader(&quot;Content-Disposition&quot;, &quot;attachment; FileName=\&quot;monthy report.xls\&quot;&quot;);
+    byte[] buf = new byte[ms.Length];
+    ms.Seek(0, SeekOrigin.Begin);
+    ms.Read(buf, 0, (int)ms.Length);
+    Response.BinaryWrite(buf);
+    Response.End();
+
+}</pre>
+<h1>&nbsp;</h1>
+<p>&nbsp;</p>
+
+</body>
+</html>

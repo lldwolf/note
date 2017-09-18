@@ -1,0 +1,69 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<title>表的维护</title>
+<script language="javascript" src="css.js"></script>
+</head>
+
+<body>
+<h1>第六章 表的维护
+</h1>
+<h2>6.1 创建表</h2>
+<pre>--创建不带任何约束的表
+create table test_table(a int);
+
+--创建单主键约束的表
+create table test_table(a int primary key);
+
+--创建复合主键约束的表
+create table test_table(a int, b int, constraint pk_test_table primary key (a, b));
+
+--创建带外键约束的表
+create table table1(table1_id int primary key);
+create table table2(table2_id int primary key, table1_id int, 
+	constraint fk_table2_table1 foreign key (table1_id) references table1(table1_id));
+--或省略外键的数据类型
+create table table2(table2_id int primary key, table1_id, 
+	constraint fk_table2_table1 foreign key (table1_id) references table1(table1_id));
+	
+--创建非空约束
+create table test_table(a int not null);
+
+--创建默认值约束
+create table test_table(a int default 10);</pre>
+<p>各种约束集中于一列时，书写顺序为：</p>
+<P>默认值约束 - 非空约束 - 主键约束 </P>
+<h2>6.2 修改表</h2>
+<H3>N.2.1 修改约束</H3>
+<H4>N.2.1.1 主键约束</H4>
+<PRE>--创建测试表
+create table test_table(a int not null, b int not null);
+
+--创建主键约束
+alter table test_table add (primary key(a, b));
+
+--删除主键约束
+alter table test_table drop primary key cascade;
+
+--创建指定名称的主键约束
+alter table test_table add constraint pk_test_table primary key(a, b)
+
+--删除指定名称的主键约束
+alter table test_table drop constraint pk_test_table cascade</PRE>
+<P>在删除主键约束时，cascade关键字的作用是删除对应该主键的外键引用。这样并不用担心会删除对应外键约束的列。例如：表table1的主键为table1_id，表table2有一个对应的外键为tabl1_id，删除table1的主键约束时，即使加了cascade，也不会删除table2的列table1_id，只是解除了外键约束而已。</P>
+<H4>N.2.1.2 外键约束</H4>
+<PRE>--创建测试表
+create table table1(table1_id int primary key, table1_value varchar2(10));
+create table table2(table2_id int primary key, table1_id int not null, table2_value varchar2(10));
+
+--创建指定名称的外键约束
+alter table table2 add constraint fk_table2_table1 foreign key (table1_id) references table1(table1_id);
+
+--创建默认名称的外键约束
+alter table table2 add foreign key (table1_id) references table1(table1_id)</PRE>
+<p>&nbsp; </p>
+<script language="javascript" src="index.js"></script>
+</body>
+</html>

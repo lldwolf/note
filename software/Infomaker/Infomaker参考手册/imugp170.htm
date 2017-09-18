@@ -1,0 +1,67 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+DateTime</TITLE>
+</HEAD>
+<BODY>
+<A NAME="DWFDateTime"></A><A NAME="TI6555"></A><h1>DateTime</h1>
+<A NAME="TI6556"></A><p>
+<FORM>
+<INPUT
+ TYPE = "BUTTON"
+ VALUE = "Examples"
+ onClick = "window.location = 'imugp170.htm#EX22';">
+<INPUT
+  TYPE = "BUTTON"
+ VALUE = "See also"
+ onClick = "window.location = 'imugp170.htm#SA22';">
+</FORM>
+</p>
+<h3>Description</h3><A NAME="TI6557"></A><p>Combines a date and a time value into a DateTime value.</p>
+
+<h3>Syntax</h3><pre><b>DateTime</b> ( <i>date</i> {, <i>time</i> } )</pre>
+<A NAME="TI6558"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI6559"></A>Argument</th>
+<th align="left" valign=bottom><A NAME="TI6560"></A>Description</th>
+</tr>
+<tr><td valign=top><A NAME="TI6561"></A><i>date</i></td>
+<td valign=top><A NAME="TI6562"></A>A valid date (such as Jan 1, 1998, or
+12-31-99) or a blob variable whose first value is a date that you
+want included in the value returned by DateTime</td>
+</tr>
+<tr><td valign=top><A NAME="TI6563"></A><i>time</i> <br> (optional)</td>
+<td valign=top><A NAME="TI6564"></A>A valid time (such as 8am or 10:25:23:456799)
+or a blob variable whose first value is a time that you want included
+in the value returned by DateTime. If you include a time, only the
+hour portion is required. If you omit the minutes, seconds, or microseconds,
+they are assumed to be zeros. If you omit am or pm, the hour is determined
+according to the 24-hour clock</td>
+</tr>
+</table>
+
+<h3>Return Values</h3><A NAME="TI6565"></A><p>DateTime. Returns a DateTime value based on the values in <i>date</i> and optionally <i>time</i>.
+If time is omitted, DateTime uses 00:00:00.000000 (midnight).</p>
+
+<h3>Usage</h3><A NAME="TI6566"></A><p>To display microseconds in a time, the display format for
+the field must include microseconds.</p>
+<A NAME="TI6567"></A><p>For information on valid dates, see Date.</p>
+
+<A NAME="EX22"></A><h3>Examples</h3><A NAME="TI6568"></A><p>This expression returns the values in the order_date
+and order_time columns as a DateTime value that can be
+used to update the database:<pre><i>DateTime</i> (Order_Date, Order_Time)</pre>
+</p>
+<A NAME="TI6569"></A><p>Using this expression for a computed field displays <pre>11/11/01
+11:11:00</pre>
+:<pre><i>DateTime</i> (11/11/01, 11:11)</pre>
+</p>
+
+<A NAME="SA22"></A><h3>See Also</h3><A NAME="TI6570"></A><p><A NAME="TI6571"></A>
+<ul>
+<li class=fi><A HREF="imugp169.htm#CAICEIEJ">Date</A></li>
+<li class=ds><A HREF="imugp247.htm#CAIBABHG">Time</A></li>
+<li class=ds> 
+</li>
+</ul>
+</p>
+
+

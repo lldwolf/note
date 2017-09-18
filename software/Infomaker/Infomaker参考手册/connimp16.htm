@@ -1,0 +1,83 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+Defining the JDBC interface</TITLE>
+</HEAD>
+<BODY>
+<A NAME="BFCDDJGD"></A><h1>Defining the JDBC interface</h1>
+<A NAME="TI367"></A><h4>Defining the profile</h4>
+<A NAME="TI368"></A><p>To define a connection through the JDBC interface, you must
+create a database profile by supplying values for at least the basic
+connection parameters in the Database Profile Setup - JDBC dialog
+box. You can then select this profile anytime to connect to your
+database in the development environment. </p>
+<A NAME="TI369"></A><p>For information on how to define a database profile, see <A HREF="connimp5.htm#X-ref289075262">"Using database profiles"</A>. </p>
+<A NAME="TI370"></A><h4>Specifying connection parameters</h4>
+<A NAME="TI371"></A><p>To provide maximum flexibility (as provided in the JDBC API),
+the JDBC interface supports database connections made with different
+combinations of connection parameters: <A NAME="TI372"></A>
+<ul>
+<li class=fi><b>Driver name, URL, and Properties</b>   You should specify values for this combination of connection
+parameters if you need to define driver-specific properties. When
+properties are defined, you <i>must</i>
+ also define
+the user ID and password in the properties field. <br>
+For example, when connecting to the jConnect driver, the following
+values should be entered in the Driver-Specific Properties field:<pre>SQLINITSTRING=set TextSize 32000; user=system;password=manager;</pre>
+<br></li>
+<li class=ds><b>Driver name, URL, User ID, and Password</b>   You should specify values for this combination of connection
+parameters if you do not need to define any driver-specific properties. <pre>Driver Name: com.sybase.jdbc.SybDriver</pre>
+<pre>URL:         jdbc:sybase:Tds:localhost:2638</pre>
+<pre>Login ID:    dba</pre>
+<pre>Password:    sql</pre>
+</li>
+<li class=ds><b>Driver name and URL</b>   You should specify values for this combination of connections
+parameters when the user ID and password are included as part of
+the URL.<br>
+For example, when connecting to the Oracle JDBC driver, the
+URL can include the user ID and password:<pre>jdbc:oracle:thin:userid/password@host:port:dbname</pre>
+<br>
+</li>
+</ul>
+</p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Specifying properties when connecting to jConnect</span> <A NAME="TI373"></A>If you plan to use the blob data type in InfoMaker, you should
+be aware that jConnect imposes a restriction on blob size. Consequently,
+before you make your database connection from InfoMaker, you may
+want to reset the blob size to a value greater than the maximum
+size you plan to use. </p>
+<A NAME="TI374"></A>To set blob size, define the jConnect property SQLINITSTRING
+in the Driver-Specific Properties box on the Connection tab. The
+SQLINITSTRING property is used to define commands to be passed to
+the backend database server: <pre>SQLINITSTRING=set TextSize 32000; </pre>
+</p>
+<A NAME="TI375"></A>Remember that if you define a property in the Driver-Specific
+Properties box, you must also define the user ID and password in
+this box. </p>
+<A NAME="TI376"></A><h4>Specifying the appropriate Java VM</h4>
+<A NAME="TI377"></A><p>Since the JDB interface supports both the Sun and Microsoft
+Java VMs, you must specify which version of the Java VM you want
+to use. Use the JavaVM DBParm to select one of the following VMs:
+Sun JRE 1.1, Sun JRE 1.2, Sun JRE 1.3, or Microsoft VM. The default
+value is JRE 1.1. The following table lists the available Java VMs
+and their corresponding JavaVM DBParm value: </p>
+<A NAME="TI378"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI379"></A>Java VM</th>
+<th align="left" valign=bottom><A NAME="TI380"></A>DBParm Value</th>
+</tr>
+<tr><td valign=top><A NAME="TI381"></A>Sun JRE 1.1</td>
+<td valign=top><A NAME="TI382"></A>Sun1.1</td>
+</tr>
+<tr><td valign=top><A NAME="TI383"></A>Sun JRE 1.2</td>
+<td valign=top><A NAME="TI384"></A>Sun1.2</td>
+</tr>
+<tr><td valign=top><A NAME="TI385"></A>Sun JRE 1.3</td>
+<td valign=top><A NAME="TI386"></A>Sun1.3</td>
+</tr>
+<tr><td valign=top><A NAME="TI387"></A>Microsoft VM</td>
+<td valign=top><A NAME="TI388"></A>MS</td>
+</tr>
+</table>
+<A NAME="TI389"></A><p>For consistent behavior, the same version of the Java VM used
+during development should be used at runtime.  </p>
+<A NAME="TI390"></A><p>The JavaVM DBParm is set via the Options tab. </p>
+

@@ -1,0 +1,42 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+Number</TITLE>
+</HEAD>
+<BODY>
+<A NAME="DWFNumber"></A><A NAME="TI7394"></A><h1>Number</h1>
+<A NAME="TI7395"></A><p>
+<FORM>
+<INPUT
+ TYPE = "BUTTON"
+ VALUE = "Examples"
+ onClick = "window.location = 'imugp214.htm#EX66';">
+</FORM>
+</p>
+<h3>Description</h3><A NAME="TI7396"></A><p>Converts a string to a number.</p>
+
+<h3>Syntax</h3><pre><b>Number</b> ( <i>string</i> )</pre>
+<A NAME="TI7397"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI7398"></A>Argument</th>
+<th align="left" valign=bottom><A NAME="TI7399"></A>Description</th>
+</tr>
+<tr><td valign=top><A NAME="TI7400"></A><i>string</i></td>
+<td valign=top><A NAME="TI7401"></A>The string you want returned as a number</td>
+</tr>
+</table>
+
+<h3>Return Values</h3><A NAME="TI7402"></A><p>A numeric data type. Returns the contents of <i>string</i> as
+a number. If <i>string</i> is not a valid number,
+Number returns 0.</p>
+
+<A NAME="EX66"></A><h3>Examples</h3><A NAME="TI7403"></A><p>This expression converts the string 24 to a number:<pre><i>Number</i> ("24")</pre>
+</p>
+<A NAME="TI7404"></A><p>This expression for a computed field tests whether
+the value in the age column is greater than 55 and if so displays
+N/A; otherwise, it displays the value in age:<pre>If(<i>Number</i> (age) &gt; 55, "N/A", age)</pre>
+</p>
+<A NAME="TI7405"></A><p>This validation rule checks that the number the user
+entered is between 25,000 and 50,000:<pre><i>Number</i> (GetText())&gt;25000 AND <i>Number</i>  (GetText())&lt;50000</pre>
+</p>
+
+

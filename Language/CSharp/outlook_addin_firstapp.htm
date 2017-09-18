@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+    <title>C#.net使用手册</title>
+    <script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+<body>
+<p id="title">Outlook Add-In 开发</p>
+
+<h1>创建 Outlook Add-In 项目</h1>
+<h1>定制 Outlook 元素</h1>
+<h1>与 WinForm 集成</h1>
+<h1>与 SilverLight 集成</h1>
+<h1>运行时控制</h1>
+
+<h1>创建 Outlook Add-In 项目</h1>
+<p>本章例子基于 VS2010 与 outlook 2010</p>
+<img alt="" src="images/create_outlook_addin.png" />
+<p>自动创建的 ThisAddIn.cs 内容如下</p>
+<div id="accordion-thisaddin">
+<p><a href="#">查看代码</a></p>
+<pre class="code" data-type="csharp">using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Xml.Linq;
+using Outlook = Microsoft.Office.Interop.Outlook;
+using Office = Microsoft.Office.Core;
+
+namespace OutlookAddIn2
+{
+    public partial class ThisAddIn
+    {
+        private void ThisAddIn_Startup(object sender, System.EventArgs e)
+        {
+        }
+
+        private void ThisAddIn_Shutdown(object sender, System.EventArgs e)
+        {
+        }
+
+        #region VSTO generated code
+
+        /// &lt;summary&gt;
+        /// Required method for Designer support - do not modify
+        /// the contents of this method with the code editor.
+        /// &lt;/summary&gt;
+        private void InternalStartup()
+        {
+            this.Startup += new System.EventHandler(ThisAddIn_Startup);
+            this.Shutdown += new System.EventHandler(ThisAddIn_Shutdown);
+        }
+        
+        #endregion
+    }
+}</pre></div>
+<h1>定制 Outlook 元素</h1>
+<ul>
+	<li>菜单项</li>
+	<li>工具栏按钮</li>
+	<li>邮件目录</li>
+	<li>日历</li>
+</ul>
+<h2>自定义邮件文件夹</h2>
+<div id="accordion-customfolder">
+<p><a href="#">ThisAddIn 代码</a></p>
+<pre class="code" data-type="csharp">using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Xml.Linq;
+using MyOutlookAddIn.Utils;
+using Office = Microsoft.Office.Core;
+using Outlook = Microsoft.Office.Interop.Outlook;
+
+namespace MyOutlookAddIn
+{
+    public partial class ThisAddIn
+    {
+        private void ThisAddIn_Startup(object sender, System.EventArgs e)
+        {
+			this.AddCustomFolder();
+        }
+
+        private void ThisAddIn_Shutdown(object sender, System.EventArgs e)
+        {
+			this.RemoveCustomFolder();
+        }
+
+        #region VSTO generated code
+
+        /// &lt;summary&gt;
+        /// Required method for Designer support - do not modify
+        /// the contents of this method with the code editor.
+        /// &lt;/summary&gt;
+        private void InternalStartup()
+        {
+            this.Startup += new System.EventHandler(ThisAddIn_Startup);
+            this.Shutdown += new System.EventHandler(ThisAddIn_Shutdown);
+        }
+        
+        #endregion
+
+		#region Custom Folder Page
+
+		private const string FOLDER_LINDONG = &quot;Lindong's Folder&quot;;
+		private void AddCustomFolder()
+		{
+			Outlook.MAPIFolder root = OutlookFolder.GetRootFolder(this.Application.Session);
+			Outlook.MAPIFolder myFolder = OutlookFolder.CreateFolder(root, FOLDER_LINDONG);
+			myFolder.WebViewURL = @&quot;C:\Work\research\OutlookAddIn1\MyOutlookAddIn\bin\Debug\HostPages\HostPage1.htm&quot;;
+			myFolder.WebViewOn = true;
+		}
+
+		private void RemoveCustomFolder()
+		{
+			Outlook.MAPIFolder root = OutlookFolder.GetRootFolder(this.Application.Session);
+			Outlook.MAPIFolder myFolder = OutlookFolder.GetFolder(root, FOLDER_LINDONG);
+			myFolder.Delete();
+		}
+
+		#endregion
+	}
+}</pre></div>
+<div id="accordion-outlookfolder">
+<p><a href="#">OutlookFolder 工具类</a></p>
+<pre class="code" data-type="csharp">using System;
+using System.IO;
+using System.Collections.Generic;
+using MSOutlook = Microsoft.Office.Interop.Outlook;
+
+namespace MyOutlookAddIn.Utils
+{
+	public sealed class OutlookFolder
+	{
+		/// &lt;summary&gt;
+		/// Returns a reference to a child folder of a folder with a specific name, creating an inbox folder if it doesn't exist.
+		/// &lt;/summary&gt;
+		/// &lt;param name=&quot;root&quot;&gt;&lt;/param&gt;
+		/// &lt;param name=&quot;folderName&quot;&gt;&lt;/param&gt;
+		/// &lt;returns&gt;&lt;/returns&gt;
+		public static MSOutlook.MAPIFolder CreateFolder(MSOutlook.MAPIFolder root, string folderName)
+		{
+			return CreateFolder(root, folderName, MSOutlook.OlDefaultFolders.olFolderInbox);
+		}
+
+		/// &lt;summary&gt;
+		/// Returns a reference to a child folder of a folder with a specific name, creating it if it doesn't exist
+		/// &lt;/summary&gt;
+		/// &lt;param name=&quot;root&quot;&gt;&lt;/param&gt;
+		/// &lt;param name=&quot;folderName&quot;&gt;&lt;/param&gt;
+		/// &lt;param name=&quot;folderType&quot;&gt;&lt;/param&gt;
+		/// &lt;returns&gt;&lt;/returns&gt;
+		public static MSOutlook.MAPIFolder CreateFolder(MSOutlook.MAPIFolder root, string folderName, MSOutlook.OlDefaultFolders folderType)
+		{
+			MSOutlook.MAPIFolder folder = GetFolder(root, folderName);
+			if (folder == null)
+				folder = AddChildFolder(root, folderName, folderType);
+
+			return folder;
+		}
+
+		/// &lt;summary&gt;
+		/// Returns a reference to a child folder of a folder with a specific name, returning null if it doesn't exist
+		/// &lt;/summary&gt;
+		/// &lt;param name=&quot;root&quot;&gt;&lt;/param&gt;
+		/// &lt;param name=&quot;folderName&quot;&gt;&lt;/param&gt;
+		/// &lt;returns&gt;&lt;/returns&gt;
+		public static MSOutlook.MAPIFolder GetFolder(MSOutlook.MAPIFolder root, string folderName)
+		{
+			foreach (MSOutlook.MAPIFolder f in root.Folders)
+			{
+				if (f.Name == folderName)
+					return f;
+			}
+
+			return null;
+		}
+
+		public static MSOutlook.MAPIFolder GetRootFolder(MSOutlook.NameSpace session)
+		{
+			return (MSOutlook.MAPIFolder)session.GetDefaultFolder(
+					MSOutlook.OlDefaultFolders.olFolderInbox).Parent;
+		}
+
+		/// &lt;summary&gt;
+		/// Creates a child inbox folder with the specified name 
+		/// &lt;/summary&gt;
+		/// &lt;param name=&quot;root&quot;&gt;&lt;/param&gt;
+		/// &lt;param name=&quot;folderName&quot;&gt;&lt;/param&gt;
+		/// &lt;returns&gt;&lt;/returns&gt;
+		public static MSOutlook.MAPIFolder AddChildFolder(MSOutlook.MAPIFolder root, string folderName)
+		{
+			return AddChildFolder(root, folderName, MSOutlook.OlDefaultFolders.olFolderInbox);
+		}
+
+		/// &lt;summary&gt;
+		/// Creates a child folder with the specified name of the specified folder type
+		/// &lt;/summary&gt;
+		/// &lt;param name=&quot;root&quot;&gt;&lt;/param&gt;
+		/// &lt;param name=&quot;folderName&quot;&gt;&lt;/param&gt;
+		/// &lt;param name=&quot;folderType&quot;&gt;&lt;/param&gt;
+		/// &lt;returns&gt;&lt;/returns&gt;
+		public static MSOutlook.MAPIFolder AddChildFolder(MSOutlook.MAPIFolder root, string folderName, MSOutlook.OlDefaultFolders folderType)
+		{
+			return root.Folders.Add(folderName, folderType);
+		}
+	}
+}</pre></div>
+<p>上例运行后，在 Outlook 的默认邮件目录下将建立一个名为 <i>Lindong's Folder</i> 的目录，点击后将会导向一个指定的网页。</p>
+<p>该例为重要的Outlook定制方法，凡可与网页集成的内容，均可定制到 Outlook 中，如以下内容：</p>
+<ul>
+	<li>动态内容，如 ASP.NET，JSP，PHP 等</li>
+	<li>ActiveX，可使用 WinForm 技术开发</li>
+	<li>WPF，可使用 SilverLight 载入</li>
+</ul>
+<h1>与 WinForm 集成</h1>
+
+</body>
+</html>

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<title>.NET安全性配置</title>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+<p id="title">.NET安全性配置</p>
+<h1>代码安全性</h1>
+<p>有时在运行.net程序中一些不安全的代码（例如使用System.Diagnostics.Process运行外部程序）时，系统会报错，大意为安全策略不允许该操作，需要SecurityException之类没营养的话。解决的方法如下：</p>
+<p>1、看是否在局域网上运行的该程序，如果是的话，拷到本地来安装，在默认.net安全设置下，则应该运行正常</p>
+<p>2、如果仍然不正常或一定要在局域网上运行，进行如下配置</p>
+<p>控制面板 -- 管理工具 -- Microsoft .NET Framework 1.1 配置</p>
+<p>打开左边树中的 我的电脑 -- 运行库安全策略 -- 计算机 -- 代码组 -- All_Code 中的 My_Computer_Zone 和 LocalIntranet_Zone，表示本机的和局域网内的安全策略，选择右边的“编辑代码组属性”，在“权限集”面板中将权限集改为“FullTrust”。</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+
+</body>
+</html>

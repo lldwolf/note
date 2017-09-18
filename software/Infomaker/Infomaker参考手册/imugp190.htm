@@ -1,0 +1,45 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+IsRowNew</TITLE>
+</HEAD>
+<BODY>
+<A NAME="DWFIsRowNew"></A><A NAME="TI6860"></A><h1>IsRowNew</h1>
+<A NAME="TI6861"></A><p>
+<FORM>
+<INPUT
+ TYPE = "BUTTON"
+ VALUE = "Examples"
+ onClick = "window.location = 'imugp190.htm#EX42';">
+<INPUT
+  TYPE = "BUTTON"
+ VALUE = "See also"
+ onClick = "window.location = 'imugp190.htm#SA42';">
+</FORM>
+</p>
+<h3>Description</h3><A NAME="TI6862"></A><p>Reports whether the row has been newly inserted. </p>
+
+<h3>Syntax</h3><pre><b>IsRowNew</b> ( )</pre>
+
+<h3>Return Values</h3><A NAME="TI6863"></A><p>Boolean. Returns TRUE if the row is new and FALSE if it was
+retrieved from the database.</p>
+
+<h3>Usage</h3><A NAME="TI6864"></A><p>In a DataWindow object, when you call IsRowNew in bands other
+than the detail band, it reports on a row in the detail band. See
+GetRow for a table specifying which row is associated with each
+band for reporting purposes.</p>
+
+<A NAME="EX42"></A><h3>Examples</h3><A NAME="TI6865"></A><p>This expression defined in the Properties view for
+the Protect property of a column prevents the user from modifying
+the column unless the row has been newly inserted:<pre>If(<i>IsRowNew</i> (), 0, 1)</pre>
+</p>
+
+<A NAME="SA42"></A><h3>See Also</h3><A NAME="TI6866"></A><p><A NAME="TI6867"></A>
+<ul>
+<li class=fi><A HREF="imugp180.htm#CAIBGHBE">GetRow</A>
+</li>
+</ul>
+</p>
+
+

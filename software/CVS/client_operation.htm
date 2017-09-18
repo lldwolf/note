@@ -1,0 +1,80 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+	<title>CVS客户端操作</title>
+	<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+	<p id="title">CVS客户端操作</p>
+	<h1>CVS 命令格式</h1>
+	<pre>cvs [CVS options] command [command coptions] files</pre>
+	<h2>N.1.1 CVS Options</h2>
+	<table width="800">
+		<tbody>
+			<tr>
+				<th>Option</th>
+				<th>Description</th>
+			</tr>
+			<tr>
+				<td>-n</td>
+				<td>不改变任何文件，用于查询文件的改变情况以生成报表</td>
+			</tr>
+			<tr>
+				<td>-q</td>
+				<td>Quiet 模式，不显示一些提示性的信息，例如正在同步哪个文件夹之类</td>
+			</tr>
+		</tbody>
+	</table>
+	<h2>N.1.2 通用的 Commond Optiosn</h2>
+	<p>不同的命令有不同的选项，但有一些是通用于各个命令的，列于下表：</p>
+	<table width="800">
+		<tbody>
+			<tr>
+				<th>Option</th>
+				<th>Description</th>
+			</tr>
+			<tr>
+				<td>-P</td>
+				<td>跳过空目录，例如在 checkout 所有文件时，空目录将不会在本地生成</td>
+			</tr>
+			<tr>
+				<td>-r <i>tag</i></td>
+				<td>指定使用的 branch，如不指定将会使用 main trunk (HEAD) 版本</td>
+			</tr>
+		</tbody>
+	</table>
+	<h1>Create Branch</h1>
+	<p>下例从HEAD创建branch "GOLLF_GOLD_OUTLOOK_ADD_IN_2012"，Repository 为 gollf</p>
+	<pre>export CVSROOT=:pserver:ll52957:temp123@loanps3d.nam.nsroot.net:40460/opt/ficm/CVSRepository
+cvs login
+cvs rtag Root_GOLLF_IRM_CDO_NOV_2011 gollf      (maketag)
+cvs rtag -b -r Root_GOLLF_IRM_CDO_NOV_2011 GOLLF_IRM_CDO_NOV_2011 gollf    (create branch)
+--cvs rtag -b -r HEAD GOLLF_GOLD_OUTLOOK_ADD_IN_2012 gollf</pre>
+	<p>也可以同时为多个 Repository 创建 Branch</p>
+	<pre>cvs rtag Root_GOLLF_BAU_APR_2014 gollf/common gollf/comps gollf/ds gollf/entl gollf/gIRM gollf/profile gollf/refdata gollf/scorecard gollf/client
+cvs rtag -b -r Root_GOLLF_BAU_APR_2014 GOLLF_BAU_APR_2014 gollf/common gollf/comps gollf/ds gollf/entl gollf/gIRM gollf/profile gollf/refdata gollf/scorecard gollf/client</pre>
+	<h1>Checkout</h1>
+	<p>Checkout 某个 Module 到本地。</p>
+	<pre>set CVSROOT=:pserver:ll52957:temp123@loanps3d.nam.nsroot.net:40460/opt/ficm/CVSRepository
+cvs checkout -r %branch% -P gollf/client  (checkout 至当前目录)</pre>
+	<p>其中 %branch% 为 branch 的名字，如果要 checkout HEAD，命令为：</p>
+	<pre>cvs checkout -r HEAD -P gollf/client</pre>
+	<p>如果要 checkout 到指定目录，使用如下命令，下面是 checkout 到本地的 c:\temp\gollf 目录下</p>
+	<pre>cvs checkout -d c:\\temp\\gollf -r GOLLF_BAU_MAR_2012 -P gollf/client</pre>
+	<h1>Update</h1>
+	<p>查看文件的更改情况，不更新本地文件</p>
+	<pre>cvs -nq update -r GOLLF_BAU_MAR_2012 -P c:\\temp\\gollf</pre>
+	<p>更新本地文件</p>
+	<pre>cvs -q update -r GOLLF_BAU_MAR_2012 -P c:\\temp\\gollf</pre>
+	<h1>Diff</h1>
+	<p>比较本地文件与服务器上的差异</p>
+	<pre>cvs diff -lR -b -B --brief -r HEAD</pre>
+	<ul>
+		<li>-lR 比较本地文件，包括子目录</li>
+		<li>-b -B: 忽略空白字符</li>
+		<li>--brief: 对于不同的文件，不输出详细信息</li>
+	</ul>
+</body>
+</html>

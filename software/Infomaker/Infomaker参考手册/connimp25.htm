@@ -1,0 +1,528 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+Oracle</TITLE>
+</HEAD>
+<BODY>
+<A NAME="X-ref338760894"></A><h1>Oracle</h1>
+<A NAME="TI659"></A><p>This section describes how to use the native Oracle database
+interfaces in InfoMaker.</p>
+<A NAME="CCJDFIBD"></A><h2>Supported versions for Oracle</h2>
+<A NAME="TI660"></A><p>InfoMaker provides two Oracle database interfaces. These
+interfaces use different DLLs and access different versions of Oracle.</p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>For more information</span> <A NAME="TI661"></A>As additional InfoMaker database interfaces are supported
+in InfoMaker, updated information will be available electronically
+on the <A HREF="http://support.sybase.com">Sybase Customer Service and Support Web site</A>
+.</p>
+<A NAME="TI662"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI663"></A>Oracle interface</th>
+<th align="left" valign=bottom><A NAME="TI664"></A>DLL</th>
+</tr>
+<tr><td valign=top><A NAME="TI665"></A>O73 Oracle 7.3</td>
+<td valign=top><A NAME="TI666"></A>PBO7380.DLL</td>
+</tr>
+<tr><td valign=top><A NAME="TI667"></A>O84 Oracle 8.x and Oracle8<i>i</i>
+</td>
+<td valign=top><A NAME="TI668"></A>PBO8480.DLL</td>
+</tr>
+</table>
+<A NAME="TI669"></A><p>The Oracle O84 database interface provides support for functionality
+in Oracle Oracle8<i>i</i>
+ Version 8.1.x in addition
+to the support it provides for Oracle Versions 8.0.x.</p>
+<A NAME="TI670"></A><h2>Supported Oracle data types</h2>
+<A NAME="TI671"></A><p>The Oracle database interfaces support the following Oracle
+data types in reports:</p>
+<A NAME="TI672"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><td valign=top><A NAME="TI673"></A>Bfile (Oracle
+8 only)</td>
+<td valign=top><A NAME="TI674"></A>Long</td>
+</tr>
+<tr><td valign=top><A NAME="TI675"></A>Blob (Oracle
+8 only)</td>
+<td valign=top><A NAME="TI676"></A>LongRaw</td>
+</tr>
+<tr><td valign=top><A NAME="TI677"></A>Char</td>
+<td valign=top><A NAME="TI678"></A>Number</td>
+</tr>
+<tr><td valign=top><A NAME="TI679"></A>Clob (Oracle
+8 only)</td>
+<td valign=top><A NAME="TI680"></A>Raw</td>
+</tr>
+<tr><td valign=top><A NAME="TI681"></A>Date</td>
+<td valign=top><A NAME="TI682"></A>VarChar</td>
+</tr>
+<tr><td valign=top><A NAME="TI683"></A>Float</td>
+<td valign=top><A NAME="TI684"></A>VarChar2</td>
+</tr>
+</table>
+<A NAME="TI685"></A><h2>Basic software components for Oracle</h2>
+<A NAME="TI686"></A><p>You must install the following software components to access
+an Oracle database in InfoMaker.</p>
+<A NAME="CCJEAHBJ"></A><h2>Preparing to use the Oracle database</h2>
+<A NAME="TI687"></A><p>Before you define the database interface and connect to an
+Oracle database in InfoMaker, follow these steps to prepare the
+database for use: <A NAME="TI688"></A>
+<ol>
+</li>
+<li class=ds>Install and configure the required
+database server, network, and client software.</li>
+<li class=ds>Install the native Oracle database interface for
+the version of Oracle you want to access.</li>
+<li class=ds>Verify that you can connect to the Oracle server
+and database outside InfoMaker.
+</li>
+</ol>
+</p>
+<A NAME="TI689"></A><p>Preparing an Oracle database for use with InfoMaker involves
+these three basic tasks.</p>
+<A NAME="TI690"></A><h4>Step 1: install and configure the database server</h4>
+<A NAME="TI691"></A><p>You must install and configure the database server, network,
+and client software for Oracle.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To install and configure the database server,
+network, and client software:</p>
+<ol><li class=fi>
+Make sure the Oracle database software
+is installed on your computer or on the server specified in your
+database profile.<br><br>
+For example, with the Oracle O84 interface you can access
+an Oracle database server 8.0.x or Oracle8<i>i Server 8.1.x</i>
+.<br><br>
+You must obtain the database server software from Oracle Corporation.<br><br>
+For installation instructions, see your Oracle
+documentation.<br><br></li>
+<li class=ds>
+Make sure the supported network software (such
+as TCP/IP) is installed and running on your computer and
+is properly configured so that you can connect to the Oracle database
+server at your site.<br><br>
+The Hosts and Services files must be present on your computer
+and properly configured for your environment. <br><br>
+You must obtain the network software from your network vendor
+or database vendor.<br><br>
+For installation and configuration instructions,
+see your network or database administrator.<br><br></li>
+<li class=ds>
+Install the required Oracle client software on
+each client computer on which InfoMaker is installed.<br><br>
+You must obtain the client software from Oracle Corporation.
+Make sure the client software version you install supports <i>all</i>
+ of
+the following:<A NAME="TI692"></A>
+<ul>
+<li class=fi>The operating
+system running on the client computer</li>
+<li class=ds>The version of the database that you want to access</li>
+<li class=ds>The version of InfoMaker that you are running
+</li>
+</ul>
+<br><br><p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Required client software versions</span> <A NAME="TI693"></A>To use the Oracle 7.3 (O73) interface, you must install Oracle
+SQL*Net client software Version 2.3 or higher.</p>
+<A NAME="TI694"></A>To use the Oracle 8.x and Oracle8<i>i</i>
+ (O84)
+interface, you must install Oracle Net8 client software Version
+8.0.4 or higher.</p>
+</li>
+<li class=ds>
+Make sure the Oracle SQL*Net client software
+is properly configured so that you can connect to the Oracle database
+server at your site.<br><br>
+For example, installing SQL*Net software places the
+correct configuration file in the Oracle directory on your computer.
+For example, if you are using SQL*Net Version 2.x, the
+required configuration file is called TNSNAMES.ORA.<br><br>
+The configuration file provides information that Oracle needs
+to find and connect to the database server at your site. To modify
+and view the information in TNSNAMES.ORA, use an Oracle tool designed
+to edit the configuration file (such as Oracle Network Manager or
+the SQL*Net Easy Configuration utility).<br><br>
+For information about setting up the TNSNAMES.ORA
+or other required Oracle configuration file, see your SQL*Net
+documentation.<br><br></li>
+<li class=ds>
+If required by your operating system, make sure
+the directory containing the Oracle client software is in your system
+path.<br><br></li></ol>
+<br><A NAME="TI695"></A><h4>Step 2: install the database interface</h4>
+<A NAME="TI696"></A><p>When prompted to do so by the InfoMaker Setup program, select
+the appropriate Oracle database interface for the version of Oracle
+you want to access.</p>
+<A NAME="TI697"></A><p>For a list of the Oracle database interfaces
+available on each platform, see <A HREF="connimp25.htm#CCJDFIBD">"Supported versions for Oracle"</A>.</p>
+<A NAME="TI698"></A><p>For installation instructions, see the<i> Installation
+Guide</i>
+.</p>
+<A NAME="TI699"></A><h4>Step 3: verify the connection </h4>
+<A NAME="TI700"></A><p>Make sure you can connect to the Oracle database server and
+log in to the database you want to access from outside InfoMaker.</p>
+<A NAME="TI701"></A><p>Some possible ways to verify the connection are by running
+the following Oracle tools:<A NAME="TI702"></A>
+<ul>
+<li class=fi><b>Accessing the database server</b>   Tools such as Oracle TNSPING (or any other Ping utility) check
+whether you can reach the database server from your computer.</li>
+<li class=ds><b>Accessing the database</b>   Tools such as Oracle SQL*Plus check whether you can
+log in to the Oracle database you want to access and perform database
+operations. It is a good idea to specify the same connection parameters
+you plan to use in your InfoMaker database profile to access the
+database.
+</li>
+</ul>
+</p>
+<A NAME="TI703"></A><h3>What to do next</h3>
+<A NAME="TI704"></A><p>For instructions on defining the Oracle database
+interface in InfoMaker, see <A HREF="connimp25.htm#CCJDAAGF">"Defining the Oracle database
+interface"</A>.</p>
+<A NAME="CCJDAAGF"></A><h2>Defining the Oracle database interface</h2>
+<A NAME="TI705"></A><p>To define a connection through an Oracle database interface,
+you must create a database profile by supplying values for at least
+the basic connection parameters in the Database Profile Setup dialog
+box for your Oracle interface. You can then select this profile
+at any time to connect to your database in the development environment.</p>
+<A NAME="TI706"></A><p>For information on how to define a database profile, see <A HREF="connimp5.htm#X-ref289075262">"Using database profiles"</A>. </p>
+<A NAME="X-ref299267753"></A><h3>Specifying the Oracleserver connect descriptor</h3>
+<A NAME="TI707"></A><p>To connect to an Oracle database server that resides on a
+network, you must specify the proper connect descriptor in the Server
+box on the Connection tab of the Database Profile Setup dialog box
+for your Oracle interface. The connect descriptor specifies the
+connection parameters that Oracle uses to access the database.</p>
+<A NAME="TI708"></A><p>For help determining the proper connect descriptor
+for your environment, see your Oracle documentation or system administrator.</p>
+<A NAME="TI709"></A><h4>Specifying a connect descriptor</h4>
+<A NAME="TI710"></A><p>The syntax of the connect descriptor depends on the Oracle
+client software you are using.</p>
+<A NAME="TI711"></A><p>If you are using Net8 Version 8.x or higher, the syntax is:<pre><i>OracleServiceName</i></pre>
+</p>
+<A NAME="TI712"></A><p>If you are using SQL*Net Version 2.x, the syntax
+is: <pre>@ <b>TNS:</b> <i>OracleServiceName</i></pre>
+</p>
+<A NAME="TI713"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI714"></A>Parameter</th>
+<th align="left" valign=bottom><A NAME="TI715"></A>Description</th>
+</tr>
+<tr><td valign=top><A NAME="TI716"></A>@</td>
+<td valign=top><A NAME="TI717"></A>The at ( @ ) sign is required </td>
+</tr>
+<tr><td valign=top><A NAME="TI718"></A><b>TNS</b></td>
+<td valign=top><A NAME="TI719"></A>The identifier for the Oracle Transparent
+Network Substrate (TNS) technology</td>
+</tr>
+<tr><td valign=top><A NAME="TI720"></A><b>:</b></td>
+<td valign=top><A NAME="TI721"></A>The colon ( : ) is required </td>
+</tr>
+<tr><td valign=top><A NAME="TI722"></A><i>OracleServiceName</i></td>
+<td valign=top><A NAME="TI723"></A>The service name assigned to your server
+in the Oracle configuration file for your platform</td>
+</tr>
+</table>
+<p><b>Net8 Version 8.0.4 example</b>   To use Net8 Version 8.x or higher client software to connect
+to the service named ORA8, type the following connect descriptor
+in the Server box on the Connection tab of the Database Profile Setup
+- Oracle 8.x and Oracle8<i>i</i>
+ dialog box:</p>
+<A NAME="TI724"></A><p>	<b>ORA8</b></p>
+<p><b>SQL*Net Version 2.x example</b>   To use SQL*Net Version 2.x client software to connect
+to the service named ORA73, type the following connect descriptor in
+the Server box on the Connection tab of the Database Profile Setup
+- Oracle 7.3 dialog box:</p>
+<A NAME="TI725"></A><p>	<b>@TNS:ORA73</b></p>
+<A NAME="CCJDICBE"></A><h2>Using Oracle stored procedures as a data source</h2>
+<A NAME="TI726"></A><p>This section describes how you can use Oracle stored procedures
+in your InfoMaker application.</p>
+<A NAME="TI727"></A><h3>What is an Oracle stored procedure?</h3>
+<A NAME="TI728"></A><p>Oracle defines a <strong>stored procedure</strong> (or
+function) as a named PL/SQL program unit that logically
+groups a set of SQL and other PL/SQL programming language
+statements together to perform a specific task.</p>
+<A NAME="TI729"></A><p>Stored procedures can take parameters and (in Oracle 7.2 or
+higher) return one or more result sets (also called cursor variables).
+You create stored procedures in your schema and store them in the
+data dictionary for use by multiple users.</p>
+<A NAME="CCJBDEFC"></A><h3>What you can do with Oraclestored procedures</h3>
+<A NAME="TI730"></A><h4>Ways to use Oracle stored procedures</h4>
+<A NAME="TI731"></A><p>In your InfoMaker application, you can use an Oracle stored
+procedure as a data source for reports.</p>
+<p><b>Procedures with a single result set</b>   You can use stored procedures that return a single result
+set in reports, but <i>not</i>
+ when using the
+RPCFUNC keyword to declare the stored procedure as an external function
+or subroutine.</p>
+<A NAME="TI732"></A><h3>Using Oracle stored procedures with result sets</h3>
+<A NAME="TI733"></A><h4>Overview of basic steps</h4>
+<A NAME="TI734"></A><p>The following procedure assumes you are creating the stored
+procedure in the ISQL view of the Database painter in InfoMaker.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To use an Oracle stored procedure with a result
+set:</p>
+<ol><li class=fi>
+Set up the ISQL view of the Database painter
+to create the stored procedure.<br><br></li>
+<li class=ds>
+Create the stored procedure with a result set
+as an IN OUT (reference) parameter.<br><br></li>
+<li class=ds>
+Create reports that use the stored procedure as
+a data source.<br><br></li></ol>
+<br><A NAME="TI735"></A><h4>Setting up the Database painter</h4>
+<A NAME="TI736"></A><p>When you create a stored procedure in the ISQL view of the
+Database painter, you must change the default SQL statement terminator
+character to one that you do not plan to use in your stored procedure
+syntax.</p>
+<A NAME="TI737"></A><p>The default SQL terminator character for the Database painter
+is a semicolon (;). If you plan to use a semicolon in your Oracle
+stored procedure syntax, you must change the painter's
+terminator character to something other than a semicolon to avoid
+conflicts. A good choice is the backquote ( ` ) character.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To change the default SQL terminator character
+in the Database painter:</p>
+<ol><li class=fi>
+Connect to your Oracle database in InfoMaker as
+the System user.<br><br>
+For instructions, see <A HREF="connimp25.htm#CCJDAAGF">"Defining the Oracle database
+interface"</A>.<br><br></li>
+<li class=ds>
+Open the Database painter.<br><br></li>
+<li class=ds>
+Select Design&gt;Options from the menu bar.<br><br>
+The Database Preferences property sheet displays. If necessary,
+click the General tab to display the General property page.<br><br></li>
+<li class=ds>
+Type the character you want (for example, a backquote)
+in the SQL Terminator Character box.<br><br></li>
+<li class=ds>
+Click Apply or OK.<br><br>
+The SQL Terminator Character setting is applied to the current
+connection and all future connections (until you change it).<br><br></li></ol>
+<br><A NAME="TI738"></A><h4>Creating the stored procedure</h4>
+<A NAME="TI739"></A><p>After setting up the Database painter, you can create an Oracle
+stored procedure that has a result set as an IN OUT (reference)
+parameter. InfoMaker retrieves the result set to populate a report.</p>
+<A NAME="TI740"></A><p>There are many ways to create stored procedures with result
+sets. The following procedure describes one possible method that
+you can use. </p>
+<A NAME="TI741"></A><p>For information about when you can use stored
+procedures with single and multiple result sets, see <A HREF="connimp25.htm#CCJBDEFC">"What you can do with Oracle
+stored procedures"</A>.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> One way to create Oracle stored procedures with
+result sets:</p>
+<ol><li class=fi>
+Make sure your Oracle user account has
+the necessary database access and privileges to access Oracle objects
+(such as tables and procedures).<br><br>
+Without the appropriate access and privileges, you will be
+unable to create Oracle stored procedures.<br><br></li>
+<li class=ds>
+Assume the following table named <i>tt</i>
+ exists
+in your Oracle database:<br><br><A NAME="TI742"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI743"></A>a</th>
+<th align="left" valign=bottom><A NAME="TI744"></A>b</th>
+<th align="left" valign=bottom><A NAME="TI745"></A>c</th>
+</tr>
+<tr><td valign=top><A NAME="TI746"></A>1</td>
+<td valign=top><A NAME="TI747"></A>Newman</td>
+<td valign=top><A NAME="TI748"></A>sysdate</td>
+</tr>
+<tr><td valign=top><A NAME="TI749"></A>2</td>
+<td valign=top><A NAME="TI750"></A>Everett</td>
+<td valign=top><A NAME="TI751"></A>sysdate</td>
+</tr>
+</table>
+</li>
+<li class=ds>
+Create an Oracle package that holds the result
+set type and stored procedure. The result type must match your table
+definition.<br><br>
+For example, the following statement creates an Oracle package
+named <i>spm</i>
+ that holds a result set type named <i>rctl</i>
+ and
+a stored procedure named <i>proc1</i>
+. The tt%ROWTYPE
+attribute defines <i>rctl</i>
+ to contain all of the columns
+in table <i>tt</i>
+. The procedure <i>proc1</i>
+ takes
+one parameter, a cursor variable named <i>rc1</i>
+ that
+is an IN OUT parameter of type <i>rctl</i>
+.<pre>CREATE OR REPLACE PACKAGE spm</pre>
+<pre>			IS TYPE rctl IS REF CURSOR</pre>
+<pre>			RETURN tt%ROWTYPE</pre>
+<pre>			PROCEDURE proc1(rc1 IN OUT rctl);END;`</pre>
+<br><br></li>
+<li class=ds>
+Create the Oracle stored procedure.<br><br>
+The following example shows how to create a stored procedure
+named <i>spm_proc 1</i>
+ that returns a single
+result set.<br><br>
+The IN OUT specification means that InfoMaker passes the
+cursor variable (<i>rc1</i>
+ or <i>rc2</i>
+)
+by reference to the Oracle procedure and expects the procedure to
+open the cursor. After the procedure call, InfoMaker fetches the
+result set from the cursor and then closes the cursor.<br><br></li>
+<li class=ds><b>spm_proc1 example for reports</b>   The following statements create <i>spm_proc1</i>
+ that
+returns one result set. You can use this procedure as the data source
+for a report in InfoMaker.</p>
+
+<pre>CREATE OR REPLACE PROCEDURE spm_proc1(rc1 IN OUT</pre>
+<pre>      spm.rctl</pre>
+<pre>  AS</pre>
+<pre>  BEGIN</pre>
+<pre>    OPEN rc1 FOR SELECT * FROM tt;END;`</pre>
+<br><br>
+<pre> </pre>
+<br><br></li></ol>
+<br><br><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Error checking</span> <A NAME="TI752"></A>If necessary, check the Oracle system table public.user_errors
+for a list of errors.
+<br>
+<A NAME="TI753"></A><h4>Creating the report</h4>
+<A NAME="TI754"></A><p>After you create the stored procedure, you can define the report that
+uses the stored procedure as a data source.</p>
+<A NAME="TI755"></A><p>You can use Oracle stored procedures that return a single
+result set in a report.</p>
+<A NAME="TI756"></A><p>The following procedure assumes that your Oracle stored procedure
+returns only a single result set.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To create a report using an Oracle stored
+procedure with a result set:</p>
+<ol><li class=fi>
+In the Report painter, click the New button
+in the Select dialog box.<br><br>
+The New Report dialog box displays. The Stored Procedure icon
+displays as a data source.<br><br></li>
+<li class=ds>
+Select the Stored Procedure data source, choose
+a presentation style, and click OK.<br><br>
+The Select Stored Procedure dialog box displays, listing the
+stored procedures available in your database.<br><br></li>
+<li class=ds>
+Select the stored procedure you want to use as
+a data source, and click OK.<br><br></li>
+<li class=ds>
+Define your report.<br><br>
+You preview a report as you normally do to get the data. InfoMaker fetches
+the result set from the cursor in order to populate the report.<br><br>
+For instructions on defining reports,
+see the <i>InfoMaker User's Guide</i>
+.<br><br></li></ol>
+<br><A NAME="CCJBEBBI"></A><h2>Using Oracle 8 user-defined types</h2>
+<A NAME="TI757"></A><h4>What InfoMaker supports</h4>
+<A NAME="TI758"></A><p>When you use the Oracle 8.x and Oracle8<i>i</i>
+ database
+interface, InfoMaker supports SQL CREATE TYPE and CREATE TABLE
+statements for Oracle 8 user-defined types (objects) in the ISQL
+view of the Database painter. It correctly handles SQL SELECT, INSERT,
+UPDATE, and DELETE statements for user-defined types in the Database
+and Report painters.</p>
+<A NAME="TI759"></A><h4>What you can do</h4>
+<A NAME="TI760"></A><p>This means that using the Oracle 8.x and Oracle8<i>i</i>
+ database
+interface in InfoMaker, you can:</p>
+<A NAME="TI761"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI762"></A>Do this</th>
+<th align="left" valign=bottom><A NAME="TI763"></A>In</th>
+</tr>
+<tr><td valign=top><A NAME="TI764"></A>Use Oracle 8 syntax to create user-defined
+types</td>
+<td valign=top><A NAME="TI765"></A>Database painter</td>
+</tr>
+<tr><td valign=top><A NAME="TI766"></A>Use Oracle 8 syntax to create tables
+with columns that reference user-defined types</td>
+<td valign=top><A NAME="TI767"></A>Database painter</td>
+</tr>
+<tr><td valign=top><A NAME="TI768"></A>View columns in Oracle 8 tables that reference
+user-defined types</td>
+<td valign=top><A NAME="TI769"></A>Database painter</td>
+</tr>
+<tr><td valign=top><A NAME="TI770"></A>Manipulate data in Oracle 8 tables that have
+user-defined types</td>
+<td valign=top><A NAME="TI771"></A>Database painter<A NAME="TI772"></A>Report painter<A NAME="TI773"></A>Reports</td>
+</tr>
+<tr><td valign=top><A NAME="TI774"></A>Export Oracle 8 table syntax containing use-defined
+types to a log file</td>
+<td valign=top><A NAME="TI775"></A>Database painter</td>
+</tr>
+<tr><td valign=top><A NAME="TI776"></A>Invoke methods of objects columns</td>
+<td valign=top><A NAME="TI777"></A>Report painter (Compute tab in SQL Toolbox)</td>
+</tr>
+</table>
+<A NAME="TI778"></A><h4>Example</h4>
+<A NAME="TI779"></A><p>Here is a simple example that shows how you might create and
+use Oracle 8 user-defined types in InfoMaker.</p>
+<A NAME="TI780"></A><p>For more information about Oracle 8 user-defined
+types, see your Oracle 8 documentation.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To create and use Oracle 8 user-defined types:</p>
+<ol><li class=fi>
+In the ISQL view of the Database painter,
+create two Oracle 8 user-defined types: ball_stats_type
+and player_type.<br><br>
+Here is the Oracle 8 syntax to create <i>ball_stats_type</i>
+.
+Notice that the <i>ball_stats</i>
+ object
+of type <i>ball_stats_type</i>
+ has
+a method associated with it called <i>get_avg</i>
+.<pre>CREATE OR REPLACE TYPE ball_stats_type AS OBJECT (</pre>
+<pre>bat_avg NUMBER(4,3),</pre>
+<pre>rbi NUMBER(3),</pre>
+<pre>MEMBER FUNCTION get_avg RETURN NUMBER,</pre>
+<pre>PRAGMA RESTRICT_REFERENCES</pre>
+<pre>    (get_avg,WNDS,RNPS,WNPS));</pre>
+<pre></pre>
+<pre>CREATE OR REPLACE TYPE BODY ball_stats_type AS</pre>
+<pre>MEMBER FUNCTION get_avg RETURN NUMBER IS</pre>
+<pre>BEGIN</pre>
+<pre>RETURN SELF.bat_avg;</pre>
+<pre>END;</pre>
+<br><br>
+Here is the Oracle 8 SQL syntax to create <i>player_type</i>
+. <i>Player_type</i>
+ references
+the user-defined type <i>ball_stats_type</i>
+. InfoMaker supports
+such nesting graphically in the Database, Report, and Table
+painters (see step 3).<pre>CREATE TYPE player_type AS OBJECT (</pre>
+<pre>player_no NUMBER(2),</pre>
+<pre>player_name VARCHAR2(30),</pre>
+<pre>ball_stats ball_stats_type);</pre>
+<br><br></li>
+<li class=ds>
+In the Database painter, create an Oracle 8 table
+named lineup that references these user-defined types.<br><br>
+Here is the Oracle 8 SQL syntax to create the lineup table
+and insert a row. Lineup references the <i>player_type</i>
+ user-defined
+type.<pre>CREATE TABLE lineup (</pre>
+<pre>position NUMBER(2) NOT NULL,</pre>
+<pre>player player_type);</pre>
+<pre></pre>
+<pre>INSERT INTO lineup VALUES (</pre>
+<pre>1,</pre>
+<pre>player_type (5, 'Nomar Garciaparra',</pre>
+<pre>ball_stats_type (0.372, 96)));</pre>
+<br><br></li>
+<li class=ds>
+Display the lineup table in the Database or Report painter.<br><br>
+InfoMaker uses the following structure-&gt;member notation
+to display the table:<pre>lineup</pre>
+<pre>======</pre>
+<pre>position</pre>
+<pre>player-&gt;player_no</pre>
+<pre>player-&gt;player_name</pre>
+<pre>player-&gt;ball_stats-&gt;bat_avg</pre>
+<pre>player-&gt;ball_stats-&gt;rbi</pre>
+<br><br></li>
+<li class=ds>
+To access the <i>get_avg</i>
+ method
+of the object ball_stats contained in the object column
+player, use the following structure-&gt;member notation when defining
+a computed column for the report. For example, when working
+in the Report painter, you could use this notation on the Compute tab
+in the SQL Toolbox:<br><br>
+<pre>player-&gt;ball_stats-&gt;get_avg()</pre>
+<br><br></li></ol>
+<br><A NAME="TI781"></A><h2>What to do next</h2>
+<A NAME="TI782"></A><p>For instructions on connecting to the database,
+see <A HREF="connimp32.htm#CCJBAGDB">"Connecting to a database"</A>. </p>
+

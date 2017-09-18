@@ -1,0 +1,211 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+About defining ODBC data sources</TITLE>
+</HEAD>
+<BODY>
+<A NAME="CCJBICIG"></A><h1>About defining ODBC data sources</h1>
+<A NAME="TI222"></A><p>Each ODBC data source requires a corresponding ODBC driver
+to access it. When you define an ODBC data source, you provide information
+about the data source that the driver requires in order to connect
+to it. (Defining an ODBC data source is often called <strong>configuring</strong> the
+data source.)</p>
+<A NAME="TI223"></A><p>After you prepare to use the data source, you must define
+it. To define a data source, use Microsoft's ODBC Data
+Source Administrator utility. This utility can be accessed via the
+Control Panel in Windows or via InfoMaker's Database painter. </p>
+<A NAME="TI224"></A><p>The rest of this section describes what you need to know to
+define an ODBC data source in order to access it in the InfoMaker development
+environment.</p>
+<A NAME="CCJDJGGB"></A><h2>How InfoMaker accesses the data source</h2>
+<A NAME="TI225"></A><p>When you access an ODBC data source in InfoMaker, there are
+several initialization files and registry entries on your computer
+that work with the ODBC interface and driver to make the connection. </p>
+<A NAME="TI226"></A><h3>PBODB80 initialization file</h3>
+<A NAME="TI227"></A><h4>Contents</h4>
+<A NAME="TI228"></A><p>The PBODB80 initialization file is located in Program Files\Sybase\Shared\PowerBuilder. InfoMaker uses
+PBODB80.INI to maintain access to extended functionality in the
+backend DBMS for which ODBC does not provide an API call. Examples
+of extended functionality are SQL syntax or DBMS-specific function
+calls.</p>
+<A NAME="TI229"></A><h4>Editing</h4>
+<A NAME="TI230"></A><p>In most cases, you should not need to edit the PBODB80 initialization
+file. In certain situations, however, you may need to add functions
+to the PBODB80 initialization file for your backend DBMS. </p>
+<A NAME="TI231"></A><p>For instructions, see <A HREF="connimp47.htm#BJBBHCIE">Appendix A, "Adding
+Functions to the PBODB80 Initialization File"</A>.</p>
+<A NAME="TI232"></A><h3>ODBCINST registry entries</h3>
+<A NAME="TI233"></A><h4>Contents</h4>
+<A NAME="TI234"></A><p>The ODBCINST initialization information is located in the HKEY_LOCAL_MACHINE\Software\ODBC\ODBC.ini
+registry entry. When you install an ODBC-compliant driver supplied
+by Sybase or another vendor, ODBCINST.INI is automatically updated
+with a description of the driver. This description includes:<A NAME="TI235"></A>
+<ul>
+<li class=fi>The DBMS or data source associated
+with the driver</li>
+<li class=ds>The drive and directory of the driver and setup
+DLLs (for some data sources, the driver and setup DLLs are the same)</li>
+<li class=ds>Other driver-specific connection parameters
+</li>
+</ul>
+</p>
+<A NAME="TI236"></A><h4>Editing</h4>
+<A NAME="TI237"></A><p>You should <i>not</i>
+ need to edit ODBCINST
+information file directly to modify connection information. If your
+driver uses the information in the ODBCINST registry subkey, the
+subkey is automatically updated when you install the driver. This
+is true whether the driver is supplied by Sybase or another vendor.</p>
+<A NAME="TI238"></A><h3>ODBC registry entries</h3>
+<A NAME="TI239"></A><h4>Contents</h4>
+<A NAME="TI240"></A><p>The ODBC.ini is located in the HKEY_CURRENT_USER\Software\ODBC registry
+entry. When you define a data source for a particular ODBC driver,
+the driver writes the values you specify in the ODBC setup dialog
+box to the ODBC registry subkey.</p>
+<A NAME="TI241"></A><p>The [ODBC Data Sources] section of the ODBC.ini
+subkey lists the name of each defined data source and its associated
+DBMS. The ODBC.ini subkey also includes a separate section for each
+data source. This section contains the values specified for that
+data source in the ODBC setup dialog box. The values may vary for
+each data source but generally include the following:<A NAME="TI242"></A>
+<ul>
+<li class=fi>Name</li>
+<li class=ds>Optional description</li>
+<li class=ds>DBMS-specific connection parameters
+</li>
+</ul>
+</p>
+<A NAME="TI243"></A><h4>Editing</h4>
+<A NAME="TI244"></A><p>You should <i>not</i>
+ edit the ODBC subkey directly
+to modify connection information. Instead, you should use a tool
+designed to define ODBC data sources and the ODBC configuration
+automatically, such as the ODBC Data Source Administrator.</p>
+<A NAME="TI245"></A><h3>Database profiles registry entry</h3>
+<A NAME="TI246"></A><h4>Contents</h4>
+<A NAME="TI247"></A><p>Database profiles for all data sources are stored in the registry
+in HKEY_CURRENT_USER\Software\Sybase\EAStudio\4.0\DatabaseProfiles\ PowerBuilder.</p>
+<A NAME="TI248"></A><h4>Editing</h4>
+<A NAME="TI249"></A><p>You should <i>not</i>
+ need to edit the profiles
+directly to modify connection information. These files are updated
+automatically when InfoMaker creates the database profile as part
+of the ODBC data source definition.</p>
+<A NAME="TI250"></A><p>You can also edit the database profile box or complete the
+Database Preferences property sheet in InfoMaker to specify other
+connection parameters stored in the registry. (For instructions,
+see <A HREF="connimp37.htm#X-ref301957254">Chapter 7, "Setting Additional
+Connection Parameters"</A>.)</p>
+<A NAME="TI251"></A><h4>Example</h4>
+<A NAME="TI252"></A><p>The following example shows a portion of the database profile
+for the EAS Demo DB V4 data source:</p>
+<A NAME="TI253"></A><p><pre>DBMS=ODBC</pre>
+<pre>Database=EAS Demo DB V4</pre>
+<pre>UserId=dba</pre>
+<pre>DatabasePassword=</pre>
+<pre>LogPassword=</pre>
+<pre>ServerName=</pre>
+<pre>LogId=</pre>
+<pre>Lock=</pre>
+<pre>DbParm=ConnectString='DSN=EAS Demo DB V4;</pre>
+<pre>		UID=dba;PWD=sql'</pre>
+<pre>Prompt=0</pre>
+</p>
+<p><b>Values used with ODBC data sources</b>   This registry entry example shows the two most important values
+in a database profile for an ODBC data source:</p>
+<A NAME="TI254"></A><p><A NAME="TI255"></A>
+<ul>
+<li class=fi><b>DBMS</b>   The DBMS value (ODBC) indicates that you are using the ODBC interface
+to connect to the data source. </li>
+<li class=ds><b>DBParm</b>   The ConnectString DBParm parameter controls your ODBC data
+source connection. The connect string <i>must</i>
+ specify
+the DSN (data source name) value, which tells ODBC which data source
+you want to access. When you select a database profile to connect
+to a data source, ODBC looks in the ODBC registry subkey for a section
+that corresponds to the data source name in your profile. ODBC then
+uses the information in the specified section of the registry file
+to load the required libraries to connect to the data source. The
+connect string can also contain the UID (user ID) and PWD (password)
+values needed to access the data source.
+</li>
+</ul>
+</p>
+<A NAME="TI256"></A><h2>About defining multiple data sources for the same
+data</h2>
+<A NAME="TI257"></A><p>When you define an ODBC data source in InfoMaker, each data
+source name must be unique. You can, however, define multiple data
+sources that access the same data, as long as the data sources have
+unique names.</p>
+<A NAME="TI258"></A><p>For example, assume that your data source is an Adaptive Server Anywhere database
+located in C:\ASA7.0\SALES.DB. Depending on your
+application, you may want to specify different sets of connection
+parameters for accessing the database--for example, using
+different passwords and user IDs.</p>
+<A NAME="TI259"></A><p>To do this, you can define two ODBC data sources named Sales1
+and Sales2 that specify the same database (C:\ASA7.0\SALES.DB)
+but different user IDs and passwords. When you connect to the data
+source using either of these profiles, you are using different connection
+parameters to access the same data.</p>
+<br><img src="images/Cnw2src.gif">
+<A NAME="CCJBJICH"></A><h2>Displaying Help for ODBC drivers</h2>
+<A NAME="TI260"></A><p>The online Help for ODBC drivers in InfoMaker is provided
+by the driver vendors. It gives help on:<A NAME="TI261"></A>
+<ul>
+<li class=fi>Completing the ODBC setup dialog box to define the
+data source </li>
+<li class=ds>Using the ODBC driver to access the data source   
+</li>
+</ul>
+</p>
+<A NAME="TI262"></A><h3>Help for any ODBC driver</h3>
+<A NAME="TI263"></A><p>Use the following procedure to display vendor-supplied Help
+when you are in the ODBC setup dialog box for <i>any</i>
+ ODBC
+driver supplied with InfoMaker.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To display Help for any ODBC driver:</p>
+<ol><li class=fi>
+Click the Help button in the ODBC setup
+dialog box for your driver.<br><br>
+A Help window displays, describing features in the setup dialog
+box.<br><br></li>
+<li class=ds>
+Click the Contents button in the Help window to
+display additional Help topics for this driver.<br><br>
+Another Help window displays, listing the topics you can view.<br><br></li>
+<li class=ds>
+Click an underlined topic to display its Help
+window.<br><br></li></ol>
+<br><A NAME="CCJDDEEA"></A><h2>Selecting an ODBC translator</h2>
+<A NAME="TI264"></A><h4>What is an ODBC translator?</h4>
+<A NAME="TI265"></A><p>The ODBC drivers supplied with InfoMaker allow you to specify
+a translator when you define the data source. An <strong>ODBC
+translator</strong> is a DLL that translates data passing between
+an application and a data source. Typically, translators are used
+to translate data from one character set to another.</p>
+<A NAME="TI266"></A><h4>What you do</h4>
+<A NAME="TI267"></A><p>Follow these steps to select a translator for your ODBC driver.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To select a translator when using an ODBC driver:</p>
+<ol><li class=fi>
+In the ODBC setup dialog box for your driver,
+display the Select Translator dialog box.<br><br>
+The way you display the Select Translator
+dialog box for Sybase-supplied ODBC drivers depends on the driver
+and Windows platform you are using. Click Help in your driver's
+setup dialog box for instructions on displaying the Select Translator
+dialog box.<br><br>
+The Select Translator dialog box displays. The translators
+listed in this dialog box are determined by the values in your ODBCINST
+registry subkey.<br><br><br><img src="images/cn2trs.gif"><br>
+</li>
+<li class=ds>
+Select a translator to use from the Installed
+Translators list.<br><br>
+If you need help using the Select Translator dialog box, click
+Help.<br><br></li>
+<li class=ds>
+Click OK.<br><br>
+The Select Translator dialog box closes and the driver performs
+the translation.<br><br></li></ol>
+<br>

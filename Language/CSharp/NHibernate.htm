@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<title>对象持久化类库——NHibernate</title>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+<p id="title">对象持久化类库——NHibernate初步</p>
+<h1>源程序 </h1>
+<p><a href="demo/NHibernate_Demo.zip">Winform 示例代码</a></p>
+<p><a href="demo/ngen.zip">ASPWEB 示例代码</a> </p>
+<h1>组成部分 </h1>
+<h2>必须要素 </h2>
+<ol>
+  <li> 新建一个将要持久化.Net对象的表
+</li>
+  <li>构建一个需要被持久化的.Net类</li>
+  <li>构建一个可以让NHibernate知道如何持久化对象属性的映射文件</li>
+  <li>构建一个让NHibernate知道如何连接数据库的配置文件</li>
+  <li>使用NHibernate的API  </li>
+</ol>
+<h2>创建表的SQL语句</h2>
+<pre class="code" data-type="csharp">CREATE TABLE users(
+	LogonID nvarchar(20) NOT NULL default '0',
+	Name nvarchar(40) default NULL,  
+	Password nvarchar(20) default NULL,  
+	EmailAddress nvarchar(40) default NULL,  
+	LastLogon datetime default NULL,  
+	PRIMARY KEY  (LogonID))</pre>
+<h2>对应的.net类</h2>
+<pre class="code" data-type="csharp">using System;
+
+namespace CTest
+{
+	/// <summary>
+	/// Summary description for User.
+	/// </summary>
+	public class User
+	{
+		private string id;
+		private string userName;
+		private string password;
+		private string emailAddress;
+		private DateTime lastLogon;
+
+
+		public User()
+		{
+		}
+
+		public string Id 
+		{
+			get { return id; }
+			set { id = value; }
+		}
+
+		public string UserName 
+		{
+			get { return userName; }
+			set { userName = value; }
+		}
+
+		public string Password 
+		{
+			get { return password; }
+			set { password = value; }
+		}
+
+		public string EmailAddress 
+		{
+			get { return emailAddress; }
+			set { emailAddress = value; }
+		}
+
+		public DateTime LastLogon 
+		{
+			get { return lastLogon; }
+			set { lastLogon = value; }
+		}
+
+	}
+}</pre>
+<h2>对应的映射文件</h2>
+<pre class="code" data-type="xml">?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; ?&gt; 
+
+&lt;hibernate-mapping xmlns=&quot;urn:nhibernate-mapping-2.0&quot;&gt;
+
+    &lt;class name=&quot;CTest.User, CTest&quot; table=&quot;users&quot;&gt;
+		&lt;id name=&quot;Id&quot; column=&quot;LogonId&quot; type=&quot;String&quot; length=&quot;20&quot;&gt;
+			&lt;generator class=&quot;assigned&quot; /&gt;
+		&lt;/id&gt;
+		
+		&lt;property name=&quot;UserName&quot; column=&quot;Name&quot; type=&quot;String&quot; length=&quot;40&quot;/&gt;
+		&lt;property name=&quot;Password&quot; type=&quot;String&quot; length=&quot;20&quot;/&gt;
+		&lt;property name=&quot;EmailAddress&quot; type=&quot;String&quot; length=&quot;40&quot;/&gt;
+		&lt;property name=&quot;LastLogon&quot; type=&quot;DateTime&quot;/&gt;
+	&lt;/class&gt;
+	
+&lt;/hibernate-mapping&gt;</pre>
+<p>让我们来看看这个文件中让我们感兴趣的某些行。第一个有趣的标签是class。这里我们将映射类型名称(类名和装配件)到我们数据库中的User表，这里和Hibernate有一点点的不同。你将不得不告诉NHibernate从何处提取对象。在这个例子里我们从装配件CTest装载类CTest.User 。NHibernate 遵循和.Net Framework同样的规则来加载类型。因此如果你在如何指定类型的方面有些混淆，请参看.Net Framework SDK。</p>
+<p>让我们先跳过id标签，来讨论property标签。简要看一下，你将发现NHibernate所要做的工作。name属性的值正是我们.Net 类的属性，column属性值将是我们数据库里的字段。type属性是可选的（如果你不标明，NHibernate将利用反射进行最佳的推测）。</p>
+<p>好了，让我们回到标签id, 你可以猜测到这个标签将是映射数据库表的主键，的确如此，id标签的组成和我们刚才看的property标签是相似的。我们映射属性到目标数据库的字段。</p>
+<p>内嵌的generator 标签告诉NHibernate 如何生成主键（它将恰当的为你生成主键，不管你指定何种类型，但你必须告诉它）。在我们的例子里，我们设定为assigned,意味着我们对象将自己生成主键（毕竟User对象常常需要一个UserID）。如果你执意要NHiberante为你生成主键，你感兴趣于设定uuid.hex和uuid.string（从文档中获取更多信息）</p>
+<p><img src="images/note.jpg" width="20" height="20">提示：如果你使用Visual Studio.Net 去编译的话，请将user.hbm.xml的Build Action属性设置为Embedded Resource(中文VS.NET为“嵌入的资源”)。映射文件将成为装配件的一部分。更详细的细节重点将在后面展示。</p>
+<p><img src="images/note.jpg" width="20" height="20">提示：如果你仅仅是改变映射文件，你不能使用build 而应该Rebuild项目。Visual Studio.Net 不会重新编译有改变的映射文件。</p>
+<p><img src="images/note.jpg" width="20" height="20">提示：必须要有id标签，即使数据库的该字段不是主键，不然会报错“元素“urn:nhibernate-mapping-2.0:class”有无效的子元素”，当时为了这个问题折腾了我一天。</p>
+<h2>为你的数据库产生一个配置文件</h2>
+<p>我们至今还没有告诉NHibernate 去哪里连接数据库。最直接的办法是在你的应用程序的配置文件里设置一个NHibernate配置节。这和在Hibernate里使用属性文件是等价的。如下配置：</p>
+<pre class="code" data-type="xml">?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; ?&gt;
+&lt;configuration&gt;
+   	 &lt;configSections&gt;
+	        &lt;section name=&quot;nhibernate&quot; type=&quot;System.Configuration.NameValueSectionHandler, System, Version=1.0.5000.0,Culture=neutral, PublicKeyToken=b77a5c561934e089&quot; /&gt;
+	        &lt;section name=&quot;log4net&quot; type=&quot;log4net.Config.Log4NetConfigurationSectionHandler,log4net&quot; /&gt;
+	&lt;/configSections&gt;
+	
+	&lt;nhibernate&gt;
+		&lt;add 
+			key=&quot;hibernate.show_sql&quot;
+			value=&quot;true&quot;
+		/&gt;
+		&lt;add 
+			key=&quot;hibernate.connection.provider&quot;          
+			value=&quot;NHibernate.Connection.DriverConnectionProvider&quot; 
+		/&gt;
+		&lt;!-- --&gt;
+		&lt;add 
+			key=&quot;hibernate.dialect&quot;                      
+			value=&quot;NHibernate.Dialect.MsSql2000Dialect&quot; 
+		/&gt;
+		&lt;add 
+			key=&quot;hibernate.connection.driver_class&quot;          
+			value=&quot;NHibernate.Driver.SqlClientDriver&quot; 
+		/&gt;
+		&lt;add 
+			key=&quot;hibernate.connection.connection_string&quot; 
+			value=&quot;data source=127.0.0.1;persist security info=True;initial catalog=test;user id=sa;password=sa&quot; 
+		/&gt;
+		
+		
+		&lt;!-- This is the System.Data.OracleClient.dll provider for Oracle from MS --&gt;
+		&lt;!--  
+		
+		&lt;add 
+			key=&quot;hibernate.dialect&quot;                      
+			value=&quot;NHibernate.Dialect.OracleDialect&quot; 
+		/&gt;
+		&lt;add 
+			key=&quot;hibernate.connection.driver_class&quot;          
+			value=&quot;NHibernate.Driver.OracleClientDriver&quot; 
+		/&gt;
+		
+		&lt;add 
+			key=&quot;hibernate.connection.connection_string&quot; 
+			value=&quot;Data Source=ora9i;User ID=scott;Password=tiger;&quot; 
+		/&gt;
+		--&gt;
+		
+	&lt;/nhibernate&gt;
+
+	&lt;!-- This section contains the log4net configuration settings --&gt;
+	&lt;log4net&gt;
+
+		&lt;!-- Define some output appenders --&gt;	
+
+		&lt;appender name=&quot;rollingFile&quot; type=&quot;log4net.Appender.RollingFileAppender,log4net&quot; &gt;
+			
+			&lt;param name=&quot;File&quot; value=&quot;log.txt&quot; /&gt;
+			&lt;param name=&quot;AppendToFile&quot; value=&quot;true&quot; /&gt;
+			&lt;param name=&quot;RollingStyle&quot; value=&quot;Date&quot; /&gt;
+			&lt;param name=&quot;DatePattern&quot; value=&quot;yyyy.MM.dd&quot; /&gt;
+			&lt;param name=&quot;StaticLogFileName&quot; value=&quot;true&quot; /&gt;
+
+			&lt;layout type=&quot;log4net.Layout.PatternLayout,log4net&quot;&gt;
+				&lt;param name=&quot;ConversionPattern&quot; value=&quot;%d [%t] %-5p %c [%x] &lt;%X{auth}&gt; - %m%n&quot; /&gt;
+			&lt;/layout&gt;
+		&lt;/appender&gt;
+
+		&lt;!-- Setup the root category, add the appenders and set the default priority --&gt;
+		
+		&lt;root&gt;
+			&lt;priority value=&quot;ALL&quot; /&gt;
+			&lt;appender-ref ref=&quot;rollingFile&quot; /&gt;
+		&lt;/root&gt;
+
+	&lt;/log4net&gt;
+	
+
+&lt;/configuration&gt;</pre>
+<p>上面的例子里用了SqlClient 驱动，在本地连接名称为test的数据库，提供用户名和密码。那里有一堆属性你需要调整来确定如何让NHibernate来访问数据库。再次说明，你可以在文档里获取更多信息。</p>
+<p>请注意以上的配置里并没有涉及到log4net的配置信息。NHibernate使用log4net来记录内部发生的一切。在一个应用程序产品里，在你特定环境里，我推荐配置log4net，并为NHibernate设置一定的日志级别。</p>
+<h2>使用NHibernate</h2>
+<p>所有艰苦的工作已经完成。你将有以下内容</p>
+<ul>
+  <li>User.cs ----你需要持久化的C#类</li>
+  <li>User.hbm.xml ----你的NHibernate映射文件</li>
+  <li>App.config ---对ADO.NET连接的配置信息（如果你愿意，你可以在代码中实现）。</li>
+  <li>你的数据库里有一张User表。</li>
+</ul>
+<p>现在可以在你的代码中恰当简洁的使用NHibernate。简化的版本如下</p>
+<ul>
+  <li>创建一个Configuration对象 </li>
+  <li> 让Configuration知道你将存储何种类型的对象 </li>
+  <li> 为你选择的数据库创建一个Session对象 </li>
+  <li> Load，Save和Query你的对象 </li>
+  <li> 通过Session的Flush()方法将对象提交给数据库。</li>
+</ul>
+<p>为了让你更清晰，我们来看一些代码。</p>
+<p>首先，创建一个Configuration对象</p>
+<p>Configuration对象能够解析所有.Net对象和后台数据库中的映射关系。</p>
+<pre class="code" data-type="csharp">Configuration cfg = new Configuration();
+cfg.AddAssembly(&quot;CTest&quot;);</pre>
+<p>Configuration对象会搜索装配件里的任何以hbm.xml 结尾的文件。还有其他方法加载映射文件，但这种方式是最简单的。</p>
+<p>下一步，创建一个Session对象</p>
+<p>ISession对象提供一个到后台数据库的连接，ITransaction对象提供一个可以被NHibernate管理的事务。</p>
+<pre class="code" data-type="csharp">ISessionFactory factory = cfg.BuildSessionFactory();
+ISession session = factory.OpenSession();
+ITransaction transaction = session.BeginTransaction();</pre>
+<p>接着来Load, Save和Query你的对象</p>
+<p>现在你可以用使用传统的.Net方法来操纵对象。你想保存一个新对象到数据库吗？尝试下面的方法：</p>
+<pre class="code" data-type="csharp">User newUser = new User();
+newUser.Id = &quot;joe_cool&quot;;
+newUser.UserName = &quot;Joseph Cool&quot;;
+newUser.Password = &quot;abc123&quot;;
+newUser.EmailAddress = &quot;joe@cool.com&quot;;
+newUser.LastLogon = DateTime.Now;
+       
+// Tell NHibernate that this object should be saved
+session.Save(newUser);
+ 
+// commit all of the changes to the DB and close the ISession
+transaction.Commit();
+session.Close();</pre>
+<p>正如你所看到的，关于NHiberante重要的事情是如此简单。继续并且查询你的数据库，验证一下User表里的新记录。现在重要的事情就是你去操心业务对象并在进行处理的时候告诉NHibernate就可以了。</p>
+<p>让我们来告诉你，当你有一个UserID的时候如何获取对象（举例说，登陆你的网站的时候）。仅仅一句话就可以打开Session，传入key就可以了</p>
+<pre class="code" data-type="csharp">// open another session to retrieve the just inserted user
+session = factory.OpenSession();
+User joeCool = (User)session.Load(typeof(User), &quot;joe_cool&quot;);</pre>
+<p>你所获取的User对象还在生存周期内！改变它的属性，并通过Flush()持久化到数据库。</p>
+<pre class="code" data-type="csharp">// set Joe Cool's Last Login property
+joeCool.LastLogon = DateTime.Now;
+ 
+// flush the changes from the Session to the Database
+session.Flush();</pre>
+<p>你所要做的就是通过NHibernate来进行你需要的改变，并调用Session的Flush()方法提交。验证一下数据库，查查用户ID为”joe_cool”的记录中”LastLogon”的更改。</p>
+<p>还有更好的，你可以以System.Collections.IList的方式来获取从表中的对象。如下</p>
+<pre class="code" data-type="csharp">IList userList = session.CreateCriteria(typeof(User)).List();
+foreach(User user in userList)
+{
+	System.Diagnostics.Debug.WriteLine(user.Id + &quot; last logged in at &quot; + user.LastLogon);
+}</pre>
+<p>这个查询将会返回所有表记录。往往你需要做更多的控制，比如说获取从March 14, 2004 10:00 PM　以后登陆的用户，如下：</p>
+<pre class="code" data-type="csharp">IList recentUsers = session.CreateCriteria(typeof(User))
+      .Add(Expression.Expression.Gt(&quot;LastLogon&quot;, new DateTime(2004, 03, 14, 20, 0, 0)))
+      .List();
+ 
+foreach(User user in recentUsers)
+{
+       System.Diagnostics.Debug.WriteLine(user.Id + &quot; last logged in at &quot; + user.LastLogon);
+}</pre>
+<p>文档里还有一堆健壮的查询方式让你调用，这里仅仅让你对NHibernate所提供的强有力的工具有一定的了解。</p>
+<p> 最后调用Session对象的Close()方法，释放NHibernate所使用的ADO.Net连接资源</p>
+<pre class="code" data-type="csharp">// tell NHibernate to close this Session
+session.Close();</pre>
+<h1>手工配置Configuration</h1>
+<p>如果使用动态数据库配置，例如应用程序需支持多个数据库类型，这样就不能将配置写死在App.configure文件中，其实可以抛开app.configure，编程序Configure对象进行设置：</p>
+<pre class="code" data-type="csharp">SqlConnection conn = new SqlConnection(&quot;packet size=4096;user id=demo;data source=\&quot;.\&quot;;persist security info=True;initial catalog=intools;password=demo&quot;);
+conn.Open();
+NHibernate.Cfg.Configuration cfg = new NHibernate.Cfg.Configuration();
+//手工设置数据库类型
+cfg.Properties.Add(&quot;hibernate.dialect&quot;, &quot;NHibernate.Dialect.MsSql2000Dialect&quot;);
+NHibernate.ISessionFactory sessions = cfg.BuildSessionFactory();
+NHibernate.ISession session = sessions.OpenSession(conn);</pre>
+<h1>用NHibernate完成数据库的各种操作</h1>
+<p>本节中使用的创建表的SQL语句为</p>
+<pre class="code" data-type="csharp">create table test_table(
+	a int identity(1,1) primary key, 
+	b varchar(20))</pre>
+<p>TestTable.hbm.xml内容为</p>
+<pre class="code" data-type="xml">?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+&lt;hibernate-mapping xmlns=&quot;urn:nhibernate-mapping-2.0&quot;&gt;
+	&lt;class name=&quot;NGEN.DA.TestTable, ngen&quot; table=&quot;test_table&quot;&gt;
+		&lt;id name=&quot;A&quot; column=&quot;a&quot; length=&quot;4&quot;&gt;
+			&lt;generator class=&quot;NHibernate.Id.IdentityGenerator&quot; /&gt;
+		&lt;/id&gt;
+		&lt;property name=&quot;B&quot; column=&quot;b&quot; type=&quot;System.String&quot; length=&quot;100&quot; /&gt;
+	&lt;/class&gt;
+&lt;/hibernate-mapping&gt;</pre>
+<p>TestTable.cs内容为</p>
+<pre class="code" data-type="csharp">using System;
+
+namespace NGEN.DA
+{
+	/// &lt;summary&gt;
+	/// 表test_table
+	/// &lt;/summary&gt;
+	public class TestTable
+	{
+
+		/// &lt;summary&gt;
+		/// 构造函数
+		/// &lt;/summary&gt;
+		public TestTable()
+		{
+		}
+
+		private System.Int32 _A;
+
+		/// &lt;summary&gt;
+		/// 列a
+		/// &lt;/summary&gt;
+		public System.Int32 A
+		{
+			get { return _A; }
+			set { _A = value; }
+		}
+
+		private System.String _B;
+
+		/// &lt;summary&gt;
+		/// 列b
+		/// &lt;/summary&gt;
+		public System.String B
+		{
+			get { return _B; }
+			set { _B = value; }
+		}
+
+	}
+}</pre>
+<h2>载入数据</h2>
+<h3>根据主键载入至一个对象</h3>
+<p>将数据库的一条记录载入到一个TestTable对象，术语称之为对象持久化（Object Persistent）</p>
+<pre class="code" data-type="csharp">using NHibernate;
+using NHibernate.Cfg;
+
+Configuration cfg = new Configuration();
+
+cfg.AddAssembly(Assembly.GetExecutingAssembly());
+ISessionFactory factory = cfg.BuildSessionFactory();
+ISession session = factory.OpenSession();
+//在test_table中查找 a = 4的记录
+object o = session.Get(typeof(TestTable), 4);
+if(o == null)
+{
+	Response.Write(&quot;&lt;script language='jscript'&gt;alert('对象不存在！');&lt;/script&gt;&quot;);
+}
+else
+{
+	TestTable t = (TestTable)o;
+	t.B = &quot;cccc&quot;;
+	session.Flush();
+	Response.Write(&quot;&lt;script language='jscript'&gt;alert('操作成功！&quot; + t.B + &quot;');&lt;/script&gt;&quot;);
+}
+session.Close();</pre>
+<p>上例中我们使用了ISession.Get方法，它在取不到记录时返回NULL，如果我们确定一定能够找到，可以改用ISession.Load()方法，但如果在数据库中找不到对应记录，则引发异常。</p>
+<p><img src="images/note.jpg" width="20" height="20">注意：在使用主键载入对象时，传入的参数必须与.hbm.xml配置文件中给出的数据类型一致，例如，若数据库中使用的数据类型为LONG，则传入的参数一定为long，若为int型，则会抛出异常。</p>
+<h3>根据HQL载入</h3>
+<pre class="code" data-type="csharp">Configuration cfg = new Configuration();
+
+cfg.AddAssembly(Assembly.GetExecutingAssembly());
+ISessionFactory factory = cfg.BuildSessionFactory();
+ISession session = factory.OpenSession();
+
+string hql;
+
+hql = &quot;select a.A from NGEN.DA.TestTable as a&quot;;
+IList list = session.Find(hql);
+
+session.Close();
+Response.Write(&quot;&lt;script language='jscript'&gt;alert('找到&quot; + list.Count + &quot;个, 第一个元素为&quot; + (int)list[0][0]  + &quot;！');&lt;/script&gt;&quot;);</pre> 
+<p>使用HSQL查询时，返回的结果为IList接口，其中里面的每个元素都是ojbect[]型值，在HQL的select列表可以写 select a.A，那么对应的object[0]中的值是一个整数，也可以写select a，那么对应的object[0]中的值是一个TestTable对象。因为上例我们的HQL select中只有一列，所以最后的list[0][0]也可以用list[0]来代替。</p>
+<h2>新增记录</h2>
+<pre class="code" data-type="csharp">Configuration cfg = new Configuration();
+
+cfg.AddAssembly(Assembly.GetExecutingAssembly());
+ISessionFactory factory = cfg.BuildSessionFactory();
+ISession session = factory.OpenSession();
+ITransaction transaction = session.BeginTransaction();
+
+TestTable t = new TestTable();
+t.B = &quot;aaaaaa&quot;;
+session.Save(t);
+
+transaction.Commit();
+session.Close();
+
+Response.Write(&quot;&lt;script language='jscript'&gt;alert('操作成功！');&lt;/script&gt;&quot;);</pre>
+<p>因为我用的字段a是自增型的，所以在映射文件中配置好好，NHibernate会自动进行处理的，否则需要手工赋值。</p>
+<h2>修改记录</h2>
+<pre class="code" data-type="csharp">Configuration cfg = new Configuration();
+
+cfg.AddAssembly(Assembly.GetExecutingAssembly());
+ISessionFactory factory = cfg.BuildSessionFactory();
+ISession session = factory.OpenSession();
+object o = session.Get(typeof(TestTable), 4);
+if(o == null)
+{
+	Response.Write(&quot;&lt;script language='jscript'&gt;alert('对象不存在！');&lt;/script&gt;&quot;);
+}
+else
+{
+	TestTable t = (TestTable)o;
+	t.B = &quot;cccc&quot;;
+	session.Flush();
+	Response.Write(&quot;&lt;script language='jscript'&gt;alert('操作成功！&quot;');&lt;/script&gt;&quot;);
+}
+session.Close();</pre>
+<h2>删除记录</h2>
+<h2>调用存储过程 </h2>
+<p>截至版本1.0.2，NHibernate尚不直接支持存储过程。因此只好用变通的方法实现</p>
+<pre class="code" data-type="csharp">static public IList ExecuteStoredProc( string spName, ICollection paramInfos) 
+{ 
+	IList result = new ArrayList(); 
+
+	ISession session = Global.NHSessionFactory.OpenSession();
+	
+	IDbCommand cmd = Global.NHSessionFactory.ConnectionProvider.Driver.CreateCommand(); 
+
+	cmd.CommandText = spName; 
+	cmd.CommandType = CommandType.StoredProcedure; 
+
+	// 加入参数 
+	if ( paramInfos != null ) 
+	{ 
+		foreach( Parameter info in paramInfos ) 
+		{ 
+			IDbDataParameter parameter = cmd.CreateParameter(); 
+			parameter.ParameterName = info.Name; // driver.FormatNameForSql( info.Name ); 
+			parameter.Value = info.Value; 
+			cmd.Parameters.Add( parameter ); 
+		} 
+	} 
+
+	IDbConnection conn = session.Connection;
+	if(conn.State == ConnectionState.Closed)
+		conn.Open();
+	try 
+	{ 
+		cmd.Connection = conn; 
+		IDataReader rs = cmd.ExecuteReader(); 
+
+		while (rs.Read()) 
+		{ 
+			int fieldCount = rs.FieldCount; 
+			object[] values = new Object[fieldCount]; 
+			for ( int i = 0; i &lt; fieldCount; i ++ ) 
+				values[i] = rs.GetValue(i); 
+			result.Add( values ); 
+		} 
+		rs.Close();
+	} 
+	finally 
+	{ 
+		conn.Close();
+	} 
+
+	return result; 
+}</pre>
+<p>其中的参数类定义如下：</p>
+<pre class="code" data-type="csharp">[Serializable]
+public class Parameter
+{
+    public string Name;
+    public object Value;
+    public SqlDbType dbType = SqlDbType.VarChar;
+	public void Parameter()
+	{
+	}
+
+	public void Parameter(string _Name, object _value, SqlDbType _dbType)
+	{
+		Name = _Name;
+		Value = _value;
+		dbType = _dbType;
+	}
+}
+
+[Serializable]
+public class Parameters : CollectionBase
+{
+	public Parameter this[int index]
+	{
+		get {return (Parameter)List[index];}
+		set {List[index] = value;}
+	}
+
+	public int Add( string Name, object Value)  
+	{
+		Parameter Parm = new Parameter();
+		Parm.Name = Name;
+        Parm.Value = Value;
+		return( this.Add(Parm) );
+	}
+
+	public int Add( string Name, object Value, SqlDbType dbType)  
+	{
+		Parameter Parm = new Parameter();
+		Parm.Name = Name;
+		Parm.Value = Value;
+        Parm.dbType = dbType;
+		return( this.Add(Parm) );
+	}
+
+	public int Add(Parameter value)  
+	{
+		return( List.Add(value) );
+	}
+
+	public int IndexOf(Parameter value)
+	{
+		return this.List.IndexOf(value);
+	}
+
+	public void IndexOf(int index, Parameter value)
+	{
+		List.Insert(index, value);
+	}
+
+	public void Remove(Parameter value)
+	{
+		List.Remove(value);
+	}
+
+	public bool Contains(Parameter value)
+	{
+		return List.Contains(value);
+	}
+
+	protected override void OnInsert( int index, Object value )  
+	{
+		if ( value.GetType() != Type.GetType(&quot;NGEN.classes.Parameter&quot;) )
+			throw new ArgumentException( &quot;value must be of type DisplayColumn.&quot;, &quot;value&quot; );
+	}
+
+	protected override void OnRemove( int index, Object value )  
+	{
+		if ( value.GetType() != Type.GetType(&quot;NGEN.classes.Parameter&quot;) )
+			throw new ArgumentException( &quot;value must be of type DisplayColumn.&quot;, &quot;value&quot; );
+	}
+
+	protected override void OnSet( int index, Object oldValue, Object newValue )  
+	{
+		if ( newValue.GetType() != Type.GetType(&quot;NGEN.classes.Parameter&quot;) )
+			throw new ArgumentException( &quot;newValue must be of type DisplayColumn.&quot;, &quot;newValue&quot; );
+	}
+
+	protected override void OnValidate( Object value )  
+	{
+		if ( value.GetType() != Type.GetType(&quot;NGEN.classes.Parameter&quot;) )
+			throw new ArgumentException( &quot;value must be of type DisplayColumn.&quot; );
+	}
+
+}</pre>
+<h1>SQL关键字支持</h1>
+<table style="width:60%"  border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <th width="50%">Keyword</th>
+    <th width="50%">Supported</th>
+  </tr>
+  <tr>
+    <td>distinct</td>
+    <td align="center">Y</td>
+  </tr>
+  <tr>
+    <td>is null, is not null </td>
+    <td align="center">Y</td>
+  </tr>
+  <tr>
+    <td>LIKE</td>
+    <td align="center">Y</td>
+  </tr>
+  <tr>
+    <td>ORDER BY</td>
+    <td align="center">Y</td>
+  </tr>
+  <tr style="color:red">
+    <td>top(SQL SERVER)</td>
+    <td align="center">N</td>
+  </tr>
+  <tr style="color:red">
+    <td>所有内置函数，如COUNT、SUM、AVG等</td>
+    <td align="center">N</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td align="center">&nbsp;</td>
+  </tr>
+</table>
+<p>&nbsp;</p>
+<p>count</p>
+<h2>SQL SERVER </h2>
+<p>top</p>
+<h1>常见错误</h1>
+<h2>用户 'XXX\ASPNET' 登录失败</h2>
+<p>可能是SQL SERVER未设置混合登录模式。 </p>
+<p>再者是连接字符串错误，所以NHibernate试图以ASPNET用户登录，此情况下你可以用winform程序试试连接字符串是否成能够成功连接。</p>
+<h1>详细参考手册</h1>
+<p><a href="downloads/NHibernate&#25991;&#26723;.chm">中文链接</a></p>
+<p><a href="downloads/nhiberante_index.html">英文链接</a></p>
+<h1>使用后手记</h1>
+<p>我最早是在Java中使用的Hibernate，当时之所以使用，只是因为接的外包项目中要求使用它。当时用的时候感觉并不好，所以做完那个项目之后也就没再用过。最近接了一个Asp.net的外包项目，对方再次提出使用NHibernate。无奈之下，只好再次使用这个.net下的Hibernate。</p>
+<p>NHibernate使用起来我觉得主要有以下缺陷：</p>
+<p>1、它号称即使程序员即使不懂数据库和SQL语句也可以进行数据库编程。这点我很是怀疑，最起码在中国这是一件让人无法想象的事情。我觉得NHibernate里面的有关数据库的配置文件，不知道要比一个连接字符串复杂多少倍。而且如果真不懂数据库的话，能做出这些配置文件也是痴人说梦。</p>
+<p>2、它使用一种称为HQL的查询语句，效率极其低下，根据日志显示结果来看，它是先从数据库中查出一堆ID，再根据这些ID逐个载入记录（一条记录生成一个对象），也就是说，如果查询的结果有1000条，那知后台会执行1000条SQL语句，对于查询结果动辄成千上万条的记录，那等待时间简直就是噩梦。而且，HQL貌似将关系数据库转成了面向对象的数据库，但HQL既不能使用数据库开发商提供的一些扩展SQL函数或功能，又无法使用面向对象语言提供的功能，尤其是其学习难度也不比SQL低。(注：NHibernate新版已解决这个问题)</p>
+<p>3、跨数据库平台性，就像JAVA的跨平台性一样，不知道有多少用户关心这个。我做过的项目也颇为不少，其中要求跨平台的项目真没有几个，而且这些要求跨平台的项目数据量都大的要死，就凭HQL那点儿效率，实在是不敢拿出来用。</p>
+<p>4、对数据库编程，对于用到的SQL语句，一般情况下都是在某个SQL分析器中调试，但使用HQL后，如果出错，只能到日志中去找出SQL，而且日志中的SQL还都是参数化的，看上去很不顺眼。而且有时还会遇到一些莫名其妙的错误，只能凭经验来解决，例如使用ID来load一个对象时，如果数据库中ID字段用的数据类型是long，而传入的参数是int型，竟然会报错。</p>
+<p>5、总感到效率低，因为就是插入一条记录，也会感到有明显的等待时间。</p>
+<p>6、截止到版本1.0.2，还不能支持存储过程调用。</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+
+</body>
+</html>

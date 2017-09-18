@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+    <script type="text/javascript" src="../../mylib/js/css.js"></script>
+    <title>正则表达式</title>
+</head>
+
+<body>
+    <p id="title">正则表达式</p>
+
+    <h1>正则表达式语言</h1>
+    <h2>字符转义</h2>
+    <table style="width: 100%" cellspacing="2" cellpadding="5">
+        <tr>
+            <th>转义符
+            </th>
+            <th>说明
+            </th>
+        </tr>
+        <tr>
+            <td>
+                <p>一般字符</p>
+            </td>
+            <td>
+                <p>除 .$ ^ { [ ( | ) * + ? \ 外，其他字符与自身匹配。</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <p>\a
+                </p>
+            </td>
+            <td>
+                <p>与响铃（警报）\u0007 匹配。</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <p>\b
+                </p>
+            </td>
+            <td>
+                <p>如果在 [] <a href="0f8bffab-ee0d-4e0e-9a96-2b4a252bb7e4.htm">字符类</a>中，则与退格符 \u0008 匹配；如果不是这种情况，请参见本表后面的“注意”部分。</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <p>\t
+                </p>
+            </td>
+            <td>
+                <p>与 Tab 符 \u0009 匹配。</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <p>\r
+                </p>
+            </td>
+            <td>
+                <p>与回车符 \u000D 匹配。</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <p>\v
+                </p>
+            </td>
+            <td>
+                <p>与垂直 Tab 符 \u000B 匹配。</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <p>\f
+                </p>
+            </td>
+            <td>
+                <p>与换页符 \u000C 匹配。</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <p>\n
+                </p>
+            </td>
+            <td>
+                <p>与换行符 \u000A 匹配。</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <p>\e
+                </p>
+            </td>
+            <td>
+                <p>与 Esc 符 \u001B 匹配。</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <p>\040
+                </p>
+            </td>
+            <td>
+                <p>将 ASCII 字符匹配为八进制数（最多三位）；如果没有前导零的数字只有一位数或者与捕获组号相对应，则该数字为后向引用。（有关更多信息，请参见<a href="e702ae9d-67bc-45e6-81f7-0a110b4548d2.htm">反向引用</a>。）例如，字符<code>\040</code> 表示空格。</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <p>\x20
+                </p>
+            </td>
+            <td>
+                <p>使用十六进制表示形式（恰好两位）与 ASCII 字符匹配。</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <p>\cC
+                </p>
+            </td>
+            <td>
+                <p>与 ASCII 控制字符匹配；例如，<code>\cC</code> 为 Ctrl-C。</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <p>\u0020
+                </p>
+            </td>
+            <td>
+                <p>使用十六进制表示形式（恰好四位）与 Unicode 字符匹配。</p>
+                <div class="alert">
+                    <table style="width: 100%" cellspacing="0" cellpadding="0">
+                        <tr>
+                            <th align="left">
+                                <img src="../../Database/SQL%20Server/images/note.jpg" alt="Note" width="20" height="20" class="note"></img>注意</th>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p>.NET Framework 不支持用于指定 Unicode 的 Perl 5 字符转义。Perl 5 字符转义的格式是 <code>\x{####…}</code>，其中“<code>####…</code>”是十六进制数字的序列。应改为使用本行中描述的 .NET Framework 字符转义。</p>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <p>\
+                </p>
+            </td>
+            <td>
+                <p>在后面带有不识别为转义符的字符时，与该字符匹配。例如，\* 与 \x2A 相同。</p>
+            </td>
+        </tr>
+    </table>
+    <p>
+        <img src="../../Database/SQL%20Server/images/note.jpg" width="20" height="20">注意：转义字符 \b 是一个特例。在正则表达式中，\b 表示单词边界（在 \w 和 \W 之间），不过，在 [] 字符类中，\b 表示退格符。在替换模式中，\b 始终表示退格符。</p>
+    <h2>替换</h2>
+    <table style="width: 100%" cellspacing="2" cellpadding="5">
+        <tr>
+            <th>字符
+            </th>
+            <th>说明
+            </th>
+        </tr>
+        <tr>
+            <td>
+                <p>$
+                数字
+                </p>
+            </td>
+            <td>
+                <p>替换按组号 number（十进制）匹配的最后一个子字符串。</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <p>${
+                name
+                }
+                </p>
+            </td>
+            <td>
+                <p>替换由 (?&lt;name&gt; ) 组匹配的最后一个子字符串。</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <p>$$
+                </p>
+            </td>
+            <td>
+                <p>替换单个“$”字符。</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <p>$&amp;
+                </p>
+            </td>
+            <td>
+                <p>替换完全匹配本身的一个副本。</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <p>$`
+                </p>
+            </td>
+            <td>
+                <p>替换匹配前的输入字符串的所有文本。</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <p>$'
+                </p>
+            </td>
+            <td>
+                <p>替换匹配后的输入字符串的所有文本。</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <p>$+
+                </p>
+            </td>
+            <td>
+                <p>替换最后捕获的组。</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <p>$_
+                </p>
+            </td>
+            <td>
+                <p>替换整个输入字符串。</p>
+            </td>
+        </tr>
+    </table>
+    <h2>字符类</h2>
+    <table style="width: 100%" cellspacing="2" cellpadding="5">
+        <tr>
+            <th>字符类
+            </th>
+            <th>说明
+            </th>
+        </tr>
+        <tr>
+            <td>
+                <p>.
+                </p>
+            </td>
+            <td>
+                <p>匹配除 \n 以外的任何字符。如果已用 Singleline 选项做过修改，则句点字符可与任何字符匹配。有关更多信息，请参见<a href="c82dc689-7e82-4767-a18d-cd24ce5f05e9.htm">正则表达式选项</a>。</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <p>[
+                aeiou
+                ]
+                </p>
+            </td>
+            <td>
+                <p>与指定字符集中包含的任何单个字符匹配。</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <p>[^
+                aeiou
+                ]
+                </p>
+            </td>
+            <td>
+                <p>与不在指定字符集中的任何单个字符匹配。</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <p>[0-9a-fA-F]
+                </p>
+            </td>
+            <td>
+                <p>使用连字号 (<code>–</code>) 允许指定连续字符范围。</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <p>\p{
+                name
+                }
+                </p>
+            </td>
+            <td>
+                <p>与 {name} 指定的命名字符类中的任何字符都匹配。支持的名称为 Unicode 组和块范围。例如，Ll、Nd、Z、IsGreek、IsBoxDrawing。</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <p>\P{
+                name
+                }
+                </p>
+            </td>
+            <td>
+                <p>与在 {name} 中指定的组和块范围不包括的文本匹配。</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <p>\w
+                </p>
+            </td>
+            <td>
+                <p>与任何单词字符匹配。等效于 Unicode 字符类别 <code>[\p{Ll}\p{Lu}\p{Lt}\p{Lo}\p{Nd}\p{Pc}\p{Lm}</code><code>]</code>。如果用 <a href="c82dc689-7e82-4767-a18d-cd24ce5f05e9.htm">ECMAScript 选项</a>指定了符合 ECMAScript 的行为，则 \w 等效于 [a-zA-Z_0-9]。</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <p>\W
+                </p>
+            </td>
+            <td>
+                <p>与任何非单词字符匹配。等效于 Unicode 字符类别 <code>[^\p{Ll}\p{Lu}\p{Lt}\p{Lo}\p{Nd}\p{Pc}\p{Lm}</code><code>]</code>。如果用 ECMAScript 选项指定了符合 ECMAScript 的行为，则 \W 等效于 [^a-zA-Z_0-9]。</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <p>\s
+                </p>
+            </td>
+            <td>
+                <p>与任何空白字符匹配。等效于 Unicode 字符类别 <code>[\f\n\r\t\v\x85\p{Z}]</code>。如果用 ECMAScript 选项指定了符合 ECMAScript 的行为，则 \s 等效于 [ \f\n\r\t\v]。</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <p>\S
+                </p>
+            </td>
+            <td>
+                <p>与任何非空白字符匹配。等效于 Unicode 字符类别 <code>[^\f\n\r\t\v\x85\p{Z}]</code>。如果用 ECMAScript 选项指定了符合 ECMAScript 的行为，则 \S 等效于 [^ \f\n\r\t\v]。</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <p>\d
+                </p>
+            </td>
+            <td>
+                <p>与任何十进制数字匹配。对于 Unicode 类别的 ECMAScript 行为，等效于 \p{Nd}，对于非 Unicode 类别的 ECMAScript 行为，等效于 [0-9]。</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <p>\D
+                </p>
+            </td>
+            <td>
+                <p>与任何非数字匹配。对于 Unicode 类别的 ECMAScript 行为，等效于 \P{Nd}，对于非 Unicode 类别的 ECMAScript 行为，等效于 [^0-9]。</p>
+            </td>
+        </tr>
+    </table>
+    <h2>原子零宽度断言</h2>
+    <table style="width: 100%" cellspacing="2" cellpadding="5">
+        <tr>
+            <th>断言
+            </th>
+            <th>说明
+            </th>
+        </tr>
+        <tr>
+            <td>
+                <p>^
+                </p>
+            </td>
+            <td>
+                <p>指定匹配必须出现在字符串的开头或行的开头。有关更多信息，请参见<a href="c82dc689-7e82-4767-a18d-cd24ce5f05e9.htm">正则表达式选项</a>中的 Multiline 选项。</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <p>$
+                </p>
+            </td>
+            <td>
+                <p>指定匹配必须出现在以下位置：字符串结尾、字符串结尾处的 \n 之前或行的结尾。有关更多信息，请参见<a href="c82dc689-7e82-4767-a18d-cd24ce5f05e9.htm">正则表达式选项</a>中的 Multiline 选项。</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <p>\A
+                </p>
+            </td>
+            <td>
+                <p>指定匹配必须出现在字符串的开头（忽略 Multiline 选项）。</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <p>\Z
+                </p>
+            </td>
+            <td>
+                <p>指定匹配必须出现在字符串的结尾或字符串结尾处的 \n 之前（忽略 Multiline 选项）。</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <p>\z
+                </p>
+            </td>
+            <td>
+                <p>指定匹配必须出现在字符串的结尾（忽略 Multiline 选项）。</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <p>\G
+                </p>
+            </td>
+            <td>
+                <p>指定匹配必须出现在上一个匹配结束的地方。与 <code>Match.NextMatch()</code> 一起使用时，此断言确保所有匹配都是连续的。</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <p>\b
+                </p>
+            </td>
+            <td>
+                <p>指定匹配必须出现在 \w（字母数字）和 \W（非字母数字）字符之间的边界上。匹配必须出现在单词边界上，即出现在由任何非字母数字字符分隔的单词中第一个或最后一个字符上。</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <p>\B
+                </p>
+            </td>
+            <td>
+                <p>指定匹配不得出现在 \b 边界上。</p>
+            </td>
+        </tr>
+    </table>
+    <h2>限定符</h2>
+    <table style="width: 100%" cellspacing="2" cellpadding="5">
+        <tr>
+            <th>限定符
+            </th>
+            <th>说明
+            </th>
+        </tr>
+        <tr>
+            <td>
+                <p>*
+                </p>
+            </td>
+            <td>
+                <p>指定零个或更多个匹配；例如 <code>\w*</code> 或 <code>(abc)*</code>。等效于 {0,}。</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <p>+
+                </p>
+            </td>
+            <td>
+                <p>指定一个或多个匹配；例如 <code>\w+</code> 或 <code>(abc)+</code>。等效于 {1,}。</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <p>?
+                </p>
+            </td>
+            <td>
+                <p>指定零个或一个匹配；例如 <code>\w?</code> 或 <code>(abc)?</code>。等效于 {0,1}。</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <p>{
+                n
+                }
+                </p>
+            </td>
+            <td>
+                <p>指定恰好 n 个匹配；例如 <code>(pizza){2}</code>。</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <p>{
+                n
+                ,}
+                </p>
+            </td>
+            <td>
+                <p>指定至少 n 个匹配；例如 <code>(abc){2,}</code>。</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <p>{
+                n
+                ,
+                m
+                }
+                </p>
+            </td>
+            <td>
+                <p>指定至少 n 个但不多于 m 个匹配。</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <p>*?
+                </p>
+            </td>
+            <td>
+                <p>指定尽可能少地使用重复的第一个匹配（等效于 lazy *）。</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <p>+?
+                </p>
+            </td>
+            <td>
+                <p>指定尽可能少地使用重复但至少使用一次（等效于 lazy <code>+</code>）。</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <p>??
+                </p>
+            </td>
+            <td>
+                <p>指定使用零次重复（如有可能）或一次重复 (lazy <code>?</code>)。</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <p>{
+                n
+                }?
+                </p>
+            </td>
+            <td>
+                <p>等效于 {n} (lazy {n})。</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <p>{
+                n
+                ,}?
+                </p>
+            </td>
+            <td>
+                <p>指定尽可能少地使用重复但至少使用 n 次 (lazy {n,})。</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <p>{
+                n
+                ,
+                m
+                }?
+                </p>
+            </td>
+            <td>
+                <p>指定介于 n 次和 m 次之间、尽可能少地使用重复 (lazy {n,m})。</p>
+            </td>
+        </tr>
+    </table>
+    <h1>在C#中使用正则表达式</h1>
+    <p>在C#中使用类System.Text.RegularExpressions.Regex。</p>
+    <h2>构造正则表达式对象</h2>
+    <p>使用正则表达式串作为参数调用构造函数</p>
+    <h2>检测是否匹配</h2>
+    <p>IsMatch(被检测串)</p>
+    <p>返回bool值，表示是否与正则表达式串匹配</p>
+    <h2>提取匹配值</h2>
+    <p>使用Match方法，返回Match对象，如果匹配失败，返回Match.Empty对象，否则，可使用Match对象的如下属性：</p>
+    <ul>
+        <li>Value：匹配串</li>
+        <li>Index：匹配串在源串中的起始位置</li>
+        <li>Length：匹配串的长度</li>
+    </ul>
+    <p>下例是一个从源串中提取所有数字的源代码：</p>
+    <pre class="code" data-type="csharp">string str1 = &quot;1234aabb345dc532aa&quot;;
+Regex r = new Regex(@&quot;[0-9]+&quot;);
+
+int iMatchBegin = 0;
+
+while (true)
+{
+    Match m = r.Match(str1, iMatchBegin);
+    if (!m.Equals(Match.Empty))
+    {
+        Console.WriteLine(m.Value);
+        iMatchBegin = m.Index + m.Length;
+
+        if (iMatchBegin &gt;= str1.Length)
+            break;
+    }
+    else
+    {
+        break;
+    }
+    
+}
+Console.Read();</pre>
+    <h1>示例</h1>
+    <h2>常用正则表达式</h2>
+    <p><a href="../regex/regex-sample.htm">正则表达式示例</a></p>
+    <h2>代码格式化</h2>
+    <p>今天我使用了如下方式将</p>
+    <pre class="code" data-type="csharp">if (t != null && (checkp as SponsorUI).SPONSOR_ID == (t as SponsorUI).SPONSOR_ID)//ignore self
+	continue;</pre>
+    <p>替换成了</p>
+    <pre class="code" data-type="csharp">if (t != null && (checkp as DealTeamUI).soeId == (t as DealTeamUI).soeId)
+{
+	continue;
+}</pre>
+    <p>使用的正则表达式为</p>
+    <pre>Find: (if \(.*\)\r\n\s+)([^{\r\n]*;)\r\n
+Replace: \1{\r\n\2\r\n}\r\n</pre>
+    <p>\1 表示第一个匹配项，\2 表示第二个匹配项</p>
+    对于 else 使用如下正则表达式
+	<pre>(\s*else\r\n)([^{\r\n]*;)\r\n
+\1{\r\n\2\r\n}\r\n</pre>
+    <p>&nbsp; </p>
+
+</body>
+</html>

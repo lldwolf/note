@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+    <title>内存管理</title>
+    <script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+    <p id="title">内存管理</p>
+
+    <h1>调用内存回收</h1>
+    <p>.net会自动回收废弃的内存块，不过有时会了提高效率，可采用如下方法手工调用该功能：</p>
+    <pre class="code" data-type="csharp">GC.Collect();
+GC.WaitForPendingFinalizers();</pre>
+    <p>在调用前，把想放弃的对象赋值为null即可。</p>
+    <h1>IDisposable, Dispose</h1>
+    <p>初学者往往会有如下两个误解:</p>
+    <ul>
+        <li>当把一个对象声明为IDisposable接口的实现时，则当该对象被回收时会自动调用Dispose方法</li>
+        <li>当调用一个对象的Dispose方法后，该对象将被回收</li>
+    </ul>
+    <p>对于第一点，这是WinForm开发者常犯的错误，因为main form在关闭时，会自动的去调用所有IDispalable对象的Dispose方法。但如果在Console项目中，你会发现在程序结束时，Dispose方法并不会被自动调用。</p>
+    <p>对用 using{object obj = new object()} 结构，如果 obj 是IDisposable 对象，则在块结束时自动调用 Dispose() 方法。因此，在使用需要显式释放的对象时，推荐使用该结构，例如 Stream 对象。</p>
+    <p>对于第二点，其实调用Dispose()，与调用其他方法并无不同，IDisposable只是对象管理框架的一个实现。至于对象是否释放，需要看该对象是否仍有强引用。具体事例请参考《内存泄漏》一节。</p>
+    <h1>内存泄漏</h1>
+    <h2>内存泄漏检测</h2>
+    <p>我使用.net framework自带的sos.dll作为检测工具。常用检测命令如下(以下命令均在Immediate Window中运行)：</p>
+    <ol>
+        <li>在怀疑有内存泄漏处设置断点，运行至断点处，加载sos.dll
+    <pre>.load sos</pre>
+        </li>
+        <li>运行命令检测指定对象，例如列出所有名字中包含Gollf的对象
+    <pre>!dumpheap -type Gollf</pre>
+            <p>如果只想看一个统计结果的话，可以加上 -stat 参数</p>
+            <pre>!dumpheap -type Gollf -stat</pre>
+        </li>
+        <li>查看所有对指定对象地址的引用
+	<pre>!gcroot [-nostacks] <i>[object address]</i></pre>
+        </li>
+        <li>查看指定对象占用的内存大小
+	<pre>!objsize <i>[object address]</i> [-aggregate] [-stat]</pre>
+        </li>
+        <li>查看指定位置的对象
+	<pre>!DumpObj <i>[object address]</i></pre>
+        </li>
+        <li>查看指定位置的方法
+	<pre>!DumpMD <i>[method address]</i></pre>
+        </li>
+        <li>查看由 JIT 预编译过的方法
+	<pre>!IP2MD <i>[code address]</i></pre>
+        </li>
+        <li>查看某方法的汇编信息
+	<pre>!u <i>[code address]</i></pre>
+        </li>
+    </ol>
+    <p>更具体的描述请参考<a href="http://msdn.microsoft.com/en-us/library/bb190764.aspx">http://msdn.microsoft.com/en-us/library/bb190764.aspx</a></p>
+    <h2>事件引起内存泄露</h2>
+    <p>我们可看一下如下的代码</p>
+    <pre class="code" data-type="csharp" data-collapsed="true" title="查看代码">using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace ConsoleApplication1
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            MemeoryLeakTest();
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+            <span style="background-color:Red">Console.Read();  //监测点</span>
+        }
+
+        static Class1 class1 = new Class1();
+
+        private static void MemeoryLeakTest()
+        {
+            using (Class2 obj = new Class2())
+            {
+            }
+        }
+
+        #region Strong reference leak
+
+        class Class1
+        {
+            public event EventHandler Handler1;
+
+            public void HandleEvent()
+            {
+                if (Handler1 != null)
+                    this.Handler1(null, EventArgs.Empty);
+            }
+        }
+
+        class Class2 : IDisposable
+        {
+            public Class2()
+            {
+                <span style="background-color:Aqua">class1.Handler1 += new EventHandler(class1_Handler1);</span>
+            }
+
+            void class1_Handler1(object sender, EventArgs e)
+            {
+
+            }
+
+            public void Dispose()
+            {
+            }
+        }
+
+
+        #endregion
+    }
+}</pre>
+    <p>我在监测点处使用sos进行监测，结果如下(黄色部分为输入)：</p>
+    <pre><span style="background-color:Yellow">.load sos</span>
+extension C:\WINNT\Microsoft.NET\Framework\v2.0.50727\sos.dll loaded
+<span style="background-color:Yellow">!dumpheap -type Console</span>
+PDB symbol for mscorwks.dll not loaded
+ Address       MT     Size
+01342c38 009930f0       12     
+<span style="background-color:#3ff">01342c44</span> 0099316c       12     
+total 2 objects
+Statistics:
+      MT    Count    TotalSize Class Name
+<span style="background-color:#3ff">0099316c</span>        1           12 ConsoleApplication1.Program+Class2
+009930f0        1           12 ConsoleApplication1.Program+Class1
+Total 2 objects</pre>
+    <p>我们可以看到，在执行完MemeoryLeakTest并进行垃圾回收后, Class2对象并没有被释放掉。继续用下面的命令进行详细定位：</p>
+    <pre><span style="background-color:Yellow">!gcroot -nostacks 01342c44</span>
+DOMAIN(00402EB0):HANDLE(Pinned):2613fc:Root:  03461010(System.Object[])->
+  0246bac0(ConsoleApplication1.Program+Class1)->
+  <span style="background-color:#3ff">0246bad8</span>(System.EventHandler)->
+  01342c44(ConsoleApplication1.Program+Class2)
+
+<span style="background-color:Yellow">!DumpObj 0246bad8</span>
+Name:        System.EventHandler
+MethodTable: 629b2a30
+EEClass:     626a2d28
+Size:        32(0x20) bytes
+File:        C:\Windows\Microsoft.Net\assembly\GAC_32\mscorlib\v4.0_4.0.0.0__b77a5c561934e089\mscorlib.dll
+Fields:
+      MT    Field   Offset                 Type VT     Attr    Value Name
+629bf744  4000076        4        System.Object  0 instance 0246bacc _target
+629bf744  4000077        8        System.Object  0 instance 240c474300000000 _methodBase
+629bab88  4000078        c        System.IntPtr  1 instance <span style="background-color:#3ff">0028C088</span> _methodPtr
+629bab88  4000079       10        System.IntPtr  1 instance 00000000 _methodPtrAux
+629bf744  400007a       14        System.Object  0 instance 240c4a6300000000 _invocationList
+629bab88  400007b       18        System.IntPtr  1 instance 00000000 _invocationCount
+
+<span style="background-color:Yellow">!U 0028C088</span>
+Unmanaged code
+02f4c14c b84c3cf402      mov     eax,<span style="background-color:#3ff">2F43C4C</span>h
+02f4c151 89ed            mov     ebp,ebp
+02f4c153 e9bc46ceff      jmp     02c30814
+02f4c158 00b000eb18b0    add     byte ptr [eax-4FE71500h],dh
+02f4c15e 02eb            add     ch,bl
+02f4c160 14b0            adc     al,0B0h
+02f4c162 04eb            add     al,0EBh
+02f4c164 10b006eb0cb0    adc     byte ptr [eax-4FF314FAh],dh
+02f4c16a 08eb            or      bl,ch
+02f4c16c 08b00aeb04b0    or      byte ptr [eax-4FFB14F6h],dh
+
+<span style="background-color:Yellow">!DumpMD 2F43C4C</span>
+Method Name: ConsoleApplication1.Class2.class1_Handler1(System.Object, System.EventArgs)
+Class:       02f41b18
+MethodTable: 02f43c80
+mdToken:     06000013
+Module:      02f433bc
+IsJitted:    no
+CodeAddr:    ffffffff</pre>
+    <p><b>解决方案一、在Dispose中解除关联事件</b></p>
+    <div id="accordion-leak-solution1">
+        <p><a href="#">查看代码</a></p>
+        <pre>using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace ConsoleApplication1
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            MemeoryLeakTest();
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+            Console.Read();
+        }
+
+        static Class1 class1 = new Class1();
+
+        private static void MemeoryLeakTest()
+        {
+            using (Class2 obj = new Class2())
+            {
+            }
+        }
+
+        #region Strong reference leak
+
+        class Class1
+        {
+            public event EventHandler Handler1;
+
+            public void HandleEvent()
+            {
+                if (Handler1 != null)
+                    this.Handler1(null, EventArgs.Empty);
+            }
+        }
+
+        class Class2 : IDisposable
+        {
+            public Class2()
+            {
+                class1.Handler1 += new EventHandler(class1_Handler1);
+            }
+
+            void class1_Handler1(object sender, EventArgs e)
+            {
+
+            }
+
+            public void Dispose()
+            {
+                <span style="background-color:Aqua">class1.Handler1 -= new EventHandler(class1_Handler1);</span>
+            }
+        }
+
+
+        #endregion
+    }
+}
+</pre>
+    </div>
+    <p><b>解决方案二、使用WeakReference</b></p>
+    <div id="accordion-leak-solution2">
+        <p><a href="#">查看代码</a></p>
+        <pre>using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace ConsoleApplication1
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            MemeoryLeakTest();
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+            Console.Read();
+        }
+
+        static Class1 class1 = new Class1();
+
+        private static void MemeoryLeakTest()
+        {
+            using (Class2 obj = new Class2())
+            {
+
+            }
+        }
+
+        #region Strong reference leak
+
+        class Class1
+        {
+            <span style="background-color:Aqua">public List&lt;WeakReference&gt; WeakHandler = new List&lt;WeakReference&gt;();
+
+            public void WeakHandleEvent()
+            {
+                foreach (WeakReference weak in WeakHandler)
+                {
+                    EventHandler handler = weak.Target as EventHandler;
+                    if (handler != null)
+                        handler(null, EventArgs.Empty);
+                }
+            }</span>
+
+        }
+
+        class Class2 : IDisposable
+        {
+            public Class2()
+            {
+                <span style="background-color:Aqua">EventHandler handler = new EventHandler(class1_Handler1);
+                WeakReference weakHandler = new WeakReference(handler);
+                class1.WeakHandler.Add(weakHandler);</span>
+            }
+
+            void class1_Handler1(object sender, EventArgs e)
+            {
+
+            }
+
+            public void Dispose()
+            {
+            }
+        }
+
+
+        #endregion
+    }
+}</pre>
+    </div>
+    <h2>Timer 引起的内存泄露</h2>
+    <p>Timer关联Tick事件并启动后，将会建立如下的引用：Timer -&gt; Timer的父对象（如窗体）。这样当窗体关闭时，将因该引用用关系的存在而无法销毁回收。示例代码如下所示</p>
+    <div id="accordion-timer-leak">
+        <p><a href="#">查看代码</a></p>
+        <pre>class Form2
+{
+	private System.Windows.Forms.Timer timer1;
+	private System.Windows.Forms.Label label1;
+	...
+	this.timer1.Enabled = true;
+	this.timer1.Interval = 1000;
+	this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+
+	private void timer1_Tick(object sender, EventArgs e)
+	{
+		this.label1.Text = DateTime.Now.ToString();
+	}</pre>
+    </div>
+    <p>这样在显示并关闭窗体后，使用sos进行如下查看(黄色部分为输入)</p>
+    <pre><span style="background-color:Yellow">.load sos</span>
+extension C:\Windows\Microsoft.NET\Framework\v4.0.30319\sos.dll loaded
+<span style="background-color:Yellow">!dumpheap -type Form2</span>
+PDB symbol for clr.dll not loaded
+ Address       MT     Size
+02637ce0 00107ee8      332     
+total 0 objects
+Statistics:
+      MT    Count    TotalSize Class Name
+00107ee8        1          332 WindowsFormsApplication2.Form2
+Total 1 objects
+<span style="background-color:Yellow">!gcroot 02637ce0</span>
+Note: Roots found on stacks may be false positives. Run "!help gcroot" for
+more info.
+Scan Thread 6664 OSTHread 1a08
+Scan Thread 6052 OSTHread 17a4
+<span style="color:red">DOMAIN(002E2F08):HANDLE(Strong):a1188:Root:  02637f78(System.Windows.Forms.Timer)->
+  026382d0(System.EventHandler)->
+  02637ce0(WindowsFormsApplication2.Form2)</span>
+Finalizer queue:Root:  026384b4(System.Windows.Forms.Application+ModalApplicationContext)->
+  02637ce0(WindowsFormsApplication2.Form2)
+Finalizer queue:Root:  026385f4(System.Windows.Forms.Control+ThreadMethodEntry)->
+  02637ce0(WindowsFormsApplication2.Form2)</pre>
+    <p>标红的部分显示出了Timer对象对Form2对象的强引用。解决方案为在关闭Form前执行</p>
+    <pre>this.timer1.Enabled = false;</pre>
+    <h2>Form.OnLoad 引起的内存泄露</h2>
+    <p>我曾经遇到过因为手工调用 Form.OnLoad 函数而引起的内存泄露。示例代码如下：</p>
+    <div id="accordion-onload-leak">
+        <p><a href="#">查看代码</a></p>
+        <pre>Form1.cs
+
+public Form1()
+{
+	InitializeComponent();
+
+	Button btn1 = new Button();
+	btn1.Location = new Point(10, 30);
+	btn1.Text = "Load";
+	btn1.Click += (object sender, EventArgs e) => { (new Form2()).ShowDialog(); };
+	this.Controls.Add(btn1);
+
+	Button btn2 = new Button();
+	btn2.Location = new Point(10, 80);
+	btn2.Text = "Test";
+	btn2.Click += new EventHandler(btn2_Click);
+	this.Controls.Add(btn2);
+}
+
+void btn2_Click(object sender, EventArgs e)
+{
+	GC.Collect();
+	GC.WaitForPendingFinalizers();
+	GC.Collect();
+	GC.WaitForPendingFinalizers();
+}
+
+Form2.cs
+
+public Form2()
+{
+	InitializeComponent();
+
+	Button btn1 = new Button();
+	btn1.Location = new Point(10, 10);
+	btn1.Text = "Load";
+	btn1.Click += new EventHandler(btn1_Click);
+	this.Controls.Add(btn1);
+}
+
+void btn1_Click(object sender, EventArgs e)
+{
+	//必须要调用两次以上，无语
+	this.OnLoad(e);
+	this.OnLoad(e);
+}</pre>
+    </div>
+    <p>如果打开 Form2 后点了那个调用 OnLoad 的按钮，使用 sos 根踪，你会发现如下的泄露点</p>
+    <pre>.load sos
+extension C:\Windows\Microsoft.NET\Framework\v4.0.30319\sos.dll loaded
+<span style="background-color:Yellow">!dumpheap -type Form2</span>
+PDB symbol for clr.dll not loaded
+ Address       MT     Size
+0270782c 00187e84      324     
+total 0 objects
+Statistics:
+      MT    Count    TotalSize Class Name
+00187e84        1          324 WindowsFormsApplication1.Form2
+Total 1 objects
+
+<span style="background-color:Yellow">!gcroot -nostacks 0270782c</span>
+<span style="color: Red">DOMAIN(00643258):HANDLE(Pinned)</span>:1213ec:Root:  036e3250(System.Object[])->
+  02704a0c(System.Windows.Forms.FormCollection)->
+  02704a24(System.Collections.ArrayList)->
+  02704a3c(System.Object[])->
+  0270782c(WindowsFormsApplication1.Form2)
+</pre>
+    <p>继续跟踪一下那个数组中的内容，你会发现里面存放了所有加载过的 Form</p>
+    <pre><span style="background-color:Yellow">!dumparray 02704a3c</span>
+Name:        System.Object[]
+MethodTable: 62276d84
+EEClass:     61ff9698
+Size:        32(0x20) bytes
+Array:       Rank 1, Number of elements 4, Type CLASS
+Element Methodtable: 622bf744
+[0] 026fee5c
+[1] 0270782c
+[2] null
+[3] null
+
+<span style="background-color:Yellow">!dumpobj 026fee5c</span>
+<span style="color:red">Name:        WindowsFormsApplication1.Form1</span>
+MethodTable: 00186394
+EEClass:     001816dc
+Size:        324(0x144) bytes
+File:        C:\Users\ll52957\Desktop\WindowsFormsApplication1\WindowsFormsApplication1\bin\Debug\WindowsFormsApplication1.exe
+Fields:
+      MT    Field   Offset                 Type VT     Attr    Value Name
+622bf744  40001e0        4        System.Object  0 instance 33731b1d00000000 __identity
+618d5b8c  40002c3        8 ...ponentModel.ISite  0 instance 3373063d00000000 site
+...
+<span style="background-color:Yellow">!dumpobj 0270782c</span>
+<span style="color:red">Name:        WindowsFormsApplication1.Form2</span>
+MethodTable: 00187e84
+EEClass:     00332f88
+Size:        324(0x144) bytes
+File:        C:\Users\ll52957\Desktop\WindowsFormsApplication1\WindowsFormsApplication1\bin\Debug\WindowsFormsApplication1.exe
+Fields:
+      MT    Field   Offset                 Type VT     Attr    Value Name
+622bf744  40001e0        4        System.Object  0 instance 2f9918c500000000 __identity
+618d5b8c  40002c3        8 ...ponentModel.ISite  0 instance 2f9907e500000000 site
+...</pre>
+    <h1>不安全的代码</h1>
+    <p>对于那些通常满足于自动内存管理、但有时又需要精确控制或细微性能调整的开发人员，C# 提供了编写“不安全”代码的能力。这类代码可以直接处理指针类型和对象地址。但是，C# 要求程序员固定对象，暂时阻止垃圾回收器移动它们。</p>
+    <p>从开发人员和用户的角度，这种“不安全”代码功能实际上是一种“安全”的功能。在代码中必须用修饰符 unsafe 清楚地标记出不安全代码，以便开发人员不可能不经意地使用不安全语言功能，并且编译器和执行引擎协同工作，确保不安全代码无法假冒安全代码。这些限制将不安全代码的使用仅限于代码受到信任的情况。</p>
+    <pre class="code" data-type="csharp">using System;
+
+public class Program
+{
+	static void WriteLocations(byte[] arr)
+	{
+		unsafe
+		{
+			fixed (byte* pArray = arr)
+			{
+				byte* pElem = pArray;
+				for (int i = 0; i < arr.Length; i++)
+				{
+					byte value = *pElem;
+					Console.WriteLine("arr[{0}] at 0x{1:X} is {2}", i, (uint)pElem, value);
+					pElem++;
+				}
+			}
+		}
+	}
+	static void Main()
+	{
+		byte[] arr = new byte[] { 1, 2, 3, 4, 5 };
+		WriteLocations(arr);
+		Console.Read();
+	}
+}</pre>
+    <p>显示了一个名为 WriteLocations 的方法。它含有一个不安全块，该块固定了一个数组实例，然后使用指针操作实现逐个地访问该数组的元素。每个数组元素的索引、值和位置被写入控制台。下面是一个可能的输出示例：</p>
+    <pre>arr[0] at 0x8E0360 is 1
+arr[1] at 0x8E0361 is 2
+arr[2] at 0x8E0362 is 3
+arr[3] at 0x8E0363 is 4
+arr[4] at 0x8E0364 is 5</pre>
+    <p>&nbsp;</p>
+    <p>&nbsp;</p>
+    <h1>WinDbg 使用</h1>
+    <h2>基本使用</h2>
+
+    <p>自从 VS2012 Update 2 以后，在VS中使用 .load sos 就不太好用。好在还有 WinDbg</p>
+    <p>使用基本步骤如下</p>
+    <ol>
+        <li>启动应用程序</li>
+        <li>启动 WinDbg</li>
+        <li>F6 (Attatch to a process) 选择要调试的应用程序</li>
+        <li>使用命令来加载 .net symbols (.net 4 及以上版本)
+			<pre class="code">.loadby sos clr</pre>
+        </li>
+        <li>使用以上相同的命令来进行内存泄露检测</li>
+    </ol>
+    <p>PS: 可以使用 F5 来继续运行应用程序，使用 Ctrl + Break 来中断进行命令检测</p>
+    <h2>常用功能</h2>
+    <table style="width: 95%">
+        <tr>
+            <th>功能</th>
+            <th>命令</th>
+            <th>说明</th>
+        </tr>
+        <tr>
+            <td>加载 .net symbols</td>
+            <td>.loadby sos clr</td>
+            <td>在调试 .net 程序前必须运行该命令</td>
+        </tr>
+        <tr>
+            <td>查看加载的 Assemblies</td>
+            <td>!dumpdomain</td>
+            <td>
+                <p>示例如下：</p>
+                <pre>Assembly:           008ec360 [C:\test\test.exe]
+ClassLoader:        008ec418
+SecurityDescriptor: 008ec2d8
+  Module Name
+00133fbc    C:\test\test.exe</pre>
+            </td>
+        </tr>
+        <tr>
+            <td>查看已加载的对象实例</td>
+            <td>!dumpheap -type [对象名] -stat</td>
+            <td>
+                <p>stat 参数表示只显示统计信息，否则会列出所有对象</p>
+                <p>对象名即类名，支持部分匹配</p>
+            </td>
+        </tr>
+        <tr>
+            <td>查看所有对指定对象地址的引用</td>
+            <td>!gcroot [-nostacks] [object address]</td>
+            <td>
+                <p>nostacks 参数表示不打印完整的调用栈</p>
+                <p>object address 即对象的堆地址，可以从 dumpheap 命令中获取</p>
+            </td>
+        </tr>
+        <tr>
+            <td>查看指定对象占用的内存大小</td>
+            <td>!objsize [object address] [-aggregate] [-stat]</td>
+            <td>
+                <p>object address 即对象的堆地址，可以从 dumpheap 命令中获取</p>
+            </td>
+        </tr>
+        <tr>
+            <td>查看指定位置的对象</td>
+            <td>!DumpObj [object address]</td>
+            <td>
+                <p>object address 即对象的堆地址，可以从 dumpheap 命令中获取</p>
+            </td>
+        </tr>
+        <tr>
+            <td>查看指定位置的方法</td>
+            <td>!DumpMD [method address]</td>
+            <td>可以认为是 DumpObj 针对 Method 的优化</td>
+        </tr>
+        <tr>
+            <td>查看由 JIT 预编译过的方法</td>
+            <td>!IP2MD [code address]</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>查看某方法的汇编信息</td>
+            <td>!u [code address]</td>
+            <td></td>
+        </tr>
+    </table>
+</body>
+</html>

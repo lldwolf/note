@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+	<script type="text/javascript" src="../../../mylib/js/css.js"></script>
+	<title>C#.net使用手册</title>
+</head>
+<body>
+	<p id="title">动画</p>
+	
+	<p>下例展示了一个旋转的太极图，太极图在鼠标移入时旋转，移出后停止旋转</p>
+	<div id="accordion-taiji-sample">
+		<p><a href="#">XAML</a></p>
+		<pre class="code" data-type="xml">&lt;UserControl x:Class=&quot;WpfDemo.Animation.TaiJiControl&quot;
+			 xmlns=&quot;http://schemas.microsoft.com/winfx/2006/xaml/presentation&quot;
+			 xmlns:x=&quot;http://schemas.microsoft.com/winfx/2006/xaml&quot;
+			 xmlns:mc=&quot;http://schemas.openxmlformats.org/markup-compatibility/2006&quot;
+			 xmlns:d=&quot;http://schemas.microsoft.com/expression/blend/2008&quot;
+			 mc:Ignorable=&quot;d&quot;
+			 d:DesignHeight=&quot;300&quot;
+			 d:DesignWidth=&quot;300&quot;&gt;
+	&lt;UserControl.Resources&gt;
+	&lt;/UserControl.Resources&gt;
+	&lt;Viewbox&gt;
+		&lt;Canvas x:Name=&quot;taijiCanvas&quot;
+				Width=&quot;100&quot;
+				Height=&quot;100&quot;
+				RenderTransformOrigin=&quot;0.5, 0.5&quot;&gt;
+			&lt;Canvas.RenderTransform&gt;
+				&lt;RotateTransform x:Name=&quot;transformer&quot;
+								 Angle=&quot;0&quot; /&gt;
+			&lt;/Canvas.RenderTransform&gt;
+			<span style="color:Blue;font-weight:bold">
+			&lt;Canvas.Triggers&gt;
+				&lt;EventTrigger RoutedEvent=&quot;Canvas.MouseEnter&quot;&gt;
+					&lt;BeginStoryboard x:Name=&quot;rotateAction&quot;&gt;
+						&lt;Storyboard&gt;
+							&lt;DoubleAnimation Storyboard.TargetName=&quot;transformer&quot;
+											 Storyboard.TargetProperty=&quot;Angle&quot;
+											 From=&quot;0&quot;
+											 To=&quot;360&quot;
+											 SpeedRatio=&quot;0.5&quot;
+											 AutoReverse=&quot;False&quot;
+											 RepeatBehavior=&quot;Forever&quot;&gt;&lt;/DoubleAnimation&gt;
+						&lt;/Storyboard&gt;
+					&lt;/BeginStoryboard&gt;
+				&lt;/EventTrigger&gt;
+				&lt;EventTrigger RoutedEvent=&quot;Canvas.MouseLeave&quot;&gt;
+					&lt;StopStoryboard BeginStoryboardName=&quot;rotateAction&quot; /&gt;
+				&lt;/EventTrigger&gt;
+			&lt;/Canvas.Triggers&gt;
+			</span>
+			&lt;Path Fill=&quot;Black&quot;
+				  Stroke=&quot;Black&quot;
+				  StrokeThickness=&quot;1&quot;&gt;
+				&lt;Path.Data&gt;
+					&lt;GeometryGroup&gt;
+						&lt;PathGeometry&gt;
+							&lt;PathFigure StartPoint=&quot;0, 50&quot;
+										IsClosed=&quot;False&quot;&gt;
+								&lt;ArcSegment Point=&quot;100, 50&quot;
+											Size=&quot;25, 25&quot;
+											SweepDirection=&quot;Clockwise&quot; /&gt;
+							&lt;/PathFigure&gt;
+							&lt;PathFigure StartPoint=&quot;0, 50&quot;
+										IsClosed=&quot;False&quot;&gt;
+								&lt;ArcSegment Point=&quot;50, 50&quot;
+											Size=&quot;25, 25&quot;
+											SweepDirection=&quot;Clockwise&quot; /&gt;
+							&lt;/PathFigure&gt;
+							&lt;PathFigure StartPoint=&quot;50, 50&quot;
+										IsClosed=&quot;False&quot;&gt;
+								&lt;ArcSegment Point=&quot;100, 50&quot;
+											Size=&quot;25, 25&quot;
+											SweepDirection=&quot;Counterclockwise&quot; /&gt;
+							&lt;/PathFigure&gt;
+						&lt;/PathGeometry&gt;
+					&lt;/GeometryGroup&gt;
+				&lt;/Path.Data&gt;
+			&lt;/Path&gt;
+			&lt;Path Fill=&quot;White&quot;
+				  Stroke=&quot;Black&quot;
+				  StrokeThickness=&quot;1&quot;&gt;
+				&lt;Path.Data&gt;
+					&lt;GeometryGroup&gt;
+						&lt;PathGeometry&gt;
+							&lt;PathFigure StartPoint=&quot;0, 50&quot;
+										IsClosed=&quot;False&quot;&gt;
+								&lt;ArcSegment Point=&quot;100, 50&quot;
+											Size=&quot;25, 25&quot;
+											SweepDirection=&quot;Counterclockwise&quot; /&gt;
+							&lt;/PathFigure&gt;
+							&lt;PathFigure StartPoint=&quot;100, 50&quot;
+										IsClosed=&quot;False&quot;&gt;
+								&lt;ArcSegment Point=&quot;50, 50&quot;
+											Size=&quot;25, 25&quot;
+											SweepDirection=&quot;Clockwise&quot; /&gt;
+							&lt;/PathFigure&gt;
+							&lt;PathFigure StartPoint=&quot;50, 50&quot;
+										IsClosed=&quot;False&quot;&gt;
+								&lt;ArcSegment Point=&quot;0, 50&quot;
+											Size=&quot;25, 25&quot;
+											SweepDirection=&quot;Counterclockwise&quot; /&gt;
+							&lt;/PathFigure&gt;
+						&lt;/PathGeometry&gt;
+					&lt;/GeometryGroup&gt;
+				&lt;/Path.Data&gt;
+			&lt;/Path&gt;
+			&lt;Path Fill=&quot;Black&quot;&gt;
+				&lt;Path.Data&gt;
+					&lt;EllipseGeometry Center=&quot;25, 50&quot;
+									 RadiusX=&quot;5&quot;
+									 RadiusY=&quot;5&quot; /&gt;
+				&lt;/Path.Data&gt;
+			&lt;/Path&gt;
+			&lt;Path Fill=&quot;White&quot;&gt;
+				&lt;Path.Data&gt;
+					&lt;EllipseGeometry Center=&quot;75, 50&quot;
+									 RadiusX=&quot;5&quot;
+									 RadiusY=&quot;5&quot; /&gt;
+				&lt;/Path.Data&gt;
+			&lt;/Path&gt;
+		&lt;/Canvas&gt;
+	&lt;/Viewbox&gt;
+&lt;/UserControl&gt;</pre></div>
+	
+</body>
+</html>

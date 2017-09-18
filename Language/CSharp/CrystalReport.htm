@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<title>Crystal Report开发</title>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+<p id="title">Crystal Report开发</p>
+
+<h1>入门</h1>
+<h2>新建报表</h2>
+<p>打开“添加新项”窗口，选择类别树中的“实用工具”项，选择“Crystal Report”，将文件名设为“TestReport.rpt”，会显示Crystal Report的设计界面。</p>
+<p><img src="images/note.jpg" width="20" height="20">注意：如果没有注册，会弹出一个注册Crystal Report的对话框，按它给出的地址注册一下即可。有人说不注册就只能使用30次，不过我没发现这一点。注册是免费的，而且每次新建报表都弹出一个要求注册的对话框也插麻烦的。</p>
+<h2>报表的节</h2>
+<p>Crystal Report报表一开始包括如下五个节</p>
+<table style="width:90%" >
+  <tr>
+    <th width="20%">节名</th>
+    <th width="80%">描述</th>
+  </tr>
+  <tr>
+    <td>报表页眉</td>
+    <td>放在“报表页眉”节中的对象只在报表开头输出显示一次。</td>
+  </tr>
+  <tr>
+    <td>页眉</td>
+    <td>放在“页眉”节中的对象输出显示在每个新页的开始位置。</td>
+  </tr>
+  <tr>
+    <td>详细资料</td>
+    <td>放在“详细资料”部分中的对象随每条新记录输出显示。</td>
+  </tr>
+  <tr>
+    <td>报表页脚</td>
+    <td><P>放在“报表页脚”节中的对象只在报表的结束位置输出显示一次。</P></td>
+  </tr>
+  <tr>
+    <td>页脚</td>
+    <td>放在“页脚”节中的对象输出显示在每页的底部。</td>
+  </tr>
+</table>
+<p>如果将组、摘要或小计添加到报表，则本程序创建另外两个节：组页眉和组页脚。 </p>
+<table style="width:90%" >
+  <tr>
+    <th width="20%">节名</th>
+    <th width="80%">描述</th>
+  </tr>
+  <tr>
+    <td>组页眉</td>
+    <td>放在“组页眉”节中的对象输出显示在每个新组的开始位置。</td>
+  </tr>
+  <tr>
+    <td>组页脚</td>
+    <td>放在“组页脚”节中的对象输出显示在每组的结束位置。</td>
+  </tr>
+</table>
+<h2>设置报表数据源</h2>
+<p>报表的数据源的结构需提前在数据集中建好，目录我尚未找到能够动态生成其数据集的方法。</p>
+<p>1、新建一个数据集，添加方法为：打开“添加新项”窗口，选择类别树中的“数据”，在右侧列表中选择“数据集”，在此起名为“ReportData.xsd”。</p>
+<p>2、在数据集中添加一个Element，可能过右键菜单或工具栏添加，Element即一个表，在此起名为“ReportTable”，第二栏为数据类型，不要动。</p>
+<p>3、在Element内输入多行，表示表的列名，可随便定义，在此需定义各行的数据类型。</p>
+<h2>在报表上放置对象</h2>
+<p>关键是数据库对象的放置，在报表设计器的右键菜单中打开<strong>数据库 </strong>- <strong>添加/删除数据库</strong>，在左侧的可用数据源树中选择<strong>项目数据 </strong>- <strong>ADO.NET数据集</strong>，可以看到我们以前定义的数据集及里面的表。</p>
+<p>可以直接在<strong>字段资源管理器</strong>中拖放字段至报表的<strong>详细资料</strong>节。</p>
+<p>对于数据字段未定的项，可用“字段资源管理器”中的“未绑定字段”。</p>
+<h2>填充数据</h2>
+<p>新建一个DataSet对象，在其中填充一个名为<strong>ReportTable</strong>的<strong>DataTable</strong>。</p>
+<pre class="code" data-type="csharp">SqlConnection conn = new SqlConnection("workstation id=LIULD;packet size=4096;user id=sa;data source=\".\";
+	persist security info=True;initial catalog=Northwind;password=sa");
+conn.Open();
+SqlDataAdapter adapter = new SqlDataAdapter(sql, conn);
+DataSet ds = new DataSet("ds");
+adapter.Fill(ds, "ReportTable");</pre>
+<p>对于未绑定的字段，可用下列语句绑定：</p>
+<pre class="code" data-type="csharp">rep.DataDefinition.FormulaFields[&quot;未绑定字符串1&quot;].Text = &quot;{ReportTable.CompanyName}&quot;;</pre>
+<p>它表示取<strong>ReportTable</strong>的<strong>CompanyName</strong>字段，更详细的信息请参考Crystal Report公式。 </p>
+<h2>查看报表</h2>
+<p>在Windows Form中可用“CrystalReportViewer”控件来查看。查看方式如下：</p>
+<pre class="code" data-type="csharp">RptCustomer rep = new RptCustomer();
+rep.SetDataSource(ds);
+this.crystalReportViewer1.ReportSource = rep;</pre>
+<h1>使用Crystal Report打印图片</h1>
+<p>在Crystal Report中打印图片，首先要建立的DataSet数据集要包含类型为System.Byte[]类型的列。但在设计器中列的属性窗口中进行列类型设计时并没有这个类型,需要在代码中修改，在对应的&lt;xs:element&gt;元素中，将其type属性设为xs:base64Binary，例如下例所示：</p>
+<pre class="code" data-type="xml">xs:element name=&quot;Img1&quot; type=&quot;xs:base64Binary&quot; minOccurs=&quot;0&quot; /&gt;</pre>
+<p>然后在Crystal Report设计器中将该字段拖放至合适位置并设定其高度和宽度。</p>
+<p>在本项目中我使用了如下代码为该字段赋值</p>
+<pre class="code" data-type="csharp">FileStream sr = new FileStream(img_path, FileMode.Open);
+BinaryReader br = new BinaryReader(sr);
+row[&quot;Img1&quot;] = br.ReadBytes((int)br.BaseStream.Length);
+br.BaseStream.Close();</pre>
+<p>在网页中访问报表rpt文件也是一个技巧，无法像在winform中一样声明一个报表对象，然后再对该对象操作。而是需要先在aspx中放置一个CrystalReportViewer控件，设置其报表源为设计好的报表文件。然后，在网页中使用如下代码设置其数据源：</p>
+<pre class="code" data-type="csharp">CrystalDecisions.CrystalReports.Engine.ReportDocument rep_doc = this.CrystalReportSource1.ReportDocument;
+rep_doc.SetDataSource(tb_print);		//tb_print为DataTable对象</pre>
+<p>使用Crystal Report打印图片时对图片格式是有限制的，经我的测试，发现支持.png、.bmp、.jpg格式，不支持.gif格式。</p>
+<p>在按下打印/导出按钮后，Crystal Report会重新执行一次页面刷新操作，因此，需要将读取数据，设置图片的代码放到Page_Load函数中。</p>
+<p>对于要打印的图片文件所在目录，要保证ASPNET用户对该目录拥有完全控制权。</p>
+<h1>部署</h1>
+<h2>方法 </h2>
+<h3>VS2003</h3>
+<p>如果在应用程序中使用了Crystal Report，在打包时要注意以下几点：</p>
+<p>一定要先注册，这个不用担心，即使你用的是D版，也可顺利注册，你会收到一封邮件，有你的注册号和密钥，例如我的注册号是<em>8545331242</em>，密钥为<em>AAP5GKS0000GZR200XH</em>。</p>
+<p>在打包应用程序时，要加入4个合并模块：</p>
+<ul>
+  <li>Crystal_Database_Access2003.msm </li>
+  <li> Crystal_Database_Access2003_enu.msm </li>
+  <li> Crystal_Managed2003.msm </li>
+  <li> Crystal_regwiz2003.msm </li>
+</ul>
+<p>它们都在VS.net的安装目录下，其中对 Crystal_regwiz2003.msm 模块，要在其属性中展开(MergeModuleProperties)，在License Key属性中输入你的秘钥。</p>
+<h3>VS2005</h3>
+<p>需要到网上去下载需要的合并模块CrystalReportsRedist2005_x86.msm，将其复制到C:\Program Files\Common Files\Merge Modules目录下，下面是我的本地下载文件：</p>
+<p><a href="downloads/CrystalReportsRedist2005_x86.msm">本地下载</a></p>
+<h2>问题</h2>
+<p>如果没有正确部署Crystal Report，在运行到相应模块时，会提示错误，找不到KeycodeV2.dll文件，提示信息如下：</p>
+<p>Cannot find KeycodeV2.dll, or invalid keycode.</p>
+<h2>另一种解决思路</h2>
+<p>从网上获取，未进行验证。</p>
+<p>This error message appears because the following registry keys do not have rights for the ASPNET account: <BR>
+<BR>
+- HKEY_CLASSES_ROOT\Interface\{4A4D268A-DF9B-4FC1-8301-D9FEEEF69F9C} <BR>
+<BR>
+- HKEY_CLASSES_ROOT\TypeLib\{8D43D0B9-C14E-4577-9E67-A9A1EEF82302} <BR>
+<BR>
+To resolve this error message, give these two registry keys ASPNET read rights. If you are running ASPNET under the System account, then the System account must have the rights to this key. <BR>
+<BR>
+To give ASPNET read rights to a registry key: <BR>
+<BR>
+1. Go into the 32-bit Registry Editor (Start &gt; Run &gt; then type "regedt32"). For Windows XP computers, type "regedit" instead of "regedt32". <BR>
+<BR>
+2. Go to 'HKEY_CLASSES_ROOT' and select the 'Interface' key. <BR>
+<BR>
+3. Highlight "{4A4D268A-DF9B-4FC1-8301-D9FEEEF69F9C}" and select the "Security" menu then click "Permissions…". (When using regedit in Windows XP, select the "Edit" menu then click "Permissions…".) <BR>
+<BR>
+4. In the permissions dialog, add the "ASPNET" account from the local computer and give this account read rights. <BR>
+<BR>
+5. Go to 'HKEY_CLASSES_ROOT' and select the 'TypeLib' key. Repeat steps 3 to 4, except use the "{8D43D0B9-C14E-4577-9E67-A9A1EEF82302}" key. <BR>
+<BR>
+==================== <BR>
+NOTE: <BR>
+<BR>
+In order to have access to these registry keys, keycodev2.dll must be registered. To register keycodev2.dll, go to Start &gt; Run and type: <BR>
+<BR>
+Regsvr32 "C:\Program Files\Common Files\Crystal Decisions\1.0\bin\keycodev2.dll" <BR>
+<BR>
+If keycodev2.dll cannot be registered, refer to knowledge base article c2012603. <BR> 
+</p>
+<p>&nbsp;</p>
+
+</body>
+</html>

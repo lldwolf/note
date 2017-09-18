@@ -1,0 +1,66 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+Example 1: creating a gray bar effect</TITLE>
+</HEAD>
+<BODY>
+<A NAME="CAIDBHIJ"></A><h1>Example 1: creating a gray bar effect</h1>
+<A NAME="TI2921"></A><p>The following report shows alternate rows with a light
+gray bar. The gray bars make it easier to track data values across
+the row:</p>
+<br><img src="images/cond015.gif">
+<A NAME="TI2922"></A><h4>Adding a rectangle control</h4>
+<A NAME="TI2923"></A><p>To create the gray bar effect, you would add a rectangle control
+to the detail band and size it so that it surrounds the controls
+you want highlighted. The rectangle needs to be located in the band
+(for the rectangle, the Properties view&gt;Position tab&gt;Layer
+option&gt;Band setting). The rectangle also needs to be specified
+as Send to Back (select from the popup menu) so that it will be
+behind all the values:</p>
+<br><img src="images/cond020.gif">
+<A NAME="TI2924"></A><p>At this point, the report shows a rectangle for each detail
+line. A narrow black line bounds the rectangle:</p>
+<br><img src="images/cond021.gif">
+<A NAME="TI2925"></A><p>The line bounding the rectangle should be set to No Visible
+Line (Rectangle property sheet&gt;General tab&gt;Pen
+Style option&gt;No Visible Line setting). You would do this
+last, after positioning the rectangle control.</p>
+<A NAME="TI2926"></A><p>At this point the report looks as it did originally without
+the rectangles in the detail lines. The rectangles are there but
+because they are white and are not bounded with a black line, you
+cannot see them.</p>
+<A NAME="TI2927"></A><h4>Specifying the condition</h4>
+<A NAME="TI2928"></A><p>Now you would specify the condition for making the rectangle
+gray. To do this, you would click the button next to the Brush Color
+property on the General property page. In the Modify Expression
+dialog box, you would enter the following expression for the Brush.Color
+property:<pre>If(mod(getrow(),2 )=1, rgb(255, 255, 255 ), rgb(240, 240, 240 ))</pre>
+</p>
+<A NAME="TI2929"></A><p>The expression <i>mod(getrow(),2)=1</i>
+ distinguishes
+odd rows from even rows.</p>
+<A NAME="TI2930"></A><p>The function <i>mod(getrow(),2)</i>
+ takes the
+row number (<i>getrow()</i>
+), divides it by <i>2</i>
+, then
+returns the remainder. The remainder can be either 0 or 1. If the
+row number is odd, mod returns 1; if the row number is even, mod
+returns 0.</p>
+<A NAME="TI2931"></A><p>If the row number is odd (the condition evaluates as true),
+the rectangle displays as white. The rgb function specifies maximum
+amounts of red, green, and blue: <i>rgb (255, 255, 255)</i>
+.
+Specifying 255 for red, green, and blue results in the color white.
+If the row number is even (the condition evaluates as false), the
+rectangle displays as light gray (<i>rgb (240, 240, 240)</i>
+).</p>
+<A NAME="TI2932"></A><h4>Finishing up</h4>
+<A NAME="TI2933"></A><p>Now the report has gray bands. The final adjustment in
+this example is to change the background color of the computed field
+used for Salary Plus Benefits. Change the background color of the
+computed field from white to transparent (Computed field property
+sheet&gt;Font tab&gt;Background Color option&gt;Transparent):</p>
+<br><img src="images/cond030.gif">
+

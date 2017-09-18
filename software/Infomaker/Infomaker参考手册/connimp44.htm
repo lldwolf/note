@@ -1,0 +1,404 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+Using the Database Trace tool</TITLE>
+</HEAD>
+<BODY>
+<A NAME="BABBFBJF"></A><h1>Using the Database Trace tool</h1>
+<A NAME="TI1354"></A><p>The section describes how to use the Database Trace tool. </p>
+<A NAME="X-ref304725087"></A><h2>About the Database Trace tool</h2>
+<A NAME="TI1355"></A><p>The Database Trace tool records the internal commands that InfoMaker executes
+while accessing a database. You can trace a database connection
+in the development environment.</p>
+<A NAME="TI1356"></A><p>InfoMaker writes the output of Database Trace to a log file
+named PBTRACE.LOG (by default) or to a nondefault log file that
+you specify. When you enable database tracing for the first time, InfoMaker creates
+the log file on your computer. Tracing continues until you disconnect
+from the database.</p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Using the Database Trace tool with one connection</span> <A NAME="TI1357"></A>You can use the Database Trace tool for only one DBMS at a
+time and for one database connection at a time.</p>
+<A NAME="TI1358"></A>For example, if your application connects to both an ODBC
+data source and an Adaptive Server Enterprise database, you can
+trace either the ODBC connection or the Adaptive Server Enterprise
+connection, but not both connections at the same time.</p>
+<A NAME="TI1359"></A><h3>How you can use the Database Trace tool</h3>
+<A NAME="TI1360"></A><p>You can use information from the Database Trace tool to help
+you understand what InfoMaker is doing <i>internally</i>
+ when
+you work with your database. Examining the information in the log
+file can help you:<A NAME="TI1361"></A>
+<ul>
+<li class=fi>Understand how InfoMaker interacts with your database</li>
+<li class=ds>Identify and resolve problems with your database
+connection</li>
+<li class=ds>Provide useful information to Technical Support
+if you call them for help with your database connection
+</li>
+</ul>
+</p>
+<A NAME="TI1362"></A><p>If you are familiar with InfoMaker and your DBMS, you can
+use the information in the log to help troubleshoot connection problems
+on your own.</p>
+<A NAME="TI1363"></A><p>If you are less experienced or need help, run the Database
+Trace tool <i>before</i>
+ you call Technical Support.
+You can then report or send the results of the trace to the Technical
+Support representative who takes your call.</p>
+<A NAME="X-ref368478431"></A><h3>Location of the DatabaseTrace log</h3>
+<A NAME="TI1364"></A><h4>PBTRACE.LOG</h4>
+<A NAME="TI1365"></A><p>By default, InfoMaker writes output of the Database Trace
+tool to a file named PBTRACE.LOG in your Windows directory.</p>
+<A NAME="TI1366"></A><h4>Nondefault log file</h4>
+<A NAME="TI1367"></A><p>If you prefer, you can specify a nondefault name and location
+for the log file when you use Database Trace.</p>
+<A NAME="TI1368"></A><p>For instructions, see <A HREF="connimp44.htm#CCJDBABJ">"Specifying a nondefault
+Database Trace log"</A>.</p>
+<A NAME="TI1369"></A><h3>Contents of the Database Trace log</h3>
+<A NAME="TI1370"></A><p>The Database Trace tool records the following information
+in the log file when you trace a database connection:<A NAME="TI1371"></A>
+<ul>
+<li class=fi>Parameters used to connect to the database</li>
+<li class=ds>Time to perform each database operation (in milliseconds)</li>
+<li class=ds>The internal commands executed to retrieve and display
+table and column information from your database. Examples include:<A NAME="TI1372"></A>
+<ul>
+<li class=fi>Preparing and executing SQL
+statements such as SELECT, INSERT, UPDATE, and DELETE</li>
+<li class=ds>Getting column descriptions</li>
+<li class=ds>Fetching table rows</li>
+<li class=ds>Binding user-supplied values to columns (if your
+database supports bind variables)</li>
+<li class=ds>Committing and rolling back database changes
+</li>
+</ul>
+</li>
+<li class=ds>Disconnecting from the database</li>
+<li class=ds>Shutting down the database interface
+</li>
+</ul>
+</p>
+<A NAME="TI1373"></A><h3>Format of the Database Trace log</h3>
+<A NAME="TI1374"></A><p>The specific content of the Database Trace log file depends
+on the database you are accessing and the operations you are performing.
+However, the log uses the following basic format to display output:</p>
+<A NAME="TI1375"></A><p><pre><i>COMMAND</i><b>:</b> (<i>time</i>)</pre>
+<pre>	{<i>additional_information</i>}</pre>
+</p>
+<A NAME="TI1376"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI1377"></A>Parameter</th>
+<th align="left" valign=bottom><A NAME="TI1378"></A>Description</th>
+</tr>
+<tr><td valign=top><A NAME="TI1379"></A><i>COMMAND</i></td>
+<td valign=top><A NAME="TI1380"></A>The internal command that InfoMaker executes
+to perform the database operation</td>
+</tr>
+<tr><td valign=top><A NAME="TI1381"></A><i>time</i></td>
+<td valign=top><A NAME="TI1382"></A>The number of milliseconds it takes InfoMaker to perform
+the database operation. The precision used depends on your operating
+system's timing mechanism</td>
+</tr>
+<tr><td valign=top><A NAME="TI1383"></A><i>additional_information</i></td>
+<td valign=top><A NAME="TI1384"></A>(Optional) Additional information about
+the command. The information provided depends on the database operation</td>
+</tr>
+</table>
+<A NAME="TI1385"></A><h4>Example</h4>
+<A NAME="TI1386"></A><p>The following portion of the log file shows the commands InfoMaker executes to
+fetch two rows from a database table:</p>
+<A NAME="TI1387"></A><p><pre>FETCH NEXT: (77 MilliSeconds)</pre>
+<pre>		dept_id=	dept_name=Business Services</pre>
+<pre>FETCH NEXT: (4 MilliSeconds)</pre>
+<pre>		dept_id=	dept_name=Corporate Management</pre>
+</p>
+<A NAME="TI1388"></A><p>For a more complete example of Database Trace
+output, see <A HREF="connimp44.htm#X-ref304635496">"Sample Database Trace
+output"</A>.</p>
+<A NAME="X-ref304628164"></A><h2>Starting the Database Trace tool</h2>
+<A NAME="TI1389"></A><p>By default, the Database Trace tool is turned off in InfoMaker.
+You can start it in the InfoMaker development environment to trace
+your database connection: To start Database Trace for your connection,
+you must edit your database profile.</p>
+<A NAME="CCJDDIEF"></A><h3>Starting Database Tracein the development environment</h3>
+<A NAME="TI1390"></A><p>To start the Database Trace tool in the InfoMaker development
+environment, edit the database profile for the connection you want
+to trace, as described in the following procedure.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To start the Database Trace tool by editing a
+database profile:</p>
+<ol><li class=fi>
+Open the Database Profile Setup dialog
+box for the connection you want to trace. <br><br></li>
+<li class=ds>
+On the Connection tab, select the Generate Trace
+checkbox and click OK or Apply. (The Generate Trace checkbox is
+located on the System tab in the OLE DB Database Profile Setup dialog
+box.)<br><br><p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Preview tab not in InfoMaker</span> <A NAME="TI1391"></A>The Preview tab is not available in the Database Profile Setup
+dialog box in InfoMaker.</p>
+<br><img src="images/cn8dbtr.gif"><br>
+
+The Database Profiles dialog box displays with the name of
+the edited profile highlighted.<br><br>
+For example, here is the relevant portion of the database
+profile entry for Sybase System 11 Test. The setting that starts
+Database Trace is shown in bold:<br><br>
+<pre>[Default] 					[value not set]</pre>
+<pre>AutoCommit 				 	"TRUE"</pre>
+<pre>Database					"Sales"</pre>
+<pre>DatabasePassword "00"</pre>
+<pre>DBMS				 "TRACE SYC"</pre>
+<pre>DbParm				 "Release"</pre>
+<pre><i>Lock				 "3"</i> </pre>
+<pre>LogId				 "login"</pre>
+<pre>LogPassword	 "pass"</pre>
+<pre>Prompt				 "0"</pre>
+<pre>ServerName	 "Sales"</pre>
+<br><br></li>
+<li class=ds>
+Click Connect in the Database Profiles dialog
+box to connect to the database.<br><br>
+A message box displays stating that database tracing is enabled
+and indicating where InfoMaker will write the output. (By default, InfoMaker writes
+Database Trace output to a log file named PBTRACE.LOG.)<br><br>
+For instructions on specifying your own name
+and location for the Database Trace log file, see <A HREF="connimp44.htm#CCJDBABJ">"Specifying a nondefault
+Database Trace log"</A>.<br><br></li>
+<li class=ds>
+Click OK.<br><br>
+InfoMaker connects to the database and starts tracing the
+connection.<br><br></li></ol>
+<br><A NAME="X-ref304629360"></A><h2>Stopping the Database Trace tool</h2>
+<A NAME="TI1392"></A><p>Once you start tracing a particular database connection, InfoMaker continues sending
+trace output to the log until you do one of the following:<A NAME="TI1393"></A>
+<ul>
+<li class=fi>Reconnect to the same database
+with tracing stopped</li>
+<li class=ds>Connect to another database for which you have not
+enabled tracing
+</li>
+</ul>
+</p>
+<A NAME="TI1394"></A><h3>Stopping Database Trace in the development environment</h3>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To stop the Database Trace tool by editing a database
+profile:</p>
+<ol><li class=fi>
+In the Database Profile Setup dialog box
+for the database you are tracing, clear the Generate Trace checkbox
+on the Connection tab.<br><br></li>
+<li class=ds>
+Click OK in the Database Profile Setup dialog
+box.<br><br>
+The Database Profiles dialog box displays with the name of
+the edited profile highlighted.<br><br></li>
+<li class=ds>
+Right-click on the connected database and select
+Re-connect from the dropdown menu in the Database Profiles dialog
+box.<br><br>
+InfoMaker connects to the database and stops tracing the
+connection.<br><br></li></ol>
+<br><A NAME="CCJDBABJ"></A><h2>Specifying a nondefault Database Trace log</h2>
+<A NAME="TI1395"></A><p>In the InfoMaker development environment, you can specify
+a nondefault name and location for the log file when you use Database
+Trace.</p>
+<A NAME="TI1396"></A><h4>What you can do</h4>
+<A NAME="TI1397"></A><p>By specifying a nondefault Database Trace log to use in the
+development environment, you can:<A NAME="TI1398"></A>
+<ul>
+<li class=fi>Control where InfoMaker writes
+the output of the Database Trace tool</li>
+<li class=ds>Give the log file a name and location that best
+meets the development needs at your site
+</li>
+</ul>
+</p>
+<A NAME="TI1399"></A><p>By default, InfoMaker writes Database Trace output to a log
+file named PBTRACE.LOG located in your Windows directory. You can
+override this default in the development environment by editing
+your InfoMaker initialization file in your InfoMaker directory. </p>
+<A NAME="TI1400"></A><h4>How to do it</h4>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To specify a nondefault Database Trace log file:</p>
+<ol><li class=fi>
+Open the InfoMaker initialization file for editing.<br><br>
+You can use the File Editor (in InfoMaker) or any text editor
+(outside InfoMaker).<br><br></li>
+<li class=ds>
+Create an entry named DBTraceFile in the [Database] section
+of the initialization file, using the following syntax to specify
+a nondefault log file:<pre><b>DBTraceFile</b>=<i>log_file_pathname</i></pre>
+<br><br>
+For example:<pre>[Database]</pre>
+<pre>...</pre>
+<pre>DBTraceFile=c:\temp\mydbtrce.log</pre>
+<br><br></li>
+<li class=ds>
+Save your changes to the initialization file.<br><br>
+The next time you use the Database Trace tool to trace a connection
+in the development environment, InfoMaker writes the output to
+the log file you specified instead of to the default PBTRACE.LOG
+file.<br><br>
+For instructions on starting Database Trace,
+see <A HREF="connimp44.htm#CCJDDIEF">"Starting Database Trace
+in the development environment"</A>.<br><br></li></ol>
+<br><A NAME="X-ref304725221"></A><h2>Using the Database Trace log</h2>
+<A NAME="TI1401"></A><p>InfoMaker writes the output of the Database Trace tool to
+a file named PBTRACE.LOG (by default) or to a nondefault log file
+that you specify. To use the trace log, you can do the following
+anytime:<A NAME="TI1402"></A>
+<ul>
+<li class=fi>View the Database Trace log
+with any text editor</li>
+<li class=ds>Annotate the Database Trace log with your own comments</li>
+<li class=ds>Delete the Database Trace log or clear its contents
+when it becomes too large
+</li>
+</ul>
+</p>
+<A NAME="TI1403"></A><p>For information about where to find PBTRACE.LOG,
+see <A HREF="connimp44.htm#X-ref368478431">"Location of the Database
+Trace log"</A>.</p>
+<A NAME="TI1404"></A><p>For instructions about specifying your own
+Database Trace log to use in the development environment, see <A HREF="connimp44.htm#CCJDBABJ">"Specifying a nondefault
+Database Trace log"</A>.</p>
+<A NAME="TI1405"></A><h3>Viewing the Database Trace log</h3>
+<A NAME="TI1406"></A><p>You can display the contents of the log file anytime during an InfoMaker session.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To view the contents of the log file:</p>
+<ol><li class=fi>
+Open the log file in one of the following
+ways:<A NAME="TI1407"></A>
+<ul>
+<li class=fi>Use the File Editor
+in InfoMaker. (For instructions, see the <i></i>
+<i>InfoMaker User's
+Guide</i>
+<i></i>
+.)</li>
+<li class=ds>Use any text editor outside InfoMaker.
+</li>
+</ul>
+
+                        <br><br></li></ol>
+<br><p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Leaving the log file open</span> <A NAME="TI1408"></A>If you leave the log file open as you work in InfoMaker,
+the Database Trace tool <i>does not update</i>
+ the
+log.</p>
+<A NAME="TI1409"></A><h3>Annotating the Database Trace log</h3>
+<A NAME="TI1410"></A><p>When you use the Database Trace log as a troubleshooting tool,
+it may be helpful to add your own comments or notes to the file.
+For example, you can specify the date and time of a particular connection,
+the versions of database server and client software you used, or
+any other useful information.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To annotate the log file:</p>
+<ol><li class=fi>
+Open the PBTRACE.LOG file in one of the
+following ways:<A NAME="TI1411"></A>
+<ul>
+<li class=fi>Use the File
+Editor in InfoMaker. (For instructions, see the <i>InfoMaker User's
+Guide</i>
+.)</li>
+<li class=ds>Use any text editor outside InfoMaker.
+</li>
+</ul>
+
+                        <br><br></li>
+<li class=ds>
+Edit the log file with your comments.<br><br></li>
+<li class=ds>
+Save your changes to the log file.<br><br></li></ol>
+<br><A NAME="TI1412"></A><h3>Deleting or clearing the Database Trace log</h3>
+<A NAME="TI1413"></A><p>Each time you connect to a database with tracing enabled, InfoMaker appends the
+trace output of your connection to the existing log. As a result,
+the log file can become very large over time, especially if you
+frequently enable tracing when connected to a database.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To keep the size of the log file manageable:</p>
+<ol><li class=fi>
+Do either of the following periodically:<br><br>
+<A NAME="TI1414"></A>
+<ul>
+<li class=fi>Open the log file,
+clear its contents, and save the empty file.<br>
+Provided that you use the default PBTRACE.LOG or the same nondefault
+file the next time you connect to a database with tracing enabled, InfoMaker will
+write to this empty file.<br></li>
+<li class=ds>Delete the log file.<br>
+InfoMaker will automatically create a new log file the next
+time you connect to a database with tracing enabled.<br>
+</li>
+</ul>
+<br><br></li></ol>
+<br><A NAME="X-ref304635496"></A><h2>Sample Database Trace output</h2>
+<A NAME="TI1415"></A><p>This section gives an example of Database Trace output that
+you might see in the log file and briefly explains each portion
+of the output.</p>
+<A NAME="TI1416"></A><p>The example traces a connection to a Sybase System 11 database
+named Sample. The output was generated while running an InfoMaker application
+that displays information about employees in each department. The
+SELECT statement shown retrieves information from the Employee table
+to display the names of employees in department 100.</p>
+<A NAME="TI1417"></A><p>The precision (for example, milliseconds) used when Database
+Trace records internal commands depends on your operating system's
+timing mechanism. Therefore, the timing precision in your Database
+Trace log may vary from this example.</p>
+<A NAME="TI1418"></A><h4>Connect to database</h4>
+<A NAME="TI1419"></A><p><pre>LOGIN: (220 MilliSeconds)</pre>
+<pre>CONNECT TO trace SYC Sybase System 11:</pre>
+<pre>DATA=sample</pre>
+<pre>LOGID=sa</pre>
+<pre>SERVER=oregano (55 MilliSeconds)</pre>
+<pre>BEGIN TRANSACTION: (0 MilliSeconds)</pre>
+</p>
+<A NAME="TI1420"></A><h4>Prepare SELECT statement</h4>
+<A NAME="TI1421"></A><p><pre>PREPARE: (0 MilliSeconds)</pre>
+<pre>SELECT employee.emp_id, employee.emp_lname,</pre>
+<pre>employee.emp_fname, employee.dept_id FROM employee</pre>
+<pre>WHERE ( employee.dept_id = 100 )</pre>
+<pre>ORDER BY employee.emp_lname ASC (0 MilliSeconds)</pre>
+</p>
+<A NAME="TI1422"></A><h4>Get column descriptions</h4>
+<A NAME="TI1423"></A><p><pre>DESCRIBE: (0 MilliSeconds)</pre>
+<pre>name=emp_id,len=4,type=????,pbt5,dbt3,ct0,dec0</pre>
+<pre>name=emp_lname,len=21,type=CHAR,pbt1,dbt1,ct0,dec0</pre>
+<pre>name=emp_fname,len=21,type=CHAR,pbt1,dbt1,ct0,dec0</pre>
+<pre>name=dept_id,len=4,type=????,pbt5,dbt3,ct0,dec0</pre>
+</p>
+<A NAME="TI1424"></A><h4>Bind memory buffers to columns</h4>
+<A NAME="TI1425"></A><p><pre>BIND SELECT OUTPUT BUFFER (DataWindow):</pre>
+<pre>(0 MilliSeconds)</pre>
+<pre>name=emp_id,len=4,type=FLOAT,pbt3,dbt3,ct0,dec0</pre>
+<pre>name=emp_lname,len=21,type=CHAR,pbt1,dbt1,ct0,dec0</pre>
+<pre>name=emp_fname,len=21,type=CHAR,pbt1,dbt1,ct0,dec0</pre>
+<pre>name=dept_id,len=4,type=FLOAT,pbt3,dbt3,ct0,dec0</pre>
+</p>
+<A NAME="TI1426"></A><h4>Execute SELECT statement</h4>
+<A NAME="TI1427"></A><p><pre>EXECUTE: (0 MilliSeconds)</pre>
+</p>
+<A NAME="TI1428"></A><h4>Fetch rows from result set</h4>
+<A NAME="TI1429"></A><p><pre>FETCH NEXT: (0 MilliSeconds)</pre>
+<pre>		emp_id=	emp_lname=Jones	emp_fname=Alan</pre>
+<pre>		dept_id=</pre>
+<pre>FETCH NEXT: (0 MilliSeconds)</pre>
+<pre>		emp_id=	emp_lname=Ciccone	emp_fname=Peter</pre>
+<pre>		dept_id=</pre>
+<pre>FETCH NEXT: (0 MilliSeconds)</pre>
+<pre>		emp_id=	emp_lname=Houston	emp_fname=Mary</pre>
+<pre>		dept_id=</pre>
+<pre>FETCH NEXT: (0 MilliSeconds)</pre>
+<pre>		emp_id=	emp_lname=Smith		emp_fname=Susan</pre>
+<pre>		dept_id=</pre>
+<pre>FETCH NEXT: (0 MilliSeconds)</pre>
+<pre>		emp_id=	emp_lname=Stein		emp_fname=David</pre>
+<pre>		dept_id=</pre>
+<pre>FETCH NEXT: (0 MilliSeconds)</pre>
+<pre>		emp_id=	emp_lname=Watson	emp_fname=Linda</pre>
+<pre>		dept_id=</pre>
+<pre>FETCH NEXT: (0 MilliSeconds)</pre>
+<pre>Error 1 (rc 100)</pre>
+</p>
+<A NAME="TI1430"></A><h4>Commit database changes</h4>
+<A NAME="TI1431"></A><p><pre>COMMIT: (55 MilliSeconds )</pre>
+</p>
+<A NAME="TI1432"></A><h4>Disconnect from database</h4>
+<A NAME="TI1433"></A><p><pre>DISCONNECT: (0 MilliSeconds)</pre>
+</p>
+<A NAME="TI1434"></A><h4>Shut down database interface</h4>
+<A NAME="TI1435"></A><p><pre>SHUTDOWN DATABASE INTERFACE: (0 MilliSeconds)</pre>
+</p>
+

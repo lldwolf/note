@@ -1,0 +1,207 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<script language="javascript" src="css.js"></script>
+<title>系统表/视图</title>
+</head>
+
+<body>
+<h1>第N章 系统表/视图</h1>
+<hr>
+<h2>N.1 获取系统中的对象</h2>
+<h3>N.1.1 表 </h3>
+<p>系统使图sys.all_all_tables或sys.all_tables</p>
+<p>可使用owner条件查询属于某用户的表，注意，查询是区分大小写，如下：</p>
+<pre>select * from all_tables where owner = 'SYSTEM'</pre>
+<p>还可以使用sys.all_objects表，其object_type字段为“TABLE”的即可</p>
+<pre>select * from all_objects where owner = 'SYSTEM' and object_type = 'TABLE'</pre>
+<h3>N.1.2 字段</h3>
+<p>要想查询某个表的所有字段，可使用视图sys.all_col_comments或sys.ALL_TAB_COLUMNS</p>
+<pre>select * from all_col_comments where owner = 'TJDG' and table_name = 'ADD_SPEC1'</pre>
+<p>sys.all_tab_columns的主要字段如下：</p>
+<table width="80%">
+  <tr>
+    <th width="30%">字段名</th>
+    <th width="70%">说明</th>
+  </tr>
+  <tr>
+    <td>owner</td>
+    <td>所属用户</td>
+  </tr>
+  <tr>
+    <td>table_name</td>
+    <td>所属表</td>
+  </tr>
+  <tr>
+    <td>column_name</td>
+    <td>字段名</td>
+  </tr>
+  <tr>
+    <td>data_type</td>
+    <td>数据类型，主要有如下几类：
+      <ul>
+        <li> NUMBER</li>
+        <li> CHAR</li>
+        <li>VARCHAR2</li>
+        <li>BLOB</li>
+        <li>CLOB</li>
+        <li>FLOAT</li>
+        <li>LONG</li>
+        <li>LONG RAW</li>
+        <li>DATE</li>
+        <li>NCHAR</li>
+        <li>NCLOB</li>
+        <li>NVARCHAR2</li>
+        <li>RAW</li>
+        <li>ROWID</li>
+    </ul></td>
+  </tr>
+  <tr>
+    <td>data_length</td>
+    <td>长度</td>
+  </tr>
+  <tr>
+    <td>data_precision</td>
+    <td>精度</td>
+  </tr>
+  <tr>
+    <td>nullable</td>
+    <td>是否为空，'Y' 或 'N' </td>
+  </tr>
+  <tr>
+    <td>column_id</td>
+    <td>主键</td>
+  </tr>
+  <tr>
+    <td>data_default</td>
+    <td>默认值</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+<p>&nbsp;</p>
+<h3>N.1.3 触发器 </h3>
+<p>要想查询某个表的所有触发器，可使用视图sys.all_triggers，主要使用用以下几个字段</p>
+<table width="80%"  border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <th width="50%">字段名</th>
+    <th width="50%">说明</th>
+  </tr>
+  <tr>
+    <td>owner</td>
+    <td>所属用户</td>
+  </tr>
+  <tr>
+    <td>table_owner</td>
+    <td>表所属用户</td>
+  </tr>
+  <tr>
+    <td>triggering_event</td>
+    <td>触发事件</td>
+  </tr>
+  <tr>
+    <td>table_name</td>
+    <td>所属表名</td>
+  </tr>
+  <tr>
+    <td>trigger_name</td>
+    <td>触发器名</td>
+  </tr>
+</table>
+<pre>select * from all_triggers 
+where owner = 'TJDG' and table_owner = 'TJDG' and triggering_event like '%UPDATE%' and table_name = 'COMPONENT'
+</pre>
+<p>使用下面的SQL语句可禁用或启用触发器</p>
+<pre>ALTER TRIGGER &quot;TJDG&quot;.&quot;TR_OR_DIU_COMPONENT&quot; DISABLE
+ALTER TRIGGER &quot;TJDG&quot;.&quot;TR_OR_DIU_COMPONENT&quot; ENABLE</pre>
+<h3>N.1.4 权限</h3>
+<p>某用户对某表的操作权限，可在视图sys.DBA_TAB_PRIVS或sys.all_tab_privs中查询，主要使用以下几个字段</p>
+<table width="80%"  border="1">
+  <tr>
+    <th width="30%">字段名</th>
+    <th width="70%">说明</th>
+  </tr>
+  <tr>
+    <td>grantor</td>
+    <td>授权用户，即表的所有者</td>
+  </tr>
+  <tr>
+    <td>GRANTEE</td>
+    <td>被授权用户</td>
+  </tr>
+  <tr>
+    <td>table_name</td>
+    <td>被授权的表名</td>
+  </tr>
+  <tr>
+    <td>PRIVILEGE</td>
+    <td>所授的权限名</td>
+  </tr>
+</table>
+<h3>N.1.5 约束 </h3>
+<p>某表的约束信息存在系统视图sys.all_constraints和sys.all_cons_columns中。</p>
+<p>all_constraints.constraint_type存放的是约束类型，有如下几种：</p>
+<table width="60%" >
+  <tr>
+    <th width="30%">值</th>
+    <th width="70%">约束类型</th>
+  </tr>
+  <tr>
+    <td><div align="center">P</div></td>
+    <td>主键约束</td>
+  </tr>
+  <tr>
+    <td><div align="center">R</div></td>
+    <td>外键约束</td>
+  </tr>
+  <tr>
+    <td><div align="center"></div></td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+<p>例如，要取某表owner1.table1的主键，可使用以下步骤：</p>
+<pre>--取得约束名
+select constraint_name from sys.all_constraints where constraint_type = 'P' and owner = 'OWNER1' and table_name = 'TABLE1'
+
+--取得主键
+select * from sys.all_cons_columns where owner = 'OWNER1' and constraint_name = 'CONSTRAINT_NAME'
+
+--取某个用户所有的外键，采用下述方法，查找一个表和所有表的时间差不太多，速度很慢
+select a.table_name src_table, 
+       b.column_name src_col,
+       c.table_name obj_table,
+       d.column_name obj_col
+from all_constraints a
+  inner join all_cons_columns b on b.owner = a.owner and b.constraint_name = a.constraint_name
+  inner join all_constraints c on c.owner = a.owner and c.constraint_name = a.r_constraint_name and c.constraint_type = 'P'
+  inner join all_cons_columns d on d.owner = a.owner and d.constraint_name = c.constraint_name
+where a.owner = 'DEMO'
+order by a.table_name, b.column_name, c.table_name
+
+--如果直接使用系统表取外键，速度会快得多，但要求用户有对这些表操作的权限
+select a.name fk_name, 
+       d.name src_table_name, f.name src_column_name,
+       i.name obj_table_name, k.name obj_column_name
+from sys.con$ a
+  inner join sys.user$ b on b.user# = a.owner#
+  inner join sys.cdef$ c on c.con# = a.con#
+  inner join sys.obj$ d on d.obj# = c.obj#
+  inner join sys.ccol$ e on e.con# = a.con# and e.obj# = d.obj#
+  inner join sys.col$ f on f.obj# = d.obj# and f.col# = e.col#
+  inner join sys.con$ g on g.con# = c.rcon#
+  inner join sys.cdef$ h on h.con# = g.con#
+  inner join sys.obj$ i on i.obj# = h.obj#
+  inner join sys.ccol$ j on j.con# = g.con# and j.obj# = i.obj#
+  inner join sys.col$ k on k.obj# = i.obj# and k.col# = j.col#
+where b.name = '用户名' and c.type# = 4
+order by src_table_name, src_column_name</pre>
+<p>&nbsp; </p>
+<p>&nbsp;</p>
+<p>&nbsp; </p>
+<script language="javascript" src="index.js"></script>
+</body>
+</html>

@@ -1,0 +1,407 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+Using the RichText presentation style </TITLE>
+</HEAD>
+<BODY>
+<A NAME="CCJDIGEE"></A><h1>Using the RichText presentation style </h1>
+<A NAME="TI4108"></A><p>The RichText presentation style allows you to combine input
+fields that represent database columns with formatted text. This
+presentation style is useful for display-only reports, especially
+mail-merge documents. </p>
+<A NAME="TI4109"></A><p>In the Design view, you see the text along with placeholders
+called input fields:<pre>{FNAME} {LNAME}<br> {COMPANY_NAME}<br> {ADDRESS}<br> {CITY}, {STATE} {ZIP}<br> <br> Dear {FNAME}:<br> . . .</pre>
+</p>
+<A NAME="TI4110"></A><p>In the Preview view, the text is the same, but InfoMaker replaces
+the input fields with values from the database:<pre>Beth Reiser<br> AMF Corp.<br> 1033 Whippany Road<br> New York, NY 10154<br> <br> Dear Beth:<br> . . .</pre>
+</p>
+<A NAME="TI4111"></A><h4>Document template</h4>
+<A NAME="TI4112"></A><p>The formatted text acts like a document template. There is
+only one copy of the text. As the user scrolls from row to row,
+the data for the current row is inserted in the input fields and
+the user sees the document with the current data. If the user edits
+the text, the changes are seen with every row of data.</p>
+<A NAME="TI4113"></A><h4>Input fields</h4>
+<A NAME="TI4114"></A><p>In the RichText presentation style, an input field is associated
+with a column or computed field. It gets its value from the retrieved
+data or from the computed field's expression.</p>
+<A NAME="TI4115"></A><p>If an input field is not a computed field and its name does
+not match a column, there is no way to specify data for the input
+field.</p>
+<A NAME="TI4116"></A><p>There can be more than one copy of an input field in the rich
+text. In the sample above, there are two instances of the field
+FNAME. Each instance of the field displays the same data.</p>
+<A NAME="TI4117"></A><h4>Unavailable settings</h4>
+<A NAME="TI4118"></A><p>Not all the settings available in other report styles
+are available. You cannot apply code tables and edit styles, such
+as a DropDownDataWindow or EditMask, to input fields. You cannot
+use slide left and slide up settings to reposition input fields
+automatically. </p>
+<A NAME="TI4119"></A><h2>Creating the report</h2>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To create a RichText report:</p>
+<ol><li class=fi>
+In the New dialog box, select RichText
+from the Object tab and click OK.<br><br></li>
+<li class=ds>
+Select data for the report as you do for any report.<br><br>
+If you want data to be retrieved into the Preview view automatically,
+select the Retrieve on Preview checkbox. For more information, see <A HREF="imugp44.htm#BABDHBEH">"Creating a new report"</A>.<br><br></li>
+<li class=ds>
+Specify settings for the report on the Specify
+RichText Settings screen, click Next, and then click Finish.<br><br><br><img src="images/Rt01.gif"><br>
+</li></ol>
+<br><A NAME="TI4120"></A><h4>Available settings</h4>
+<A NAME="TI4121"></A><p>This
+table describes the types of settings you can make for the RichText report in
+the wizard:</p>
+<A NAME="TI4122"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI4123"></A>You can specify</th>
+<th align="left" valign=bottom><A NAME="TI4124"></A>With these settings</th>
+</tr>
+<tr><td valign=top><A NAME="TI4125"></A>Tools available</td>
+<td valign=top><A NAME="TI4126"></A>Rich text bars: Tool, Tab, Ruler, and
+PopUp Menu</td>
+</tr>
+<tr><td valign=top><A NAME="TI4127"></A>Whether there will be a header and footer
+for the printed report</td>
+<td valign=top><A NAME="TI4128"></A>Header/Footer</td>
+</tr>
+<tr><td valign=top><A NAME="TI4129"></A>Whether users are prevented from editing
+input fields and text</td>
+<td valign=top><A NAME="TI4130"></A>Display Only</td>
+</tr>
+<tr><td valign=top><A NAME="TI4131"></A>Colors for the whole background and the
+background of input fields</td>
+<td valign=top><A NAME="TI4132"></A>Background Color: General and Input Field</td>
+</tr>
+</table>
+<A NAME="TI4133"></A><h4>Editing the content</h4>
+<A NAME="TI4134"></A><p>After you click Finish in the wizard, you see input fields
+with their labels in the detail band in the Design view:</p>
+<br><img src="images/Rt02.gif">
+<A NAME="TI4135"></A><p>You can:<A NAME="TI4136"></A>
+<ul>
+<li class=fi>Begin editing text in the
+detail, header, or footer bands, building a report around the input
+fields. You can delete, move, copy, and paste text and input fields
+as needed.</li>
+<li class=ds>Include a rich text file you have already prepared.
+If you include a rich text file created in PowerBuilder that contains
+input fields, those names should match the columns selected in the report.</li>
+<li class=ds>Add computed fields that will appear as input fields
+in the report and whose value comes from the computed field expression.
+</li>
+</ul>
+</p>
+<A NAME="TI4137"></A><p>This sample shows how you might rearrange the input fields
+in a sales letter:</p>
+<br><img src="images/Rt03.gif">
+<A NAME="TI4138"></A><h4>Editing text</h4>
+<A NAME="TI4139"></A><p>You can add text by typing directly in the Design view. You
+don't have to create text objects as you do for other report styles.
+The Report painter's StyleBar lets you apply formatting
+to selected text. The RichText toolbars are <i>not</i>
+ available in
+the painter. </p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Preview mode and editing text</span> <A NAME="TI4140"></A>You cannot edit text in the Preview view, but you can edit
+text when you preview the report by selecting File&gt;Run/Preview
+from the menu bar. It may seem convenient to edit text in Preview
+mode because the toolbars are available. However, <i>any
+changes you make to the text when previewing are temporary</i>
+.
+They are discarded as soon as you return to the Design view.</p>
+<A NAME="TI4141"></A><h4>Inserting a file</h4>
+<A NAME="TI4142"></A><p>If you have a rich text file, you can include it in the report.
+You can insert text from a file into the detail, header, or footer
+band.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To insert a file:</p>
+<ol><li class=fi>
+Click in the text in any band to set the
+insertion point for the file.<br><br></li>
+<li class=ds>
+Right-click in the Design view and select Insert
+File from the popup menu.<br><br></li>
+<li class=ds>
+Select the file you want to insert in the file
+selection dialog box.<br><br></li></ol>
+<br><A NAME="TI4143"></A><p>Only the body of the file is used. If the file has a header
+or footer, it is ignored.</p>
+<A NAME="TI4144"></A><h4>Headers and footers</h4>
+<A NAME="TI4145"></A><p>You decide whether your RichText report has a header and
+footer by checking Header/Footer in the wizard or Rich
+Text Object property sheet (described in <A HREF="imugp100.htm#CCJDHBIG">"Formatting for RichText
+objects within the report"</A>).</p>
+<A NAME="TI4146"></A><p>To display a page number or a date in the header or footer,
+you can insert the predefined computed fields <i>Page n of
+n</i>
+ or <i>Today()</i>
+. </p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Losing header and footer text</span> <A NAME="TI4147"></A>If you clear the Header/Footer checkbox, any text
+in the header and footer is discarded.</p>
+<A NAME="CCJDHBIG"></A><h2>Formatting for RichText objects within the report</h2>
+<A NAME="TI4148"></A><p>Each type of object in a RichText report has its own property
+sheet. When you select Properties from the popup menu, the property
+sheet you get depends on what is selected.</p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Properties and Control List views</span> <A NAME="TI4149"></A>The Properties and Control List views are not available for
+RichText reports. The painter uses the same property sheets
+as are available to users when they run the report, and controls
+in RichText reports cannot be manipulated in the same way as
+in other reports.</p>
+<A NAME="TI4150"></A><p>Most of the objects in a RichText report correspond to
+familiar objects, like bitmaps, columns, and computed fields. You
+can also specify formatting for a temporary <i>selected text
+object</i>
+. In a RichText report, the objects are:<A NAME="TI4151"></A>
+<ul>
+<li class=fi>The whole document</li>
+<li class=ds>Selected text and paragraphs</li>
+<li class=ds>Input fields (associated with columns or computed
+fields)</li>
+<li class=ds>Pictures
+</li>
+</ul>
+</p>
+<A NAME="TI4152"></A><p>This section describes how to select each type of object and
+access its property sheet. The user can access the property sheets
+too if you enable the Popup Menu option on the Rich Text Object's
+General property sheet.</p>
+<A NAME="TI4153"></A><h3>The whole RichText object</h3>
+<A NAME="TI4154"></A><p>Settings for the whole RichText report include the values
+you specified in the wizard, as well as:<A NAME="TI4155"></A>
+<ul>
+<li class=fi>Whether pictures are displayed
+or represented by empty frames</li>
+<li class=ds>Whether newly entered text will wrap within the
+display</li>
+<li class=ds>Whether various nonprinting characters, such as
+tabs, returns, and spaces, are visible</li>
+<li class=ds>Standard report settings such as units of measurement
+and the pointer</li>
+<li class=ds>Print specifications
+</li>
+</ul>
+</p>
+<A NAME="TI4156"></A><p>Use the following procedure to change settings:</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To set values for the RichText report:</p>
+<ol><li class=fi>
+Make sure nothing is selected in the Design
+view by clicking to set the insertion point.<br><br></li>
+<li class=ds>
+Right-click in the Design view and select Properties
+from the popup menu.<br><br></li>
+<li class=ds>
+Click Help to get more information about a specific
+setting.<br><br></li></ol>
+<br><A NAME="TI4157"></A><h3>Selected text and paragraphs</h3>
+<A NAME="TI4158"></A><p>You can specify detailed font formatting for selected text.
+The selected text can be one character or many paragraphs.</p>
+<A NAME="TI4159"></A><p>If an input field is part of the selection, the font settings
+apply to it too. A picture that is part of the selection ignores
+settings for the selected text object.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To specify formatting for selected text:</p>
+<ol><li class=fi>
+Select the text you want to format.<br><br></li>
+<li class=ds>
+Right-click in the Design view and select Properties
+from the popup menu.<br><br>
+The Selected Text Object property sheet displays. You can
+set:<A NAME="TI4160"></A>
+<ul>
+<li class=fi><b>Paragraph alignment</b>   The alignment setting on the Selected Text page applies to
+all paragraphs in the selection.</li>
+<li class=ds><b>Font formatting</b>   Settings on the Font page apply to text in the selection,
+including input fields.
+</li>
+</ul>
+<br><br></li></ol>
+<br><A NAME="TI4161"></A><h4>Paragraphs</h4>
+<A NAME="TI4162"></A><p>There are also settings for selected paragraphs. You can display
+the Paragraph dialog box by pressing ctrl+shift+s.
+The user can double-click the ruler bar or press the key combination
+to display the same dialog box.</p>
+<A NAME="TI4163"></A><h4>Default font</h4>
+<A NAME="TI4164"></A><p>You can change the default font by double-clicking on the
+toolbar or pressing ctrl+shift+d.
+You can't change the default font in the painter.</p>
+<A NAME="TI4165"></A><h3>Input fields</h3>
+<A NAME="TI4166"></A><p>An input field can be either a column or computed field. Before
+you retrieve data, its value is shown as two question marks (??).</p>
+<A NAME="TI4167"></A><p>The text can include many copies of a named input field. The
+same data will appear in each instance of the input field.</p>
+<A NAME="TI4168"></A><h4>Column input fields</h4>
+<A NAME="TI4169"></A><p>The columns you select for the report become input fields
+in the rich text. Because the input field's name matches
+the column name, InfoMaker displays the column's data
+in the input field.</p>
+<A NAME="TI4170"></A><p>If an input field exists in the text, you can copy and paste
+it to create another copy. If you need to recreate a column input
+field that you deleted, use this procedure:</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To insert a column input field in the text:</p>
+<ol><li class=fi>
+Select Insert&gt;Control&gt;Column
+from the menu bar.<br><br></li>
+<li class=ds>
+Click in the text where you want the column input
+field to appear.<br><br>
+InfoMaker displays a list of the columns selected for the report.<br><br></li>
+<li class=ds>
+Select a column for the input field.<br><br></li></ol>
+<br><A NAME="TI4171"></A><h4>Properties for input fields</h4>
+<A NAME="TI4172"></A><p>An input field is selected when the whole field is flashing.
+If there is a solid selection with a flashing insertion point, then
+the current object is selected text and you'll get a different
+property sheet.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To set properties for an input field:</p>
+<ol><li class=fi>
+Click on the input field so it is flashing.<br><br></li>
+<li class=ds>
+Display the popup menu and select Properties.<br><br></li>
+<li class=ds>
+On the Font page, specify text formatting.<br><br></li>
+<li class=ds>
+On the Format page, specify a display format.<br><br></li></ol>
+<br><A NAME="TI4173"></A><p>If there are multiple copies of an input field, the format
+settings apply to all the copies. Background color on the Font page
+applies to all input fields. Other settings on the Font page apply
+to individual instances.</p>
+<p><b>Computed field input fields</b>   When you display the property sheet for a computed field,
+the settings are a little different. You can specify the input field name
+and its expression on the Compute page.</p>
+<A NAME="TI4174"></A><h4>Computed fields</h4>
+<A NAME="TI4175"></A><p>Computed fields have an expression that specifies the value
+of the computed field. In rich text, they are represented as input
+fields too. You specify a name and an expression. The data value
+comes from evaluating the expression and cannot be edited.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To define a computed field:</p>
+<ol><li class=fi>
+Select Insert&gt;Control&gt;Computed
+Field.<br><br><p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Predefined computed fields</span> <A NAME="TI4176"></A>You can also select one of the predefined computed fields
+at the bottom of the menu. InfoMaker provides several predefined
+computed fields, but in a RichText report only the page number
+(<i>Page n of n</i>
+) and today's date (<i>Today()</i>
+)
+are available.</p>
+</li>
+<li class=ds>
+Click in the text where you want the computed
+field to appear.<br><br>
+If you do not select a predefined computed field, InfoMaker displays
+the property sheet for the computed field:<br><br><br><img src="images/Rt04.gif"><br>
+</li>
+<li class=ds>
+On the Compute page, name the computed field and
+specify its expression.<br><br></li>
+<li class=ds>
+(Optional) On the Font page, specify text formatting.<br><br></li>
+<li class=ds>
+(Optional) On the Format page, specify a display
+format.<br><br></li></ol>
+<br><A NAME="TI4177"></A><p>If there are multiple copies of a computed field input field,
+the expression and format settings apply to all the copies. Font
+settings apply to individual instances.</p>
+<A NAME="TI4178"></A><p>For more about computed field expressions
+and display formats, see <A HREF="imugp51.htm#CAICGCGD">Chapter 5, "Enhancing Reports "</A>.</p>
+<A NAME="TI4179"></A><h3>Pictures</h3>
+<A NAME="TI4180"></A><p>You can include bitmaps (BMP files) in rich text.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To insert a picture in the rich text:</p>
+<ol><li class=fi>
+Select Insert&gt;Control&gt;Picture
+from the menu bar.<br><br></li>
+<li class=ds>
+Click in the text where you want the picture to
+appear.<br><br>
+InfoMaker displays the Select Picture dialog box.<br><br></li>
+<li class=ds>
+Select the file containing the picture.<br><br></li></ol>
+<br><A NAME="TI4181"></A><p>A picture is selected when you can see its nine sizing handles.
+(If the picture is very small, the handles converge and the selected
+picture looks black.) When the picture is part of a text selection,
+it displays with inverted colors.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To specify settings for the picture:</p>
+<ol><li class=fi>
+Click on the picture so you see its resizing
+handles.<br><br></li>
+<li class=ds>
+Right-click in the Design view and select Properties
+from the popup menu.<br><br>
+The Bitmap Object property sheet displays.<br><br></li></ol>
+<br><A NAME="TI4182"></A><p>You can change the size and position of the picture by dragging
+its handles. You can also change the size using the Bitmap Object
+property sheet:</p>
+<A NAME="TI4183"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI4184"></A>Choosing this Picture Size Option</th>
+<th align="left" valign=bottom><A NAME="TI4185"></A>Has this effect</th>
+</tr>
+<tr><td valign=top><A NAME="TI4186"></A>Original size</td>
+<td valign=top><A NAME="TI4187"></A>The bitmap displays at its original size.
+You can set the x and y offset to make additional space above and
+to the left of the picture</td>
+</tr>
+<tr><td valign=top><A NAME="TI4188"></A>Resizable</td>
+<td valign=top><A NAME="TI4189"></A>The bitmap fills the picture dimensions</td>
+</tr>
+<tr><td valign=top><A NAME="TI4190"></A>Resizable - Maintain X/Y Ratio</td>
+<td valign=top><A NAME="TI4191"></A>The bitmap fills the picture dimensions
+as well as it can while maintaining the aspect ratio of the picture</td>
+</tr>
+</table>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To change the picture's dimensions:</p>
+<ol><li class=fi>
+Change the numbers in the Picture Dimension
+textboxes on the Bitmap property page.<br><br>
+The picture will fill the frame according to the Picture Size
+Option you've selected.<br><br></li></ol>
+<br><A NAME="TI4192"></A><h2>Previewing and printing</h2>
+<A NAME="TI4193"></A><p>You can preview the RichText report in the Preview view
+or in preview mode so you can see what it looks like with data. </p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To preview the report in preview mode:</p>
+<ol><li class=fi>
+Select File&gt;Run/Preview
+from the menu bar.<br><br>
+<i>or</i>
+<br><br>
+Click the Run/Preview button on the PowerBar.<br><br></li>
+<li class=ds>
+Select Rows&gt;Retrieve from the menu bar.<br><br><p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Retrieve on Preview</span> <A NAME="TI4194"></A>If the RichText definition specifies Retrieve on Preview,
+data is retrieved automatically when you open the Preview view or
+preview the report in preview mode.</p>
+</li></ol>
+<br><p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To view the header and footer text:</p>
+<ol><li class=fi>
+From the Design menu, select Header/Footer.<br><br></li>
+<li class=ds>
+Select Header/Footer again to go back
+to the detail band.<br><br></li></ol>
+<br><A NAME="TI4195"></A><h4>Changes in preview </h4>
+<p><b>Data</b>   While you are previewing the report in preview mode, or
+when focus is in the Preview view, you can use the scroll buttons
+in the Preview toolbar to move from row to row and you can change
+data in the input fields. The changes you make, however, do not
+affect the data in the database.</p>
+<p><b>Text</b>   Any changes you make to the rich text in the Preview view <i>will
+not be reflected</i>
+ in the Design view. Any changes that
+you want to keep must be made in the Design view, not in preview.</p>
+<A NAME="TI4196"></A><p>If the Display Only setting is checked, you cannot change
+text or data in the Preview view.</p>
+<A NAME="TI4197"></A><h4>Print Preview</h4>
+<A NAME="TI4198"></A><p>Print Preview displays a reduced view of one row of data as
+it would be printed.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To see the report in Print Preview:</p>
+<ol><li class=fi>
+Click in the Preview view to make it the
+current view.<br><br></li>
+<li class=ds>
+Select File&gt;Print Preview.<br><br><br><img src="images/Rt05.gif"><br>
+</li></ol>
+<br><A NAME="TI4199"></A><p>In Print Preview, you can test different margin settings and
+scroll through the pages of the document.</p>
+<A NAME="TI4200"></A><p>You <i>cannot</i>
+ scroll to view other rows
+of data.</p>
+<A NAME="TI4201"></A><p>Any changes you make to settings in Print Preview are discarded
+when you return to the Design view.</p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Setting margins</span> <A NAME="TI4202"></A>To specify permanent margin settings for the RichText report,
+use the Print Specifications page of the Rich Text Object property
+sheet.</p>
+

@@ -1,0 +1,100 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+CrosstabCount</TITLE>
+</HEAD>
+<BODY>
+<A NAME="CAIBCHGE"></A><A NAME="TI6355"></A><h1>CrosstabCount</h1>
+<A NAME="TI6356"></A><p>
+<FORM>
+<INPUT
+ TYPE = "BUTTON"
+ VALUE = "Examples"
+ onClick = "window.location = 'imugp162.htm#EX14';">
+<INPUT
+  TYPE = "BUTTON"
+ VALUE = "See also"
+ onClick = "window.location = 'imugp162.htm#SA14';">
+</FORM>
+</p>
+<h3>Description</h3><A NAME="TI6357"></A><p>Counts the number of values returned by an expression in the
+values list of the crosstab. When the crosstab definition has more
+than one column, CrosstabCount can also count the number of the
+expression's values for groups of column values.</p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>For crosstabs only</span> <A NAME="TI6358"></A>You can use this function <i>only</i>
+ in a crosstab
+DataWindow object or report.</p>
+
+<h3>Syntax</h3><pre><b>CrosstabCount</b> ( <i>n</i> {, <i>column</i>, <i>groupvalue</i> } )</pre>
+<A NAME="TI6359"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI6360"></A>Argument</th>
+<th align="left" valign=bottom><A NAME="TI6361"></A>Description</th>
+</tr>
+<tr><td valign=top><A NAME="TI6362"></A><i>n</i></td>
+<td valign=top><A NAME="TI6363"></A>The number of the crosstab-values expression
+for which you want the total number of returned values</td>
+</tr>
+<tr><td valign=top><A NAME="TI6364"></A><i>column</i> (optional)</td>
+<td valign=top><A NAME="TI6365"></A>The number of the crosstab column as
+it is listed in the Columns box of the Crosstab Definition dialog
+for which you want intermediate calculations</td>
+</tr>
+<tr><td valign=top><A NAME="TI6366"></A><i>groupvalue</i> (optional)</td>
+<td valign=top><A NAME="TI6367"></A>A string whose value controls the grouping
+for the calculation. <i>Groupvalue</i> is usually
+a value from another column in the crosstab. To specify the current
+column value in a dynamic crosstab, rather than a specific value,
+specify @ plus the column name as a quoted string</td>
+</tr>
+</table>
+
+<h3>Return Values</h3><A NAME="TI6368"></A><p>Long. Returns the number of values returned by expression <i>n</i> for
+all the column values or, optionally, for a subset of column values.</p>
+
+<h3>Usage</h3><A NAME="TI6369"></A><p>This function is meaningful <i>only</i>
+ for
+the count of the values of the expression in a <i>row</i>
+ in
+the crosstab. This means you can use it only in the detail band,
+not in a header, trailer, or summary band.</p>
+<A NAME="TI6370"></A><p>NULL values are ignored and are not included in the count.</p>
+<A NAME="TI6371"></A><p>For more information about restricting the
+calculation to groups of values when the crosstab definition has
+more than one column, see Usage for CrosstabAvg.</p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Reviewing the expressions</span> <A NAME="TI6372"></A>To review the expressions defined for the crosstab values,
+open the Crosstab Definition dialog box (select Design&gt;Crosstab
+from the menubar).</p>
+
+<A NAME="EX14"></A><h3>Examples</h3><A NAME="TI6373"></A><p>These examples all use the crosstab-values expressions
+shown below:<pre>Count(emp_id for crosstab),Sum(salary for crosstab)</pre>
+</p>
+<A NAME="TI6374"></A><p>This expression for a computed field in the crosstab
+returns the count of the employee counts (the first expression):<pre><i>CrosstabCount</i> (1)</pre>
+</p>
+<A NAME="TI6375"></A><p>This expression for a computed field in the crosstab
+returns the count of the salary totals (the second expression):<pre><i>CrosstabCount</i> (2)</pre>
+</p>
+<A NAME="TI6376"></A><p>The next two examples use a crosstab with two columns
+(year and quarter), a row (product), and the values expression Avg(sales
+for crosstab).</p>
+<A NAME="TI6377"></A><p>This expression for a computed field returns the count of
+the sales for each year:<pre><i>CrosstabCount</i> (1, 2, "@year")</pre>
+</p>
+<A NAME="TI6378"></A><p>This expression for a computed field returns the
+count of all the sales in the row:<pre><i>CrosstabCount</i> (1)</pre>
+</p>
+<A NAME="TI6379"></A><p>For an example illustrating how the painter automatically
+defines a crosstab by creating computed fields using the Crosstab
+functions, see CrosstabAvg.</p>
+
+<A NAME="SA14"></A><h3>See Also</h3><A NAME="TI6380"></A><p><A NAME="TI6381"></A>
+<ul>
+<li class=fi><A HREF="imugp161.htm#CAICGAGE">CrosstabAvg</A></li>
+<li class=ds><A HREF="imugp163.htm#CAIDGJBH">CrosstabMax</A></li>
+<li class=ds><A HREF="imugp164.htm#CAIBJFGH">CrosstabMin</A></li>
+<li class=ds><A HREF="imugp165.htm#CAIBIJHD">CrosstabSum</A>
+</li>
+</ul>
+</p>
+
+

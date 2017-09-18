@@ -1,0 +1,59 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+Asc</TITLE>
+</HEAD>
+<BODY>
+<A NAME="CAIDGAGA"></A><A NAME="TI6114"></A><h1>Asc</h1>
+<A NAME="TI6115"></A><p>
+<FORM>
+<INPUT
+ TYPE = "BUTTON"
+ VALUE = "Examples"
+ onClick = "window.location = 'imugp151.htm#EX3';">
+<INPUT
+  TYPE = "BUTTON"
+ VALUE = "See also"
+ onClick = "window.location = 'imugp151.htm#SA3';">
+</FORM>
+</p>
+<h3>Description</h3><A NAME="TI6116"></A><p>Converts the first character of a string to its ASCII integer
+value.</p>
+
+<h3>Syntax</h3><pre><b>Asc</b> ( <i>string</i> )</pre>
+<A NAME="TI6117"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI6118"></A>Argument</th>
+<th align="left" valign=bottom><A NAME="TI6119"></A>Description</th>
+</tr>
+<tr><td valign=top><A NAME="TI6120"></A><i>string</i></td>
+<td valign=top><A NAME="TI6121"></A>The string for which you want the ASCII
+value of the first character</td>
+</tr>
+</table>
+
+<h3>Return Values</h3><A NAME="TI6122"></A><p>Integer. Returns the ASCII value of the first character in <i>string</i>.</p>
+
+<h3>Usage</h3><A NAME="TI6123"></A><p>Use Asc to test the case of a character or manipulate text
+and letters.</p>
+<A NAME="TI6124"></A><p>To find out the case of a character, you can check whether
+its ASCII value is within the appropriate range.</p>
+
+<A NAME="EX3"></A><h3>Examples</h3><A NAME="TI6125"></A><p>This expression for a computed field returns the
+string in code_id if the ASCII value of the first character
+in code_id is A (65):<pre>If (<i>Asc</i> (code_id) = 65, code_id, "Not a valid code")</pre>
+</p>
+<A NAME="TI6126"></A><p>This expression for a computed field checks the case
+of the first character of lname and if it is lowercase, makes it
+uppercase:<pre>IF (<i>Asc</i> (lname) &gt; 64 AND <i>Asc</i> (lname) &lt; 91, lname, WordCap(lname))</pre>
+</p>
+
+<A NAME="SA3"></A><h3>See Also</h3><A NAME="TI6127"></A><p><A NAME="TI6128"></A>
+<ul>
+<li class=fi><A HREF="imugp158.htm#CAIDDFCH">Char</A></li>
+<li class=ds><A HREF="imugp254.htm#CAIBDJFB">WordCap</A></li>
+<li class=ds>
+</li>
+</ul>
+</p>
+
+

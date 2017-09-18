@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>动态载入节点的TreeView控件</title>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+<p id="title">动态加载结点的TreeView控件</p>
+
+<h1>简介</h1>
+<p>我在开发中遇到这么一个问题：如果结点数过多时（近万个），使用TreeView控件加载时速度非常慢。我就想能否做到一开始只加载部分结点，当用户翻页时再加载需要的新结点。但我翻了一个TreeView的资料，没有发现有针对滚动条的事件。于是就自己重载了TreeView控件，添加了对滚动条事件的支持。</p>
+<h1>添加滚动条事件支持</h1>
+<p>主要的实现代码很简单，如下所示：</p>
+<pre class="code" data-type="csharp">public class MyTreeView : System.Windows.Forms.TreeView
+{
+	private const int WM_VSCROLL = 0x0115;			//滚动条事件
+	private const int WM_MOUSEWHEEL = 0x020A;		//鼠标滚轮事件
+	private const int SB_ENDSCROLL = 8;				//滚动结束标志
+
+	public event EventHandler VerticalScrolled;
+
+	protected override void WndProc(ref Message m)
+	{
+		if (m.Msg == WM_VSCROLL || m.Msg == WM_MOUSEWHEEL)
+		{
+			if (m.WParam.ToInt32() != SB_ENDSCROLL)
+			{
+				VerticalScrolled(this, new EventArgs());
+			}
+		}
+		base.WndProc(ref m);
+	}
+
+}</pre>
+<h1>动态加载节点</h1>
+<p>事件添加好了，现在要做的事情就是动态添加节点了，又出现了一个问题就是，我如何获取当前屏幕区域内的最后一个节点，我使用了如下一个方法获取当前区域内的最后一个树结点：</p>
+<pre class="code" data-type="csharp">private TreeNode GetLastNodeInScreen(TreeView tv)
+{
+	TreeNode node = null;
+	for (int x = tv.ClientSize.Width; x > 0; x -= 5)
+	{
+		int y;
+		for (y = tv.ClientSize.Height; y > 0; y -= 5)
+		{
+			node = tv.GetNodeAt(x, y);
+			if (node != null)
+			{
+				break;
+			}
+		}
+		if (y > 0)
+			break;
+	}
+	return node;
+}</pre>
+<p>动态加载的关键代码如下所示：</p>
+<pre class="code" data-type="csharp">private MyTreeView Tree;
+
+/// &lt;summary&gt;
+/// 要载入的全部内容
+/// &lt;/summary&gt;
+private List&lt;string&gt; Nodes;
+
+/// &lt;summary&gt;
+/// 每次载入的行数
+/// &lt;/summary&gt;
+private const int PageRows = 30;
+
+/// &lt;summary&gt;
+/// 总页数
+/// &lt;/summary&gt;
+private int PageCount;
+
+/// &lt;summary&gt;
+/// 加载的页数
+/// &lt;/summary&gt;
+private int LoadedPage = 0;
+
+/// &lt;summary&gt;
+/// 滚动树内容时触发的事件
+/// &lt;/summary&gt;
+/// &lt;param name=&quot;sender&quot;&gt;&lt;/param&gt;
+/// &lt;param name=&quot;e&quot;&gt;&lt;/param&gt;
+private void TreeScrolled(object sender, EventArgs e)
+{
+	if (this.LoadedPage == this.PageCount)
+		return;
+
+	TreeNode last_node_sc = this.GetLastNodeInScreen(this.Tree);
+
+	if (this.Tree.Nodes.Count - last_node_sc.Index &lt; 10)
+	{
+		this.LoadPage(this.LoadedPage + 1);
+	}
+}
+
+
+private void Form1_Load(object sender, EventArgs e)
+{
+	this.Tree = new MyTreeView();
+	this.Tree.Parent = this;
+	this.Controls.Add(this.Tree);
+	this.Tree.Top = 10;
+	this.Tree.Left = 10;
+	this.Tree.Width = 150;
+	this.Tree.Height = 200;
+	this.Tree.VerticalScrolled += new EventHandler(this.TreeScrolled);
+
+	this.Nodes = new List&lt;string&gt;();
+	for (int i = 0; i &lt; 1000; i++)
+	{
+		this.Nodes.Add(&quot;Node&quot; + i.ToString().PadLeft(4));
+	}
+	this.PageCount = (int)Math.Ceiling(Convert.ToDouble(this.Nodes.Count) / PageRows);
+	this.LoadPage(1);
+}
+
+/// &lt;summary&gt;
+/// 载入页
+/// &lt;/summary&gt;
+/// &lt;param name=&quot;page_no&quot;&gt;&lt;/param&gt;
+private void LoadPage(int page_no)
+{
+	for (int i = this.LoadedPage * PageRows; i &lt; page_no * PageRows - 1 &amp;&amp; i &lt; this.Nodes.Count; i++)
+	{
+		TreeNode node = new TreeNode();
+		node.Text = this.Nodes[i];
+		this.Tree.Nodes.Add(node);
+	}
+	this.LoadedPage = page_no;
+}</pre>
+<h1>示例代码</h1>
+<p><a href="demo/TreeView_Dyamic_Loaded.zip">示例代码</a> </p>
+<p>&nbsp;</p>
+
+</body>
+</html>

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+<title>数据库组件</title>
+</head>
+
+<body>
+<p id="title">数据库组件</p>
+<h1>System.Data.SqlClient命名空间</h1>
+<p>用于操作MS SQL Server数据库 </p>
+<h2>SqlConnection</h2>
+<p>用于连接SQL SERVER数据库的组件，一般用法如下：</p>
+<pre class="code" data-type="csharp">using System.Data.SqlClient;
+...
+//连接SQL SERVER自带的NorthWind数据库
+SqlConnection conn = new SqlConnection(&quot;user id=sa;data source=localhost;persist security info=true;initial catalog=Northwind;password=sa&quot;);
+//打开数据库连接
+conn.Open();
+//对对数据库进行各种操作
+...
+//关闭数据库连接
+conn.Close();</pre>
+<h2>SqlCommand</h2>
+<p>用于执行对数据库的更新操作，一般用法如下：</p>
+<pre class="code" data-type="csharp">using System.Data.SqlClient;
+...
+//连接数据库
+SqlConnection conn = new SqlConnection(&quot;user id=sa;data source=localhost;persist security info=true;initial catalog=Northwind;password=sa&quot;);
+//备份数据库到 c:\NorthWind.bak
+string sql = &quot;BACKUP DATABASE [Northwind] TO DISK = N'C:\NorthWind.bak' WITH INIT, NOUNLOAD, NAME = N'NorthWind backup', NOSKIP, STATS = 10, NOFORMAT&quot;;
+SqlCommand cmd = new SqlCommand(sql, conn);
+cmd.ExecuteNonQuery();</pre>
+<p>注意：SqlCommand的默认最大执行时间为30秒，有些操作可能会耗时太长，从而导致出错，这时需要设置其CommandTimeout属性来调整最大执行时间，以秒为单位，若设为0则表示无限时间。</p>
+<h2>SqlDataAdapter</h2>
+<h1>连接 Oracle</h1>
+    <p>请参考 <a href="ODP.htm">ODP.NET</a></p>
+<h1>System.Data.OleDb命名空间 </h1>
+<h1>System.Data.Odbc命名空间</h1>
+<p>在HKEY_LOCAL_MACHINE或HKEY_CURRENT_USER的SOFTWARE\ODBC\ODBC.INI下，存放着本机的所有ODBC数据源</p>
+<h1>System.Data命名空间 </h1>
+<h2>DataSet</h2>
+<h2>DataReader</h2>
+<p>经常使用IDbCommand.ExecuteReader()方法得到，用于顺序检索结果集。DataReader使用完后一定要调用Close()方法，否则经常会出现运行时错误“SqlCommand 是当前正忙的Open, Fetching”。</p>
+<h1>8.6 CurrencyManager</h1>
+<h2>8.6.1 简介</h2>
+<p>该类属于命名空间 System.Windows.Forms。</p>
+<p>该类用于绑定Windows窗体数据，即将Windows窗体控件与一个数据源绑定。Windows 窗体控件绑定到的任何数据源将都具有一个关联的 CurrencyManager 对象。CurrencyManager 对象跟踪位置，另外监控对该数据源的绑定。对于当前绑定到的每个离散数据源，在窗体上都有一个 CurrencyManager 对象。如果窗体上的所有控件都绑定到一个源（例如，如果几个 TextBox 控件绑定到同一数据表），那么它们将共享同一个 CurrencyManager。但是，有时窗体上的控件将绑定到不同的源。在这种情况下，窗体上有多个 CurrencyManager 对象，每个都跟踪控件正在使用哪个记录或数据元素。</p>
+<p>另外，每个 Windows 窗体都有一个 BindingContext 对象。BindingContext 对象跟踪窗体上的所有 CurrencyManager 对象。因此，任何具有数据绑定控件的 Windows 窗体都至少有一个跟踪一个（或多个）CurrencyManager 对象的 BindingContext 对象，而每个 CurrencyManager 对象又跟踪一个数据源。如果使用容器控件，如 GroupBox、Panel 或 TabControl 来包含数据绑定控件，则可以只为该容器控件及其控件创建一个 BindingContext。这使窗体的各个部分都由它自己的 CurrencyManager 对象来管理。</p>
+<p>下面的关系图显示 Windows 窗体及其控件、BindingContext 对象、CurrencyManager 对象以及它们各自的数据源彼此间如何维持联系：</p>
+<p><img src="images/004.jpg" width="390" height="221"></p>
+<h2>8.6.2 一个简单应用，将一个Text控件和数据表绑定</h2>
+<pre class="code" data-type="csharp">using System.Windows.Forms;
+using System.Data;
+Using System.Data.SqlClient;
+...
+//准备数据
+SqlConnection conn = new SqlConnection(&quot;user id=sa;data source=localhost;persist security info=true;initial catalog=Northwind;password=sa&quot;);
+DataSet ds = new DataSet();
+ds.Tables.Add(&quot;Companys&quot;);
+string sql = &quot;select top 10 CustomerID, CompanyName from Customers&quot;;
+SqlDataAdapter adapter = new SqlDataAdapter(sql, conn);
+adapter.Fill(ds, &quot;Companys&quot;);
+DataTable myTable = ds.Tables[0];
+
+//将Text控件 textBox1 和 CompanyName 字段绑定
+CurrencyManager myCurrencyManager = (CurrencyManager)this.BindingContext[myTable];
+this.textBox1.DataBindings.Add(&quot;Text&quot;, myTable, &quot;CompanyName&quot;);
+//或 this.textBox1.DataBindings.Add(&quot;Text&quot;, ds, &quot;Companys.CompanyName&quot;);
+...
+//导航
+myCurrencyManager.Position = 0;	//textBox1显示第一条记录的CompanyName值
+
+//导航至下一条记录
+if (myCurrencyManager.Position == myCurrencyManager.Count - 1)
+	MessageBox.Show(&quot;You're at end of the records&quot;);
+else
+	myCurrencyManager.Position += 1;
+
+//导航至上一条记录
+if (myCurrencyManager.Position == 0)
+	MessageBox.Show(&quot;You're at the beginning of the records&quot;);
+else
+	myCurrencyManager.Position -= 1;</pre>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+
+</body>
+</html>

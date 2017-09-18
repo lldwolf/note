@@ -1,0 +1,188 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+Working with database views </TITLE>
+</HEAD>
+<BODY>
+<A NAME="CCJCAHJF"></A><h1>Working with database views </h1>
+<A NAME="TI1087"></A><p>A database view gives a different (and usually limited) perspective
+of the data in one or more tables. Although you see existing database
+views listed in the Objects view, a database view does not physically
+exist in the database as a table does. Each time you select a database
+view and use the view's data, InfoMaker executes a SQL
+SELECT statement to retrieve the data and creates the database view.</p>
+<A NAME="TI1088"></A><p>For more information about using database
+views, see your DBMS documentation.</p>
+<A NAME="TI1089"></A><h4>Using database views in InfoMaker</h4>
+<A NAME="TI1090"></A><p>You can define and manipulate database views in InfoMaker.
+Typically you use database views for the following reasons:<A NAME="TI1091"></A>
+<ul>
+<li class=fi>To give names to frequently
+executed SELECT statements.</li>
+<li class=ds>To limit access to data in a table. For example,
+you can create a database view of all the columns in the Employee
+table except Salary. Users of the database view can see and update
+all information except the employee's salary.</li>
+<li class=ds>To combine information from multiple tables for
+easy access. 
+</li>
+</ul>
+</p>
+<A NAME="TI1092"></A><p>In InfoMaker, you can create single- or multiple-table database
+views. You can also use a database view when you define data to
+create a new database view. </p>
+<A NAME="TI1093"></A><p>You define, open, and manipulate database views in the View
+painter, which is similar to the Select painter. For more information
+about the Select painter, see <A HREF="imugp47.htm#CFHDGEIA">"Defining the data source "</A>.</p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Updating database views</span> <A NAME="TI1094"></A>Some database views are logically updatable and others are
+not. Some DBMSs don't allow any updating of views. For
+the rules your DBMS follows, see your DBMS documentation.</p>
+<A NAME="TI1095"></A><h4>Opening an existing database view</h4>
+<A NAME="TI1096"></A><p></p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To open a database view:</p>
+<ol><li class=fi>
+In the Objects view, expand the list of
+Views for your database.<br><br></li>
+<li class=ds>
+Highlight the view you want to open and select
+Add To Layout from the popup menu.<br><br>
+<i>or</i>
+<br><br>
+Drag the view's icon to the Object Layout view. <br><br></li></ol>
+<br><A NAME="TI1097"></A><h4>Creating a database view</h4>
+<A NAME="TI1098"></A><p></p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To create a database view:</p>
+<ol><li class=fi>
+Click the Create View button.<br><br>
+<i>or</i>
+<br><br>
+Select View or New View from the Object&gt;Insert
+or popup menu.<br><br>
+The Select Tables dialog box displays listing all tables and
+views that you can access in the database.<br><br></li>
+<li class=ds>
+Select the tables and views from which you will
+create the view by doing one of the following:<A NAME="TI1099"></A>
+<ul>
+<li class=fi>Click the name of each table or view you want to
+open in the list displayed in the Select Tables dialog box, then
+click the Open button to open them. The Select Tables dialog box
+closes.</li>
+<li class=ds>Double-click the name of each table or view you
+want to open. Each object is opened immediately. Then click the
+Cancel button to close the Select Tables dialog box.
+</li>
+</ul>
+
+                      <br><br>
+Representations of the selected tables and views display in
+the View painter workspace:<br><br><br><img src="images/dbview.gif"><br>
+</li>
+<li class=ds>
+Select the columns to include in the view and
+include computed columns as needed.<br><br></li>
+<li class=ds>
+Join the tables if there is more than one table
+in the view.<br><br>
+For information, see <A HREF="imugp39.htm#BABBIHJJ">"Joining tables"</A>.<br><br></li>
+<li class=ds>
+Specify criteria to limit rows retrieved (Where
+tab), group retrieved rows (Group tab), and limit the retrieved
+groups (Having tab) if appropriate.<br><br>
+For information, see the section on using
+the SQL Select painter in <A HREF="imugp47.htm#CFHDGEIA">"Defining the data source "</A>. The View painter and the SQL Select
+painter are similar.<br><br></li>
+<li class=ds>
+When the view has been completed, click the Return
+button.<br><br></li>
+<li class=ds>
+Name the view.<br><br>
+Include <i>view</i>
+ or some other identifier
+in the view's name so that you will be able to distinguish
+it from a table in the Select Tables dialog box.<br><br></li>
+<li class=ds>
+Click the Create button.<br><br>
+InfoMaker generates a CREATE VIEW statement and submits it
+to the DBMS. The view definition is created in the database. You
+return to the Database painter workspace with the new view displayed
+in the workspace.<br><br></li></ol>
+<br><A NAME="TI1100"></A><h4>Displaying a database view's SQL statement</h4>
+<A NAME="TI1101"></A><p>You can display the SQL statement that defines a database
+view. How you do it depends on whether you are creating a new view
+in the View painter or want to look at the definition of an existing
+view.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To display the SQL statement from the View painter:</p>
+<ol><li class=fi>
+Select the Syntax tab in the View painter.<br><br><br><img src="images/dbsyn.gif"><br>
+
+InfoMaker displays the SQL it is generating. The display
+is updated each time you change the view.<br><br></li></ol>
+<br><p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To display the SQL statement from the Database
+painter:</p>
+<ol><li class=fi>
+Highlight the name of the database view
+in the Objects view and select Properties from the popup menu.<br><br>
+<i>or</i>
+<br><br>
+Drag the view's icon to the Object Details
+view.<br><br>
+The completed SELECT statement used to create the database
+view displays in the Definition field on the General tab:<br><br><br><img src="images/dbsql.gif"><br>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>View dialog box is read-only</span> <A NAME="TI1102"></A>You cannot alter the view definition in this tab. To alter
+a view, drop it and then create another view.</p>
+</li></ol>
+<br><A NAME="BABBIHJJ"></A><h4>Joining tables</h4>
+<A NAME="TI1103"></A><p>If the database view contains more than one table, you should
+join the tables on their common columns. When the View painter is
+first opened for a database view containing more than one table, InfoMaker makes
+its best guess as to the join columns, as follows:<A NAME="TI1104"></A>
+<ul>
+<li class=fi>If there is a primary/foreign key relationship
+between the tables, InfoMaker automatically joins them.</li>
+<li class=ds>If there are no keys, InfoMaker tries to join tables
+based on common column names and types.
+</li>
+</ul>
+</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To join tables:</p>
+<ol><li class=fi>
+Click the Join button.<br><br></li>
+<li class=ds>
+Click the columns on which you want to join the
+tables.<br><br>
+In the following screen, the Employee and Department tables
+are joined on the dept_id column:<br><br><br><img src="images/db0018.gif"><br>
+</li>
+<li class=ds>
+To create a join other than the equality join,
+click the join representation in the workspace.<br><br>
+The Join dialog box displays:<br><br><br><img src="images/db0019.gif"><br>
+</li>
+<li class=ds>
+Select the join operator you want from the Join
+dialog box.<br><br>
+If your DBMS supports outer joins, outer join options also
+display in the Join dialog box. For example, in the preceding dialog
+box (which uses the Employee and Department tables), you can choose
+to include rows from the Employee table where there are no matching
+departments, or rows from the Department table where there are no
+matching employees.<br><br><p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>About the Query Governor</span> <A NAME="TI1105"></A>You can use the Query Governor to set data selection and retrieval
+options. If the Allow Cross Product option is set in the Query Governor,
+the Join dialog box displays outer join options.</p>
+<A NAME="TI1106"></A>For more information, see <A HREF="imugp19.htm#BFCBCFIE">"Using the Query Governor"</A>. </p>
+
+For more about outer joins, see <A HREF="imugp47.htm#CACJAHDI">"Using ANSI outer joins"</A>.<br><br></li></ol>
+<br><A NAME="TI1107"></A><h4>Dropping a database view</h4>
+<A NAME="TI1108"></A><p>Dropping a database view removes its definition from the database.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To drop a view:</p>
+<ol><li class=fi>
+In the Objects view, select the database
+view you want to drop.<br><br></li>
+<li class=ds>
+Click the Drop Object button or select Drop View
+from the popup menu. <br><br>
+InfoMaker prompts you to confirm the drop, then generates
+a DROP VIEW statement and submits it to the DBMS.<br><br></li></ol>
+<br>

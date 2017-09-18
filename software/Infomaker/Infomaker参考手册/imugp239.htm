@@ -1,0 +1,148 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+Small</TITLE>
+</HEAD>
+<BODY>
+<A NAME="CAIBCECF"></A><A NAME="TI7834"></A><h1>Small</h1>
+<A NAME="TI7835"></A><p>
+<FORM>
+<INPUT
+ TYPE = "BUTTON"
+ VALUE = "Examples"
+ onClick = "window.location = 'imugp239.htm#EX91';">
+<INPUT
+  TYPE = "BUTTON"
+ VALUE = "See also"
+ onClick = "window.location = 'imugp239.htm#SA91';">
+</FORM>
+</p>
+<h3>Description</h3><A NAME="TI7836"></A><p>Finds a small value at a specified ranking in a column (for
+example, third-smallest, fifth-smallest) and returns the value of
+another column or expression based on the result.</p>
+
+<h3>Syntax</h3><pre><b>Small</b> ( <i>returnexp</i>, <i>column</i>, <i>nbottom</i> { FOR <i>range</i> { DISTINCT { <i>expres1</i> <br> 	{,  <i>expres2</i> {, ... } } } } } )</pre>
+<A NAME="TI7837"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI7838"></A>Argument</th>
+<th align="left" valign=bottom><A NAME="TI7839"></A>Description</th>
+</tr>
+<tr><td valign=top><A NAME="TI7840"></A><i>returnexp</i></td>
+<td valign=top><A NAME="TI7841"></A>The value you want returned when the
+small value is found. <i>Returnexp</i> includes a
+reference to a column, but not necessarily the column that is being
+evaluated for the small value, so that a value is returned from
+the same row that contains the small value</td>
+</tr>
+<tr><td valign=top><A NAME="TI7842"></A><i>column</i></td>
+<td valign=top><A NAME="TI7843"></A>The column that contains the small value
+you are searching for. <i>Column</i> can be a column
+name or a column number preceded by a pound sign (#). <i>Column</i> can
+also be an expression that includes a reference to the column. The
+data type of <i>column</i> must be numeric</td>
+</tr>
+<tr><td valign=top><A NAME="TI7844"></A><i>nbottom</i></td>
+<td valign=top><A NAME="TI7845"></A>The relationship of the small value to
+the column's smallest value. For example, when <i>nbottom</i> is
+2, Small finds the second-smallest value</td>
+</tr>
+<tr><td valign=top><A NAME="TI7846"></A>FOR <i>range</i>  (optional)</td>
+<td valign=top><A NAME="TI7847"></A>The data that will be included when finding
+the small value. For most presentation styles, values for <i>range</i> are:<A NAME="TI7848"></A><A NAME="TI7849"></A>
+<ul>
+<li class=fi>ALL -- (Default)
+The small value of all rows in <i>column</i></li>
+<li class=ds>GROUP <i>n</i> -- The small
+value of rows in <i>column</i> in the specified group.
+Specify the keyword GROUP followed by the group number: for example,
+GROUP 1</li>
+<li class=ds>PAGE -- The small value of the rows in <i>column</i> on
+a page
+</li>
+</ul>
+<A NAME="TI7850"></A>For Crosstabs, specify CROSSTAB for <i>range</i>:<A NAME="TI7851"></A><A NAME="TI7852"></A>
+<ul>
+<li class=fi>CROSSTAB -- (Crosstabs
+only) The small value of all rows in <i>column</i> in
+the crosstab
+</li>
+</ul>
+<A NAME="TI7853"></A>For Graph and OLE objects, specify one of the following:<A NAME="TI7854"></A><A NAME="TI7855"></A>
+<ul>
+<li class=fi>GRAPH -- (Graphs
+only) The small value in <i>column</i> in the range
+specified for the Rows option</li>
+<li class=ds>OBJECT -- (OLE objects only) The small value
+in <i>column</i> in the range specified for the Rows
+option
+</li>
+</ul>
+</td>
+</tr>
+<tr><td valign=top><A NAME="TI7856"></A>DISTINCT (optional)</td>
+<td valign=top><A NAME="TI7857"></A>Causes Small to consider only the distinct
+values in <i>column</i> when determining the small
+value. For a value of <i>column</i>, the first row found
+with the value is used and other rows that have the same value are
+ignored</td>
+</tr>
+<tr><td valign=top><A NAME="TI7858"></A><i>expresn</i>  (optional)</td>
+<td valign=top><A NAME="TI7859"></A>One or more expressions that you want
+to evaluate to determine distinct rows. <i>Expresn</i> can
+be the name of a column, a function, or an expression</td>
+</tr>
+</table>
+
+<h3>Return Values</h3><A NAME="TI7860"></A><p>The data type of <i>returnexp</i>. Returns the <i>nbottom</i>-smallest
+value if it succeeds and -1 if an error occurs.</p>
+
+<h3>Usage</h3><A NAME="TI7861"></A><p>If you specify <i>range</i>, Small returns the
+value in <i>returnexp</i> when the value in <i>column</i> is
+the <i>nbottom</i>-smallest value in <i>range</i>.
+If you specify DISTINCT, Small returns <i>returnexp</i> when
+the value in <i>column</i> is the <i>nbottom</i>-smallest value
+of the distinct values in <i>column</i>, or if you
+specify <i>expresn</i>, the <br> <i>nbottom</i>-smallest
+for each distinct value of <i>expresn</i>.</p>
+<A NAME="TI7862"></A><p>For graphs and OLE objects, you do not select the range when
+you call the function. The range has already been determined by
+the Rows setting on the Data property page (the Range property),
+and the aggregation function uses that range. Settings for Rows
+include:</p>
+<A NAME="TI7863"></A><p><A NAME="TI7864"></A>
+<ul>
+<li class=fi>For the Graph or OLE
+presentation style, Rows is always All.</li>
+<li class=ds>For Graph controls, Rows can be All, Page, or Group.</li>
+<li class=ds>For OLE controls, Rows can be All, Current Row,
+Page, or Group. The available choices depend on the layer the control
+occupies.
+</li>
+</ul>
+</p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <p><b>Min may be faster</b>   If you don't need a return value from another column
+and you want to find the smallest value (<i>nbottom</i> = 1),
+use Min; it is faster.</p>
+<p><b>Not in validation rules or filter expressions</b>   You cannot use this or other aggregate functions in validation
+rules or filter expressions.</p>
+<A NAME="TI7865"></A><p>Using an aggregate function cancels the effect of setting
+Retrieve Rows As Needed in the painter. To do the aggregation, a
+DataWindow object or report always retrieves all rows.</p>
+
+<A NAME="EX91"></A><h3>Examples</h3><A NAME="TI7866"></A><p>These expressions return the names of the salespersons
+with the three smallest sales (sum_sales is the sum of
+the sales for each salesperson) in group 2, which might be the salesregion
+group. Note that sum_sales contains the values being compared,
+but Small returns a value in the name column:<pre><i>Small</i> (name, sum_sales, 1 for group 2)<i><br> Small</i> (name, sum_sales, 2 for group 2)<i><br> Small</i> (name, sum_sales, 3 for group 2)</pre>
+</p>
+<A NAME="TI7867"></A><p>This example reports the salesperson with the third-smallest
+sales, considering only the first entry for each salesperson:<pre><i>Small</i> (name, sum_sales, 3 for all DISTINCT sum_sales)</pre>
+</p>
+
+<A NAME="SA91"></A><h3>See Also</h3><A NAME="TI7868"></A><p><A NAME="TI7869"></A>
+<ul>
+<li class=fi><A HREF="imugp193.htm#CAIBCEJC">Large</A> 
+</li>
+</ul>
+</p>
+
+

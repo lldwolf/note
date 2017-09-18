@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+	<script type="text/javascript" src="../../mylib/js/css.js"></script>
+	<title>jQuery Note</title>
+</head>
+
+<body>
+	<p id="title">使用 jQuery 控制HTML</p>
+	<h1>HTML 元素查找</h1>
+	<table style="width: 95%">
+		<tr>
+			<th>操作</th>
+			<th>代码</th>
+			<th>说明</th>
+		</tr>
+		<tr>
+			<td>按 id 查找</td>
+			<td><pre class="code" data-type="javascript">$('#myid')</pre></td>
+			<td>返回所有 id 为 'myid' 的元素</td>
+		</tr>
+		<tr>
+			<td>按标签查找</td>
+			<td><pre class="code" data-type="javascript">$('div')</pre></td>
+			<td>返回所有的 div 元素</td>
+		</tr>
+		<tr>
+			<td>按 class 查找</td>
+			<td><pre class="code" data-type="javascript">$('.myclass')</pre></td>
+			<td>返回所有 class 为 'myclass' 的元素</td>
+		</tr>
+		<tr>
+			<td>查找上一个同级元素</td>
+			<td>HTML
+				<pre class="code" data-type="html">&lt;ul&gt;
+  &lt;li&gt;list item 1&lt;/li&gt;
+  &lt;li&gt;list item 2&lt;/li&gt;
+  &lt;li class=&quot;third-item&quot;&gt;list item 3&lt;/li&gt;
+  &lt;li&gt;list item 4&lt;/li&gt;
+  &lt;li&gt;list item 5&lt;/li&gt;
+&lt;/ul&gt;</pre>
+				JavaScript
+				<pre class="code" data-type="javascript">$( &quot;li.third-item&quot; ).prev().css( &quot;background-color&quot;, &quot;red&quot; );</pre>
+			</td>
+			<td>结果为
+				<pre class="code" data-type="html">&lt;ul&gt;
+  &lt;li&gt;list item 1&lt;/li&gt;
+  &lt;li style=&quot;background-color: red&quot;&gt;list item 2&lt;/li&gt;
+  &lt;li class=&quot;third-item&quot;&gt;list item 3&lt;/li&gt;
+  &lt;li&gt;list item 4&lt;/li&gt;
+  &lt;li&gt;list item 5&lt;/li&gt;
+&lt;/ul&gt;</pre>
+			</td>
+		</tr>
+		<tr>
+			<td>查找下一个同级元素</td>
+			<td>HTML
+				<pre class="code" data-type="html">&lt;ul&gt;
+  &lt;li&gt;list item 1&lt;/li&gt;
+  &lt;li&gt;list item 2&lt;/li&gt;
+  &lt;li class=&quot;third-item&quot;&gt;list item 3&lt;/li&gt;
+  &lt;li&gt;list item 4&lt;/li&gt;
+  &lt;li&gt;list item 5&lt;/li&gt;
+&lt;/ul&gt;</pre>
+				JavaScript
+				<pre class="code" data-type="javascript">$( &quot;li.third-item&quot; ).next().css( &quot;background-color&quot;, &quot;red&quot; );</pre>
+			</td>
+			<td>结果为
+				<pre class="code" data-type="html">&lt;ul&gt;
+  &lt;li&gt;list item 1&lt;/li&gt;
+  &lt;li&gt;list item 2&lt;/li&gt;
+  &lt;li class=&quot;third-item&quot;&gt;list item 3&lt;/li&gt;
+  &lt;li style=&quot;background-color: red&quot;&gt;list item 4&lt;/li&gt;
+  &lt;li&gt;list item 5&lt;/li&gt;
+&lt;/ul&gt;</pre>
+			</td>
+		</tr>
+	</table>
+	<h1>HTML 结构编辑</h1>
+	<p>可参考  <a href="http://api.jquery.com/">http://api.jquery.com/</a></p>
+	<table style="width: 95%">
+		<tr>
+			<th>操作</th>
+			<th>代码</th>
+			<th>说明</th>
+		</tr>
+		<tr>
+			<td>添加 class</td>
+			<td>
+				<pre class="code" data-type="javascript">$( "p" ).addClass( "myClass yourClass" );</pre>
+			</td>
+			<td>可添加多个, 使用空格格开</td>
+		</tr>
+		<tr>
+			<td>子元素封装</td>
+			<td>HTML
+				<pre class="code" data-type="html">&lt;div class=&quot;inner&quot;&gt;Hello&lt;/div&gt;</pre>
+				JavaScript
+				<pre class="code" data-type="javascript">$( &quot;.inner&quot; ).wrapInner( &quot;&lt;div class='new'&gt;&lt;/div&gt;&quot;);</pre>
+			</td>
+			<td>结果为
+				<pre class="code" data-type="html">&lt;div class=&quot;inner&quot;&gt;
+	&lt;div class=&quot;new&quot;&gt;Hello&lt;/div&gt;
+&lt;/div&gt;</pre>
+			</td>
+		</tr>
+		<tr>
+			<td>父元素封装</td>
+			<td>HTML
+				<pre class="code" data-type="html">&lt;div class=&quot;inner&quot;&gt;Hello&lt;/div&gt;</pre>
+				JavaScript
+				<pre class="code" data-type="javascript">$( &quot;.inner&quot; ).wrap( &quot;&lt;div class='new'&gt;&lt;/div&gt;&quot;);</pre>
+			</td>
+			<td>结果为
+				<pre class="code" data-type="html">&lt;div class=&quot;new&quot;&gt;
+	&lt;div class=&quot;inner&quot;&gt;Hello&lt;/div&gt;
+&lt;/div&gt;</pre>
+			</td>
+		</tr>
+		<tr>
+			<td>在开始处添加子元素</td>
+			<td>HTML
+				<pre class="code" data-type="html">&lt;div class=&quot;inner&quot;&gt;Hello&lt;/div&gt;</pre>
+				JavaScript
+				<pre class="code" data-type="javascript">$( &quot;.inner&quot; ).prepend( &quot;&lt;p&gt;Test&lt;/p&gt;&quot; );</pre>
+			</td>
+			<td>结果为
+				<pre class="code" data-type="html">&lt;div class=&quot;inner&quot;&gt;
+	&lt;p&gt;Test&lt;/p&gt;
+	Hello
+&lt;/div&gt;</pre>
+			</td>
+		</tr>
+		<tr>
+			<td>在结束处添加子元素</td>
+			<td>HTML
+				<pre class="code" data-type="html">&lt;div class=&quot;inner&quot;&gt;Hello&lt;/div&gt;</pre>
+				JavaScript
+				<pre class="code" data-type="javascript">$( &quot;.inner&quot; ).append( &quot;&lt;p&gt;Test&lt;/p&gt;&quot; );</pre>
+			</td>
+			<td>结果为
+				<pre class="code" data-type="html">&lt;div class=&quot;inner&quot;&gt;
+	Hello
+	&lt;p&gt;Test&lt;/p&gt;
+&lt;/div&gt;</pre>
+			</td>
+		</tr>
+		<tr>
+			<td>元素前插入同级元素</td>
+			<td>HTML
+				<pre class="code" data-type="html">&lt;div class=&quot;inner&quot;&gt;Hello&lt;/div&gt;</pre>
+				JavaScript
+				<pre class="code" data-type="javascript">$( &quot;.inner&quot; ).before( &quot;&lt;p&gt;Test&lt;/p&gt;&quot; );</pre>
+			</td>
+			<td>结果为
+				<pre class="code" data-type="html">&lt;p&gt;Test&lt;/p&gt;
+&lt;div class=&quot;inner&quot;&gt;Hello&lt;/div&gt;</pre>
+			</td>
+		</tr>
+		<tr>
+			<td>元素后插入同级元素</td>
+			<td>HTML
+				<pre class="code" data-type="html">&lt;div class=&quot;inner&quot;&gt;Hello&lt;/div&gt;</pre>
+				JavaScript
+				<pre class="code" data-type="javascript">$( &quot;.inner&quot; ).after( &quot;&lt;p&gt;Test&lt;/p&gt;&quot; );</pre>
+			</td>
+			<td>结果为
+				<pre class="code" data-type="html">&lt;div class=&quot;inner&quot;&gt;Hello&lt;/div&gt;
+&lt;p&gt;Test&lt;/p&gt;</pre>
+			</td>
+		</tr>
+		<tr>
+			<td>更改 inner HTML</td>
+			<td>HTML
+				<pre class="code" data-type="html">&lt;div class=&quot;demo-container&quot;&gt;
+	&lt;div class=&quot;demo-box&quot;&gt;Demonstration Box&lt;/div&gt;
+&lt;/div&gt;</pre>
+				JavaScript
+				<pre class="code" data-type="javascript">$( &quot;div.demo-container&quot; ).html( &quot;&lt;p&gt;All new content. &lt;em&gt;You bet!&lt;/em&gt;&lt;/p&gt;&quot; );</pre>
+			</td>
+			<td>结果为
+				<pre class="code" data-type="html">&lt;div class=&quot;demo-container&quot;&gt;
+	&lt;p&gt;All new content. &lt;em&gt;You bet!&lt;/em&gt;&lt;/p&gt;
+&lt;/div&gt;</pre>
+			</td>
+		</tr>
+		<tr>
+			<td>替换 HTML 元素</td>
+			<td>HTML
+				<pre class="code" data-type="html">&lt;div class=&quot;container&quot;&gt;
+  &lt;div class=&quot;inner first&quot;&gt;Hello&lt;/div&gt;
+  &lt;div class=&quot;inner second&quot;&gt;And&lt;/div&gt;
+  &lt;div class=&quot;inner third&quot;&gt;Goodbye&lt;/div&gt;
+&lt;/div&gt;</pre>
+				JavaScript
+				<pre class="code" data-type="javascript">$( &quot;div.second&quot; ).replaceWith( &quot;&lt;h2&gt;New heading&lt;/h2&gt;&quot; );</pre>
+			</td>
+			<td>结果为
+				<pre class="code" data-type="html">&lt;div class=&quot;container&quot;&gt;
+  &lt;div class=&quot;inner first&quot;&gt;Hello&lt;/div&gt;
+  &lt;h2&gt;New heading&lt;/h2&gt;
+  &lt;div class=&quot;inner third&quot;&gt;Goodbye&lt;/div&gt;
+&lt;/div&gt;</pre>
+			</td>
+		</tr>
+	</table>
+</body>
+</html>

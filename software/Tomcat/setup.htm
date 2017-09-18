@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+	<script type="text/javascript" src="../../mylib/js/css.js"></script>
+	<title>配置</title>
+</head>
+
+<body>
+	<p id="title">配置 </p>
+	<h1>HTTP端口配置</h1>
+	<p>TOMCAT的默认HTTP监听端口是8080，但有时会和机器上安装的某些软件冲突（如Oracle），这时就需要更改，更改方法如下：</p>
+	<p>对于TOMCAT 4.x，找到 %TOMCAT_HOME%\conf\server.xml:</p>
+	<pre>&lt;Connector className=&quot;org.apache.coyote.tomcat4.CoyoteConnector&quot;
+               port=&quot;8080&quot; minProcessors=&quot;5&quot; maxProcessors=&quot;75&quot;
+               enableLookups=&quot;true&quot; redirectPort=&quot;8443&quot;
+               acceptCount=&quot;100&quot; debug=&quot;0&quot; connectionTimeout=&quot;20000&quot;
+               useURIValidationHack=&quot;false&quot; disableUploadTimeout=&quot;true&quot; /&gt;</pre>
+	<p>将8080改为需要的端口即可。</p>
+	<h1>SSL证书配置</h1>
+	<h2>明文口令</h2>
+	<p>仅用于测试</p>
+	<pre class="code" data-type="xml">&lt;Connector port=&quot;9050&quot; protocol=&quot;org.apache.coyote.http11.Http11Protocol&quot;
+	maxThreads=&quot;150&quot; SSLEnabled=&quot;true&quot; scheme=&quot;https&quot; secure=&quot;true&quot;
+	keystoreFile=&quot;/opt/ecmsynd/apps/ecmServer/certs/ecmsrv.jks&quot; keystorePass=&quot;ecmsrv2015&quot;
+	clientAuth=&quot;false&quot; sslProtocol=&quot;TLS&quot; keystoreType=&quot;JKS&quot; /&gt;</pre>
+	<h2>密文口令</h2>
+	<h3>web.xml 配置</h3>
+	<pre class="code" data-type="xml">&lt;Connector port=&quot;9050&quot; protocol=&quot;com.citi.ecmsynd.common.util.DecryptHttp11Protocol&quot;
+	maxThreads=&quot;150&quot; SSLEnabled=&quot;true&quot; scheme=&quot;https&quot; secure=&quot;true&quot;
+	keystoreFile=&quot;/opt/ecmsynd/apps/ecmServer/certs/ecmopenssl.pfx&quot; keystorePass=&quot;1TQpLscW0eM=&quot;
+	clientAuth=&quot;false&quot; sslProtocol=&quot;TLS&quot; keystoreType=&quot;PKCS12&quot; /&gt;</pre>
+	<h3>解密类</h3>
+	<pre class="code" data-type="java">package com.citi.ecmsynd.common.util;
+
+import org.apache.coyote.http11.Http11Protocol;
+
+import com.ssmb.eae.util.EAESecurity;
+
+public class DecryptHttp11Protocol extends Http11Protocol {
+	public static String key = "1A2B3C4D000000000000000000000000";
+	
+	@Override 
+    public void init() throws Exception {  
+        final String password = this.getKeystorePass();
+        final String realpassword = EAESecurity.decrypt(password, key);
+        this.setKeystorePass(realpassword);
+        super.init();
+    }  
+   
+}</pre>
+</body>
+</html>

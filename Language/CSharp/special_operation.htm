@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+	<script type="text/javascript" src="../../mylib/js/css.js"></script>
+	<title>鼠标操作</title>
+</head>
+<body>
+	<p id="title">鼠标操作 </p>
+
+	<h1>全局鼠标信息</h1>
+	<p>通过一些Control的静态属性，可在任何时刻获取鼠标的状态信息，如鼠标的位置，鼠标的状态等。</p>
+	<h2>获取鼠标的位置</h2>
+	<p>使用Control.MousePosition属性，这是一个静态属性，在程序中不用加任何前缀直接引用即可，这是一个Point型的值。</p>
+	<p>使用该属性返回的鼠标位置为屏幕坐标，即基于屏幕左上角为原点的坐标。如要转换为基于某特点控件的工作区坐标，需使用控件的PointToClient成员方法。</p>
+	<h2>获取鼠标的键的按下状态</h2>
+	<p>使用Control.MouseButtons 属性，这是一个静态属性，在程序中不用加任何前缀直接引用即可，这是一个MouseButtons型的值。</p>
+	<h1>自定义光标 </h1>
+	<h2>使用IDE创建光标</h2>
+	<p>关键点在于鼠标热点的指定，需使用工具栏上的热点按钮</p>
+	<img src="images/cursor_hotspot.png" alt="" />
+	<h1>拖放操作 </h1>
+	<h2>标准代码</h2>
+	<p>例如，当我想将一个ListBox控件上的内容拖到一个DataGrid的单元格上时，使用如下代码：</p>
+	<div id="accordion-drag-drop-sample">
+		<p><a href="#">查看代码</a></p>
+		<pre class="code" data-type="csharp">//写ListBox的MouseDown事件
+private void listBox1_MouseDown(object sender, System.Windows.Forms.MouseEventArgs e)
+{
+  this.listBox1.DoDragDrop(this.listBox1.Items[this.listBox1.SelectedIndex], DragDropEffects.Copy | DragDropEffects.Move);
+}
+
+//写DataGrid的DragEnter事件，此时需将其AllowDrop属性设为True
+private void dataGrid1_DragEnter(object sender, System.Windows.Forms.DragEventArgs e)
+{
+  if(e.Data.GetDataPresent(typeof(string)))
+    e.Effect = DragDropEffects.Copy;
+  else
+    e.Effect = DragDropEffects.None;
+}
+
+//最后写DataGrid的DragDrop事件
+private void dataGrid1_DragDrop(object sender, System.Windows.Forms.DragEventArgs e)
+{
+  if(e.Data.GetDataPresent(DataFormats.Text))
+  {
+    DataGrid grid = (DataGrid)sender;
+    DataGrid.HitTestInfo hti = grid.HitTest(grid.PointToClient(new Point(e.X, e.Y)));
+    if(hti.Type == DataGrid.HitTestType.Cell)
+    {
+      if(hti.Column > 0)
+        grid[hti.Row, hti.Column] = e.Data.GetData(typeof(string)).ToString();
+    }
+  }
+}</pre>
+	</div>
+	<p>注意：使用 GetData 或 GetDataPresent 用 Type 作为参数时，Type 为精确匹配模式，即不支持使用父类型来匹配子类型。</p>
+	<h2>自定义拖动光标</h2>
+	<p>对于目标控件，使用下面两个事件定制光标：</p>
+	<ul>
+		<li>DragEnter：设定光标</li>
+		<li>GiveFeedback：保持光标</li>
+	</ul>
+	<p>示例如下：</p>
+	<div id="accordion-custom-cursor">
+		<p><a href="#">查看代码</a></p>
+		<pre class="code" data-type="csharp">private void chartControl1_DragEnter(object sender, System.Windows.Forms.DragEventArgs e)
+{
+	if (...)
+	{
+		e.Effect = DragDropEffects.Move;
+		System.IO.Stream curStream = Assembly.GetExecutingAssembly().GetManifestResourceStream("***.Resources.point_drag.cur");         //资源字符串写法参考
+<a href="resources.htm#embeded_resource">这里</a>
+		Cursor.Current = new Cursor(curStream);
+	}
+	else
+	{
+		e.Effect = DragDropEffects.None;
+	}
+}
+
+private void chartControl1_GiveFeedback(object sender, System.Windows.Forms.GiveFeedbackEventArgs e)
+{
+	e.UseDefaultCursors = e.Effect != DragDropEffects.Move;
+}</pre>
+	</div>
+	<h2>与Windows实现相互拖动操作</h2>
+	<h3>将文件从Windows中拖入自己的应用</h3>
+	<p>如果将文件（文件夹）从Windows中拖入我们自己的应用，可以使用系统常量 DataFormats.FileDrop 获取到拖入的数据，是一个 string[]，里面包含所有拖入文件的路径。</p>
+
+</body>
+</html>

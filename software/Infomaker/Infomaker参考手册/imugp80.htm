@@ -1,0 +1,119 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+Specifying colors</TITLE>
+</HEAD>
+<BODY>
+<A NAME="CAIBJHCI"></A><h1>Specifying colors</h1>
+<A NAME="TI3299"></A><p>You specify a color by specifying a number that represents
+the color. You can specify the number explicitly or by using an
+expression that includes the RGB (<i>r</i>, <i>g</i>, <i>b</i>)
+function.</p>
+<A NAME="TI3300"></A><p>For the numbers and expressions that specify common colors,
+see the table below.</p>
+<A NAME="TI3301"></A><h4>How the number is calculated</h4>
+<A NAME="TI3302"></A><p>The formula for combining color values into a number is:</p>
+<A NAME="TI3303"></A><p><pre><i>red</i> + 256*<i>green</i> + 256*256*<i>blue</i></pre>
+</p>
+<A NAME="TI3304"></A><p>where the amount of each primary color (red, green, and blue)
+is specified as a value from 0 to 255.</p>
+<A NAME="TI3305"></A><p>The RGB (<i>r</i>, <i>g</i>, <i>b</i>)
+function calculates the number from the amounts of red, green, and
+blue specified.</p>
+<A NAME="TI3306"></A><h4>Sample numeric calculation</h4>
+<A NAME="TI3307"></A><p>To create cyan, you use blue and green, but no red. If you
+wanted to create the most saturated (bright) cyan, you would use
+maximum amounts of blue and green in the formula, which is indicated
+by the number 255 for each. The following statements show the calculation:<pre><i>red</i> + 256*<i>green</i> + 256*256*<i>blue</i></pre>
+<pre>0 + 256*<i>255</i> + 256*256*<i>255</i></pre>
+<pre>0 + 65280 + 16711680</pre>
+<pre>16776960</pre>
+</p>
+<A NAME="TI3308"></A><h4>Sample expression using the RGB function</h4>
+<A NAME="TI3309"></A><p>The following expression also specifies the brightest cyan:<pre>RGB (<i>r</i>, <i>g</i>, <i>b</i>)</pre>
+<pre>RGB (<i>0</i>,<i>255</i>,<i>255</i>)</pre>
+<pre>16776960 (the RGB function returns this number)</pre>
+</p>
+<A NAME="TI3310"></A><p>Notice that the expression specifies the maximum for green
+and blue (255) and 0 for red. To specify cyan, entering the expression <b>RGB</b>(<b>0</b>, <b>255</b>, <b>255</b>)
+is the same as entering the number <b>16776960</b>.</p>
+<A NAME="TI3311"></A><h4>Numbers and expressions to enter for the common
+colors</h4>
+<A NAME="TI3312"></A><p>This table shows the numbers and expressions to enter for
+some common colors. The number and expression for a color are equivalent.
+You can use either:</p>
+<A NAME="TI3313"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI3314"></A>Color</th>
+<th align="left" valign=bottom><A NAME="TI3315"></A>Expression to enter</th>
+<th align="left" valign=bottom><A NAME="TI3316"></A>Number to enter</th>
+<th align="left" valign=bottom><A NAME="TI3317"></A>How the number is calculated</th>
+</tr>
+<tr><td valign=top><A NAME="TI3318"></A>Black</td>
+<td valign=top><A NAME="TI3319"></A>RGB (0, 0, 0)</td>
+<td valign=top><A NAME="TI3320"></A>0</td>
+<td valign=top><A NAME="TI3321"></A>0 (no color)</td>
+</tr>
+<tr><td valign=top><A NAME="TI3322"></A>Blue</td>
+<td valign=top><A NAME="TI3323"></A>RGB (0, 0, 255)</td>
+<td valign=top><A NAME="TI3324"></A>16711680</td>
+<td valign=top><A NAME="TI3325"></A>256*256*255 (blue only)</td>
+</tr>
+<tr><td valign=top><A NAME="TI3326"></A>Cyan</td>
+<td valign=top><A NAME="TI3327"></A>RGB (0, 255, 255)</td>
+<td valign=top><A NAME="TI3328"></A>16776960</td>
+<td valign=top><A NAME="TI3329"></A>256*255 + 256*256*255
+(green and blue)</td>
+</tr>
+<tr><td valign=top><A NAME="TI3330"></A>Dark Green</td>
+<td valign=top><A NAME="TI3331"></A>RGB (0, 128, 0)</td>
+<td valign=top><A NAME="TI3332"></A>32768</td>
+<td valign=top><A NAME="TI3333"></A>256*128 (green only)</td>
+</tr>
+<tr><td valign=top><A NAME="TI3334"></A>Green</td>
+<td valign=top><A NAME="TI3335"></A>RGB (0, 255, 0)</td>
+<td valign=top><A NAME="TI3336"></A>65280</td>
+<td valign=top><A NAME="TI3337"></A>256*255 (green only)</td>
+</tr>
+<tr><td valign=top><A NAME="TI3338"></A>Light Gray</td>
+<td valign=top><A NAME="TI3339"></A>RGB (192, 192, 192)</td>
+<td valign=top><A NAME="TI3340"></A>12632256</td>
+<td valign=top><A NAME="TI3341"></A>192 + 256*192 + 256*256*192 (some
+red, green, and blue in equal amounts)</td>
+</tr>
+<tr><td valign=top><A NAME="TI3342"></A>Lighter Gray</td>
+<td valign=top><A NAME="TI3343"></A>RGB (224, 224, 224)</td>
+<td valign=top><A NAME="TI3344"></A>14737632</td>
+<td valign=top><A NAME="TI3345"></A>224 + 256*224 + 256*256*224 (some
+red, green, and blue in equal amounts)</td>
+</tr>
+<tr><td valign=top><A NAME="TI3346"></A>Lightest Gray</td>
+<td valign=top><A NAME="TI3347"></A>RGB (240, 240, 240)</td>
+<td valign=top><A NAME="TI3348"></A>15790320</td>
+<td valign=top><A NAME="TI3349"></A>240 + 256*240 + 256*256*240 (some
+red, green, and blue in equal amounts)</td>
+</tr>
+<tr><td valign=top><A NAME="TI3350"></A>Magenta</td>
+<td valign=top><A NAME="TI3351"></A>RGB (255, 0, 255)</td>
+<td valign=top><A NAME="TI3352"></A>16711935</td>
+<td valign=top><A NAME="TI3353"></A>255 + 256*256*255
+(red and blue)</td>
+</tr>
+<tr><td valign=top><A NAME="TI3354"></A>Red</td>
+<td valign=top><A NAME="TI3355"></A>RGB (255, 0, 0)</td>
+<td valign=top><A NAME="TI3356"></A>255</td>
+<td valign=top><A NAME="TI3357"></A>255 (red only)</td>
+</tr>
+<tr><td valign=top><A NAME="TI3358"></A>White</td>
+<td valign=top><A NAME="TI3359"></A>RGB (255, 255, 255)</td>
+<td valign=top><A NAME="TI3360"></A>16777215</td>
+<td valign=top><A NAME="TI3361"></A>255 + 256*255 + 256*256*255 (red,
+green, and blue in equal amounts at the maximum of 255)</td>
+</tr>
+<tr><td valign=top><A NAME="TI3362"></A>Yellow</td>
+<td valign=top><A NAME="TI3363"></A>RGB (255, 255, 0)</td>
+<td valign=top><A NAME="TI3364"></A>65535</td>
+<td valign=top><A NAME="TI3365"></A>255 + 256*255 (red
+and green)</td>
+</tr>
+</table>
+

@@ -1,0 +1,78 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+About using OLE in reports </TITLE>
+</HEAD>
+<BODY>
+<A NAME="BFCCDAFH"></A><h1>About using OLE in reports </h1>
+<A NAME="TI4332"></A><p>A report can include a control that is a container for
+an OLE object. The container stores information about the application
+that created the object and it can launch the application to display
+or modify the OLE object.</p>
+<A NAME="TI4333"></A><p>The container can fill the whole report, when you create
+a new report using the OLE presentation style, or it can exist
+alongside other controls in a report, when you add an OLE object
+to an existing report. You can also read OLE data from a blob
+column in a database and display the objects in the report.</p>
+<A NAME="TI4334"></A><p>You can use OLE objects in reports in the following ways:<A NAME="TI4335"></A>
+<ul>
+<li class=fi><b>OLE object in
+a report</b>    The OLE object is displayed in its container control with
+the report data and other controls, such as bitmaps or text.
+You can associate it with data in a particular row, the rows on
+a page, or with all rows. You choose which columns in the report are
+transferred to the OLE object. You can add an OLE container control
+to a report that uses any presentation style that supports multiple reports
+(this does not include the graph and RichText presentation styles).</li>
+<li class=ds><b>OLE presentation style</b>    The OLE presentation style is similar to an OLE object in
+a report. The difference is that the OLE container is <i>the
+only</i>
+ control in the report. The underlying data is <i>not</i>
+ presented
+in column controls and <i>there are no other</i>
+ controls,
+such as bitmaps or text. The OLE object is <i>always</i>
+ associated
+with all the rows in the report.</li>
+<li class=ds><b>OLE database blob column</b>    OLE objects that are stored in the database in a blob column
+are displayed in each row of the report.
+</li>
+</ul>
+</p>
+<A NAME="TI4336"></A><p>You can also add ActiveX controls (also called OLE custom
+controls or OCXs) to reports. ActiveX controls range from simple
+visual displays, such as meters and clocks, to more complex controls
+that perform spellchecking or image processing.</p>
+<A NAME="BFCDHAEF"></A><h4>Activating OLE objects</h4>
+<A NAME="TI4337"></A><p>When you're working in the Report painter, you can start
+the server application for an OLE object by selecting Open from
+the popup menu. Once the server application has started, you can
+use the tools provided by the server to edit the initial presentation
+of the object.</p>
+<A NAME="TI4338"></A><p>When you preview a report that has one or more OLE objects
+associated with it, you cannot activate the OLE objects. When you
+preview a report, InfoMaker retrieves data from the database and
+displays the report as it will appear when printed. For this reason,
+activation is not possible.</p>
+<A NAME="TI4339"></A><p>To activate an OLE object, you first need to add the report
+that contains the object to a form. Once you've done this,
+you can activate the server application.</p>
+<A NAME="TI4340"></A><p>If the OLE object is associated with <i>all rows</i>
+ retrieved
+and is in the foreground or background layer, not the band layer, users can
+activate the object. If the object is associated with a single row
+or page or is in the band layer, users can see the object but
+can't activate it. Reports created using the OLE presentation style
+are <i>always</i>
+ associated with all rows.</p>
+<A NAME="TI4341"></A><p>Unlike OLE objects, ActiveX controls are always active. They
+do not contain objects that need to be opened or activated.</p>
+<A NAME="TI4342"></A><h4>What's next</h4>
+<A NAME="TI4343"></A><p>Whether you are inserting an OLE object into a report or
+using the OLE presentation style, you use the same procedures to
+define, preview, and specify data for the OLE object. Because of
+their similarities, the next section discusses both OLE objects
+in reports and the OLE presentation style. The last section discusses
+OLE database blob columns.</p>
+

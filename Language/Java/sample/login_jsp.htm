@@ -1,0 +1,122 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<title>login.jsp</title>
+<script type="text/javascript" src="css.js"></script>
+</head>
+
+<body>
+<h1>第N章 login.jsp</h1>
+<hr>
+<p>在login.jsp中，使用了以下技术：</p>
+<ul>
+	<li><a href="#ajax">AJAX技术，使用初始技术实现</a></li>
+	<li><a href="#layout_skill">网页布局技巧，使页面一定显示在顶端</a></li>
+	<li><a href="#s_property">&lt;property&gt;标签</a></li>
+	<li><a href="#json">集成JSON</a></li>
+	<li><a href="#multi_result">Servlet Action返回多路结果</a></li>
+</ul>
+<h2><a name="ajax"></a>N.1 AJAX</h2>
+<h3>生成XMLHTTP ActiveX对象</h3>
+<p>使用如下代码检测客户端浏览器是否支持AJAX</p>
+<pre>var bXmlHttpSupport = (typeof XMLHttpRequest != "undefined" || window.ActiveXObject);</pre>
+<p>使用如下代码作为XMLHTTP对象</p>
+<pre>function XMLHttpRequest() {
+	var arrSignatures = [&quot;MSXML2.XMLHTTP.5.0&quot;, &quot;MSXML2.XMLHTTP.4.0&quot;,
+						 &quot;MSXML2.XMLHTTP.3.0&quot;, &quot;MSXML2.XMLHTTP&quot;,
+						 &quot;Microsoft.XMLHTTP&quot;];
+					 
+	for (var i=0; i &lt; arrSignatures.length; i++) {
+		try {        
+			var oRequest = new ActiveXObject(arrSignatures[i]);            
+			return oRequest;        
+		} catch (oError) { /*ignore*/ }
+	}          
+
+	throw new Error(&quot;MSXML is not installed on your system.&quot;);               
+}</pre>
+<p>使用如下代码发送AJAX请求并处理返回结果</p>
+<pre>if(bXmlHttpSupport) 
+{
+	var frm = document.form1;
+	var sUrl = &quot;&lt;%= DOC_PATH %&gt;/SysManage/Login.action?UserName=&quot; + frm.UserName.value + &quot;&amp;Password=&quot; + frm.Password.value;
+	var oRequest = new XMLHttpRequest();
+	oRequest.onreadystatechange = function() 
+	{
+		if(oRequest.readyState == 4) 
+		{
+			var oUser = eval('(' + oRequest.responseText + ')');
+			if(oUser.userId == &quot;&quot;)
+			{
+				alert(&quot;用户名或口令错误&quot;);
+			}else
+			{
+				document.location.href = &quot;&lt;%= DOC_PATH %&gt;/index.jsp&quot;;
+			}
+			
+		}
+	};
+	oRequest.open('POST', sUrl);
+	oRequest.send(null);
+}</pre>
+<p>返回结果为JSON对象，有关JSON对象定义，请参考本人所写的JavaScript笔记中的JSON一章。有关如何在struts2中集成JSON，请参看本章中的相关章节。</p>
+<h2><a name="layout_skill"></a>N.2 网页布局技巧，使页面一定显示在顶端</h2>
+<p>在页面一开始加入如下 JavaScript 代码：</p>
+<pre>if(parent != self)
+{
+	top.location.href = &quot;&lt;%= DOC_PATH %&gt;/login.jsp&quot;;
+}</pre>
+<h2><a name="s_property"></a>N.3 &lt;property&gt;标签</h2>
+<p>在页面开始引入标签库</p>
+<pre>&lt;%@ taglib prefix=&quot;s&quot; uri=&quot;/struts-tags&quot; %&gt;</pre>
+<p>使用&lt;property&gt;标签读取Servlet中使用HttpServletRequest.setAttribute设置的对象：</p>
+<pre>&lt;s:property value=&quot;#request.response_info&quot; /&gt;</pre>
+<h2><a name="json"></a>N.4 集成JSON</h2>
+<ol>
+  <li>引入json包jsonplugin-0.17.jar</li>
+  <li>在struts的映射配置文件struts-intools.xml中，集成json
+<pre>&lt;package name=&quot;SysManage&quot; namespace=&quot;/SysManage&quot; <span style="color:red">extends=&quot;json-default&quot;</span>&gt;
+	&lt;action	name=&quot;Login&quot; class=&quot;com.lld.intools.manage.LoginAction&quot;&gt;
+		&lt;result	name=&quot;success&quot; <span style="color:red">type=&quot;json&quot;</span> /&gt;
+		&lt;result	name=&quot;failed&quot; <span style="color:red">type=&quot;json&quot;</span> /&gt;
+	&lt;/action&gt;
+
+	...
+
+&lt;/package&gt;</pre>
+使用了这样的配置后，会自动以JSON方式返回该类的JavaBean表示形式
+  </li>
+  <li>在客户端使用JavaScript读取JSON对象
+  <pre>var oUser = eval('(' + oRequest.responseText + ')');
+if(oUser.userId == &quot;&quot;)
+	...</pre>
+  </li>
+</ol>
+<h2><a name="multi_result"></a>N.5 Servlet Action返回多路结果</h2>
+<p>是指根据输入不出，Servlet产生不同的输出。</p>
+<ol>
+  <li>根据计算结果不同，在Servlet端生成不同的值</li>
+<pre>if(qres == null)
+{
+	...
+	return &quot;failed&quot;;
+}else
+{
+	...
+	return &quot;success&quot;;
+}</pre>
+  <li>在配置文件struts-intools中为不同的返回值配备不同的子项
+  <pre>
+&lt;action	name=&quot;Login&quot; class=&quot;com.lld.intools.manage.LoginAction&quot;&gt;
+		&lt;result	<span style="color:red;">name=&quot;success&quot;</span> type=&quot;json&quot; /&gt;
+		&lt;result	<span style="color:red;">name=&quot;failed&quot;</span> type=&quot;json&quot; /&gt;
+	&lt;/action&gt;</pre>
+因为在本例中使用了AJAX，所以都以JSON返回相同的页面</li>
+</ol>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<script type="text/javascript" src="index.js"></script>
+</body>
+</html>

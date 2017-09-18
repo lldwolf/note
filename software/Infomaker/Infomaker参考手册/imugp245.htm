@@ -1,0 +1,133 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+Sum</TITLE>
+</HEAD>
+<BODY>
+<A NAME="DWFSum"></A><A NAME="TI8003"></A><h1>Sum</h1>
+<A NAME="TI8004"></A><p>
+<FORM>
+<INPUT
+ TYPE = "BUTTON"
+ VALUE = "Examples"
+ onClick = "window.location = 'imugp245.htm#EX97';">
+<INPUT
+  TYPE = "BUTTON"
+ VALUE = "See also"
+ onClick = "window.location = 'imugp245.htm#SA97';">
+</FORM>
+</p>
+<h3>Description</h3><A NAME="TI8005"></A><p>Calculates the sum of the values in the specified column.</p>
+
+<h3>Syntax</h3><pre><b>Sum</b> ( <i>column</i> { FOR <i>range</i> { DISTINCT { <i>expres1</i> {, <i>expres2</i>  {, ... } } } } } )</pre>
+<A NAME="TI8006"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI8007"></A>Argument</th>
+<th align="left" valign=bottom><A NAME="TI8008"></A>Description</th>
+</tr>
+<tr><td valign=top><A NAME="TI8009"></A><i>column</i></td>
+<td valign=top><A NAME="TI8010"></A>The column for which you want the sum
+of the data values. <i>Column</i> can be the column
+name or the column number preceded by a pound sign (#). <i>Column</i> can
+also be an expression that includes a reference to the column. The
+data type of <i>column</i> must be numeric</td>
+</tr>
+<tr><td valign=top><A NAME="TI8011"></A>FOR <i>range</i>  (optional)</td>
+<td valign=top><A NAME="TI8012"></A>The data that will be included in the
+sum. For most presentation styles, values for <i>range</i> are:<A NAME="TI8013"></A><A NAME="TI8014"></A>
+<ul>
+<li class=fi>ALL -- (Default)
+The sum of all values in <i>column</i></li>
+<li class=ds>GROUP <i>n</i> -- The sum
+of values in <i>column</i> in the specified group.
+Specify the keyword GROUP followed by the group number: for example,
+GROUP 1</li>
+<li class=ds>PAGE -- The sum of the values in <i>column</i> on
+a page
+</li>
+</ul>
+<A NAME="TI8015"></A>For Crosstabs, specify CROSSTAB for <i>range</i>:<A NAME="TI8016"></A><A NAME="TI8017"></A>
+<ul>
+<li class=fi>CROSSTAB -- (Crosstabs
+only) The sum of all values in <i>column</i> in the
+crosstab
+</li>
+</ul>
+<A NAME="TI8018"></A>For Graph and OLE objects, specify one of the following:<A NAME="TI8019"></A><A NAME="TI8020"></A>
+<ul>
+<li class=fi>GRAPH -- (Graphs
+only) The sum of values in <i>column</i> in the range
+specified for the Rows option of the graph</li>
+<li class=ds>OBJECT -- (OLE objects only) The sum of
+values in <i>column</i> in the range specified for
+the Rows option of the OLE object
+</li>
+</ul>
+</td>
+</tr>
+<tr><td valign=top><A NAME="TI8021"></A>DISTINCT (optional)</td>
+<td valign=top><A NAME="TI8022"></A>Causes Sum to consider only the distinct
+values in <i>column</i> when determining the sum.
+For a value of <i>column</i>, the first row found with
+the value is used and other rows that have the same value are ignored</td>
+</tr>
+<tr><td valign=top><A NAME="TI8023"></A><i>expresn</i>  (optional)</td>
+<td valign=top><A NAME="TI8024"></A>One or more expressions that you want
+to evaluate to determine distinct rows. <i>Expresn</i> can
+be the name of a column, a function, or an expression</td>
+</tr>
+</table>
+
+<h3>Return Values</h3><A NAME="TI8025"></A><p>The appropriate numeric data type. Returns the sum of the
+data values in <i>column</i>.</p>
+
+<h3>Usage</h3><A NAME="TI8026"></A><p>If you specify <i>range</i>, Sum returns the
+sum of the values in <i>column</i> within <i>range</i>.
+If you specify DISTINCT, Sum returns the sum of the distinct values
+in <i>column</i>, or if you specify <i>expresn</i>,
+the sum of the values of <i>column</i> where the value
+of <i>expresn</i> is distinct.</p>
+<A NAME="TI8027"></A><p>For graphs and OLE objects, you do not select the range when
+you call the function. The range has already been determined by
+the Rows setting on the Data property page (the Range property),
+and the aggregation function uses that range. Settings for Rows
+include:</p>
+<A NAME="TI8028"></A><p><A NAME="TI8029"></A>
+<ul>
+<li class=fi>For the Graph or OLE
+presentation style, Rows is always All.</li>
+<li class=ds>For Graph controls, Rows can be All, Page, or Group.</li>
+<li class=ds>For OLE controls, Rows can be All, Current Row,
+Page, or Group. The available choices depend on the layer the control
+occupies.
+</li>
+</ul>
+</p>
+<A NAME="TI8030"></A><p>NULL values are ignored and are not included in the calculation.</p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Not in validation rules or filter expressions</span> <A NAME="TI8031"></A>You cannot use this or other aggregate functions in validation
+rules or filter expressions.</p>
+<A NAME="TI8032"></A><p>Using an aggregate function cancels the effect of setting
+Retrieve Rows As Needed in the painter. To do the aggregation, a
+DataWindow object or report always retrieves all rows.</p>
+
+<A NAME="EX97"></A><h3>Examples</h3><A NAME="TI8033"></A><p>This expression returns the sum of the values in
+group 1 in the column named salary:<pre><i>Sum</i> (salary for group 1)</pre>
+</p>
+<A NAME="TI8034"></A><p>This expression returns the sum of the values in
+column 4 on the page:<pre><i>Sum</i> (#4 for page)</pre>
+</p>
+<A NAME="TI8035"></A><p>Assuming a DataWindow object displays the order number,
+amount, and line items for each order, this computed field returns
+the sum of the order amount for the distinct order numbers:<pre><i>Sum</i> (order_amt for all DISTINCT order_nbr)</pre>
+</p>
+
+<A NAME="SA97"></A><h3>See Also</h3><A NAME="TI8036"></A><p><A NAME="TI8037"></A>
+<ul>
+<li class=fi><A HREF="imugp148.htm#X-ref350671311">"Example 1: counting
+NULL values in a column"</A></li>
+<li class=ds><A HREF="imugp148.htm#X-ref350653531">"Example 2: counting
+male and female employees"</A>
+</li>
+</ul>
+</p>
+
+

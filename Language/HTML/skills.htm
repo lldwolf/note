@@ -1,0 +1,45 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>技巧集</title>
+<script language="javascript" src="css.js"></script>
+</head>
+
+<body>
+<h1>第N章 技巧集</h1>
+<hr />
+<h3>N.1 如何让网页的背景图片不跟随内容滚动？</h3>
+<p> 背景图片是很多网页设 计者经常添加的东西，当网页内容超出一屏时，拉动滚动条背景图片会与内容相对静止的一起滚动，那么能否锁定背景不跟随滚动呢？当然可以进入“Edit style sheet”窗口，单击“New”确立新样式，在TYpe中选择“Redefine HTML Tag”，同时Tag选单选中“Body”，在左边列表中选择“Background”。　设定“Attachment”（附件）为“fixed”。其中 scroll代表默认使用的滚动显示。</p>
+<h3>N.2 建立电子邮件的表单处理</h3>
+<p>将form的action设为 &quot;mailto:邮箱地址&quot;，这样当点击提交按钮后，就会弹出一个提示窗口，单击“确定”表单内容会发送到指定的邮箱中</p>
+<h3>N.3 制作“漫天飞舞”的图片</h3>
+<p>首先在网页中插入目标图片，同时选中它，单击快速启动板中的“Timelins”按钮进入“时间线”窗口，在时间轴1frame的位置鼠标右击，选择 “Add Object”,这时时间轴上会出现一兰色色条（默认1-15frame），将镜头停在15frame处，同时移动页面内图片到运动的终点位置。</p>
+<p>现在一个简单的运动动画已经完成了，你可以通过在中间添加keyframe的方法调整路径的曲折度。单击上方的右箭头按钮预览效果。</p>
+<h3>N.4 制作在页面中“静态悬浮”的图片 </h3>
+<p>所谓的“静态悬浮”也就是图片总是试图停留在网页中的某个位置，因此在视觉上有种跟着页面“走”的感觉，象悬浮着一样。<br />
+  <br />
+  　　 该效果的实现是通过javascript来完成的，一般要求有一定的编程能力。好在DW提供了制作该效果的固定插件，因此就显得简单多了。<br />
+  <br />
+  　 　首先你必须先下载stav插件,将里面的两个文件(其中包括图片文件Cross Browser Static Division.gif和网页文件Cross Browser Static Division.htm)都拷贝到DW安装目录Configuration\Objects\Common下。<br />
+<br />
+　　 重新启动DW,在Object(对象)面板中,你会看到最底部已经多了SI项,选中它在弹出的窗口中设定浮动层到上边和左边的距离,然后在图层中插入指定的内容（这里为图片）即可。</p>
+<h3>N.5 使文字和图片内容</h3>
+<p>我们都知道，在DW中，图片对象往往是独占一行的，那么文字内容只能在与其平行的一行的位置上，怎么样才可以让文字围绕着图片显示呢？</p>
+<p> 选中图片，在属性面板的右上方你能看到一个“Align”的属性选单，选择“Left”，这时你会发现文字已经均匀的排列在图片的右边了。</p>
+<h3>N.6 制作一条宽度为1的细线</h3>
+<p>在DW中，尽管水平线是以“Line”形式出现的，但在制作细线时，它表现的并不尽如人意，主要是过粗，没有需要的细腻感！</p>
+<p> 那么我们可以采取变通的方法以表格的应用来实现。</p>
+<p> 在网页中插入一个1行1列的表格，将表格的“cellpadding”“cellspacing”都设置为“0”，同时将单元格的“bgcolor”设定为红色，当然你也可以使用其他的颜色来代替，“Height”设定高度为1。 </p>
+<p> 还有最关键的一步，查看源代码，将&lt; td&gt;&lt; /td&gt;中的“ ”去掉即可。</p>
+<h3>N.7 网页中可以随便拖动的对象是怎么建立的</h3>
+<p>访问网站时，经常能见到不少可以用鼠标拖动的元素，其中以图片居多，比如，一张广告图片挡住了你想浏览的内容，你完全可以用鼠标选中把它扔到一边去！</p>
+<p>制作这种效果是通过图层的“Drag Layer”行为实现的，单击Behavior面板中“+”号，选择“Drag Layer”，当然之前你必要保证目标图层处于选中状态，进行简单设置后就OK了。</p>
+<h3>N.8 更新页面缓存</h3>
+<pre>    &lt;META HTTP-EQUIV=&quot;pragma&quot; CONTENT=&quot;no-cache&quot;&gt;
+    &lt;META HTTP-EQUIV=&quot;Cache-Control&quot; CONTENT=&quot;no-cache, must-revalidate&quot;&gt;
+    &lt;META HTTP-EQUIV=&quot;expires&quot; CONTENT=&quot;Mon, 23 Jan 1978 20:52:30 GMT&quot;&gt;</pre>
+<p>&nbsp;</p>
+<script language="javascript" src="index.js"></script>
+</body>
+</html>

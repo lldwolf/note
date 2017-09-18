@@ -1,0 +1,476 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+Adding controls to a report</TITLE>
+</HEAD>
+<BODY>
+<A NAME="BFCCIJACX"></A><h1>Adding controls to a report</h1>
+<A NAME="TI1975"></A><p>This section describes adding controls to enhance your report:</p>
+<A NAME="BFCCHFBA"></A><h2>Adding columns to a report</h2>
+<A NAME="TI1976"></A><p>You can add columns that are included in the data source to
+a report. When you first create a report, each of the columns
+in the data source is automatically placed in the report. Typically,
+you would add a column to restore one that you had deleted from
+the report, or to display the column more than once in the report.</p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Adding columns not previously retrieved to the data
+source</span> <A NAME="TI1977"></A>To specify that you want to retrieve a column not previously
+retrieved (that is, add a column to the data source), you must modify
+the data source.</p>
+<A NAME="TI1978"></A>See <A HREF="imugp54.htm#CAICFEBG">"Modifying the data source
+of a report"</A>.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To add a column from the data source to a report:</p>
+<ol><li class=fi>
+Select Insert&gt;Control&gt;Column
+from the menu bar.<br><br></li>
+<li class=ds>
+Click where you want to place the column.<br><br>
+The Select Column dialog box displays listing all columns
+included in the data source of the report.<br><br></li>
+<li class=ds>
+Select the column and click OK.<br><br></li></ol>
+<br><A NAME="BFCBGFFG"></A><h2>Adding text to a report</h2>
+<A NAME="TI1979"></A><p>When InfoMaker generates a basic report from a presentation
+style and data source, it places columns and their headings in the
+workspace. You can add text anywhere you want to make the report easier
+to understand.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To add text to a report:</p>
+<ol><li class=fi>
+Select Insert&gt;Control&gt;Text
+from the menu bar.<br><br></li>
+<li class=ds>
+Click where you want the text.<br><br>
+InfoMaker places the text control in the Design view and
+displays the word <i>text</i>
+.<br><br></li>
+<li class=ds>
+Type the text you want.<br><br></li>
+<li class=ds>
+(Optional) Change the font, size, style, and alignment
+for the text using the StyleBar.<br><br></li></ol>
+<br><A NAME="BFCDAICD"></A><h2>Adding drawing controls to a report</h2>
+<A NAME="TI1980"></A><p>You can add the following drawing controls to a report to
+enhance its appearance:<A NAME="TI1981"></A>
+<ul>
+<li class=fi>Rectangle</li>
+<li class=ds>RoundRectangle</li>
+<li class=ds>Line</li>
+<li class=ds>Oval
+</li>
+</ul>
+</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To place a drawing control in a report:</p>
+<ol><li class=fi>
+Select the drawing control from the Insert&gt;Control
+menu.<br><br></li>
+<li class=ds>
+Click where you want the control to display.<br><br></li>
+<li class=ds>
+Resize or move the drawing control as needed.<br><br></li>
+<li class=ds>
+Use the drawing control's Properties
+view to change its properties as needed. <br><br>
+For example, you might want to specify a fill color for a
+rectangle or thickness for a line.<br><br></li></ol>
+<br><A NAME="BFCCBFFD"></A><h2>Adding a groupbox to a report</h2>
+<A NAME="TI1982"></A><p>To visually enhance the layout of a report, you can add
+a groupbox. The groupbox is a static frame used to group and label
+a set of controls in a report. The following example shows
+two groupboxes in a report. The Address groupbox groups address
+information and the Phone/Fax groupbox groups telephone
+numbers:</p>
+<br><img src="images/Dwen30a.gif">
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To add a groupbox to a report:</p>
+<ol><li class=fi>
+Select Insert&gt;Control&gt;Group
+Box from the menu bar and click in the Design view.<br><br></li>
+<li class=ds>
+With the groupbox selected, type the text to display
+in the frame.<br><br></li>
+<li class=ds>
+Move and resize the groupbox as appropriate.<br><br></li></ol>
+<br><A NAME="BFCCHGGA"></A><h2>Adding pictures to a report</h2>
+<A NAME="TI1983"></A><p>You can place pictures, such as your company logo, in a report to
+enhance its appearance. If you place a picture in the header, summary,
+or footer band of the report, the picture displays each time
+the contents of that band displays. If you place the picture in
+the detail band of the report, it displays in each row.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To place a picture in a report:</p>
+<ol><li class=fi>
+Select Insert&gt;Control&gt;Picture
+from the menu bar.<br><br></li>
+<li class=ds>
+Click where you want the picture to display.<br><br>
+The Select Picture dialog box displays.<br><br></li>
+<li class=ds>
+Use the Browse button to find the file or enter
+a filename in the File Name box. Then click Open.<br><br>
+The picture must be a bitmap (BMP), runlength-encoded (RLE),
+Windows metafile (WMF), CompuServe Graphics Interchange (GIF), or
+JPEG file.<br><br></li>
+<li class=ds>
+Display the popup menu and select Original Size
+to display the bitmap in its original size. <br><br>
+You can use the mouse to change the size of the bitmap in
+the Report painter.<br><br></li>
+<li class=ds>
+Click the Invert Image checkbox on the General
+page of the Properties view to display the picture with its colors
+inverted.<br><br></li></ol>
+<br><A NAME="TI1984"></A><h4>Tips for using pictures</h4>
+<A NAME="TI1985"></A><p>To display a different picture for each row of data, retrieve
+a column containing picture filenames from the database.</p>
+<A NAME="TI1986"></A><p>For more information, see <A HREF="imugp36.htm#BABDFJCI">"Specifying additional properties
+for character columns"</A>.<i></i>
+<i></i>
+</p>
+<A NAME="TI1987"></A><p>If you change the bitmap in the Picture control in a report,
+you need to reset the original size property. The property automatically
+reverts to the default setting when you change the bitmap. </p>
+<A NAME="CAICBBCE"></A><h2>Adding computed fields to a report</h2>
+<A NAME="TI1988"></A><p>You can use <strong>computed fields</strong> in any
+band of the report. Typical uses include:<A NAME="TI1989"></A>
+<ul>
+<li class=fi><b>Calculations based on column data that change
+for each retrieved row</b>    For example, if you are retrieving yearly salary, you can
+define a computed field in the detail band that displays monthly
+salary (defined as Salary / 12).</li>
+<li class=ds><b>Summary statistics of the data</b>    For example, if you have a grouped report, you can use
+a computed field to calculate the totals of a column for each group.</li>
+<li class=ds><b>Concatenated fields</b>    For example, if you are retrieving first name and last name,
+you can define a computed field that concatenates the values so they
+appear with only one space between them (defined as Fname + "
+" + Lname).</li>
+<li class=ds><b>System information</b>    For example, you can place the current date and time in a report's
+header by using computed fields (defined as Today() and Now()).
+</li>
+</ul>
+</p>
+<A NAME="TI1990"></A><h3>Computed columns versus computed fields</h3>
+<A NAME="TI1991"></A><p>When creating a report, you can define computed columns
+and computed fields as follows:<A NAME="TI1992"></A>
+<ul>
+<li class=fi>In
+the Select painter, you can define <strong>computed columns</strong> when
+you are defining the SELECT statement that will be used to retrieve
+data into the report</li>
+<li class=ds>In the Report painter, you can define <strong>computed
+fields</strong> after you have defined the SELECT statement (or
+other data source)
+</li>
+</ul>
+</p>
+<A NAME="TI1993"></A><h4>The difference between the two ways</h4>
+<A NAME="TI1994"></A><p>When you define the computed column in the Select painter,
+the value is calculated by the DBMS when the data is retrieved.
+The computed column's value does not change until data
+has been updated and retrieved again.</p>
+<A NAME="TI1995"></A><p>When you define the computed field in the Report painter, the
+value of the column is calculated in the report after the data
+has been retrieved. </p>
+<A NAME="TI1996"></A><h3>Defining a computed field in the Report painter Design
+view</h3>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To define a computed field in the Report painter Design
+view:</p>
+<ol><li class=fi>
+Select Insert&gt;Control&gt;Computed
+Field from the menu bar.<br><br></li>
+<li class=ds>
+Click where you want the computed field. <br><br>
+If the calculation is to be based on column data that changes
+for each row, make sure you place the computed field in the detail
+band.<br><br>
+The Modify Expression dialog box displays listing:<A NAME="TI1997"></A>
+<ul>
+<li class=fi>InfoMaker functions you can use in
+the computed field</li>
+<li class=ds>The columns in the report</li>
+<li class=ds>Operators and parentheses
+</li>
+</ul>
+<br><br></li>
+<li class=ds>
+Enter the expression that defines the computed
+field (see below).<br><br></li>
+<li class=ds>
+(Optional) Click Verify to test the expression.<br><br>
+InfoMaker analyzes the expression.<br><br></li>
+<li class=ds>
+Click OK.<br><br></li></ol>
+<br><A NAME="TI1998"></A><h4>Entering the expression</h4>
+<A NAME="TI1999"></A><p>You can enter any valid InfoMaker expression when defining a computed
+field. You can paste operators, columns, and InfoMaker functions into the
+expression from information in the Modify Expression dialog box.</p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>InfoMaker expressions</span> <A NAME="TI2000"></A>The expression you are entering is an InfoMaker expression; it is not
+a SQL expression processed by the DBMS. So the expression follows
+the rules for InfoMaker expressions.</p>
+<A NAME="TI2001"></A>For complete information about InfoMaker expressions,
+see<A HREF="imugp143.htm#CAIBEHFJ">Chapter 20, "Operators
+and Expressions"</A>.</p>
+<A NAME="TI2002"></A><p>You can use the + operator to concatenate strings.</p>
+<A NAME="TI2003"></A><h4>Referring to next and previous rows</h4>
+<A NAME="TI2004"></A><p>You can refer to other rows in a computed field. This is particularly
+useful in n-up reports when you want to refer to another row
+in the detail band. </p>
+<A NAME="TI2005"></A><p>Use this syntax:</p>
+<A NAME="TI2006"></A><p><pre><i>ColumnName</i>[x]</pre>
+</p>
+<A NAME="TI2007"></A><p>where <i>x</i>
+ is an integer. 0 refers to the
+current row (or first row in the detail band), 1 refers to the next
+row, -1 refers to the previous row, and so on.</p>
+<A NAME="TI2008"></A><h4>Examples</h4>
+<A NAME="TI2009"></A><p>Here are some examples of computed fields and columns:</p>
+<A NAME="TI2010"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI2011"></A>To display</th>
+<th align="left" valign=bottom><A NAME="TI2012"></A>Enter this expression</th>
+<th align="left" valign=bottom><A NAME="TI2013"></A>In this band</th>
+</tr>
+<tr><td valign=top><A NAME="TI2014"></A>Current date at top of each page</td>
+<td valign=top><A NAME="TI2015"></A>Today() (a built-in InfoMaker function)</td>
+<td valign=top><A NAME="TI2016"></A>Header</td>
+</tr>
+<tr><td valign=top><A NAME="TI2017"></A>Current time at top of each page</td>
+<td valign=top><A NAME="TI2018"></A>Now()</td>
+<td valign=top><A NAME="TI2019"></A>Header</td>
+</tr>
+<tr><td valign=top><A NAME="TI2020"></A>Current page at bottom of each page</td>
+<td valign=top><A NAME="TI2021"></A>Page()</td>
+<td valign=top><A NAME="TI2022"></A>Footer</td>
+</tr>
+<tr><td valign=top><A NAME="TI2023"></A>Total page count at bottom of each page</td>
+<td valign=top><A NAME="TI2024"></A>PageCount()</td>
+<td valign=top><A NAME="TI2025"></A>Footer</td>
+</tr>
+<tr><td valign=top><A NAME="TI2026"></A>Concatenation of Fname and Lname columns
+for each row</td>
+<td valign=top><A NAME="TI2027"></A>Fname + " " + Lname</td>
+<td valign=top><A NAME="TI2028"></A>Detail</td>
+</tr>
+<tr><td valign=top><A NAME="TI2029"></A>Monthly salary if Salary column contains
+annual salary</td>
+<td valign=top><A NAME="TI2030"></A>Salary / 12</td>
+<td valign=top><A NAME="TI2031"></A>Detail</td>
+</tr>
+<tr><td valign=top><A NAME="TI2032"></A>Four asterisks if the value of the Salary
+column is greater than $50,000</td>
+<td valign=top><A NAME="TI2033"></A>IF(Salary&gt; 50000, "****",
+"")</td>
+<td valign=top><A NAME="TI2034"></A>Detail</td>
+</tr>
+<tr><td valign=top><A NAME="TI2035"></A>Average salary of all retrieved rows</td>
+<td valign=top><A NAME="TI2036"></A>Avg(Salary)</td>
+<td valign=top><A NAME="TI2037"></A>Summary</td>
+</tr>
+<tr><td valign=top><A NAME="TI2038"></A>Count of retrieved rows, assuming each
+row contains a value for EmpID</td>
+<td valign=top><A NAME="TI2039"></A>Count(EmpID)</td>
+<td valign=top><A NAME="TI2040"></A>Summary</td>
+</tr>
+</table>
+<A NAME="TI2041"></A><h4>For more information</h4>
+<A NAME="TI2042"></A><p>For complete information about the functions you can use in
+computed fields in the Report painter, see Chapter 23, "DataWindow Painter
+and InfoMaker Functions".</p>
+<A NAME="TI2043"></A><h4>A shortcut for doing summary statistics</h4>
+<A NAME="TI2044"></A><p>InfoMaker provides a quick way to create computed fields
+that summarize values in the detail band.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To summarize values:</p>
+<ol><li class=fi>
+Select one or more columns in the report's
+detail band.<br><br></li>
+<li class=ds>
+Do one of the following:<br><br><A NAME="TI2045"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI2046"></A>To place this computed field</th>
+<th align="left" valign=bottom><A NAME="TI2047"></A>Do this</th>
+</tr>
+<tr><td valign=top><A NAME="TI2048"></A>Average</td>
+<td valign=top><A NAME="TI2049"></A>Select Insert&gt;Control&gt;Average
+from the menu bar or click the button in the Controls dropdown toolbar</td>
+</tr>
+<tr><td valign=top><A NAME="TI2050"></A>Count</td>
+<td valign=top><A NAME="TI2051"></A>Select Insert&gt;Control&gt;Count
+from the menu bar or click the button in the Controls dropdown toolbar</td>
+</tr>
+<tr><td valign=top><A NAME="TI2052"></A>Sum</td>
+<td valign=top><A NAME="TI2053"></A>Select Insert&gt;Control&gt;Sum
+from the menu bar or click the button in the Controls dropdown toolbar</td>
+</tr>
+</table>
+
+InfoMaker places a computed field in the summary band or
+in the group trailer band if the report is grouped. The band
+is resized automatically to hold the computed field. If there is
+already a computed field that matches the one being generated, it
+is skipped.<br><br></li></ol>
+<p><b>Adding custom buttons that place computed fields</b>   You can add buttons to the PainterBar in the Report painter that
+place computed fields using any of the aggregate functions, such
+as Max, Min, and Median.</p>
+<br><p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To customize the PainterBar with custom buttons
+for placing computed fields:</p>
+<ol><li class=fi>
+Place the mouse pointer over the PainterBar and
+select Customize from the popup menu.<br><br>
+The Customize dialog box displays.<br><br></li>
+<li class=ds>
+Click Custom in the Select palette group to display
+the set of custom buttons.<br><br></li>
+<li class=ds>
+Drag a custom button into the Current toolbar group
+and release it.<br><br>
+The Toolbar Item Command dialog box displays.<br><br></li>
+<li class=ds>
+Click the Function button.<br><br>
+The Function For Toolbar dialog box displays.<br><br></li>
+<li class=ds>
+Select a function and click OK.<br><br>
+You return to the Toolbar Item Command dialog box.<br><br></li>
+<li class=ds>
+Specify text that displays for the button and click
+OK.<br><br>
+InfoMaker places the new button in the PainterBar. You can
+click it to add a computed field to your report the same way
+you use the built-in Sum button.<br><br></li></ol>
+<br><A NAME="TI2054"></A><h4>A shortcut for placing page numbers and date</h4>
+<A NAME="TI2055"></A><p>You can click buttons in the PainterBar to place a computed
+field for the current page number and date anywhere in the report:</p>
+<A NAME="TI2056"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI2057"></A>To place this computed field</th>
+<th align="left" valign=bottom><A NAME="TI2058"></A>Do this</th>
+</tr>
+<tr><td valign=top><A NAME="TI2059"></A>'Page ' + page() + ' of ' + pageCount()</td>
+<td valign=top><A NAME="TI2060"></A>Click the Page button in the Controls dropdown
+toolbar or select Insert&gt;Control&gt;Page n of n from
+the menu bar</td>
+</tr>
+<tr><td valign=top><A NAME="TI2061"></A>today()</td>
+<td valign=top><A NAME="TI2062"></A>Click the Today button in the Controls dropdown
+toolbar or select Insert&gt;Control&gt;Today() from
+the menu bar</td>
+</tr>
+</table>
+<A NAME="BFCBACAG"></A><h2>Adding buttons to a report</h2>
+<A NAME="TI2063"></A><p>The Button control is a command (or Picture) style button
+that can be placed in a report. When clicked at execution time,
+the button activates the action you assign to it.</p>
+<A NAME="TI2064"></A><p>The following example shows a button placed in a report. Clicking
+the button brings up the Filter dialog, where users can specify
+a filter to be applied to the currently retrieved data:</p>
+<br><img src="images/dwen32a.gif">
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To add a button to a report:</p>
+<ol><li class=fi>
+Select Insert&gt;Control&gt;Button
+from the menu bar.<br><br></li>
+<li class=ds>
+Click where you want the button to display.<br><br>
+You may find it useful to put a Delete button or an Insert
+button in the detail band. Clicking a Delete button in the detail
+band will delete the row next to the button clicked. Clicking an
+Insert button in the detail band will insert a row following the
+row containing the button clicked.<br><br><p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Be careful when putting buttons in the detail band</span> <A NAME="TI2065"></A>Buttons in the detail band repeat for every row of data (often
+not desirable). During retrieval the buttons in the detail band
+are not visible. So, for example, a Cancel button in the detail
+band would be unavailable when needed.</p>
+</li>
+<li class=ds>
+With the button still selected, type the text to display
+on the button.<br><br></li>
+<li class=ds>
+Display the button's Properties view (General
+page).<br><br></li>
+<li class=ds>
+Select the action you want to assign to the button from
+the Action dropdown listbox.<br><br>
+For information about actions, see <A HREF="imugp56.htm#BFCBEJJH">"Actions assignable to buttons
+in reports"</A>.<br><br></li>
+<li class=ds>
+If you want to add a picture to the button, select the
+Action Default Picture checkbox or enter the name of the Picture
+file to display on the button.<br><br></li></ol>
+<br><A NAME="TI2066"></A><h3>Controlling the display of buttons in print preview
+and on printed output</h3>
+<A NAME="TI2067"></A><p>You can choose whether to display buttons in print preview
+or in printed output. You control this in the Properties view for
+the report (not the one for the button).</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To control the display of buttons in a report in
+print preview and on printed output:</p>
+<ol><li class=fi>
+Display the report's Properties
+view with the Print Specification page on top.<br><br></li>
+<li class=ds>
+Select the Display Buttons - Print checkbox to
+have buttons included in the printed output when the report is
+printed. <br><br></li>
+<li class=ds>
+Select the Display Buttons - Print Preview checkbox
+to have the buttons display on the screen when viewing the report in
+print preview.<br><br></li></ol>
+<br><A NAME="BFCBEJJH"></A><h3>Actions assignable to buttonsin reports</h3>
+<A NAME="TI2068"></A><p>These are the actions you can assign to a button in a report: </p>
+<A NAME="TI2069"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI2070"></A>Action</th>
+<th align="left" valign=bottom><A NAME="TI2071"></A>What it does</th>
+</tr>
+<tr><td valign=top><A NAME="TI2072"></A>Cancel</td>
+<td valign=top><A NAME="TI2073"></A>Cancels a retrieval that has been started
+with the option to yield</td>
+</tr>
+<tr><td valign=top><A NAME="TI2074"></A>Filter</td>
+<td valign=top><A NAME="TI2075"></A>Displays Filter dialog and filters as
+specified</td>
+</tr>
+<tr><td valign=top><A NAME="TI2076"></A>Page First</td>
+<td valign=top><A NAME="TI2077"></A>Scrolls to the first page</td>
+</tr>
+<tr><td valign=top><A NAME="TI2078"></A>Page Last</td>
+<td valign=top><A NAME="TI2079"></A>Scrolls to the last page</td>
+</tr>
+<tr><td valign=top><A NAME="TI2080"></A>Page Next</td>
+<td valign=top><A NAME="TI2081"></A>Scrolls to the next page</td>
+</tr>
+<tr><td valign=top><A NAME="TI2082"></A>Page Prior</td>
+<td valign=top><A NAME="TI2083"></A>Scrolls to the prior page</td>
+</tr>
+<tr><td valign=top><A NAME="TI2084"></A>Preview With Rulers</td>
+<td valign=top><A NAME="TI2085"></A>Toggles between rulers on and off</td>
+</tr>
+<tr><td valign=top><A NAME="TI2086"></A>Print</td>
+<td valign=top><A NAME="TI2087"></A>Prints one copy of the DataWindow object</td>
+</tr>
+<tr><td valign=top><A NAME="TI2088"></A>Retrieve</td>
+<td valign=top><A NAME="TI2089"></A>Retrieves rows from the database. The
+option to yield is not automatically turned on</td>
+</tr>
+<tr><td valign=top><A NAME="TI2090"></A>Retrieve<A NAME="TI2091"></A> (Yield)</td>
+<td valign=top><A NAME="TI2092"></A>Retrieves rows from the database. Before
+retrieval actually occurs, option to yield is turned on; this will
+allow the Cancel action to take effect during a long retrieve</td>
+</tr>
+<tr><td valign=top><A NAME="TI2093"></A>Save Rows As</td>
+<td valign=top><A NAME="TI2094"></A>Displays Save As dialog and saves rows
+in the format specified</td>
+</tr>
+<tr><td valign=top><A NAME="TI2095"></A>Sort</td>
+<td valign=top><A NAME="TI2096"></A>Displays Sort dialog and sorts as specified</td>
+</tr>
+</table>
+<A NAME="BFCCGJID"></A><h2>Adding graphs to a report</h2>
+<A NAME="TI2097"></A><p>Graphs are one of the best ways to present information. For
+example, if your report displays sales information over the course
+of a year, you can easily build a graph in a report to display
+the information visually.</p>
+<A NAME="TI2098"></A><p>InfoMaker offers many types of graphs and provides you with
+the ability to control the appearance of a graph to best meet your
+application's needs.</p>
+<A NAME="TI2099"></A><p>For information on using graphs, see <A HREF="imugp86.htm#CCJCJJAE">Chapter 10, "Working with Graphs "</A>.</p>
+<A NAME="BFCCIJACQ"></A><h2>Adding OLE controls to a report</h2>
+<A NAME="TI2100"></A><p>You can add the following to a report:<A NAME="TI2101"></A>
+<ul>
+<li class=fi>A column that contains a database binary large object (a blob
+object) using OLE 2.0</li>
+<li class=ds>OLE 2.0 objects
+</li>
+</ul>
+</p>
+<A NAME="TI2102"></A><p>For information on using OLE in a report,
+see <A HREF="imugp102.htm#CCJBFGBD">Chapter 13, "Using OLE in a Report "</A>.</p>
+<A NAME="BFCDIHDC"></A><h2>Adding reports to a report</h2>
+<A NAME="TI2103"></A><p>You can nest reports in a report.</p>
+<A NAME="TI2104"></A><p>For information on nesting reports, see <A HREF="imugp81.htm#BFCEAGEF">Chapter 9, "Using Nested Reports "</A>.</p>
+

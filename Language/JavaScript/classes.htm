@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+<title>常用类及其功能</title>
+</head>
+
+<body>
+<p id="title">常用类及其功能</p>
+
+<h1>Date</h1>
+<h2>获取当前日期 </h2>
+<pre>var today = new Date();</pre>
+<h2>创建指定的日期</h2>
+<pre>var d1 = new Date(&quot;4/1/2005&quot;);		//2005年4月1日
+var d2 = new Date(&quot;4/1/2005 15:30:40&quot;);	//2005年4月1日15时30分40秒
+var d3 = new Date(2005, 4, 1);		//2006年5月1日
+var d4 = new Date(2005, 4, 1, 15, 30, 40);	//2006年4月1日15时30分40秒</pre>
+<p>注意第3行和第4行，2005表示2006年，月份4表示5月，超过11不会出错，12表示1月，以此类推。</p>
+<h2>获取年月日</h2>
+<pre>var d = new Date();
+var year = d.getYear();	//年，若19xx年，则只返回后两位
+var full_year = d.getFullYear();//返回完整的年份
+var month = d.getMonth();	//月, 0 - 11
+var day_of_month = d.getDate();	//返回一个月中的某一天
+var day_of_week = d.getDay();	//返回一个星期中的某一天，0为周日，6为周六
+var hour = d.getHours();	//小时，0 - 23
+var min = d.getMinutes();	//分，0 - 59
+var second = d.getSeconds();	//秒，0 - 59</pre>
+<h2>更改日期 </h2>
+<p>把 节中的 get 替换为 set 即为设置日期的函数。</p>
+<p>&nbsp;</p>
+<p>&nbsp; </p>
+<script language="javascript" src="index.js"></script>
+</body>
+</html>

@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312"><br>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+<title>一些古怪的问题 </title>
+</head>
+
+<body>
+<p id="title">一些古怪的问题 </p>
+<p>javascript中，有个BUG，将字符串&quot;&lt;/script&gt;&quot;赋给变量时会报错：字符串未正确结束，如下：</p>
+<pre> var str = &quot;&lt;/script&gt;&quot;</pre>
+<p> 可如下变通</p>
+<pre> var str = &quot;&lt;/script&quot; + &quot;&gt;&quot;; </pre>
+<p>&nbsp;</p>
+</body>
+</html>

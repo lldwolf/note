@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<script type="text/javascript" src="../css.js"></script>
+<title>C# 笔记</title>
+</head>
+
+<body>
+<p id="title">Excel的二次开发 (Open XML)</p>
+
+<h1>XML 文档结构</h1>
+<p>下图为 Spread Sheet 的类型结构图</p>
+<p><img alt="" src="images/open_xml_spreadsheet_type.gif" /></p>
+<p>在使用 Open XML 时，经常会遇到一些名字看上去差不多的类，例如 Worksheet, Sheet, WorksheetPart，而且各有用途，比 COM 组件库要复杂一些，我通过下图可简单地说明一下各类在 Open XML 的含义。</p>
+<p>我们可以认为一个 .xlsx 文件实际上是多个 XML 文件的组合，最上层的类是 SpreadsheetDocument，它代表一个 Excel 文档</p>
+<p><img alt="" src="img/open_xml_format.png" /></p>
+<h1>Workbook/Worksheet</h1>
+<h2>创建Workbook</h2>
+<p>与COM接口不同，使用 Open XML 创建的 Workbook 不会自动生成 Worksheet，所以本例在演示了如何创建 Workbook 并添加一个新的 Sheet。</p>
+<div id="accordion-workbook-create">
+<p><a href="#">查看代码</a></p>
+<pre class="code" data-type="csharp">using DocumentFormat.OpenXml;
+using DocumentFormat.OpenXml.Packaging;
+using DocumentFormat.OpenXml.Spreadsheet;
+
+public static void Create(string filepath)
+{
+	// Create a spreadsheet document by supplying the filepath.
+	// By default, AutoSave = true, Editable = true, and Type = xlsx.
+	SpreadsheetDocument spreadsheetDocument = SpreadsheetDocument.Create(filepath, SpreadsheetDocumentType.Workbook);
+
+	// Add a WorkbookPart to the document.
+	WorkbookPart workbookpart = spreadsheetDocument.AddWorkbookPart();
+	workbookpart.Workbook = new Workbook();
+
+	// Add a WorksheetPart to the WorkbookPart.
+	WorksheetPart worksheetPart = workbookpart.AddNewPart&lt;WorksheetPart&gt;();
+	worksheetPart.Worksheet = new Worksheet(new SheetData());
+
+	// Add Sheets to the Workbook.
+	Sheets sheets = spreadsheetDocument.WorkbookPart.Workbook.AppendChild&lt;Sheets&gt;(new Sheets());
+
+	// Append a new worksheet and associate it with the workbook.
+	Sheet sheet = new Sheet()
+	{
+		Id = spreadsheetDocument.WorkbookPart.GetIdOfPart(worksheetPart),
+		SheetId = 1,
+		Name = &quot;mySheet1&quot;
+	};
+	sheets.Append(sheet);
+
+	sheet = new Sheet()
+	{
+		Id = spreadsheetDocument.WorkbookPart.GetIdOfPart(worksheetPart),
+		SheetId = 2,
+		Name = &quot;mySheet2&quot;
+	};
+	sheets.Append(sheet);
+
+	workbookpart.Workbook.Save();
+
+	// Close the document.
+	spreadsheetDocument.Close();
+}</pre></div>
+<h2>插入Sheet</h2>
+<p>下例演示了如何打开一个现存的文件并在最前面插入一个新的 Sheet</p>
+<div id="accordion-insert-sheet">
+<p><a href="#">查看代码</a></p>
+<pre class="code" data-type="csharp">using DocumentFormat.OpenXml;
+using DocumentFormat.OpenXml.Packaging;
+using DocumentFormat.OpenXml.Spreadsheet;
+
+public static void InsertSheet(string docName)
+{
+	// Open the document for editing.
+	using (SpreadsheetDocument spreadSheet = SpreadsheetDocument.Open(docName, true))
+	{
+		// Add a blank WorksheetPart.
+		WorksheetPart newWorksheetPart = spreadSheet.WorkbookPart.AddNewPart&lt;WorksheetPart&gt;();
+		newWorksheetPart.Worksheet = new Worksheet(new SheetData());
+
+		Sheets sheets = spreadSheet.WorkbookPart.Workbook.GetFirstChild&lt;Sheets&gt;();
+		string relationshipId = spreadSheet.WorkbookPart.GetIdOfPart(newWorksheetPart);
+
+		// Get a unique ID for the new worksheet.
+		uint sheetId = 1;
+		if (sheets.Elements&lt;Sheet&gt;().Count() &gt; 0)
+		{
+			sheetId = sheets.Elements&lt;Sheet&gt;().Select(s =&gt; s.SheetId.Value).Max() + 1;
+		}
+
+		// Give the new worksheet a name.
+		string sheetName = &quot;Sheet&quot; + sheetId;
+
+		// Append the new worksheet and associate it with the workbook.
+		Sheet sheet = new Sheet() { Id = relationshipId, SheetId = sheetId, Name = sheetName };
+		//sheets.Append(sheet);
+		sheets.InsertBefore&lt;Sheet&gt;(sheet, sheets.Elements&lt;Sheet&gt;().First());
+	}
+}</pre></div>
+<h2>删除Sheet</h2>
+<p>下例演示了如何打开一个现存的文件并删除第一个 Sheet</p>
+<div id="accordion-delete-sheet">
+<p><a href="#">查看代码</a></p>
+<pre class="code" data-type="csharp">using DocumentFormat.OpenXml;
+using DocumentFormat.OpenXml.Packaging;
+using DocumentFormat.OpenXml.Spreadsheet;
+
+public static void DeleteSheet(string docName)
+{
+	// Open the document for editing.
+	using (SpreadsheetDocument spreadSheet = SpreadsheetDocument.Open(docName, true))
+	{
+		Sheets sheets = spreadSheet.WorkbookPart.Workbook.GetFirstChild&lt;Sheets&gt;();
+		sheets.RemoveChild&lt;Sheet&gt;(sheets.Elements&lt;Sheet&gt;().First());				
+	}
+}</pre></div>
+<h1>Range/Cell</h1>
+<h2>修改单元格内容</h2>
+<p>修改单元格内容是一种比较复杂的操作，尤其是对于字符串值，Excel 对于字符串数据采用了一种类似于 .net string 的处理机制，有一个区域 SharedStringTablePart 专门用于存放所有使用的字符串，然后单元格存放的是指向该字符串的引用。对于其它类型，如数字、日期则无此限制。</p>
+<p>下例演示了如何打开一个现存的文件并在指定单元格插入想应的内容</p>
+<div id="accordion-update-cell">
+<p><a href="#">查看代码</a></p>
+<pre class="code" data-type="csharp">using DocumentFormat.OpenXml;
+using DocumentFormat.OpenXml.Packaging;
+using DocumentFormat.OpenXml.Spreadsheet;
+
+public static string UpdateCell(string docName, string sheetName, string columnName, uint rowIndex, string text)
+{
+	// Open the document for editing.
+	using (SpreadsheetDocument spreadSheet = SpreadsheetDocument.Open(docName, true))
+	{
+		Sheets sheets = spreadSheet.WorkbookPart.Workbook.GetFirstChild&lt;Sheets&gt;();
+		Sheet sheet = sheets.Elements&lt;Sheet&gt;().FirstOrDefault(item =&gt; item.Name == sheetName);
+		if (sheet == null)
+		{
+			return &quot;Wrong sheet name&quot;;
+		}
+
+		SharedStringTablePart shareStringPart;
+		if (spreadSheet.WorkbookPart.GetPartsOfType&lt;SharedStringTablePart&gt;().Count() &gt; 0)
+		{
+			shareStringPart = spreadSheet.WorkbookPart.GetPartsOfType&lt;SharedStringTablePart&gt;().First();
+		}
+		else
+		{
+			shareStringPart = spreadSheet.WorkbookPart.AddNewPart&lt;SharedStringTablePart&gt;();
+		}
+
+		// Insert the text into the SharedStringTablePart.
+		int index = InsertSharedStringItem(text, shareStringPart);
+
+		WorksheetPart sheetPart = spreadSheet.WorkbookPart.GetPartById(sheet.Id) as WorksheetPart;
+		Cell cell = InsertCellInWorksheet(columnName, rowIndex, sheetPart);
+
+		// Set the value of cell A1.
+		cell.CellValue = new CellValue(index.ToString());
+		cell.DataType = new EnumValue&lt;CellValues&gt;(CellValues.SharedString);
+
+		// Save the new worksheet.
+		spreadSheet.WorkbookPart.Workbook.Save();
+	}
+
+	return null;
+}
+
+private static int InsertSharedStringItem(string text, SharedStringTablePart shareStringPart)
+{
+	// If the part does not contain a SharedStringTable, create one.
+	if (shareStringPart.SharedStringTable == null)
+	{
+		shareStringPart.SharedStringTable = new SharedStringTable();
+	}
+
+	int i = 0;
+
+	// Iterate through all the items in the SharedStringTable. If the text already exists, return its index.
+	foreach (SharedStringItem item in shareStringPart.SharedStringTable.Elements&lt;SharedStringItem&gt;())
+	{
+		if (item.InnerText == text)
+		{
+			return i;
+		}
+
+		i++;
+	}
+
+	// The text does not exist in the part. Create the SharedStringItem and return its index.
+	shareStringPart.SharedStringTable.AppendChild(new SharedStringItem(new DocumentFormat.OpenXml.Spreadsheet.Text(text)));
+	shareStringPart.SharedStringTable.Save();
+
+	return i;
+}
+
+// Given a column name, a row index, and a WorksheetPart, inserts a cell into the worksheet. 
+// If the cell already exists, returns it. 
+private static Cell InsertCellInWorksheet(string columnName, uint rowIndex, WorksheetPart worksheetPart)
+{
+	Worksheet worksheet = worksheetPart.Worksheet;
+	SheetData sheetData = worksheet.GetFirstChild&lt;SheetData&gt;();
+	string cellReference = columnName + rowIndex;
+
+	// If the worksheet does not contain a row with the specified row index, insert one.
+	Row row;
+	if (sheetData.Elements&lt;Row&gt;().Where(r =&gt; r.RowIndex == rowIndex).Count() != 0)
+	{
+		row = sheetData.Elements&lt;Row&gt;().Where(r =&gt; r.RowIndex == rowIndex).First();
+	}
+	else
+	{
+		row = new Row() { RowIndex = rowIndex };
+		sheetData.Append(row);
+	}
+
+	// If there is not a cell with the specified column name, insert one.  
+	if (row.Elements&lt;Cell&gt;().Where(c =&gt; c.CellReference.Value == columnName + rowIndex).Count() &gt; 0)
+	{
+		return row.Elements&lt;Cell&gt;().Where(c =&gt; c.CellReference.Value == cellReference).First();
+	}
+	else
+	{
+		// Cells must be in sequential order according to CellReference. Determine where to insert the new cell.
+		Cell refCell = null;
+		foreach (Cell cell in row.Elements&lt;Cell&gt;())
+		{
+			if (string.Compare(cell.CellReference.Value, cellReference, true) &gt; 0)
+			{
+				refCell = cell;
+				break;
+			}
+		}
+
+		Cell newCell = new Cell() { CellReference = cellReference };
+		row.InsertBefore(newCell, refCell);
+
+		worksheet.Save();
+		return newCell;
+	}
+}</pre></div>
+<p>上例是更改为字符串的情况，如果使用数字，会简单一些，关键点为不再需要有关 SharedStringTablePart 的操作，在写入值时使用如下示例代码。</p>
+<pre class="code" data-type="csharp">    // Set the cell value to be a numeric value of 100.
+    newCell.CellValue = new CellValue("100");
+    newCell.DataType = new EnumValue&lt;CellValues&gt;(CellValues.Number);</pre>
+<h2>删除单元格</h2>
+<p>使用 XML 的操作方式，意味着删除单元格内容不再像以前以前简单地对单元格赋值为空，而是真正地将单元格从 XML 中删掉</p>
+
+<p>&nbsp;</p>
+
+</body>
+</html>

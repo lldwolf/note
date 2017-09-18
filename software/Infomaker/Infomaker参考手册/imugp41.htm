@@ -1,0 +1,200 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+Administering the database </TITLE>
+</HEAD>
+<BODY>
+<A NAME="CCJBBAIE"></A><h1>Administering the database </h1>
+<A NAME="TI1148"></A><p>Administering your databases with the Database painter means
+having the ability to:<A NAME="TI1149"></A>
+<ul>
+<li class=fi>Create SQL statements to send to the DBMS for immediate execution</li>
+<li class=ds>Control access to the current database
+</li>
+</ul>
+</p>
+<A NAME="TI1150"></A><h2>Creating and executing SQL statements</h2>
+<A NAME="TI1151"></A><p>The Database painter's Interactive SQL view is a
+SQL editor in which you can enter and execute SQL statements. The
+view provides all editing capabilities needed for writing and modifying
+SQL statements. You can cut, copy, and paste text; search for and
+replace text; and paint SQL statements. You can also set editing
+properties to make reading your SQL files easier.</p>
+<A NAME="CCJCFJIF"></A><h3>Building and executing SQLstatements</h3>
+<A NAME="TI1152"></A><p>You can use the Interactive SQL view to build SQL statements
+and execute them immediately. The view acts as a notepad in which
+you can enter SQL statements.</p>
+<A NAME="TI1153"></A><h4>Creating stored procedures</h4>
+<A NAME="TI1154"></A><p>You can use the Interactive SQL view to create stored procedures
+or triggers, but make sure that the painter's SQL statement
+terminator character is not the same as the terminator character
+used in the stored procedure language of your DBMS.</p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>About the statement terminator</span> <A NAME="TI1155"></A>By default, InfoMaker uses the semicolon as the SQL statement
+terminator. You can override the semicolon by specifying a different
+terminator character in the Database painter. To change the terminator
+character, select Design&gt;Options from the Database painter's
+menu bar.</p>
+<A NAME="TI1156"></A><h4>Controlling comments</h4>
+<A NAME="TI1157"></A><p>By default, InfoMaker strips off comments when it sends SQL
+to the DBMS. You can have comments included by clearing the checkmark
+next to Strip Comments in the context menu of the Interactive SQL
+view.</p>
+<A NAME="TI1158"></A><h4>Entering SQL</h4>
+<A NAME="TI1159"></A><p>You can enter a SQL statement in four ways:<A NAME="TI1160"></A>
+<ul>
+<li class=fi>Pasting the statement</li>
+<li class=ds>Typing the statement in the view</li>
+<li class=ds>Opening a text file containing the SQL</li>
+<li class=ds>Dragging a procedure or function from the Objects
+view
+</li>
+</ul>
+</p>
+<p><b>Pasting SQL</b>   You can paste SELECT, INSERT, UPDATE, and DELETE statements
+to the view. Depending on which kind of statement you want to paste, InfoMaker displays
+dialog boxes that guide you through painting the full statement.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To paste a SQL statement to the workspace:</p>
+<ol><li class=fi>
+Click the Paste SQL button in the PainterBar.<br><br>
+<i>or</i>
+<br><br>
+Select Paste SQL from the Edit or popup menu.<br><br>
+The SQL Statement Type dialog box displays listing the types
+of SQL statements you can use.<br><br></li>
+<li class=ds>
+Double-click the appropriate icon to select the
+statement type.<br><br>
+The Select Table dialog box displays.<br><br></li>
+<li class=ds>
+Select the table(s) you will reference in the
+SQL statement.<br><br>
+You go to the Select, Insert, Update, or Delete painter, depending
+on the type of SQL statement you are pasting. The Insert, Update,
+and Delete painters are similar to the Select painter, but only
+the appropriate tabs display in the SQL toolbox at the bottom of
+the workspace.<br><br>
+For more information about the Select painter,
+see <A HREF="imugp47.htm#CFHDGEIA">"Defining the data source "</A>. <br><br></li>
+<li class=ds>
+Follow the procedure for the statement you are
+pasting:<br><br><A NAME="TI1161"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI1162"></A>Type of statement</th>
+<th align="left" valign=bottom><A NAME="TI1163"></A>What you do</th>
+</tr>
+<tr><td valign=top><A NAME="TI1164"></A>SELECT</td>
+<td valign=top><A NAME="TI1165"></A>Define the statement exactly as in the
+Select painter when building a view. You choose the columns to select.
+You can define computed columns, specify sorting and joining criteria, and
+WHERE, GROUP BY, and HAVING criteria<A NAME="TI1166"></A>For more information, see <A HREF="imugp39.htm#CCJCAHJF">"Working with database views "</A></td>
+</tr>
+<tr><td valign=top><A NAME="TI1167"></A>INSERT</td>
+<td valign=top><A NAME="TI1168"></A>Type the values to insert into each column.
+You can insert as many rows as you want</td>
+</tr>
+<tr><td valign=top><A NAME="TI1169"></A>UPDATE</td>
+<td valign=top><A NAME="TI1170"></A>First specify the new values for the
+columns in the Update Column Values dialog box. Then specify the
+WHERE criteria to indicate which rows to update</td>
+</tr>
+<tr><td valign=top><A NAME="TI1171"></A>DELETE</td>
+<td valign=top><A NAME="TI1172"></A>Specify the WHERE criteria to indicate
+which rows to delete</td>
+</tr>
+</table>
+</li>
+<li class=ds>
+When you have completed painting the SQL statement,
+click the Return button in the PainterBar in the Select, Insert,
+Update, or Delete painter.<br><br>
+You return to the Database painter with the SQL statement
+pasted into the ISQL view.<br><br></li></ol>
+<br><p><b>Typing SQL</b>   Rather than paste, you can simply type one or more SQL statements
+directly in the ISQL view.</p>
+<A NAME="TI1173"></A><p>You can enter most statements supported by your DBMS. This
+includes statements you can paint as well as statements you cannot
+paint (such as a database stored procedure or CREATE TRIGGER statement).
+You cannot enter certain statements that could destabilize the InfoMaker development environment.
+These include the SET statement and the USE <i>database</i>
+ statement.</p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Sybase SQL Server stored procedures</span> <A NAME="TI1174"></A>When you use the Database painter to execute a Sybase SQL
+Server system stored procedure, you <i>must</i>
+ start
+the syntax with the keyword EXEC or EXECUTE. For example, enter <b>EXEC
+SP_LOCK</b>. You cannot execute the stored
+procedure simply by entering its name. </p>
+<p><b>Importing SQL from a text file</b>   You can import SQL that has been saved in a text file into
+the Database painter.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To read SQL from a file:</p>
+<ol><li class=fi>
+Put the insertion point where you want
+to insert the SQL.<br><br></li>
+<li class=ds>
+Select Paste Special&gt;From File from the
+Edit or popup menu.<br><br>
+The File Import dialog box displays.<br><br></li>
+<li class=ds>
+Select the file containing the SQL and click OK.<br><br></li></ol>
+<br><p><b>Dragging a procedure or function from the Objects
+view</b>   From the tree view in the Objects view, you can select an
+existing procedure or function that contains a SQL statement you
+want to enter and drag it to the Interactive SQL view. </p>
+<A NAME="TI1175"></A><h4>Explaining SQL</h4>
+<A NAME="TI1176"></A><p>Sometimes there is more than one way to code SQL statements
+to obtain the results you want. When this is the case, you can use
+Explain SQL on the Design menu to help you select the most efficient
+method. Explain SQL displays information about the path that InfoMaker will
+use to execute the statements in the SQL Statement Execution Plan
+dialog box. This is most useful when you are retrieving or updating
+data in an indexed column or using multiple tables.</p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>DBMS-specific information</span> <A NAME="TI1177"></A>The information displayed in the SQL Statement Execution Plan
+dialog box depends on your DBMS.</p>
+<A NAME="TI1178"></A>For more about the SQL execution plan, see
+your DBMS documentation.</p>
+<A NAME="TI1179"></A><h4>Executing SQL</h4>
+<A NAME="TI1180"></A><p>When you have the SQL statements you want in the workspace,
+you can submit them to the DBMS.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To execute the SQL:</p>
+<ol><li class=fi>
+Click the Execute button.<br><br>
+<i>or</i>
+<br><br>
+Select Design&gt;Execute SQL from the menu bar.<br><br></li></ol>
+<br><A NAME="TI1181"></A><p>If the SQL retrieves data, the data appears in grid format
+in the Results view. If there is a database error, you see a message
+box describing the problem.</p>
+<A NAME="TI1182"></A><p>For a description of what you can do with
+the data, see <A HREF="imugp40.htm#CCJBGABA">"Manipulating data "</A>.</p>
+<A NAME="TI1183"></A><h3>Customizing the editor</h3>
+<A NAME="TI1184"></A><p>The Interactive SQL view provides the same editing capabilities
+as the file editor. It also has Script, Font, and Coloring properties
+that you can change to make SQL files easier to read. With no change
+in properties, SQL files have black text on a white background and
+a tab stop setting of 3 for indentation.</p>
+<A NAME="TI1185"></A><h4>Setting Script and Font properties</h4>
+<A NAME="TI1186"></A><p>Select Design&gt;Options from the menu bar to open the
+editor's property sheet. The Script and Font properties
+are the same as those you can set for the File Editor.</p>
+<A NAME="TI1187"></A><p>For more information, see "Using the file
+editor" on page 32. </p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Editor properties apply elsewhere</span> <A NAME="TI1188"></A>When you set Script and Font properties for the Database painter,
+the settings also apply to the file editor.</p>
+<A NAME="TI1189"></A><h4>Setting Coloring properties</h4>
+<A NAME="TI1190"></A><p>You can set the text color and background color for SQL styles
+(such as data types and keywords) so that the style will stand out
+and the SQL code will be more readable. You set Coloring properties
+on the Coloring tab page.</p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Enabling syntax coloring</span> <A NAME="TI1191"></A>Be sure the Enable Syntax Coloring checkbox is selected before
+you set colors for SQL styles. You can turn off all Coloring properties
+by clearing the checkbox.</p>
+<A NAME="TI1192"></A><h2>Controlling access to the current database</h2>
+<A NAME="TI1193"></A><p>The Database painter's Design menu provides access
+to a series of dialog boxes you can use to control access to the
+current database. In some DBMSs, for example, you can assign table
+access privileges to users and groups.</p>
+<A NAME="TI1194"></A><p>Which menu items display on the Design menu and which dialog
+boxes display depend on your DBMS.</p>
+<A NAME="TI1195"></A><p>For information about support for security
+options in your DBMS, see <i>Connecting to Your Database</i>
+ and
+your DBMS documentation.</p>
+

@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>Session的会话状态</title>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+<p id="title">Session的会话状态</p>
+
+<h1> 会话状态的功能</h1>
+<p>HTTP 是一个无状态的协议，所以它不自动指示一个请求序列是否都来自相同的客户端，甚至不指示单个浏览器实例是否仍活跃地查看某个页或站点。而使用ASP.NET内置的会话状态功能，可以使用我们做到</p>
+<ol>
+  <li>对从单个浏览器客户端到服务器上逻辑应用程序会话的请求进行自动识别和分类。 </li>
+  <li>将会话范围的数据存储在服务器上以供跨多个浏览器请求使用。 </li>
+  <li>引发适当的可在应用程序代码中处理的会话生存期管理事件（Session_OnStart、Session_OnEnd 等）<br />
+  </li>
+</ol>
+<h1>会话状态的标识</h1>
+<p> 在创建会话时，服务器会为每一个会话生成一个单独的标识。该标识用 120 位的 SessionID 字符串表示，该字符串只包含 URL 中所允许使用的 ASCII 字符。SessionID 值是使用保证唯一性和随机性的算法生成的，其中保证唯一性的目的是确保会话不冲突，保证随机性的目的是确保怀有恶意的用户不能使用新的 SessionID 来计算现有会话的 SessionID。</p>
+<h1>会话状态的存储方式</h1>
+<p> 会话状态有三种存储方式</p>
+<ol>
+  <li> 1、进程内会话状态模式(Inproc)：当我们新建一个WEB程序后默认的采用的进程内会话状态模式，这也是大家所普遍采用的模式。在这种模式下会话状态存储在本地的 ASP.NET 辅助进程中，可以说到目前为止，进程内会话状态模式可能是最快的访问选项。但会话中存储的数据越多，Web 服务器所消耗的内存就越多，这样会潜在地增加性能降低的风险。</li>
+  <li>.NET 状态服务器模式(StateServer)：会话状态存储在远程进程中（例如，名为 aspnet_state.exe 
+    的 indows NT 服务中）</li>
+  <li>SQL 模式(SQLServer)：会话状态存储到由 SQL Server 管理的专用数据库表中。</li>
+</ol>
+<p>.NET 状态服务器模式和SQL 模式都可以称为进程外会话模式，当储存数据时，需要将数据序列化储存到外部储备库，当读取和数据时，需要将数据反序列化，复制到本地会话词典中，所以请求导致性能下降了 15%（进程外）到 25% (SQL Server)。注意这只是一种粗略的估计。但是在进程外存储方案中，会话状态存活的时间较长，使应用程序的功能更强大，因为它可以防止 Microsoft? Internet 信息服务 (IIS) 和
+  ASP.NET 失败。通过将会话状态与应用程序相分离，您还可以更容易地将现有应用程序扩展到 Web Farm 
+  和 Web Garden 体系结构中。另外，会话状态存储在外部进程中，从根本上消除了由于进程循环而导致的周期性数据丢失的风险。</p>
+<h1>会话状态的配置</h1>
+<p>会话状态的配置是通过设置Web.config文件的&lt;sessionState&gt;节来实现的。下面介绍一下三种会话状态的具体配置方法</p>
+<h2> 进程内模式</h2>
+<p> 进程内模式是默认的会话状态模式。若要使用进程内模式，请将 &lt;sessionState&gt; 元素的 mode 属性设置为 Inproc。下面显示了进程内模式的一个配置设置示例。</p>
+<pre class="code" data-type="xml">configuration&gt;
+	&lt;system.web&gt;
+		&lt;sessionState mode=&quot;Inproc&quot;
+			cookieless=&quot;false&quot;
+			timeout=&quot;20&quot;/&gt;
+		&lt;/sessionState&gt;
+	&lt;/system.web&gt;
+&lt;/configuration&gt;</pre>
+<h2>状态服务器模式</h2>
+<p> 若要使用状态服务器，必须首先确保 ASP.NET 状态服务运行在用于会话存储的远程服务器上。此服务与
+ASP.NET 和 Visual Studio .NET 一起安装在以下位置：</p>
+<p>  systemroot\Microsoft.NET\Framework\versionNumber\aspnet_state.exe </p>
+<p> 然后，在应用程序的 Web.config 文件中，将 &lt;sessionState&gt; 元素的 mode 属性设置为 StateServer。最后，将 connectionString 属性设置为 </p>
+<p>tcpip=serverName:portNumber</p>
+<p> 下面是状态服务器模式的一个配置设置示例。</p>
+<pre class="code" data-type="xml">configuration&gt;
+	&lt;system.web&gt;
+		&lt;sessionState mode=&quot;StateServer&quot;
+			stateConnectionString=&quot;tcpip=dataserver:42424&quot;
+			cookieless=&quot;false&quot;
+			timeout=&quot;20&quot;/&gt;
+		&lt;/sessionState&gt;
+	&lt;/system.web&gt;
+&lt;/configuration&gt;</pre>
+<h2>SQL Server 模式</h2>
+<p> 若要使用 SQL Server，首先在将存储会话状态的 SQL Server 计算机上，运行 InstallSqlState.sql 
+  或 InstallPersistSqlState.sql。两个脚本均创建一个名为 ASPState 的数据库，它包含若干存储过程。两个脚本间的差异在于放置 ASPStateTempApplications 和 ASPStateTempSessions 表的位置。InstallSqlState.sql 脚本将这些表添加到 TempDB 数据库，该数据库在计算机重新启动时将丢失数据。相反，InstallPersistSqlState.sql 脚本将这些表添加到 ASPState 数据库，该数据库允许在计算机重新启动时保留会话数据。</p>
+<p>默认情况下，两个脚本文件均安装在下面的位置：</p>
+<p>systemroot\Microsoft.NET\Framework\versionNumber</p>
+<p>然后，在应用程序的 Web.config 文件中，将 &lt;sessionState&gt; 元素的 mode 属性设置为 SQLServer。最后，将 sqlConnectionString 属性设置为 Integrated Security=SSPI;data source=serverName;。</p>
+<p>下面显示了 SQL Server 模式的一个配置设置示例。</p>
+<pre class="code" data-type="xml">configuration&gt;
+	&lt;system.web&gt;
+		&lt;sessionState mode=&quot;SQLServer&quot;
+			stateConnectionString=&quot;Integrated Security=SSPI;data source=dataserver;&quot;
+			cookieless=&quot;false&quot;
+			timeout=&quot;20&quot;/&gt;
+		&lt;/sessionState&gt;
+	&lt;/system.web&gt;
+&lt;/configuration&gt;</pre>
+<p>在 SQL Server 模式中，也可以将会话状态配置为在故障转移群集中工作。故障转移群集是两个或更多相同的冗余 Web 服务器，它们将会话数据存储在一台单独的计算机上的 SQL Server 数据库中。如果一个 Web 服务器出现故障，群集中的另一个服务器会接管它的工作，为请求提供服务，会话数据不会丢失。若要配置故障转移群集，请将 Web 服务器的 Web.config 文件中的 &lt;machinekey&gt; 元素设置为相同的值。然后将 Web 服务器的 SQL 连接字符串设置为指向计算机上存储会话数据的 SQL Server 数据库。</p>
+<h1>会话状态的访问</h1>
+<p>在ASP.NET Web窗体中，可以直接通过Session集合来实现对会话状态的访问。为了与 ASP 的早期版本兼容，还可以通过应用程序对象上的 Session.Contents 属性来实现对会话状态的访问。若想在单纯的类中访问Session，可通过调用System.Web.HttpContext.Current.Session静态属性获取。</p>
+<p>下面的示例显示在第一个网页将两个值写入Session集合，然后再在第二个网页读取Session集合。注：此处省略了页代码。</p>
+<p> 第一个网页，将值写入Session集合</p>
+<pre class="code" data-type="csharp">//发送
+ArrayList arr = new ArrayList();
+...
+Session[&quot;parm&quot;] = arr;
+
+//接收
+ArrayList arr = Session[&quot;parm&quot;] as ArrayList;<br />Session.Remove(&quot;parm&quot;);
+</pre>
+<p>注意，在进程内模式，未发生真正的序列化和反序列化，所以对象作为各自类的活动实例存储在会话状态中。而在进程外会话模式，因为使用了序列化和反序列化，所以你要根据情况对数据类型进行转换。如对日期值执行序列化操作，日期应为 Int64 类型。</p>
+<p>如果要定义可序列化的类，最简单的办法是在类的声明语句前加上[Seriazable]定义。</p>
+<h1>会话生存期管理事件</h1>
+<p> 会话生存期管理事件有两个Session_OnStart事件和Session_OnEnd事件，你可以在Global.asax.cs文件中对它们进行设置</p>
+<p> 1、Session_OnStart事件</p>
+<p> 当从单个浏览器客户端连接到服务器上时，就会触发Session_OnStart事件，它标志着会话的开始，在此后的浏览过程中，将不在触发该事件，除非此次会话超时或被放弃。Session_OnStart 事件是设置会话期变量的最佳时机，因为在访问任何页之前都会先设置它们。<br />
+  <br />
+示例：下面的示例是比较常用到的统计在线人数的Session_OnStart 事件代码：</p>
+<p> Sub Session_Start(ByVal sender As Object, ByVal e As EventArgs)<br />
+  '当事件发生时，将在线用户的人数加1<br />
+  Application(&quot;usercount&quot;) = Application(&quot;usercount&quot;) + 1<br />
+  End Sub<br />
+</p>
+<p>2、Session_OnEnd事件<br />
+  Session_OnEnd 事件在会话被放弃或超时发生，它标志着事件的结束。但<br />
+  请注意，只有 InProc 模式支持该事件。你可以通过Web.config文件的<br />
+&lt;sessionState&gt;节的timeout属性来指定超时时限,如果用户在该超时时<br />
+  限之内(以分钟为单位，默认是20分<br />
+  钟）不刷新或请求网页，则该会话将终止。可以利用Session_OnEnd 事<br />
+  件做一些清理工作。</p>
+<p>示例：下面的示例是比较常用到的统计在线人数的Session_OnEnd 事件代码：</p>
+<p> Sub Session_End(ByVal sender As Object, ByVal e As EventArgs)<br />
+  Application(&quot;usercount&quot;) = Application(&quot;usercount&quot;) - 1<br />
+  End Sub</p>
+<h1>整个站点默认禁用 Session，而某个页面不禁用的做法</h1>
+<p>先说一个不正确的做法，整个站点的 Web.config 被设置为：</p>
+<pre class="code" data-type="xml">configuration&gt;
+ &lt;system.web&gt;
+  &lt;sessionState mode=&quot;Off&quot;/&gt;
+ &lt;/system.web&gt;
+&lt;/configuration&gt;</pre>
+<p>在单独需要用Sesssion的页面，设置</p>
+<pre class="code" data-type="xml">%@ Page  EnableSessionState=&quot;True&quot;%&gt;</pre>
+<p>这种做法是错误的，你会发现仍然是错误：只有在配置文件或 Page 指令中将启用会话状态设置为真时，才可以使用会话状态，后面告诉原因。</p>
+<p>正确的做法是
+Web.config 节sessionState 不要使用下面配置：</p>
+<pre class="code" data-type="xml">sessionState mode=&quot;Off&quot;/&gt;</pre>
+<p>而是用其他几种配置方式。（不设置的默认配置是 InProc。）然后在在这个 Web.config 中设置：</p>
+<pre class="code" data-type="xml">configuration&gt;
+ &lt;system.web&gt;
+   &lt;pages enableSessionState=&quot;false&quot; /&gt;
+ &lt;/system.web&gt;
+&lt;/configuration&gt;</pre>
+<p>这样整个站点的页面默认是不打开Session的。在你需要的页面中使用如下 Page 设置：</p>
+<pre class="code" data-type="xml">%@ Page EnableSessionState=&quot;True&quot;%&gt;</pre>
+<p>或者在你需要打开Session的目录下，设置一个 web.config：</p>
+<pre class="code" data-type="xml">configuration&gt;
+ &lt;system.web&gt;
+   &lt;pages enableSessionState=&quot;true&quot; /&gt;
+ &lt;/system.web&gt;
+&lt;/configuration&gt;</pre>
+<p>分析原因：&lt;sessionState mode=&quot;Off&quot;/&gt; 是整个站点禁用了Session，你无法作特列处理。</p>
+<p>另外，通过访问 System.Web.SessionState.HttpSessionState.Mode 属性的值，可以查看当前选定的会话状态。</p>
+<p>上述知识点，不仅仅适用于 ASP.net 1.0 1.1 也适用于 2.0</p>
+<h1>常见问题</h1>
+<h2>Session变量有时候不能工作</h2>
+<p>第一，如果客户端不允许cookie操作，session将失效。因为session是依赖于cookie的。</p>
+<p>第二，session有失效时间的设定。缺省的设置是20分钟。你可以这样修改它：Web directory -&gt; Properties -&gt; Virtual directory -&gt; Application settings -&gt; Configuration -&gt; App Options -&gt; Session timeout。或者在ASP中，写上这样的代码：Session.timeout=60 。</p>
+<p>第三，session是和具体的Web Application相关的。如果用户从/products/default.asp浏览到/jobs/default.asp，也可能造成session的重新创建。</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+
+</body>
+</html>

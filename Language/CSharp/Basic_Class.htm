@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+    <script type="text/javascript" src="../../mylib/js/css.js"></script>
+    <title>一些基本的类</title>
+</head>
+
+<body>
+    <p id="title">一些基本的类</p>
+    <h1>DateTime</h1>
+    <h2>简介</h2>
+    <p>时间日期类</p>
+    <h2>获取当前时间</h2>
+    <pre class="code" data-type="csharp">//获取当前日期和时间
+DateTime dt1 = DateTime.Now;
+
+//获取当前日期
+DateTime dt = DateTime.Today;</pre>
+    <h2>创建指定的时间 </h2>
+    <p>可使用如下几种构造函数</p>
+    <pre class="code" data-type="csharp">//将 DateTime 结构的新实例初始化为指定的年、月和日
+public DateTime(
+   int year,
+   int month,
+   int day
+);
+
+//将 DateTime 结构的新实例初始化为指定的年、月、日、小时、分钟和秒
+public DateTime(
+   int year,
+   int month,
+   int day,
+   int hour,
+   int minute,
+   int second
+);
+
+//将 DateTime 结构的新实例初始化为指定的年、月、日、小时、分钟、秒和毫秒
+public DateTime(
+   int year,
+   int month,
+   int day,
+   int hour,
+   int minute,
+   int second,
+   int millisecond
+);</pre>
+    <h2>获取某个部分的值</h2>
+    <p>可使用以下属性</p>
+    <table style="width: 90%">
+        <tr>
+            <th style="width: 20%">属性</th>
+            <th style="width: 80%">说明</th>
+        </tr>
+        <tr>
+            <td>Date</td>
+            <td>获取此实例的日期部分，即去掉时间的部分，亦为DateTime型，与 TimeofDay 属性相对 </td>
+        </tr>
+        <tr>
+            <td>Day</td>
+            <td>获取此实例所表示的日期为该月中的第几天</td>
+        </tr>
+        <tr>
+            <td>DayOfWeek</td>
+            <td>获取此实例所表示的日期是星期几</td>
+        </tr>
+        <tr>
+            <td>DayOfYear</td>
+            <td>获取此实例所表示的日期是该年中的第几天</td>
+        </tr>
+        <tr>
+            <td>Hour</td>
+            <td>获取此实例所表示日期的小时部分</td>
+        </tr>
+        <tr>
+            <td>Millisecond</td>
+            <td>获取此实例所表示日期的毫秒部分</td>
+        </tr>
+        <tr>
+            <td>Minute</td>
+            <td>获取此实例所表示日期的分钟部分</td>
+        </tr>
+        <tr>
+            <td>Month</td>
+            <td>获取此实例所表示日期的月份部分</td>
+        </tr>
+        <tr>
+            <td>Second</td>
+            <td>获取此实例所表示日期的秒部分</td>
+        </tr>
+        <tr>
+            <td>TimeOfDay</td>
+            <td>获取此实例的当天的时间，与 Date 属性相对</td>
+        </tr>
+        <tr>
+            <td>Year</td>
+            <td>获取此实例所表示日期的年份部分</td>
+        </tr>
+    </table>
+    <h2>按指定格式转化为字符串</h2>
+    <p>使用toString方法，其格式字符串定义如下：</p>
+    <table style="width: 80%">
+
+        <tr>
+            <th style="width: 50%">格式模式</th>
+            <th style="width: 50%">说明</th>
+        </tr>
+
+        <tr>
+            <td>d</td>
+            <td>月中的某一天。一位数的日期没有前导零。</td>
+        </tr>
+
+        <tr>
+            <td>dd</td>
+            <td>月中的某一天。一位数的日期有一个前导零。</td>
+        </tr>
+
+        <tr>
+            <td>ddd</td>
+            <td>周中某天的缩写名称，在 AbbreviatedDayNames 中定义。</td>
+        </tr>
+
+        <tr>
+            <td>dddd</td>
+            <td>周中某天的完整名称，在 DayNames 中定义。</td>
+        </tr>
+
+        <tr>
+            <td>M</td>
+            <td>月份数字。一位数的月份没有前导零。</td>
+        </tr>
+
+        <tr>
+            <td>MM</td>
+            <td>月份数字。一位数的月份有一个前导零。</td>
+        </tr>
+
+        <tr>
+            <td>MMM</td>
+            <td>月份的缩写名称，在 AbbreviatedMonthNames 中定义。</td>
+        </tr>
+
+        <tr>
+            <td>MMMM</td>
+            <td>月份的完整名称，在 MonthNames 中定义。</td>
+        </tr>
+
+        <tr>
+            <td>y</td>
+            <td>不包含纪元的年份。如果不包含纪元的年份小于 10，则显示不具有前导零的年份。</td>
+        </tr>
+
+        <tr>
+            <td>yy</td>
+            <td>不包含纪元的年份。如果不包含纪元的年份小于 10，则显示具有前导零的年份。</td>
+        </tr>
+
+        <tr>
+            <td>yyyy</td>
+            <td>包括纪元的四位数的年份。</td>
+        </tr>
+
+        <tr>
+            <td>gg</td>
+            <td>时期或纪元。如果要设置格式的日期不具有关联的时期或纪元字符串，则忽略该模式。</td>
+        </tr>
+
+        <tr>
+            <td>h</td>
+            <td>12 小时制的小时。一位数的小时数没有前导零。</td>
+        </tr>
+
+        <tr>
+            <td>hh</td>
+            <td>12 小时制的小时。一位数的小时数有前导零。</td>
+        </tr>
+
+        <tr>
+            <td>H</td>
+            <td>24 小时制的小时。一位数的小时数没有前导零。</td>
+        </tr>
+
+        <tr>
+            <td>HH</td>
+            <td>24 小时制的小时。一位数的小时数有前导零。</td>
+        </tr>
+
+        <tr>
+            <td>m</td>
+            <td>分钟。一位数的分钟数没有前导零。</td>
+        </tr>
+
+        <tr>
+            <td>mm</td>
+            <td>分钟。一位数的分钟数有一个前导零。</td>
+        </tr>
+
+        <tr>
+            <td>s</td>
+            <td>秒。一位数的秒数没有前导零。</td>
+        </tr>
+
+        <tr>
+            <td>ss</td>
+            <td>秒。一位数的秒数有一个前导零。</td>
+        </tr>
+
+        <tr>
+            <td>f</td>
+            <td>秒的小数精度为一位。其余数字被截断。</td>
+        </tr>
+
+        <tr>
+            <td>ff</td>
+            <td>秒的小数精度为两位。其余数字被截断。</td>
+        </tr>
+
+        <tr>
+            <td>fff</td>
+            <td>秒的小数精度为三位。其余数字被截断。</td>
+        </tr>
+
+        <tr>
+            <td>ffff</td>
+            <td>秒的小数精度为四位。其余数字被截断。</td>
+        </tr>
+
+        <tr>
+            <td>fffff</td>
+            <td>秒的小数精度为五位。其余数字被截断。</td>
+        </tr>
+
+        <tr>
+            <td>ffffff</td>
+            <td>秒的小数精度为六位。其余数字被截断。</td>
+        </tr>
+
+        <tr>
+            <td>fffffff</td>
+            <td>秒的小数精度为七位。其余数字被截断。</td>
+        </tr>
+
+        <tr>
+            <td>t</td>
+            <td>在 AMDesignator 或 PMDesignator 中定义的 AM/PM 指示项的第一个字符（如果存在）。</td>
+        </tr>
+
+        <tr>
+            <td>tt</td>
+            <td>在 AMDesignator 或 PMDesignator 中定义的 AM/PM 指示项（如果存在）。</td>
+        </tr>
+
+        <tr>
+            <td>z</td>
+            <td>时区偏移量（“+”或“-”后面仅跟小时）。一位数的小时数没有前导零。例如，太平洋标准时间是“-8”。</td>
+        </tr>
+
+        <tr>
+            <td>zz</td>
+            <td>时区偏移量（“+”或“-”后面仅跟小时）。一位数的小时数有前导零。例如，太平洋标准时间是“-08”。</td>
+        </tr>
+
+        <tr>
+            <td>zzz</td>
+            <td>完整时区偏移量（“+”或“-”后面跟有小时和分钟）。一位数的小时数和分钟数有前导零。例如，太平洋标准时间是“-08:00”。</td>
+        </tr>
+
+        <tr>
+            <td>:</td>
+            <td>在 TimeSeparator 中定义的默认时间分隔符。</td>
+        </tr>
+
+        <tr>
+            <td>/</td>
+            <td>在 DateSeparator 中定义的默认日期分隔符。</td>
+        </tr>
+
+        <tr>
+            <td>% <i>c</i> </td>
+            <td>其中 <i>c</i> 是格式模式（如果单独使用）。如果格式模式与原义字符或其他格式模式合并，则可以省略“%”字符。</td>
+        </tr>
+
+        <tr>
+            <td>\ <i>c</i> </td>
+            <td>其中 <i>c</i> 是任意字符。照原义显示字符。若要显示反斜杠字符，请使用“\\”。</td>
+        </tr>
+    </table>
+    <p>
+        <img src="images/note.jpg" style="width: 20" height="20">注意：字符 / 表示默认的日期分隔符，通常情况下为字符“-”，若想实际显示该字符，需使用转义符，例如：</p>
+    <pre class="code" data-type="csharp">Console.Write(DateTime.Now.ToString(@&quot;MM\/dd\/yyyy&quot;));</pre>
+    <p>如想转成控制面板中设置的格式，使用如下代码：</p>
+    <pre class="code" data-type="csharp">DateTimeObj.ToString(&quot;d&quot;, CultureInfo.CurrentCulture)</pre>
+    <h2>时区变换</h2>
+    <p>下面的代码可以将当前的本地时间转换为美国东部时间</p>
+    <pre class="code" data-type="csharp">DateTime usTime = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("US Eastern Standard Time"));</pre>
+    <p>至于各个时间的ID，可以通过下面的代码来获取</p>
+    <pre class="code" data-type="csharp">foreach (var tzi in TimeZoneInfo.GetSystemTimeZones())
+{
+	System.Diagnostics.Debug.WriteLine(tzi.Id);
+}</pre>
+    <p>列表如下</p>
+    <pre class="code" data-collapsed="true" title="Time Zone Id List">Dateline Standard Time
+UTC-11
+Hawaiian Standard Time
+Alaskan Standard Time
+Pacific Standard Time (Mexico)
+Pacific Standard Time
+US Mountain Standard Time
+Mountain Standard Time (Mexico)
+Mountain Standard Time
+Central America Standard Time
+Central Standard Time
+Central Standard Time (Mexico)
+Canada Central Standard Time
+SA Pacific Standard Time
+Eastern Standard Time
+US Eastern Standard Time
+Venezuela Standard Time
+Paraguay Standard Time
+Atlantic Standard Time
+Central Brazilian Standard Time
+SA Western Standard Time
+Pacific SA Standard Time
+Newfoundland Standard Time
+E. South America Standard Time
+Argentina Standard Time
+SA Eastern Standard Time
+Greenland Standard Time
+Montevideo Standard Time
+Bahia Standard Time
+UTC-02
+Mid-Atlantic Standard Time
+Azores Standard Time
+Cape Verde Standard Time
+Morocco Standard Time
+UTC
+GMT Standard Time
+Greenwich Standard Time
+W. Europe Standard Time
+Central Europe Standard Time
+Romance Standard Time
+Central European Standard Time
+W. Central Africa Standard Time
+Namibia Standard Time
+Jordan Standard Time
+GTB Standard Time
+Middle East Standard Time
+Egypt Standard Time
+Syria Standard Time
+E. Europe Standard Time
+South Africa Standard Time
+FLE Standard Time
+Turkey Standard Time
+Israel Standard Time
+Kaliningrad Standard Time
+Libya Standard Time
+Arabic Standard Time
+Arab Standard Time
+Belarus Standard Time
+Russian Standard Time
+E. Africa Standard Time
+Iran Standard Time
+Arabian Standard Time
+Azerbaijan Standard Time
+Russia Time Zone 3
+Mauritius Standard Time
+Georgian Standard Time
+Caucasus Standard Time
+Afghanistan Standard Time
+West Asia Standard Time
+Ekaterinburg Standard Time
+Pakistan Standard Time
+India Standard Time
+Sri Lanka Standard Time
+Nepal Standard Time
+Central Asia Standard Time
+Bangladesh Standard Time
+N. Central Asia Standard Time
+Myanmar Standard Time
+SE Asia Standard Time
+North Asia Standard Time
+China Standard Time
+North Asia East Standard Time
+Singapore Standard Time
+W. Australia Standard Time
+Taipei Standard Time
+Ulaanbaatar Standard Time
+Tokyo Standard Time
+Korea Standard Time
+Yakutsk Standard Time
+Cen. Australia Standard Time
+AUS Central Standard Time
+E. Australia Standard Time
+AUS Eastern Standard Time
+West Pacific Standard Time
+Tasmania Standard Time
+Magadan Standard Time
+Vladivostok Standard Time
+Russia Time Zone 10
+Central Pacific Standard Time
+Russia Time Zone 11
+New Zealand Standard Time
+UTC+12
+Fiji Standard Time
+Kamchatka Standard Time
+Tonga Standard Time
+Samoa Standard Time
+Line Islands Standard Time</pre>
+    <h1>集合类</h1>
+    <p>常用集合类</p>
+    <table style="width: 90%">
+        <tr>
+            <th>Class</th>
+            <th>Description</th>
+        </tr>
+        <tr>
+            <td>Array</td>
+            <td>所有数组的基类</td>
+        </tr>
+        <tr>
+            <td>ArrayList</td>
+            <td>非范型集合类</td>
+        </tr>
+        <tr>
+            <td>List&lt;T&gt;</td>
+            <td>范型集合类</td>
+        </tr>
+    </table>
+    <h2>ArrayList</h2>
+    <h1>哈希表类</h1>
+    <p>常用哈希表类</p>
+    <table style="width: 90%">
+        <tr>
+            <th>Class</th>
+            <th>Description</th>
+        </tr>
+        <tr>
+            <td>Hashtable</td>
+            <td>非范型哈希表</td>
+        </tr>
+        <tr>
+            <td>Dictionary&lt;K, V&gt;</td>
+            <td>范型哈希表</td>
+        </tr>
+    </table>
+    <h2>Hashtable</h2>
+    <h3>简介</h3>
+    <p>该类用于构建哈希表。</p>
+    <h3>基本使用方法</h3>
+    <pre class="code" data-type="csharp">//创建
+Hashtable table = new Hashtable();
+
+
+//添加元素
+table.Add(&quot;key1&quot;, &quot;value1&quot;);</pre>
+    <h3>如何访问Hashtable中的所有元素 </h3>
+    <pre class="code" data-type="csharp">Hashtable table = new Hashtable(10);
+table.Add(&quot;1&quot;, &quot;val1&quot;);
+table.Add(&quot;2&quot;, &quot;val2&quot;);
+IDictionaryEnumerator em = table.GetEnumerator();
+while(em.MoveNext())
+{
+	MessageBox.Show(em.Key + &quot;: &quot; + em.Value);
+}</pre>
+    <p>因为 Hashtable 已经对数据作为散列处理，所以无法按照插入的顺序对 Hashtable 进行遍历</p>
+    <p>使用 table[key] = value 的行式时，可实现 key 存在则覆盖，不存在则加入的操作</p>
+    <h2>Dictionary&lt;K, V&gt;</h2>
+    <h3>基本用法</h3>
+    <p>基本上可看作 Hashtable 的范型扩展类，但有以下区别</p>
+    <ul>
+        <li>使用 Dictioanry.Keys，尽管 MSDN 声明其顺序是不定的，但实际上可按照插入顺序来遍历</li>
+        <li>不支持线程安全</li>
+    </ul>
+    <h3>使用自定义类作为Key</h3>
+    <p>如果使用自定义对象作为Key，必须做如下两个动作，方可正确的使用Dictionary与Key相关的操用，如ContainsKey，按Key取值等：</p>
+    <ol>
+        <li>声明一个比较类，实现IEqualityComparer&lt;T&gt;接口，其中T即为用作Key的类型</li>
+        <li>在创建Dictionary时，将上步骤实现的比较类实例作为构造参数传入</li>
+    </ol>
+    <p class="note">按照 MSDN 的建议，我们最好直接继承 EqualityComparer&lt;T&gt; 而不是自己去实现 IEqualityComparer&lt;T&gt; 接口</p>
+    <p>下面是MSDN偍供的示例代码：</p>
+    <pre class="code" data-type="csharp">using System;
+using System.Collections.Generic;
+class Example
+{
+    static void Main()
+    {
+        try
+        {
+
+            BoxEqualityComparer boxEqC = new BoxEqualityComparer();
+
+            Dictionary&lt;Box, String&gt; boxes = new Dictionary&lt;Box, string&gt;(boxEqC);
+
+            Box redBox = new Box(4, 3, 4);
+            Box blueBox = new Box(4, 3, 4);
+
+            boxes.Add(redBox, &quot;red&quot;);
+            boxes.Add(blueBox, &quot;blue&quot;);
+
+            Console.WriteLine(redBox.GetHashCode());
+            Console.WriteLine(blueBox.GetHashCode());
+        }
+        catch (ArgumentException argEx)
+        {
+            Console.WriteLine(argEx.Message);
+        }
+    }
+}
+
+public class Box
+{
+    public Box(int h,  int l, int w)
+    {
+        this.Height = h;
+        this.Length = l;
+        this.Width = w;
+    }
+    public int Height { get; set; }
+    public int Length { get; set; }
+    public int Width { get; set; }
+}
+
+
+class BoxEqualityComparer : IEqualityComparer&lt;Box&gt;
+{
+
+    public bool Equals(Box b1, Box b2)
+    {
+        if (b1.Height == b2.Height &amp; b1.Length == b2.Length &amp; b1.Width == b2.Width)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+
+    public int GetHashCode(Box bx)
+    {
+        int hCode = bx.Height ^ bx.Length ^ bx.Width;
+        return hCode.GetHashCode();
+    }
+
+}</pre>
+
+    <p>StringComparer 是 .net framework 提供的一个 IEqualityComparer&lt;T&gt; 的实现。因此可以使用如下方式构造一个忽略 Key 大小写的 Dictionary&lt;string, object&gt;</p>
+    <pre class="code" data-type="csharp">var d2 = new Dictionary&lt;string, object&gt;(StringComparer.OrdinalIgnoreCase);</pre>
+    <p>从直觉上来讲，可能感觉使用了自定义的 IEqualityComparer&lt;T&gt; 效率会低。其实不然，除非你的比较逻辑过于复杂，一般来讲使用自定义的 IEqualityComparer&lt;T&gt; 后效率反而更高。这是因为默认情况下，.net framework 使用 EqualityComparer&lt;T&gt;.Default 作为比较类。如果 Key 为值类型，这样反而会带来 Box/Unbox 的开销。</p>
+    <h1>String </h1>
+    <h2>Format方法</h2>
+    <p>介绍该方法，只是觉得该方法让我起起了当年最常用的printf，该方法示例如下：</p>
+    <pre class="code" data-type="csharp">int a = 10;
+int b = 20;
+Console.Write(string.Format(&quot;a is {0}, b is {1}.&quot;, a, b));
+Console.Read();</pre>
+    <p>其模式为 {n....}，n 表示第几个参数，后面可接各种功能表达式，如下所示</p>
+    <table style="width: 90%">
+        <tr>
+            <th>场景</th>
+            <th>示例</th>
+        </tr>
+        <tr>
+            <td>指定输出长度及对其方式</td>
+            <td>{0,-12}: 第1个参数输出长度为12，左对齐
+                <br />
+                {0,12}: 第1个参数输出长度为12，右对齐
+            </td>
+        </tr>
+        <tr>
+            <td>格式化日期</td>
+            <td>{0:yyyy-MM-dd HH:mm:ss}: 输出格式示例为 2016-08-29 20:35:16</td>
+        </tr>
+        <tr>
+            <td>格式化数字</td>
+            <td>{0:N2}: 有千分位分隔，带两位小数</td>
+        </tr>
+
+        <tr>
+            <td>货币格式</td>
+            <td>{0:C2}: 有千分位分隔，带两位小数，并带有当前区域的货币符号</td>
+        </tr>
+        <tr>
+            <td>16进制</td>
+            <td>{0:X}: 打印16进制</td>
+        </tr>
+        <tr>
+            <td>科学计数法</td>
+            <td>{0:E}: 格式化为科学计算法</td>
+        </tr>
+        <tr>
+            <td>组合使用</td>
+            <td>{0,8:N2}: 将第1个参数打印宽度为8个字符，右对齐，并按数字格式化为千分位分隔符并带两位小数</td>
+        </tr>
+    </table>
+    <p>如果想在其中打印 { 或 }，则使用 {{ 转义为 {，}} 转义为 }</p>
+    <p>下面抄下 MSDN 上的例子进行说明</p>
+    <pre class="code" data-type="csharp">using System;
+
+namespace ConsoleApplication1
+{
+	class Program
+	{
+		public static void Main()
+		{
+			// Create array of 5-tuples with population data for three U.S. cities, 1940-1950.
+			Tuple&lt;string, DateTime, int, DateTime, int&gt;[] cities = 
+			{ 
+				Tuple.Create("Los Angeles", new DateTime(1940, 1, 1), 1504277,  new DateTime(1950, 1, 1), 1970358),
+				Tuple.Create("New York", new DateTime(1940, 1, 1), 7454995,  new DateTime(1950, 1, 1), 7891957),
+				Tuple.Create("Chicago", new DateTime(1940, 1, 1), 3396808,  new DateTime(1950, 1, 1), 3620962),
+				Tuple.Create("Detroit", new DateTime(1940, 1, 1), 1623452,  new DateTime(1950, 1, 1), 1849568) 
+			};
+
+			// Display header 
+			string header = String.Format("{0,-12}{1,8}{2,12}{1,8}{2,12}{3,14}\n",
+			"City", "Year", "Population", "Change (%)");
+			Console.WriteLine(header);
+			string output;
+			foreach (var city in cities)
+			{
+				output = String.Format("{0,-12}{1,8:yyyy}{2,12:N0}{3,8:yyyy}{4,12:N0}{5,14:P1}",
+					 city.Item1, city.Item2, city.Item3, city.Item4, city.Item5,
+					 (city.Item5 - city.Item3) / (double)city.Item3);
+				Console.WriteLine(output);
+			}
+
+			Console.Read();
+		}
+	}
+}
+
+// The example displays the following output: 
+//    City            Year  Population    Year  Population    Change (%) 
+//     
+//    Los Angeles     1940   1,504,277    1950   1,970,358        31.0 % 
+//    New York        1940   7,454,995    1950   7,891,957         5.9 % 
+//    Chicago         1940   3,396,808    1950   3,620,962         6.6 % 
+//    Detroit         1940   1,623,452    1950   1,849,568        13.9 %</pre>
+    <h1>CollectionBase</h1>
+    <p>可用于构建自己的类似于ArrayList的对象</p>
+    <pre class="code" data-type="csharp">using System;
+using System.Collections;
+
+public class Int16Collection : CollectionBase  {
+
+   public Int16 this[ int index ]  {
+      get  {
+         return( (Int16) List[index] );
+      }
+      set  {
+         List[index] = value;
+      }
+   }
+
+   public int Add( Int16 value )  {
+      return( List.Add( value ) );
+   }
+
+   public int IndexOf( Int16 value )  {
+      return( List.IndexOf( value ) );
+   }
+
+   public void Insert( int index, Int16 value )  {
+      List.Insert( index, value );
+   }
+
+   public void Remove( Int16 value )  {
+      List.Remove( value );
+   }
+
+   public bool Contains( Int16 value )  {
+      // If value is not of type Int16, this will return false.
+      return( List.Contains( value ) );
+   }
+
+   protected override void OnInsert( int index, Object value )  {
+      if ( value.GetType() != Type.GetType(&quot;System.Int16&quot;) )
+         throw new ArgumentException( &quot;value must be of type Int16.&quot;, &quot;value&quot; );
+   }
+
+   protected override void OnRemove( int index, Object value )  {
+      if ( value.GetType() != Type.GetType(&quot;System.Int16&quot;) )
+         throw new ArgumentException( &quot;value must be of type Int16.&quot;, &quot;value&quot; );
+   }
+
+   protected override void OnSet( int index, Object oldValue, Object newValue )  {
+      if ( newValue.GetType() != Type.GetType(&quot;System.Int16&quot;) )
+         throw new ArgumentException( &quot;newValue must be of type Int16.&quot;, &quot;newValue&quot; );
+   }
+
+   protected override void OnValidate( Object value )  {
+      if ( value.GetType() != Type.GetType(&quot;System.Int16&quot;) )
+         throw new ArgumentException( &quot;value must be of type Int16.&quot; );
+   }
+
+}
+
+
+public class SamplesCollectionBase  {
+
+   public static void Main()  {
+ 
+      // Creates and initializes a new CollectionBase.
+      Int16Collection myI16 = new Int16Collection();
+
+      // Adds elements to the collection.
+      myI16.Add( (Int16) 1 );
+      myI16.Add( (Int16) 2 );
+      myI16.Add( (Int16) 3 );
+      myI16.Add( (Int16) 5 );
+      myI16.Add( (Int16) 7 );
+
+      // Displays the contents of the collection using the enumerator.
+      Console.WriteLine( &quot;Initial contents of the collection:&quot; );
+      PrintIndexAndValues( myI16 );
+
+      // Searches the collection with Contains and IndexOf.
+      Console.WriteLine( &quot;Contains 3: {0}&quot;, myI16.Contains( 3 ) );
+      Console.WriteLine( &quot;2 is at index {0}.&quot;, myI16.IndexOf( 2 ) );
+      Console.WriteLine();
+
+      // Inserts an element into the collection at index 3.
+      myI16.Insert( 3, (Int16) 13 );
+      Console.WriteLine( &quot;Contents of the collection after inserting at index 3:&quot; );
+      PrintIndexAndValues( myI16 );
+
+      // Gets and sets an element using the index.
+      myI16[4] = 123;
+      Console.WriteLine( &quot;Contents of the collection after setting the element at index 4 to 123:&quot; );
+      PrintIndexAndValues( myI16 );
+
+      // Removes an element from the collection.
+      myI16.Remove( (Int16) 2 );
+
+      // Displays the contents of the collection using the index.
+      Console.WriteLine( &quot;Contents of the collection after removing the element 2:&quot; );
+      for ( int i = 0; i &lt; myI16.Count; i++ )  {
+         Console.WriteLine( &quot;   [{0}]:   {1}&quot;, i, myI16[i] );
+      }
+
+   }
+ 
+   public static void PrintIndexAndValues( Int16Collection myCol )  {
+      int i = 0;
+      System.Collections.IEnumerator myEnumerator = myCol.GetEnumerator();
+      while ( myEnumerator.MoveNext() )
+         Console.WriteLine( &quot;   [{0}]:   {1}&quot;, i++, myEnumerator.Current );
+      Console.WriteLine();
+   }
+}</pre>
+</body>
+</html>

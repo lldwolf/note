@@ -1,0 +1,132 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<script language="javascript" src="css.js"></script>
+<title>图纸打印</title>
+</head>
+
+<body>
+<h1>第N章 图纸打印
+</h1>
+<p>每个.dwg文件都包含本身所使用的打印机的信息，也就是说，打印时使用哪台打印机由.dwg文件决定，而不是由打印机设置决定，在菜单“文件-打印”中可以设定所使用的打印机。</p>
+<p>AutoCAD没有提供批量打印功能，我写了如下函数实现该功能，</p>
+<p>用VBA实现打印功能如下</p>
+<h2>N.1 辅助函数，取得某目录下的所有.dwg文件</h2>
+<pre>'取目录内的所有文件
+Private Sub GetFilesInDir(ByVal DirName As String, ByRef Files() As String)
+
+    Dim fs, f, f1, fc
+    Dim i As Integer, j As Integer
+    Set fs = CreateObject("Scripting.FileSystemObject")
+    Set f = fs.GetFolder(DirName)
+    Set fc = f.Files
+    
+    Dim all_file() As String
+    Dim dwg_count As Integer
+    
+    dwg_count = 0
+    ReDim all_file(fc.Count - 1)
+    
+    i = 0
+    For Each f1 In fc
+      If (UCase(Mid(f1, Len(f1) - 3, 4)) = ".DWG") Then
+        all_file(i) = f1
+        dwg_count = dwg_count + 1
+      End If
+      i = i + 1
+    Next
+    
+    ReDim Files(dwg_count - 1)
+    j = 0
+    For i = 0 To UBound(all_file)
+      If all_file(i) <> "" Then
+        Files(j) = all_file(i)
+        j = j + 1
+      End If
+    Next i
+    
+End Sub</pre>
+<p>在此功能中，我使用的windows自带的ActiveX控件Scripting.FileSystemObject，用来取目录下的所有文件</p>
+<h2>N.2 批量打印</h2>
+<h3>N.2.1 代码 </h3>
+<pre>Public Sub print_batch()
+
+  Dim Files() As String
+  Dim DwgPath As String
+  
+  '图纸所在的目录
+  DwgPath = "D:\test"
+  
+  Call GetFilesInDir(DwgPath, Files)
+  
+  ' 设置打印区域的范围和比例
+  Dim LeftBottom(0 To 1) As Double, RightTop(0 To 1) As Double
+  Dim i_file As Integer
+  
+  '设定要打印的窗口
+  LeftBottom(0) = -5: LeftBottom(1) = -5
+  RightTop(0) = 841 + 5: RightTop(1) = 594 + 5
+    
+  Call ThisDrawing.SetVariable("BACKGROUNDPLOT", 0)
+    
+  For i_file = 0 To UBound(Files)
+    Call Application.Documents.Open(Files(i_file))
+   
+    If ThisDrawing.ActiveSpace = acPaperSpace Then
+      ThisDrawing.MSpace = True
+      ThisDrawing.ActiveSpace = acModelSpace
+    End If
+      
+    '设置使用的打印机
+    ThisDrawing.ModelSpace.Layout.ConfigName = "\\ps2\HP5000-7"
+      
+    '指定区间打印
+    ThisDrawing.ModelSpace.Layout.PlotType = acWindow
+    Call ThisDrawing.ModelSpace.Layout.SetWindowToPlot(LeftBottom, RightTop)
+      
+    '将打印份数设置为 1
+    ThisDrawing.Plot.NumberOfCopies = 1
+
+    ' 初始化打印
+    ThisDrawing.Plot.PlotToDevice
+      
+    ThisDrawing.Close False
+  Next i_file
+    
+End Sub</pre>
+<h3>N.2.2 设定使用的打印机 </h3>
+<p>我使用如下代码设定要使用的打印机</p>
+<pre>    ThisDrawing.ModelSpace.Layout.ConfigName = "\\ps2\HP5000-7"</pre>
+<h3>N.2.3 设置打印方式</h3>
+<p>常用的打印方式有按窗口打印或自适应缩放打印，上面我使用的是按窗口打印，相关代码如下：</p>
+<pre>  Dim LeftBottom(0 To 1) As Double, RightTop(0 To 1) As Double
+
+  '设定要打印的窗口
+  LeftBottom(0) = -5: LeftBottom(1) = -5
+  RightTop(0) = 841 + 5: RightTop(1) = 594 + 5
+
+  '指定区间打印
+  ThisDrawing.ModelSpace.Layout.PlotType = acWindow
+  Call ThisDrawing.ModelSpace.Layout.SetWindowToPlot(LeftBottom, RightTop)</pre>
+<p>使用这种打印方式要求每张图纸的起始坐标及图纸大小都一样</p>
+<p>若使用自适应缩放方式打印，则使用如下代码：</p>
+<pre>    '自缩放打印
+    ThisDrawing.ModelSpace.Layout.PlotType = acExtents
+    ThisDrawing.ModelSpace.Layout.StandardScale = acScaleToFit</pre>
+<h3>N.2.4 设定前台打印或后台打印</h3>
+<p>默认方式为后台打印，如果打印机中有打印任务则失败，所以要设为前台打印，使用如下代码</p>
+<pre>  Call ThisDrawing.SetVariable("BACKGROUNDPLOT", 0)
+</pre>
+<p>设为非0值表示后台打印</p>
+<h3>N.2.5 打印或预览 </h3>
+<pre>    '预览
+    ThisDrawing.Plot.DisplayPlotPreview acFullPreview
+
+    ' 打印
+    ThisDrawing.Plot.PlotToDevice</pre>
+<p>&nbsp;</p>
+<script language="javascript" src="index.js"></script>
+</body>
+</html>

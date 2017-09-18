@@ -1,0 +1,806 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html><head>
+
+                                                     
+ 
+ 
+ <style type="text/css"> /* <![CDATA[ */
+ @import "/branding/css/tigris.css";
+ @import "/branding/css/inst.css";
+ /* ]]> */</style>
+ <link rel="stylesheet" type="text/css" href="prototype1.3.1.js.cn_files/print.css" media="print">
+ <script src="prototype1.3.1.js.cn_files/tigris.js" type="text/javascript"></script>
+  
+             
+ 
+  <script src="prototype1.3.1.js.cn_files/alm.js" type="text/javascript"></script>
+ <style type="text/css">
+    /* <![CDATA[ */
+    @import "/branding/css/alm.css";
+   /* ]]> */
+ </style><title>compdoc2cn: prototype.js开发笔记</title>
+ 
+ 
+ 
+ 
+                                                       
+ <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+ <meta http-equiv="Content-Style-Type" content="text/css">
+ <meta name="version" content="4.5.2.148.4">
+ 
+ 
+      
+   <link rel="stylesheet" href="prototype1.3.1.js.cn_files/sagehill.css" type="text/css"><meta name="generator" content="DocBook XSL Stylesheets V1.60.1"></head><body class="composite">
+ 
+ 
+ <div id="collabnet">
+ <div id="login"> 
+     <div>
+      <a href="https://www.dev.java.net/servlets/Login?detour=https://compdoc2cn.dev.java.net/prototype/html/prototype.js.cn.html">登录</a>
+      |    <a href="https://www.dev.java.net/servlets/Join">注册</a>    </div>
+ </div>
+ <a href="http://www.collab.net/special/clickpbc0502.html" id="cnlogo">
+<span class="alt">CollabNet Enterprise Edition</span></a>
+</div>
+ 
+ 
+ 
+ 
+ 
+
+<div class="topline">
+<div class="topbar">
+<div id="banner">
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+	<tbody><tr>
+		<td>
+		  	<div><a href="http://www.java.net/"><img src="prototype1.3.1.js.cn_files/header_jnet_new.jpg" alt="The Source for Java Technology Collaboration" height="60" width="500"></a></div>
+  		</td>
+	  	<td class="right" style="vertical-align: middle;">
+  			<div id="domainlinks">
+				
+								<div id="loginbox">
+												<div>
+				   <a href="https://www.dev.java.net/servlets/TLogin?detour=https://compdoc2cn.dev.java.net/prototype/html/prototype.js.cn.html">登录</a>								|    <a href="https://www.dev.java.net/servlets/Join">注册</a>								</div>
+								</div>
+								
+			</div>
+		</td>
+  	</tr>
+</tbody></table>
+</div>
+</div>
+</div> 
+ 
+ 
+ 
+ <div id="toptabs">
+
+<table border="0" cellpadding="4" cellspacing="0"><tbody><tr>
+
+
+<td>   <a href="https://www.dev.java.net/servlets/StartPage">我的页面</a></td>
+
+<th><a href="http://community.java.net/projects/">Projects</a></th>
+
+
+  <td><a href="http://community.java.net/">Communities</a></td>
+
+
+
+<td><a href="http://www.java.net/">java.net</a></td>
+
+
+</tr></tbody></table>
+</div>
+
+  
+ 
+ <div id="breadcrumbs">
+   <a href="https://www.dev.java.net/servlets/ProjectList">项目</a>    &gt;
+     
+
+    <a href="https://edu-gelc.dev.java.net/">edu-gelc</a>
+     &gt;
+     
+
+    <a href="https://edu-gelc-main.dev.java.net/">edu-gelc-main</a>
+     &gt;
+     
+
+    <a href="https://edu-incubator.dev.java.net/">edu-incubator</a>
+     &gt;
+     
+
+   <strong>   <a href="https://compdoc2cn.dev.java.net/">compdoc2cn</a>
+   </strong>  </div>
+ 
+ 
+ 
+ 
+<table id="main" border="0" cellpadding="4" cellspacing="0" width="100%">
+<tbody><tr>
+<td id="navcol">
+ 
+ 
+ 
+
+
+  
+             
+ 
+  
+ 
+                                                           <dl id="projecttools" class="navgroup">
+   <dt>项目 工具</dt>
+   <dd>
+    <ul>
+          <li>   <a href="https://compdoc2cn.dev.java.net/servlets/ProjectHome">项目 主页</a></li>
+           
+       
+ 
+   </ul>
+</dd>
+ 
+ 
+                  
+ 
+   <dd><ul>
+    <li>   <a href="https://compdoc2cn.dev.java.net/servlets/ProjectNewsList">通告</a></li>
+ 
+ 
+            
+ 
+        <li>   <a href="https://compdoc2cn.dev.java.net/servlets/ProjectForumView">讨论论坛</a></li>
+  
+ 
+         
+ 
+   <li>   <a href="https://compdoc2cn.dev.java.net/servlets/ProjectMailingListList">邮件列表</a></li>
+      </ul></dd>
+       
+ 
+            
+ 
+   <dd><ul>
+    <li>   <a href="https://compdoc2cn.dev.java.net/servlets/ProjectDocumentList">文档和文件</a></li>
+ 
+ 
+         
+ 
+   <li>
+<a href="https://compdoc2cn.dev.java.net/source/browse/compdoc2cn/">CVS</a>
+
+
+</li>
+      </ul></dd>
+       
+ 
+               
+ 
+   <dd><ul>
+  <li>   <a href="https://compdoc2cn.dev.java.net/servlets/ProjectIssues">事件跟踪工具</a></li>
+ 
+ 
+                               	</ul>
+       </dd>
+               
+     </dl>
+   
+
+
+
+
+<form action="https://compdoc2cn.dev.java.net/servlets/Search" method="get">
+ <dl id="searchbox" class="navgroup">
+  
+      <dt>搜索</dt>
+  <dd>
+   <div>
+       <select name="scope">
+           <option value="project" selected="selected">此 项目</option>
+               <option value="domain">所有项目</option>
+    </select>
+      </div>
+   <div>
+    <input name="resultsPerPage" value="40" type="hidden"> 
+    <input name="query" size="10" maxlength="99" type="text"> 
+    <input name="Button" value="执行" type="submit">
+   </div>
+   <div>
+       <a href="https://compdoc2cn.dev.java.net/servlets/Search?mode=advanced">高级搜索</a>   </div>
+  </dd>
+
+ </dl>
+</form>
+
+
+<dl id="helptext" class="navgroup">
+ <dt>我该怎样才能...</dt>
+ <dd>
+  <ul>
+     
+   <li> <a href="http://www.collab.net/rn/" onclick="return launch(this.href, 1)" title="注意:链接可能在新窗口中打开" class="helplink">
+ 
+ 是否要获取 CollabNet 4.5.2 的发行说明？</a>
+</li>
+
+   <li><a href="https://compdoc2cn.dev.java.net/nonav/servlets/HelpTOC" onclick="return launch(this.href, 1)" title="注意:链接可能在新窗口中打开" class="helplink">是否要取得帮助？</a></li>
+  </ul>
+ </dd>
+</dl>
+
+ 
+ 
+<div class="strut">&nbsp;</div>
+</td>
+<td id="midcol">
+ 
+<div id="bodycol">
+ 
+ 
+ 
+        
+                 
+                 
+           
+    
+  
+
+ 
+ 
+
+
+
+<div class="book" lang="en"><div class="titlepage"><div><div><h1 class="title"><a name="d0e1"></a>prototype.js开发笔记</h1></div></div><div></div><hr></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt>1. <a href="#d0e6">Programming Guide</a></dt><dd><dl><dt>1.1. <a href="#d0e9">Prototype是什么?</a></dt><dt>1.2. <a href="#d0e30">关联文章</a></dt><dt>1.3. <a href="#d0e37">通用性方法</a></dt><dd><dl><dt>1.3.1. <a href="#d0e42">使用 $()方法</a></dt><dt>1.3.2. <a href="#d0e67">使用$F()方法</a></dt><dt>1.3.3. <a href="#d0e82">使用$A()方法</a></dt><dt>1.3.4. <a href="#d0e111">使用$H()方法</a></dt><dt>1.3.5. <a href="#d0e127">使用$R()方法</a></dt><dt>1.3.6. <a href="#d0e152">使用Try.these()方法</a></dt></dl></dd><dt>1.4. <a href="#d0e175">Ajax 对象</a></dt><dd><dl><dt>1.4.1. <a href="#d0e191">使用 Ajax.Request类</a></dt><dt>1.4.2. <a href="#d0e333">使用 Ajax.Updater 类</a></dt></dl></dd></dl></dd><dt>2. <a href="#reference">prototype.js参考</a></dt><dd><dl><dt>2.1. <a href="#d0e408">JavaScript 类的扩展</a></dt><dt>2.2. <a href="#d0e413">对 Object 类的扩展</a></dt><dt>2.3. <a href="#d0e477">对 Number 类的扩展</a></dt><dt>2.4. <a href="#d0e519">对 Function 类的扩展</a></dt><dt>2.5. <a href="#d0e580">对 String 类的扩展</a></dt><dt>2.6. <a href="#d0e649">对 document DOM 对象的扩展</a></dt><dt>2.7. <a href="#d0e692">对 Event 对象的扩展</a></dt><dt>2.8. <a href="#d0e997">在 prototype.js中定义的新对象和类</a></dt><dt>2.9. <a href="#d0e1002">PeriodicalExecuter 对象</a></dt><dt>2.10. <a href="#d0e1095">Prototype 对象</a></dt><dt>2.11. <a href="#d0e1141">Class 对象</a></dt><dt>2.12. <a href="#d0e1197">Ajax 对象</a></dt><dt>2.13. <a href="#ajax_base">Ajax.Base 类</a></dt><dt>2.14. <a href="#ajax_request_reference">Ajax.Request 类</a></dt><dt>2.15. <a href="#options_reference">options 参数对象</a></dt><dt>2.16. <a href="#ajax_updater_reference">Ajax.Updater 类</a></dt><dt>2.17. <a href="#ajax_periodical_updater">Ajax.PeriodicalUpdater 类</a></dt><dt>2.18. <a href="#d0e2052">Element 对象</a></dt><dt>2.19. <a href="#d0e2227">Abstract 对象</a></dt><dt>2.20. <a href="#abstract_insertion">Abstract.Insertion 类</a></dt><dt>2.21. <a href="#d0e2351">Insertion 对象</a></dt><dt>2.22. <a href="#d0e2358">Insertion.Before 类</a></dt><dt>2.23. <a href="#d0e2426">Insertion.Top 类</a></dt><dt>2.24. <a href="#d0e2494">Insertion.Bottom 类</a></dt><dt>2.25. <a href="#d0e2562">Insertion.After 类</a></dt><dt>2.26. <a href="#d0e2629">Field 对象</a></dt><dt>2.27. <a href="#d0e2728">Form 对象</a></dt><dt>2.28. <a href="#d0e2870">Form.Element 对象</a></dt><dt>2.29. <a href="#d0e2929">Form.Element.Serializers 对象</a></dt><dt>2.30. <a href="#abstract_timed_observer">Abstract.TimedObserver 类</a></dt><dt>2.31. <a href="#form_element_observer">Form.Element.Observer 类</a></dt><dt>2.32. <a href="#form_observer">Form.Observer 类</a></dt><dt>2.33. <a href="#abstract_event_observer">Abstract.EventObserver 类</a></dt><dt>2.34. <a href="#form_element_event_observer">Form.Element.EventObserver 类</a></dt><dt>2.35. <a href="#form_event_observer">Form.EventObserver 类</a></dt><dt>2.36. <a href="#d0e3601">Position 对象 (预备文档)</a></dt></dl></dd></dl></div><i><span class="remark">覆盖版本 1.3.1</span></i><div class="chapter" lang="en"><div class="titlepage"><div><div><h2 class="title"><a name="d0e6"></a>Chapter&nbsp;1.&nbsp;Programming Guide</h2></div></div><div></div></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both;"><a name="d0e9"></a>1.1.&nbsp;Prototype是什么?</h2></div></div><div></div></div><p>或许你还没有用过它， <a href="http://prototype.conio.net/" target="_top">prototype.js</a> 是一个由<a href="http://www.conio.net/" target="_top">Sam
+      Stephenson</a>写的JavaScript包。这个构思奇妙编写良好的一段<span class="bold"><b>兼容标准</b></span>的一段代码将承担创造胖客户端， 高交互性WEB应用程序的重担。轻松加入Web
+      2.0特性。</p><p>如果你最近体验了这个程序包，你很可能会发现文档并不是它的强项之一。像所有在我之前的开发者一样，我只能一头扎进prototype.js的源代码中并且试验其中的每一个部分。
+      我想当我学习他的时候记写笔记然后分享给其他人将会很不错。</p><p>我也一起提供了这个包的对象，类，方法和扩展的 <a href="#reference" title="Chapter&nbsp;2.&nbsp;prototype.js参考">非官方参考</a>
+      。</p></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both;"><a name="d0e30"></a>1.2.&nbsp;关联文章</h2></div></div><div></div></div><p>高级<a href="http://www.sergiopereira.com/articles/advjs.html" target="_top">JavaScript指南</a></p></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both;"><a name="d0e37"></a>1.3.&nbsp;通用性方法</h2></div></div><div></div></div><p>这个程序包里面包含了许多预定义的对象和通用性方法。编写这些方法的明显的目的就是为了减少你大量的重复编码和惯用法。</p><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e42"></a>1.3.1.&nbsp;使用 <tt class="literal">$()</tt>方法</h3></div></div><div></div></div><p><tt class="literal">$()</tt> 方法是在DOM中使用过于频繁的
+        <tt class="literal">document.getElementById()</tt>
+        方法的一个便利的简写，就像这个DOM方法一样，这个方法返回参数传入的id的那个元素。</p><p>比起DOM中的方法，这个更胜一筹。你可以传入多个id作为参数然后 <tt class="literal">$()</tt>
+        返回一个带有所有要求的元素的一个 <tt class="literal">Array</tt> 对象。下面的例子会向你描述这些。</p><pre class="programlisting">&lt;HTML&gt;
+&lt;HEAD&gt;
+&lt;TITLE&gt; Test Page &lt;/TITLE&gt;
+&lt;script src="prototype-1.3.1.js"&gt;&lt;/script&gt;
+
+&lt;script&gt;
+    function test1()
+    {
+        var d = $('myDiv');
+        alert(d.innerHTML);
+    }
+
+    function test2()
+    {
+        var divs = $('myDiv','myOtherDiv');
+        for(i=0; i&lt;divs.length; i++)
+        {
+            alert(divs[i].innerHTML);
+        }
+    }
+&lt;/script&gt;
+&lt;/HEAD&gt;
+
+&lt;BODY&gt;
+    &lt;div id="myDiv"&gt;
+        &lt;p&gt;This is a paragraph&lt;/p&gt;
+    &lt;/div&gt;
+    &lt;div id="myOtherDiv"&gt;
+        &lt;p&gt;This is another paragraph&lt;/p&gt;
+    &lt;/div&gt;
+
+    &lt;input type="button" value=Test1 onclick="test1();"&gt;&lt;br&gt;
+    &lt;input type="button" value=Test2 onclick="test2();"&gt;&lt;br&gt;
+
+&lt;/BODY&gt;
+&lt;/HTML&gt;</pre><p>这个方法的另一个好处就是你可以传入id字符串或者元素对象自己，这使得在创建可以传入任何形式参数的方法的时候，
+        它变得非常有用。</p></div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e67"></a>1.3.2.&nbsp;使用<tt class="literal">$F()</tt>方法</h3></div></div><div></div></div><p><tt class="literal">$F()</tt>方法是另一个非常受欢迎的简写。它可以返回任何输入表单控件的值，如文本框或下拉框。
+        这个方法可以传入元素的id或者元素自己。</p><pre class="programlisting">&lt;script&gt;
+    function test3()
+    {
+        alert(  <span class="bold"><b>$F('userName')</b></span>  );
+    }
+&lt;/script&gt;
+
+&lt;input type="text" id="userName" value="Joe Doe"&gt;&lt;br&gt; 
+&lt;input type="button" value=Test3 onclick="test3();"&gt;&lt;br&gt;</pre></div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e82"></a>1.3.3.&nbsp;使用<tt class="literal">$A()</tt>方法</h3></div></div><div></div></div><p><tt class="literal">$A()</tt>方法把接收到的参数转换成一个<tt class="literal">Array</tt>对象。</p><p>这个方法加上对<tt class="literal">Array</tt>类的扩展，可以很容易的转换或者复制任意的列举列表到<tt class="literal">Array</tt>对象，
+        一个被推荐使用的用法就是转换<tt class="literal">DOM</tt>的<tt class="literal">NodeLists</tt>到一个普通的数组里，可以被更广泛高效的使用，
+        看下面的例子。</p><pre class="programlisting">&lt;script&gt;
+
+    function showOptions(){
+        var someNodeList = $('lstEmployees').getElementsByTagName('option');
+        var nodes = $A(someNodeList);
+
+        nodes.each(function(node){
+                alert(node.nodeName + ': ' + node.innerHTML);
+            });
+    }
+&lt;/script&gt;
+
+&lt;select id="lstEmployees" size="10" &gt;
+    &lt;option value="5"&gt;Buchanan, Steven&lt;/option&gt;
+    &lt;option value="8"&gt;Callahan, Laura&lt;/option&gt;
+    &lt;option value="1"&gt;Davolio, Nancy&lt;/option&gt;
+&lt;/select&gt;
+
+&lt;input type="button" value="Show the options" onclick="showOptions();" &gt; </pre></div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e111"></a>1.3.4.&nbsp;使用<tt class="literal">$H()</tt>方法</h3></div></div><div></div></div><p><tt class="literal">$H()</tt>方法把对象转化成可枚举的貌似联合数组<tt class="literal">Hash</tt>对象。</p><pre class="programlisting">&lt;script&gt;
+    function testHash()
+    {
+        //let's create the object
+        var a = {
+            first: 10,
+            second: 20,
+            third: 30
+            };
+
+        //now transform it into a hash
+        var h = $H(a);
+        alert(h.toQueryString()); //displays: first=10&amp;second=20&amp;third=30
+    }
+
+&lt;/script&gt;</pre><p></p></div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e127"></a>1.3.5.&nbsp;使用<tt class="literal">$R()</tt>方法</h3></div></div><div></div></div><p><tt class="literal">$R()</tt>方法是<tt class="literal">new ObjectRange(lowerBound,
+        upperBound, excludeBounds)</tt>的一个简单快捷的使用方式。</p><p><tt class="literal">ObjectRange</tt>类文档里面有完整的解释。 同时，我们来看看一个简单的例子，
+        来演示通过<tt class="literal">each</tt>方法遍历的用法。
+        那个方法的更多解释在<tt class="literal">Enumerable</tt>对象文档里面。</p><pre class="programlisting">&lt;script&gt;
+    function demoDollar_R(){
+        var range = $R(10, 20, false);
+        range.each(function(value, index){
+            alert(value);
+        });
+    }
+
+&lt;/script&gt;
+
+&lt;input type="button" value="Sample Count" onclick="demoDollar_R();" &gt; </pre></div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e152"></a>1.3.6.&nbsp;使用<tt class="literal">Try.these()</tt>方法</h3></div></div><div></div></div><p><tt class="literal">Try.these()</tt>
+        方法使得实现当你想调用不同的方法直到其中的一个成功正常的这种需求变得非常容易，
+        他把一系列的方法作为参数并且按顺序的一个一个的执行这些方法直到其中的一个成功执行，返回成功执行的那个方法的返回值。</p><p>在下面的例子中，
+        <tt class="literal">xmlNode.text</tt>在一些浏览器中好用，但是<tt class="literal">xmlNode.textContent</tt>在另一些浏览器中正常工作。
+        使用<tt class="literal">Try.these()</tt>方法我们可以得到正常工作的那个方法的返回值。</p><pre class="programlisting">&lt;script&gt;
+function getXmlNodeValue(xmlNode){
+    return Try.these(
+        function() {return xmlNode.text;},
+        function() {return xmlNode.textContent;)
+        );
+}
+&lt;/script&gt;</pre></div></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both;"><a name="d0e175"></a>1.4.&nbsp;<tt class="literal">Ajax</tt> 对象</h2></div></div><div></div></div><p>上面提到的共通方法非常好，但是面对它吧，它们不是最高级的那类东西。它们是吗？你很可能自己编写了这些甚至在你的脚本里面有类似功能的方法。但是这些方法只是冰山一角。</p><p>我很肯定你对prototype.js感兴趣的原因很可能是由于它的AJAX能力。所以让我们解释当你需要完成AJAX逻辑的时候，这个包如何让它更容易。</p><p><tt class="literal">Ajax</tt> 对象是一个预定义对象，由这个包创建，为了封装和简化编写<a href="http://en.wikipedia.org/wiki/Ajax_%28programming%29" target="_top">AJAX</a>
+      功能涉及的狡猾的代码。 这个对象包含一系列的封装AJAX逻辑的类。我们来看看它们的一些。</p><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e191"></a>1.4.1.&nbsp;使用 <tt class="literal">Ajax.Request</tt>类</h3></div></div><div></div></div><p>如果你不使用任何的帮助程序包，你很可能编写了整个大量的代码来创建<tt class="literal">XMLHttpRequest</tt>对象并且异步的跟踪它的进程，
+        然后解析出响应 然后处理它。当你不需要支持多于一种类型的浏览器时你会感到非常的幸运。</p><p>为了支持 AJAX 功能。这个包定义了 <tt class="literal">Ajax.Request </tt>类。</p><p>假如你有一个应用程序可以通过url
+        <span class="emphasis"><em>http://yoursever/app/get_sales?empID=1234&amp;year=1998</em></span>与服务器通信。它返回下面这样的XML
+        响应。</p><p>
+          </p><pre class="programlisting">&lt;?xml version="1.0" encoding="utf-8" ?&gt;
+&lt;ajax-response&gt;
+    &lt;response type="object" id="productDetails"&gt;
+        &lt;monthly-sales&gt;
+            &lt;employee-sales&gt;
+                &lt;employee-id&gt;1234&lt;/employee-id&gt;
+                &lt;year-month&gt;1998-01&lt;/year-month&gt;
+                &lt;sales&gt;$8,115.36&lt;/sales&gt;
+            &lt;/employee-sales&gt;
+            &lt;employee-sales&gt;
+                &lt;employee-id&gt;1234&lt;/employee-id&gt;
+                &lt;year-month&gt;1998-02&lt;/year-month&gt;
+                &lt;sales&gt;$11,147.51&lt;/sales&gt;
+            &lt;/employee-sales&gt;
+        &lt;/monthly-sales&gt;
+    &lt;/response&gt;
+&lt;/ajax-response&gt;</pre><p>
+        </p><p>用
+        <tt class="literal">Ajax.Request</tt>对象和服务器通信并且得到这段XML是非常简单的。下面的例子演示了它是如何完成的。</p><pre class="programlisting">&lt;script&gt;
+    function searchSales()
+    {
+        var empID = $F('lstEmployees');
+        var y = $F('lstYears');
+        var url = 'http://yoursever/app/get_sales';
+        var pars = 'empID=' + empID + '&amp;year=' + y;<span class="bold"><b>
+       var myAjax = new Ajax.Request(
+                    url,
+                    {method: 'get', parameters: pars, onComplete: showResponse}
+                    );</b></span>
+
+    }
+
+    function showResponse(originalRequest)
+    {
+        //put returned XML in the textarea
+        $('result').value = originalRequest.responseText;
+    }
+&lt;/script&gt;
+
+&lt;select id="lstEmployees" size="10" onchange="searchSales()"&gt;
+    &lt;option value="5"&gt;Buchanan, Steven&lt;/option&gt;
+    &lt;option value="8"&gt;Callahan, Laura&lt;/option&gt;
+    &lt;option value="1"&gt;Davolio, Nancy&lt;/option&gt;
+&lt;/select&gt;
+&lt;select id="lstYears" size="3" onchange="searchSales()"&gt;
+    &lt;option selected="selected" value="1996"&gt;1996&lt;/option&gt;
+    &lt;option value="1997"&gt;1997&lt;/option&gt;
+    &lt;option value="1998"&gt;1998&lt;/option&gt;
+&lt;/select&gt;
+&lt;br&gt;&lt;textarea id=result cols=60 rows=10 &gt;&lt;/textarea&gt;</pre><p>你看到传入 <tt class="literal">Ajax.Request</tt>构造方法的第二个对象了吗？
+        参数<tt class="literal">{method: 'get', parameters: pars, onComplete:
+        showResponse}</tt> 表示一个匿名对象的真实写法。他表示你传入的这个对象有一个名为
+        <tt class="literal">method</tt> 值为 <tt class="literal">'get'的属性，</tt>另一个属性名为
+        <tt class="literal">parameters</tt>
+        包含HTTP请求的查询字符串，和一个<tt class="literal">onComplete</tt>
+        属性/方法包含函数<tt class="literal">showResponse</tt>。</p><p>还有一些其它的属性可以在这个对象里面定义和设置，如
+        <tt class="literal">asynchronous</tt>，可以为<tt class="literal">true</tt> 或
+        <tt class="literal">false</tt> 来决定AJAX对服务器的调用是否是异步的（默认值是
+        <tt class="literal">true</tt>）。</p><p>这个参数定义AJAX调用的选项。在我们的例子中，在第一个参数通过HTTP GET命令请求那个url，传入了变量
+        <tt class="literal">pars</tt>包含的查询字符串， <tt class="literal">Ajax.Request
+        </tt>对象在它完成接收响应的时候将调用<tt class="literal">showResponse</tt> 方法。</p><p>也许你知道，
+        <tt class="literal">XMLHttpRequest</tt>在HTTP请求期间将报告进度情况。这个进度被描述为四个不同阶段：<span class="emphasis"><em>Loading</em></span>,
+        <span class="emphasis"><em>Loaded</em></span>, <span class="emphasis"><em>Interactive</em></span>, 或
+        <span class="emphasis"><em>Complete</em></span>。你可以使 <tt class="literal">Ajax.Request</tt>
+        对象在任何阶段调用自定义方法 ，<span class="emphasis"><em>Complete</em></span>
+        是最常用的一个。想调用自定义的方法只需要简单的在请求的选项参数中的名为 <tt class="literal">onXXXXX</tt>
+        属性/方法中提供自定义的方法对象。 就像我们例子中的 <tt class="literal">onComplete</tt>
+        。你传入的方法将会被用一个参数调用，这个参数是 <tt class="literal">XMLHttpRequest</tt>
+        对象自己。你将会用这个对象去得到返回的数据并且或许检查包含有在这次调用中的HTTP结果代码的
+        <tt class="literal">status</tt> 属性。</p><p>还有另外两个有用的选项用来处理结果。我们可以在<tt class="literal">onSuccess</tt>
+        选项处传入一个方法，当AJAX无误的执行完后调用，
+        相反的，也可以在<tt class="literal">onFailure</tt>选项处传入一个方法，当服务器端出现错误时调用。正如<tt class="literal">onXXXXX</tt>
+        选项传入的方法一样，这两个在被调用的时候也传入一个带有AJAX请求的<tt class="literal">XMLHttpRequest对象。</tt></p><p>我们的例子没有用任何有趣的方式处理这个 XML响应，
+        我们只是把这段XML放进了一个文本域里面。对这个响应的一个典型的应用很可能就是找到其中的想要的信息，然后更新页面中的某些元素，
+        或者甚至可能做某些XSLT转换而在页面中产生一些HTML。</p><p>更完全的解释，请参照 <a href="#ajax_request_reference" title="2.14.&nbsp;Ajax.Request 类">Ajax.Request
+        参考</a> 和 <a href="#options_reference" title="2.15.&nbsp;options 参数对象">Ajax选项参考</a>。</p></div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="d0e333"></a>1.4.2.&nbsp;使用 <tt class="literal">Ajax.Updater</tt> 类</h3></div></div><div></div></div><p>如果你的服务器的另一端返回的信息已经是HTML了，那么使用这个程序包中
+        <tt class="literal">Ajax.Updater</tt>
+        类将使你的生活变得更加得容易。用它你只需提供哪一个元素需要被AJAX请求返回的HTML填充就可以了，例子比我写说明的更清楚。</p><p>
+          </p><pre class="programlisting">&lt;script&gt;
+    function getHTML()
+    {
+        var url = 'http://yourserver/app/getSomeHTML';
+        var pars = 'someParameter=ABC';
+
+         <span class="bold"><b>var myAjax = new Ajax.Updater('placeholder', url, {method: 'get', parameters: pars});</b></span>
+
+    }
+&lt;/script&gt;
+
+&lt;input type=button value=GetHtml onclick="getHTML()"&gt;
+&lt;div id="placeholder"&gt;&lt;/div&gt;</pre><p>
+        </p><p>你可以看到，这段代码比前面的例子更加简洁，不包括 <tt class="literal">onComplete</tt>
+        方法，但是在构造方法中传入了一个元素id。 我们来稍稍修改一下代码来描述如何在客户端处理服务器段错误成为可能。</p><p>我们将加入更多的选项， 指定处理错误的一个方法。这个是用 <tt class="literal">onFailure</tt>
+        选项来完成的。</p><p>我们也指定了一个 <tt class="literal">placeholder</tt>
+        只有在成功请求之后才会被填充。为了完成这个目的我们修改了第一个参数从一个简单的元素id到一个带有两个属性的对象，
+        <tt class="literal">success</tt> (一切OK的时候被用到) 和 <tt class="literal">failure</tt>
+        (有地方出问题的时候被用到) 在下面的例子中没有用到<tt class="literal">failure</tt>属性，而仅仅在
+        <tt class="literal">onFailure</tt> 处使用了 <tt class="literal">reportError</tt>
+        方法。</p><pre class="programlisting">&lt;script&gt;
+    function getHTML()
+    {
+        var url = 'http://yourserver/app/getSomeHTML';
+        var pars = 'someParameter=ABC';<span class="bold"><b>
+        var myAjax = new Ajax.Updater(
+                    {success: 'placeholder'},
+                    url,
+                    {method: 'get', parameters: pars, onFailure: reportError});</b></span>
+
+    }
+
+    function reportError(request)
+    {
+        alert('Sorry. There was an error.');
+    }
+&lt;/script&gt;
+
+&lt;input type=button value=GetHtml onclick="getHTML()"&gt;
+&lt;div id="placeholder"&gt;&lt;/div&gt;</pre><p>如果你的服务器逻辑是返回JavaScript 代码而不是单纯的 HTML 标记，
+        <tt class="literal">Ajax.Updater</tt>对象可以执行那段JavaScript代码。为了使这个对象对待响应为JavaScript，你只需在最后参数的对象构造方法中简单加入<tt class="literal">evalScripts:
+        true</tt>属性。</p><p></p><p></p><p>更完全的解释，请参照 <a href="#ajax_updater_reference" title="2.16.&nbsp;Ajax.Updater 类">Ajax.Updater
+        参考</a> 和 <a href="#options_reference" title="2.15.&nbsp;options 参数对象">Ajax选项参考</a> 。</p></div></div></div><div class="chapter" lang="en"><div class="titlepage"><div><div><h2 class="title"><a name="reference"></a>Chapter&nbsp;2.&nbsp;prototype.js参考</h2></div></div><div></div></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both;"><a name="d0e408"></a>2.1.&nbsp;JavaScript 类的扩展</h2></div></div><div></div></div><p>prototype.js 包中加入功能的一种途径就是扩展已有的JavaScript 类。</p></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both;"><a name="d0e413"></a>2.2.&nbsp;对 <tt class="literal">Object</tt> 类的扩展</h2></div></div><div></div></div><div class="table"><a name="d0e419"></a><p class="title"><b>Table&nbsp;2.1.&nbsp;<tt class="literal">Object</tt> 类的扩展</b></p><table summary="Object 类的扩展" border="1"><colgroup><col><col><col><col></colgroup><thead><tr><th align="center">方法</th><th align="center">类别</th><th align="center">参数</th><th align="center">描述</th></tr></thead><tbody><tr><td><tt class="literal">extend(destination, source)</tt></td><td><tt class="literal">static</tt></td><td><tt class="literal">destination</tt>: 任何对象,
+              <tt class="literal">source</tt>: 任何对象</td><td>用从 <tt class="literal">source</tt> 到
+              <tt class="literal">destination</tt>复制所有属性和方法的方式 来提供一种继承机制。</td></tr><tr><td><tt class="literal">extend(object)</tt></td><td><tt class="literal">instance</tt></td><td><tt class="literal">任何对象</tt></td><td>用从传入的 <tt class="literal">object</tt> 中复制所有属性和方法的方式
+              来提供一种继承机制。</td></tr></tbody></table></div></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both;"><a name="d0e477"></a>2.3.&nbsp;对 <tt class="literal">Number</tt> 类的扩展</h2></div></div><div></div></div><p>
+        </p><div class="table"><a name="d0e485"></a><p class="title"><b>Table&nbsp;2.2.&nbsp;<tt class="literal">Number</tt> 类的扩展</b></p><table summary="Number 类的扩展" border="1"><colgroup><col><col><col><col></colgroup><thead><tr><th align="center">方法</th><th align="center">类别</th><th align="center">参数</th><th align="center">描述</th></tr></thead><tbody><tr><td><tt class="literal">toColorPart()</tt></td><td><tt class="literal">instance</tt></td><td><tt class="literal">(none)</tt></td><td>返回数字的十六进制描述， 当在HTML中转换为RGB颜色组件到HTML中使用的颜色。</td></tr></tbody></table></div><p>
+      </p></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both;"><a name="d0e519"></a>2.4.&nbsp;对 <tt class="literal">Function</tt> 类的扩展</h2></div></div><div></div></div><div class="table"><a name="d0e526"></a><p class="title"><b>Table&nbsp;2.3.&nbsp;对 <tt class="literal">Function</tt> 类的扩展</b></p><table summary="对 Function 类的扩展" border="1"><colgroup><col><col><col><col></colgroup><thead><tr><th align="center">方法</th><th align="center">类别</th><th align="center">参数</th><th align="center">描述</th></tr></thead><tbody><tr><td><tt class="literal">bind(object)</tt></td><td><tt class="literal">instance</tt></td><td><tt class="literal">object</tt>: 拥有这个方法的对象</td><td>返回预先绑定在拥有该函数(=方法)的对象上的函数实例，
+                返回的方法将和原来的方法具有相同的参数。</td></tr><tr><td><tt class="literal">bindAsEventListener(object)</tt></td><td><tt class="literal">instance</tt></td><td><tt class="literal">object</tt>: 拥有这个方法的对象</td><td>返回预先绑定在拥有该函数(=方法)的对象上的函数实例，
+                返回的方法将把当前的事件对象作为它的参数。</td></tr></tbody></table></div><p>让我们看看这些扩展的具体例子。</p><pre class="programlisting">&lt;input type=checkbox id=myChk value=1&gt; Test?
+&lt;script&gt;
+    //declaring the class
+    var CheckboxWatcher = Class.create();
+
+    //defining the rest of the class implmentation
+    CheckboxWatcher.prototype = {
+
+       initialize: function(chkBox, message) {
+            this.chkBox = $(chkBox);
+            this.message = message;
+            //assigning our method to the event
+            <span class="bold"><b>this.chkBox.onclick = this.showMessage.bindAsEventListener(this);</b></span>
+       },
+
+       showMessage: function(evt) {
+          alert(this.message + ' (' + evt.type + ')');
+       }
+    };
+
+
+    var watcher = new CheckboxWatcher('myChk', 'Changed');
+&lt;/script&gt;</pre></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both;"><a name="d0e580"></a>2.5.&nbsp;对 <tt class="literal">String</tt> 类的扩展</h2></div></div><div></div></div><p>
+        </p><div class="table"><a name="d0e588"></a><p class="title"><b>Table&nbsp;2.4.&nbsp;<tt class="literal">String</tt> 类的扩展</b></p><table summary="String 类的扩展" border="1"><colgroup><col><col><col><col></colgroup><thead><tr><th align="center">方法</th><th align="center">类别</th><th align="center">参数</th><th align="center">描述</th></tr></thead><tbody><tr><td><tt class="literal">stripTags()</tt></td><td><tt class="literal">instance</tt></td><td><tt class="literal">(none)</tt></td><td>返回一个把所有的HTML或XML标记都移除的字符串。</td></tr><tr><td><tt class="literal">escapeHTML()</tt></td><td><tt class="literal">instance</tt></td><td><tt class="literal">(none)</tt></td><td>返回一个把所有的HTML标记回避掉的字符串。</td></tr><tr><td><tt class="literal">unescapeHTML()</tt></td><td><tt class="literal">instance</tt></td><td><tt class="literal">(none)</tt></td><td>和 <tt class="literal">escapeHTML()</tt>相反。</td></tr></tbody></table></div><p>
+      </p></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both;"><a name="d0e649"></a>2.6.&nbsp;对 <tt class="literal">document</tt> DOM 对象的扩展</h2></div></div><div></div></div><p>
+        </p><div class="table"><a name="d0e657"></a><p class="title"><b>Table&nbsp;2.5.&nbsp;<tt class="literal">document</tt> DOM 对象的扩展</b></p><table summary="document DOM 对象的扩展" border="1"><colgroup><col><col><col><col></colgroup><thead><tr><th align="center">方法</th><th align="center">类别</th><th align="center">参数</th><th align="center">描述</th></tr></thead><tbody><tr><td><tt class="literal">getElementsByClassName(className)</tt></td><td><tt class="literal">instance</tt></td><td><tt class="literal">className</tt>: 关联在元素上的CSS类名</td><td>返回给定的具有相同的CSS类名的所有元素。</td></tr></tbody></table></div><p>
+      </p></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both;"><a name="d0e692"></a>2.7.&nbsp;对 <tt class="literal">Event</tt> 对象的扩展</h2></div></div><div></div></div><p>
+        </p><div class="table"><a name="d0e700"></a><p class="title"><b>Table&nbsp;2.6.&nbsp;<tt class="literal">Event</tt> 对象的扩展</b></p><table summary="Event 对象的扩展" border="1"><colgroup><col><col><col></colgroup><thead><tr><th align="center">属性</th><th align="center">类型</th><th align="center">描述</th></tr></thead><tbody><tr><td><tt class="literal">KEY_BACKSPACE</tt></td><td><tt class="literal">Number</tt></td><td>8: 常量，退格(Backspace)键的代码。</td></tr><tr><td><tt class="literal">KEY_TAB</tt></td><td><tt class="literal">Number</tt></td><td>9: 常量，Tab键的代码。</td></tr><tr><td><tt class="literal">KEY_RETURN</tt></td><td><tt class="literal">Number</tt></td><td>13: 常量，回车键的代码。</td></tr><tr><td><tt class="literal">KEY_ESC</tt></td><td><tt class="literal">Number</tt></td><td>27: 常量， Esc键的代码。</td></tr><tr><td><tt class="literal">KEY_LEFT</tt></td><td><tt class="literal">Number</tt></td><td>37: 常量，左箭头键的代码。</td></tr><tr><td><tt class="literal">KEY_UP</tt></td><td><tt class="literal">Number</tt></td><td>38: 常量，上箭头键的代码。</td></tr><tr><td><tt class="literal">KEY_RIGHT</tt></td><td><tt class="literal">Number</tt></td><td>39: 常量，右箭头键的代码。</td></tr><tr><td><tt class="literal">KEY_DOWN</tt></td><td><tt class="literal">Number</tt></td><td>40: 常量，下箭头键的代码。</td></tr><tr><td><tt class="literal">KEY_DELETE</tt></td><td><tt class="literal">Number</tt></td><td>46: 常量，删除(Delete)键的代码。</td></tr><tr><td><tt class="literal">observers:</tt></td><td><tt class="literal">Array</tt></td><td><span class="emphasis"><em>缓存的观察者的列表，这个对象内部具体实现的一部分。</em></span></td></tr></tbody></table></div><p>
+      </p><div class="table"><a name="d0e811"></a><p class="title"><b>Table&nbsp;2.7.&nbsp;<tt class="literal">Event</tt> 对象的扩展</b></p><table summary="Event 对象的扩展" border="1"><colgroup><col><col><col><col></colgroup><thead><tr><th align="center">方法</th><th align="center">类别</th><th align="center">参数</th><th align="center">描述</th></tr></thead><tbody><tr><td><tt class="literal">element(event)</tt></td><td><tt class="literal">static</tt></td><td><tt class="literal">event</tt>: 事件对象</td><td>返回引发这个事件的元素。</td></tr><tr><td><tt class="literal">isLeftClick(event)</tt></td><td><tt class="literal">static</tt></td><td><tt class="literal">event</tt>: 事件对象</td><td>如果鼠标左键单击返回true。</td></tr><tr><td><tt class="literal">pointerX(event)</tt></td><td><tt class="literal">static</tt></td><td><tt class="literal">event</tt>: 事件对象</td><td>返回在页面上x坐标。</td></tr><tr><td><tt class="literal">pointerY(event)</tt></td><td><tt class="literal">static</tt></td><td><tt class="literal">event</tt>: 事件对象</td><td>返回在页面上y坐标。</td></tr><tr><td><tt class="literal">stop(event)</tt></td><td><tt class="literal">static</tt></td><td><tt class="literal">event</tt>: 事件对象</td><td>用这个方法来中止事件的默认行为来使事件的传播停止。</td></tr><tr><td><tt class="literal">findElement(event, tagName)</tt></td><td><tt class="literal">static</tt></td><td><tt class="literal">event</tt>: 事件对象,
+                <tt class="literal">tagName</tt>: 指定标记的名字</td><td>向 DOM 树的上位查找，找到第一个给定标记名称的元素， 从这个元素开始触发事件。</td></tr><tr><td><tt class="literal">observe(element, name, observer,
+                  useCapture)</tt></td><td><tt class="literal">static</tt></td><td><tt class="literal">element</tt>: 对象或者对象id,
+                <tt class="literal">name</tt>: 事件名 (如 'click', 'load', etc),
+                <tt class="literal">observer</tt>: 处理这个事件的方法,
+                <tt class="literal">useCapture</tt>: 如果true, 在捕捉到事件的阶段处理事件 那么如果
+                false在<span class="emphasis"><em>bubbling</em></span> 阶段处理。</td><td>加入一个处理事件的方法。</td></tr><tr><td><tt class="literal">stopObserving(element, name, observer,
+                  useCapture)</tt></td><td><tt class="literal">static</tt></td><td><tt class="literal">element</tt>: 对象或者对象id,
+                <tt class="literal">name</tt>: 事件名 (如 'click', 'load', etc),
+                <tt class="literal">observer</tt>: 处理这个事件的方法,
+                <tt class="literal">useCapture</tt>: 如果true, 在捕捉到事件的阶段处理事件 那么如果
+                false在<span class="emphasis"><em>bubbling</em></span> 阶段处理。</td><td>删除一个处理实践的方法。</td></tr><tr><td><tt class="literal">_observeAndCache( element, name, observer,
+                  useCapture)</tt></td><td><tt class="literal">static</tt></td><td>&nbsp;</td><td>私有方法，不用管它。</td></tr><tr><td><tt class="literal">unloadCache()</tt></td><td><tt class="literal">static</tt></td><td><tt class="literal">(none)</tt></td><td>私有方法，不用管它。清除内存中的多有观察着缓存。</td></tr></tbody></table></div><p>让我们看看怎样用这个对象加入处理 <tt class="literal">window</tt>
+      对象的<tt class="literal">load</tt>事件的处理方法。</p><pre class="programlisting">&lt;script&gt;
+    <span class="bold"><b>Event.observe(window, 'load', showMessage, false);</b></span>
+
+    function showMessage() {
+      alert('Page loaded.');
+    }
+&lt;/script&gt;</pre></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both;"><a name="d0e997"></a>2.8.&nbsp;在 prototype.js中定义的新对象和类</h2></div></div><div></div></div><p>另一个这个程序包帮助你的地方就是提供许多既支持面向对象设计理念又有共通功能的许多对象。</p></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both;"><a name="d0e1002"></a>2.9.&nbsp;<tt class="literal">PeriodicalExecuter</tt> 对象</h2></div></div><div></div></div><p>这个对象提供一定间隔时间上重复调用一个方法的逻辑。</p><p>
+        </p><div class="table"><a name="d0e1011"></a><p class="title"><b>Table&nbsp;2.8.&nbsp;<tt class="literal">PeriodicalExecuter</tt> 对象</b></p><table summary="PeriodicalExecuter 对象" border="1"><colgroup><col><col><col><col></colgroup><thead><tr><th align="center">方法</th><th align="center">类别</th><th align="center">参数</th><th align="center">描述</th></tr></thead><tbody><tr><td><tt class="literal">[ctor](callback, interval)</tt></td><td><tt class="literal">constructor</tt></td><td><tt class="literal">callback</tt>: 没有参数的方法,
+                <tt class="literal">interval</tt>: 秒数</td><td>创建这个对象的实例将会重复调用给定的方法。</td></tr></tbody></table></div><p>
+
+        </p><div class="table"><a name="d0e1049"></a><p class="title"><b>Table&nbsp;2.9.&nbsp;<tt class="literal">PeriodicalExecuter</tt> 对象</b></p><table summary="PeriodicalExecuter 对象" border="1"><colgroup><col><col><col></colgroup><thead><tr><th align="center">属性</th><th align="center">类型</th><th align="center">描述</th></tr></thead><tbody><tr><td><tt class="literal">callback</tt></td><td><tt class="literal">Function()</tt></td><td>被调用的方法，该方法不会被传入参数。</td></tr><tr><td><tt class="literal">frequency</tt></td><td><tt class="literal">Number</tt></td><td>以秒为单位的间隔。</td></tr><tr><td><tt class="literal">currentlyExecuting</tt></td><td><tt class="literal">Boolean</tt></td><td>表示这个方法是否正在执行。</td></tr></tbody></table></div><p>
+      </p></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both;"><a name="d0e1095"></a>2.10.&nbsp;<tt class="literal">Prototype</tt> 对象</h2></div></div><div></div></div><p><tt class="literal">Prototype</tt> 没有太重要的作用，只是声明了该程序包的版本 。</p><p>
+        </p><div class="table"><a name="d0e1106"></a><p class="title"><b>Table&nbsp;2.10.&nbsp;The Prototype object</b></p><table summary="The Prototype object" border="1"><colgroup><col><col><col></colgroup><thead><tr><th align="center">属性</th><th align="center">类型</th><th align="center">描述</th></tr></thead><tbody><tr><td><tt class="literal">Version</tt></td><td><tt class="literal">String</tt></td><td>包的版本。</td></tr><tr><td><tt class="literal">emptyFunction</tt></td><td><tt class="literal">Function()</tt></td><td>空方法对象。</td></tr></tbody></table></div><p>
+      </p></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both;"><a name="d0e1141"></a>2.11.&nbsp;<tt class="literal">Class</tt> 对象</h2></div></div><div></div></div><p>在这个程序包中 <tt class="literal">Class</tt> 对象在声明其他的类时候被用到 。用这个对象声明类使得新类支持
+      <tt class="literal">initialize()</tt> 方法，他起构造方法的作用。</p><p>看下面的例子</p><pre class="programlisting">//declaring the class
+<span class="bold"><b>var MySampleClass = Class.create();</b></span>
+//defining the rest of the class implmentation
+MySampleClass.prototype = {
+
+   initialize: function(message) {
+        this.message = message;
+   },
+
+   showMessage: function(ajaxResponse) {
+      alert(this.message);
+   }
+};
+
+//now, let's instantiate and use one object
+var myTalker = new MySampleClass('hi there.');
+myTalker.showMessage(); //displays alert</pre><p>
+        </p><div class="table"><a name="d0e1163"></a><p class="title"><b>Table&nbsp;2.11.&nbsp;<tt class="literal">Class</tt> 对象</b></p><table summary="Class 对象" border="1"><colgroup><col><col><col><col></colgroup><thead><tr><th align="center">方法</th><th align="center">类别</th><th align="center">参数</th><th align="center">描述</th></tr></thead><tbody><tr><td><tt class="literal">create(*)</tt></td><td><tt class="literal">instance</tt></td><td><tt class="literal">(any)</tt></td><td>定义新类的构造方法。</td></tr></tbody></table></div><p>
+      </p></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both;"><a name="d0e1197"></a>2.12.&nbsp;<tt class="literal">Ajax</tt> 对象</h2></div></div><div></div></div><p>这个对象被用作其他提供AJAX功能的类的根对象。</p><p>
+        </p><div class="table"><a name="d0e1206"></a><p class="title"><b>Table&nbsp;2.12.&nbsp;<tt class="literal">Ajax</tt> 对象</b></p><table summary="Ajax 对象" border="1"><colgroup><col><col><col><col></colgroup><thead><tr><th align="center">方法</th><th align="center">类别</th><th align="center">参数</th><th align="center">描述</th></tr></thead><tbody><tr><td><tt class="literal">getTransport()</tt></td><td><tt class="literal">instance</tt></td><td><tt class="literal">(none)</tt></td><td>返回新的<tt class="literal">XMLHttpRequest</tt> 对象。</td></tr></tbody></table></div><p>
+      </p></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both;"><a name="ajax_base"></a>2.13.&nbsp;<tt class="literal">Ajax.Base</tt> 类</h2></div></div><div></div></div><p>这个类是其他在Ajax对象中定义的类的基类。</p><p>
+        </p><div class="table"><a name="d0e1252"></a><p class="title"><b>Table&nbsp;2.13.&nbsp;Ajax.Base 类</b></p><table summary="Ajax.Base 类" border="1"><colgroup><col><col><col><col></colgroup><thead><tr><th align="center">方法</th><th align="center">类别</th><th align="center">参数</th><th align="center">描述</th></tr></thead><tbody><tr><td><tt class="literal">setOptions(options)</tt></td><td><tt class="literal">instance</tt></td><td><tt class="literal">options</tt>: <a href="#options_reference" title="2.15.&nbsp;options 参数对象">AJAX 选项</a></td><td>设定AJAX操作想要的选项。</td></tr><tr><td><tt class="literal">responseIsSuccess()</tt></td><td><tt class="literal">instance</tt></td><td><tt class="literal">(none)</tt></td><td>返回 <tt class="literal">true</tt> 如果AJAX操作成功,否则为
+                <tt class="literal">false</tt> 。</td></tr><tr><td><tt class="literal">responseIsFailure()</tt></td><td><tt class="literal">instance</tt></td><td><tt class="literal">(none)</tt></td><td>与 <tt class="literal">responseIsSuccess()</tt> 相反。</td></tr></tbody></table></div><p>
+      </p></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both;"><a name="ajax_request_reference"></a>2.14.&nbsp;<tt class="literal">Ajax.Request</tt> 类</h2></div></div><div></div></div><p>继承自 <a href="#ajax_base" title="2.13.&nbsp;Ajax.Base 类">
+          <tt class="literal">Ajax.Base</tt>
+        </a></p><p>封装 AJAX 操作</p><p>
+        </p><div class="table"><a name="d0e1336"></a><p class="title"><b>Table&nbsp;2.14.&nbsp;<tt class="literal">Ajax.Request</tt> 类</b></p><table summary="Ajax.Request 类" border="1"><colgroup><col><col><col><col></colgroup><thead><tr><th align="center">属性</th><th align="center">类型</th><th align="center">类别</th><th align="center">描述</th></tr></thead><tbody><tr><td><tt class="literal">Events</tt></td><td><tt class="literal">Array</tt></td><td><tt class="literal">static</tt></td><td>在AJAX操作中所有可能报告的事件/状态的列表。这个列表包括:
+                <tt class="literal">'Uninitialized', 'Loading', 'Loaded', 'Interactive',
+                </tt>和 <tt class="literal">'Complete'</tt>。</td></tr><tr><td><tt class="literal">transport</tt></td><td><tt class="literal">XMLHttpRequest</tt></td><td><tt class="literal">instance</tt></td><td>携带AJAX操作的 <tt class="literal">XMLHttpRequest</tt> 对象。</td></tr></tbody></table></div><p>
+
+        </p><div class="table"><a name="d0e1391"></a><p class="title"><b>Table&nbsp;2.15.&nbsp;<tt class="literal">Ajax.Request</tt> 类</b></p><table summary="Ajax.Request 类" border="1"><colgroup><col><col><col><col></colgroup><thead><tr><th align="center">方法</th><th align="center">类别</th><th align="center">参数</th><th align="center">描述</th></tr></thead><tbody><tr><td><tt class="literal">[ctor](url, options)</tt></td><td><tt class="literal">constructor</tt></td><td><tt class="literal">url</tt>: 请求的url,
+                <tt class="literal">options</tt>: AJAX 选项</td><td>创建这个对象的一个实例，它将在给定的选项下请求url。 <span class="bold"><b>重要：</b></span>如果选择的url受到浏览器的安全设置，他会一点作用也不起。
+                很多情况下，浏览器不会请求与当前页面不同主机(域名)的url。
+                你最好只使用本地url来避免限制用户配置他们的浏览器(谢谢Clay)</td></tr><tr><td><tt class="literal">request(url)</tt></td><td><tt class="literal">instance</tt></td><td><tt class="literal">url</tt>: AJAX 请求的url</td><td>这个方法通常不会被外部调用。已经在构造方法中调用了。</td></tr><tr><td><tt class="literal">setRequestHeaders()</tt></td><td><tt class="literal">instance</tt></td><td><tt class="literal">(none)</tt></td><td>这个方法通常不会被外部调用。 被这个对象自己调用来配置在HTTP请求要发送的HTTP报头。</td></tr><tr><td><tt class="literal">onStateChange()</tt></td><td><tt class="literal">instance</tt></td><td><tt class="literal">(none)</tt></td><td>这个方法通常不会被外部调用。 当AJAX请求状态改变的时候被这个对象自己调用。</td></tr><tr><td><tt class="literal">respondToReadyState(readyState)</tt></td><td><tt class="literal">instance</tt></td><td><tt class="literal">readyState</tt>: 状态数字 (1 到 4)</td><td>这个方法通常不会被外部调用。 当AJAX请求状态改变的时候被这个对象自己调用。</td></tr></tbody></table></div><p>
+      </p></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both;"><a name="options_reference"></a>2.15.&nbsp;<tt class="literal">options</tt> 参数对象</h2></div></div><div></div></div><p>AJAX操作中一个重要的部分就是 <tt class="literal">options</tt> 参数。
+      本质上没有options类。任何对象都可以被传入，只要带有需要的属性。通常会只为了AJAX调用创建匿名类。</p><p>
+        </p><div class="table"><a name="d0e1494"></a><p class="title"><b>Table&nbsp;2.16.&nbsp;<tt class="literal">options</tt> 参数对象</b></p><table summary="options 参数对象" border="1"><colgroup><col><col><col><col></colgroup><thead><tr><th align="center">属性</th><th align="center">类型</th><th align="center">Default</th><th align="center">描述</th></tr></thead><tbody><tr><td><tt class="literal">method</tt></td><td><tt class="literal">Array</tt></td><td><tt class="literal">'post'</tt></td><td>HTTP 请求方式。</td></tr><tr><td><tt class="literal">parameters</tt></td><td><tt class="literal">String</tt></td><td><tt class="literal">''</tt></td><td>在HTTP请求中传入的url格式的值列表。</td></tr><tr><td><tt class="literal">asynchronous</tt></td><td><tt class="literal">Boolean</tt></td><td><tt class="literal">true</tt></td><td>指定是否做异步 AJAX 请求。</td></tr><tr><td><tt class="literal">postBody</tt></td><td><tt class="literal">String</tt></td><td><tt class="literal">undefined</tt></td><td>在HTTP POST的情况下，传入请求体中的内容。</td></tr><tr><td><tt class="literal">requestHeaders</tt></td><td><tt class="literal">Array</tt></td><td><tt class="literal">undefined</tt></td><td>和请求一起被传入的HTTP头部列表， 这个列表必须含有偶数个项目， 任何奇数项目是自定义的头部的名称，
+                接下来的偶数项目使这个头部项目的字符串值。 例子:<tt class="literal">['my-header1', 'this is the
+                value', 'my-other-header', 'another value']</tt></td></tr><tr><td><tt class="literal">onXXXXXXXX</tt></td><td><tt class="literal">Function(XMLHttpRequest)</tt></td><td><tt class="literal">undefined</tt></td><td>在AJAX请求中，当相应的事件/状态形成的时候调用的自定义方法。 例如 <tt class="literal">var myOpts
+                = {onComplete: showResponse, onLoaded:
+                registerLoaded};</tt>. 这个方法将被传入一个参数， 这个参数是携带AJAX操作的
+                <tt class="literal">XMLHttpRequest</tt>对象。</td></tr><tr><td><tt class="literal">onSuccess</tt></td><td><tt class="literal">Function(XMLHttpRequest)</tt></td><td><tt class="literal">undefined</tt></td><td>当AJAX请求成功完成的时候调用的自定义方法。 这个方法将被传入一个参数， 这个参数是携带AJAX操作的
+                <tt class="literal">XMLHttpRequest</tt>对象。</td></tr><tr><td><tt class="literal">onFailure</tt></td><td><tt class="literal">Function(XMLHttpRequest)</tt></td><td><tt class="literal">undefined</tt></td><td>当AJAX请求完成但出现错误的时候调用的自定义方法。 这个方法将被传入一个参数， 这个参数是携带AJAX操作的
+                <tt class="literal">XMLHttpRequest</tt>对象。</td></tr><tr><td><tt class="literal">insertion</tt></td><td><tt class="literal">Function(Object, String)</tt></td><td><tt class="literal">null</tt></td><td>为了把返回的文本注入到一个元素中而执行的方法。 这个方法将被传入两个参数，要被更新的对象并且只应用于
+                <tt class="literal">
+                    <a href="#ajax_updater_reference" title="2.16.&nbsp;Ajax.Updater 类">Ajax.Updater</a>
+                  </tt>的响应文本 。</td></tr><tr><td><tt class="literal">evalScripts</tt></td><td><tt class="literal">Boolean</tt></td><td><tt class="literal">undefined, false</tt></td><td>决定当响应到达的时候是否执行其中的脚本块，只在 <a href="#ajax_updater_reference" title="2.16.&nbsp;Ajax.Updater 类">
+                    <tt class="literal">Ajax.Updater</tt>
+                  </a> 对象中应用。</td></tr><tr><td><tt class="literal">decay</tt></td><td><tt class="literal">Number</tt></td><td><tt class="literal">undefined, 1</tt></td><td>决定当最后一次响应和前一次响应相同时在 <a href="#ajax_periodical_updater" title="2.17.&nbsp;Ajax.PeriodicalUpdater 类">
+                    <tt class="literal">Ajax.PeriodicalUpdater</tt>
+                  </a> 对象中的减漫访问的次数， 例如，如果设为2，后来的刷新和之前的结果一样，
+                这个对象将等待2个设定的时间间隔进行下一次刷新， 如果又一次一样， 那么将等待4次，等等。
+                不设定这个只，或者设置为1，将避免访问频率变慢。</td></tr></tbody></table></div><p>
+      </p></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both;"><a name="ajax_updater_reference"></a>2.16.&nbsp;<tt class="literal">Ajax.Updater</tt> 类</h2></div></div><div></div></div><p>继承自 <tt class="literal">
+          <a href="#ajax_request_reference" title="2.14.&nbsp;Ajax.Request 类">Ajax.Request</a>
+        </tt></p><p>当请求的url返回一段HTML而你想把它直接放置到页面中一个特定的元素的时候被用到。
+      如果url的返回<tt class="literal">&lt;script&gt;</tt>
+      的块并且想在接收到时就执行它的时候也可以使用该对象。含有脚本的时候使用 <tt class="literal">evalScripts</tt>
+      选项。</p><p>
+        </p><div class="table"><a name="d0e1702"></a><p class="title"><b>Table&nbsp;2.17.&nbsp;<tt class="literal">Ajax.Updater</tt> 类</b></p><table summary="Ajax.Updater 类" border="1"><colgroup><col><col><col><col></colgroup><thead><tr><th align="center">属性</th><th align="center">类型</th><th align="center">类别</th><th align="center">描述</th></tr></thead><tbody><tr><td><tt class="literal">ScriptFragment</tt></td><td><tt class="literal">String</tt></td><td><tt class="literal">static</tt></td><td>可以判断是否为脚本的正则表达式。</td></tr><tr><td><tt class="literal">containers</tt></td><td><tt class="literal">Object</tt></td><td><tt class="literal">instance</tt></td><td>这个对象包含两个属性:AJAX请求成功执行的时候用到
+                <tt class="literal">containers.success</tt> , 否则的话用到
+                <tt class="literal">containers.failure</tt> 。</td></tr></tbody></table></div><p>
+
+        </p><div class="table"><a name="d0e1754"></a><p class="title"><b>Table&nbsp;2.18.&nbsp;<tt class="literal">Ajax.Updater</tt> 类</b></p><table summary="Ajax.Updater 类" border="1"><colgroup><col><col><col><col></colgroup><thead><tr><th align="center">方法</th><th align="center">类别</th><th align="center">参数</th><th align="center">描述</th></tr></thead><tbody><tr><td><tt class="literal">[ctor](container, url, options)</tt></td><td><tt class="literal">constructor</tt></td><td><tt class="literal">container</tt>:可以是元素的id, 也可以是元素自己,
+                或者可以是带有2个属性的对象 - <span class="bold"><b>object.success</b></span> AJAX请求成功的时候用到的元素(或者id)
+                否则用到<span class="bold"><b>object.failure</b></span>
+                中设定的元素(或id) <tt class="literal">,url</tt>: 请求的url,
+                <tt class="literal">options</tt>: <a href="#options_reference" title="2.15.&nbsp;options 参数对象">AJAX 选项</a></td><td>创建一个用给定的选项请求给定的url的一个实例。</td></tr><tr><td><tt class="literal">updateContent()</tt></td><td><tt class="literal">instance</tt></td><td><tt class="literal">(none)</tt></td><td>这个方法通常不会被外部调用。 当响应到达的时候，被这个对象自己调用。 它会用HTML更新适当的元素或者调用在
+                <tt class="literal">insertion</tt> 选项中传入的方法-这个方法将被传入两个参数，
+                被更新的元素和响应文本。</td></tr></tbody></table></div><p>
+      </p></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both;"><a name="ajax_periodical_updater"></a>2.17.&nbsp;<tt class="literal">Ajax.PeriodicalUpdater</tt> 类</h2></div></div><div></div></div><p>继承自 <a href="#ajax_base" title="2.13.&nbsp;Ajax.Base 类">
+          <tt class="literal">Ajax.Base</tt>
+        </a></p><p>这个类重复生成并使用 <tt class="literal">Ajax.Updater </tt>对象来刷新页面中的一个元素。或者执行
+      Ajax.Updater 可以执行的其它任务。更多信息参照 <a href="#ajax_updater_reference" title="2.16.&nbsp;Ajax.Updater 类">Ajax.Updater 参考</a> 。</p><p>
+        </p><div class="table"><a name="d0e1840"></a><p class="title"><b>Table&nbsp;2.19.&nbsp;<tt class="literal">Ajax.PeriodicalUpdater</tt> 类</b></p><table summary="Ajax.PeriodicalUpdater 类" border="1"><colgroup><col><col><col><col></colgroup><thead><tr><th align="center">属性</th><th align="center">类型</th><th align="center">类别</th><th align="center">描述</th></tr></thead><tbody><tr><td><tt class="literal">container</tt></td><td><tt class="literal">Object</tt></td><td><tt class="literal">instance</tt></td><td>这个值将直接传入<tt class="literal">Ajax.Updater</tt>的构造方法。</td></tr><tr><td><tt class="literal">url</tt></td><td><tt class="literal">String</tt></td><td><tt class="literal">instance</tt></td><td>这个值将直接传入<tt class="literal">Ajax.Updater</tt>的构造方法。</td></tr><tr><td><tt class="literal">frequency</tt></td><td><tt class="literal">Number</tt></td><td><tt class="literal">instance</tt></td><td>两次刷新之间的间隔 (不是频率) ，以秒为单位。 默认2秒。 This 当调用
+                <tt class="literal">Ajax.Updater</tt> 对象的时候，这个数将和当前的
+                <tt class="literal">decay</tt> 相乘。</td></tr><tr><td><tt class="literal">decay</tt></td><td><tt class="literal">Number</tt></td><td><tt class="literal">instance</tt></td><td>重负执行任务的时候保持的衰败水平。</td></tr><tr><td><tt class="literal">updater</tt></td><td><tt class="literal">
+                    <a href="#ajax_updater_reference" title="2.16.&nbsp;Ajax.Updater 类">Ajax.Updater</a>
+                  </tt></td><td><tt class="literal">instance</tt></td><td>最后一次使用的 <tt class="literal">Ajax.Updater </tt>对象</td></tr><tr><td><tt class="literal">timer</tt></td><td><tt class="literal">Object</tt></td><td><tt class="literal">instance</tt></td><td>通知对象该下一次更新时用到的JavaScript 计时器。</td></tr></tbody></table></div><p>
+
+        </p><div class="table"><a name="d0e1952"></a><p class="title"><b>Table&nbsp;2.20.&nbsp;<tt class="literal">Ajax.PeriodicalUpdater</tt> 类</b></p><table summary="Ajax.PeriodicalUpdater 类" border="1"><colgroup><col><col><col><col></colgroup><thead><tr><th align="center">方法</th><th align="center">类别</th><th align="center">参数</th><th align="center">描述</th></tr></thead><tbody><tr><td><tt class="literal">[ctor](container, url, options)</tt></td><td><tt class="literal">constructor</tt></td><td><tt class="literal">container</tt>:可以是元素的id, 也可以是元素自己,
+                或者可以是带有2个属性的对象 - <span class="bold"><b>object.success</b></span> AJAX请求成功的时候用到的元素(或者id)
+                否则用到<span class="bold"><b>object.failure</b></span>
+                中设定的元素(或id) <tt class="literal">,url</tt>: 请求的url,
+                <tt class="literal">options</tt>: <a href="#options_reference" title="2.15.&nbsp;options 参数对象">AJAX 选项</a></td><td>创建一个用给定的选项请求给定的url的一个实例。</td></tr><tr><td><tt class="literal">start()</tt></td><td><tt class="literal">instance</tt></td><td><tt class="literal">(none)</tt></td><td>这个方法通常不会被外部调用。 对象为了开始周期性执行任务的时候调用的方法。</td></tr><tr><td><tt class="literal">stop()</tt></td><td><tt class="literal">instance</tt></td><td><tt class="literal">(none)</tt></td><td>这个方法通常不会被外部调用。 对象为了停止周期性执行任务的时候调用的方法。</td></tr><tr><td><tt class="literal">updateComplete()</tt></td><td><tt class="literal">instance</tt></td><td><tt class="literal">(none)</tt></td><td>这个方法通常不会被外部调用。 被当前的 <tt class="literal">Ajax.Updater
+                </tt>使用，当一次请求结束的时候，它被用作计划下一次请求。</td></tr><tr><td><tt class="literal">onTimerEvent()</tt></td><td><tt class="literal">instance</tt></td><td><tt class="literal">(none)</tt></td><td>这个方法通常不会被外部调用。当到下一次更新时被内部调用。</td></tr></tbody></table></div><p>
+      </p></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both;"><a name="d0e2052"></a>2.18.&nbsp;<tt class="literal">Element</tt> 对象</h2></div></div><div></div></div><p>这个对象提供在操作DOM中元素时使用的功能性方法。</p><p>
+        </p><div class="table"><a name="d0e2061"></a><p class="title"><b>Table&nbsp;2.21.&nbsp;<tt class="literal">Element</tt> 对象</b></p><table summary="Element 对象" border="1"><colgroup><col><col><col><col></colgroup><thead><tr><th align="center">方法</th><th align="center">类别</th><th align="center">参数</th><th align="center">描述</th></tr></thead><tbody><tr><td><tt class="literal">toggle(elem1 [, elem2 [, elem3 [...]]])</tt></td><td><tt class="literal">constructor</tt></td><td><tt class="literal">elemN</tt>: 元素对象或id</td><td>切换每一个传入元素的可视性。</td></tr><tr><td><tt class="literal">hide(elem1 [, elem2 [, elem3 [...]]])</tt></td><td><tt class="literal">instance</tt></td><td><tt class="literal">elemN</tt>: 元素对象或id</td><td>用设定它的 <tt class="literal">style.display</tt> 为
+                <tt class="literal">'none'</tt>来隐藏每个传入的元素。</td></tr><tr><td><tt class="literal">show(elem1 [, elem2 [, Slem3 [...]]])</tt></td><td><tt class="literal">instance</tt></td><td><tt class="literal">elemN</tt>: 元素对象或id</td><td>用设定它的 <tt class="literal">style.display </tt>为
+                <tt class="literal">''</tt>来显示每个传入的元素。</td></tr><tr><td><tt class="literal">remove(element)</tt></td><td><tt class="literal">instance</tt></td><td><tt class="literal">element</tt>: 元素对象或id</td><td>从document对象中删除指定的元素。</td></tr><tr><td><tt class="literal">getHeight(element)</tt></td><td><tt class="literal">instance</tt></td><td><tt class="literal">element</tt>: 元素对象或id</td><td>返回元素的 <tt class="literal">offsetHeight</tt> 。</td></tr><tr><td><tt class="literal">addClassName( element, className)</tt></td><td><tt class="literal">instance</tt></td><td><tt class="literal">element</tt>: 元素对象或id,
+                <tt class="literal">className</tt>: CSS类名</td><td>向元素的类名中加入给定的类名。</td></tr><tr><td><tt class="literal">hasClassName( element, className)</tt></td><td><tt class="literal">instance</tt></td><td><tt class="literal">element</tt>: 元素对象或id,
+                <tt class="literal">className</tt>: CSS类名</td><td>返回 <tt class="literal">true</tt> 如果元素的类名中含有给定的类名</td></tr><tr><td><tt class="literal">removeClassName( element, className)</tt></td><td><tt class="literal">instance</tt></td><td><tt class="literal">element</tt>: 元素对象或id,
+                <tt class="literal">className</tt>: CSS类名</td><td>从元素的类名中删除给定的类名。</td></tr><tr><td><tt class="literal">cleanWhitespace( element )</tt></td><td><tt class="literal">instance</tt></td><td><tt class="literal">element</tt>: 元素对象或id</td><td>删除该元素的所有只含有空格的子节点。</td></tr></tbody></table></div><p>
+      </p></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both;"><a name="d0e2227"></a>2.19.&nbsp;<tt class="literal">Abstract</tt> 对象</h2></div></div><div></div></div><p>这个对象是这个程序包中其他类的根。它没有任何属性和方法。在这个对象中定义的类可以被视为传统的抽象类。</p></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both;"><a name="abstract_insertion"></a>2.20.&nbsp;<tt class="literal">Abstract.Insertion</tt> 类</h2></div></div><div></div></div><p>这个类被用作其他提供动态内容插入功能的类的基类，它像一个抽象类一样被使用。</p><p>
+        </p><div class="table"><a name="d0e2243"></a><p class="title"><b>Table&nbsp;2.22.&nbsp;<tt class="literal">Abstract.Insertion</tt> 类</b></p><table summary="Abstract.Insertion 类" border="1"><colgroup><col><col><col><col></colgroup><thead><tr><th align="center">方法</th><th align="center">类别</th><th align="center">参数</th><th align="center">描述</th></tr></thead><tbody><tr><td><tt class="literal">[ctor](element, content)</tt></td><td><tt class="literal">constructor</tt></td><td><tt class="literal">element</tt>: 元素对象或id,
+                <tt class="literal">content</tt>: 被插入的HTML</td><td>创建一个可以帮助插入动态内容的对象。</td></tr></tbody></table></div><p>
+
+        </p><div class="table"><a name="d0e2281"></a><p class="title"><b>Table&nbsp;2.23.&nbsp;<tt class="literal">Abstract.Insertion</tt> 类</b></p><table summary="Abstract.Insertion 类" border="1"><colgroup><col><col><col><col></colgroup><thead><tr><th align="center">属性</th><th align="center">类型</th><th align="center">类别</th><th align="center">描述</th></tr></thead><tbody><tr><td><tt class="literal">adjacency</tt></td><td><tt class="literal">String</tt></td><td><tt class="literal">static, parameter</tt></td><td>这个参数指定相对于给定元素，内容将被放置的位置。 可能的值是:
+                <tt class="literal">'beforeBegin'</tt>,
+                <tt class="literal">'afterBegin'</tt>,
+                <tt class="literal">'beforeEnd'</tt>, 和
+                <tt class="literal">'afterEnd'</tt>.</td></tr><tr><td><tt class="literal">element</tt></td><td><tt class="literal">Object</tt></td><td><tt class="literal">instance</tt></td><td>与插入物做参照元素对象。</td></tr><tr><td><tt class="literal">content</tt></td><td><tt class="literal">String</tt></td><td><tt class="literal">instance</tt></td><td>被插入的 HTML 。</td></tr></tbody></table></div><p>
+      </p></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both;"><a name="d0e2351"></a>2.21.&nbsp;<tt class="literal">Insertion</tt> 对象</h2></div></div><div></div></div><p>这个对象是其他类似功能的根。它没有任何属性和方法。在这个对象中定义的类仍然可以被视为传统的抽象类。</p></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both;"><a name="d0e2358"></a>2.22.&nbsp;<tt class="literal">Insertion.Before</tt> 类</h2></div></div><div></div></div><p>继承自 <tt class="literal">
+          <a href="#abstract_insertion" title="2.20.&nbsp;Abstract.Insertion 类">Abstract.Insertion</a>
+        </tt></p><p>在给定元素开始标记的前面插入HTML。</p><div class="table"><a name="d0e2373"></a><p class="title"><b>Table&nbsp;2.24.&nbsp;<tt class="literal">Insertion.Before</tt> 类</b></p><table summary="Insertion.Before 类" border="1"><colgroup><col><col><col><col></colgroup><thead><tr><th align="center">方法</th><th align="center">类别</th><th align="center">参数</th><th align="center">描述</th></tr></thead><tbody><tr><td><tt class="literal">[ctor](element, content)</tt></td><td><tt class="literal">constructor</tt></td><td><tt class="literal">element</tt>: 元素对象或id,
+                <tt class="literal">content</tt>: 被插入的HTML</td><td>继承自 <tt class="literal">Abstract.Insertion</tt>.
+                创建一个可以帮助插入动态内容的对象。</td></tr></tbody></table></div><p>下面的代码</p><pre class="programlisting">&lt;br&gt;Hello, &lt;span id="person" style="color:red;"&gt;Wiggum. How's it going?&lt;/span&gt;
+
+&lt;script&gt; <span class="bold"><b>new Insertion.Before('person', 'Chief ');</b></span> &lt;/script&gt;</pre><p>将把 HTML 变为</p><pre class="programlisting">&lt;br&gt;Hello, <span class="bold"><b>Chief</b></span> &lt;span id="person" style="color:red;"&gt;Wiggum. How's it going?&lt;/span&gt;</pre></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both;"><a name="d0e2426"></a>2.23.&nbsp;<tt class="literal">Insertion.Top</tt> 类</h2></div></div><div></div></div><p>继承自 <tt class="literal">
+          <a href="#abstract_insertion" title="2.20.&nbsp;Abstract.Insertion 类">Abstract.Insertion</a>
+        </tt></p><p>在给定元素第一个子节点位置插入 HTML。内容将位于元素的开始标记的紧后面。</p><div class="table"><a name="d0e2441"></a><p class="title"><b>Table&nbsp;2.25.&nbsp;<tt class="literal">Insertion.Top</tt> 类</b></p><table summary="Insertion.Top 类" border="1"><colgroup><col><col><col><col></colgroup><thead><tr><th align="center">方法</th><th align="center">类别</th><th align="center">参数</th><th align="center">描述</th></tr></thead><tbody><tr><td><tt class="literal">[ctor](element, content)</tt></td><td><tt class="literal">constructor</tt></td><td><tt class="literal">element</tt>: 元素对象或id,
+                <tt class="literal">content</tt>: 被插入的HTML</td><td>继承自 <tt class="literal">Abstract.Insertion</tt>.
+                创建一个可以帮助插入动态内容的对象。</td></tr></tbody></table></div><p>下面的代码</p><pre class="programlisting">&lt;br&gt;Hello, &lt;span id="person" style="color:red;"&gt;Wiggum. How's it going?&lt;/span&gt;
+
+&lt;script&gt; <span class="bold"><b>new Insertion.Top('person', 'Mr. ');</b></span> &lt;/script&gt;</pre><p>将把 HTML 变为</p><pre class="programlisting">&lt;br&gt;Hello, &lt;span id="person" style="color:red;"&gt;<span class="bold"><b>Mr.</b></span> Wiggum. How's it going?&lt;/span&gt;</pre></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both;"><a name="d0e2494"></a>2.24.&nbsp;<tt class="literal">Insertion.Bottom</tt> 类</h2></div></div><div></div></div><p>继承自 <tt class="literal">
+          <a href="#abstract_insertion" title="2.20.&nbsp;Abstract.Insertion 类">Abstract.Insertion</a>
+        </tt></p><p>在给定元素最后一个子节点位置插入 HTML。内容将位于元素的结束标记的紧前面。</p><div class="table"><a name="d0e2509"></a><p class="title"><b>Table&nbsp;2.26.&nbsp;<tt class="literal">Insertion.Bottom</tt> 类</b></p><table summary="Insertion.Bottom 类" border="1"><colgroup><col><col><col><col></colgroup><thead><tr><th align="center">方法</th><th align="center">类别</th><th align="center">参数</th><th align="center">描述</th></tr></thead><tbody><tr><td><tt class="literal">[ctor](element, content)</tt></td><td><tt class="literal">constructor</tt></td><td><tt class="literal">element</tt>: 元素对象或id,
+                <tt class="literal">content</tt>: 被插入的HTML</td><td>继承自 <tt class="literal">Abstract.Insertion</tt>.
+                创建一个可以帮助插入动态内容的对象。</td></tr></tbody></table></div><p>下面的代码</p><pre class="programlisting">&lt;br&gt;Hello, &lt;span id="person" style="color:red;"&gt;Wiggum. How's it going?&lt;/span&gt;
+
+&lt;script&gt; <span class="bold"><b>new Insertion.Bottom('person', " What's up?");</b></span> &lt;/script&gt;</pre><p>将把 HTML 变为</p><pre class="programlisting">&lt;br&gt;Hello, &lt;span id="person" style="color:red;"&gt;Wiggum. How's it going? <span class="bold"><b>What's up?</b></span>&lt;/span&gt;</pre></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both;"><a name="d0e2562"></a>2.25.&nbsp;<tt class="literal">Insertion.After</tt> 类</h2></div></div><div></div></div><p>继承自 <tt class="literal">
+          <a href="#abstract_insertion" title="2.20.&nbsp;Abstract.Insertion 类">Abstract.Insertion</a>
+        </tt></p><p>在给定元素结束标记的后面插入HTML。</p><div class="table"><a name="d0e2577"></a><p class="title"><b>Table&nbsp;2.27.&nbsp;<tt class="literal">Insertion.After</tt> 类</b></p><table summary="Insertion.After 类" border="1"><colgroup><col><col><col><col></colgroup><thead><tr><th align="center">方法</th><th align="center">类别</th><th align="center">参数</th><th align="center">描述</th></tr></thead><tbody><tr><td><tt class="literal">[ctor](element, content)</tt></td><td><tt class="literal">constructor</tt></td><td><tt class="literal">element</tt>: 元素对象或id,
+                <tt class="literal">content</tt>: 被插入的HTML</td><td>继承自 <tt class="literal">Abstract.Insertion</tt>.
+                创建一个可以帮助插入动态内容的对象。</td></tr></tbody></table></div><p>下面的代码</p><pre class="programlisting">&lt;br&gt;Hello, &lt;span id="person" style="color:red;"&gt;Wiggum. How's it going?&lt;/span&gt;
+
+&lt;script&gt; <span class="bold"><b>new Insertion.After('person', ' Are you there?');</b></span> &lt;/script&gt;</pre><p>将把 HTML 变为</p><pre class="programlisting">&lt;br&gt;Hello, &lt;span id="person" style="color:red;"&gt;Wiggum. How's it going?&lt;/span&gt; <span class="bold"><b>Are you there?</b></span></pre></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both;"><a name="d0e2629"></a>2.26.&nbsp;<tt class="literal">Field</tt> 对象</h2></div></div><div></div></div><p>这个对象提供操作表单中的输入项目的功能性方法。</p><p>
+        </p><div class="table"><a name="d0e2638"></a><p class="title"><b>Table&nbsp;2.28.&nbsp;<tt class="literal">Field</tt> 对象</b></p><table summary="Field 对象" border="1"><colgroup><col><col><col><col></colgroup><thead><tr><th align="center">方法</th><th align="center">类别</th><th align="center">参数</th><th align="center">描述</th></tr></thead><tbody><tr><td><tt class="literal">clear(field1 [, field2 [, field3 [...]]])</tt></td><td><tt class="literal">instance</tt></td><td><tt class="literal">fieldN</tt>: 元素对象或id</td><td>清除传入表单中项目元素的值。</td></tr><tr><td><tt class="literal">present(field1 [, field2 [, field3
+                  [...]]])</tt></td><td><tt class="literal">instance</tt></td><td><tt class="literal">fieldN</tt>: 元素对象或id</td><td>只有在所有的表单项目都不为空时返回 <tt class="literal">true</tt> 。</td></tr><tr><td><tt class="literal">focus(field)</tt></td><td><tt class="literal">instance</tt></td><td><tt class="literal">fieldN</tt>: 元素对象或id</td><td>移动焦点到给定的表单项目。</td></tr><tr><td><tt class="literal">select(field)</tt></td><td><tt class="literal">instance</tt></td><td><tt class="literal">fieldN</tt>: 元素对象或id</td><td>选择支持项目值选择的表单项目的值。</td></tr><tr><td><tt class="literal">activate(field)</tt></td><td><tt class="literal">instance</tt></td><td><tt class="literal">fieldN</tt>: 元素对象或id</td><td>移动焦点并且选择支持项目值选择的表单项目的值。</td></tr></tbody></table></div><p>
+      </p></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both;"><a name="d0e2728"></a>2.27.&nbsp;<tt class="literal">Form</tt> 对象</h2></div></div><div></div></div><p>这个对象提供操作表单和他们的输入项目的功能性方法。</p><p>
+        </p><div class="table"><a name="d0e2737"></a><p class="title"><b>Table&nbsp;2.29.&nbsp;<tt class="literal">Form</tt> 对象</b></p><table summary="Form 对象" border="1"><colgroup><col><col><col><col></colgroup><thead><tr><th align="center">方法</th><th align="center">类别</th><th align="center">参数</th><th align="center">描述</th></tr></thead><tbody><tr><td><tt class="literal">serialize(form)</tt></td><td><tt class="literal">instance</tt></td><td><tt class="literal">form</tt>: 表单元素或id</td><td>返回url参数格式的项目名和值的列表，
+                如<tt class="literal">'field1=value1&amp;field2=value2&amp;field3=value3'。</tt></td></tr><tr><td><tt class="literal">getElements(form)</tt></td><td><tt class="literal">instance</tt></td><td><tt class="literal">form</tt>: 表单元素或id</td><td>返回包含所有在表单中输入项目的 <tt class="literal">Array</tt> 对象。</td></tr><tr><td><tt class="literal">getInputs(form [, typeName [, name]])</tt></td><td><tt class="literal">instance</tt></td><td><tt class="literal">form</tt>: 表单元素或id,
+                <tt class="literal">typeName</tt>: 输入项目的类型, <tt class="literal">name</tt>:
+                输入项目的名称</td><td>返回一个 <tt class="literal">Array</tt> 包含所有在表单中的
+                <tt class="literal">&lt;input&gt; 元素</tt>。 另外，
+                这个列表可以对元素的类型或名字属性进行过滤。</td></tr><tr><td><tt class="literal">disable(form)</tt></td><td><tt class="literal">instance</tt></td><td><tt class="literal">form</tt>: 表单元素或id</td><td>使表单中的所有输入项目无效。</td></tr><tr><td><tt class="literal">enable(form)</tt></td><td><tt class="literal">instance</tt></td><td><tt class="literal">form</tt>: 表单元素或id</td><td>使表单中的所有输入项目有效。</td></tr><tr><td><tt class="literal">focusFirstElement(form)</tt></td><td><tt class="literal">instance</tt></td><td><tt class="literal">form</tt>: 表单元素或id</td><td>激活第一个表单中可视的，有效的输入项目。</td></tr><tr><td><tt class="literal">reset(form)</tt></td><td><tt class="literal">instance</tt></td><td><tt class="literal">form</tt>: 表单元素或id</td><td>重置表单。和调用表单对象的 <tt class="literal">reset()</tt> 方法一样。</td></tr></tbody></table></div><p>
+      </p></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both;"><a name="d0e2870"></a>2.28.&nbsp;<tt class="literal">Form.Element</tt> 对象</h2></div></div><div></div></div><p>这个对象提供表单对象中的可视和非可视元素的功能性方法。</p><p>
+        </p><div class="table"><a name="d0e2879"></a><p class="title"><b>Table&nbsp;2.30.&nbsp;<tt class="literal">Form.Element</tt> 对象</b></p><table summary="Form.Element 对象" border="1"><colgroup><col><col><col><col></colgroup><thead><tr><th align="center">方法</th><th align="center">类别</th><th align="center">参数</th><th align="center">描述</th></tr></thead><tbody><tr><td><tt class="literal">serialize(element)</tt></td><td><tt class="literal">instance</tt></td><td><tt class="literal">element</tt>: 表单元素或id</td><td>返回元素的 名称=值 对, 如
+                <tt class="literal">'elementName=elementValue'。</tt></td></tr><tr><td><tt class="literal">getValue(element)</tt></td><td><tt class="literal">instance</tt></td><td><tt class="literal">element</tt>: 表单元素或id</td><td>返回元素的值。</td></tr></tbody></table></div><p>
+      </p></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both;"><a name="d0e2929"></a>2.29.&nbsp;<tt class="literal">Form.Element.Serializers</tt> 对象</h2></div></div><div></div></div><p>这个对象提供了内部使用的用来协助解析出表单元素的当前值功能性方法。</p><p>
+        </p><div class="table"><a name="d0e2938"></a><p class="title"><b>Table&nbsp;2.31.&nbsp;<tt class="literal">Form.Element.Serializers</tt> 对象</b></p><table summary="Form.Element.Serializers 对象" border="1"><colgroup><col><col><col><col></colgroup><thead><tr><th align="center">方法</th><th align="center">类别</th><th align="center">参数</th><th align="center">描述</th></tr></thead><tbody><tr><td><tt class="literal">inputSelector(element)</tt></td><td><tt class="literal">instance</tt></td><td><tt class="literal">element</tt>: 一个带有checked属性的表单元素或id， 如
+                radio 或 checkbox。</td><td>返回带有元素名称和值的 <tt class="literal">Array</tt> , 如
+                <tt class="literal">['elementName', 'elementValue']</tt></td></tr><tr><td><tt class="literal">textarea(element)</tt></td><td><tt class="literal">instance</tt></td><td><tt class="literal">element</tt>: 一个带有value属性的表单元素或id， 如
+                textbox, button 或 password 项目。</td><td>返回带有元素名称和值的 <tt class="literal">Array</tt> , 如
+                <tt class="literal">['elementName', 'elementValue']</tt></td></tr><tr><td><tt class="literal">select(element)</tt></td><td><tt class="literal">instance</tt></td><td><tt class="literal">element</tt>: 一个<tt class="literal">&lt;select&gt;
+                </tt>元素对象或id。</td><td>返回带有元素名称和所有被选择的选项的值或文本的 <tt class="literal">Array</tt> , 如
+                <tt class="literal">['elementName', 'selOpt1 selOpt4
+                selOpt9']</tt></td></tr></tbody></table></div><p>
+      </p></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both;"><a name="abstract_timed_observer"></a>2.30.&nbsp;<tt class="literal">Abstract.TimedObserver</tt> 类</h2></div></div><div></div></div><p>这个类是用于其它监听一个元素的值(或者任何类中涉及的属性)变化的类的基类，这个类像一个抽象类一样被使用。</p><p>子类可以被创建来监听如输入项目值，或style属性，或表格的行数，或者其他任何对跟踪变化相关的东西。</p><p>子类必须实现这个方法来决定什么才是被监听的元素的当前值。</p><p>
+        </p><div class="table"><a name="d0e3030"></a><p class="title"><b>Table&nbsp;2.32.&nbsp;<tt class="literal">Abstract.TimedObserver</tt> 类</b></p><table summary="Abstract.TimedObserver 类" border="1"><colgroup><col><col><col><col></colgroup><thead><tr><th align="center">方法</th><th align="center">类别</th><th align="center">参数</th><th align="center">描述</th></tr></thead><tbody><tr><td><tt class="literal">[ctor](element, frequency, callback)</tt></td><td><tt class="literal">constructor</tt></td><td><tt class="literal">element</tt>: 元素对象或id,
+                <tt class="literal">frequency</tt>: 以秒为单位的间隔,
+                <tt class="literal">callback</tt>: 当元素改变的时候调用的方法。</td><td>创建一个监听元素的对象。</td></tr><tr><td><tt class="literal">registerCallback()</tt></td><td><tt class="literal">instance</tt></td><td><tt class="literal">(none)</tt></td><td>这个方法通常不会被外部调用。 被这个对象自己调用来开始监听那个元素。</td></tr><tr><td><tt class="literal">onTimerEvent()</tt></td><td><tt class="literal">instance</tt></td><td><tt class="literal">(none)</tt></td><td>这个方法通常不会被外部调用。 被这个对象自己调用来周期性的检查那个元素。</td></tr></tbody></table></div><p>
+
+        </p><div class="table"><a name="d0e3095"></a><p class="title"><b>Table&nbsp;2.33.&nbsp;<tt class="literal">Abstract.TimedObserver</tt> 类</b></p><table summary="Abstract.TimedObserver 类" border="1"><colgroup><col><col><col></colgroup><thead><tr><th align="center">属性</th><th align="center">类型</th><th align="center">描述</th></tr></thead><tbody><tr><td><tt class="literal">element</tt></td><td><tt class="literal">Object</tt></td><td>被监听的元素对象。</td></tr><tr><td><tt class="literal">frequency</tt></td><td><tt class="literal">Number</tt></td><td>每次检查中的以秒为单位的时间间隔。</td></tr><tr><td><tt class="literal">callback</tt></td><td><tt class="literal">Function(Object, String)</tt></td><td>只要元素改变这个方法就会被调用。 会接收到元素对象和新值作为参数。</td></tr><tr><td><tt class="literal">lastValue</tt></td><td><tt class="literal">String</tt></td><td>元素被核实的最后一个值。</td></tr></tbody></table></div><p>
+      </p></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both;"><a name="form_element_observer"></a>2.31.&nbsp;<tt class="literal">Form.Element.Observer</tt> 类</h2></div></div><div></div></div><p>继承自 <tt class="literal">
+          <a href="#abstract_timed_observer" title="2.30.&nbsp;Abstract.TimedObserver 类">Abstract.TimedObserver</a>
+        </tt></p><p><tt class="literal">Abstract.TimedObserver</tt>
+      的一个实现类用来监听表单输入项目的值的变化。当你想监听一个没有带报告值变化事件的元素的时候使用这个类。否则的话使用 <tt class="literal">
+          <a href="#form_element_event_observer" title="2.34.&nbsp;Form.Element.EventObserver 类">Form.Element.EventObserver</a>
+        </tt> 类代替。</p><p>
+        </p><div class="table"><a name="d0e3174"></a><p class="title"><b>Table&nbsp;2.34.&nbsp;<tt class="literal">Form.Element.Observer</tt> 类</b></p><table summary="Form.Element.Observer 类" border="1"><colgroup><col><col><col><col></colgroup><thead><tr><th align="center">方法</th><th align="center">类别</th><th align="center">参数</th><th align="center">描述</th></tr></thead><tbody><tr><td><tt class="literal">[ctor](element, frequency, callback)</tt></td><td><tt class="literal">constructor</tt></td><td><tt class="literal">element</tt>: 元素对象或id,
+                <tt class="literal">frequency</tt>: 以秒为单位的间隔,
+                <tt class="literal">callback</tt>: 当元素改变的时候调用的方法。</td><td>继承自 <tt class="literal">Abstract.TimedObserver</tt>.
+                创建一个监听元素值属性的对象。</td></tr><tr><td><tt class="literal">getValue()</tt></td><td><tt class="literal">instance</tt></td><td><tt class="literal">(none)</tt></td><td>返回元素的值。</td></tr></tbody></table></div><p>
+      </p></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both;"><a name="form_observer"></a>2.32.&nbsp;<tt class="literal">Form.Observer</tt> 类</h2></div></div><div></div></div><p>继承自 <tt class="literal">
+          <a href="#abstract_timed_observer" title="2.30.&nbsp;Abstract.TimedObserver 类">Abstract.TimedObserver</a>
+        </tt></p><p><tt class="literal">Abstract.TimedObserver</tt>
+      的一个实现类用来监听表单中任何数据项的值的变化。当你想监听一个没有带报告值变化事件的元素的时候使用这个类。 否则的话使用类<tt class="literal">
+          <a href="#form_event_observer" title="2.35.&nbsp;Form.EventObserver 类">Form.EventObserver</a>
+        </tt> 代替。</p><p>
+        </p><div class="table"><a name="d0e3254"></a><p class="title"><b>Table&nbsp;2.35.&nbsp;<tt class="literal">Form.Observer</tt> 类</b></p><table summary="Form.Observer 类" border="1"><colgroup><col><col><col><col></colgroup><thead><tr><th align="center">方法</th><th align="center">类别</th><th align="center">参数</th><th align="center">描述</th></tr></thead><tbody><tr><td><tt class="literal">[ctor](form, frequency, callback)</tt></td><td><tt class="literal">constructor</tt></td><td><tt class="literal">form</tt>: 表单对象或id,</td><td>继承自 <tt class="literal">Abstract.TimedObserver</tt>.
+                创建一个监听表单变化的对象。</td></tr><tr><td><tt class="literal">getValue()</tt></td><td><tt class="literal">instance</tt></td><td><tt class="literal">(none)</tt></td><td>返回所有表单数据的一系列值。</td></tr></tbody></table></div><p>
+      </p></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both;"><a name="abstract_event_observer"></a>2.33.&nbsp;<tt class="literal">Abstract.EventObserver</tt> 类</h2></div></div><div></div></div><p>这个类被用作其他一些类的基类，这些类具有在一个元素的值改变事件发生的时候执行一个回调方法这样的功能。</p><p>类 <tt class="literal">Abstract.EventObserver
+      的多个对象可以绑定到一个元素上，不是一个帮其他的擦出了，而是按照他们付给元素的顺序执行这些回调方法。</tt></p><p>单选按钮和复选框的触发事件是 <tt class="literal">onclick</tt> ，而文本框和下拉列表框/下拉列表框的是
+      <tt class="literal">onchange</tt> 。</p><p>子类必须实现这个方法来决定什么才是被监听的元素的当前值。</p><p>
+        </p><div class="table"><a name="d0e3327"></a><p class="title"><b>Table&nbsp;2.36.&nbsp;<tt class="literal">Abstract.EventObserver</tt> 类</b></p><table summary="Abstract.EventObserver 类" border="1"><colgroup><col><col><col><col></colgroup><thead><tr><th align="center">方法</th><th align="center">类别</th><th align="center">参数</th><th align="center">描述</th></tr></thead><tbody><tr><td><tt class="literal">[ctor](element, callback)</tt></td><td><tt class="literal">constructor</tt></td><td><tt class="literal">element</tt>: 元素对象或id,
+                <tt class="literal">callback</tt>: 当事件发生的时候调用的方法。</td><td>创建监听元素的对象。</td></tr><tr><td><tt class="literal">registerCallback()</tt></td><td><tt class="literal">instance</tt></td><td><tt class="literal">(none)</tt></td><td>这个方法通常不会被外部调用。 被对象调用来把自己绑定到元素的事件上。</td></tr><tr><td><tt class="literal">registerFormCallbacks()</tt></td><td><tt class="literal">instance</tt></td><td><tt class="literal">(none)</tt></td><td>这个方法通常不会被外部调用。 被对象调用来把自己绑定到表单中的每一个数据项元素的事件上。</td></tr><tr><td><tt class="literal">onElementEvent()</tt></td><td><tt class="literal">instance</tt></td><td><tt class="literal">(none)</tt></td><td>这个方法通常不会被外部调用。 将被绑定到元素的事件上。</td></tr></tbody></table></div><p>
+
+        </p><div class="table"><a name="d0e3401"></a><p class="title"><b>Table&nbsp;2.37.&nbsp;<tt class="literal">Abstract.EventObserver</tt> 类</b></p><table summary="Abstract.EventObserver 类" border="1"><colgroup><col><col><col></colgroup><thead><tr><th align="center">属性</th><th align="center">类型</th><th align="center">描述</th></tr></thead><tbody><tr><td><tt class="literal">element</tt></td><td><tt class="literal">Object</tt></td><td>被监听的元素对象。</td></tr><tr><td><tt class="literal">callback</tt></td><td><tt class="literal">Function(Object, String)</tt></td><td>只要元素改变就调用的方法。会接收到元素对象和新值作为参数。</td></tr><tr><td><tt class="literal">lastValue</tt></td><td><tt class="literal">String</tt></td><td>元素被核实的最后一个值。</td></tr></tbody></table></div><p>
+      </p></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both;"><a name="form_element_event_observer"></a>2.34.&nbsp;<tt class="literal">Form.Element.EventObserver</tt> 类</h2></div></div><div></div></div><p>继承自 <a href="#abstract_event_observer" title="2.33.&nbsp;Abstract.EventObserver 类">
+          <tt class="literal">Abstract.EventObserver</tt>
+        </a></p><p><tt class="literal">Abstract.EventObserver</tt>
+      的一个实现类，它在监测到表单中数据项元素的值改变的相应事件时候执行一个回调方法。 如果元素没有任何报告变化的事件，那么你可以使用
+      <tt class="literal">
+          <a href="#form_element_observer" title="2.31.&nbsp;Form.Element.Observer 类">Form.Element.Observer</a>
+        </tt> 类代替。</p><p>
+        </p><div class="table"><a name="d0e3471"></a><p class="title"><b>Table&nbsp;2.38.&nbsp;<tt class="literal">Form.Element.EventObserver</tt> 类</b></p><table summary="Form.Element.EventObserver 类" border="1"><colgroup><col><col><col><col></colgroup><thead><tr><th align="center">方法</th><th align="center">类别</th><th align="center">参数</th><th align="center">描述</th></tr></thead><tbody><tr><td><tt class="literal">[ctor](element, callback)</tt></td><td><tt class="literal">constructor</tt></td><td><tt class="literal">element</tt>: 元素对象或id,
+                <tt class="literal">callback</tt>: 当事件发生的时候调用的方法。</td><td>继承自 <tt class="literal">Abstract.EventObserver</tt>。
+                创建一个监听元素值属性的对象。</td></tr><tr><td><tt class="literal">getValue()</tt></td><td><tt class="literal">instance</tt></td><td><tt class="literal">(none)</tt></td><td>返回元素的值。</td></tr></tbody></table></div><p>
+      </p></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both;"><a name="form_event_observer"></a>2.35.&nbsp;<tt class="literal">Form.EventObserver</tt> 类</h2></div></div><div></div></div><p>继承自 <a href="#abstract_event_observer" title="2.33.&nbsp;Abstract.EventObserver 类">
+          <tt class="literal">Abstract.EventObserver</tt>
+        </a></p><p><tt class="literal">Abstract.EventObserver</tt>
+      的一个实现类，监听表单对象中包含的任何对象的任何变化，用元素的事件检测值的变化。如果元素没有任何报告变化的事件， 那么你可以使用<tt class="literal">
+          <a href="#form_observer" title="2.32.&nbsp;Form.Observer 类">Form.Observer</a>
+        </tt> 类代替。</p><p>
+        </p><div class="table"><a name="d0e3548"></a><p class="title"><b>Table&nbsp;2.39.&nbsp;<tt class="literal">Form.Element.EventObserver</tt> 类</b></p><table summary="Form.Element.EventObserver 类" border="1"><colgroup><col><col><col><col></colgroup><thead><tr><th align="center">方法</th><th align="center">类别</th><th align="center">参数</th><th align="center">描述</th></tr></thead><tbody><tr><td><tt class="literal">[ctor](form, callback)</tt></td><td><tt class="literal">constructor</tt></td><td><tt class="literal">form</tt>: 元素对象或id,
+                <tt class="literal">callback</tt>: 当表单中任何数据项改变的时候调用的方法</td><td>继承自 <tt class="literal">Abstract.EventObserver</tt>。
+                创建一个监听元素值属性的对象。</td></tr><tr><td><tt class="literal">getValue()</tt></td><td><tt class="literal">instance</tt></td><td><tt class="literal">(none)</tt></td><td>返回所有表单数据的一系列值。</td></tr></tbody></table></div><p>
+      </p></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both;"><a name="d0e3601"></a>2.36.&nbsp;<tt class="literal">Position</tt> 对象 (预备文档)</h2></div></div><div></div></div><p>这个对象提供许多和元素位置相关的方法。</p><p>
+        </p><div class="table"><a name="d0e3610"></a><p class="title"><b>Table&nbsp;2.40.&nbsp;<tt class="literal">Position</tt> 对象 (预备文档)</b></p><table summary="Position 对象 (预备文档)" border="1"><colgroup><col><col><col><col></colgroup><thead><tr><th align="center">方法</th><th align="center">类别</th><th align="center">参数</th><th align="center">描述</th></tr></thead><tbody><tr><td><tt class="literal">prepare()</tt></td><td><tt class="literal">instance</tt></td><td><tt class="literal">(none)</tt></td><td>调整 <tt class="literal">deltaX</tt> 和
+                <tt class="literal">deltaY</tt> 属性来协调在滚动位置中的变化。
+                记得在页面滚动之后的任何调用的<tt class="literal">withinIncludingScrolloffset</tt>
+                之前调用这个方法。</td></tr><tr><td><tt class="literal">realOffset(element)</tt></td><td><tt class="literal">instance</tt></td><td><tt class="literal">element</tt>: 对象或id</td><td>返回这个元素的正确滚动偏差的 <tt class="literal">Array</tt> 对象，
+                包括所有影响元素的滚动偏差。结果数组类似 <tt class="literal">[total_scroll_left,
+                total_scroll_top]</tt></td></tr><tr><td><tt class="literal">cumulativeOffset(element)</tt></td><td><tt class="literal">instance</tt></td><td><tt class="literal">element</tt>: 对象或id</td><td>回这个元素的正确滚动偏差的 <tt class="literal">Array</tt> 对象，
+                包含任何被放置的父元素强加偏差。结果数组类似 <tt class="literal">[total_offset_left,
+                total_offset_top]</tt></td></tr><tr><td><tt class="literal">within(element, x, y)</tt></td><td><tt class="literal">instance</tt></td><td><tt class="literal">element</tt>: 对象, <tt class="literal">x</tt> 和
+                <tt class="literal">y</tt>: 一个点的坐标</td><td>测试给定的点的坐标是否在给定的元素的外部矩形范围之内。</td></tr><tr><td><tt class="literal">withinIncludingScrolloffsets(element, x,
+                  y)</tt></td><td><tt class="literal">instance</tt></td><td><tt class="literal">element</tt>: object, x and y:
+                coordinates of a point</td><td>&nbsp;</td></tr><tr><td><tt class="literal">overlap(mode, element)</tt></td><td><tt class="literal">instance</tt></td><td><tt class="literal">mode</tt>: <tt class="literal">'vertical'
+                </tt>或 <tt class="literal">'horizontal'</tt>,
+                <tt class="literal">element</tt>: 对象</td><td>在调用这个方法之前需要调用<tt class="literal">within()</tt>
+                。这个方法返回0.0到1.0之间的数字，来表示坐标在元素重叠的分数。
+                举个例子，如果元素是一个边长是100px的正方形的DIV，并且位于(300, 300), 然后
+                <tt class="literal">within(divSquare, 330, 330)；</tt><tt class="literal">overlap('vertical', divSquare); </tt>会返回
+                0.10，意思是那个点位于DIV顶部边框以下 10% (30px) 的位置上。</td></tr><tr><td><tt class="literal">clone(source, target)</tt></td><td><tt class="literal">instance</tt></td><td><tt class="literal">source</tt>: 元素对象或 id,
+                <tt class="literal">target</tt>: 元素对象或id</td><td>改变目标元素的大小尺寸和位置与源元素的相同。</td></tr></tbody></table></div><p>
+      </p><p>
+        <i><span class="remark">如果你发现错误，过失或信息不完全，或平淡无意义的东西，请 <a href="mailto:sergio_pereira@msn.com" target="_top">通知作者</a>
+        ，作者会尽可能快的修正它，作者仍然在写其他没写的类，来保持一致。 任何翻译的过失，不足，词不达意，表达含糊等请<a href="mailto:sunfmin@hotmail.com" target="_top">通知我</a>，我会再加斟酌，找到合适的描述。</span></i>
+      </p></div></div></div>
+</div>
+</td>
+</tr>
+</tbody></table>
+ 
+ 
+ <div id="footer">
+   <p><a href="http://today.java.net/pub/q/java_net_rss"><img src="prototype1.3.1.js.cn_files/xml.gif" alt="XML" style="vertical-align: middle;" height="14" width="36"></a>&nbsp;<b>java.net RSS</b></p>
+   <table border="0" cellpadding="4" cellspacing="0" width="100%">
+   	<tbody><tr>
+   		<td><a href="http://www.collab.net/special/clickpbc0502.html" id="poweredby"><span class="alt">Powered by CollabNet</span></a></td>
+ 		<td><a href="http://java-net.dev.java.net/feedback.html" onclick="return launch(this.href, 1)" title="Note: link may open in new window" class="helplink">Feedback</a>   |
+ 		<a href="http://java.net/faq.csp">FAQ</a> |
+ 		<a href="http://java.net/presscenter/">Press</a> |
+ 		 		<a href="http://www.collab.net/developers/tools/" onclick="return launch(this.href, 1)" title="Note: link may open in new window">Developer tools</a> 	   <div>
+ 
+ 	<a href="http://java.net/terms.csp">Terms of Use</a> | 
+ 	<a href="http://www.sun.com/privacy">Privacy</a> |
+ 	<a href="http://www.sun.com/suntrademarks/">Trademarks</a> | 
+ 	<a href="https://java-net.dev.java.net/sitemap.html">Site Map</a> 
+</div>
+	   <p>© 1995 - 2007 CollabNet. CollabNet is a registered trademark of CollabNet, Inc.</p>
+
+	    </td>
+	   <td><a href="http://www.sun.com/" onclick="return launch(this.href, 1)"><img src="prototype1.3.1.js.cn_files/logo_sun_small.gif" id="logosun" alt="Sun" height="29" width="61"></a>
+		<a href="http://www.oreilly.com/" onclick="return launch(this.href, 1)"><img src="prototype1.3.1.js.cn_files/montague_logo_oreilly.gif" id="logooreilly" alt="Oreilly" height="19" width="74"></a></td>
+		</tr></tbody></table>
+		
+		<!-- Begin SiteCatalyst code-->
+		<script language="JavaScript" src="prototype1.3.1.js.cn_files/s_code_remote.js"></script><img src="prototype1.3.1.js.cn_files/s99217617216220.gif" name="s_i_sunjnet" alt="" border="0" height="1" width="1">
+<!-- End SiteCatalyst code --> 
+ 
+</div></body></html>

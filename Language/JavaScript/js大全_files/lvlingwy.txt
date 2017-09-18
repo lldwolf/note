@@ -1,0 +1,4 @@
+var mainDiv=document.getElementById('job_csdn_net_sr');
+if(mainDiv) { 
+mainDiv.innerHTML="您还没有启用<strong>开放简历</strong>的功能，如果您想即刻享用，请访问<a href='http://job.csdn.net/' target='_blank'>CSDN人才频道</a>"; 
+} 

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>用C#编写ActiveX控件</title>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+<p id="title">用C#编写ActiveX控件</p>
+
+<h1>基本ActiveX控件</h1>
+<p>前些日子做一个Web项目，必须自己编写一个ActiveX控件。如今的ActiveX控件大多是使用VB/C++来开发的，而我对他们并不熟悉，因此考虑使用熟悉的C#编写ActiveX控件。 </p>
+<p> 首先，建立一个WinForm控件项目HelloWorld，并拖入一个Label控件，文字设为HelloWorld</p>
+<p> 此时编译项目，可以生成HelloWorld.dll。将此dll拷贝到IIS的虚拟根目录下，然后建立一个helloworld.htm的文件，html代码如下： </p>
+<pre class="code" data-type="xml">body bgcolor='#223344'&gt; 
+	&lt;object id=&quot;helloworld&quot; classid=’http://localhost/HelloWorld.dll#HelloWorld.Demo’ Width=&quot;184&quot; Height=&quot;96&quot; VIEWASTEXT&gt; &lt;/object&gt; 
+&lt;/body&gt;</pre>
+<p>在IE地址栏中输入以下地址：http://localhost/helloworld.htm即可察看ActiveX空间的内容。</p>
+<p>但是问题到这里还没有解决。不相信？你可以试试在另外一台机器上测试，注意需要修改对应的html代码和URL地址。你可以看到这个在原来显示控件的地方是一个红色的叉，或者还会弹出一个对话框，表示这个控件没有任何权限。出现这个结果是微软的默认设置造成的，作者必须在控件所在的控件的 AssemblyInfo.cs/vb 中执行一个安全声明，声明这个控件必须使用赋予的权限，才可以显示出界面。我们在AssemblyInfo.cs中引用System.Security命名空间，并添加一句： </p>
+<pre class="code" data-type="csharp">[assembly : AllowPartiallyTrustedCallers()]</pre>
+<p>现在重新编译，并且替换以前的dll，界面又可以显示出来了。 </p>
+<p> 需要提醒的是，到现在为止，我们编写的还不是真正的ActiveX控件。这个控件到现在为止，还只是能够实现自身的显示，并且不能实现更多的功能，比如实现与脚本的交互或者操作客户端的注册表或者磁盘。这是由于.Net Framework的安全模型所限制的。如果我们希望这个控件突破.Net Framework安全模型的限制，实现与脚本的交互或者操作客户端的注册表或者磁盘的话，必须要让它成为真正的ActiveX控件。下面，我们把刚才的控件变成真正的ActiveX控件。 </p>
+<p> 首先使用 工具—〉创建GUID 生成一个GUID，并修改UserControl1.cs文件。首先增加引用System.Runtime.InteropServices命名空间，并在Demo前面加入一条语句： </p>
+<pre class="code" data-type="csharp">[Guid(&quot;9551B223-6188-4387-B293-C7D9D8173E3A&quot;)]
+public class Demo : System.Windows.Forms.UserControl,IObjectSafety</pre>
+<p>注意Guid中的字符串，就是你生成的Guid字符串。它是你所生成的ActiveX控件的唯一标识符。然后修改项目属性，如图： </p>
+<p><img src="images/activex_1.JPG" width="640" height="450" /></p>
+<p>注意面板中的最后一项，我们唯一需要修改的是将其值改为True。 </p>
+<p> 重新编译。我们使用 工具—〉OLE/COM对象查看器 查看，如图： </p>
+<p><img src="images/activex_2.JPG" width="640" height="446" /></p>
+<p>可以看到，我们写的HelloWorld.Demo已经被正确识别为COM组件。现在，我们已经可以像使用其它ActiveX控件一样在网页中显示了。在HelloWorld.Demo点击鼠标右键，如图： </p>
+<p><img src="images/activex_3.JPG" width="370" height="191" /></p>
+<p>选择Copy HTML &lt;object&gt; Tag to Clipboard,可以将代码拷入剪贴板。 </p>
+<p>现在，我们改写helloworld.htm，html代码如下： </p>
+<pre class="code" data-type="xml">body bgcolor='#223344'&gt; 
+	&lt;object id=&quot;helloworld&quot; 
+		classid=&quot;clsid:9551B223-6188-4387-B293-C7D9D8173E3A&quot; Width=&quot;184&quot; Height=&quot;96&quot;&gt; 
+	&lt;/object&gt; 
+&lt;/body&gt;</pre>
+<p>使用IE查看，我们的控件又可以在网页中显示了。不过，这个时候它已经不再是以前的.net WinForm控件了，而是货真价实的ActiveX控件了。 </p>
+<h1>加入JS交互</h1>
+<p>我们在Demo中加入ShowMessage方法：</p>
+<pre class="code" data-type="csharp">public void ShowMessage(string msg) 
+{ 
+	if(msg != null) 
+	{ 
+		MessageBox.Show(msg); 
+	} 
+} </pre>
+我们重新编译。在重新访问页面之前，我们先来修改html代码：
+<pre class="code" data-type="xml">body bgcolor='#223344'&gt; 
+	&lt;object id=&quot;helloworld&quot; 
+		classid=&quot;clsid:9551B223-6188-4387-B293-C7D9D8173E3A&quot; Width=&quot;184&quot; Height=&quot;96&quot; &gt; 
+	&lt;/object&gt; 
+	&lt;br&gt; 
+	&lt;input type='button' onclick='helloworld.ShowMessage(“Hello World!”)' value='Click'&gt; 
+&lt;/body&gt;</pre>
+<p>现在，重新访问http://localhost/helloworld.htm，单击Click按钮，应该可以实现交互了。 </p>
+<p> 但是结果却很遗憾，我们发现IE跳出了对话框，如图所示： </p>
+<p><img src="images/activex_4.JPG" width="315" height="124" /></p>
+<p>单击确定之后，我们发现JS报错。根据提示，我们判断可以通过修改IE的设置使控件运行。打开IE的 工具——〉Internet选项——〉安全——〉本地Intranet——〉自定义级别——〉对没有标记为安全的ActiveX控件进行初始化和运行，将其值设为启用。我们刷新页面，现在终于可以正确运行了。 </p>
+<p> 当然，我们不能指望我们的客户和我们一样修改这个值。毕竟，一是操作麻烦，二是给电脑带来了很大的安全风险。在互联网上搜索之后，发现必须要实现IObjectSafety接口，把ActiveX控件标记为安全的ActiveX控件。在搜索MSDN之后，我找到了IObjectSafety接口的定义。这就好办了。首先我们自己用C#实现这个接口： </p>
+<pre class="code" data-type="csharp">[Guid(&quot;CB5BDC81-93C1-11CF-8F20-00805F2CD064&quot;),InterfaceType(ComInterfaceType.InterfaceIsIUnknown)] 
+public interface IObjectSafety 
+{ 
+    // methods 
+    void GetInterfacceSafyOptions( 
+        System.Int32 riid, 
+        out System.Int32 pdwSupportedOptions, 
+        out System.Int32 pdwEnabledOptions); 
+    void SetInterfaceSafetyOptions( 
+        System.Int32 riid, 
+        System.Int32 dwOptionsSetMask, 
+        System.Int32 dwEnabledOptions);         
+}</pre>
+<p>注意，这个GUID是不能改的。然后，我们在Demo类里面实现这个接口。增加一下代码： </p>
+<pre class="code" data-type="csharp">#region IObjectSafety 成员 
+ 
+public void GetInterfacceSafyOptions(Int32 riid, out Int32 pdwSupportedOptions, out Int32 pdwEnabledOptions) 
+{ 
+    // TODO:  添加 WebCamControl.GetInterfacceSafyOptions 实现 
+    pdwSupportedOptions = 1; 
+    pdwEnabledOptions = 2; 
+} 
+
+public void SetInterfaceSafetyOptions(Int32 riid, Int32 dwOptionsSetMask, Int32 dwEnabledOptions) 
+{ 
+    // TODO:  添加 WebCamControl.SetInterfaceSafetyOptions 实现             
+} 
+
+#endregion</pre>
+<p>重新编译，然后将IE里面的设置改回来。现在，我们发现，和JS的交互已经没有问题了。 </p>
+<p> 这样，一个最基本的ActiveX控件已经写好了。你可以在这个控件的基础上增加任何你需要的功能。到这里，编写控件的任务已经完成了，我们的下一个目标就是发布它。 </p>
+<h1>发布ActiveX控件</h1>
+<p> 首先，我们建立一个windows安装项目，并将ActiveX控件的主输出添加到项目输出中。然后，改动ActiveX控件的主输出文件，将其Register属性改为vsdrpCOM.如图: </p>
+<p><img src="images/activex_5.JPG" width="640" height="468" /></p>
+<p>下一步，我们改动项目属性，将引导程序更改为 Web引导程序。很遗憾的是，在 Web引导程序设置 中的安装文件夹URL中必须使用绝对路径，不能使用相对路径。这意味着生成安装程序的时候就必须确定路径，不是很方便。在示例中，我使用了localhost，在发布中可以改为实际的域名。 </p>
+<p><img src="images/activex_6.JPG" width="640" height="482" /></p>
+<p>现在我们生成安装程序，并把相应得程序拷贝到正确的目录中（本例中为默认网站目录下的ActiveX文件夹中）。我们可以直接执行Setup.Exe文件，以验证安装文件的正确性。在我的机器上正确执行了，成功了！ </p>
+<p> 现在我们又要重新改动helloworld.htm文件了。修改后的结果如下： </p>
+<pre class="code" data-type="xml">body bgcolor='#223344'&gt; 
+	&lt;object id=&quot;helloworld&quot; 
+		classid=&quot;clsid:9551B223-6188-4387-B293-C7D9D8173E3A&quot; 
+		Width=&quot;184&quot; Height=&quot;96&quot; codebase=&quot;ActiveX/Setup.Exe&quot;&gt;  
+	&lt;/object&gt; 
+	&lt;br&gt; 
+	&lt;input type='button' onclick='helloworld.ShowMessage(&quot;Hello World!&quot;)' value='Click'&gt; 
+&lt;/body&gt;</pre>
+<p>注意，我们在object块中加入了codebase属性，这就是制定的下载控件的位置，可以使用相对路径。别忙，我们现在还不能正确请求这个页面，因为我们还没有对我们的控件进行签名。签名可以采用两种方式，一种是在上面生成安装程序的时候签名，另一种是使用sn.exe签名。推荐大家使用后者，因为可以提供更多选项。本人很懒，就不多写了，大家可以参考csdn上的文章《发布ActiveX》。先给给大家提个醒，在申请证书的时候选择 高级证书申请。 </p>
+<h1>源码下载</h1>
+<p><a href="demo/activex_HelloWorld.zip">HelloWorld</a></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+
+
+</body>
+</html>

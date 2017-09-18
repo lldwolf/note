@@ -1,0 +1,137 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+About the JDBC interface</TITLE>
+</HEAD>
+<BODY>
+<A NAME="CJAEHDHD"></A><h1>About the JDBC interface</h1>
+<A NAME="TI317"></A><p>You can access a wide variety of databases via JDBC in InfoMaker.
+This section describes what you need to know to use JDBC connections
+to access your data in InfoMaker.</p>
+<A NAME="TI318"></A><h2>What is JDBC?</h2>
+<A NAME="TI319"></A><h4>The JDBC API</h4>
+<A NAME="TI320"></A><p>Java Database Connectivity (JDBC) is a standard application
+programming interface (API) that allows a Java application to access
+any database that supports Structured Query Language (SQL) as its
+standard data access language. </p>
+<A NAME="TI321"></A><p>The JDBC API includes classes for common SQL database activities
+so that you can open connections to databases, execute SQL commands,
+and process results. Consequently, Java programs have the capability
+to use the familiar SQL programming model of issuing SQL statements
+and processing the resulting data. The JDBC classes are included
+in Java 1.1+ and Java 2 as the java.sql package.</p>
+<A NAME="TI322"></A><p>The JDBC API defines the following:</p>
+<A NAME="TI323"></A><p><A NAME="TI324"></A>
+<ul>
+<li class=fi>A library of JDBC function calls that
+connect to a database, execute SQL statements, and retrieve results</li>
+<li class=ds>A standard way to connect and log in to a DBMS</li>
+<li class=ds>SQL syntax based on the X/Open SQL Call
+Level Interface or X/Open and SQL Access Group (SAG) CAE
+specification (1992)</li>
+<li class=ds>A standard representation for data types</li>
+<li class=ds>A standard set of error codes
+</li>
+</ul>
+</p>
+<A NAME="TI325"></A><h4>How JDBC APIs are implemented</h4>
+<A NAME="TI326"></A><p>JDBC API implementations fall into two broad categories: those
+that communicate with an existing ODBC driver (a JDBC-ODBC bridge)
+and those that communicate with a native database API (a JDBC driver
+that converts JDBC calls into the communications protocol used by
+the specific database vendor). The InfoMaker implementation of
+the JDBC interface can be used to connect to any database for which
+a JDBC-compliant driver exists. </p>
+<A NAME="TI327"></A><h4>The InfoMaker JDBC interface</h4>
+<A NAME="TI328"></A><p>A Java VM is required to interpret and execute the bytecode
+version of a Java program. InfoMaker supports three implementations
+of the JDBC interface: <i>JDM</i>
+ to run with Microsoft's
+Java Virtual Machine, <i>JDS</i>
+ to run with Sun's
+Java Virtual Machine Version 1.1.x, and <i>JDB</i>
+,
+which supports all the functionality provided in the existing JDS
+and JDM interfaces (which were written against the JDBC 1.0 specification)
+as well as functionality defined in JDBC 2.0. You can use the version
+of InfoMaker's JDBC interface that is most appropriate
+for your development and deployment environment. </p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>JDM and JDS support to be discontinued</span> <A NAME="TI329"></A>The JDS and JDM interfaces continue to be supported in InfoMaker
+8.0, but support for these interfaces is to be discontinued after
+this release. In InfoMaker 8.0, if you install the JDM or JDS
+interface, you get a message box warning you that support for these
+interfaces is to be discontinued. In addition, profiles using these
+drivers will be marked as <i>deprecated</i>
+ in the
+list of Installed Database Interfaces in the Database Profiles dialog
+box and the Database painter. </p>
+<A NAME="TI330"></A><h2>Components of a JDBC connection</h2>
+<A NAME="TI331"></A><h4>How a JDBC connection is made</h4>
+<A NAME="TI332"></A><p>In InfoMaker when you access a database via the JDBC interface,
+your connection goes through several layers before reaching the
+database. It is important to understand that each layer represents
+a separate component of the connection, and that each component
+may come from a different vendor.</p>
+<A NAME="TI333"></A><p>Because JDBC is a standard API, InfoMaker uses the same interface
+to access every JDBC-compliant database driver. </p>
+<A NAME="TI334"></A><p>The following diagram shows the general components of a JDBC
+connection.</p>
+<br><img src="images/Cnw3jdbc.gif">
+<A NAME="TI335"></A><h4>The JDBC DLLs</h4>
+<A NAME="TI336"></A><p>InfoMaker provides three DLLs: JDM to run with Microsoft's
+Java VM, JDS to run with Sun's Java VM Version 1.1.x, and
+JDB to run with both VMs. </p>
+<A NAME="TI337"></A><h4>InfoMaker Java package </h4>
+<A NAME="TI338"></A><p>Along with the DLLs, InfoMaker includes a small package of
+Java classes that gives the JDBC interface the level of error-checking
+and efficiency (SQLException catching) found in the other InfoMaker interfaces.
+The package is called pbjdbc11.jar or pbjdbc12.jar, depending on
+which version of the JDBC interface you install, and is found in \Program Files\Sybase\Shared\PowerBuilder. </p>
+<A NAME="TI339"></A><h4>The Java VMs</h4>
+<A NAME="TI340"></A><p>The Java VM is a component of Microsoft's and Sun's
+Java development software. You must have running on your machine
+either the Microsoft VM for Java or the Sun Java Runtime Environment
+(JRE). See the InfoMaker Release Notes for information about the
+required Java VM version.</p>
+<A NAME="TI341"></A><h4>The JDBC drivers</h4>
+<A NAME="TI342"></A><p>The JDBC interface can communicate with any JDBC-compliant
+driver including Sybase jConnect as well as the Oracle and INFORMIX
+JDBC drivers. These drivers are native-protocol all-Java drivers--that
+is, they convert JDBC calls into the SQL syntax supported by the
+databases. </p>
+<A NAME="TI343"></A><h2>The JDBC registry entries</h2>
+<A NAME="TI344"></A><p>When you access data through the InfoMaker JDBC interface, InfoMaker uses an
+internal registry to maintain definitions of SQL syntax, DBMS-specific function
+calls, and default DBParm parameter settings for the backend DBMS. This
+internal registry currently includes subentries for Sybase Adaptive Server Anywhere and
+Adaptive Server Enterprise databases as well as Oracle. </p>
+<A NAME="TI345"></A><p>In most cases you should not need to modify the JDBC entries.
+However, if you do need to customize the existing entries or add
+new entries, you can make changes to the system registry by editing
+the registry directly or executing a registry file. Changes you
+introduce in the system registry override the InfoMaker internal
+registry entries. See the egreg.txt file in \Program Files\Sybase\Shared\PowerBuilder
+for an example of a registry file you could execute to change entry
+settings.</p>
+<A NAME="X-ref354483650"></A><h2>Supported versions for JDBC</h2>
+<A NAME="TI346"></A><p>The InfoMaker JDBC interface uses one of the following DLLs
+to access a database via a JDBC driver: <A NAME="TI347"></A>
+<ul>
+<li class=fi>PBJDS80.DLL</li>
+<li class=ds>PBJDM80.DLL</li>
+<li class=ds>PBJDB80.DLL
+</li>
+</ul>
+</p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <p><b>Required Sybase JDBC driver version</b>   To use the JDBC interface to access the jConnect driver, use
+jConnect Version 4.2 or higher or jConnect Version 5.2 or higher.
+For information on jConnect, see your Sybase documentation.</p>
+<p><b>Required Oracle JDBC driver version</b>   To use the JDBC interface to access the Oracle JDBC driver,
+use Oracle 8 JDBC driver Version 8.0.4 or higher. For information
+on the Oracle JDBC driver, see your Oracle 8 documentation.</p>
+<A NAME="TI348"></A><h2>Supported JDBC data types</h2>
+<A NAME="TI349"></A><p>Like ODBC, the JDBC interface compiles, sorts, presents, and
+uses a list of data types that are native to the backend database
+to emulate as much as possible the behavior of a native interface. </p>
+

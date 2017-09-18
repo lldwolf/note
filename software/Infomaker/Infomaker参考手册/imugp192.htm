@@ -1,0 +1,40 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+IsTime</TITLE>
+</HEAD>
+<BODY>
+<A NAME="DWFIsTime"></A><A NAME="TI6879"></A><h1>IsTime</h1>
+<A NAME="TI6880"></A><p>
+<FORM>
+<INPUT
+ TYPE = "BUTTON"
+ VALUE = "Examples"
+ onClick = "window.location = 'imugp192.htm#EX44';">
+</FORM>
+</p>
+<h3>Description</h3><A NAME="TI6881"></A><p>Reports whether the value of a string is a valid time value.</p>
+
+<h3>Syntax</h3><pre><b>IsTime</b> ( <i>timevalue</i> )</pre>
+<A NAME="TI6882"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI6883"></A>Argument</th>
+<th align="left" valign=bottom><A NAME="TI6884"></A>Description</th>
+</tr>
+<tr><td valign=top><A NAME="TI6885"></A><i>timevalue</i></td>
+<td valign=top><A NAME="TI6886"></A>A string whose value you want to test
+to determine whether it is a valid time</td>
+</tr>
+</table>
+
+<h3>Return Values</h3><A NAME="TI6887"></A><p>Boolean. Returns TRUE if <i>timevalue</i> is
+a valid time and FALSE if it is not.</p>
+
+<A NAME="EX44"></A><h3>Examples</h3><A NAME="TI6888"></A><p>This expression returns TRUE:<pre><i>IsTime</i> ("8:00:00 am")</pre>
+</p>
+<A NAME="TI6889"></A><p>This expression returns FALSE:<pre><i>IsTime</i> ("25:00")</pre>
+</p>
+<A NAME="TI6890"></A><p>To pass this validation rule, the value in start_time
+must be a time:<pre><i>IsTime</i> (start_time)  <i></i> </pre>
+</p>
+
+

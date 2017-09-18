@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>Struts 2</title>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+<p id="title">Struts 2</p>
+
+<h1>N.1 简介</h1>
+<p>struts 2与struts 1.1间的差别比较大，因此单列一章进行讲解。</p>
+<h1>N.2 基本功能</h1>
+<h2>N.2.1 所需包</h2>
+<ul>
+	<li>commons-logging-1.0.4.jar</li>
+	<li>freemarker-2.3.8.jar</li>
+	<li>ognl-2.6.11.jar</li>
+	<li>struts2-core-2.0.9.jar</li>
+	<li>xwork-2.0.4.jar</li>
+</ul>
+<p>不要把lib下的所有包都包括进来，因为Struts发布包中lib目录下面的jar文件中很多都是插件，并不是构建Struts应用所必须的。如果全部包进来的话，启动Tomcat时有可能会出现如下莫名其妙的错误：</p>
+<pre>unable to load bean: type:com.opensymphony.xwork2.ObjectFactory
+class:org.apache.struts2.spring.StrutsSpringObjectFactory - bean - jar:
+file:/E:/workspace/Struts/WEB-INF/lib/struts2-spring-plugin-2.0.8.jar!/struts-plugin.xml:8:132。</pre>
+<h2>N.2.2 web.xml配置</h2>
+<pre>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;web-app id=&quot;WebApp_9&quot; version=&quot;2.4&quot; xmlns=&quot;http://java.sun.com/xml/ns/j2ee&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xsi:schemaLocation=&quot;http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd&quot;&gt;
+
+	&lt;display-name&gt;Tutorial&lt;/display-name&gt;
+
+	&lt;filter&gt;
+		&lt;filter-name&gt;struts2&lt;/filter-name&gt;
+		&lt;filter-class&gt;org.apache.struts2.dispatcher.FilterDispatcher&lt;/filter-class&gt;
+	&lt;/filter&gt;
+
+	&lt;filter-mapping&gt;
+		&lt;filter-name&gt;struts2&lt;/filter-name&gt;
+		&lt;url-pattern&gt;/*&lt;/url-pattern&gt;
+	&lt;/filter-mapping&gt;
+
+	&lt;welcome-file-list&gt;
+		&lt;welcome-file&gt;index.html&lt;/welcome-file&gt;
+	&lt;/welcome-file-list&gt;
+
+&lt;/web-app&gt;</pre>
+<h2>N.2.3 程序说明</h2>
+<p>本例只简单演示struts的servlet框架功能，它从页面上接收一个参数，经过一个servlet类的处理后，将其显示在目标页面上。搭建如下文件：</p>
+<h3>sayHello.jsp</h3>
+<pre>&lt;%@ page language=&quot;java&quot; contentType=&quot;text/html; charset=utf-8&quot;%&gt;
+&lt;%@ taglib prefix=&quot;s&quot; uri=&quot;/struts-tags&quot; %&gt;
+&lt;!DOCTYPE html PUBLIC &quot;-//W3C//DTD HTML 4.01 Transitional//EN&quot; &quot;http://www.w3.org/TR/html4/loose.dtd&quot;&gt;
+&lt;html&gt;
+&lt;head&gt;
+&lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=utf-8&quot;&gt;
+&lt;title&gt;Say Hello&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+	&lt;h3&gt;Say &quot;Hello&quot; to: &lt;/h3&gt;
+	Address:&lt;input type=&quot;text&quot; name=&quot;address&quot;/&gt;
+	&lt;s:form action=&quot;HelloWorld&quot;&gt;
+		Name: &lt;s:textfield name=&quot;name&quot;/&gt;
+		&lt;s:submit&gt;&lt;/s:submit&gt;
+	&lt;/s:form&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+<h3>HelloWorld.jsp</h3>
+<pre>&lt;%@ page language=&quot;java&quot; contentType=&quot;text/html; charset=utf-8&quot;%&gt;
+&lt;%@ taglib prefix=&quot;s&quot; uri=&quot;/struts-tags&quot; %&gt;
+&lt;!DOCTYPE html PUBLIC &quot;-//W3C//DTD HTML 4.01 Transitional//EN&quot; &quot;http://www.w3.org/TR/html4/loose.dtd&quot;&gt;
+&lt;html&gt;
+	&lt;head&gt;
+		&lt;title&gt;Hello&lt;/title&gt;
+	&lt;/head&gt;
+	&lt;body&gt;
+		&lt;h3&gt;&lt;s:property value=&quot;name&quot; /&gt;&lt;/h3&gt;
+	&lt;/body&gt;
+&lt;/html&gt;</pre>
+<h3>HelloWorld.java</h3>
+<pre>package tutorial; 
+
+import com.opensymphony.xwork2.ActionSupport;
+ 
+public class HelloWorld extends ActionSupport 
+{
+	private String name; 
+
+	public String getName() 
+	{
+		return name;
+	} 
+
+	public void setName(String name) 
+	{
+		this.name = name;
+	}
+
+	public String execute()
+	{
+		name=&quot;Hello &quot;+name+&quot;!&quot;;
+
+		//System.out.println(name);
+		return SUCCESS; 
+	}
+}</pre>
+<p>这几个文件之间的流程如下图所示：</p>
+<img src="images/struts_01.gif" />
+<p>首先sayHello.jsp向服务器发送请求，然后根据我们web.xml文件的配置，这个请求被交给了FilterDispatcher这个类来进行处理，FilterDispatcher会根据我们struts.xml文件的中的配置信息来对这个请求分流，让它进入某个指定的action(本例中是HelloWorld.java)，在处理完请求之后，再将页面转向HelloWorld.jsp(这个也是在struts.xml中指定的)。为了保证上述流程的顺利执行，现在struts.xml文件的内容修改如下：</p>
+<pre>&lt;!DOCTYPE struts PUBLIC   
+     &quot;-//Apache Software Foundation//DTD Struts Configuration 2.0//EN&quot;   
+     &quot;http://struts.apache.org/dtds/struts-2.0.dtd&quot;&gt;  
+&lt;struts&gt;
+    &lt;package name=&quot;tutorial&quot; extends=&quot;struts-default&quot;&gt;
+       &lt;action name=&quot;HelloWorld&quot; class=&quot;tutorial.HelloWorld&quot;&gt;
+           &lt;result&gt;HelloWorld.jsp&lt;/result&gt;
+       &lt;/action&gt;
+    &lt;/package&gt;
+&lt;/struts&gt;</pre>
+<p>注意，这里action的name属性和sayHello.jsp中的action属性的值是一样的，实际上在FilterDispatcher中就是根据这两个值对request进行分流的，具体过程如下：</p>
+<ol>
+	<li>我们写出这个处理这个请求的url，本例是http://localhost:8888/Struts/HelloWorld</li>
+	<li>取出http://localhost:8888/Struts/之后的字符串得到了HelloWorld</li>
+	<li>在struts.xml文件中查找name属性为HelloWorld的action，把request交给它处理，默认情况下首先执行它里面的execute()方法</li>
+	<li>请求处理完毕之后进入HelloWorld.jsp页面，配置在&lt;result&gt;标签里面</li>
+</ol>
+<p>struts.xml文件中的package元素有一个namespace属性，这个属性有什么用呢，加了这个属性之后我们的url又该怎么写了，还是亲自实践一把吧，我现在把struts.xml文件修改如下：</p>
+<pre>&lt;!DOCTYPE struts PUBLIC   
+     &quot;-//Apache Software Foundation//DTD Struts Configuration 2.0//EN&quot;   
+     &quot;http://struts.apache.org/dtds/struts-2.0.dtd&quot;&gt;  
+&lt;struts&gt;
+   &lt;package name=&quot;tutorial&quot; extends=&quot;struts-default&quot; <span style="color: red">namespace=&quot;/test&quot;</span>&gt;
+      &lt;action name=&quot;HelloWorld&quot; class=&quot;tutorial.HelloWorld&quot;&gt;
+        &lt;result&gt;HelloWorld.jsp&lt;/result&gt;
+      &lt;/action&gt;
+   &lt;/package&gt;
+&lt;/struts&gt;</pre>
+<p>其它文件的内容都不变，和上一篇文章中一样，这是我在sayHello.jsp文件中点击提交，页面报错：The requested resource (/Struts/HelloWorld) is not available。下面做如下一些尝试：</p>
+<p>1．将sayHello.jsp中form的action改为test/HelloWorld</p>
+<p>报错：The requested resource (/Struts/test/HelloWorld) is not available</p>
+<p>2．将sayHello.jsp中form的action改为test/HelloWorld.action</p>
+<p>报错：The requested resource (/Struts/test/HelloWorld.jsp) is not available，这表明action已经找到，只是执行action之后找不到所转向的页面HelloWorld.jsp</p>
+<p>3．将struts.xml中result标签改为&lt;result&gt;/HelloWorld.jsp&lt;/result&gt;</p>
+<p>OK,测试通过！</p>
+<p>因此，在设置了package的namespace属性之后，标准的访问url应该是：</p>
+<pre>http://webserver/webPrefix/namespace/actionname.action</pre>
+<p>实际上FilterDispatcher对url进行映射的方式非常复杂，我在上篇文章里面所做的推测
+
+针对的只是一种最简单的情况而已，因为我做了很多BT的测试，得到了一些让我吃惊的结果。比如说我再加一个package：</p>
+<pre>&lt;package name=&quot;tutorial1&quot; extends=&quot;struts-default&quot;&gt;
+        &lt;action name=&quot;HelloWorld&quot; class=&quot;tutorial.HelloWorld&quot;&gt;
+           &lt;result&gt;/HelloWorld.jsp&lt;/result&gt;
+        &lt;/action&gt;
+&lt;/package&gt;</pre>
+<p>这个包和之前那个唯一的差别就是没有namespace属性，当然包名肯定是不同的咯，现在我将sayHello.jsp的action进行修改，我发现无论怎么改，只要它是以HelloWorld.action结尾，测试都是通过的，例如111/222/HelloWorld.action，aaa/bbb/HelloWorld.action，这些都能得到正确的答案。看来FilterDispatcher到底是怎么映射url的只能到源码里面去找答案了。但是在具体的开发中，我们只要严格按照http://webserver/webPrefix/namespace/actionname.action这个规则来配置url肯定是不是错的咯。</p>
+<p>通过前面的学习，对Struts2的工作流程大致有了一个了解，如下图所示：</p>
+<img src="images/struts_02.JPG" />
+<p>上图中的“分流”是指根据我们所请求的url把request交给某个指定的action来处理。那么在这个FilterDispatcher中还有一些什么操作呢？在Struts1中我们经常要把一个ActionForm和一个Action相关联，ActionForm中封装了表单的所有值，并且这些都是在ActionServlet中完成的，因此我们在action中可以直接通过ActionForm得到表当中的值，那么Struts2中又是怎么做的呢？我们怎么取得那些值呢？我发现可以这么做：对表单中每一个要获取的值，在action中相应添加这样的一个域，然后再设置相应的set和get方法，即采用javabean风格，貌似这个现在比较流行。比方说在前面的例子中，在sayHello.jsp的表单中有一个文本域，它的name=”name”，在我的action文件HelloWorld.java中有一个域private String name;同时还分别设置了相应的setName和getName方法，现在我把setName方法改为如下：</p>
+<p>OK，在浏览器中输入http://localhost:8888/Struts/sayHello.jsp，这时我们发现后台打印出了name:CMTobby，CMTobby是我输入的name的值，这说明setName方法被执行了，奇怪啊，我们根本没有显式的调用这个方法啊，它是什么时候调用的呢？现在我们在setName方法里面设置一个断点，然后再在execute方法里面设置一个断点，再次运行我们的程序，结果显示setName方法在execute方法前面执行。</p>
+<p>接着，无聊的我又做了一些测试：</p>
+<p>1．把setName改为setName1，结果页面输出：Hello null，并且setName1为执行</p>
+<p>2．在sayHello.jsp的form之外加了一个文本框，取名address，在HelloWorld中增加相应的域address、setAddress方法和getAddress方法，通过断点测试发现，setAddress方法不会执行。</p>
+<p>基于以上测试，我认为在执行action的操作之前，首先会根据请求页面的form表当中所包含的参数来调用action中相应的set****方法，比如说，本例中，form中有name属性，因此会在执行execute之情调用setName方法，而address因为不在form中所以不会调用setAddress方法.</p>
+<p>在处理完请求之后如何把用户所请求的值回传到结果页面当中呢？在HelloWorld.jsp中我们用了<s:property value="name" />，嘿嘿，难道又是隐式的调用了getName方法吗？于是我在HelloWorld.java的getName方法处设置了一个断点，再次运行我们的程序，果然getName被隐式的调用了。</p>
+<p>此外如果我把&lt;s:property value=&quot;name&quot; /&gt;中value的值改为别的如name1，这时页面出错，一片空白。我接着又把getName方法改为getName1，这时页面仍然一片空白，因为取不到name属性的值。如果我把&lt;s:property value=&quot;name&quot; /&gt;改为&lt;s:property value=&quot;name1&quot; /&gt;，同时也把getName改为getName1，那么显示就正常了，这个表明框架会根据属性的名字去调用相应的get方法。</p>
+<p>上述机制是不是和我们前面所讨论的BeanUtils的copyProperties方法一样，实际上很多ORM框架都采用的这个机制，都是首先得到属性名再调用相应的set或者get方法，而不是直接访问的域。</p>
+<h1>N.3 对POJO对象访问的支持</h1>
+<p>在Struts2.0里面有一个非常牛*的功能就是支持更高级的POJO访问，这句话是什么意思呢？下面来通过例子实际操作一把就能体会到这个功能的强大与好使了。</p>
+<p>要实现的功能：如果用户输入用户名xiaozu，密码111111，则显示welcome，xiaozhu!否则提示用户名或密码错误。</p>
+<p>下面是我们所需的文件：</p>
+<h3>登陆页面login.jsp</h3><br />
+<pre>&lt;%@ page language=&quot;java&quot; contentType=&quot;text/html; charset=utf-8&quot;%&gt;
+&lt;%@ taglib prefix=&quot;s&quot; uri=&quot;/struts-tags&quot; %&gt;
+&lt;!DOCTYPE html PUBLIC &quot;-//W3C//DTD HTML 4.01 Transitional//EN&quot; &quot;http://www.w3.org/TR/html4/loose.dtd&quot;&gt;
+
+&lt;html&gt;
+&lt;head&gt;
+&lt;title&gt;登陆页面&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;s:form action=&quot;/test/loginAction.action&quot; method=&quot;post&quot;&gt;
+    &lt;s:textfield name=&quot;userName&quot; label=&quot;用户名&quot;/&gt;
+    &lt;s:password name=&quot;password&quot; label=&quot;密码&quot;/&gt;
+    &lt;s:submit/&gt;
+&lt;/s:form&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+<h3>请求处理LoginAction.java</h3>
+<pre>package tutorial; 
+
+import com.opensymphony.xwork2.ActionSupport; 
+
+public class LoginAction extends ActionSupport 
+{
+
+	private String msg=&quot;显示默认消息&quot;;
+	private String userName;
+	private String password;	
+
+	public String getPassword() 
+	{
+		return password;
+	} 
+
+	public void setPassword(String password) 
+	{
+		this.password = password;
+	}
+
+	public String getUserName() 
+	{
+		return userName;
+	} 
+
+	public void setUserName(String userName) 
+	{
+		this.userName = userName;
+	}
+
+	public String getMsg() 
+	{
+		return msg;
+	}
+
+	public String execute()
+	{
+		if (&quot;xiaozhu&quot;.equals(userName)&amp;&amp;&quot;111111&quot;.equals(password)) 
+		{
+			msg=&quot;welcome,&quot;+userName;
+		} else 
+		{
+			msg=&quot;用户名或密码错误&quot;;
+		}
+		return this.SUCCESS;
+	}
+}</pre>
+<h3>响应页面HelloWorld.jsp</h3>
+<pre>&lt;%@ page language=&quot;java&quot; contentType=&quot;text/html; charset=utf-8&quot;%&gt;
+&lt;%@ taglib prefix=&quot;s&quot; uri=&quot;/struts-tags&quot; %&gt;
+&lt;!DOCTYPE html PUBLIC &quot;-//W3C//DTD HTML 4.01 Transitional//EN&quot; &quot;http://www.w3.org/TR/html4/loose.dtd&quot;&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;Hello&lt;/title&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;h3&gt;&lt;s:property value=&quot;msg&quot;/&gt;&lt;/h3&gt;
+    &lt;/body&gt;
+&lt;/html&gt;</pre>
+<p>如上所示，对于login.jsp表单中的每个值域我们都会在相应的action中声明一个对应的属性并产生相应的get和set方法，如果这个表单中的值很多(例如注册用户信息的表单)，就会导致action十分庞大和容易混乱，并且也不利于我们的软件分层，违背了OO的原则，下面看一下改进后的方案。</p>
+<h3>登陆页面login.jsp</h3>
+<pre>&lt;%@ page language=&quot;java&quot; contentType=&quot;text/html; charset=utf-8&quot;%&gt;
+&lt;%@ taglib prefix=&quot;s&quot; uri=&quot;/struts-tags&quot; %&gt;
+&lt;!DOCTYPE html PUBLIC &quot;-//W3C//DTD HTML 4.01 Transitional//EN&quot; &quot;http://www.w3.org/TR/html4/loose.dtd&quot;&gt;
+&lt;html&gt;
+&lt;head&gt;
+&lt;title&gt;Insert title here&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;s:form action=&quot;/test/loginAction.action&quot; method=&quot;post&quot;&gt;
+    &lt;s:textfield name=&quot;user.userName&quot; label=&quot;用户名&quot;/&gt;
+    &lt;s:password name=&quot;user.password&quot; label=&quot;密码&quot;/&gt;
+    &lt;s:submit/&gt;
+&lt;/s:form&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+<h3>新增实体类User.java</h3>
+<pre>package tutorial;
+ 
+public class User {
+    private String userName;
+    private String password;
+   
+    public String getPassword() {
+       return password;
+    }
+    public void setPassword(String password) {
+       this.password = password;
+    }
+    public String getUserName() {
+       return userName;
+    }
+    public void setUserName(String userName) {
+       this.userName = userName;
+    }
+}</pre>
+<h3>请求处理LoginAction.java</h3>
+<pre>package tutorial;
+ 
+import com.opensymphony.xwork2.ActionSupport;
+ 
+public class LoginAction extends ActionSupport {
+	private String msg=&quot;显示默认消息&quot;;
+	private User user;
+	
+	public User getUser() {
+		return user;
+	}
+	public void setUser(User user) {
+		this.user = user;
+	}
+	public String getMsg() {
+		return msg;
+	}
+ 
+	public String execute(){
+		if(&quot;xiaozhu&quot;.equals(user.getUserName())&amp;&amp;&quot;111111&quot;.equals(user.getPassword()))
+			msg=&quot;welcome,&quot;+user.getUserName();
+		else
+			msg=&quot;用户名或密码错误&quot;;
+		return this.SUCCESS;//
+	}
+}</pre>
+<h3>响应页面HelloWorld.jsp</h3>
+<pre>&lt;%@ page language=&quot;java&quot; contentType=&quot;text/html; charset=utf-8&quot;%&gt;
+&lt;%@ taglib prefix=&quot;s&quot; uri=&quot;/struts-tags&quot; %&gt;
+&lt;!DOCTYPE html PUBLIC &quot;-//W3C//DTD HTML 4.01 Transitional//EN&quot; &quot;http://www.w3.org/TR/html4/loose.dtd&quot;&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;Hello&lt;/title&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;h3&gt;&lt;s:property value=&quot;msg&quot;/&gt;&lt;/h3&gt;
+    &lt;/body&gt;
+&lt;/html&gt;</pre>
+<p>前后两种处理方式有何不同呢？后者新建了一个User实体类，用于封装从表单中接收的数据，而在action中就不用设置相应的属性和方法了，并且这样做能够让我们的软件层次感更加明显，系统结构也更加清晰。以User为例，描述一下采用这种方式的关键步骤：</p>
+<p>1． 在action中定义一个User类型的对象：User user；</p>
+<p>2． 表单中各个控件的name属性要采取如下命名规则：对象名.属性名，注意对象名必须与action中定义的一样，属性名也必须和该对象的属性一一对应。如上例中的user.userName和user.password。</p>
+<h1>N.4 访问隐藏的request和session</h1>
+<p>在Struts1.*中，要想访问request、response以及session等Servlet对象是很方便的，因为它们一直是作为形参在各个方法之间进行传递的，而在Struts2中我们就很难看到它们的芳踪了，因为我们获得表单中的值都是通过预先设置好了的get方法来得到的，那么如果有些参数我们必须通过request.getParametre或者session.getAttribute来得到，那么应该怎么做呢？按照Max的教程上的说法，可以分为两种：IoC方式和非IoC方式，如何理解这两种方式的区别呢？IoC是Spring里面的特征之一，字面意思是反转控制，说白了就是依赖注入，比方说类A依赖类B，那么就主动的给A注入一个类B的对象，下面看一下这两种方法的具体实现。</p>
+<h2>N.4.1 非Ioc方式</h2>
+<p>这种方式主要是利用了com.opensymphony.xwork2.ActionContext类以及org.apache.struts2.ServletActionContext类，具体的方法如下所示。</p>
+<h3>获得request对象:</h3>
+<pre>HttpServletRequest request = ServletActionContext.getRequest();</pre>
+<pre>ActionContext ct = ActionContext.getContext();
+HttpServletRequest request = (HttpServletRequest)ct.get(ServletActionContext.HTTP_REQUEST);</pre>
+<h3>获得session对象</h3>
+<p>在Struts2中底层的session都被封装成了java.util.Map类型，我们称之为SessionMap，而平常我们所说的session则是指HttpSession对象，具体的获得方法如下所示：</p>
+<pre>Map session = ActionContext.getSession();</pre>
+<pre>Map session = (Map)ActionContext.getContext().get(ActionContext.SESSION);</pre>
+<p>得到这个SessionMap之后我们就可以对session进行读写了，如果我们想得到原始的HttpSession可以首先得到HttpServletRequest对象，然后通过request.getSession()来取得原始的HttpSession对象。一般情况下SessionMap已经可以完成所有的工作，我们不必再去碰底层的session了。</p>
+<h2>N.4.2 IoC方式</h2>
+<p>这种方式相对来说变化就比较少了，具体流程如下所示：</p>
+<h3>获得request对象</h3>
+<p>第一步：让action实现<span style="COLOR: #000000">org.apache.struts2.interceptor.</span>ServletRequestAware接口</p>
+<p>第二步：在action中声明一个HttpServletRequest类型的实例变量</p>
+<p>第三步：在action中实现ServletRequestAware接口的setServletRequest方法，实现方式很简单，如下所示。</p>
+<pre>private HttpServletRequest request;
+publicvoid setServletRequest(HttpServletRequest request) 
+{
+	this.request = request;
+}</pre>
+<h3>获得Session对象(SessionMap类型)</h3>
+<p>第一步：让action实现<span style="COLOR: #000000">org.apache.struts2.interceptor.</span>SessionAware接口</p>
+<p>第二步：在action中声明一个HttpServletRequest类型的实例变量</p>
+<p>第三步：在action中实现SessionAware接口的setSession方法，实现方式很简单，如下所示。</p>
+<pre>private Map session;
+publicvoid setSession(Map session) 
+{
+	this. session = session;
+}</pre>
+<h1>N.5 说说相对路径</h1>
+<p>从刚开始接触Tomcat开始，就被繁杂的相对路径给弄晕了，尽管最后每次都能正确的匹配上，但是总觉得不是很顺畅，一直试图找出一条匹配的规则出来，但是每每总结出一条来的时候，总是又被新的“事实”给颠覆，让人不胜烦恼，因此决定有一点写一点。</p>
+<p>通常相对路径的写法有两种，一种就是以“/”开头，一种就是不以“/”开头，这两种写法有什么区别呢，下面举例阐述一下。</p>
+<p>现在的Web环境是一个Struts2的应用，我的应用名是Struts，应用程序所在的目录名也是Struts。这样我的url基本是以http://localhost/Struts开头的啦。现在做如下测试：</p>
+<p>1．在Struts目录下面有一个文件叫sayHello.jsp，它里面的form的action的值是HelloWorld.action，那么提交之后匹配的路径是http://localhost/Struts/HelloWorld.action。</p>
+<p>2．如果action的值是test/HelloWorld.action，那么提交之后匹配的路径是http://localhost/Struts/test/HelloWorld.action。</p>
+<p>3．假设在Struts目录下面有一个子目录add，它里面有一个文件叫sayHello.jsp，它里面的form的action的值是HelloWorld.action，那么提交之后匹配的路径是http://localhost/Struts/add/HelloWorld.action。</p>
+<p>4．在测试3下将action的值改为test/HelloWorld.action，那么提交之后匹配的路径是http://localhost/Struts/add/test/HelloWorld.action。</p>
+<p>5．在测试3下将action的值改为/HelloWorld.action，那么提交之后匹配的路径是http://localhost/Struts/ HelloWorld.action。</p>
+<p>6．在测试3下将action的值改为/test/HelloWorld.action，那么提交之后匹配的路径是http://localhost/Struts/ test/HelloWorld.action。</p>
+<p>总结：在页面文件中，所请求的相对路径为path，那么它的路径匹配是从文件当前所在的目录开始的，假设页面文件当前所在目录为curr，那么匹配后的完整路径就是http://localhost/Sturts/curr/path；如果相对路径为/aa/bb/cc，那么匹配后的路径就是http://localhost/Sturts/path。也就是说，如果以“/”开头，就从当前应用的根目录开始匹配，如果不以“/”开头就从当前文件所在的目录开始匹配。这样的话，如果文件本来就在根目录下面，那么加“/”和不加“/”就没啥区别了。</p>
+<p>在Struts2还一个要匹配路径的地方就是在处理完请求之后对页面进行分发的时候，也就是result元素里面的内容。测试记录如下：</p>
+<p>1．&lt;result&gt;/HelloWorld.jsp&lt;/result&gt;。匹配的路径是http://localhost/Struts/HelloWorld.jsp。</p>
+<p>2．&lt;result&gt;HelloWorld.jsp&lt;/result&gt;。这个时候就和调用这个action的路径相关了。可以这样进行匹配，首先得到请求这个action的url，然后去掉最后一个“/”后面的内容，再把HelloWorld.jsp接上去即可。例如，我们是通过http://localhost/Struts/aa//bb/cc/HelloWorld.action调用的action，那么匹配出来的url就是http://localhost/Struts/aa//bb/cc/HelloWorld.jsp。</p>
+<h1>N.6 国际化</h1>
+<p>．建立国际化资源文件LoginAction_zh_CN.properties ：</p>
+<pre>## login.jsp
+login.title = 用户登录
+login.username = 用户名
+login.password = 密码
+login.submit = 登录
+## login.jsp validation
+requiredstring = $\{getText(fieldName)} 是必须的.
+limitedlength = $\{getText(fieldName)} 必须在${minLength}和${maxLength}之间.</pre>
+<p>这里值得注意的是$\{getText(fieldName)}，这个用来获取页面中的表单的name的值。</p>
+<p>2.修改login.jsp，加入国际化支持：</p>
+<pre>&lt;%@ page language=&quot;java&quot; import=&quot;java.util.*&quot; pageEncoding=&quot;UTF-8&quot;%&gt;
+&lt;%@taglib prefix=&quot;s&quot; uri=&quot;/struts-tags&quot;%&gt;
+&lt;s:i18n name=&quot;org.rainlife.struts2.action.LoginAction&quot;&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;s:head theme=&quot;ajax&quot; /&gt;
+        &lt;title&gt;&lt;s:text name=&quot;login.title&quot;/&gt;&lt;/title&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;s:form action=&quot;login&quot; method=&quot;post&quot;&gt;
+            &lt;s:textfield label=&quot;%{getText('login.username')}&quot; name=&quot;username&quot; /&gt;
+            &lt;s:textfield label=&quot;%{getText('login.password')}&quot; name=&quot;password&quot; /&gt;
+            &lt;s:submit value=&quot;%{getText('login.submit')}&quot; /&gt;
+        &lt;/s:form&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+&lt;/s:i18n&gt;</pre>
+<p>通过&lt;s:i18n name=&quot;org.rainlife.struts2.action.LoginAction&quot;&gt;&lt;/s:i18n&gt;来使用页面支持国际化，name=&quot;org.rainlife.struts2.action.LoginAction&quot;指向了国际化文件LoginAction.properties的位置。</p>
+<p>在JSP页面中，通过%{getText(‘key’)}这种OGNL表达式来获取资源文件中的信息。</p>
+<p>3．验证文件中出错信息的国际化</p>
+<pre>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;!DOCTYPE validators PUBLIC 
+&quot;-//OpenSymphony Group//XWork Validator 1.0.2//EN&quot; 
+&quot;http://www.opensymphony.com/xwork/xwork-validator-1.0.2.dtd&quot;&gt;
+&lt;validators&gt;
+    &lt;field name=&quot;username&quot;&gt;
+        &lt;field-validator type=&quot;requiredstring&quot;&gt;
+            &lt;message key=&quot;requiredstring&quot;/&gt;
+        &lt;/field-validator&gt;
+    &lt;/field&gt;
+
+    &lt;field name=&quot;password&quot;&gt;
+        &lt;field-validator type=&quot;requiredstring&quot;&gt;
+            &lt;message key=&quot;requiredstring&quot;/&gt;
+        &lt;/field-validator&gt;
+        &lt;field-validator type=&quot;stringlength&quot;&gt;
+            &lt;param name=&quot;minLength&quot;&gt;6&lt;/param&gt;
+            &lt;param name=&quot;maxLength&quot;&gt;10&lt;/param&gt;
+            &lt;message key=&quot;limitedlength&quot;/&gt;
+        &lt;/field-validator&gt;
+    &lt;/field&gt;
+&lt;/validators&gt;</pre>
+<p>由上面可知，是通过&lt;message&gt;元素的key属性来实现的，key的值为资源文件中定义的国际化信息的键值。</p>
+<h1>N.7 基于AJAX的表单验证</h1>
+<p>基于AJAX的表单验证需要先安装DWR，在http://getahead.ltd.uk/dwr/download上下载DWR 2.0 RC 2，将dwr.jar拷贝到WEB-INF/lib目录下</p>
+<p>1．修改web.xml，另入DWR支持： </p>
+<pre>&lt;servlet&gt;
+    &lt;servlet-name&gt;dwr&lt;/servlet-name&gt;
+    &lt;servlet-class&gt;
+        org.directwebremoting.servlet.DwrServlet
+    &lt;/servlet-class&gt;
+    &lt;init-param&gt;
+        &lt;param-name&gt;debug&lt;/param-name&gt;
+        &lt;param-value&gt;true&lt;/param-value&gt;
+    &lt;/init-param&gt;
+&lt;/servlet&gt;
+&lt;servlet-mapping&gt;
+    &lt;servlet-name&gt;dwr&lt;/servlet-name&gt;
+    &lt;url-pattern&gt;/dwr/*&lt;/url-pattern&gt;
+&lt;/servlet-mapping&gt;</pre>
+<p>2．在WEB-INF目录下新建dwr.xml文件</p>
+<pre>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;!DOCTYPE dwr PUBLIC &quot;-//GetAhead Limited//DTD Direct Web Remoting 2.0//EN&quot;
+&quot;http://getahead.ltd.uk/dwr/dwr20.dtd&quot;&gt;
+&lt;dwr&gt;
+    &lt;allow&gt;
+        &lt;create javascript=&quot;validator&quot; creator=&quot;new&quot;&gt;
+            &lt;param name=&quot;class&quot;
+                value=&quot;org.apache.struts2.validators.DWRValidator&quot; /&gt;
+        &lt;/create&gt;
+        &lt;convert converter=&quot;bean&quot;
+            match=&quot;com.opensymphony.xwork2.ValidationAwareSupport&quot; /&gt;
+    &lt;/allow&gt;
+
+    &lt;signatures&gt;
+        &lt;![CDATA[
+        import java.util.Map;
+        import org.apache.struts2.validators.DWRValidator;
+
+        DWRValidator.doPost(String, String, Map&lt;String, String&gt;);
+        ]]&gt;
+    &lt;/signatures&gt;
+&lt;/dwr&gt;</pre>
+<p>3．在login.jsp中添加AJAX验证支持，修改后的login.jsp内容如下：</p>
+<pre>&lt;%@ page language=&quot;java&quot; import=&quot;java.util.*&quot; pageEncoding=&quot;UTF-8&quot;%&gt;
+&lt;%@taglib prefix=&quot;s&quot; uri=&quot;/struts-tags&quot;%&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;s:head theme=&quot;ajax&quot; /&gt;
+        &lt;title&gt;登录页面&lt;/title&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;s:form action=&quot;login&quot; method=&quot;post&quot; theme=&quot;ajax&quot;&gt;
+            &lt;s:textfield label=&quot;用户名&quot; name=&quot;username&quot; /&gt;
+            &lt;s:textfield label=&quot;密码&quot; name=&quot;password&quot; /&gt;
+            &lt;s:submit value=&quot;登录&quot; /&gt;
+        &lt;/s:form&gt;
+    &lt;/body&gt;
+&lt;/html&gt;</pre>
+<p>注意上面的&lt;s:head theme=&quot;ajax&quot; /&gt;，它为页面使用AJAX验证准备相应的Scripts代码。</p>
+<p>4.配置validation.xml</p>
+<pre>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;!DOCTYPE validators PUBLIC 
+&quot;-//OpenSymphony Group//XWork Validator 1.0.2//EN&quot; 
+&quot;http://www.opensymphony.com/xwork/xwork-validator-1.0.2.dtd&quot;&gt;
+&lt;validators&gt;
+    &lt;field name=&quot;username&quot;&gt;
+        &lt;field-validator type=&quot;requiredstring&quot;&gt;
+            &lt;message&gt;请输入用户名&lt;/message&gt;
+        &lt;/field-validator&gt;
+    &lt;/field&gt;
+
+    &lt;field name=&quot;password&quot;&gt;
+        &lt;field-validator type=&quot;requiredstring&quot;&gt;
+            &lt;message&gt;请输入密码&lt;/message&gt;
+        &lt;/field-validator&gt;
+        &lt;field-validator type=&quot;stringlength&quot;&gt;
+            &lt;param name=&quot;minLength&quot;&gt;6&lt;/param&gt;
+            &lt;param name=&quot;maxLength&quot;&gt;10&lt;/param&gt;
+            &lt;message&gt;密码长度只能在 ${minLength} 和 ${maxLength} 之间.&lt;/message&gt;
+        &lt;/field-validator&gt;
+    &lt;/field&gt;
+&lt;/validators&gt;</pre>
+<p>这样就为JSP页面提供了基于AJAX的验证。</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+
+</body>
+</html>

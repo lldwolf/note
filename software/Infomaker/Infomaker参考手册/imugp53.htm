@@ -1,0 +1,475 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+Using the Preview view of a report </TITLE>
+</HEAD>
+<BODY>
+<A NAME="CAIECGIC"></A><h1>Using the Preview view of a report </h1>
+<A NAME="TI1754"></A><p>You can use the Preview view of a report to view it as
+it will appear with data and test the processing that takes place
+in it. </p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To display the Preview view of a report open
+in the Report painter:</p>
+<ol><li class=fi>
+Select View&gt;Preview from the menu
+bar.<br><br>
+The Preview view displays. In the Preview view, the bars that
+indicate the bands disappear, and by default InfoMaker retrieves
+all the rows from the database (you are prompted to supply arguments
+if you defined retrieval arguments).<br><br><br><img src="images/dwen05i.gif"><br>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>In external reports</span> <A NAME="TI1755"></A>If the report uses the External data source, no data is
+retrieved. You can import data, as described in <A HREF="imugp53.htm#CAICDBAI">"Importing data into a report"</A>.</p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>In reports that have stored data</span> <A NAME="TI1756"></A>If the report has stored data in it, no data is retrieved
+from the database.</p>
+
+As the rows are being retrieved, the Retrieve button in the
+PainterBar changes to a Cancel button. You can click the Cancel
+button to stop the retrieval.<br><br></li>
+<li class=ds>
+Select File&gt;Print Preview from the menu
+bar and evaluate your report. <br><br>
+For example, scroll the page and page down to new pages to
+review the layout and content of the report.<br><br></li></ol>
+<br><A NAME="CAICDABH"></A><h2>Retrieving data</h2>
+<A NAME="TI1757"></A><h4>Where InfoMaker gets data</h4>
+<A NAME="TI1758"></A><p>InfoMaker follows this order of precedence to supply the
+data in your report:<A NAME="TI1759"></A>
+<ol>
+</li>
+<li class=ds>If you have saved data in the report, InfoMaker uses
+the saved rows from the report and does not retrieve data from
+the database.</li>
+<li class=ds>If data caching is on, InfoMaker uses the data
+in the cache (if there is any). Data caching is always on.</li>
+<li class=ds>If there is no data in the cache yet, InfoMaker retrieves
+data from the database automatically, with one exception. If the
+Retrieve on Preview option is off, you have to request retrieval
+explicitly, as described next.
+</li>
+</ol>
+</p>
+<A NAME="TI1760"></A><h4>Previewing without retrieving data</h4>
+<A NAME="TI1761"></A><p>If you do not want InfoMaker to retrieve data from the database
+automatically when the Preview view opens, you can set the Retrieve
+on Preview option. Then the Preview view will show the report without
+retrieving data.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To be able to preview without retrieving data
+automatically:</p>
+<ol><li class=fi>
+Select Design&gt;Options from the
+menu bar.<br><br>
+The Report Options property sheet displays.<br><br></li>
+<li class=ds>
+Select the General tab.<br><br></li>
+<li class=ds>
+Deselect the Retrieve on Preview checkbox.<br><br>
+When this checkbox is unchecked, your request to preview the report will not
+result in automatic data retrieval from the database.<br><br></li></ol>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Retrieve on Preview checkbox is available in the Report wizards</span> <A NAME="TI1762"></A>During the initial creation of a report, you can set the
+Retrieve on Preview option.</p>
+<br><A NAME="TI1763"></A><h4>InfoMaker uses data caching</h4>
+<A NAME="TI1764"></A><p>When InfoMaker first retrieves data, it stores the data internally.
+When InfoMaker refreshes the Preview view, InfoMaker displays
+the stored data instead of retrieving rows from the database again.
+This can save you a lot of time, since data retrieval can be time
+consuming.</p>
+<A NAME="TI1765"></A><h4>How using data from the cache affects you</h4>
+<A NAME="TI1766"></A><p>Because InfoMaker accesses the cache and does not automatically
+retrieve data every time you preview, you may not have what you
+want when you preview. The data you see in preview and the data
+in the database can be out of sync.</p>
+<A NAME="TI1767"></A><p>For example, if you are working with live data that changes
+frequently or with statistics based on changing data and you spend
+time designing the report, the data you are looking at may no
+longer match the database. In this case, you may want to retrieve
+again just before printing.</p>
+<A NAME="TI1768"></A><h4>Explicitly retrieving data</h4>
+<A NAME="TI1769"></A><p>You can explicitly request retrieval at any time.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To retrieve rows from the database:</p>
+<ol><li class=fi>
+Click the Retrieve button in the PainterBar.<br><br>
+<i>or</i>
+<br><br>
+Select Rows&gt;Retrieve from the menu bar.<br><br>
+<i>or</i>
+<br><br>
+Select Retrieve from the Preview view's popup
+menu.<br><br><p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Supplying argument values or criteria</span> <A NAME="TI1770"></A>If the report has retrieval arguments or is set up to
+prompt for criteria, you will be prompted to supply values for the
+arguments or to specify criteria.</p>
+
+InfoMaker retrieves the rows. As InfoMaker retrieves, the
+Retrieve button changes to a Cancel button. You can click the Cancel
+button to stop the retrieval anytime.<br><br></li></ol>
+<br><A NAME="TI1771"></A><h4>Sharing data with the Data view</h4>
+<A NAME="TI1772"></A><p>The Data view displays data that can be used to populate a
+DataWindow. When the ShareData popup menu item in the Data view
+is checked, changes you make in the Data view are reflected in the
+Preview view and vice versa.</p>
+<A NAME="TI1773"></A><h4>Other options that affect retrieval</h4>
+<A NAME="TI1774"></A><p>These other options can affect retrieval:<A NAME="TI1775"></A>
+<ul>
+<li class=fi><b>Query Governor</b>    Lets you (or a database administrator) set certain restrictions
+on data retrieval. For example, Query Governor can limit the number
+of rows that will be retrieved.<br>
+For information, see <A HREF="imugp19.htm#BFCBCFIE">"Using the Query Governor"</A>.<br></li>
+<li class=ds><b>Retrieve Rows As Needed</b>    Lets you specify that only the rows needed to display the
+current portion of the report should be retrieved. When you scroll
+downward, additional rows are retrieved. This can speed up reporting
+in certain situations. <br>
+See <A HREF="imugp60.htm#CAIBFCAB">"Retrieving rows as needed"</A>.<br></li>
+<li class=ds><b>Retrieve Rows to Disk</b>   Lets you specify that InfoMaker should save retrieved data
+on your hard disk in a temporary file rather than keep the data
+in memory. When you preview your report, InfoMaker swaps rows
+of data from the temporary file into memory as needed.<br>
+For information, see <A HREF="imugp60.htm#CAIBJBCD">"Saving retrieved rows to
+disk "</A>.<br>
+</li>
+</ul>
+</p>
+<A NAME="CAICDBAI"></A><h2>Importing data into a report</h2>
+<A NAME="TI1776"></A><p>You can import and display data from an external source. Then
+you can view the data or save the data in an external format.</p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Importing is not available in a report packaged in
+an executable file</span> <A NAME="TI1777"></A>When you create an InfoMaker application (which is an executable
+file), you can include reports. When you run a report from the executable
+file, you cannot import data.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To import data into a report:</p>
+<ol><li class=fi>
+Select Rows&gt;Import from the menu
+bar.<br><br>
+The Select Import File dialog box displays.<br><br></li>
+<li class=ds>
+Specify the file from which you want to import
+the data.<br><br>
+The types of files that you can import into the painter display
+in the List Files of Type dropdown listbox.<br><br></li>
+<li class=ds>
+Click Open.<br><br>
+InfoMaker reads the data from the file into the painter. You
+can view the data and save the data in an external file.<br><br></li></ol>
+<br><p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Data from file must match retrieved columns</span> <A NAME="TI1778"></A>When importing data from a file, the data must match all the
+columns in the retrieved data (typically, the columns specified
+in the SELECT statement), not just the columns that are displayed
+in the report.</p>
+<A NAME="CAIDJGIG"></A><h2>Using print preview</h2>
+<A NAME="TI1779"></A><p>You can print the data displayed in the Preview view. Before
+printing, you can preview the output on the screen. Your computer must
+have a default printer specified.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To preview printed output before printing:</p>
+<ol><li class=fi>
+Be sure the Preview view is selected (current)
+and then select File&gt;Print Preview from the menu bar.<br><br>
+Print Preview displays the report as it will print. <br><br></li></ol>
+<br><p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Using the IntelliMouse pointing device</span> <A NAME="TI1780"></A>Using the IntelliMouse pointing device, users can scroll
+a report by rotating the wheel. You can also zoom a report larger
+or smaller by holding down the ctrl key while
+rotating the wheel.</p>
+<A NAME="TI1781"></A><h4>Controlling the display of rulers</h4>
+<A NAME="TI1782"></A><p>You can choose whether to display rulers around page borders.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To control the display of rulers in Print Preview:</p>
+<ol><li class=fi>
+Select/deselect File&gt;Print
+Preview Rulers from the menu bar.<br><br><br><img src="images/Dwen06.gif"><br>
+</li></ol>
+<br><A NAME="TI1783"></A><h4>Changing margins</h4>
+<A NAME="TI1784"></A><p>You can dynamically change margins while previewing a report.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To change the margins in Print Preview:</p>
+<ol><li class=fi>
+Drag the margin boundaries on the rulers. <br><br></li></ol>
+<br><A NAME="TI1785"></A><p>The following picture shows the left and top margin boundaries.
+There are also boundaries for the right and bottom margins.</p>
+<br><img src="images/Dwen07.gif">
+<A NAME="TI1786"></A><h4>Zooming the page</h4>
+<A NAME="TI1787"></A><p>You can reduce or enlarge the amount of the page that displays
+in the Print Preview view. This does not affect the printed output.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To zoom the page on the display screen:</p>
+<ol><li class=fi>
+Select File&gt;Print Preview Zoom
+from the menu bar.<br><br></li>
+<li class=ds>
+Select the magnification you want and click OK.<br><br>
+The display of the page zooms in or out as appropriate. The
+size of the contents of the page changes proportionately as you
+zoom. This type of zooming affects your display but does not affect
+printing.<br><br></li></ol>
+<br><A NAME="TI1788"></A><h4>Zooming the contents</h4>
+<A NAME="TI1789"></A><p>In addition to zooming the display on the screen, you can
+also zoom the contents, affecting the amount of material that prints
+on a page.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To zoom the contents of a report with respect
+to the printed page:</p>
+<ol><li class=fi>
+Select Design&gt;Zoom from the menu
+bar.<br><br>
+The Zoom dialog box displays.<br><br></li>
+<li class=ds>
+Select the magnification you want and click OK.<br><br>
+The contents of the page zooms in or out as appropriate. If
+you enlarge the contents so they no longer fit, InfoMaker creates
+additional pages as needed.<br><br></li></ol>
+<br><A NAME="BFCBHEIF"></A><h2>Printing data</h2>
+<A NAME="TI1790"></A><p>You can print your report while the Preview view is displayed.
+You can print all pages, a range of pages, only the current page,
+or only odd or even pages. You can also specify whether you want
+multiple copies, collated copies, and printing to a file.</p>
+<A NAME="TI1791"></A><h4>Avoiding large rows</h4>
+<A NAME="TI1792"></A><p>To avoid multiple blank pages and other anomalies in printed
+reports, no row in the report should be larger than the size
+of the target page. The page boundary is often reached in long text
+columns with AutoSizeHeight on. It can also be reached when detail
+rows are combined with page and group headers and trailers, or when
+they contain multiple nested reports or a column that has been
+resized to be larger than the page.</p>
+<A NAME="TI1793"></A><p>When a row contains large multi-line edit columns, it can
+be broken into a series of rows each containing one text line. These
+text lines become the source for a nested report. The nested
+DataWindow object determines how many of its rows fit in the remaining
+page space. A WordWrap utility, obtainable from Sybase, can be used
+to parse the text into single lines.</p>
+<A NAME="TI1794"></A><h4>Page break before last row</h4>
+<A NAME="TI1795"></A><p>The summary band in a report is always printed on the same
+page as the last row of data. 	This means that you will sometimes
+find that there is a page break before the last row of 	data even
+if there is sufficient space to print the row. If you want the last
+row to print on 	the same page as the preceding rows, the summary
+band must be made small enough to fit on the page as well.</p>
+<A NAME="TI1796"></A><h4>To change printers or settings before printing</h4>
+<A NAME="TI1797"></A><p>You can choose File&gt;Printer Setup from the menu bar.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To print a DataWindow object:</p>
+<ol><li class=fi>
+Select File&gt;Print Report from
+the menu bar to display the Print dialog box.<br><br></li>
+<li class=ds>
+Specify the number of copies to print.<br><br></li>
+<li class=ds>
+Specify the pages: select All or Current Page,
+or type page numbers and/or page ranges in the Pages box.<br><br></li>
+<li class=ds>
+Specify all pages, even pages, or odd pages in
+the Print dropdown listbox.<br><br></li>
+<li class=ds>
+If you want to print to a file rather than to
+the printer, select the Print to File checkbox.<br><br></li>
+<li class=ds>
+If you want to change the collating option, deselect
+or select the Collate Copies checkbox and click OK.<br><br>
+If you specified print to file, the Print to File dialog box
+displays.<br><br></li>
+<li class=ds>
+Enter a filename and click OK.<br><br>
+The extension PRN identifies it as a file prepared for the
+printer. Change drive and/or directory if you want. <br><br></li></ol>
+<br><A NAME="CAIBAHHD"></A><h2>Saving data in an external file</h2>
+<A NAME="TI1798"></A><p>While previewing, you can save the data retrieved in an external
+file. Note that the data and headers (if specified) are saved. Information
+in the footer or summary bands is not saved unless you are saving
+in the file format named Powersoft report.</p>
+<A NAME="TI1799"></A><p>For more information about the Powersoft report
+file format, see <A HREF="imugp53.htm#CAICEIAE">"Working with PSR files"</A>.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To save the data in a report in an external
+file:</p>
+<ol><li class=fi>
+Select File&gt;Save Rows As from
+the menu bar.<br><br>
+The Save As dialog box displays.<br><br></li>
+<li class=ds>
+Choose a format for the file from the Save As
+Type dropdown listbox.<br><br>
+If you want the column headers saved in the file, select a
+file format that includes headers (such as Excel With Headers).
+When you select a <i>with headers</i>
+ format, the
+names of the database columns (not the column labels) will also
+be saved in the file.<br><br>
+When you choose a format, InfoMaker supplies the appropriate
+file extension on platforms that require them.<br><br><p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Saving the data as a Powersoft report or HTML Table</span> <A NAME="TI1800"></A>You can choose Powersoft report in the Save As dialog box
+to save a Powersoft PSR file. You can choose HTML Table to save
+the data in HTML Table format.</p>
+</li>
+<li class=ds>
+Name the file and click Save.<br><br>
+InfoMaker saves all displayed rows in the file; all columns
+in the displayed rows are saved. Filtered rows are not saved.<br><br></li></ol>
+<br><A NAME="BFCCEFEG"></A><h2>Saving the data in HTML Table format</h2>
+<A NAME="TI1801"></A><p>One of the formats you can choose to save data in is HTML
+Table format. When you save in HTML Table format, InfoMaker saves
+a style sheet along with the data. If you use this format, you can
+open the saved file in a browser such as Netscape. Once you have
+the file in HTML Table format, you can continue to enhance the file
+in HTML.</p>
+<A NAME="TI1802"></A><h4>About the results</h4>
+<A NAME="TI1803"></A><p>Some presentation styles translate better into HTML than others.
+The Tabular, Group, Freeform, Crosstab, and Grid presentation styles
+produce good results. The Composite, RichText, Graph, and OLE 2.0 presentation
+styles and nested reports produce HTML tables based on the result
+set (data) only and not on the presentation style. Reports with
+overlapping controls in them may not produce the results you want.</p>
+<A NAME="TI1804"></A><h4>An example</h4>
+<A NAME="TI1805"></A><p>The example shows a report in the Preview view and the file
+saved in HTML Table format in Netscape.</p>
+<A NAME="TI1806"></A><p>These are the steps you would follow to recreate this example:<A NAME="TI1807"></A>
+<ol>
+</li>
+<li class=ds>Open a report.</li>
+<li class=ds>Preview it:<br><img src="images/Dwen10.gif">
+</li>
+<li class=ds>Select File&gt;Save Rows As from the menu
+bar.</li>
+<li class=ds>Choose the HTML Table format for the file from the
+Save As Type dropdown listbox.</li>
+<li class=ds>Name the file.<br>
+InfoMaker creates a file using the name you supplied and
+the extension <i>htm</i>
+.<br></li>
+<li class=ds>Open a browser such as Netscape or Internet Explorer.</li>
+<li class=ds>Use the browser's file open command to
+open the HTML file.<br>
+This screen shows the file opened in Netscape:<br><br><img src="images/dwen011.gif">
+
+</li>
+</ol>
+</p>
+<A NAME="CAICEIAE"></A><h2>Working with PSR files</h2>
+<A NAME="TI1808"></A><p>A PSR file is a special file with the extension PSR created
+by PowerBuilder, InfoMaker, or DataWindow Builder. PSR stands for Powersoft
+report.</p>
+<A NAME="TI1809"></A><p>A PSR file contains a report definition (source and object)
+as well as the data contained in the report when the PSR file was
+created.</p>
+<br><img src="images/Dwen12.gif">
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>About reports</span> <A NAME="TI1810"></A>A report is the same as a nonupdatable DataWindow object. </p>
+<A NAME="TI1811"></A>For more information, see <A HREF="imugp43.htm#BFCEAGFF">"About reports"</A>.</p>
+<A NAME="TI1812"></A><p>You can use a PSR file to save a complete report (report design
+and data). This can be especially important if you need to keep
+a snapshot of data taken against a database that changes frequently.</p>
+<A NAME="TI1813"></A><h4>How PSR files are created</h4>
+<A NAME="TI1814"></A><p>InfoMaker creates a PSR file when you:<A NAME="TI1815"></A>
+<ul>
+<li class=fi>Mail a report to an InfoMaker user using electronic
+mail.<br>
+See <A HREF="imugp53.htm#CAIECDFA">"Mailing reports"</A>.<br></li>
+<li class=ds>Save data in the Powersoft report file format.<br>
+See <A HREF="imugp53.htm#CAIBAHHD">"Saving data in an external
+file"</A>.<br>
+</li>
+</ul>
+</p>
+<A NAME="TI1816"></A><h4>Opening a PSR file</h4>
+<A NAME="TI1817"></A><p>When you open a PSR file, InfoMaker displays the report in
+the Report painter. If InfoMaker is not already running, opening
+a PSR file automatically starts InfoMaker. You can open a PSR file
+in File Manager or Explorer, in a mail message, and using the File
+menu in the Report painter. </p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Windows and PSR files</span> <A NAME="TI1818"></A>When InfoMaker is installed, the Powersoft report file type
+is registered with Windows.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To open a PSR file in InfoMaker using Explorer
+or File Manager or from a mail message:</p>
+<ol><li class=fi>
+Double-click the PSR filename.<br><br>
+InfoMaker displays the report.<br><br></li></ol>
+<br><p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To open a PSR file from the menu bar in the Report painter in PowerBuilder, DataWindow Builder,
+or InfoMaker:</p>
+<ol><li class=fi>
+Select File&gt;Open File from the
+menu bar.<br><br>
+The Select a File Name dialog box displays.<br><br></li>
+<li class=ds>
+Select the PSR file you want. Change drives and
+directories if needed.<br><br>
+The Report painter displays the report in the Design view.<br><br></li>
+<li class=ds>
+Select View&gt;Preview to preview the report.<br><br></li></ol>
+<br><A NAME="TI1819"></A><h4>PSR files and retrieval</h4>
+<A NAME="TI1820"></A><p>When you are previewing a PSR file, you see the data that
+was saved in the file when it was created. This is true until you
+explicitly retrieve data again using the Retrieve button or Rows&gt;Retrieve
+from the menu bar.</p>
+<A NAME="TI1821"></A><p>If you attempt to retrieve data with a PSR file, you must
+be sure that you are properly connected to the right database. Otherwise,
+you will receive a database error message.</p>
+<A NAME="TI1822"></A><p>If you retrieve new data while previewing a PSR file, you
+cannot go back to the old data contained in the file. To go back
+to the old data, you must leave the PSR file without saving and
+then reopen the PSR file.</p>
+<A NAME="CAIECDFA"></A><h2>Mailing reports</h2>
+<A NAME="TI1823"></A><p>While previewing in the Report painter, you can mail a report
+as a PSR file to an InfoMaker user who is using a MAPI-compliant
+mail system such as Microsoft Exchange. (MAPI stands for <i>messaging
+application program interface</i>
+ and is one of the programming
+interfaces to mail systems.)</p>
+<A NAME="TI1824"></A><p>For more about PSR files, see <A HREF="imugp53.htm#CAICEIAE">"Working with PSR files"</A>.</p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Using 16-bit mail clients</span> <A NAME="TI1825"></A>Use of the 16-bit mail API (MAPI) is not supported under 32-bit InfoMaker--you
+need to use the 32-bit version.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To mail a report:</p>
+<ol><li class=fi>
+While previewing a report in the Report
+painter, select File&gt;Send from the menu bar.<br><br>
+If you are not logged on to your mail system, you will be
+prompted for your password.<br><br></li>
+<li class=ds>
+Enter your password and click OK.<br><br>
+A form for mailing the report displays. InfoMaker creates
+and attaches the appropriate PSR file (which holds the report and
+data).<br><br></li>
+<li class=ds>
+Complete the form and send the message.<br><br>
+InfoMaker mails the PSR file.<br><br>
+The recipient can open the report by double-clicking it if InfoMaker is installed.<br><br></li></ol>
+<br><A NAME="CAIBFGFD"></A><h2>Working in a grid report</h2>
+<A NAME="TI1826"></A><p>If you are viewing a grid-style report in the Preview
+view, you can make the following changes. Whatever you do in the
+Preview view is reflected in the Design view:<A NAME="TI1827"></A>
+<ul>
+<li class=fi>Resize columns</li>
+<li class=ds>Reorder columns</li>
+<li class=ds>Copy data to the clipboard
+</li>
+</ul>
+</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To resize a column in a grid report:</p>
+<ol><li class=fi>
+Position the mouse pointer
+at a column boundary in the header.<br><br>
+The pointer changes to a two-headed arrow.<br><br></li>
+<li class=ds>
+Press and hold the left mouse button and drag
+the mouse to move the boundary.<br><br></li>
+<li class=ds>
+Release the mouse button when the column is the
+correct width.<br><br></li></ol>
+<br><p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To reorder columns in a grid report:</p>
+<ol><li class=fi>
+Press and hold the left mouse button on
+a column heading.<br><br>
+InfoMaker selects the column and displays a line representing
+the column border:<br><br><br><img src="images/Dwen14.gif"><br>
+</li>
+<li class=ds>
+Drag the mouse left or right to move the column.<br><br></li>
+<li class=ds>
+Release the mouse button.<br><br></li></ol>
+<br><p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To copy data to the clipboard from a grid report:</p>
+<ol><li class=fi>
+Select the cells whose data you want to
+copy to the clipboard:<A NAME="TI1828"></A>
+<ul>
+<li class=fi>To select an entire column, click its header. To
+select neighboring columns, press and hold shift,
+then click the headers. To select non-neighboring columns, press
+and hold ctrl, then click the headers.</li>
+<li class=ds>To select cells, press the left mouse button on
+the bottom border of a cell and drag the mouse.
+</li>
+</ul>
+
+                      <br><br>
+Selected cells are highlighted.<br><br></li>
+<li class=ds>
+Select Edit&gt;Copy from the menu bar.<br><br>
+The contents of the selected cells are copied to the clipboard.
+If you copied the contents of more than one column, the data is
+separated by tabs.<br><br></li></ol>
+<br>

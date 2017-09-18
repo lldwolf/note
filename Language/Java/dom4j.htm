@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<title>dom4j</title>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+<p id="title">dom4j</p>
+
+<p>用于操作XML文件.</p>
+<p>需要引用的包：</p>
+<ul>
+  <li>dom4j-1.6.1.jar</li>
+  <li>jaxen-1.1-beta-6.jar</li>
+</ul>
+<p>如果不引用jaxen-1.1-beta-6.jar的话，在调用Document.selectNodes()或Document.selectSingleNode()方法时会出现异常。</p>
+<p>一个简单的例子：</p>
+<pre>import org.dom4j.io.SAXReader;
+import org.dom4j.*;
+
+public class TestDom4j
+{
+	public static void main(String[] args) throws Exception
+	{
+		try
+		{
+			SAXReader reader = new SAXReader();
+			String xml_file = &quot;D:\\Work\\Java\\INtools\\WebContent\\config\\manage_sql.xml&quot;;
+			File file = new File(xml_file);
+	        Document document = reader.read(xml_file);
+	        Node sql_node = document.selectSingleNode(&quot;/root/sql[@key=\&quot;list_user\&quot;]&quot;);
+	        System.out.println(sql_node.getText());
+		}catch(Exception ex)
+		{
+			System.out.print(ex.getMessage());
+		}
+	}
+
+}</pre>
+<h1>Resources</h1>
+<p><a href="resource/dom4j - Quick Start Guide.mht">Quick Start Guide</a></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+
+</body>
+</html>

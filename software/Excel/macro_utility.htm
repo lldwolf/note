@@ -1,0 +1,131 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>常用工具宏函数</title>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+<h1>第N章 常用工具宏函数</h1>
+<hr />
+<h2><a href="#column_no">N.1 列号字符串与数字的转换</a></h2>
+<h3>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#coltag_to_colno">N.1.1 列号转为数字</a></h3>
+<h3>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#colno_to_coltag">N.1.2 数字转为列号</a></h3>
+<h2><a href="#worksheet">N.2 工作表</a> </h2>
+<h3>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#sheet_to_html">N.2.1 工作表内容转为HTML表格</a></h3>
+<h2>N.3 查找</h2>
+<hr />
+<h2><a name="column_no" id="column_no"></a>N.1 列号字符串与数字的转换</h2>
+<h3><a name="coltag_to_colno" id="coltag_to_colno"></a>N.1.1 列号转为数字</h3>
+<pre>Public Function GetColNumber(ByVal ColNo As String) As Integer
+
+    Dim I As Integer, iTemp As Integer
+    Dim ColVal As Integer
+    
+    ColNo = UCase(ColNo)
+    ColNo = Trim(ColNo)
+    ColVal = 0
+    
+    For I = 1 To Len(ColNo)
+        iTemp = Asc(Mid(ColNo, I, 1)) - Asc(&quot;A&quot;) + 1
+        If I &lt;&gt; Len(ColNo) Then
+            ColVal = ColVal + iTemp * 26 ^ (Len(ColNo) - I)
+        Else
+            ColVal = ColVal + iTemp
+        End If
+    Next I
+    
+    GetColNumber = ColVal
+    
+
+End Function</pre>
+<h3><a name="colno_to_coltag" id="colno_to_coltag"></a>N.1.2 数字转为列号</h3>
+<pre>Public Function GetColNo(ByVal ColNo As Integer) As String
+
+    Dim I As Integer, iTemp As Integer
+    
+    If ColNo &lt;= 26 Then
+        GetColNo = Chr(Asc(&quot;A&quot;) + ColNo - 1)
+    Else
+        If ColNo Mod 26 = 0 Then
+            GetColNo = Chr(Asc(&quot;A&quot;) + ColNo \ 26 - 2) &amp; &quot;Z&quot;
+        Else
+            GetColNo = Chr(Asc(&quot;A&quot;) + ColNo \ 26 - 1) &amp; Chr(Asc(&quot;A&quot;) + ColNo Mod 26 - 1)
+        End If
+    End If
+    
+
+End Function</pre>
+<h2><a name="worksheet" id="worksheet"></a>N.2 工作表</h2>
+<h3><a name="sheet_to_html" id="sheet_to_html"></a>N.2.1 工作表内容转为HTML表格</h3>
+<pre>Sub ExcelToHTML()
+
+    Dim row As Integer
+    Dim col As Integer
+    Dim html As String
+    Dim cell_value As String
+    
+    html = &quot;&lt;table&gt;&quot; &amp; vbCrLf
+    
+    row = 1: col = 1
+    
+    For row = 1 To ActiveSheet.UsedRange.Rows.Count
+        html = html &amp; &quot;&lt;tr&gt;&quot; &amp; vbCrLf
+        For col = 1 To ActiveSheet.UsedRange.Columns.Count
+            cell_value = ActiveSheet.Cells(row, col)
+            If cell_value = &quot;&quot; Then cell_value = &quot;&amp;nbsp;&quot;
+            html = html &amp; &quot;&lt;td&gt;&quot; &amp; cell_value &amp; &quot;&lt;/td&gt;&quot; &amp; vbCrLf
+        Next col
+        html = html &amp; &quot;&lt;/tr&gt;&quot; &amp; vbCrLf
+    Next row
+    html = html &amp; &quot;&lt;/table&gt;&quot;
+    
+    ActiveSheet.Cells(row + 1, 1) = html
+
+End Sub</pre>
+<h2>N.3 查找字符串 </h2>
+<p>下面的函数有3个参数，第一个是查找范围，第2个是查找值，第3个为返回的查找结果区域（如果找得到），返回值表示是否找到，如果找到返回True</p>
+<pre>Private Function find_value(r_search As Excel.Range, search_val As String, ByRef r_result As Range) As Boolean
+
+    Dim rFindRes As Excel.Range
+    
+    Set rFindRes = r_search.Find(search_val)
+    
+    If rFindRes Is Nothing Then
+        Set r_result = Nothing
+        find_value = False
+        Exit Function
+    ElseIf UCase(rFindRes) = UCase(search_val) Then
+        Set r_result = rFindRes
+        find_value = True
+        Exit Function
+    End If
+    
+    Dim firstRow As Integer, firstCol As Integer
+    
+    firstRow = rFindRes.Row
+    firstCol = rFindRes.Column
+    
+    Set rFindRes = r_search.Find(search_val, rFindRes)
+    
+    While (Not (rFindRes Is Nothing)) And UCase(rFindRes) &lt;&gt; UCase(search_val) And rFindRes.Row &lt;&gt; firstRow And rFindRes.Column &lt;&gt; firstCol
+        If UCase(rFindRes) = UCase(search_val) Then
+            r_result = rFindRes
+            find_value = True
+            Exit Function
+        End If
+        
+        Set rFindRes = r_search.Find(search_val, rFindRes)
+    Wend
+    
+    Set r_result = Nothing
+    find_value = False
+
+End Function</pre>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</body>
+</html>

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<title>Struts2 常见问题</title>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+<p id="title">Struts2 常见问题</p>
+
+<h1>界面</h1>
+<h2>N.1.1 form标签 </h2>
+<p>struts2的form标签，包括&lt;s:select&gt;、&lt;s:textarea&gt;、&lt;s:textfield&gt;等，在默认情况下，生成的HTML如下所示</p>
+<pre>&lt;tr&gt;
+	&lt;td&gt;label&lt;/td&gt;
+	&lt;td&gt;&lt;input /&gt;&lt;/td&gt;
+&lt;/tr&gt;</pre>
+<p>这常常不是我们需要的显示方式，我们只需要显示最简单的&lt;input /&gt;即可，那些自动生成的&lt;tr&gt;&lt;td&gt;还是净谢不敏的好。要修改的话很简单，在src根目录下建立struts.properties，里面加入这么一行即可</p>
+<p>struts.ui.theme=simple</p>
+<h2>N.1.2 &lt;s:iterator&gt; 标签</h2>
+<p>使用&lt;s:iterator&gt;标签时，对于循环中出现的&lt;s:submit&gt;如果需要调用ognl变量，可以如下所示：</p>
+<pre>&lt;s:iterator value=&quot;users&quot; id=&quot;user&quot;&gt;
+&lt;tr bgcolor=&quot;#f4fbff&quot; class=&quot;table_data&quot;&gt;
+	&lt;td align=&quot;left&quot;&gt;&lt;s:property value=&quot;userId&quot; /&gt;&lt;/td&gt;
+	&lt;td align=&quot;left&quot;&gt;&lt;s:property value=&quot;userName&quot; /&gt;&lt;/td&gt;
+	&lt;td align=&quot;left&quot;&gt;&lt;s:property value=&quot;role&quot; /&gt;&lt;/td&gt;
+	&lt;td align=&quot;center&quot;&gt;
+		&lt;s:set name=&quot;userId&quot; value=&quot;userId&quot; /&gt;
+		&lt;s:submit type=&quot;button&quot; cssClass=&quot;form_button&quot; value=&quot;删除&quot;  onclick=&quot;document.location.href = 'DeleteUser.action?userId=%{#attr.user.userId}';&quot; /&gt;
+	&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/s:iterator&gt;</pre>
+<p>或者</p>
+<pre>&lt;s:iterator value=&quot;users&quot;&gt;
+&lt;tr bgcolor=&quot;#f4fbff&quot; class=&quot;table_data&quot;&gt;
+	&lt;td align=&quot;left&quot;&gt;&lt;s:property value=&quot;userId&quot; /&gt;&lt;/td&gt;
+	&lt;td align=&quot;left&quot;&gt;&lt;s:property value=&quot;userName&quot; /&gt;&lt;/td&gt;
+	&lt;td align=&quot;left&quot;&gt;&lt;s:property value=&quot;role&quot; /&gt;&lt;/td&gt;
+	&lt;td align=&quot;center&quot;&gt;
+		&lt;s:set name=&quot;userId&quot; value=&quot;userId&quot; /&gt;
+		&lt;s:submit type=&quot;button&quot; cssClass=&quot;form_button&quot; value=&quot;删除&quot;  onclick=&quot;document.location.href = 'DeleteUser.action?userId=${userId}';&quot; /&gt;
+	&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/s:iterator&gt;</pre>
+<h1>原始对象 </h1>
+<h2>N.2.1 取得Request、Session、Response</h2>
+<h3>自动获取</h3>
+<p>建一个如下的基类，取代com.opensymphony.xwork2.ActionSupport作为Action类的基类，凡从此类派生的类均自动获取这几个系统对象</p>
+<pre>import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import com.opensymphony.xwork2.ActionSupport;
+import org.apache.struts2.interceptor.ServletRequestAware;
+import org.apache.struts2.interceptor.ServletResponseAware;
+import org.apache.struts2.interceptor.SessionAware;
+
+public class BaseAction extends ActionSupport 
+	implements ServletRequestAware, ServletResponseAware, SessionAware {
+	
+	protected HttpServletRequest request;
+	public void setServletRequest(HttpServletRequest request)
+	{
+		this.request = request;
+	}
+	
+	protected HttpServletResponse response;
+	public void setServletResponse(HttpServletResponse response)
+	{
+		this.response = response;
+	}
+
+	protected Map&lt;String, Object&gt; session;
+	
+	@SuppressWarnings(&quot;unchecked&quot;)
+	public void setSession(Map session)
+	{
+		this.session = session;
+	}
+}</pre>
+<h3>手工获取</h3>
+<p>要获得上述对象，关键Struts 2.0中com.opensymphony.xwork2.ActionContext类。我们可以通过它的静态方法getContext()获取当前Action的上下文对象。 另外，org.apache.struts2.ServletActionContext作为辅助类（Helper Class），可以帮助您快捷地获得这几个对象。 </p>
+<pre>HttpServletRequest request = ServletActionContext.getRequest(); 
+HttpServletResponse response = ServletActionContext.getResponse(); 
+ServletContext servlet_ctx = ServletActionContext.getServletContext();
+HttpSession session = request.getSession();</pre>
+<p>如果你只是想访问session的属性（Attribute），你也可以通过ActionContext.getContext().getSession()获取或添加session范围（Scoped）的对象。</p>
+<h1>路径 </h1>
+<h2>N.3.1 获取绝对路径</h2>
+<p>使用javax.servlet.ServletContext.getRealPath对象，如下所示：</p>
+<pre>import javax.servlet.ServletContext;
+import org.apache.struts2.ServletActionContext;
+...
+ServletContext servlet_ctx = ServletActionContext.getServletContext();
+System.out.println(&quot;servlet path is &quot; + servlet_ctx.getRealPath(&quot;/config&quot;));</pre>
+<h1>错误解决</h1>
+<h2>N.4.1 struts.xml</h2>
+<h3>N.4.1.1 解析错误</h3>
+<p>检查Tomcat的日志文件，其提示内容为：</p>
+<pre>org.apache.catalina.core.StandardContext filterStart
+严重: Exception starting filter struts2</pre>
+<p>经检查发现，在struts.xml中未加入</p>
+<pre>&lt;!DOCTYPE struts PUBLIC
+	&quot;-//Apache Software Foundation//DTD Struts Configuration 2.0//EN&quot;
+	&quot;http://struts.apache.org/dtds/struts-2.0.dtd&quot;&gt;</pre>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+
+</body>
+</html>

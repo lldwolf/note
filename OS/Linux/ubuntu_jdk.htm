@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>在Ubuntu下安装JDK</title>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+<p id="title">在Ubuntu下安装JDK6</p>
+
+<h1>整理后的安装说明</h1>
+<h2>下载安装 </h2>
+<ol>
+  <li>从网站上下载非RPM的bin文件（不能改名） </li>
+  <li>安装如下包（及相关依赖包，具体查看手面的手记）
+    <ol>
+      <li>fakeroot</li>
+      <li>java-package</li>
+    </ol>
+  </li>
+  <li>直接运行./jdk_6u6_linux-i586.bin安装
+  <pre>chmod +x jdk_6u6_linux-i586.bin
+./jdk_6u6_linux-i586.bin</pre>
+  </li>
+  <li>添加环境变量JAVA_HOME、CLASSPATH，并将$JAVA_HOME/bin添加到PATH环境变量中<br />
+  在/etc/profile最后添加
+<pre>export JAVA_HOME=JDK安装目如
+export CLASSPATH=.:$JAVA_HOME/lib
+export PATH=$JAVA_HOME/bin:$PATH</pre></li>
+</ol>
+<h2>使用集成包</h2>
+<p>&nbsp; </p>
+<p>测试JDK是否安装成功的命令为</p>
+<p>java -version </p>
+<h1>手记 </h1>
+<p>从SUN的网站上下载来一个jdk6.bin(改成这个名字吧，原先的名字太长了)，然后，苦命的一天开始了。</p>
+<p>作为linux菜鸟，我还不晓得怎么从windows上把文件传到linux，上网查了一下，linux可通过smbclient访问windows的共享文件</p>
+<pre>smbclient //192.168.1.99/share -U liuld </pre>
+<p>linux下的所有命令及参数都分大小写，烦死了，输入密码登录后</p>
+<pre>get jdk6.bin </pre>
+<p>文件传输到默认的工作目录下 /home/andy</p>
+<p>ubuntu用的是debian内核，不支持rpm命令，需要用工具将jdk6.bin打包成.deb文件。运行</p>
+<pre>fakeroot make-jpkg jdk6.bin </pre>
+<p>系统提示需要安装fakeroot，到网上查查还需要java-package。</p>
+<p>如下面的命令安装fakeroot</p>
+<pre>sudo apt-get install fakeroot </pre>
+<p>幸亏能上网，这一步挺顺利，窃喜中。然后安装java-package，在网上找了半天，找到了所有教程里都用的0.28版本，安装！</p>
+<pre>sudo dpkg -i java-package.deb</pre>
+<p> 系统提示错误，需要安装一大堆的依赖包，烦也烦死了，包的先后安装顺序如下所示：</p>
+<ol>
+  <li>html2ext</li>
+  <li>libtimedate-perl</li>
+  <li>patch</li>
+  <li>dpkg-dev</li>
+  <li>gettext</li>
+  <li>intltool-debin</li>
+  <li>po-debconf</li>
+  <li>debhelper</li>
+</ol>
+<p>我靠，什么也没有，也敢出来开店，我那叫一个郁闷。把这些鸡零狗碎都装上去，统一安装命令为：</p>
+<pre>sudo dpkg -i *.deb </pre>
+<p>所有的包都能在网站 <a href="http://packages.debian.org/sid">http://packages.debian.org/sid</a> 中找到（包括fakeroot）。 </p>
+<p>然后再安装java-package，还好，装好了。结果在使用最开始的转.deb文件的命令时，系统提示：</p>
+<pre>Loading plugins: blackdown-j2re.sh blackdown-j2sdk.sh common.sh ibm-j2re.sh ibm-j2sdk.sh j2re.sh 
+j2sdk-doc.sh j2sdk.sh j2se.sh sun-j2re.sh sun-j2sdk-doc.sh sun-j2sdk.sh
+
+No matching plugin was found.
+Removing temporary directory: done</pre>
+<p>我查了一下/usr/share/java-package，这些文件都有，怎么会找不到，顺便还知道了修改PATH环境变量的命令(其实人实这是找到了，只是没找到合适的，我这是典型的Windows思维)</p>
+<pre>PATH=$PATH:/usr/share/java-package
+export PATH</pre>
+<p>当然改了也没用，上网再查资料，说是/usr/share/java-package目录下的sun-j2sdk.sh不支持新的平台，用dpkg-architecture查看，如果看到输出中有</p>
+<pre>DEB_BUILD_GNU_TYPE=i486-linux-gnu </pre>
+<p>那么就修改这个文件，把第6行从i386-linux改成你的机器的架构(最常见的是 i486-linux-gnu)。</p>
+<p>改文件时还得用root权限</p>
+<pre>sudo vim sun-j2sdk.sh</pre>
+<p>上帝保佑，一开始没小心用了vi修改，那就一个难用。事实上vim也很难用，但相比vi而言，已经算是从地狱走到天堂了。</p>
+<p>改完还是没用，我哭了。中间总是用sudo执行root权限的东西，在普通用户权限下，连删个文件都不行，还是切换到root好了，没想到ubunto在图形界面下还不让切。需要先使用如下命令设置root口令，再用su命令切到root</p>
+<pre>sudo passwd root
+su</pre>
+<p>如果不这样，直接使用命令</p>
+<pre>sudo -s -H</pre>
+<p>也可以切换到root用户。</p>
+<p>好在也算是程序员，虽然没有写过bash脚本，但也能将就着看一下，发现除了要我改的东西外，bin文件的名字也是有要求的，一定要用从sun网站上down下来时用的名字(巨Faint)，而且发现里面也没有针对jdk6版本的包，狠狠地骂一句那个在网上写教程的，不知道这帮子大爷都是怎么装的，唉，8成都是抄的，再到网上下一个能找到的最新版本0.41，安装后不报这个错误，换成了：</p>
+<p>Invalid size (59 MB) of extracted archive. Probably you have not enough free disc space in the temporary directory. Note: You can spcify an alternate directory by setting the environment variable TMPDIR. </p>
+<p>再怎么穷，59M硬盘上肯定有的，God, please save me! 自己再到sun的网站上去找找看吧，发现当年下的版本是个带rpm的，8成是ubuntu不支持rpm，连带这个也不行了吧，于是下了个最新的jdk-6u6-linux-i586.bin，再执行“fakeroot make-jpkg jdk-6u6-linux-i586.bin”命令安装，貌似可以了，屏幕上好多输出，只是中间要求阅读java的许可协议比较烦，得一直按回车一直按到询问是否同意，Faint，最后又不对劲了，一堆的“Operation not permitted”错误，我已经没力气生气了。最后碰一下运气，直接运行：</p>
+<pre>./jdk_6u6_linux-i586.bin</pre>
+<p>我日，居然安装成功了。-_-，我的安装后的路径是“/home/andy/java/jdk1.6.0_06”(andy是我的用户名)，再按网上的说法，修改一下/etc/environment，在PATH环境变量中加入路径“/home/andy/java/jdk1.6.0_06/bin”，并添加如下行：</p>
+<pre>PATH="/home/用户名/jdk/jdk1.6.0_06/bin:原先的PATH"
+JAVA_HOME="/home/用户名/jdk/jdk1.6.0_06"
+CLASSPATH="/home/用户名/jdk/jdk1.6.0_06/lib:."
+export JAVA_HOME
+export CLASSPATH</pre>
+<p>注销并重新登录linux，在命令行中执行</p>
+<pre>java -version </pre>
+<p>终于看到熟悉的输出了，不过我发现environment文件中的“export ...”那两行不写也行。睡觉。</p>
+<p>&nbsp;</p>
+
+</body>
+</html>

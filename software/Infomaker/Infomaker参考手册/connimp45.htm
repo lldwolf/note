@@ -1,0 +1,178 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+Using the ODBC Driver Manager Trace</TITLE>
+</HEAD>
+<BODY>
+<A NAME="BABCAAHG"></A><h1>Using the ODBC Driver Manager Trace</h1>
+<A NAME="TI1436"></A><p>This section describes how to use the ODBC Driver Manager
+Trace tool. </p>
+<A NAME="X-ref347115744"></A><h2>About ODBC Driver Manager Trace</h2>
+<A NAME="TI1437"></A><p>You can use the ODBC Driver Manager Trace tool to trace a
+connection to any ODBC data source that you access in InfoMaker through
+the ODBC interface.</p>
+<A NAME="TI1438"></A><p>Unlike the Database Trace tool, the ODBC Driver Manager Trace
+tool <i>cannot</i>
+ trace connections through one of
+the native database interfaces.</p>
+<A NAME="TI1439"></A><h4>What this tool does</h4>
+<A NAME="TI1440"></A><p>ODBC Driver Manager Trace records information about ODBC API
+calls (such as SQLDriverConnect, SQLGetInfo, and SQLFetch) made
+by InfoMaker while connected to an ODBC data source. It writes
+this information to a default log file named SQL.LOG or to a log
+file that you specify.</p>
+<A NAME="TI1441"></A><h4>What both tools do</h4>
+<A NAME="TI1442"></A><p>The information from ODBC Driver Manager Trace, like Database
+Trace, can help you:<A NAME="TI1443"></A>
+<ul>
+<li class=fi>Understand what InfoMaker is
+doing <i>internally</i>
+ while connected to an ODBC
+data source</li>
+<li class=ds>Identify and resolve problems with your ODBC connection</li>
+<li class=ds>Provide useful information to Technical Support
+if you call them for help with your database connection
+</li>
+</ul>
+</p>
+<A NAME="TI1444"></A><h4>When to use this tool</h4>
+<A NAME="TI1445"></A><p>You should use ODBC Driver Manager Trace <i>instead</i>
+ of
+the Database Trace tool if you want more detailed information about
+the ODBC API calls made by InfoMaker.</p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Performance considerations</span> <A NAME="TI1446"></A>Turning on ODBC Driver Manager Trace can slow your performance
+while working in InfoMaker. Therefore, you should use ODBC Driver
+Manager Trace for debugging purposes only and keep it turned off
+when you are not debugging.</p>
+<A NAME="TI1447"></A><h4>SQL.LOG file</h4>
+<A NAME="TI1448"></A><p>InfoMaker writes ODBC Driver Manager Trace output to a default
+log file named SQL.LOG or to a log file that you specify. The default
+location of SQL.LOG is in your root directory.</p>
+<A NAME="CCJDIJIG"></A><h2>Starting ODBC Driver Manager Trace</h2>
+<A NAME="TI1449"></A><p>By default, ODBC Driver Manager Trace is turned off in InfoMaker.
+To start it in order to trace your ODBC connection, you must edit
+your database profile.</p>
+<A NAME="X-ref347574539"></A><h3>Starting ODBC DriverManager Trace in the development environment</h3>
+<A NAME="TI1450"></A><p>To start ODBC Driver Manager Trace in the InfoMaker development environment,
+edit the database profile for the connection you want to trace,
+as described in the following procedure.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To start ODBC Driver Manager Trace by editing
+the database profile:</p>
+<ol><li class=fi>
+Open the Database Profile Setup-ODBC dialog
+box for the ODBC connection you want to trace. <br><br></li>
+<li class=ds>
+On the Options tab, select the Trace ODBC API
+Calls checkbox.<br><br></li>
+<li class=ds>
+(Optional) To specify a log file where you want InfoMaker to
+write the output of ODBC Driver Manager Trace, type the pathname
+in the Trace File box.<br><br>
+<i>or</i>
+<br><br>
+(Optional) Click Browse to display the pathname of an
+existing log file in the Trace File box.<br><br>
+By default, if the Trace ODBC API Calls checkbox is selected
+and no trace file is specified, InfoMaker sends ODBC Driver Manager
+Trace output to the default SQL.LOG file.<br><br><p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Preview tab not in InfoMaker</span> <A NAME="TI1451"></A>The Preview tab is not available in the Database Profile Setup
+dialog box in InfoMaker.</p>
+<br><img src="images/cn8odbtr.gif"><br>
+</li>
+<li class=ds>
+Click OK or Apply. <br><br>
+<i>or</i>
+<br><br>
+Right-click on the connected database and select Re-connect
+from the dropdown menu in the Database Profiles dialog box.<br><br>
+The Database Profiles dialog box displays with the name of
+the edited profile highlighted.<br><br>
+InfoMaker saves your settings in the database profile entry
+in the registry file (HKEY_CURRENT_USER\Software\Sybase\EA Studio\PowerBuilder).<br><br>
+For example, here is the relevant portion of a database profile
+entry for an ODBC data source named Employee. The settings that
+start ODBC Driver Manager Trace (corresponding to the ConnectOption
+DBParm parameter) are shown in bold.<pre>DBMS				"ODBC"</pre>
+<pre>...</pre>
+<pre>DbParm				"Connectstring='DSN=Employee'"</pre>
+<pre>	<i>ConnectOption "'SQL_OPT_TRACE,SQL_OPT_TRACE_ON;</i> </pre>
+<pre>	<i>		SQL_OPT_TRACEFILE,c:\temp\odbctrce.log'"</i> </pre>
+<br><br></li>
+<li class=ds>
+Click Connect in the Database Profiles dialog
+box to connect to the database.<br><br>
+<i>or</i>
+<br><br>
+Right-click on the connected database and select Re-connect
+from the dropdown menu in the Database Profiles dialog box.<br><br>
+InfoMaker connects to the database, starts tracing the ODBC
+connection, and writes output to the log file you specified.<br><br></li></ol>
+<br><A NAME="CCJCBAAE"></A><h2>Stopping ODBC Driver Manager Trace</h2>
+<A NAME="TI1452"></A><p>Once you start tracing an ODBC connection with ODBC Driver
+Manager Trace, InfoMaker continues sending trace output to the
+log file until you stop tracing.</p>
+<A NAME="TI1453"></A><h3>Stopping ODBC Driver Manager Trace in the development
+environment</h3>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To stop ODBC Driver Manager Trace by editing a
+database profile:</p>
+<ol><li class=fi>
+Open the Database Profile Setup - ODBC
+dialog box for the connection you are tracing.<br><br>
+For instructions, see <A HREF="connimp45.htm#X-ref347574539">"Starting ODBC Driver
+Manager Trace in the development environment"</A>.<br><br></li>
+<li class=ds>
+On the Options tab, clear the Trace ODBC API Calls
+checkbox.<br><br>
+If you supplied the pathname of a log file in the Trace File
+box, you can leave it specified in case you want to restart tracing
+later.<br><br></li>
+<li class=ds>
+Click OK in the Database Profile Setup - ODBC
+dialog box.<br><br>
+The Database Profiles dialog box displays, with the name of
+the edited profile highlighted.<br><br></li>
+<li class=ds>
+Click Connect in the Database Profiles dialog
+box.<br><br>
+<i>or</i>
+<br><br>
+Right-click on the connected database and select Re-connect
+from the dropdown menu in the Database Profiles dialog box.<br><br>
+InfoMaker connects to the database and stops tracing the
+connection.<br><br></li></ol>
+<br><A NAME="CCJDDHJA"></A><h2>Viewing the ODBC Driver Manager Trace log</h2>
+<A NAME="TI1454"></A><p>You can display the contents of the ODBC Driver Manager Trace
+log file anytime during an InfoMaker session.</p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Location of SQL.LOG</span> <A NAME="TI1455"></A>For information about where to find the default
+SQL.LOG file, see <A HREF="connimp45.htm#X-ref347115744">"About ODBC Driver
+Manager Trace"</A>.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To view the contents of the log file:</p>
+<ol><li class=fi>
+Open SQL.LOG or the log file you specified
+in one of the following ways:<br><br>
+<A NAME="TI1456"></A>
+<ul>
+<li class=fi>Use the File Editor
+in InfoMaker. (For instructions, see the <i>InfoMaker User's
+Guide</i>
+.)</li>
+<li class=ds>Use any text editor outside InfoMaker.
+</li>
+</ul>
+<br><br></li></ol>
+<br><p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Leaving the log file open</span> <A NAME="TI1457"></A>If you leave the log file open as you work in InfoMaker,
+ODBC Driver Manager Trace <i>does not update it</i>
+.</p>
+<A NAME="CCJBAGDJ"></A><h2>Sample ODBC Driver Manager Trace output</h2>
+<A NAME="TI1458"></A><p>This section shows a partial example of output from ODBC Driver
+Manager Trace to give you an idea of the information it provides.
+The example is part of the trace on an ODBC connection to the EAS Demo DB.</p>
+<A NAME="TI1459"></A><p>For more about a particular ODBC API call,
+see your ODBC documentation.</p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Similar format and content on all platforms</span> <A NAME="TI1460"></A>The basic format and content of the ODBC Driver Manager Trace
+log file is the same on <i>all</i>
+ InfoMaker platforms
+that support it.</p>
+<A NAME="TI1461"></A><p><pre>B80 179:192	EXIT  SQLSetConnectOption  with return code 0 (SQL_SUCCESS)		HDBC 0x036e1300		UWORD 	104 &lt;SQL_OPT_TRACE&gt;		UDWORD 1PB80 179:192	ENTER SQLSetConnectOption 	HDBC 0x036e1300	UWORD 105 &lt;SQL_OPT_TRACEFILE&gt;	UDWORD 160694373PB80 179:192	EXIT  SQLSetConnectOption  with return code 0 (SQL_SUCCESS)	HDBC 0x036e1300	UWORD 105 &lt;SQL_OPT_TRACEFILE&gt;	UDWORD 160694373PB80 179:192	ENTER SQLDriverConnectW 	HDBC 0x036e1300	HWND 0x004607fa	WCHAR * 0x1f4be068 [      -3] "******\ 0"	SWORD -3 	WCHAR * 0x1f4be068 	SWORD 8 	SWORD * 0x00000000	UWORD 1 &lt;SQL_DRIVER_COMPLETE&gt;PB80 179:192	EXIT  SQLDriverConnectW  with return code 0 (SQL_SUCCESS)	HDBC 0x036e1300	HWND 0x004607fa	WCHAR * 0x1f4be068 [      -3] "******\ 0"	SWORD -3 	WCHAR * 0x1f4be068 	SWORD 8 	SWORD * 0x00000000		UWORD 1 &lt;SQL_DRIVER_COMPLETE&gt;PB80 179:192	ENTER SQLGetInfoW 		HDBC 0x036e1300		UWORD 6 &lt;SQL_DRIVER_NAME&gt;		PTR 0x036e2098 		SWORD 6 		SWORD * 0x0012cd30PB80 179:192	EXIT  SQLGetInfoW  with return code 1 (SQL_SUCCESS_WITH_INFO)		HDBC 0x036e1300		UWORD 6 &lt;SQL_DRIVER_NAME&gt;		PTR 0x036e2098 [       6] "DB\ 0"		SWORD 6 		SWORD * 0x0012cd30 (22)	DIAG [01004] [Sybase][ODBC Driver]Data truncated (0) PB80 179:192	ENTER SQLGetInfoW 		HDBC 0x036e1300		UWORD 10 &lt;SQL_ODBC_VER&gt;		PTR 0x036e39f8 		SWORD 100 		SWORD * 0x0012cd38PB80 179:192	EXIT  SQLGetInfoW  with return code 0 (SQL_SUCCESS)		HDBC 0x036e1300		UWORD 10 &lt;SQL_ODBC_VER&gt;		PTR 0x036e39f8 [      20] "03.51.0000"		SWORD 100 		SWORD * 0x0012cd38 (20)PB80 179:192	ENTER SQLGetInfoW 		HDBC 0x036e1300		UWORD 2 &lt;SQL_DATA_SOURCE_NAME&gt;		PTR 0x036e3c88 		SWORD 512 		SWORD * 0x0012cc32PB80 179:192	EXIT  SQLGetInfoW  with return code 0 (SQL_SUCCESS)		HDBC 0x036e1300		UWORD 2 &lt;SQL_DATA_SOURCE_NAME&gt;		PTR 0x036e3c88 [      28] "EAS Demo DB V4"		SWORD 512 		SWORD * 0x0012cc32 (28)PB80 179:192	ENTER SQLGetInfoW 		HDBC 0x036e1300		UWORD 16 &lt;SQL_DATABASE_NAME&gt;		PTR 0x036e3c88 		SWORD 512 		SWORD * 0x0012cc32PB80 179:192	EXIT  SQLGetInfoW  with return code 0 (SQL_SUCCESS)		HDBC 0x036e1300		UWORD 16 &lt;SQL_DATABASE_NAME&gt;		PTR 0x036e3c88 [      16] "easdemo4"		SWORD 512 		SWORD * 0x0012cc32 (16)PB80 179:192	ENTER SQLGetInfoW 		HDBC 0x036e1300		UWORD 25 &lt;SQL_DATA_SOURCE_READ_ONLY&gt;		PTR 0x036e3c88 		SWORD 512 		SWORD * 0x0012cc32PB80 179:192	EXIT  SQLGetInfoW  with return code 0 (SQL_SUCCESS)		HDBC 0x036e1300		UWORD 25 &lt;SQL_DATA_SOURCE_READ_ONLY&gt;		PTR 0x036e3c88 [       2] "N"		SWORD 512 		SWORD * 0x0012cc32 (2)PB80 179:192	ENTER SQLGetInfoW 		HDBC 0x036e1300		UWORD 13 &lt;SQL_SERVER_NAME&gt;		PTR 0x036e3c88 		SWORD 512 		SWORD * 0x0012cc32PB80 179:192	EXIT  SQLGetInfoW  with return code 0 (SQL_SUCCESS)		HDBC 0x036e1300		UWORD 13 &lt;SQL_SERVER_NAME&gt;		PTR 0x036e3c88 [      16] "easdemo4"		SWORD 512 		SWORD * 0x0012cc32 (16)PB80 179:192	ENTER SQLGetInfoW 		HDBC 0x036e1300		UWORD 17 &lt;SQL_DBMS_NAME&gt;		PTR 0x036e3c88 		SWORD 512 		SWORD * 0x0012cab6PB80 179:192	EXIT  SQLGetInfoW  with return code 0 (SQL_SUCCESS)		HDBC 0x036e1300		UWORD 17 &lt;SQL_DBMS_NAME&gt;		PTR 0x036e3c88 [      48] "Adaptive Server Anywhere"		SWORD 512 		SWORD * 0x0012cab6 (48)PB80 179:192	ENTER SQLGetInfoW 		HDBC 0x036e1300		UWORD 6 &lt;SQL_DRIVER_NAME&gt;		PTR 0x036e1a10 		SWORD 550 		SWORD * 0x0012cbbcPB80 179:192	EXIT  SQLGetInfoW  with return code 0 (SQL_SUCCESS)		HDBC 0x036e1300		UWORD 6 &lt;SQL_DRIVER_NAME&gt;		PTR 0x036e1a10 [      22] "DBODBC7.DLL"		SWORD 550 		SWORD * 0x0012cbbc (22)PB80 179:192	ENTER SQLAllocStmt 		HDBC 0x036e1300		HSTMT * 0x0012d0b4 PB80 179:192	EXIT  SQLAllocStmt  with return code 0 (SQL_SUCCESS)		HDBC 0x036e1300		HSTMT * 0x0012d0b4 ( 0x036e1c48)PB80 179:192	ENTER SQLGetTypeInfo 		HSTMT 0x036e1c48		SWORD 0 &lt;SQL_ALL_TYPES&gt;</pre>
+</p>
+

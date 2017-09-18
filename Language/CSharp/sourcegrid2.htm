@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<title>功能强大的表格控件——SourceGrid2</title>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+<p id="title">功能强大的表格控件——SourceGrid2
+</p>
+
+<h1>下载及安装</h1>
+<h2>下载 </h2>
+<p>下载地址：<a href="downloads/SourceGrid2_Source.zip">点这里下载类库</a></p>
+<h2>安装</h2>
+<p>解开压缩包后，引用SourceGrid2.dll和SourceLibrary.dll。</p>
+<h1>第一个例子</h1>
+<p>在界面上放置一个SourceGrid2.Grid控件，将其名称设为grid1，使用代码如下：</p>
+<pre class="code" data-type="csharp">grid1.BorderStyle = BorderStyle.FixedSingle;
+
+grid1.ColumnsCount = 3;
+//grid1.FixedRows = 1;
+grid1.Rows.Insert(0);
+grid1[0,0] = new SourceGrid2.Cells.Real.ColumnHeader(&quot;String&quot;);
+grid1[0,1] = new SourceGrid2.Cells.Real.ColumnHeader(&quot;DateTime&quot;);
+grid1[0,2] = new SourceGrid2.Cells.Real.ColumnHeader(&quot;CheckBox&quot;);
+for (int r = 1; r < 10; r++)
+{
+	grid1.Rows.Insert(r);
+	grid1[r,0] = new SourceGrid2.Cells.Real.Cell(&quot;Hello &quot; + r.ToString(), typeof(string));
+	grid1[r,1] = new SourceGrid2.Cells.Real.Cell(DateTime.Today, typeof(DateTime));
+	grid1[r,2] = new SourceGrid2.Cells.Real.CheckBox(true);
+}
+
+grid1.AutoSizeAll();</pre>
+<p>生成的界面如下：</p>
+<p><img src="images/sourcgrid2_01.jpg" width="252" height="166"></p>
+<h1>SourceGrid2常用的操作</h1>
+<h2>生成表格并填充数据</h2>
+<pre class="code" data-type="csharp">//生成一个九九乘法表
+//10行，包括表头
+this.grid1.RowsCount = 10;
+
+//10列，包括行首指示列
+this.grid1.ColumnsCount = 10;
+
+//1行固定行，作为列头
+this.grid1.FixedRows = 1;
+
+//1列固定列，作为行首
+this.grid1.FixedColumns = 1;
+
+//生成99乘法表
+	
+this.grid1[0, 0] = new SourceGrid2.Cells.Real.ColumnHeader();
+		
+//列头
+for(int col = 1; col <= 9; col++)
+{
+	this.grid1[0, col] = new SourceGrid2.Cells.Real.ColumnHeader(col);
+	(this.grid1[0, col] as SourceGrid2.Cells.Real.ColumnHeader).SortMode = SourceGrid2.GridSortMode.None;
+}
+
+//行头
+for(int row = 1; row <= 9; row++)
+{
+	this.grid1[row, 0] = new SourceGrid2.Cells.Real.RowHeader(row);
+}
+
+//乘法表
+for(int row = 1; row <= 9; row++)
+	for(int col = 1; col <= 9; col++)
+	{
+		this.grid1[row, col] = new SourceGrid2.Cells.Real.Cell(row * col);
+		this.grid1[row, col].DataModel = SourceGrid2.Utility.CreateDataModel(typeof(int));
+		this.grid1[row, col].DataModel.EditableMode = SourceGrid2.EditableMode.AnyKey;
+	}</pre>
+<h1>SourceGrid2的列</h1>
+<h2>列的排序</h2>
+<p>默认情况下点击列标题时会跟据该列的内容进行排序，可通过如下代码禁止列的自动排序：</p>
+<pre class="code" data-type="csharp">(this.grid1[0, 1] as SourceGrid2.Cells.Real.ColumnHeader).EnableSort = false;</pre>
+<h1>SourceGrid2的行</h1>
+<h2>行的选中</h2>
+<pre class="code" data-type="csharp">//选中第1行
+this.grid1.Rows[1].Focus();</pre>
+<h1>SourceGrid2单元格的格式</h1>
+<h2>单元格的可编辑属性</h2>
+<p>使用SourceGrid2.Grid[].DataModel.EditableMode属性，其类型为SourceGrid2.EditableMode枚举，各枚举值说明如下：</p>
+<table style="width:90%">
+  <tr>
+    <th width="20%">枚举值</th>
+    <th width="80%">说明</th>
+  </tr>
+  <tr>
+    <td>None</td>
+    <td>不可编辑</td>
+  </tr>
+  <tr>
+    <td>F2Key</td>
+    <td>按F2键编辑</td>
+  </tr>
+  <tr>
+    <td>DoubleClick</td>
+    <td>双击单元格编辑</td>
+  </tr>
+  <tr>
+    <td>SingleClick</td>
+    <td>单击单元格编辑</td>
+  </tr>
+  <tr>
+    <td>AnyKey</td>
+    <td>按任意键编辑单元格</td>
+  </tr>
+  <tr>
+    <td>Focus</td>
+    <td>当单元格获得焦点后即可编辑</td>
+  </tr>
+  <tr>
+    <td>Default</td>
+    <td>DoubleClick | F2Key | AnyKey</td>
+  </tr>
+</table>
+<p>例如，要将第1行第1列的单元格设为不可编辑（本章所有的行列索引均不包括固定行列），代码如下：</p>
+<pre class="code" data-type="csharp">grid1[1, 1].DataModel = SourceGrid2.Utility.CreateDataModel(typeof(string));		//设该单元格为字符串型
+grid1[1, 1].DataModel.EditableMode = SourceGrid2.EditableMode.None;</pre>
+<h2>单元格的对齐属性</h2>
+<p>使用SourceGrid2.Grid[].VisualModel.TextAlignment属性，例如，将表头第一列列标题设为居中，第1行第1列单元格值设为右对齐，代码如下：</p>
+<pre class="code" data-type="csharp">this.grid1[0, 1].VisualModel = new SourceGrid2.VisualModels.Header();
+this.grid1[0, 1].VisualModel.TextAlignment = ContentAlignment.MiddleCenter;
+this.grid1[1, 2].VisualModel = new SourceGrid2.VisualModels.Common();
+this.grid1[1, 2].VisualModel.TextAlignment = ContentAlignment.MiddleRight;</pre>
+<h2>单元格的边框 </h2>
+<p>使用SourceGrid2.Grid[].VisualModel.Border属性，其类型为SourceGrid2.RectangleBorder，它提供如下3种默认的样式：</p>
+<table style="width:80%">
+  <tr>
+    <th width="30%">样式</th>
+    <th width="70%">说明</th>
+  </tr>
+  <tr>
+    <td>Default</td>
+    <td>默认样式，轻灰边框，宽度为1</td>
+  </tr>
+  <tr>
+    <td>NoBorder</td>
+    <td>无边框</td>
+  </tr>
+  <tr>
+    <td>RectangleBlack1Width</td>
+    <td>黑色边框，宽度为1</td>
+  </tr>
+</table>
+<p>除了默认样式外，还可以使用其成员方法FormatBorder创建新的边框样式。其声明如下：</p>
+<pre class="code" data-type="csharp">public static RectangleBorder FormatBorder(CommonBorderStyle p_Style, int p_width, Color p_ShadowColor, Color p_LightColor)</pre>
+<p>参数说明如下：</p>
+<table style="width:80%">
+  <tr>
+    <th width="30%">参数</th>
+    <th width="70%">说明</th>
+  </tr>
+  <tr>
+    <td>p_Style</td>
+    <td>样式，参见<a href="#CommonBorderStyle">CommonBorderStyle</a></td>
+  </tr>
+  <tr>
+    <td>p_width</td>
+    <td>线宽</td>
+  </tr>
+  <tr>
+    <td>p_ShadowColor</td>
+    <td>左边框和上边框的颜色</td>
+  </tr>
+  <tr>
+    <td>p_LightColor</td>
+    <td>右边框和下边框的颜色</td>
+  </tr>
+</table>
+<p>CommonBorderStyle枚举说明：</p>
+
+<table style="width:80%" >
+  <tr>
+    <th width="30%">枚举值</th>
+    <th width="70%">说明</th>
+  </tr>
+  <tr>
+    <td>Normal</td>
+    <td>普通扁平</td>
+  </tr>
+  <tr>
+    <td>Raised</td>
+    <td>凸起</td>
+  </tr>
+  <tr>
+    <td>Inset</td>
+    <td>凹下</td>
+  </tr>
+</table>
+<p>例如，第1行第2列单元格设为蓝色粗线框，代码如下：</p>
+<pre class="code" data-type="csharp">this.grid1[1, 2].VisualModel = new SourceGrid2.VisualModels.Common();
+this.grid1[1, 2].VisualModel.Border = SourceGrid2.RectangleBorder.FormatBorder(SourceGrid2.CommonBorderStyle.Inset, 4, Color.Blue, Color.Blue);</pre>
+<h2>单元格的前景色和背景色</h2>
+<p>使用SourceGird2.Gird[].VisualModel的BackColor和ForeColor属性，例如将第1行第2列单元格前景色设为红色，背景色设为浅蓝，代码如下：</p>
+<pre class="code" data-type="csharp">this.grid1[1, 2].VisualModel = new SourceGrid2.VisualModels.Common();
+this.grid1[1, 2].VisualModel.BackColor = Color.LightBlue;
+this.grid1[1, 2].VisualModel.ForeColor = Color.Red;</pre>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+
+</body>
+</html>

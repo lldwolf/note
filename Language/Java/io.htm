@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+	<title>I/O</title>
+	<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+	<p id="title">I/O</p>
+	<h1>路径操作</h1>
+	<h2>获取当前路径</h2>
+	<h3>取当前项目路径</h3>
+	<pre class="code" data-type="java">System.getProperty("user.dir")</pre>
+	<h3>取当前执行路径</h3>
+	<pre class="code" data-type="java">public class Test {
+	public static void main(String[] args) throws Exception {
+		System.out.println(Test.class.getResource("").getPath());
+	}
+}</pre>
+	<h2>判断文件/文件夹是否存在</h2>
+	<pre class="code" data-type="java">if ((new File(path).exists())) {}</pre>
+	<h2>根据路径获取文件列表</h2>
+	<h2>根据 CLASSPATH 加载文件</h2>
+	<pre class="code" data-type="java">public class Test {
+	public static void main(String[] args) throws Exception {
+		Properties props = new Properties();
+		props.load(Test.class.getClassLoader().getResourceAsStream("test.properties"));
+	}
+}</pre>
+	<h1>文本文件I/O</h1>
+	<h2>读取</h2>
+	<h3>FileReader</h3>
+	<p>使用FileReader，示例代码如下所示：</p>
+	<pre class="code" data-type="java">import java.io.FileReader;
+
+public class TextReader
+{
+	public static void main(String[] args) throws Exception
+	{
+		FileReader fr = new FileReader("C:/1.txt");
+		int ch = fr.read();
+		while(ch != -1)
+		{
+			System.out.print((char)ch);
+			ch = fr.read();
+		}
+	}
+}</pre>
+	<h3>BufferedReader</h3>
+	<pre class="code" data-type="java">public class ReadFileIntoAStringLineByLine {
+
+	public static void main(String[] args) throws IOException {
+
+		BufferedReader bufferedReader = new BufferedReader(new FileReader("readme.txt"));
+
+		StringBuffer stringBuffer = new StringBuffer();
+		String line = null;
+
+		while ((line = bufferedReader.readLine()) != null) {
+
+			stringBuffer.append(line).append("\n");
+		}
+
+		System.out.println(stringBuffer);
+	}
+}</pre>
+	<h3>Apache CommonsIO</h3>
+	<pre class="code" data-type="java">public static void replacePropertiesContent() throws Exception {
+	String str = FileUtils.readFileToString(new File("C:/1.txt"));
+	System.out.println(str);
+}</pre>
+	<h2>写入</h2>
+	<p>使用FileWriter，示例代码如下所示：</p>
+	<pre class="code" data-type="java">import java.io.FileWriter;
+
+public class TextWriter
+{
+	public static void main(String[] args) throws Exception
+	{
+		FileWriter fw = new FileWriter("C:/1.txt");
+		fw.write("结庐在人境\r\n");
+		fw.write("而无车马喧\r\n");
+		fw.write("all are shit!");
+		fw.flush();
+		fw.close();
+	}
+}</pre>
+	<p>&nbsp;</p>
+	<p>&nbsp;</p>
+	<p>&nbsp;</p>
+
+</body>
+</html>

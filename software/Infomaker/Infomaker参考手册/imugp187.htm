@@ -1,0 +1,59 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+IsNull</TITLE>
+</HEAD>
+<BODY>
+<A NAME="DWFIsNull"></A><A NAME="TI6821"></A><h1>IsNull</h1>
+<A NAME="TI6822"></A><p>
+<FORM>
+<INPUT
+ TYPE = "BUTTON"
+ VALUE = "Examples"
+ onClick = "window.location = 'imugp187.htm#EX39';">
+<INPUT
+  TYPE = "BUTTON"
+ VALUE = "See also"
+ onClick = "window.location = 'imugp187.htm#SA39';">
+</FORM>
+</p>
+<h3>Description</h3><A NAME="TI6823"></A><p>Reports whether the value of a column or expression is NULL.</p>
+
+<h3>Syntax</h3><pre><b>IsNull</b> ( <i>any</i> )</pre>
+<A NAME="TI6824"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI6825"></A>Argument</th>
+<th align="left" valign=bottom><A NAME="TI6826"></A>Description</th>
+</tr>
+<tr><td valign=top><A NAME="TI6827"></A><i>any</i></td>
+<td valign=top><A NAME="TI6828"></A>A column or expression that you want
+to test to determine whether its value is NULL</td>
+</tr>
+</table>
+
+<h3>Return Values</h3><A NAME="TI6829"></A><p>Boolean. Returns TRUE if <i>any</i> is NULL
+and FALSE if it is not.</p>
+
+<h3>Usage</h3><A NAME="TI6830"></A><p>Use IsNull to test whether a user-entered value or a value
+retrieved from the database is NULL.</p>
+
+<A NAME="EX39"></A><h3>Examples</h3><A NAME="TI6831"></A><p>This expression returns TRUE if either a or b is
+NULL:<pre><i>IsNull</i> (a + b)</pre>
+</p>
+<A NAME="TI6832"></A><p>This expression returns TRUE if the value in the
+salary column is NULL:<pre><i>IsNull</i> (salary)</pre>
+</p>
+<A NAME="TI6833"></A><p>This expression returns TRUE if the value the user
+has entered is NULL:<pre><i>IsNull</i> (GetText())</pre>
+</p>
+
+<A NAME="SA39"></A><h3>See Also</h3><A NAME="TI6834"></A><p><A NAME="TI6835"></A>
+<ul>
+<li class=fi><A HREF="imugp148.htm#X-ref350671311">"Example 1: counting
+NULL values in a column"</A></li>
+<li class=ds><A HREF="imugp148.htm#X-ref351281467">"Example 4: displaying
+all data when a column allows NULLs"</A>
+</li>
+</ul>
+</p>
+
+

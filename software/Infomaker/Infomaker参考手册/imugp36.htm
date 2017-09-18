@@ -1,0 +1,534 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+Working with tables</TITLE>
+</HEAD>
+<BODY>
+<A NAME="CCJDHHHB"></A><h1>Working with tables</h1>
+<A NAME="TI931"></A><p>When you open the Database painter, the Object view lists
+all tables in the current database that you have access to (including
+tables that were not created using InfoMaker). You can create a
+new table or alter an existing table. You can also modify table
+properties and work with indexes and keys.</p>
+<A NAME="TI932"></A><h2>Creating a new table from scratch</h2>
+<A NAME="TI933"></A><p>In InfoMaker, you can create a new table in any database
+to which InfoMaker is connected. </p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To create a table in the current database:</p>
+<ol><li class=fi>
+Click the Create Table button.<br><br>
+<i>or</i>
+<br><br>
+Right-click in the Columns view and select New Table
+from the popup menu.<br><br>
+<i>or</i>
+<br><br>
+Right-click Tables in the Objects view and select New
+Table from the popup menu. <br><br>
+<i>or</i>
+<br><br>
+Select Insert&gt;Table from the Object menu.<br><br>
+The new table template displays in the Columns view. What
+you see in the view is DBMS-dependent: <br><br><br><img src="images/dbcols.gif"><br>
+
+You use this template to specify each column in the table.
+The insertion point is in the Column Name box for the first column. <br><br></li>
+<li class=ds>
+Enter the required information for this column.<br><br>
+For what to enter in each field, see <A HREF="imugp36.htm#BABJBHDJ">"Specifying column definitions"</A>.<br><br>
+As you enter information, use the tab key
+to move from place to place in the column definition. After defining
+the last item in the column definition, press the tab key
+to display the work area for the next column.<br><br></li>
+<li class=ds>
+Repeat step 2 for each additional column in your
+table.<br><br></li>
+<li class=ds>
+(Optional) Select Pending SQL from the popup menu
+to see the pending SQL syntax.<br><br>
+To hide the SQL syntax and return to the table columns, deselect Object&gt;Pending
+Syntax.<br><br></li>
+<li class=ds>
+Click the Save button or selecting Save from the
+File or popup menu, then enter a name for the table in the Create
+New Table dialog box.<br><br>
+InfoMaker submits the pending SQL syntax statements it generated
+to the DBMS, and the table is created. The new table is displayed
+in the Object Layout view. <br><br><p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>About saving the table</span> <A NAME="TI934"></A>If you make changes after you save the table and before you
+close it, you see the pending changes when you select Pending SQL
+again. When you click Save again, InfoMaker submits a DROP TABLE
+statement to the DBMS, recreates the table, and applies all changes
+that are pending.</p>
+<A NAME="TI935"></A>Clicking Save many times can be time consuming when you are
+working with large tables. So waiting to save a table until you
+have finished defining it can be a good practice.</p>
+</li>
+<li class=ds>
+Specify extended attributes for the columns.<br><br>
+For what to enter in each field, see <A HREF="imugp36.htm#BABBHCBH">"Specifying column extended
+attributes"</A>.<br><br></li></ol>
+<br><A NAME="TI936"></A><h2>Creating a new table from an existing table</h2>
+<A NAME="TI937"></A><p>You can create a new table that's similar to an existing
+table very quickly by using the Save Table As menu option.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To create a new table from an existing table:</p>
+<ol><li class=fi>
+Open the existing table in the Columns
+view by dragging and dropping it or selecting Alter Table from the
+popup menu. <br><br></li>
+<li class=ds>
+Right-click in the Columns view and select Save
+Table As from the popup menu.<br><br>
+The Create New Table dialog box displays.<br><br></li>
+<li class=ds>
+Enter a name for the new table and then the owner's
+name and click OK.<br><br>
+The new table appears in the Objects Layout view and the Columns
+view.<br><br></li>
+<li class=ds>
+Make whatever changes you want to the table definition.<br><br></li>
+<li class=ds>
+Save the table.<br><br></li>
+<li class=ds>
+Make changes to the table's properties
+in the Object Details view.<br><br>
+For more information about modifying table
+properties, see <A HREF="imugp36.htm#BABCEFEE">"Specifying table and column
+properties"</A>.<br><br></li></ol>
+<br><A NAME="BABJBHDJ"></A><h2>Specifying column definitions</h2>
+<A NAME="TI938"></A><p>When you create a new table, you must specify a definition
+for each column. The fields that display for each column in the
+Columns view depend on your DBMS. You may not see all of the following
+fields, and the values that you can enter are dependent on the DBMS. </p>
+<A NAME="TI939"></A><p>For more information, see your DBMS documentation.</p>
+<A NAME="TI940"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI941"></A>Field</th>
+<th align="left" valign=bottom><A NAME="TI942"></A>What you enter</th>
+</tr>
+<tr><td valign=top><A NAME="TI943"></A>Column name</td>
+<td valign=top><A NAME="TI944"></A>(Required) The name by which the column
+will be identified</td>
+</tr>
+<tr><td valign=top><A NAME="TI945"></A>Data Type</td>
+<td valign=top><A NAME="TI946"></A>(Required) Select a data type from the
+dropdown listbox. All data types supported by the current DBMS are
+displayed in the listbox</td>
+</tr>
+<tr><td valign=top><A NAME="TI947"></A>Width</td>
+<td valign=top><A NAME="TI948"></A>For data types with variable widths,
+the number of characters in the field</td>
+</tr>
+<tr><td valign=top><A NAME="TI949"></A>Dec</td>
+<td valign=top><A NAME="TI950"></A>For numeric data types, the number of
+decimal places to display</td>
+</tr>
+<tr><td valign=top><A NAME="TI951"></A>Null</td>
+<td valign=top><A NAME="TI952"></A>Select Yes or No from the Null dropdown
+listbox to specify whether NULLs are allowed in the column. Specifying
+No means the column cannot have NULL values; users must supply a
+value. No is the default in a new table</td>
+</tr>
+<tr><td valign=top><A NAME="TI953"></A>Default</td>
+<td valign=top><A NAME="TI954"></A>The value that will be placed in a column
+in a row that you insert into a form. The dropdown listbox
+has built-in choices, but you can type any other value. For an explanation
+of the built-in choices, see your DBMS documentation</td>
+</tr>
+</table>
+<A NAME="BABCEFEE"></A><h2>Specifying table and column properties</h2>
+<A NAME="TI955"></A><p>After a table has been created and saved, you can specify
+the properties of a table and of any column in a table. Table properties
+include the fonts used for headers, labels, and data, and a comment
+that you can associate with the table. Column properties include
+the text used for headers and labels, display formats, validation
+rules, and edit styles used for data (also known as a column's
+extended attributes), and a comment you can associate with the column. </p>
+<A NAME="TI956"></A><h4>Specifying table properties</h4>
+<A NAME="TI957"></A><p>In addition to adding a comment to associate with the table,
+you can choose the fonts that will be used to display information
+from the table in a report or form. You can specify
+the font, point size, color, and style.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To specify table properties:</p>
+<ol><li class=fi>
+Highlight the table in either the Objects
+view or the Object Layout view and select Properties from the Object
+or popup menu.<br><br>
+<i>or</i>
+<br><br>
+Click the Properties button.<br><br>
+<i>or</i>
+<br><br>
+Drag and drop the table to the Object Details view.<br><br>
+The Table Properties property sheet displays in the Object
+Details view.<br><br><br><img src="images/dbprops.gif"><br>
+</li>
+<li class=ds>
+Select a tab and specify properties:<br><br><A NAME="TI958"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI959"></A>Select this tab</th>
+<th align="left" valign=bottom><A NAME="TI960"></A>To modify this property</th>
+</tr>
+<tr><td valign=top><A NAME="TI961"></A>General</td>
+<td valign=top><A NAME="TI962"></A>Comments associated with the table</td>
+</tr>
+<tr><td valign=top><A NAME="TI963"></A>Data Font</td>
+<td valign=top><A NAME="TI964"></A>Font for data retrieved from the database
+and displayed in the Results view by clicking a Data Manipulation
+button</td>
+</tr>
+<tr><td valign=top><A NAME="TI965"></A>Heading Font</td>
+<td valign=top><A NAME="TI966"></A>Font for column identifiers used in grid,
+tabular, and n-up reports and grid forms displayed in the Results
+view by clicking a Data Manipulation button</td>
+</tr>
+<tr><td valign=top><A NAME="TI967"></A>Label Font</td>
+<td valign=top><A NAME="TI968"></A>Font for column identifiers used in freeform reports and forms displayed
+in the Results view by clicking a Data Manipulation button</td>
+</tr>
+</table>
+</li>
+<li class=ds>
+Right-click on the Object Details view and select
+Save Changes from the popup menu. <br><br>
+Any changes you've made in the property sheet are
+immediately saved to the table definition. <br><br></li></ol>
+<br><A NAME="BABBHCBH"></A><h4>Specifying column extended
+attributes</h4>
+<A NAME="TI969"></A><p>In addition to adding a comment to associate with a column,
+you can specify extended attributes for each column. An extended
+attribute is InfoMaker-specific information that enhances the definition
+of the column. </p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To specify extended attributes:</p>
+<ol><li class=fi>
+Highlight the column in either the Objects
+view or the Object Layout view and select Properties from the Object
+or popup menu.<br><br>
+<i>or</i>
+<br><br>
+Click the Properties button.<br><br>
+<i>or</i>
+<br><br>
+Drag and drop the column to the Object Details view.<br><br>
+The Column property sheet displays in the Object Details view.<br><br><br><img src="images/dbexa.gif"><br>
+</li>
+<li class=ds>
+Select a tab and specify extended attribute values:<br><br><A NAME="TI970"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI971"></A>Select this tab</th>
+<th align="left" valign=bottom><A NAME="TI972"></A>To modify these extended attributes</th>
+</tr>
+<tr><td valign=top><A NAME="TI973"></A>General</td>
+<td valign=top><A NAME="TI974"></A>Column comments</td>
+</tr>
+<tr><td valign=top><A NAME="TI975"></A>Headers</td>
+<td valign=top><A NAME="TI976"></A>Label text used in freeform reports or
+forms<A NAME="TI977"></A>Header text used in tabular, grid, or n-up reports or
+in grid forms</td>
+</tr>
+<tr><td valign=top><A NAME="TI978"></A>Display </td>
+<td valign=top><A NAME="TI979"></A>How the data is formatted in a report or
+form as well as display height, width, and position. For example,
+you can associate a display format with a Revenue column so that its
+data displays with a leading dollar sign and negative numbers display
+in parentheses</td>
+</tr>
+<tr><td valign=top><A NAME="TI980"></A>Validation </td>
+<td valign=top><A NAME="TI981"></A>Criteria that a value must pass to be
+accepted in a form. For example, you can associate a validation
+rule with a Salary column so that you can only enter a value within
+a particular range<A NAME="TI982"></A>The initial value for the column. You can select a value from
+the dropdown listbox. The initial value must be the same data type
+as the column, must pass validation, and can be NULL only if NULL
+is allowed for the column</td>
+</tr>
+<tr><td valign=top><A NAME="TI983"></A>Edit Style</td>
+<td valign=top><A NAME="TI984"></A>How the column is presented in a report or
+form. For example, you can display column values as radio buttons
+or in a dropdown listbox</td>
+</tr>
+</table>
+</li>
+<li class=ds>
+Right-click on the Column property sheet and select
+Save Changes from the popup menu. <br><br>
+Any changes you've made in the property sheet are
+immediately saved to the table definition. <br><br></li></ol>
+<br><p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Overriding definitions</span> <A NAME="TI985"></A>In the Report painter and Form painter, you can override the extended
+attributes specified in the Database painter for a particular report or
+form.</p>
+<p><b>How the information is stored</b>   Extended attributes are stored in the InfoMaker system tables
+in the database. InfoMaker uses the information to display, present,
+and validate data in the Database painter and in reports and forms.
+When you create a view in the Database painter, the extended attributes of
+the table columns used in the view are used by default.</p>
+<p><b>About display formats, edit styles, and validation
+rules</b>   In the Database painter, you create display formats, edit
+styles, and validation rules. Whatever you create is then available
+for use with columns in tables in the database. You can see all
+the display formats, edit styles, and validation rules defined for
+the database in the Extended Attributes view. </p>
+<A NAME="TI986"></A><p>For more information about defining, maintaining,
+and using these extended attributes, see <A HREF="imugp62.htm#CAIDCCJB">Chapter 6, "Displaying and Validating
+Data "</A>.</p>
+<p><b>About headings and labels</b>   By default, InfoMaker uses the column names as labels and
+headings, replacing any underscore characters with spaces and capitalizing
+each word in the name. For example, the default label or heading for
+the column Dept_name is Dept Name. To define multiple-line
+headings, press ctrl+enter to begin
+a new line.</p>
+<A NAME="BABDFJCI"></A><h4>Specifying additional properties
+for character columns</h4>
+<A NAME="TI987"></A><p>You can also set two additional properties for character columns
+on the Display property page: Case and Picture.</p>
+<p><b>Specifying the displayed case</b>   You can specify whether InfoMaker converts the case of characters
+for a column in a report or form.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To specify how character data should be displayed:</p>
+<ol><li class=fi>
+On the Display property page, select a
+value in the Case dropdown listbox:<br><br><A NAME="TI988"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI989"></A>Value</th>
+<th align="left" valign=bottom><A NAME="TI990"></A>Meaning</th>
+</tr>
+<tr><td valign=top><A NAME="TI991"></A>Any</td>
+<td valign=top><A NAME="TI992"></A>Characters are displayed as they are
+entered</td>
+</tr>
+<tr><td valign=top><A NAME="TI993"></A>UPPER</td>
+<td valign=top><A NAME="TI994"></A>Characters are converted to uppercase</td>
+</tr>
+<tr><td valign=top><A NAME="TI995"></A>lower</td>
+<td valign=top><A NAME="TI996"></A>Characters are converted to lowercase</td>
+</tr>
+</table>
+</li></ol>
+<br><p><b>Specifying a column as a picture</b>   You can specify that a character column can contain names
+of picture files (BMP or WMF files).</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To specify that column values are names of picture
+files:</p>
+<ol><li class=fi>
+On the Display property page, select the
+Picture checkbox.<br><br>
+When the Picture checkbox is selected, InfoMaker expects
+to find bitmap (BMP) or Windows metafile (WMF) filenames in the
+column and displays the contents of the picture file--not
+the name of the file--in reports and forms.<br><br>
+Because InfoMaker cannot determine the size of the image
+until execution time, it sets both display height and display width
+to 0 when you check the Picture checkbox.<br><br></li>
+<li class=ds>
+Enter the size and the justification for the picture
+(optional).<br><br></li></ol>
+<br><A NAME="TI997"></A><h2>Altering a table </h2>
+<A NAME="TI998"></A><p>After a table is created, how you can alter the table depends
+on your DBMS.</p>
+<A NAME="TI999"></A><p>You can always:<A NAME="TI1000"></A>
+<ul>
+<li class=fi>Add
+or modify InfoMaker-specific extended attributes for columns</li>
+<li class=ds>Delete an index and create a new index
+</li>
+</ul>
+</p>
+<A NAME="TI1001"></A><p>You can never:<A NAME="TI1002"></A>
+<ul>
+<li class=fi>Insert
+a column between two existing columns</li>
+<li class=ds>Prohibit NULL values for an appended column</li>
+<li class=ds>Alter an existing index
+</li>
+</ul>
+</p>
+<A NAME="TI1003"></A><p>Some DBMSs let you do the following but others do not: <A NAME="TI1004"></A>
+<ul>
+<li class=fi>Append columns that allow NULLs </li>
+<li class=ds>Increase or decrease the number of characters allowed
+for data in an existing column </li>
+<li class=ds>Allow NULLs</li>
+<li class=ds>Prohibit NULLs in a column that allowed NULLs 
+</li>
+</ul>
+</p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Database painter is DBMS-aware</span> <A NAME="TI1005"></A>The Database painter grays out or notifies you about actions
+that your DBMS prohibits.</p>
+<A NAME="TI1006"></A><p>For complete information about what you can
+and cannot do when you modify a table in your DBMS, see your DBMS
+documentation.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To alter a table:</p>
+<ol><li class=fi>
+Highlight the table and select Alter Table
+from the popup menu. <br><br><p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Opening multiple instances of tables</span> <A NAME="TI1007"></A>You can open another instance of a table by selecting Columns
+from the View menu. Doing this is helpful when you want to use the
+Database painter's cut, copy, and paste features to cut
+or copy and paste between tables.</p>
+
+The table definition displays in the Columns view (this screen
+shows the Employee table): <br><br><br><img src="images/dbalter.gif"><br>
+</li>
+<li class=ds>
+Make the changes you want in the Columns view
+or in the property sheets in the Object Details view.<br><br></li>
+<li class=ds>
+Select Save Table or Save Changes.<br><br>
+InfoMaker submits the pending SQL syntax statements it generated
+to the DBMS, and the table is modified.<br><br></li></ol>
+<br><A NAME="TI1008"></A><h2>Cutting, copying, and pasting columns </h2>
+<A NAME="TI1009"></A><p>In the Database painter, you can use the Cut, Copy, and Paste
+buttons in the PainterBar (or Cut, Copy, and Paste from the Edit
+or popup menu) to cut, copy, and paste one column at a time within
+a table or between tables.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To cut or copy a column within a table:</p>
+<ol><li class=fi>
+Put the insertion point anywhere in the
+column you want to cut or copy.<br><br></li>
+<li class=ds>
+Click the Cut or Copy button in the PainterBar.<br><br></li></ol>
+<br><p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To paste a column within a table:</p>
+<ol><li class=fi>
+Put the insertion point in the column you
+want to paste to.<br><br>
+If you are changing an existing table, put the insertion point
+in the last column of the table. If you try to insert a column between
+two columns, you'll get an error message. You can only
+append a column to an existing table. If you are defining a new
+table, you can paste a column anywhere.<br><br></li>
+<li class=ds>
+Click the Paste button in the PainterBar.<br><br></li></ol>
+<br><p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To paste a column to a different table:</p>
+<ol><li class=fi>
+Open another instance of the Columns view
+and use Alter Table to display an existing table or click New to
+create a new table.<br><br></li>
+<li class=ds>
+Put the insertion point in the column you want
+to paste to.<br><br></li>
+<li class=ds>
+Click the Paste button in the PainterBar.<br><br></li></ol>
+<br><A NAME="TI1010"></A><h2>Closing a table</h2>
+<A NAME="TI1011"></A><p>You can remove a table from a view by selecting Close or Reset
+View from its popup menu. This action only removes the table from
+the Database painter view. It does not drop (remove) the table from
+the database.</p>
+<A NAME="TI1012"></A><h2>Dropping a table</h2>
+<A NAME="TI1013"></A><p>Dropping removes the table from the database.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To drop a table:</p>
+<ol><li class=fi>
+Select Drop Table from the table's
+popup menu.<br><br>
+<i>or</i>
+<br><br>
+Select Object&gt;Delete from the menu bar.<br><br></li>
+<li class=ds>
+Click Yes.<br><br></li></ol>
+<br><A NAME="TI1014"></A><h4>Deleting orphaned table information</h4>
+<A NAME="TI1015"></A><p>If you drop a table outside InfoMaker, information remains
+in the system tables about the table, including extended attributes
+for the columns.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To delete orphaned table information from the
+extended attribute system tables:</p>
+<ol><li class=fi>
+Select Design&gt;Synch Extended Attributes
+from the menu bar.<br><br>
+If you try to delete orphaned table information and there
+is none, a message tells you that synchronization is not necessary.<br><br></li>
+<li class=ds>
+Click Yes.<br><br></li></ol>
+<br><A NAME="CCJBIEJH"></A><h2>Viewing pending SQL changes </h2>
+<A NAME="TI1016"></A><p>As you create or alter a table definition, you can view the
+pending SQL syntax changes that will be made when you save the table
+definition.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To view pending SQL syntax changes:</p>
+<ol><li class=fi>
+Right-click the table definition in the
+Columns view and select Pending Syntax from the popup menu. <br><br>
+InfoMaker displays in SQL syntax the pending changes to the
+table definition:<br><br><br><img src="images/dbpend.gif"><br>
+
+The SQL statements execute only when you save the table definition
+or reset the view and then tell InfoMaker to save changes.<br><br></li></ol>
+<br><A NAME="TI1017"></A><h4>Copying, saving, and printing pending SQL changes</h4>
+<A NAME="TI1018"></A><p>When you are viewing pending SQL changes, you can:<A NAME="TI1019"></A>
+<ul>
+<li class=fi>Copy pending changes to the
+clipboard</li>
+<li class=ds>Save pending changes to a file</li>
+<li class=ds>Print pending changes
+</li>
+</ul>
+</p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>To copy, save, or print only part of the SQL syntax</span> <A NAME="TI1020"></A>Select the part of the SQL syntax you want before you copy,
+save, or print.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To copy the SQL syntax to the clipboard:</p>
+<ol><li class=fi>
+In the Pending Syntax view, click the Copy
+button or select Copy from the popup menu.<br><br></li></ol>
+<br><p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To save SQL syntax for execution at a later time:</p>
+<ol><li class=fi>
+In the Pending Syntax view, Select File&gt;Save
+As.<br><br>
+The Save Syntax to File dialog box displays.<br><br></li>
+<li class=ds>
+Navigate to the folder where you want to save
+SQL, name the file, and then click the Save button.<br><br></li></ol>
+<br><A NAME="TI1021"></A><p>At a later time, you can import the SQL file into the Database
+painter and execute it.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To print pending table changes:</p>
+<ol><li class=fi>
+While viewing the pending SQL syntax, click
+the Print button or select Print from the File menu.<br><br></li></ol>
+<br><A NAME="TI1022"></A><h2>Printing the table definition</h2>
+<A NAME="TI1023"></A><p>You can print a report of the table's definition
+anytime, whether or not the table has been saved. The Table Definition
+Report contains information about the table and each column in the
+table, including the extended attributes for each column.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To print the table definition:</p>
+<ol><li class=fi>
+Select Print or Print Definition from the
+File or popup menu or click the Print button.<br><br></li></ol>
+<br><A NAME="CCJCBFAD"></A><h2>About system tables</h2>
+<A NAME="TI1024"></A><p>Two kinds of system tables exist in the database:<A NAME="TI1025"></A>
+<ul>
+<li class=fi>System tables provided by
+your DBMS (for more information, see your DBMS documentation) </li>
+<li class=ds>InfoMaker extended attribute system tables
+</li>
+</ul>
+</p>
+<A NAME="TI1026"></A><h4>About InfoMaker system tables</h4>
+<A NAME="TI1027"></A><p>InfoMaker stores extended attribute information you provide
+when you create or modify a table (such as the text to use for labels
+and headings for the columns, validation rules, display formats,
+and edit styles) in system tables. These system tables contain information
+about database tables and columns. Extended attribute information
+extends database definitions. </p>
+<A NAME="TI1028"></A><p>In the Employee table, for example, one column name is Emp_lname.
+A label and a heading for the column are defined for InfoMaker to
+use in reports. The column label is defined as Last Name:. The
+column heading is defined as Last Name. The label and heading are
+stored in the PBCatCol table in the extended attribute system tables.</p>
+<p><b>Table maintenance</b>   The extended attribute system tables are maintained by InfoMaker.
+Only InfoMaker users can enter information into the extended attribute
+system tables.</p>
+<p><b>Five tables</b>   There are five extended attribute system tables:</p>
+<A NAME="TI1029"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI1030"></A>This system table</th>
+<th align="left" valign=bottom><A NAME="TI1031"></A>Stores this extended attribute information</th>
+</tr>
+<tr><td valign=top><A NAME="TI1032"></A>PBCatCol</td>
+<td valign=top><A NAME="TI1033"></A>Column data such as name, header and
+label for reports and forms, and header and label positions</td>
+</tr>
+<tr><td valign=top><A NAME="TI1034"></A>PBCatEdt</td>
+<td valign=top><A NAME="TI1035"></A>Edit style names and definitions</td>
+</tr>
+<tr><td valign=top><A NAME="TI1036"></A>PBCatFmt</td>
+<td valign=top><A NAME="TI1037"></A>Display format names and definitions</td>
+</tr>
+<tr><td valign=top><A NAME="TI1038"></A>PBCatTbl</td>
+<td valign=top><A NAME="TI1039"></A>Table data such as name, fonts, and comments</td>
+</tr>
+<tr><td valign=top><A NAME="TI1040"></A>PBCatVld</td>
+<td valign=top><A NAME="TI1041"></A>Validation rule names and definitions</td>
+</tr>
+</table>
+<A NAME="TI1042"></A><p>For more about the extended attribute system
+tables, see <A HREF="imugp256.htm#CCJEBFGB">Appendix A, "The Extended
+Attribute System Tables"</A>.</p>
+<A NAME="TI1043"></A><h4>Opening and displaying system tables </h4>
+<A NAME="TI1044"></A><p>You can open system tables in the Database painter just like
+other tables.</p>
+<A NAME="TI1045"></A><p>By default, InfoMaker shows only user-created tables in the
+Objects view. If you highlight Tables and select Show System Tables
+from the popup menu, InfoMaker also shows system tables.</p>
+

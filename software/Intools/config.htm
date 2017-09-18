@@ -1,0 +1,98 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<script language="javascript" src="css.js"></script>
+<title>INTools配置</title>
+</head>
+
+<body>
+<h1>第三章 配置INTools</h1>
+<hr>
+<h2><a href="#init_intools">3.1 初始化INTOOLS</a> </h2>
+<h2><a href="#language_setup">3.2 语言设置</a></h2>
+<h2><a name="init_intools"></a>3.1 初始化INTools </h2>
+<h3>3.1.1 SQL SERVER配置 </h3>
+<p>若为SQL SERVER版的INTools，需要安装英文版的SQL SERVER，我在中文版下未能安装成功，如果谁在中文版下安装成功了，请不吝指教。另外还需要对SQL SERVER做一些配置，设置方法为，“开始”-&gt;“Microsoft SQL Server”-&gt;“Client Network Utility”，即“客户端网络实用工具”。去掉“DB-Library选项”面板里的“自动转换ANSI到OEM选项”，如图所示：</p>
+<p><img src="images/036.jpg" width="553" height="393"></p>
+<h3>3.1.2 操作系统设置</h3>
+<p>我在此用的操作系统为Windows 2000中文版，如果用的是英文版，则不需要再做任何设置，若为中文版，需设置其区域及默认字符集。设置方法为打开“控制面板”里的“区域选项”，如下图所示：</p>
+<p><img src="images/053.jpg" width="404" height="473"></p>
+<p>在“常规”面板中将“您的区域设置（位置）”设为“英语（美国）”，再点下面的“设置默认值”按钮，选中“英语（美国）”，如图所示：</p>
+<p><img src="images/052.jpg" width="347" height="181"></p>
+<p>全部确定后出现画面，选择复制文件的方式，一般直接选择“是”直接使用现有文件好了：</p>
+<p><img src="images/055.jpg" width="636" height="152"></p>
+<p>重新启动系统，待装完INTools后再设为原值即可。</p>
+<h3>3.1.3 创建数据库</h3>
+<p>启动“开始”-&gt;“Intergraph INtools”-&gt;“DB Setup Utility”，设定SQL SERVER服务器的机器名以及其用户名和口令，如下图所示：</p>
+<p><img src="images/037.jpg" width="279" height="281"></p>
+<p>点击“Connect”按钮后，进入下一步，如果SQL SERVER的“自动转换ANSI到OEM选项”未去掉，则会出现如下的错误提示：</p>
+<p><img src="images/038.jpg" width="459" height="120"></p>
+<p>正常情况下，出现数据库设置画面：</p>
+<p><img src="images/039.jpg" width="488" height="573"></p>
+<p>输入“Target INTools database name”,INTools会以该名创建一个SQL SERVER数据库，INTools会自动填充其它输入框：</p>
+<p><img src="images/040.jpg" width="487" height="573"></p>
+<p>按下“OK”按钮后，开始创建数据库：</p>
+<p><img src="images/041.jpg" width="492" height="99"></p>
+<p>如果不出意外，最后出现创建成功的对话框：</p>
+<p><img src="images/042.jpg" width="261" height="119"></p>
+<p>按下确定按钮后，还会出现一个对话框，提醒用户如果使用别的工作站如果想使用“DBSetup”连接到该数据库的话，需要把这台机器上的INTools安装目录下的“intools.ini”文件复制到相应的位置：</p>
+<p><img src="images/043.jpg" width="617" height="120"></p>
+<h3>3.1.4 创建项目（域）</h3>
+<p>运行“开始”-&gt;“Intergraph INTools”-&gt; “Administration”,启动画面如下：</p>
+<p><img src="images/044.jpg" width="292" height="366"></p>
+<p>初始的用户名和口令都是“DBA”（大小写不敏感）。如果第一次运行，会出现对话框：</p>
+<p><img src="images/045.jpg" width="390" height="412"></p>
+<p>一般不需要改动，直接按“Save”按钮即可。接着会提示输入SQL SERVER的口令：</p>
+<p><img src="images/046.jpg" width="281" height="256"> </p>
+<p>上面两个对话框在第一次运行完后不再出现。然出现在对话框：</p>
+<p><img src="images/047.jpg" width="380" height="261"></p>
+<p>若要创建域，需使用“System Administrator”角色登入，现在我们尚未创建任何域，所以“Domain Administrator”选项不可用。登入后的主界面如下：</p>
+<p><img src="images/048.jpg" width="357" height="362"></p>
+<p>选择“File”菜单下的“Initialize...”，弹出域的属性定义界面：</p>
+<p><img src="images/049.jpg" width="453" height="461"></p>
+<p>左侧4个属性框依次为域名（项目名）、方案名、域口令、SQL SERVER的管理员用户口令，按“OK”按钮弹出数据库文件的属性设置，一般情况下，只有数据库文件及索引文件的大小需要设一下：</p>
+<p><img src="images/050.jpg" width="516" height="354"></p>
+<p>现在按下“OK”按钮即开始初始化域：</p>
+<p><img src="images/051.jpg" width="454" height="462"></p>
+<p>如果在初始化过程中出现如下警告：</p>
+<p><img src="images/054.jpg" width="515" height="125"></p>
+<p>一般是因为字符集的设置问题，请检查SQL SERVER的版本以及WINDOWS 2000的区域设置。如果出错，恢复办法为：打开SQL SERVER的企业管理器，删除Intools建立的数据库，本例中为“Intools”，然后在“Security”的“Login”中删掉INTools建立的登录，它些登录的默认数据库都是“Intools”。然后重新设置SQL SERVER及WINDOWS 2000的字符集后重新建库并初始化。如果原先已有别的域，则需手工删除数据库中相应用户的对象后再重新初始化。</p>
+<h2><a name="language_setup"></a>3.2 语言设置</h2>
+<p>使用语言设置可将INTools的界面设为你需要的语言，不过语言包需要你自己翻译。</p>
+<h3>3.2.1 准备语言包</h3>
+<p>INTools使用的语言包为PSR格式，其格式如下：</p>
+<p>……</p>
+<p>我的语言包文件为c:\lang.psr</p>
+<h3>3.2.2 数据库修改</h3>
+<p>找到INTools使用的数据库下的in_dbamn.LANGUAGE_LIST表，加入记录如下：</p>
+<table width="80%" >
+  <caption>
+  新加入语言条目
+  </caption>
+  <tr>
+    <td>LANG_ID
+    </td>
+    <td>LANG_NAME
+    </td>
+    <td>LANG_COLUMN</td>
+    <td>LAST_ID</td>
+  </tr>
+  <tr>
+    <td>4</td>
+    <td>CUSTOM</td>
+    <td>LANG4_SENTENCE</td>
+    <td>33389</td>
+  </tr>
+</table>
+<h3>3.2.3 在INTools</h3>
+<p>启动 “开始”-&gt;“Intergraph INtools”-&gt;“Administration”,以 System Administrator 身分登录。启动菜单上的“Tools”-&gt;“Tranlation...”，设置完成后如下图所示：</p>
+<p><img src="images/056.jpg" width="340" height="271"></p>
+<p>点击OK后，退出系统。然后再启动INTools，这时你会发现界面已变成中文了。</p>
+<p>说明：其实也可以手工修改配置文件完成该操作，修改INTools安装目录下的“intools.ini”中的“[Translation]”块如下：</p>
+<pre>[Translation]<br>Enable=Yes<br>LangFile=C:\lang.psr<br>Optimize=2<br>Language=CUSTOM
+</pre>
+<p>也可得到同样的效果。</p>
+</body>
+</html>

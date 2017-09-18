@@ -1,0 +1,416 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+Adding controls to the form</TITLE>
+</HEAD>
+<BODY>
+<A NAME="X-ref288962931"></A><h1>Adding controls to the form</h1>
+<A NAME="TI5224"></A><p>The topics in this section describe how to enhance a form
+by adding controls:</p>
+<A NAME="X-ref307303735"></A><h2>Adding columns to a form</h2>
+<A NAME="TI5225"></A><p>You can add columns to a form: you can restore columns you
+have deleted or add columns after you have modified the data source
+to include more columns.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To add a column to a form:</p>
+<ol><li class=fi>
+Click the Column button in the Controls
+dropdown toolbar.<br><br>
+<i>or</i>
+<br><br>
+Select Insert&gt;Column from the menu bar.<br><br></li>
+<li class=ds>
+Click where you want to place the column.<br><br>
+The Select Column dialog box displays, listing columns not
+currently in the form.<br><br></li>
+<li class=ds>
+Select the column and click OK.<br><br></li></ol>
+<br><A NAME="TI5226"></A><p>The column is added. No header or label is added, but you
+can create a header or label by adding a text control to the form.</p>
+<A NAME="X-ref307303765"></A><h2>Adding text to a form</h2>
+<A NAME="TI5227"></A><p>When InfoMaker generates a basic form from a form style and
+data source, it places columns and their headings in the Layout
+view. You can add text anywhere to make the form easier to understand.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To add text to a form:</p>
+<ol><li class=fi>
+Click the Text button in the PainterBar.<br><br>
+<i>or</i>
+<br><br>
+Select Insert&gt;StaticText from the menu bar.<br><br></li>
+<li class=ds>
+Click where you want the text.<br><br>
+InfoMaker places the text control in the Layout view, and
+displays the word <i>text</i>
+ on the control, in the
+Text box in the StyleBar, and on the General page in the Properties
+view.<br><br></li>
+<li class=ds>
+Type the new text.<br><br></li>
+<li class=ds>
+(Optional) Change the font, size, style, and alignment
+for the text by using the StyleBar or changing the properties on
+the Font page in the Properties view.<br><br></li></ol>
+<br><A NAME="X-ref307303779"></A><h2>Adding computed fields to a form</h2>
+<A NAME="TI5228"></A><p>You can use computed fields to perform calculations in the
+form. Typical uses of computed fields include:</p>
+<A NAME="TI5229"></A><p><A NAME="TI5230"></A>
+<ul>
+<li class=fi><b>Calculations
+based on column data that change for each retrieved row</b>   For example, if you are retrieving yearly salary, you could
+define a computed field that displays monthly salary (defined as
+Salary / 12).</li>
+<li class=ds><b>Summary statistics</b>   For example, you can use a computed field to calculate the
+average salary of all the retrieved rows.</li>
+<li class=ds><b>Concatenated fields</b>   For example, if you are retrieving first name and last name,
+you can define a computed field that concatenates the values so that
+they appear with only one space between them (defined as Fname + " " + Lname).</li>
+<li class=ds><b>System information</b>   For example, you can place the current date and time in a
+form by using computed fields (defined as Today( ) and Now( )
+).
+</li>
+</ul>
+</p>
+<A NAME="TI5231"></A><h3>About defining computed columns and computed fields</h3>
+<A NAME="TI5232"></A><p>When creating a form, you can define computed columns and
+computed fields:</p>
+<A NAME="TI5233"></A><p><A NAME="TI5234"></A>
+<ul>
+<li class=fi>In the Select painter,
+you can define computed columns when you are defining the SELECT
+statement that will be used to retrieve data into the form</li>
+<li class=ds>In the Form painter, you can define computed fields <i>after</i>
+ you
+have defined the SELECT statement
+</li>
+</ul>
+</p>
+<A NAME="TI5235"></A><h4>The difference between the two ways</h4>
+<A NAME="TI5236"></A><p>When you define a computed column in the Select painter, the
+column's definition is part of the SELECT statement and
+the value is calculated <i>by the DBMS</i>
+ when the
+data is retrieved. The computed column's value does not change
+until data has been updated and retrieved again.</p>
+<A NAME="TI5237"></A><p>When you define a computed field in the Form painter, the
+value of the column is calculated by <i>InfoMaker</i>
+ in
+the form <i>after</i>
+ the data has been retrieved.
+The value changes dynamically as the data in the form changes.</p>
+<A NAME="TI5238"></A><h4>Recommendation</h4>
+<A NAME="TI5239"></A><p>If you want your DBMS to do the calculations on the server
+before bringing data down and you do not care about dynamically
+updating the computed values, define computed columns as part of
+the SELECT statement.</p>
+<A NAME="TI5240"></A><p>If you want computed values to change dynamically, define
+computed fields in the Form painter, as described next.</p>
+<A NAME="TI5241"></A><h3>Defining a computed field</h3>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To add a computed field to a form:</p>
+<ol><li class=fi>
+Click the Compute button in the Controls
+dropdown toolbar.<br><br>
+<i>or</i>
+<br><br>
+Select Insert&gt;Computed Field from the menu
+bar.<br><br></li>
+<li class=ds>
+Click where you want the computed field.<br><br>
+The computed field's properties display in the Properties
+view:<br><br><br><img src="images/enfrm251.gif"><br>
+</li>
+<li class=ds>
+In the Compute Expression box, enter an expression
+to define the computed field.<br><br>
+<i>or</i>
+<br><br>
+Click the button to the right of the box to display
+the Modify Expression dialog box. In this dialog box, you can easily
+enter a complicated expression. When you are done, you can verify
+it and click OK.<br><br>
+For more, see <A HREF="imugp124.htm#CFHDJFAI">"About the Modify Expression
+dialog box"</A>.<br><br></li></ol>
+<br><A NAME="CFHDJFAI"></A><h4>About the Modify Expression
+dialog box</h4>
+<A NAME="TI5242"></A><p>The Modify Expression dialog box provides you with lists and
+buttons to help you create the computed field:</p>
+<br><img src="images/enfrm261.gif">
+<A NAME="TI5243"></A><p>The Modify Expression dialog box contains:</p>
+<A NAME="TI5244"></A><p><A NAME="TI5245"></A>
+<ul>
+<li class=fi>A Functions box with
+a list of built-in functions you can use in the computed field</li>
+<li class=ds>A Columns box with a list of columns, named computed
+fields, and retrieval arguments in the form</li>
+<li class=ds>Buttons for adding operators and parentheses
+</li>
+</ul>
+</p>
+<A NAME="TI5246"></A><h4>Entering the expression</h4>
+<A NAME="TI5247"></A><p>You can enter any valid expression when defining a computed
+field. You can paste operators, columns, existing computed fields,
+retrieval arguments, and functions into the expression from information
+in the Modify Expression dialog box. You can use the + operator
+to concatenate strings. </p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Remember</span> <A NAME="TI5248"></A>The expression you are entering is an <i>InfoMaker</i>
+ expression;
+it is not a SQL expression processed by the DBMS. The expression
+follows InfoMaker rules.</p>
+<A NAME="TI5249"></A>For complete information about expressions,
+see <A HREF="imugp143.htm#CAIBEHFJ">Chapter 20, "Operators
+and Expressions"</A>.</p>
+<A NAME="TI5250"></A><h4>Examples</h4>
+<A NAME="TI5251"></A><p>Here are some examples of computed fields:</p>
+<A NAME="TI5252"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI5253"></A>To display</th>
+<th align="left" valign=bottom><A NAME="TI5254"></A>Enter this expression</th>
+</tr>
+<tr><td valign=top><A NAME="TI5255"></A>Current date</td>
+<td valign=top><A NAME="TI5256"></A>Today( )</td>
+</tr>
+<tr><td valign=top><A NAME="TI5257"></A>Current time</td>
+<td valign=top><A NAME="TI5258"></A>Now( )</td>
+</tr>
+<tr><td valign=top><A NAME="TI5259"></A>Concatenation of Fname and Lname columns
+for each row</td>
+<td valign=top><A NAME="TI5260"></A>Fname + " " + Lname</td>
+</tr>
+<tr><td valign=top><A NAME="TI5261"></A>Monthly salary if Salary column contains annual
+salary</td>
+<td valign=top><A NAME="TI5262"></A>Salary / 12</td>
+</tr>
+<tr><td valign=top><A NAME="TI5263"></A>Four asterisks if the value of the Salary column
+is greater than $50,000</td>
+<td valign=top><A NAME="TI5264"></A>IF(Salary&gt; 50000, "****",
+"")</td>
+</tr>
+<tr><td valign=top><A NAME="TI5265"></A>Average salary of all retrieved rows</td>
+<td valign=top><A NAME="TI5266"></A>Avg(Salary)</td>
+</tr>
+<tr><td valign=top><A NAME="TI5267"></A>Count of retrieved rows, assuming each row
+contains a value for EmpID</td>
+<td valign=top><A NAME="TI5268"></A>Count(EmpID)</td>
+</tr>
+</table>
+<A NAME="TI5269"></A><p>For more information about the functions you
+can use in computed fields in the Form painter, see Chapter 23,
+"DataWindow Painter and InfoMaker Functions" and online Help.</p>
+<A NAME="X-ref307303795"></A><h2>Adding pictures to a form</h2>
+<A NAME="TI5270"></A><p>You can place pictures, such as your company logo, in a form
+to enhance its appearance.</p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Tips for using pictures</span> <A NAME="TI5271"></A>To display a different picture for each row of data, retrieve
+a column containing picture filenames from the database. </p>
+<A NAME="TI5272"></A>For more information, see the section on character
+columns in <A HREF="imugp36.htm#BABDFJCI">"Specifying additional properties
+for character columns"</A>.</p>
+<A NAME="TI5273"></A>To compute a picture name when a form is run, use the Bitmap
+function in the expression defining a computed field.</p>
+<A NAME="TI5274"></A>For information about the Bitmap function,
+see Chapter 23, "DataWindow Painter and InfoMaker Functions" and
+online Help.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To add a picture to a form:</p>
+<ol><li class=fi>
+Click the Picture button in the Controls
+dropdown toolbar.<br><br>
+<i>or</i>
+<br><br>
+Select Insert&gt;Picture from the menu bar.<br><br></li>
+<li class=ds>
+Click where you want the picture to display.<br><br>
+The container for the picture displays in the Layout view<br><br></li>
+<li class=ds>
+In the Properties view, enter a filename in the
+File Name box.<br><br>
+<i>or</i>
+<br><br>
+Click the Browse button next to the File Name box to
+display the Select Picture dialog box and navigate to find the picture
+file.<br><br>
+The picture must be a bitmap (BMP), runlength-encoded (RLE),
+Windows metafile (WMF), CompuServe Graphics Interchange (GIF), or
+JPEG file.<br><br><br><img src="images/enfrm271.gif"><br>
+</li></ol>
+<br><A NAME="X-ref307303806"></A><h2>Adding command buttons to a form</h2>
+<A NAME="TI5275"></A><p>You can add command buttons to a form. Command buttons are
+used to carry out an action. For example, you can add a button that
+prints the current form.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To add a button to a form:</p>
+<ol><li class=fi>
+Click the Button button in the Controls
+dropdown toolbar.<br><br>
+<i>or</i>
+<br><br>
+Select Insert&gt;CommandButton from the menu bar.<br><br></li>
+<li class=ds>
+Click where you want to place the command button.<br><br>
+A button with the text <i>none</i>
+ displays.
+The text <i>none</i>
+ also displays in the text box
+in the StyleBar and on the General page of the Properties view.<br><br></li>
+<li class=ds>
+Type the new text.<br><br><br><img src="images/enfrm281.gif"><br>
+</li>
+<li class=ds>
+(Optional) Specify the command button as a default
+or cancel button.<br><br>
+For more information, see <A HREF="imugp124.htm#X-ref346185158">"Specifying default
+and cancel buttons"</A>.<br><br></li></ol>
+<br><A NAME="X-ref346350110"></A><h3>Making the commandbutton work</h3>
+<A NAME="TI5276"></A><p>To make the button do something when it is clicked when you
+run a form, you associate an action with it. Each form style has
+its own set of actions you can choose from for a button.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To associate an action with a button:</p>
+<ol><li class=fi>
+Move the pointer to the button you added
+to the form, display the popup menu, and select Action.<br><br>
+The Select Action dialog box displays the actions that are
+provided with the form style you are using<br><br><br><img src="images/enfrm301.gif"><br>
+</li>
+<li class=ds>
+Select the action from the list.<br><br></li>
+<li class=ds>
+If the action takes parameters, click the Parameters
+button and supply the parameters.<br><br></li>
+<li class=ds>
+Click OK.<br><br>
+You return to the Form painter Layout view.<br><br></li></ol>
+<br><A NAME="TI5277"></A><p>For information about the actions provided
+with the built-in form styles, see <A HREF="imugp117.htm#X-ref356371930">"Actions in forms"</A>.</p>
+<A NAME="TI5278"></A><p>If you need information about actions provided by a style
+defined in your organization, talk with the style's developer.</p>
+<A NAME="X-ref346185158"></A><h3>Specifying defaultand cancel buttons</h3>
+<A NAME="TI5279"></A><p>You can define a button as the default button in a form and
+you can define a Cancel button.</p>
+<A NAME="TI5280"></A><h4>Default button behavior</h4>
+<A NAME="TI5281"></A><p>If you define a default button, pressing the enter key
+when the focus is not on another button is the same as clicking
+the default button. If the focus is on another button, pressing enter is
+the same as clicking the button that has focus.</p>
+<A NAME="TI5282"></A><p>InfoMaker places a bold border around the default button
+(or the button with focus if you explicitly tab to a button).</p>
+<A NAME="TI5283"></A><h4>Cancel button behavior</h4>
+<A NAME="TI5284"></A><p>If you define a cancel CommandButton, pressing the esc key
+is the same as clicking the cancel button.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To define a default or cancel button:</p>
+<ol><li class=fi>
+Select Properties from the command button's
+popup menu and then select the Default or Cancel checkbox on the
+General page.<br><br></li></ol>
+<br><A NAME="X-ref307303817"></A><h2>Adding picture buttons to a form</h2>
+<A NAME="TI5285"></A><p>Picture buttons are identical to command buttons in their
+functionality. The only difference is that you can specify a bitmap
+(BMP), runlength-encoded (RLE), Windows metafile (WMF), CompuServe
+Graphics Interchange (GIF), or JPEG file to display in the button.
+Use these controls when you want to be able to represent the purpose
+of a button using a picture instead of just text.</p>
+<br><img src="images/enfrm306.gif">
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To add a picture button to a form:</p>
+<ol><li class=fi>
+Click the PictureButton button in the Controls
+dropdown toolbar.<br><br>
+<i>or</i>
+<br><br>
+Select Insert&gt;PictureButton from the menu bar.<br><br></li>
+<li class=ds>
+Click where you want the picture button to display.<br><br>
+A picture button displays in the Layout view.<br><br></li>
+<li class=ds>
+In the Properties view, General page, type the
+new text (if you want any) in the Text box:<br><br><br><img src="images/enfrm311.gif"><br>
+</li>
+<li class=ds>
+Click the Browse button next to PictureName to
+display the Select Picture dialog box and navigate to find the picture
+file.<br><br>
+<i>or</i>
+<br><br>
+Enter a filename in the PictureName box.<br><br>
+The picture must be a bitmap (BMP), runlength-encoded (RLE),
+Windows metafile (WMF), CompuServe Graphics Interchange (GIF), or
+JPEG file.<br><br></li>
+<li class=ds>
+Specify other properties of the button as needed.<br><br></li></ol>
+<br><A NAME="TI5286"></A><p>For information about associating the picture
+button with an action, see <A HREF="imugp124.htm#X-ref346350110">"Making the command
+button work"</A>. The procedure is the same.</p>
+<A NAME="X-ref307303831"></A><h2>Adding reports to a form</h2>
+<A NAME="TI5287"></A><p>You can add reports that you created in the Report painter
+to a form. The reports must be in the current library.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To add a report to a form:</p>
+<ol><li class=fi>
+Click the Report button in the Controls
+dropdown toolbar.<br><br>
+<i>or</i>
+<br><br>
+Select Insert&gt;Report from the menu bar.<br><br></li>
+<li class=ds>
+Click where you want the report to display.<br><br>
+A report control displays in the Layout view.<br><br></li>
+<li class=ds>
+In the Properties view, supply the name of the
+report to show in the control. You can use the browse button to
+search for the report.<br><br>
+InfoMaker places the report in the form (you see everything
+but the data, which is displayed when you run the form).<br><br></li></ol>
+<br><A NAME="TI5288"></A><p>At this point, you may want to resize the report or change
+some of its other properties. For example, you may want to make
+the report itself resizable. </p>
+<A NAME="X-ref307303843"></A><h2>Adding drawing controls to a form</h2>
+<A NAME="TI5289"></A><p>You can add the following drawing controls to a form to enhance
+its appearance:</p>
+<A NAME="TI5290"></A><p><A NAME="TI5291"></A>
+<ul>
+<li class=fi>Line</li>
+<li class=ds>Oval</li>
+<li class=ds>Rectangle</li>
+<li class=ds>RoundRectangle
+</li>
+</ul>
+</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To add a drawing control to a form:</p>
+<ol><li class=fi>
+Click the drawing control in the Controls
+dropdown toolbar.<br><br>
+<i>or</i>
+<br><br>
+Select Insert&gt;Line, Insert&gt;Oval, Insert&gt;Rectangle, Insert&gt;RoundRectangle
+from the menu bar.<br><br></li>
+<li class=ds>
+Click where you want the control to display.<br><br></li>
+<li class=ds>
+Resize or move the drawing control as needed.<br><br></li>
+<li class=ds>
+Change the drawing control's properties
+as needed in the Properties view.<br><br>
+For example, you might want to specify a fill color for a
+rectangle or thickness for a line. To do so, you work on the General
+page in the Property view for the rectangle or line control.<br><br></li></ol>
+<br><A NAME="TI5292"></A><h4>Using drawing controls for grouping</h4>
+<A NAME="TI5293"></A><p>Drawing controls are useful for grouping controls in a form
+or providing design highlights. For example, to group some controls
+you can place a colored rectangle behind them by selecting Send
+To Back from the rectangle's popup menu.</p>
+<A NAME="TI5294"></A><p>Here are some controls grouped with a round rectangle and
+a text label:</p>
+<br><img src="images/enfrm331.gif">
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To group controls with a round rectangle and text
+in the Form painter:</p>
+<ol><li class=fi>
+Select Insert&gt;RoundRectangle from
+the menu bar and add a round rectangle to the Layout view.<br><br></li>
+<li class=ds>
+Size the rectangle and place it over the controls
+you want to group.<br><br></li>
+<li class=ds>
+Select Send To Back from the rectangle's
+popup menu to place the rectangle behind the group of controls.<br><br></li>
+<li class=ds>
+Click the Text button in the Controls dropdown
+listbox, add a text control to the Layout view, and place it on
+the round rectangle.<br><br></li>
+<li class=ds>
+Select a background color for the text control
+from the Background Color dropdown toolbar and select the color,
+in this case gray to match the rectangle.<br><br></li>
+<li class=ds>
+Position all controls as needed.<br><br></li></ol>
+<br>

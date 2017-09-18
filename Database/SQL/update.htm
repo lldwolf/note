@@ -1,0 +1,52 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<title>数据库更新语句</title>
+<script language="javascript" src="css.js"></script>
+</head>
+
+<body>
+<h1>第三章 数据库更新语句</h1>
+<h2>3.1 插入</h2>
+<h3>3.1.1 单条插入</h3>
+<pre>insert into 表名(字段列表) 
+values(对应的值列表)</pre>
+<p>例1：创建一个表，其字段为员工编号，姓名，并插入一条记录</p>
+<pre>create table Employee(EmployeeId varchar(20), EmployeeName varchar(20))
+
+insert into Employee(EmployeeId, EmployeeName)
+values('1001', '刘林栋')</pre>
+<h3>3.1.2 多条插入</h3>
+<pre>insert into 表名(字段列表) 
+select 子句（要求其结果集的字段与插入的字段列表一一对应）</pre>
+<h2>3.2 删除记录</h2>
+<h3>3.2.1 delete </h3>
+<p>删除符合条件的记录</p>
+<pre>delete from 表名 where 条件 </pre>
+<h3>3.2.2 truncate</h3>
+<pre>truncate 表名 </pre>
+<p>删除表的全部记录，功能与不带where条件的delete语句功能相同，但速度更快，并可释放表所占用的磁盘空间。</p>
+<h2>3.3 修改记录</h2>
+<p>update 表名 set 字段名 = 字段值, …… where 条件 </p>
+<p>修改符合条件的记录</p>
+<h2>3.4 T-SQL扩充</h2>
+<h2>3.4.1 delete与update的多表联合</h2>
+<p>在标准SQL中，并不支持delete和update的多表联合操作，但SQL SERVER对此提供了支持。 </p>
+<p>Delete示例：在索引表中删除所有制造商为“Auto”的仪表。</p>
+<pre>delete component 
+from component a, component_mfr b
+where a.cmpnt_mfr_id = b.cmpnt_mfr_id and b.cmpnt_mfr_name = 'Auto'</pre>
+<p>Update示例：在索引表中将所有制造商为“Auto”的仪表的Remark1字段内容改为“傲途制造”</p>
+<pre>update component set remark1 = '傲途制造' 
+from component a, component_mfr b
+where a.cmpnt_mfr_id = b.cmpnt_mfr_id and b.cmpnt_mfr_name = 'Auto'</pre>
+<h2>3.4.2 使用select创建表</h2>
+<p>根据select的列表自动创建表，并将select的结果集插入。</p>
+<pre>select 字段列表 into 目标表 from 源表</pre>
+<p>&nbsp;</p>
+<script language="javascript" src="index.js"></script>
+<p>&nbsp; </p>
+</body>
+</html>

@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>DevExpress.XtraGrid.GridControl</title>
+<script type="text/javascript" src="../../../mylib/js/css.js"></script>
+
+<style type="text/css">
+.first_class {font-family:宋体; font-weight:bold; font-size:16px; text-align:center; layout-flow:vertical-ideographic}
+.second_class {font-weight: bold}
+</style>
+</head>
+
+<body>
+<p id="title">GridControl - Unbound Mode</p>
+
+<h1>How to add an unbound column</h1>
+<h2>Unbound Column's property</h2>
+<table width="60%">
+	<tbody>
+		<tr>
+			<th>Property</th>
+			<th>Value</th>
+		</tr>
+		<tr>
+			<td>FieldName</td>
+			<td>Random name, but be sure it's not as same as the existing property name in data source.</td>
+		</tr>
+		<tr>
+			<td>UnboundType</td>
+			<td>The data type, if it's not a simple type, then select <b><i>Object</i></b></td>
+		</tr>
+	</tbody>
+</table>
+<h2>Display cell value in Unbound cell</h2>
+<pre>private void gridView1_CustomUnboundColumnData(object sender, DevExpress.XtraGrid.Views.Base.CustomColumnDataEventArgs e)
+{
+	if (e.IsGetData)
+	{
+		if (e.Column == this.gridColumn3)
+		{
+			e.Value = "aaa";		//display value
+		}
+	}
+	else if (e.IsSetData)
+	{
+		if (e.Column == this.gridColumn3)
+		{
+			e.Value = "aaa";		//write value
+		}
+	}
+}</pre>
+<h1>Error Notification</h1>
+<pre>using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Text;
+using System.Windows.Forms;
+using DevExpress.XtraGrid.Views.Grid;
+using DevExpress.XtraGrid.Views.Grid.ViewInfo;
+using DevExpress.XtraGrid;
+using DevExpress.XtraEditors.ViewInfo;
+using DevExpress.XtraGrid.Views.Grid.Drawing;
+using DevExpress.XtraEditors.DXErrorProvider;
+using DevExpress.XtraEditors.Drawing;
+using DevExpress.XtraGrid.Columns;
+
+namespace WindowsApplication767 {
+    public partial class Form1 : Form
+    {
+        private DataTable CreateTable(int RowCount)
+        {
+            DataTable tbl = new DataTable();
+            tbl.Columns.Add("Name", typeof(string));
+            tbl.Columns.Add("Date", typeof(DateTime));
+            for (int i = 0; i < RowCount; i++)
+                tbl.Rows.Add(new object[] { String.Format("Name{0}", i), DateTime.Now.AddDays(i) });
+            return tbl;
+        }
+        
+
+        public Form1()
+        {
+            InitializeComponent();
+            gridControl1.DataSource = CreateTable(20);
+        }
+
+        public string GetError(object value, int rowHandle, GridColumn column)
+        {
+            if (value == null) return "value is null";
+            if (!(value is int)) return string.Empty; ;
+            if ((int)value % 2 == 0) return "value is even";
+            if ((int)value < 10) return "value < 10";
+            return string.Empty;
+        }
+
+        void SetError(BaseEditViewInfo cellInfo, string errorIconText)
+        {
+            if (errorIconText == string.Empty) return;
+            cellInfo.ErrorIconText = errorIconText;
+            cellInfo.ShowErrorIcon = true;
+            cellInfo.FillBackground = true;
+            cellInfo.ErrorIcon = DXErrorProvider.GetErrorIconInternal(ErrorType.Critical);
+        }
+
+
+        private void gridView1_CustomDrawCell(object sender, DevExpress.XtraGrid.Views.Base.RowCellCustomDrawEventArgs e)
+        {
+            BaseEditViewInfo info = ((GridCellInfo)e.Cell).ViewInfo;
+            string error = GetError(e.CellValue, e.RowHandle, e.Column);
+            SetError(info, error);
+            info.CalcViewInfo(e.Graphics);
+        }
+
+
+        private void gridView1_CustomUnboundColumnData(object sender, DevExpress.XtraGrid.Views.Base.CustomColumnDataEventArgs e)
+        {
+            if (e.IsGetData) e.Value = e.RowHandle;
+        }
+
+        private void gridView1_ShownEditor(object sender, EventArgs e)
+        {
+            string error = GetError(gridView1.GetFocusedValue(), gridView1.FocusedRowHandle, gridView1.FocusedColumn);
+            if (error == string.Empty) return;
+            gridView1.SetColumnError(gridView1.FocusedColumn, error);
+        }
+    }
+
+}</pre>
+<p>Please review the following Knowledge Base article that provides precise instructions on how this issue can be solved:</p>
+<p><a href="http://www.devexpress.com/Support/Center/p/K18308.aspx">How to show error icons for cells when working in unbound mode.</a></p>
+<script type="text/javascript" src="grid_index.js"></script>
+</body>
+</html>

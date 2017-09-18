@@ -1,0 +1,352 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+Installing InfoMaker stored procedures in Adaptive Server Enterprise databases</TITLE>
+</HEAD>
+<BODY>
+<A NAME="CCJDBEBA"></A><h1>Installing InfoMaker stored procedures in Adaptive Server Enterprise databases</h1>
+<A NAME="TI890"></A><p>This section describes how to install InfoMaker stored procedures
+in an Adaptive Server Enterprise database by running SQL scripts
+provided for this purpose.</p>
+<A NAME="TI891"></A><p>You <i>must</i>
+ run these scripts outside InfoMaker <i>before</i>
+ connecting
+to an Adaptive Server Enterprise database for the first time through
+the Sybase Adaptive Server Enterprise (SYC DBMS identifier) native
+database interface.</p>
+<A NAME="CCJEAJDD"></A><h2>What are the InfoMaker stored procedure scripts?</h2>
+<A NAME="TI892"></A><h4>What you do</h4>
+<A NAME="TI893"></A><p>In order to work with an Adaptive Server Enterprise database
+in InfoMaker, you or your system administrator must install certain
+stored procedures in the database <i>before</i>
+ you
+connect to Adaptive Server Enterprise from InfoMaker <i>for the
+first time</i>
+.</p>
+<A NAME="TI894"></A><p>You must run the InfoMaker stored procedure scripts only
+once per database server, and not before each InfoMaker session.
+If you have already installed the InfoMaker stored procedures in
+your Adaptive Server Enterprise database before connecting in InfoMaker on
+any supported platform, you need <i>not</i>
+ install
+the stored procedures again before connecting in InfoMaker on a different
+platform.</p>
+<A NAME="TI895"></A><h4>InfoMaker stored procedures</h4>
+<A NAME="TI896"></A><p>A <strong>stored procedure</strong> is a group of precompiled
+and preoptimized SQL statements that performs some database operation.
+Stored procedures reside on the database server where they can be
+accessed as needed.</p>
+<A NAME="TI897"></A><p>InfoMaker uses these stored procedures to get information
+about tables and columns from the Adaptive Server Enterprise system
+catalog. (The InfoMaker stored procedures are different from the
+stored procedures you may create in your database.)</p>
+<A NAME="TI898"></A><h4>SQL scripts</h4>
+<A NAME="TI899"></A><p>InfoMaker provides SQL script files for installing the required
+stored procedures in sybsystemprocs database:</p>
+<A NAME="TI900"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI901"></A>Script</th>
+<th align="left" valign=bottom><A NAME="TI902"></A>Use for</th>
+</tr>
+<tr><td valign=top><A NAME="TI903"></A>PBSYC.SQL</td>
+<td valign=top><A NAME="TI904"></A>Sybase Adaptive Server Enterprise databases</td>
+</tr>
+<tr><td valign=top><A NAME="TI905"></A>PBSYC2.SQL</td>
+<td valign=top><A NAME="TI906"></A>Sybase Adaptive Server Enterprise databases
+to restrict the Select Tables list</td>
+</tr>
+</table>
+<A NAME="TI907"></A><h3>PBSYC.SQL script</h3>
+<A NAME="TI908"></A><h4>What it does</h4>
+<A NAME="TI909"></A><p>The PBSYC.SQL script contains SQL code that overwrites stored
+procedures that correspond to the same version of InfoMaker in
+the Sybase Adaptive Server Enterprise sybsystemprocs database and
+then re-creates them.</p>
+<A NAME="TI910"></A><p>The PBSYC.SQL script uses the sybsystemprocs database to hold
+the InfoMaker stored procedures. This database is created when
+you install Adaptive Server Enterprise.</p>
+<A NAME="TI911"></A><h4>When to run it</h4>
+<A NAME="TI912"></A><p>Before you connect to an Adaptive Server Enterprise database
+in InfoMaker <i>for the first time</i>
+ using the
+SYC DBMS identifier, you or your database administrator <i>must
+run</i>
+ the PBSYC.SQL script once per database server into the
+sybsystemprocs database.</p>
+<A NAME="TI913"></A><p>Run PBSYC.SQL if the server at your site will be <i>accessed
+by anyone using the InfoMaker development environment or by deployment
+machines</i>
+.</p>
+<A NAME="TI914"></A><p>If you or your database administrator have already run the
+current version of PBSYC.SQL to install InfoMaker stored procedures
+in the sybsystemprocs database on your server, you need not rerun
+the script to install the stored procedures again.</p>
+<A NAME="TI915"></A><p>For instructions on running PBSYC.SQL, see <A HREF="connimp27.htm#X-ref307891105">"How to run the scripts"</A>.</p>
+<A NAME="TI916"></A><h4>Stored procedures it creates</h4>
+<A NAME="TI917"></A><p>The PBSYC.SQL script creates the following InfoMaker stored
+procedures in the Adaptive Server Enterprise sybsystemprocs database.
+The procedures are listed in the order in which the script creates
+them.</p>
+<A NAME="TI918"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI919"></A>PBSYC.SQL stored procedure</th>
+<th align="left" valign=bottom><A NAME="TI920"></A>What it does</th>
+</tr>
+<tr><td valign=top><A NAME="TI921"></A>sp_pb80column</td>
+<td valign=top><A NAME="TI922"></A>Lists the columns in a table</td>
+</tr>
+<tr><td valign=top><A NAME="TI923"></A>sp_pb80primarykey</td>
+<td valign=top><A NAME="TI924"></A>Lists the columns in a table's
+primary key</td>
+</tr>
+<tr><td valign=top><A NAME="TI925"></A>sp_pb80pkcheck</td>
+<td valign=top><A NAME="TI926"></A>Determines whether a table has a primary
+key</td>
+</tr>
+<tr><td valign=top><A NAME="TI927"></A>sp_pb80fktable</td>
+<td valign=top><A NAME="TI928"></A>Lists the tables that reference the current
+table</td>
+</tr>
+<tr><td valign=top><A NAME="TI929"></A>sp_pb80foreignkey</td>
+<td valign=top><A NAME="TI930"></A>Lists all foreign keys associated with
+a specified table</td>
+</tr>
+<tr><td valign=top><A NAME="TI931"></A>sp_pb80extcat</td>
+<td valign=top><A NAME="TI932"></A>Checks the status of the extended attributes
+system tables</td>
+</tr>
+<tr><td valign=top><A NAME="TI933"></A>sp_pb80procdesc</td>
+<td valign=top><A NAME="TI934"></A>Retrieves a description of the argument
+list for a specified stored procedure</td>
+</tr>
+<tr><td valign=top><A NAME="TI935"></A>sp_pb80proclist</td>
+<td valign=top><A NAME="TI936"></A>Lists available stored procedures and
+extended stored procedures<A NAME="TI937"></A>If the SystemProcs DBParm parameter is set to 1 or Yes (the
+default), sp_pb80proclist displays both system stored procedures
+and user-defined stored procedures. If SystemProcs is set to 0 or
+No, sp_pb80proclist displays only user-defined stored procedures</td>
+</tr>
+<tr><td valign=top><A NAME="TI938"></A>sp_pb80text</td>
+<td valign=top><A NAME="TI939"></A>Retrieves the text of a stored procedure
+from the SYSCOMMENTS table</td>
+</tr>
+<tr><td valign=top><A NAME="TI940"></A>sp_pb80db</td>
+<td valign=top><A NAME="TI941"></A>Retrieves the names of all databases
+available for this server</td>
+</tr>
+<tr><td valign=top><A NAME="TI942"></A>sp_pb80table</td>
+<td valign=top><A NAME="TI943"></A>Retrieves information about <i>all</i>
+ tables
+in a database, including those for which the current user has no permissions<A NAME="TI944"></A>PBSYC.SQL contains the default version of sp_pb80table.
+If you want to replace the default version of sp_pb80table
+with a version that restricts the table list to those tables for
+which the user has SELECT permission, you can run the PBSYC2.SQL
+script, described in <A HREF="connimp27.htm#X-ref353682973">"PBSYC2.SQL script"</A></td>
+</tr>
+<tr><td valign=top><A NAME="TI945"></A>sp_pb80index</td>
+<td valign=top><A NAME="TI946"></A>Retrieves information about all indexes
+for a specified table</td>
+</tr>
+</table>
+<A NAME="X-ref353682973"></A><h3>PBSYC2.SQL script</h3>
+<A NAME="TI947"></A><h4>What it does</h4>
+<A NAME="TI948"></A><p>The PBSYC2.SQL script contains SQL code that drops and re-creates
+one InfoMaker stored procedure in the Sybase Adaptive Server Enterprise sybsystemprocs
+database: a replacement version of sp_pb80table.</p>
+<A NAME="TI949"></A><p>The default version of sp_pb80table is installed
+by the PBSYC.SQL script. InfoMaker uses the sp_pb80table
+procedure to build a list of <i>all</i>
+ tables in
+the database, including those for which the current user has no
+permissions. This list displays in the Select Tables dialog box
+in InfoMaker.</p>
+<A NAME="TI950"></A><p>For security reasons, you or your database administrator may
+want to restrict the table list to display only those tables for
+which a user has permissions. To do this, you can run the PBSYC2.SQL
+script <i>after you run PBSYC.SQL</i>
+. PBSYC2.SQL
+replaces the default version of sp_pb80table with a new
+version that displays a restricted table list including only tables
+and views:<A NAME="TI951"></A>
+<ul>
+<li class=fi>Owned by the current
+user</li>
+<li class=ds>For which the current user has SELECT authority</li>
+<li class=ds>For which the current user's group has
+SELECT authority</li>
+<li class=ds>For which SELECT authority was granted to PUBLIC
+</li>
+</ul>
+</p>
+<A NAME="TI952"></A><h4>When to run it</h4>
+<A NAME="TI953"></A><p>If you are accessing an Adaptive Server Enterprise database
+using the SYC DBMS identifier in InfoMaker, <i>you</i>
+ <i>must
+first run PBSYC.SQL</i>
+ once per database server to install
+the required InfoMaker stored procedures in the sybsystemprocs
+database.</p>
+<A NAME="TI954"></A><p>After you run PBSYC.SQL, you can optionally run PBSYC2.SQL
+if you want to replace sp_pb80table with a version that
+restricts the table list to those tables for which the user has
+SELECT permission.</p>
+<A NAME="TI955"></A><p>If you do not want to restrict the table list, there is no
+need to run PBSYC2.SQL.</p>
+<A NAME="TI956"></A><p>For instructions on running PBSYC2.SQL, see <A HREF="connimp27.htm#X-ref307891105">"How to run the scripts"</A>.</p>
+<A NAME="TI957"></A><h4>Stored procedure it creates</h4>
+<A NAME="TI958"></A><p>The PBSYC2.SQL script creates the following InfoMaker stored
+procedure in the Adaptive Server Enterprise sybsystemprocs database:</p>
+<A NAME="TI959"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI960"></A>PBSYC2.SQL stored procedure</th>
+<th align="left" valign=bottom><A NAME="TI961"></A>What it does</th>
+</tr>
+<tr><td valign=top><A NAME="TI962"></A>sp_pb80table</td>
+<td valign=top><A NAME="TI963"></A>Retrieves information about those tables
+in the database for which the current user has SELECT permission<A NAME="TI964"></A>This version of sp_pb80table replaces the default
+version of sp_pb80table installed by the PBSYC.SQL script</td>
+</tr>
+</table>
+<A NAME="X-ref307891105"></A><h2>How to run the scripts</h2>
+<A NAME="TI965"></A><p>You can use the ISQL or SQL Advantage tools to run the stored
+procedure scripts outside InfoMaker.</p>
+<A NAME="TI966"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI967"></A>You can use this tool</th>
+<th align="left" valign=bottom><A NAME="TI968"></A>To run these scripts</th>
+</tr>
+<tr><td valign=top><A NAME="TI969"></A>ISQL</td>
+<td valign=top><A NAME="TI970"></A><A NAME="TI971"></A>
+<ul>
+<li class=fi>PBSYC.SQL</li>
+<li class=ds>PBSYC2.SQL
+</li>
+</ul>
+</td>
+</tr>
+<tr><td valign=top><A NAME="TI972"></A>SQL Advantage</td>
+<td valign=top><A NAME="TI973"></A><A NAME="TI974"></A>
+<ul>
+<li class=fi>PBSYC.SQL</li>
+<li class=ds>PBSYC2.SQL
+</li>
+</ul>
+</td>
+</tr>
+</table>
+<A NAME="X-ref298320004"></A><h3>Using ISQL to runthe stored procedure scripts</h3>
+<A NAME="TI975"></A><p>ISQL is an interactive SQL utility that comes with the Sybase
+Open Client software on the Windows platforms. If you have ISQL
+installed, use the following procedure to run the InfoMaker stored
+procedure scripts.</p>
+<A NAME="TI976"></A><p>For complete instructions on using ISQL, see
+your Sybase Open Client documentation.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To use ISQL to run the InfoMaker stored procedure
+scripts:</p>
+<ol><li class=fi>
+Connect to the sybsystemprocs Adaptive
+Server Enterprise database as the system administrator. <br><br></li>
+<li class=ds>
+Open one of the following files containing the InfoMaker stored
+procedure script you want to run:<A NAME="TI977"></A>
+<ul>
+<li class=fi>PBSYC.SQL</li>
+<li class=ds>PBSYC2.SQL
+</li>
+</ul>
+
+                        <br><br></li>
+<li class=ds>
+Issue the appropriate ISQL command to run the
+SQL script with the user ID, server name, and (optionally) password
+you specify. Make sure you specify uppercase and lowercase exactly
+as shown:<br><br>
+<pre><b>isql /U sa /S</b> <i>SERVERNAME</i> <b>/i</b> <i>pathname</i> <b>/P</b> {<i> password</i> }</pre>
+<br><br><A NAME="TI978"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI979"></A>Parameter</th>
+<th align="left" valign=bottom><A NAME="TI980"></A>Description</th>
+</tr>
+<tr><td valign=top><A NAME="TI981"></A><b>sa</b></td>
+<td valign=top><A NAME="TI982"></A>The user ID for the system administrator.
+Do <i>not</i>
+ change this user ID</td>
+</tr>
+<tr><td valign=top><A NAME="TI983"></A><i>SERVERNAME</i></td>
+<td valign=top><A NAME="TI984"></A>The name of the computer running the
+Adaptive Server Enterprise database</td>
+</tr>
+<tr><td valign=top><A NAME="TI985"></A><i>pathname</i></td>
+<td valign=top><A NAME="TI986"></A>The drive and directory containing the
+SQL script you want to run</td>
+</tr>
+<tr><td valign=top><A NAME="TI987"></A><i>password</i></td>
+<td valign=top><A NAME="TI988"></A>(Optional) The password for the sa (system administrator)
+user ID. The default Adaptive Server Enterprise installation creates
+the sa user ID without a password. If you changed the password for
+sa during the installation, replace <i>password</i> with
+your new password</td>
+</tr>
+</table>
+
+For example, if you are using InfoMaker and are accessing
+the stored procedure scripts from the product CD-ROM, type either
+of the following (assuming D is your CD-ROM drive):<br><br>
+<b>  isql /U sa /S
+TESTDB /i d:\server\pbsyb.sql /P</b><br><br>
+ <b>isql /U sa /S
+SALES /i d:\server\pbsyc.sql /P
+adminpwd</b><br><br></li></ol>
+<br><A NAME="X-ref298319956"></A><h3>Using SQL Advantageto run the stored procedure scripts</h3>
+<A NAME="TI989"></A><p>SQL Advantage is an interactive SQL utility that comes with
+the Sybase Open Client software on the Windows platform. If you
+have SQL Advantage installed, use the following procedure to run
+the InfoMaker stored procedure scripts.</p>
+<A NAME="TI990"></A><p>For complete instructions on using SQL Advantage,
+see your Sybase Open Client documentation.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To use SQL Advantage to run the InfoMaker stored
+procedure scripts:</p>
+<ol><li class=fi>
+Start the SQL Advantage utility.<br><br></li>
+<li class=ds>
+Open a connection to the sybsystemprocs Adaptive
+Server Enterprise database as the system administrator. <br><br></li>
+<li class=ds>
+Open one of the following files containing the InfoMaker stored
+procedure script you want to run:<A NAME="TI991"></A>
+<ul>
+<li class=fi>PBSYC.SQL</li>
+<li class=ds>PBSYC2.SQL
+</li>
+</ul>
+
+                        <br><br></li>
+<li class=ds>
+Delete the <i>use sybsystemprocs</i>
+ command
+and the <i>go</i>
+ command at the beginning of each
+script.<br><br>
+SQL Advantage requires that you issue the <i>use sybsystemprocs</i>
+ command by
+itself, with no other SQL commands following it. When you open a connection
+to the sybsystemprocs database in step 2, you are in effect issuing
+the <i>use sybsystemprocs</i>
+ command. This command
+should not be issued again as part of the stored procedure script.<br><br>
+Therefore, to successfully install the stored procedures,
+you <i>must</i>
+ delete the lines shown in the following
+table from the beginning of the InfoMaker stored procedure script <i>before</i>
+ executing
+the script.<br><br><A NAME="TI992"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI993"></A>Before executing this script</th>
+<th align="left" valign=bottom><A NAME="TI994"></A>Delete these lines</th>
+</tr>
+<tr><td valign=top><A NAME="TI995"></A>PBSYC.SQL</td>
+<td valign=top><A NAME="TI996"></A><pre>use sybsystemprocs</pre>
+<A NAME="TI997"></A><pre>go</pre>
+</td>
+</tr>
+<tr><td valign=top><A NAME="TI998"></A>PBSYC2.SQL</td>
+<td valign=top><A NAME="TI999"></A><pre>use sybsystemprocs</pre>
+<A NAME="TI1000"></A><pre>go</pre>
+</td>
+</tr>
+</table>
+</li>
+<li class=ds>
+Execute all of the statements in the SQL script.<br><br></li>
+<li class=ds>
+Exit the SQL Advantage session.<br><br></li></ol>
+<br>

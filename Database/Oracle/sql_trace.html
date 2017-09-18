@@ -1,0 +1,781 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>跟踪SQL</title>
+<script language="javascript" src="css.js"></script>
+</head>
+
+<body>
+<h1>第N章 跟踪SQL</h1>
+<hr />
+<h2><a href="#sql_trace">N.1 使用SQL_TRACE </a></h2>
+<h2><a href="#system_table">N.2 使用系统表</a></h2>
+<hr />
+<h2><a name="sql_trace" id="sql_trace"></a>N.1 使用SQL_TRACE </h2>
+<h3>N.1.1 快速指南 </h3>
+<p>本章介绍使用SQL_TRACE跟踪SQL语句，要使用SQL_TRACE，必须使用SYS用户，使用SYSDBA身份登录，下列的命令使用SQL*PLUS或pl/sql developer的Command窗口。 </p>
+<p>以跟踪INTOOLS为例，首先使用如下SQL语句获取INTOOLS的SESSION信息</p>
+<pre>select sid, serial#, username from v$session;</pre>
+<p>假设取到的INTOOLS登录session的sid = 9, serial# = 71，则执行下列命令对该session进行监听</p>
+<pre>exec dbms_system.set_sql_trace_in_session(9,71,true)</pre>
+<p>然后操作INTOOLS，操作完成后使用下面命令关闭监听</p>
+<pre>exec dbms_system.set_sql_trace_in_session(9,71,false)</pre>
+<p>则在%ORACLE_HOME%\ADMIN\[服务名]\udump目录下生成最新的.trc跟踪文件，可使用ORACLE提供的工具程序tkprof将.trc文件解析为更易读的文件：</p>
+<pre>tkprof [.trc文件路径] [目标文件路径] </pre>
+<p>后面还可加上如下一些参数</p>
+<table width="90%">
+  <tr>
+    <th width="30%">参数</th>
+    <th width="70%">说明</th>
+  </tr>
+  <tr>
+    <td>explain=user/password</td>
+    <td>Connect to ORACLE and issue EXPLAIN PLAN.</td>
+  </tr>
+  <tr>
+    <td>table=schema.tablename</td>
+    <td>Use 'schema.tablename' with 'explain=' option.</td>
+  </tr>
+  <tr>
+    <td>print=integer</td>
+    <td>List only the first 'integer' SQL statements.</td>
+  </tr>
+  <tr>
+    <td>aggregate=yes|no</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>insert=filename</td>
+    <td>将其中的SQL语句抽取出来生成一个插入tkprof_table表的脚本文件</td>
+  </tr>
+  <tr>
+    <td>sys=no </td>
+    <td>过滤由sys用户调用的SQL语句</td>
+  </tr>
+  <tr>
+    <td>record=filename</td>
+    <td>将跟踪文件中的非递归SQL语句记入文件</td>
+  </tr>
+  <tr>
+    <td>waits=yes|no</td>
+    <td>Record summary for any wait events found in the trace file.</td>
+  </tr>
+  <tr>
+    <td>sort=option</td>
+    <td><p>可设为0，或按下列规则排序</p>
+    <p> prscnt  number of times parse was called<br />
+prscpu  cpu time parsing<br />
+prsela  elapsed time parsing<br />
+prsdsk  number of disk reads during parse<br />
+prsqry  number of buffers for consistent read during parse<br />
+prscu   number of buffers for current read during parse<br />
+prsmis  number of misses in library cache during parse<br />
+execnt  number of execute was called<br />
+execpu  cpu time spent executing<br />
+exeela  elapsed time executing<br />
+exedsk  number of disk reads during execute<br />
+exeqry  number of buffers for consistent read during execute<br />
+execu   number of buffers for current read during execute<br />
+exerow  number of rows processed during execute<br />
+exemis  number of library cache misses during execute<br />
+fchcnt  number of times fetch was called<br />
+fchcpu  cpu time spent fetching<br />
+fchela  elapsed time fetching<br />
+fchdsk  number of disk reads during fetch<br />
+fchqry  number of buffers for consistent read during fetch<br />
+fchcu   number of buffers for current read during fetch<br />
+fchrow  number of rows fetched<br />
+userid  userid of user that parsed the cursor<br />
+    </p></td>
+  </tr>
+</table>
+<p>其中比较有用的一个排序选项是fchela，即按照elapsed time fetching来对分析的结果排序（记住要设置初始化参数time_statistics=true），生成的.prf文件将把最消耗时间的sql放在最前面显示。另外一个有用的参数就是sys， 这个参数设置为no可以阻止所有以sys用户执行的sql被显示出来，这样可以减少分析出来的文件的复杂度，便于查看。</p>
+<h3>N.1.2 详细介绍</h3>
+<p>SQL_TRACE可以作为初始化参数在全局启用，也可以通过命令行方式在具体session启用。</p>
+<p>若在全局启用，则在参数文件（pfile/spfile）中指定:</p>
+<pre>sql_trace=true</pre>
+<p>在全局启用SQL_TRACE会导致所有进程的活动被跟踪，包括后台进程及所有用户进程，这通常会导致比较严重的性能问题，所以在生产环境中要谨慎使用.</p>
+<p> 提示: 通过在全局启用sql_trace，我们可以跟踪到所有后台进程的活动，很多在文档中的抽象说明，通过跟踪文件的实时变化，我们可以清晰的看到各个进程之间的紧密协调.</p>
+<p>大多数时候我们使用sql_trace跟踪当前进程.通过跟踪当前进程可以发现当前操作的后台数据库递归活动(这在研究数据库新特性时尤其有效)，研究SQL执行，发现后台错误等.
+在session级启用和停止sql_trace方式如下: </p>
+<pre>--启用
+alter session set sql_trace=true;
+
+--停止
+alter session set sql_trace=false;</pre>
+<p>跟踪其它用户的进程已在N.1.1节中介绍。</p>
+<h3>N.1.3 10046事件说明</h3>
+<p>10046事件是Oracle提供的内部事件，是对SQL_TRACE的增强.
+10046事件可以设置以下四个级别:</p>
+<ul>
+  <li> 1 - 启用标准的SQL_TRACE功能,等价于sql_trace</li>
+  <li> 4 - Level 1 加上绑定值(bind values)</li>
+  <li> 8 - Level 1 + 等待事件跟踪</li>
+  <li> 12 - Level 1 + Level 4 + Level 8</li>
+</ul>
+<p> 类似sql_trace，10046事件可以在全局设置，也可以在session级设置。</p>
+<h4>N.1.3.1 在全局中设置</h4>
+<p>在参数文件中增加：</p>
+<pre>event=&quot;10046 trace name context forever,level 12&quot;</pre>
+<h4>N.1.3.2 对当前session设置</h4>
+<p>通过alter session的方式修改，需要alter session的系统权限:</p>
+<pre>SQL> alter session set events '10046 trace name context forever';
+Session altered.
+SQL> alter session set events '10046 trace name context forever, level 8';
+Session altered.
+SQL> alter session set events '10046 trace name context off';
+Session altered.</pre>
+<h4>N.1.3.3 对其它用户session的设置 </h4>
+<p>通过DBMS_SYSTEM.SET_EV系统包来实现，它有5个参数，依次为：</p>
+<ul>
+  <li>SI: sid</li>
+  <li>SE: serial#</li>
+  <li>EV: 事件标识，在此即为10046  </li>
+  <li>LE: level</li>
+  <li>NM: username </li>
+</ul>
+<pre>--查询获得需要跟踪的session信息:
+SQL> select sid,serial#,username from v$session where username is not null;
+SID SERIAL# USERNAME
+---------- ---------- ------------------------------
+8 2041 SYS
+9 437 EYGLE
+
+
+--执行跟踪:
+SQL> exec dbms_system.set_ev(9,437,10046,8,'eygle');
+
+PL/SQL procedure successfully completed.
+
+--结束跟踪:
+SQL> exec dbms_system.set_ev(9,437,10046,0,'eygle');
+
+PL/SQL procedure successfully completed.</pre>
+<h3>N.1.4 读取当前session设置的参数</h3>
+<p>当我们通过alter session的方式设置了sql_trace,这个设置是不能通过show parameter的方式得到的,我们需要通过dbms_system.read_ev来获取：</p>
+<pre>SQL> set feedback off
+SQL> set serveroutput on 
+SQL> declare 
+2 event_level number; 
+3 begin 
+4 for event_number in 10000..10999 loop 
+5 sys.dbms_system.read_ev(event_number, event_level); 
+6 if (event_level > 0) then 
+7 sys.dbms_output.put_line(
+8 'Event ' ||
+9 to_char(event_number) ||
+10 ' is set at level ' || 
+11 to_char(event_level)
+12 ); 
+13 end if; 
+14 end loop; 
+15 end; 
+16 /
+Event 10046 is set at level 1</pre>
+<h3>N.1.5 tkprof介绍</h3>
+<p>首先解释输出文件中列的含义：</p>
+<ul>
+  <li>         CALL：每次SQL语句的处理都分成三个部分</li>
+  <li> Parse：这步将SQL语句转换成执行计划，包括检查是否有正确的授权和所需要用到的表、列以及其他引用到的对象是否存在。</li>
+  <li> Execute：这步是真正的由Oracle来执行语句。对于insert、update、delete操作，这步会修改数据，对于select操作，这步就只是确定选择的记录。</li>
+  <li>Fetch：返回查询语句中所获得的记录，这步只有select语句会被执行。</li>
+  <li>         COUNT:这个语句被parse、execute、fetch的次数。</li>
+  <li> CPU：这个语句对于所有的parse、execute、fetch所消耗的cpu的时间，以秒为单位。</li>
+  <li> ELAPSED：这个语句所有消耗在parse、execute、fetch的总的时间。</li>
+  <li> DISK：从磁盘上的数据文件中物理读取的块的数量。一般来说更想知道的是正在从缓存中读取的数据而不是从磁盘上读取的数据。</li>
+  <li> QUERY：在一致性读模式下，所有parse、execute、fetch所获得的buffer的数量。一致性模式的buffer是用于给一个长时间运行的事务提供一个一致性读的快照，缓存实际上在头部存储了状态。</li>
+  <li> CURRENT：在current模式下所获得的buffer的数量。一般在current模式下执行insert、update、delete操作都会获取buffer。在current模式下如果在高速缓存区发现有新的缓存足够给当前的事务使用，则这些buffer都会被读入了缓存区中。</li>
+  <li> ROWS: 所有SQL语句返回的记录数目，但是不包括子查询中返回的记录数目。对于select语句，返回记录是在fetch这步，对于insert、update、delete操作，返回记录则是在execute这步。  </li>
+</ul>
+<p>Tkprof的使用步骤基本上遵循以下几步：</p>
+<ol>
+  <li><p>在数据库级别上设置TIMED_STATISTICS为True。</p>
+<p>8i数据库需要修改init文件增加TIMED_STATISTICS＝true，然后重启数据库使其生效。</p>
+<p>9i数据库可以直接修改：</p>
+<pre>SQL> alter system set timed_statistics=false scope=both;
+系统已更改。</pre></li>
+  <li><p>使用各种的工具得到你想要查看session的trace。</p></li>
+  <li><p>找到生成的正确的trace文件，在init.ora初始化参数文件中user_dump_dest定义的路径下可以找到。</p></li>
+  <li><p>对trace文件使用tkprof工具进行分析。</p>
+<pre>tkprof tracefile outfile [explain=user/password] [options...] </pre>
+<p> 一般来说，使用tkprof得到的输出文件中包含三个部分：</p>
+<ul><li>SQL语句本身。</li>
+<li>相关的诊断信息，包括cpu时间、总共消耗的时间、读取磁盘数量、逻辑读的数量、以及查询中返回的记录数目。</li>
+<li>列出这个语句的执行计划。</li></ul>
+</li>
+</ol>
+<h3>N.1.6 .trc文件分析</h3>
+<p>文本总结了trace结果原始输出文件中的内容。</p>
+<p>----------------------------------------------------------------------------<br />
+  APPNAME   mod='%s' mh=%lu act='%s'   ah=%lu<br />
+  ----------------------------------------------------------------------------</p>
+<p>APPNAME：Application name setting。在Oracle   7.2和以上版本中出现。这个名称可以由DBMS_APPLICATION_INFO包来设定。<br />
+  mod：Module name<br />
+  mh：Module   hash value<br />
+  act：Action<br />
+  ah：Action hash value </p>
+<p>比如：APPNAME mod='SQL*Plus' mh=3669949024 act='' ah=4029777240</p>
+<p>----------------------------------------------------------------------------<br />
+  PARSING   IN CURSOR # len=X dep=X uid=X oct=X lid=X tim=X hv=X   ad='X'<br />
+  statement....<br />
+  END OF   STMT<br />
+  ----------------------------------------------------------------------------</p>
+<p>CURSOR：Cursor number<br />
+  len ：Length of SQL statement，SQL语句的长度<br />
+  dep   ：Recursive depth of the   cursor，当前SQL语句的递规深度，如果为0则表示是用户提交的SQL，为1则是由于用户SQL而导致Oracle后台自己执行的SQL，为2则是由1级SQL继续诱发的下一级SQL。<br />
+  uid   ：Schema user id of parsing user<br />
+  oct ：Oracle command type.<br />
+  lid ：Privilege   user id.<br />
+  tim   ：Timestamp。在Oracle9i之前单位是1/100秒，9i则是1/1,000,000秒。利用这个值可以计算一个SQL执行了到底多长时间。这个值就是当前行被写入trace文件时数据库V$TIMER视图的值。<br />
+  hv   ：Hash id.<br />
+  ad ：SQLTEXT   address，SQLTEXT的地址，跟V$SQLAREA和V$SQLTEXT视图中的ADDRESS字段值相等。<br />
+  statement ：The   actual SQL statement being parsed. </p>
+<p>----------------------------------------------------------------------------<br />
+  PARSE   ERROR #%d:len=%ld dep=%d uid=%ld oct=%d lid=%ld tim=%lu   err=%d<br />
+  statement....<br />
+  ----------------------------------------------------------------------------</p>
+<p>PARSE ERROR ：在Oracle 7.2以上版本中解析的错误会写入trace文件中。<br />
+  len ：Length of SQL   statement.<br />
+  dep ：Recursive depth of the statement<br />
+  uid ：User id.<br />
+  oct   ：Oracle command type (if known).<br />
+  lid ：Privilege user id.<br />
+  tim   ：Timestamp.<br />
+  err ：Oracle error code (e.g. ORA-XXXXX) reported<br />
+  statement   ：The SQL statement that errored. </p>
+<p>----------------------------------------------------------------------------<br />
+  PARSE   #:c=0,e=0,p=0,cr=0,cu=0,mis=0,r=0,dep=0,og=4,tim=0<br />
+  EXEC   #:c=0,e=0,p=0,cr=0,cu=0,mis=0,r=0,dep=0,og=4,tim=0<br />
+  FETCH   #:c=0,e=0,p=0,cr=0,cu=0,mis=0,r=0,dep=0,og=4,tim=0<br />
+  UNMAP   #:c=0,e=0,p=0,cr=0,cu=0,mis=0,r=0,dep=0,og=4,tim=0<br />
+  ----------------------------------------------------------------------------</p>
+<p>PARSE ：Parse a statement. 解析一个SQL<br />
+  EXEC ：Execute a pre-parsed statement.   执行已经解析完毕的SQL<br />
+  FETCH ：Fetch rows from a cursor. 从游标中得到数据，通常指select返回记录<br />
+  UNMAP   ：如果游标使用了临时表（temporary table）, 当游标关闭的时候将会看到UNMAP<br />
+  c ：CPU time (100th's of a   second in Oracle7 ,8 and 9).<br />
+  e ：Elapsed time (100th's of a second Oracle7, 8.   Microseconds in Oracle 9 onwards).<br />
+  p ：Number of physical reads.<br />
+  cr ：Number   of buffers retrieved for CR reads.<br />
+  cu ：Number of buffers retrieved in current   mode.<br />
+  mis ：Cursor missed in the cache.<br />
+  r ：Number of rows processed.<br />
+  dep   ：Recursive call depth (0 = user SQL, &gt;0 = recursive).<br />
+  og ：Optimizer goal:   1=All_Rows, 2=First_Rows, 3=Rule, 4=Choose<br />
+  tim ：Timestamp (large number in   100ths of a second).</p>
+<p>比如：FETCH #2:c=0,e=106,p=0,cr=3,cu=0,mis=0,r=1,dep=1,og=4,tim=6005498548671 </p>
+<p>----------------------------------------------------------------------------<br />
+  ERROR   #%d:err=%d   tim=%lu<br />
+  ----------------------------------------------------------------------------</p>
+<p>执行或者fetch之后出现的SQL Error<br />
+  err ：Oracle error code (e.g. ORA-XXXXX) at the top   of the stack.<br />
+  tim ：Timestamp. </p>
+<p>----------------------------------------------------------------------------<br />
+  STAT   # id=N cnt=0 [pid=0 pos=0 obj=0 op='SORT AGGREGATE   ']<br />
+  ----------------------------------------------------------------------------</p>
+<p>CURSOR的执行计划.<br />
+  CURSOR ：Cursor which the statistics apply to.<br />
+  id ：Line of   the explain plan which the row count applies to (从1开始).<br />
+  cnt ：Number of rows   for this row source.<br />
+  pid ：Parent id of this row source.<br />
+  pos ：Position in   explain plan.<br />
+  obj ：Object id of row source (if this is a base object).<br />
+  op   ： The row source access operation. </p>
+<p>比如：</p>
+<p>STAT #2 id=2 cnt=0 pid=1 pos=1 obj=510 op='TABLE ACCESS BY INDEX ROWID   OBJECT_USAGE (cr=2 r=0 w=0 time=83 us)'<br />
+  STAT #2 id=3 cnt=1 pid=2 pos=1   obj=511 op='INDEX RANGE SCAN I_STATS_OBJ# (cr=1 r=0 w=0 time=43 us)' </p>
+<p>----------------------------------------------------------------------------<br />
+  XCTEND   rlbk=%d   rd_only=%d<br />
+  ----------------------------------------------------------------------------</p>
+<p>XCTEND是事务结束的标志.<br />
+  rlbk ：1 if a rollback was performed, 0 if no rollback   (commit).<br />
+  rd_only ：1 if transaction was read only, 0 if changes occurred. </p>
+<p>----------------------------------------------------------------------------<br />
+  BINDS   #%d:<br />
+  bind 0: dty=2 mxl=22(22) mal=00 scl=00 pre=00 oacflg=03 oacfl2=0 size=24   offset=0<br />
+  bfp=02fedb44 bln=22 avl=00   flg=05<br />
+  value=10<br />
+  ----------------------------------------------------------------------------</p>
+<p>BIND ：Variables bound to a cursor.<br />
+  bind N ：The bind position being   bound.<br />
+  dty ：Data type.<br />
+  mxl ：Maximum length of the bind variable (private   max len in paren).<br />
+  mal ：Array length.<br />
+  scl ：Scale.<br />
+  pre   ：Precision.<br />
+  oacflg ：Special flag indicating bind options<br />
+  oacflg2   ：Continuation of oacflg<br />
+  size ：Amount of memory to be allocated for this   chunk<br />
+  offset ：Offset into this chunk for this bind buffer<br />
+  bfp ：Bind   address.<br />
+  bln ：Bind buffer length.<br />
+  avl ：Actual value length (array length   too).<br />
+  flg ：Special flag indicating bind status<br />
+  value ：The actual value of   the bind variable. </p>
+<p>比如：</p>
+<p>BINDS #4:<br />
+  bind 0: dty=2 mxl=22(22) mal=00 scl=00 pre=00 oacflg=08 oacfl2=1   size=24 offset=0<br />
+  bfp=ffffffff7ce64ee0 bln=22 avl=01 flg=05<br />
+  value=0<br />
+  bind   1: dty=1 mxl=32(11) mal=00 scl=00 pre=00 oacflg=18 oacfl2=1 size=32   offset=0<br />
+  bfp=ffffffff7ce6b128 bln=32 avl=11   flg=05<br />
+  value=&quot;TABCOMPART$&quot;<br />
+  bind 2: dty=2 mxl=22(22) mal=00 scl=00 pre=00   oacflg=08 oacfl2=1 size=24 offset=0<br />
+  bfp=ffffffff7ce6bae8 bln=24 avl=02   flg=05<br />
+  value=1 </p>
+<p>----------------------------------------------------------------------------<br />
+  WAIT   #: nam=&quot;&quot; ela=0 p1=0 p2=0   p3=0<br />
+  ----------------------------------------------------------------------------</p>
+<p>WAIT ：An event that we waited for.<br />
+  nam ：What was being waited for.<br />
+  ela   ：Elapsed time for the operation.<br />
+  p1 ：P1 for the given wait event.<br />
+  p2 ：P2   for the given wait event.<br />
+  p3 ：P3 for the given wait event. </p>
+<p>比如 (Full Table Scan):<br />
+  WAIT #1: nam=&quot;db file scattered read&quot; ela= 5 p1=4   p2=1435 p3=25<br />
+  在游标1上经历了&quot;db file scattered read&quot;等待事件，一共等了0.05秒，在读取File 4，从1435   block开始，读了25个block </p>
+<p>比如 (Index Scan):<br />
+  WAIT #1: nam=&quot;db file sequential read&quot; ela= 4 p1=4   p2=1224 p3=1<br />
+  在游标1上经历了&quot;db file sequential read&quot;等待事件，一共等了0.04秒，在读取file 4，block   1224，读取了这一个block</p>
+<p>对于每一个等待事件的含义和p1,p2,p3表示的意思，可以参考<a href="http://download-west.oracle.com/docs/cd/B10501_01/server.920/a96536/toc.htm">Oracle   Database Reference</a>文档的<a href="http://download-west.oracle.com/docs/cd/B10501_01/server.920/a96536/apa.htm#968373">Oracle   Wait Events</a>章节。</p>
+<h2><a name="system_table" id="system_table"></a>N.2 使用系统表</h2>
+<h3>N.2.1 V$SQL与V$SQLTEXT </h3>
+<p>ORACLE没有提供类似于SQL SERVER的事件探查器那样的工具来跟踪后台发生的SQL语句，如果想跟踪的话，需通过v$sql和v$sqltext这两个系统对象，这两个系统对象与dual系统对象一样，完全由ORACLE来控制，用户只能查询，无法进行插入、删除操作。</p>
+<p>v$sql可以查询发生的SQL语句，但如果语句过长的话，需通过v$sqltext查看完整的SQL语句，两者使用 address 和 hash_value 两个值进行关联。</p>
+<p>其中 address 是一个长度为4的byte数组，其值为该数组内容的的16进制表达式串联而成，例如[22, 39, 184, 164], 则对应的 address 值为 1627B8A4。</p>
+<p>hash_value 值为一个长整数。通过这两个值可唯一在 v$sqltext 中标识一条执行过的SQL语句。如果SQL语句很长，在v$sqltext会有多条对应的记录，将这些记录按其 piece 字段排序再组合，即可获取完整的SQL语句。这个操作可能很麻烦，这里我可以提供一个小技巧，那就是使用PL/SQL Developer取得v$sqltext的查询结果后，导出到HTML文件，再将HTML文件导出到EXCEL，删掉EXCEL中除SQL_TEXT外的其它列，将该列内容复制到ultraedit中，进行16进制模式，将所有的“0D 0A”替换为空值，再返回正常编辑模式，即可得到完整的SQL语句。</p>
+<p>我们可根据 v$sql.first_load_time或v$sql.last_load_time来获取某段时间内发生的SQL语句，值的注意的是，同样的SQL语句只会在v$sql中出现一次。即你执行同样的SQL语句两次，只会在v$sql中查到一条记录，这不能不说是一个缺憾。会了能尽可能完整地跟踪到所有发生过的SQL语句，建议在跟踪前重启一下ORACLE数据库服务。而且，单纯从字面上判断first_load_time和last_load_time的含义是不准确的，其实first_load_time是指运行SQL语句的父对象的创建时间，last_load_time是指SQL语句解析完成，准备载入的时间。</p>
+<p>v$sql中的command_type字段记录了SQL语句的类型，主要有以下几种：</p>
+<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <th width="50%">command_type</th>
+    <th width="50%">说明</th>
+  </tr>
+  <tr>
+    <td align="center">2</td>
+    <td>INSERT语句</td>
+  </tr>
+  <tr>
+    <td align="center">3</td>
+    <td>SELECT语句</td>
+  </tr>
+  <tr>
+    <td align="center">6</td>
+    <td>UPDATE语句</td>
+  </tr>
+  <tr>
+    <td align="center">7</td>
+    <td>DELETE语句</td>
+  </tr>
+</table>
+<p>v$sql中还有以下较常用的字段：</p>
+<table width="100%"  border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <th width="30%">字段名</th>
+    <th width="70%">说明</th>
+  </tr>
+  <tr>
+    <td>rows_processed</td>
+    <td>影响行数</td>
+  </tr>
+  <tr>
+    <td>PARSING_USER_ID</td>
+    <td>发出该SQL语句请求的用户ID</td>
+  </tr>
+</table>
+<h3>N.2.2 V$SQL的完整说明</h3>
+<table summary="" class="InformalWide" border="1" frame="hsides" rules="groups" width="100%" cellpadding="3" cellspacing="0" dir="ltr" title="">
+  <thead>
+    <tr class="Informal">
+      <th width="10%" align="left" valign="bottom" class="Informal" scope="col"><a name="1124444" id="1124444"></a> <font face="Arial, Helvetica, sans-serif"><strong>Column</strong></font></th>
+      <th width="10%" align="left" valign="bottom" class="Informal" scope="col"><a name="1124446" id="1124446"></a> <font face="Arial, Helvetica, sans-serif"><strong>Datatype</strong></font></th>
+      <th width="80%" align="left" valign="bottom" class="Informal" scope="col"><a name="1124448" id="1124448"></a> <font face="Arial, Helvetica, sans-serif"><strong>Description</strong></font></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr class="Informal" align="left" valign="top">
+      <td class="Informal"><a name="1124450" id="1124450"></a>
+          <p class="TB"><code>SQL_TEXT</code></p></td>
+      <td class="Informal"><a name="1124452" id="1124452"></a>
+          <p class="TB"><code>VARCHAR2(1000)</code></p></td>
+      <td class="Informal"><a name="1124454" id="1124454"></a>
+          <p class="TB">First thousand characters of the SQL text for the current cursor</p></td>
+    </tr>
+    <tr class="Informal" align="left" valign="top">
+      <td class="Informal"><a name="1124456" id="1124456"></a>
+          <p class="TB"><code>SHARABLE_MEM</code></p></td>
+      <td class="Informal"><a name="1124458" id="1124458"></a>
+          <p class="TB"><code>NUMBER</code></p></td>
+      <td class="Informal"><a name="1124460" id="1124460"></a>
+          <p class="TB">Amount of shared memory used by this child cursor (in bytes)</p></td>
+    </tr>
+    <tr class="Informal" align="left" valign="top">
+      <td class="Informal"><a name="1124462" id="1124462"></a>
+          <p class="TB"><code>PERSISTENT_MEM</code></p></td>
+      <td class="Informal"><a name="1124464" id="1124464"></a>
+          <p class="TB"><code>NUMBER</code></p></td>
+      <td class="Informal"><a name="1124466" id="1124466"></a>
+          <p class="TB">Fixed amount of memory used for the lifetime of this child cursor (in bytes)</p></td>
+    </tr>
+    <tr class="Informal" align="left" valign="top">
+      <td class="Informal"><a name="1124468" id="1124468"></a>
+          <p class="TB"><code>RUNTIME_MEM</code></p></td>
+      <td class="Informal"><a name="1124470" id="1124470"></a>
+          <p class="TB"><code>NUMBER</code></p></td>
+      <td class="Informal"><a name="1124472" id="1124472"></a>
+          <p class="TB">Fixed amount of memory required during the execution of this child cursor</p></td>
+    </tr>
+    <tr class="Informal" align="left" valign="top">
+      <td class="Informal"><a name="1124474" id="1124474"></a>
+          <p class="TB"><code>SORTS</code></p></td>
+      <td class="Informal"><a name="1124476" id="1124476"></a>
+          <p class="TB"><code>NUMBER</code></p></td>
+      <td class="Informal"><a name="1124478" id="1124478"></a>
+          <p class="TB">Number of sorts that were done for this child cursor</p></td>
+    </tr>
+    <tr class="Informal" align="left" valign="top">
+      <td class="Informal"><a name="1124480" id="1124480"></a>
+          <p class="TB"><code>LOADED_VERSIONS</code></p></td>
+      <td class="Informal"><a name="1124482" id="1124482"></a>
+          <p class="TB"><code>NUMBER</code></p></td>
+      <td class="Informal"><a name="1124484" id="1124484"></a>
+          <p class="TB">Indicates whether the context heap is loaded (<code>1</code>) or not (<code>0</code>)</p></td>
+    </tr>
+    <tr class="Informal" align="left" valign="top">
+      <td class="Informal"><a name="1124486" id="1124486"></a>
+          <p class="TB"><code>OPEN_VERSIONS</code></p></td>
+      <td class="Informal"><a name="1124488" id="1124488"></a>
+          <p class="TB"><code>NUMBER</code></p></td>
+      <td class="Informal"><a name="1124490" id="1124490"></a>
+          <p class="TB">Indicates whether the child cursor is locked (<code>1</code>) or not (<code>0</code>)</p></td>
+    </tr>
+    <tr class="Informal" align="left" valign="top">
+      <td class="Informal"><a name="1124492" id="1124492"></a>
+          <p class="TB"><code>USERS_OPENING</code></p></td>
+      <td class="Informal"><a name="1124494" id="1124494"></a>
+          <p class="TB"><code>NUMBER</code></p></td>
+      <td class="Informal"><a name="1124496" id="1124496"></a>
+          <p class="TB">Number of users executing the statement</p></td>
+    </tr>
+    <tr class="Informal" align="left" valign="top">
+      <td class="Informal"><a name="1124498" id="1124498"></a>
+          <p class="TB"><code>FETCHES</code></p></td>
+      <td class="Informal"><a name="1124500" id="1124500"></a>
+          <p class="TB"><code>NUMBER</code></p></td>
+      <td class="Informal"><a name="1124502" id="1124502"></a>
+          <p class="TB">Number of fetches associated with the SQL statement</p></td>
+    </tr>
+    <tr class="Informal" align="left" valign="top">
+      <td class="Informal"><a name="1124504" id="1124504"></a>
+          <p class="TB"><code>EXECUTIONS</code></p></td>
+      <td class="Informal"><a name="1124506" id="1124506"></a>
+          <p class="TB"><code>NUMBER</code></p></td>
+      <td class="Informal"><a name="1124508" id="1124508"></a>
+          <p class="TB">Number of executions that took place on this object since it was brought into the library cache</p></td>
+    </tr>
+    <tr class="Informal" align="left" valign="top">
+      <td class="Informal"><a name="1124510" id="1124510"></a>
+          <p class="TB"><code>USERS_EXECUTING</code></p></td>
+      <td class="Informal"><a name="1124512" id="1124512"></a>
+          <p class="TB"><code>NUMBER</code></p></td>
+      <td class="Informal"><a name="1124514" id="1124514"></a>
+          <p class="TB">Number of users executing the statement</p></td>
+    </tr>
+    <tr class="Informal" align="left" valign="top">
+      <td class="Informal"><a name="1124516" id="1124516"></a>
+          <p class="TB"><code>LOADS</code></p></td>
+      <td class="Informal"><a name="1124518" id="1124518"></a>
+          <p class="TB"><code>NUMBER</code></p></td>
+      <td class="Informal"><a name="1124520" id="1124520"></a>
+          <p class="TB">Number of times the object was either loaded or reloaded</p></td>
+    </tr>
+    <tr class="Informal" align="left" valign="top">
+      <td class="Informal"><a name="1124522" id="1124522"></a>
+          <p class="TB"><code>FIRST_LOAD_TIME</code></p></td>
+      <td class="Informal"><a name="1124524" id="1124524"></a>
+          <p class="TB"><code>VARCHAR2(19)</code></p></td>
+      <td class="Informal"><a name="1124526" id="1124526"></a>
+          <p class="TB">Timestamp of the parent creation time</p></td>
+    </tr>
+    <tr class="Informal" align="left" valign="top">
+      <td class="Informal"><a name="1124528" id="1124528"></a>
+          <p class="TB"><code>INVALIDATIONS</code></p></td>
+      <td class="Informal"><a name="1124530" id="1124530"></a>
+          <p class="TB"><code>NUMBER</code></p></td>
+      <td class="Informal"><a name="1124532" id="1124532"></a>
+          <p class="TB">Number of times this child cursor has been invalidated</p></td>
+    </tr>
+    <tr class="Informal" align="left" valign="top">
+      <td class="Informal"><a name="1124534" id="1124534"></a>
+          <p class="TB"><code>PARSE_CALLS</code></p></td>
+      <td class="Informal"><a name="1124536" id="1124536"></a>
+          <p class="TB"><code>NUMBER</code></p></td>
+      <td class="Informal"><a name="1124538" id="1124538"></a>
+          <p class="TB">Number of parse calls for this child cursor</p></td>
+    </tr>
+    <tr class="Informal" align="left" valign="top">
+      <td class="Informal"><a name="1124540" id="1124540"></a>
+          <p class="TB"><code>DISK_READS</code></p></td>
+      <td class="Informal"><a name="1124542" id="1124542"></a>
+          <p class="TB"><code>NUMBER</code></p></td>
+      <td class="Informal"><a name="1124544" id="1124544"></a>
+          <p class="TB">Number of disk reads for this child cursor</p></td>
+    </tr>
+    <tr class="Informal" align="left" valign="top">
+      <td class="Informal"><a name="1124546" id="1124546"></a>
+          <p class="TB"><code>BUFFER_GETS</code></p></td>
+      <td class="Informal"><a name="1124548" id="1124548"></a>
+          <p class="TB"><code>NUMBER</code></p></td>
+      <td class="Informal"><a name="1124550" id="1124550"></a>
+          <p class="TB">Number of buffer gets for this child cursor</p></td>
+    </tr>
+    <tr class="Informal" align="left" valign="top">
+      <td class="Informal"><a name="1124552" id="1124552"></a>
+          <p class="TB"><code>ROWS_PROCESSED</code></p></td>
+      <td class="Informal"><a name="1124554" id="1124554"></a>
+          <p class="TB"><code>NUMBER</code></p></td>
+      <td class="Informal"><a name="1124556" id="1124556"></a>
+          <p class="TB">Total number of rows the parsed SQL statement returns</p></td>
+    </tr>
+    <tr class="Informal" align="left" valign="top">
+      <td class="Informal"><a name="1124558" id="1124558"></a>
+          <p class="TB"><code>COMMAND_TYPE</code></p></td>
+      <td class="Informal"><a name="1124560" id="1124560"></a>
+          <p class="TB"><code>NUMBER</code></p></td>
+      <td class="Informal"><a name="1124562" id="1124562"></a>
+          <p class="TB">Oracle command type definition</p></td>
+    </tr>
+    <tr class="Informal" align="left" valign="top">
+      <td class="Informal"><a name="1124564" id="1124564"></a>
+          <p class="TB"><code>OPTIMIZER_MODE</code></p></td>
+      <td class="Informal"><a name="1124566" id="1124566"></a>
+          <p class="TB"><code>VARCHAR2(10)</code></p></td>
+      <td class="Informal"><a name="1124568" id="1124568"></a>
+          <p class="TB">Mode under which the SQL statement is executed</p></td>
+    </tr>
+    <tr class="Informal" align="left" valign="top">
+      <td class="Informal"><a name="1124570" id="1124570"></a>
+          <p class="TB"><code>OPTIMIZER_COST</code></p></td>
+      <td class="Informal"><a name="1124572" id="1124572"></a>
+          <p class="TB"><code>NUMBER</code></p></td>
+      <td class="Informal"><a name="1124574" id="1124574"></a>
+          <p class="TB">Cost of this query given by the optimizer</p></td>
+    </tr>
+    <tr class="Informal" align="left" valign="top">
+      <td class="Informal"><a name="1124576" id="1124576"></a>
+          <p class="TB"><code>PARSING_USER_ID</code></p></td>
+      <td class="Informal"><a name="1124578" id="1124578"></a>
+          <p class="TB"><code>NUMBER</code></p></td>
+      <td class="Informal"><a name="1124580" id="1124580"></a>
+          <p class="TB">User ID of the user who originally built this child cursor</p></td>
+    </tr>
+    <tr class="Informal" align="left" valign="top">
+      <td class="Informal"><a name="1124582" id="1124582"></a>
+          <p class="TB"><code>PARSING_SCHEMA_ID</code></p></td>
+      <td class="Informal"><a name="1124584" id="1124584"></a>
+          <p class="TB"><code>NUMBER</code></p></td>
+      <td class="Informal"><a name="1124586" id="1124586"></a>
+          <p class="TB">Schema ID that was used to originally build this child cursor</p></td>
+    </tr>
+    <tr class="Informal" align="left" valign="top">
+      <td class="Informal"><a name="1124588" id="1124588"></a>
+          <p class="TB"><code>KEPT_VERSIONS</code></p></td>
+      <td class="Informal"><a name="1124590" id="1124590"></a>
+          <p class="TB"><code>NUMBER</code></p></td>
+      <td class="Informal"><a name="1124592" id="1124592"></a>
+          <p class="TB">Indicates whether this child cursor has been marked to be kept pinned in the cache using the <code>DBMS_SHARED_POOL</code> package</p></td>
+    </tr>
+    <tr class="Informal" align="left" valign="top">
+      <td class="Informal"><a name="1124594" id="1124594"></a>
+          <p class="TB"><code>ADDRESS</code></p></td>
+      <td class="Informal"><a name="1124596" id="1124596"></a>
+          <p class="TB"><code>RAW(4 | 8)</code></p></td>
+      <td class="Informal"><a name="1124598" id="1124598"></a>
+          <p class="TB">Address of the handle to the parent for this cursor</p></td>
+    </tr>
+    <tr class="Informal" align="left" valign="top">
+      <td class="Informal"><a name="1124600" id="1124600"></a>
+          <p class="TB"><code>TYPE_CHK_HEAP</code></p></td>
+      <td class="Informal"><a name="1124602" id="1124602"></a>
+          <p class="TB"><code>RAW(4)</code></p></td>
+      <td class="Informal"><a name="1124604" id="1124604"></a>
+          <p class="TB">Descriptor of the type check heap for this child cursor</p></td>
+    </tr>
+    <tr class="Informal" align="left" valign="top">
+      <td class="Informal"><a name="1124606" id="1124606"></a>
+          <p class="TB"><code>HASH_VALUE</code></p></td>
+      <td class="Informal"><a name="1124608" id="1124608"></a>
+          <p class="TB"><code>NUMBER</code></p></td>
+      <td class="Informal"><a name="1124610" id="1124610"></a>
+          <p class="TB">Hash value of the parent statement in the library cache</p></td>
+    </tr>
+    <tr class="Informal" align="left" valign="top">
+      <td class="Informal"><a name="1124612" id="1124612"></a>
+          <p class="TB"><code>PLAN_HASH_VALUE</code></p></td>
+      <td class="Informal"><a name="1124614" id="1124614"></a>
+          <p class="TB"><code>NUMBER</code></p></td>
+      <td class="Informal"><a name="1124616" id="1124616"></a>
+          <p class="TB">Numerical representation of the SQL plan for this cursor. Comparing one <code>PLAN_HASH_VALUE</code> to another easily identifies whether or not two plans are the same (rather than comparing the two plans line by line).</p></td>
+    </tr>
+    <tr class="Informal" align="left" valign="top">
+      <td class="Informal"><a name="1124618" id="1124618"></a>
+          <p class="TB"><code>CHILD_NUMBER</code></p></td>
+      <td class="Informal"><a name="1124620" id="1124620"></a>
+          <p class="TB"><code>NUMBER</code></p></td>
+      <td class="Informal"><a name="1124622" id="1124622"></a>
+          <p class="TB">Number of this child cursor</p></td>
+    </tr>
+    <tr class="Informal" align="left" valign="top">
+      <td class="Informal"><a name="1124624" id="1124624"></a>
+          <p class="TB"><code>MODULE</code></p></td>
+      <td class="Informal"><a name="1124626" id="1124626"></a>
+          <p class="TB"><code>VARCHAR2(64)</code></p></td>
+      <td class="Informal"><a name="1124628" id="1124628"></a>
+          <p class="TB">Contains the name of the module that was executing at the time that the SQL statement was first parsed, which is set by calling <code>DBMS_APPLICATION_INFO</code>.<code>SET_MODULE</code></p></td>
+    </tr>
+    <tr class="Informal" align="left" valign="top">
+      <td class="Informal"><a name="1124630" id="1124630"></a>
+          <p class="TB"><code>MODULE_HASH</code></p></td>
+      <td class="Informal"><a name="1124632" id="1124632"></a>
+          <p class="TB"><code>NUMBER</code></p></td>
+      <td class="Informal"><a name="1124634" id="1124634"></a>
+          <p class="TB">Hash value of the module listed in the <code>MODULE</code> column</p></td>
+    </tr>
+    <tr class="Informal" align="left" valign="top">
+      <td class="Informal"><a name="1124636" id="1124636"></a>
+          <p class="TB"><code>ACTION</code></p></td>
+      <td class="Informal"><a name="1124638" id="1124638"></a>
+          <p class="TB"><code>VARCHAR2(64)</code></p></td>
+      <td class="Informal"><a name="1124640" id="1124640"></a>
+          <p class="TB">Contains the name of the action that was executing at the time that the SQL statement was first parsed, which is set by calling <code>DBMS_APPLICATION_INFO</code>.<code>SET_ACTION</code></p></td>
+    </tr>
+    <tr class="Informal" align="left" valign="top">
+      <td class="Informal"><a name="1124642" id="1124642"></a>
+          <p class="TB"><code>ACTION_HASH</code></p></td>
+      <td class="Informal"><a name="1124644" id="1124644"></a>
+          <p class="TB"><code>NUMBER</code></p></td>
+      <td class="Informal"><a name="1124646" id="1124646"></a>
+          <p class="TB">Hash value of the action listed in the <code>ACTION</code> column</p></td>
+    </tr>
+    <tr class="Informal" align="left" valign="top">
+      <td class="Informal"><a name="1124648" id="1124648"></a>
+          <p class="TB"><code>SERIALIZABLE_ABORTS</code></p></td>
+      <td class="Informal"><a name="1124650" id="1124650"></a>
+          <p class="TB"><code>NUMBER</code></p></td>
+      <td class="Informal"><a name="1124652" id="1124652"></a>
+          <p class="TB">Number of times the transaction fails to serialize, producing <code>ORA-08177</code> errors, per cursor</p></td>
+    </tr>
+    <tr class="Informal" align="left" valign="top">
+      <td class="Informal"><a name="1124654" id="1124654"></a>
+          <p class="TB"><code>OUTLINE_CATEGORY</code></p></td>
+      <td class="Informal"><a name="1124656" id="1124656"></a>
+          <p class="TB"><code>VARCHAR2(64)</code></p></td>
+      <td class="Informal"><a name="1124658" id="1124658"></a>
+          <p class="TB">If an outline was applied during construction of the cursor, then this column displays the category of that outline. Otherwise the column is left blank.</p></td>
+    </tr>
+    <tr class="Informal" align="left" valign="top">
+      <td class="Informal"><a name="1124660" id="1124660"></a>
+          <p class="TB"><code>CPU_TIME</code></p></td>
+      <td class="Informal"><a name="1124662" id="1124662"></a>
+          <p class="TB"><code>NUMBER</code></p></td>
+      <td class="Informal"><a name="1124664" id="1124664"></a>
+          <p class="TB">CPU time (in microseconds) used by this cursor for parsing/executing/fetching</p></td>
+    </tr>
+    <tr class="Informal" align="left" valign="top">
+      <td class="Informal"><a name="1124666" id="1124666"></a>
+          <p class="TB"><code>ELAPSED_TIME</code></p></td>
+      <td class="Informal"><a name="1124668" id="1124668"></a>
+          <p class="TB"><code>NUMBER</code></p></td>
+      <td class="Informal"><a name="1124670" id="1124670"></a>
+          <p class="TB">Elapsed time (in microseconds) used by this cursor for parsing/executing/fetching</p></td>
+    </tr>
+    <tr class="Informal" align="left" valign="top">
+      <td class="Informal"><a name="1124672" id="1124672"></a>
+          <p class="TB"><code>OUTLINE_SID</code></p></td>
+      <td class="Informal"><a name="1124674" id="1124674"></a>
+          <p class="TB"><code>NUMBER</code></p></td>
+      <td class="Informal"><a name="1124676" id="1124676"></a>
+          <p class="TB">Outline session identifier</p></td>
+    </tr>
+    <tr class="Informal" align="left" valign="top">
+      <td class="Informal"><a name="1124678" id="1124678"></a>
+          <p class="TB"><code>CHILD_ADDRESS</code></p></td>
+      <td class="Informal"><a name="1124680" id="1124680"></a>
+          <p class="TB"><code>RAW(4 | 8)</code></p></td>
+      <td class="Informal"><a name="1124682" id="1124682"></a>
+          <p class="TB">Address of the child cursor</p></td>
+    </tr>
+    <tr class="Informal" align="left" valign="top">
+      <td class="Informal"><a name="1124684" id="1124684"></a>
+          <p class="TB"><code>SQLTYPE</code></p></td>
+      <td class="Informal"><a name="1124686" id="1124686"></a>
+          <p class="TB"><code>NUMBER</code></p></td>
+      <td class="Informal"><a name="1124688" id="1124688"></a>
+          <p class="TB">Denotes the version of the SQL language used for this statement</p></td>
+    </tr>
+    <tr class="Informal" align="left" valign="top">
+      <td class="Informal"><a name="1124690" id="1124690"></a>
+          <p class="TB"><code>REMOTE</code></p></td>
+      <td class="Informal"><a name="1124692" id="1124692"></a>
+          <p class="TB"><code>VARCHAR2(1)</code></p></td>
+      <td class="Informal"><a name="1124694" id="1124694"></a>
+          <p class="TB">Indicates whether the cursor is remote mapped (<code>Y</code>) or not (<code>N</code>)</p></td>
+    </tr>
+    <tr class="Informal" align="left" valign="top">
+      <td class="Informal"><a name="1124696" id="1124696"></a>
+          <p class="TB"><code>OBJECT_STATUS</code></p></td>
+      <td class="Informal"><a name="1124698" id="1124698"></a>
+          <p class="TB"><code>VARCHAR2(19)</code></p></td>
+      <td class="Informal"><a name="1124700" id="1124700"></a>
+          <p class="TB">Status of the cursor (<code>VALID</code> or <code>INVALID</code>)</p></td>
+    </tr>
+    <tr class="Informal" align="left" valign="top">
+      <td class="Informal"><a name="1124702" id="1124702"></a>
+          <p class="TB"><code>LITERAL_HASH_VALUE</code></p></td>
+      <td class="Informal"><a name="1124704" id="1124704"></a>
+          <p class="TB"><code>NUMBER</code></p></td>
+      <td class="Informal"><a name="1124706" id="1124706"></a>
+          <p class="TB">Hash value of the literals which are replaced with system-generated bind variables and are to be matched, when <code>CURSOR_SHARING</code> is used. This is not the hash value for the SQL statement. If <code>CURSOR_SHARING</code> is not used, then the value is 0.</p></td>
+    </tr>
+    <tr class="Informal" align="left" valign="top">
+      <td class="Informal"><a name="1124708" id="1124708"></a>
+          <p class="TB"><code>LAST_LOAD_TIME</code></p></td>
+      <td class="Informal"><a name="1124710" id="1124710"></a>
+          <p class="TB"><code>VARCHAR2(19)</code></p></td>
+      <td class="Informal"><a name="1124712" id="1124712"></a>
+          <p class="TB">Time at which the query plan (heap 6) was loaded into the library cache</p></td>
+    </tr>
+    <tr class="Informal" align="left" valign="top">
+      <td class="Informal"><a name="1124714" id="1124714"></a>
+          <p class="TB"><code>IS_OBSOLETE</code></p></td>
+      <td class="Informal"><a name="1124716" id="1124716"></a>
+          <p class="TB"><code>VARCHAR2(1)</code></p></td>
+      <td class="Informal"><a name="1124718" id="1124718"></a>
+          <p class="TB">Indicates whether the cursor has become obsolete (<code>Y</code>) or not (<code>N</code>). This can happen if the number of child cursors is too large.</p></td>
+    </tr>
+    <tr class="Informal" align="left" valign="top">
+      <td class="Informal"><a name="1124720" id="1124720"></a>
+          <p class="TB"><code>CHILD_LATCH</code></p></td>
+      <td class="Informal"><a name="1124722" id="1124722"></a>
+          <p class="TB"><code>NUMBER</code></p></td>
+      <td class="Informal"><a name="1124724" id="1124724"></a>
+          <p class="TB">Child latch number that is protecting the cursor</p></td>
+    </tr>
+  </tbody>
+</table>
+<p></p>
+<p>&nbsp; </p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+  <script language="javascript" src="index.js"></script>
+</body>
+</html>

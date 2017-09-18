@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<title>事件处理</title>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+<p id="title">事件处理</p>
+
+<p>在所有的事件处理函数中, 都可以传递如下参数：</p>
+<ul>
+  <li>this: HTML控件本身</li>
+  <li>event: 事件 </li>
+</ul>
+<p>例如，下面的代码使得文件框中能够显示按下的键的键值</p>
+<pre>&lt;html&gt;
+&lt;body&gt;
+	&lt;form id=&quot;form1&quot; name=&quot;form1&quot;&gt;
+		&lt;input type=&quot;text&quot; name=&quot;text1&quot; value=&quot;&quot; onkeyup=&quot;textChange(this, event);&quot; /&gt;
+	&lt;/form&gt;
+&lt;script type=&quot;text/javascript&quot;&gt;
+function textChange(obj, event)
+{
+	obj.value = event.keyCode;
+}
+&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+<p>其实在上述代码中，event实际上是一个全局的变量名，因此不作为参数传递亦可。</p>
+<p>下面的例了演示了一个只允许输入数字的文本框：</p>
+<pre>&lt;form&gt;
+	&lt;input type=&quot;text&quot; name=&quot;txt1&quot; onkeydown=&quot;checkKey(this)&quot; /&gt; &lt;br /&gt;
+&lt;/form&gt;
+&lt;script type=&quot;text/javascript&quot;&gt;
+function checkKey(obj)
+{
+	if((event.keyCode &gt;= 48 &amp;&amp; event.keyCode &lt;= 57)
+		|| event.keyCode == 8		//Backspace
+		|| event.keyCode == 9		//Tab
+		|| event.keyCode == 35		//End
+		|| event.keyCode == 36		//Home
+		|| event.keyCode == 37		//Left
+		|| event.keyCode == 39		//Right
+		|| event.keyCode == 190		//.
+		)	
+	{
+		if(event.keyCode == 190)
+		{
+			if(obj.value.indexOf('.') &gt;= 0)
+				event.returnValue = false;
+			else
+				event.returnValue = true;
+		}
+		else
+			event.returnValue = true;
+	}
+	else
+	{
+		event.returnValue = false;
+	}
+}
+
+&lt;/script&gt;</pre>
+<p>或者进行更精确的控制(仅限IE)</p>
+<pre>function checkKey(obj)
+{
+	if((event.keyCode &gt;= 48 &amp;&amp; event.keyCode &lt;= 57)
+		|| event.keyCode == 8		//Backspace
+		|| event.keyCode == 9		//Tab
+		|| event.keyCode == 35		//End
+		|| event.keyCode == 36		//Home
+		|| event.keyCode == 37		//Left
+		|| event.keyCode == 39		//Right
+		|| event.keyCode == 190		//.
+		)	
+	{
+		if(event.keyCode == 190)
+		{
+			if(obj.value.indexOf('.') &gt;= 0)
+				event.returnValue = false;
+			else
+				event.returnValue = true;
+		}
+		else if(event.keyCode &gt;= 48 &amp;&amp; event.keyCode &lt;= 57)
+		{
+			var p = obj.value.indexOf('.');
+			if(p &gt;= 0)
+			{
+				obj.focus();
+				var s = document.selection.createRange(); 
+				s.setEndPoint(&quot;StartToStart&quot;, obj.createTextRange());
+				var cp = s.text.length;
+				//alert(&quot;cp = &quot; + cp + &quot;, p = &quot; + p);
+				if(cp &lt;= p)
+					event.returnValue = true;
+				else
+				{
+					if(obj.value.length - p &gt;= 3)
+						event.returnValue = false;
+					else
+						event.returnValue = true;
+				}
+			}
+			else
+				event.returnValue = true;
+			
+		}
+	}
+	else
+	{
+		event.returnValue = false;
+	}
+
+}</pre>
+<p>&nbsp;</p>
+
+</body>
+</html>

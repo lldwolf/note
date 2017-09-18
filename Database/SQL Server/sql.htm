@@ -1,0 +1,102 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<script language="javascript" src="css.js"></script>
+<title>数据库维护</title>
+</head>
+
+<body>
+<h1>第N章 数据库维护</h1>
+<hr>
+<h2><a href="#create_db">N.1 创建数据库</a></h2>
+<h2><a href="#drop_db">N.2 删除数据库</a></h2>
+<h2><a href="#backup_db">N.3 备份数据库</a></h2>
+<h2><a href="#restore_db">N.4 还原数据库</a></h2>
+<h2><a href="#rename_db">N.5 数据库改名</a></h2>
+<hr>
+<h2><a name="create_db"></a>N.1 创建数据库</h2>
+<pre>create database AutoPCRS 
+ON 
+  (name = AutoPCRS_DATA, filename = 'c:\AutoPCRS_data.mdf', size = 10MB, maxsize = unlimited, filegrowth = 10%)
+log on
+  (name = AutoPCRS_LOG, filename = 'c:\AutoPCRS_log.ldf', size = 1MB, maxsize = unlimited, filegrowth = 10%)
+collate Chinese_PRC_CI_AS</pre>
+<h2><a name="drop_db"></a>N.2 删除数据库</h2>
+<pre>DROP DATABASE 数据库名</pre>
+<h2><a name="backup_db"></a>N.3 备份数据库</h2>
+<pre> backup database basf to disk='c:\basf_20050602.bak'</pre>
+<h2><a name="restore_db"></a>N.4 还原数据库</h2>
+<h3>N.4.1 使用备份文件还原</h3>
+<p>如果你是自己备份自己恢复，一般最简单的选项就可以了：</p>
+<pre>restore database 数据库名 FROM DISK = 备份文件路径</pre>
+<p>但如果是你不知从哪里弄了个数据库备份文件来，需使用以下步骤恢复：</p>
+<ol>
+  <li>查看数据库备份文件中的逻辑名</li>
+<pre>RESTORE FILELISTONLY from disk =  'd:\NGEDB.bak' </pre>
+返回的结果集中的LogicalName列即为逻辑名<br><br>
+  <li>根据逻辑名还原数据库</li>
+  <pre>restore database ngedb from disk = 'd:\NGEDB.bak' 
+with move 'NGE_Data' to 'D:\Program Files\Microsoft SQL Server\MSSQL\Data\NGEDB_data.mdf',
+     move 'NGE_log' to 'D:\Program Files\Microsoft SQL Server\MSSQL\Data\NGEDB_log.ldf'</pre>
+其中NGE_data和NGE_log就分别是查询的数据库文件和日志文件的逻辑名
+  <li>如果还原后的数据库名称与还原前不一致，需使用replace关键字</li>
+  <pre>restore database ngedb from disk = 'd:\NGEDB.bak' 
+with move 'NGE_Data' to 'D:\Program Files\Microsoft SQL Server\MSSQL\Data\NGEDB_data.mdf',
+     move 'NGE_log' to 'D:\Program Files\Microsoft SQL Server\MSSQL\Data\NGEDB_log.ldf',
+replace</pre>
+</ol>
+<h3>N.4.2 使用MDF和LDF文件还原</h3>
+<p>使用sp_attach_db系统过程</p>
+<Pre><CODE><B>sp_attach_db</B> [ <B>@dbname<I> </I>= </B>] <B>'</B><I>dbname</I><B>'</B></CODE><B><BR>
+    <CODE>, </CODE></B><CODE>[ <B>@filename1</B> <B>= </B>] <B>'</B><I>filename_n</I><B>' </B>[ <B>,</B>...<I>16 </I>]</CODE></Pre>
+<p>常规的数据库是由MDF文件（数据）和LDF文件构成（日志），其实对于使用多文件的数据库而言，也是使用同样的方法恢复</p>
+<h3>N.4.3 只使用MDF文件还原</h3>
+<p>这种问题就比较棘手了，使用如下的步骤进行还原</p>
+<p>A．我们使用默认方式建立一个供恢复使用的数据库(如test)。可以在SQL Server Enterprise Manager里面建立。</p>
+<p>B．停掉数据库服务器。</p>
+<p>C．将刚才生成的数据库的日志文件test_log.ldf删除，用要恢复的数据库mdf文件覆盖刚才生成的数据库数据文件test_data.mdf。</p>
+<p>D．启动数据库服务器。此时会看到数据库test的状态为“置疑”。这时候不能对此数据库进行任何操作。</p>
+<p>E．设置数据库允许直接操作系统表。此操作可以在SQL Server Enterprise Manager里面选择数据库服务器，按右键，选择“属性”，在“服务器设置”页面中将“允许对系统目录直接修改”一项选中。也可以使用如下语句来实现。</p>
+<pre>use master
+go
+sp_configure 'allow updates',1
+go
+reconfigure with override
+go</pre>
+<p>F．设置test为紧急修复模式</p>
+<pre>update sysdatabases set status=-32768 where dbid=DB_ID('test')</pre>
+<p>此时可以在SQL Server Enterprise Manager里面看到该数据库处于“只读\置疑\脱机\紧急模式”可以看到数据库里面的表，但是仅仅有系统表</p>
+<p>G．下面执行真正的恢复操作，重建数据库日志文件</p>
+<pre>dbcc rebuild_log('test','C:\Program Files\Microsoft SQL Server\MSSQL\Data\test_log.ldf')</pre>
+<p>执行过程中，如果遇到下列提示信息：</p>
+<pre>服务器: 消息 5030，级别 16，状态 1，行 1
+未能排它地锁定数据库以执行该操作。
+DBCC 执行完毕。如果 DBCC 输出了错误信息，请与系统管理员联系。</pre>
+<p> 说明您的其他程序正在使用该数据库，如果刚才您在F步骤中使用SQL Server Enterprise Manager打开了test库的系统表，那么退出SQL Server Enterprise Manager就可以了。</p>
+<p> 正确执行完成的提示应该类似于：</p>
+<pre>警告: 数据库 'test' 的日志已重建。已失去事务的一致性。应运行 DBCC CHECKDB 以验证物理一致性。将必须重置数据库选项，并且可能需要删除多余的日志文件。
+DBCC 执行完毕。如果 DBCC 输出了错误信息，请与系统管理员联系。</pre>
+<p> 此时打开在SQL Server Enterprise Manager里面会看到数据库的状态为“只供DBO使用”。此时可以访问数据库里面的用户表了。</p>
+<p>H．验证数据库一致性（可省略）</p>
+<pre>dbcc checkdb('test')</pre>
+<p> 一般执行结果如下：</p>
+<pre>CHECKDB 发现了 0 个分配错误和 0 个一致性错误（在数据库 'test' 中）。 
+DBCC 执行完毕。如果 DBCC 输出了错误信息，请与系统管理员联系。</pre>
+<p> I．设置数据库为正常状态</p>
+<pre>sp_dboption 'test','dbo use only','false'</pre>
+<p> 如果没有出错，那么恭喜，现在就可以正常的使用恢复后的数据库啦。</p>
+<p> J．最后一步，我们要将步骤E中设置的“允许对系统目录直接修改”一项恢复。因为平时直接操作系统表是一件比较危险的事情。当然，我们可以在SQL Server Enterprise Manager里面恢复，也可以使用如下语句完成</p>
+<pre>sp_configure 'allow updates',0
+go
+reconfigure with override
+go</pre>
+<h2><a name="rename_db"></a>N.5 数据库改名</h2>
+<pre>alter database 数据库名 modify name=新数据库名   --不要用单引号将新数据库名括起来，如果数据库名为关键字，可用方括号</pre>
+<h2>&nbsp;</h2>
+<p>&nbsp;</p>
+<script language="javascript" src="index.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,28 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<title>概述</title>
+<script language="javascript" src="css.js"></script>
+</head>
+
+<body>
+<h1>第一章 概述</h1>
+<hr>
+<p>本文所讲的ActiveX控件，是指在脚本语言中常用的那些，例如VBA，JavaScript等。</p>
+<p>ActiveX对象的系统名称，可通过VS.NET的对象查看器来查看，例如在项目中引用 Microsoft XML 5.0 类库后，在VS.NET的IDE环境中查看MSXML2引用对象时，可看到包interop.msxml2下的MSXML2包，那么再下面的DOMDocument对象的系统名称就是“MSXML2.DOMDocument”。</p>
+<p>在VBA中是不分大小写的，而JavaScript是区分大小写的，所以在调用ActiveX的方法时，要严格按照对象查看器中的名称大小写，否则会出错。</p>
+<h2>1.1 在VBA中的使用方法 </h2>
+<p>在VBA中，可先在项目中引用，例如引用 Microsoft XML 5.0 库，在程序中即可作如下使用</p>
+<pre>Dim xDoc As MSXML2.DOMDocument </pre>
+<p>或者不引用类库，直接使用 Variant 类型进行如下操作：</p>
+<pre>Dim xDoc As Variant
+Set xDoc = CreateObject(&quot;MSXML2.DOMDocument&quot;)</pre>
+<h2>1.2 在JavaScript中的使用方法</h2>
+<pre>var xDoc = new ActiveXObject(&quot;MSXML2.DOMDocument&quot;);</pre>
+<p>&nbsp;</p>
+<p>&nbsp; </p>
+<script language="javascript" src="index.js"></script>
+</body>
+</html>

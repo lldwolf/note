@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<title>System</title>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+<script language="javascript">
+var t1 = 1;
+</script>
+<p id="title">System</p>
+
+<h1> 目录</h1>
+<table style="width:80%" >
+  <tr>
+    <th width="30%">类</th>
+    <th width="70%">简介</th>
+  </tr>
+  <tr>
+    <td>ActivationContext</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td><a href="#Activator">Activator</a></td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td><a href="#Environment">Environment</a></td>
+    <td>提供有关当前环境和平台的信息以及操作它们的方法</td>
+  </tr>
+  <tr>
+    <td><a href="#Type">Type</a></td>
+    <td>表示类型声明</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+<h1>  
+Activator</h1>
+<h2>1 访问COM对象</h2>
+<p>如下的代码是创建Excel进程，并新建一个工作薄</p>
+<pre class="code" data-type="csharp">object xApp;
+try
+{
+    xApp = System.Runtime.InteropServices.Marshal.GetActiveObject(&quot;Excel.Application.11&quot;);
+}
+catch
+{
+    Type objClassType = Type.GetTypeFromProgID(&quot;Excel.Application&quot;);
+    xApp = Activator.CreateInstance(objClassType);
+}
+object Workbooks = xApp.GetType().InvokeMember(&quot;Workbooks&quot;, BindingFlags.GetProperty, null, xApp, null);
+object xBook = xWorkbooks.GetType().InvokeMember(&quot;Add&quot;, BindingFlags.InvokeMethod, null, xWorkbooks, null);
+object xSheets = xBook.GetType().InvokeMember(&quot;Worksheets&quot;, BindingFlags.GetProperty, null, xBook, null);
+object[] Params = new object[1];
+Params[0] = 1;
+object xSheet = xSheets.GetType().InvokeMember(&quot;Item&quot;, BindingFlags.GetProperty, null, xSheets, Params)
+Params = new object[1];
+Params[0] = &quot;A1&quot;;
+object xRange = xSheet.GetType().InvokeMember(&quot;Range&quot;, BindingFlags.GetProperty, null, xSheet, Params);
+Params = new object[1];
+Params[0] = &quot;abcdefg&quot;;
+xRange.GetType().InvokeMember(&quot;Value2&quot;, BindingFlags.SetProperty, null, xRange, Params);</pre>
+<h1>  
+  Environment</h1>
+<p>提供有关当前环境和平台的信息以及操作它们的方法。不能继承此类。</p>
+<h2>1 获取一些系统路径</h2>
+<pre class="code" data-type="csharp">Environment.GetFolderPath(Environment.SpecialFolder)</pre>
+<p>获取的路径最后一个字符不是“\”，其中Environment.SpecialFolder是一个枚举变量，有如下值</p>
+<table style="width:90%" cellpadding="0" cellspacing="0">
+  <tr>
+    <th width="30%" valign="top"><p align="center">成员名称</p></th>
+    <th width="70%" valign="top"><p align="center">说明</p></th>
+  </tr>
+  <tr>
+    <td valign="top"><p>ApplicationData</p></td>
+    <td valign="top"><p>目录，它用作当前漫游用户的应用程序特定数据的公共储存库。</p>
+        <p>漫游用户在网络上的多台计算机上工作。漫游用户的配置文件保存在网络服务器上，当用户登录到某个系统上时，它会加载到该系统。</p></td>
+  </tr>
+  <tr>
+    <td valign="top"><p>CommonApplicationData</p></td>
+    <td valign="top"><p>目录，它用作所有用户使用的应用程序特定数据的公共储存库。</p></td>
+  </tr>
+  <tr>
+    <td valign="top"><p>CommonProgramFiles</p></td>
+    <td valign="top"><p>用于应用程序间共享的组件的目录。</p></td>
+  </tr>
+  <tr>
+    <td valign="top"><p>Cookies</p></td>
+    <td valign="top"><p>用作 Internet Cookie 的公共储存库的目录。</p></td>
+  </tr>
+  <tr>
+    <td valign="top"><p>Desktop</p></td>
+    <td valign="top"><p>逻辑桌面，而不是物理文件系统位置。</p></td>
+  </tr>
+  <tr>
+    <td valign="top"><p>DesktopDirectory</p></td>
+    <td valign="top"><p>用于物理上存储桌面上的文件对象的目录。</p>
+        <p>不应将此目录与桌面文件夹本身混淆，后者是虚拟文件夹。</p></td>
+  </tr>
+  <tr>
+    <td valign="top"><p>Favorites</p></td>
+    <td valign="top"><p>用作用户收藏夹项的公共储存库的目录。</p></td>
+  </tr>
+  <tr>
+    <td valign="top"><p>History</p></td>
+    <td valign="top"><p>用作 Internet 历史记录项的公共储存库的目录。</p></td>
+  </tr>
+  <tr>
+    <td valign="top"><p>InternetCache</p></td>
+    <td valign="top"><p>用作 Internet 临时文件的公共储存库的目录。</p></td>
+  </tr>
+  <tr>
+    <td valign="top"><p>LocalApplicationData</p></td>
+    <td valign="top"><p>目录，它用作当前非漫游用户使用的应用程序特定数据的公共储存库。</p></td>
+  </tr>
+  <tr>
+    <td valign="top"><p>MyComputer</p></td>
+    <td valign="top"><p>“我的电脑”文件夹。</p></td>
+  </tr>
+  <tr>
+    <td valign="top"><p>MyMusic</p></td>
+    <td valign="top"><p>“My Music”文件夹。</p></td>
+  </tr>
+  <tr>
+    <td valign="top"><p>MyPictures</p></td>
+    <td valign="top"><p>“My Pictures”文件夹。</p></td>
+  </tr>
+  <tr>
+    <td valign="top"><p>Personal</p></td>
+    <td valign="top"><p>用作文档的公共储存库的目录。</p></td>
+  </tr>
+  <tr>
+    <td valign="top"><p>ProgramFiles</p></td>
+    <td valign="top"><p>“Program files”目录。</p></td>
+  </tr>
+  <tr>
+    <td valign="top"><p>Programs</p></td>
+    <td valign="top"><p>包含用户程序组的目录。</p></td>
+  </tr>
+  <tr>
+    <td valign="top"><p>Recent</p></td>
+    <td valign="top"><p>包含用户最近使用过的文档的目录。</p></td>
+  </tr>
+  <tr>
+    <td valign="top"><p>SendTo</p></td>
+    <td valign="top"><p>包含“发送”菜单项的目录。</p></td>
+  </tr>
+  <tr>
+    <td valign="top"><p>StartMenu</p></td>
+    <td valign="top"><p>包含“开始”菜单项的目录。</p></td>
+  </tr>
+  <tr>
+    <td valign="top"><p>Startup</p></td>
+    <td valign="top"><p>对应于用户的“启动”程序组的目录。</p>
+        <p>每当用户登录、启动 Windows NT 或更高版本或启动 Windows 98 时，系统均会启动这些程序。</p></td>
+  </tr>
+  <tr>
+    <td valign="top"><p>System</p></td>
+    <td valign="top"><p>“System”目录。</p></td>
+  </tr>
+  <tr>
+    <td valign="top"><p>Templates</p></td>
+    <td valign="top"><p>用作文档模板的公共储存库的目录。</p></td>
+  </tr>
+</table>
+<p>一些其它的获取系统路径的属性</p>
+<table style="width:90%" >
+  <tr>
+    <th width="30%">属性</th>
+    <th width="70%">说明</th>
+  </tr>
+  <tr>
+    <td>CommandLine</td>
+    <td>获取该进程的命令行，与Application.ExecutablePath属性功能相同</td>
+  </tr>
+  <tr>
+    <td>CurrentDirectory</td>
+    <td>应用程序的当前路径，与Application.StartupPath属性功能相同</td>
+  </tr>
+  <tr>
+    <td>MachineName</td>
+    <td>机器名，与System.Net.Dns.GetHostName()方法功能相同</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>SystemDirectory</td>
+    <td>获取系统目录的完全限定路径，与Environment.GetFolderPath(Environment.SpecialFolder.System)功能相同，例如对windows xp系统通常为“C:\Windows\system32”</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+<h1>Type</h1>
+<p>表示类型声明</p>
+<h2>方法说明</h2>
+<h3>IsAssignableFrom</h3>
+<pre class="code" data-type="csharp">public virtual bool IsAssignableFrom (Type c)</pre>
+<p>返回当前 Type 的实例是否可以从指定 Type 的实例分配。也就是说，如果当前实例的类型为TypeA，指定类型为TypeB，如下代码是能够正确运行的：</p>
+<pre class="code" data-type="csharp">TypeA a;
+TypeB b;
+a = b;</pre>
+<p>即TypeB与TypeA相同，或者是TypeA的实现类（如果TypeA为接口）或继承类。</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+
+</body>
+</html>

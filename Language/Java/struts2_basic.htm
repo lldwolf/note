@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>Struts2入门</title>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+<p id="title">Struts2入门</p>
+
+简介</h1>
+<p>Struts 2与Struts 1.1间的差比很大，从用户体验而言，基本上可以认为是两个完全不同的系统。因此，本章不准备在两个版本间进行比较。</p>
+<p>本章以一个简单的登录页面，来讲述一下struts 2的基本用法。</p>
+第一个程序</h1>
+<p>本例使用Eclipse + Lomboz完成，网页文件的主目录为WebContent，项目名为tutorial。 </p>
+<p><a href="example/tutorial_struts2_01.zip">下载本例源代码</a></p>
+<p>本着越简单越好的原则，本项目中包含以下几个文件：</p>
+<table width="90%"  border="0" cellspacing="0" cellpadding="0">
+  <tr>
+	<th width="20%">文件名</th>
+	<th width="30%">所在位置</th>
+	<th width="50%">说明</th>
+  </tr>
+  <tr>
+	<td>web.xml</td>
+	<td>WebContent\WEB-INF</td>
+	<td>&nbsp;</td>
+  </tr>
+  <tr>
+	<td>login.jsp</td>
+	<td>WebContent</td>
+	<td>登录页面</td>
+  </tr>
+  <tr>
+	<td>success.jsp</td>
+	<td>WebContent</td>
+	<td>登录成功后显示的页面</td>
+  </tr>
+  <tr>
+	<td>error.jsp</td>
+	<td>WebContent</td>
+	<td>登录失败后显示的页面</td>
+  </tr>
+  <tr>
+	<td>LoginAction.java</td>
+	<td>src\example</td>
+	<td>处理登录请求的servlet</td>
+  </tr>
+  <tr>
+	<td>struts.xml</td>
+	<td>src</td>
+	<td>struts2的配置文件</td>
+  </tr>
+  <tr>
+	<td>example.xml</td>
+	<td>src</td>
+	<td>Servlet与JSP间的MVC映射配置文件</td>
+  </tr>
+</table>
+
+<p>另外，需要引用strus2中的如下类库：</p>
+<ul>
+  <li>commons-logging-1.0.4.jar</li>
+  <li>freemarker-2.3.8.jar</li>
+  <li>ognl-2.6.11.jar</li>
+  <li>struts2-core-2.0.9.jar</li>
+  <li>xwork-2.0.4.jar</li>
+</ul>
+<h2>N.2.1 web.xml</h2>
+<pre>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;web-app id=&quot;WebApp_9&quot; version=&quot;2.4&quot; 
+	xmlns=&quot;http://java.sun.com/xml/ns/j2ee&quot; 
+	xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; 
+	xsi:schemaLocation=&quot;http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd&quot;&gt;
+
+	&lt;display-name&gt;Tutorial&lt;/display-name&gt;
+<span style="color:blue ">
+	&lt;filter&gt;
+		&lt;filter-name&gt;struts2&lt;/filter-name&gt;
+		&lt;filter-class&gt;org.apache.struts2.dispatcher.FilterDispatcher&lt;/filter-class&gt;
+	&lt;/filter&gt;
+
+	&lt;filter-mapping&gt;
+		&lt;filter-name&gt;struts2&lt;/filter-name&gt;
+		&lt;url-pattern&gt;/*&lt;/url-pattern&gt;
+	&lt;/filter-mapping&gt;
+</span>
+	&lt;welcome-file-list&gt;
+		&lt;welcome-file&gt;login.jsp&lt;/welcome-file&gt;
+	&lt;/welcome-file-list&gt;
+
+&lt;/web-app&gt;</pre>
+<p>上面的代码中，标为蓝色的为struts2需要的配置。另外，将默认的首页设为login.jsp</p>
+<p>在此将映射模板设为了/*，表示一切以.action结尾的请求均由struts2来处理。</p>
+<h2>N.2.2 login.jsp</h2>
+<pre>&lt;%@ page language=&quot;java&quot; contentType=&quot;text/html; charset=GB18030&quot;
+	pageEncoding=&quot;GB18030&quot;%&gt;
+&lt;html&gt;
+&lt;head&gt;
+&lt;title&gt;Login&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;form name=&quot;form1&quot; action=&quot;/tutorial/example/Login.action&quot; method=&quot;post&quot;&gt;
+	user name: &lt;input type=&quot;text&quot; name=&quot;UserName&quot; /&gt;  &lt;br /&gt;
+	password: &lt;input type=&quot;password&quot; name=&quot;Password&quot; /&gt; &lt;br /&gt;
+	&lt;input type=&quot;submit&quot; value=&quot;Submit&quot; /&gt;
+&lt;/form&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+<p>界面上就两个输入框和一个提交按钮。</p>
+<h2>N.2.3 success.jsp</h2>
+<pre>&lt;%@ page language=&quot;java&quot; contentType=&quot;text/html; charset=GB18030&quot;
+	pageEncoding=&quot;GB18030&quot;%&gt;
+&lt;html&gt;
+&lt;head&gt;
+&lt;title&gt;Login Success&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;p&gt;user name: &lt;%=request.getAttribute(&quot;UserName&quot;) %&gt;&lt;/p&gt;
+&lt;p&gt;password: &lt;%=request.getAttribute(&quot;Password&quot;) %&gt;&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+<h2>N.2.4 error.jsp</h2>
+<pre>&lt;%@ page language=&quot;java&quot; contentType=&quot;text/html; charset=GB18030&quot;
+	pageEncoding=&quot;GB18030&quot;%&gt;
+&lt;html&gt;
+&lt;head&gt;
+&lt;title&gt;Login Failed&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;p&gt;Login failed!&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+<h2>N.2.5 LoginAction.java</h2>
+<pre>package example;
+
+import javax.servlet.http.HttpServletRequest;
+import com.opensymphony.xwork2.ActionSupport;
+import org.apache.struts2.interceptor.ServletRequestAware;
+
+public class LoginAction extends ActionSupport implements ServletRequestAware 
+{
+	private HttpServletRequest request;
+	
+	public void setServletRequest(HttpServletRequest request) 
+	{
+		this.request = request;	
+	}
+	
+	public String execute() throws Exception 
+	{
+		String user_name = this.request.getParameter(&quot;UserName&quot;);
+		String password = this.request.getParameter(&quot;Password&quot;);
+		if(user_name.equals(&quot;lld&quot;) &amp;&amp; password.equals(&quot;lld&quot;))
+		{
+			this.request.setAttribute(&quot;UserName&quot;, user_name);
+			this.request.setAttribute(&quot;Password&quot;, password);
+			return &quot;success&quot;;
+		}else
+			return &quot;failed&quot;;
+			
+	}
+
+}</pre>
+<p>该servlet类从页面接受用户名和口令，如果两个都是“lld”，则认为是正确，否则登录失败。</p>
+<p>注意，如果使用struts2，所有的action类都要是com.opensymphony.xwork2.ActionSupport继承类，但这里还实现了org.apache.struts2.interceptor.ServletRequestAware接口，因为出于使用struts 1.1版本的习惯，我需要在这里使用request对象，只要实现一个setServletRequest方法即可，struts2会自动调用该方法，将request作为参数传入。这并不是struts推荐的方式，在以后的章节中我会继续讲如何使用struts提供的功能完成使用request对象的功能。</p>
+<h2>N.2.6 struts.xml</h2>
+<p>该文件位于src目录下</p>
+<pre>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; ?&gt;
+&lt;!DOCTYPE struts PUBLIC
+	&quot;-//Apache Software Foundation//DTD Struts Configuration 2.0//EN&quot;
+	&quot;http://struts.apache.org/dtds/struts-2.0.dtd&quot;&gt;
+
+&lt;struts&gt;
+
+	&lt;constant name=&quot;struts.enable.DynamicMethodInvocation&quot; value=&quot;false&quot; /&gt;
+	&lt;constant name=&quot;struts.devMode&quot; value=&quot;false&quot; /&gt;
+
+	&lt;include file=&quot;example.xml&quot; /&gt;
+
+&lt;/struts&gt;</pre>
+<p>该配置文件将example.xml包括进来，我在example.xml定义了MVC映射，在struts.xml中可包含多个MVC映射文件。struts.xml为固定文件名，不能更改。</p>
+<h2>N.2.7 example.xml</h2>
+<p>该文件位于src目录下</p>
+<pre>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; ?&gt;
+&lt;!DOCTYPE struts PUBLIC
+		&quot;-//Apache Software Foundation//DTD Struts Configuration 2.0//EN&quot;
+		&quot;http://struts.apache.org/dtds/struts-2.0.dtd&quot;&gt;
+
+&lt;struts&gt;
+
+	&lt;package name=&quot;example&quot; namespace=&quot;/example&quot; extends=&quot;struts-default&quot;&gt;
+
+		&lt;action name=&quot;Login&quot; class=&quot;example.LoginAction&quot;&gt;
+			&lt;result name=&quot;success&quot;&gt;/success.jsp&lt;/result&gt;
+			&lt;result name=&quot;failed&quot;&gt;/error.jsp&lt;/result&gt;
+		&lt;/action&gt;
+
+	&lt;/package&gt;
+&lt;/struts&gt;</pre>
+<p>这里需要详细解释一下，package中定义了一系列的映射，我们可以把一组相关的映射放到一个package中，其name属性可为任意值，只是标识该package的名称，另外，该package的名称与Java类的package没有任何关系。</p>
+<p>package的namespace属性需要与提交的请求名吻合，例如在login.jsp中，我将form.action设为了/tutorial/example/Login.action，其中/tutorial为根目录，而后面的/example则需要与该package的namespace属性吻合。</p>
+<p>package的extends属性为“struts-default”，一般情况下不需要修改该值。</p>
+<p>在example.xml中，我只定义了一个映射，其name属性值为Login，与login.jsp中的Login.action对应。在struts2中，默认情况下以.action结尾的提交请求均由struts2处理。</p>
+<p>action.class属性定义了servlet处理类的全路径名。</p>
+<p>action的两个子结点表示当action.execute()方法返回值为“success”时，跳转到/success.jsp页面，而返回值为“failed”时，则跳转到error.jsp，而如果在Servlet类中返回的是预定义静态变量SUCCESS，则可以省略name属性。</p>
+<h1>POJO</h1>
+<p>在上例中，其实我只使用了struts2中的简单MVC映射，同时，我在servlet和JSP中大量使用了request对象，而且没有使用任何的struts标签，这些都是struts不希望用户做的事情。但是，我在写本文的时候，更想从最原始的地方入手，一步步地揭示struts的功能。老本儿不能忘啊，我可不希望某天我离了struts后，发现地球不转了。</p>
+<p>POJO，简单的Java对象（Plain Old Java Objects）实际就是普通JavaBeans,使用POJO名称是为了和EJB混淆起来, 而且简称比较直接. 有一些属性及其getter setter方法的类,有时可以作为value object或dto来使用.当然,如果你有一个简单的运算属性也是可以的,但不允许有业务方法,不能携带有connection之类的，例如针对某个数据库表的映射类，里面用getter和setter方法来表示每一个字段，但不带任何的的Insert、Delete之类的操作。</p>
+<h2>N.3.1 简单POJO</h2>
+<p>本节讲述struts使用的POJO技术代替request.getParameter()方法来获取表单输入。除了LoginAction.java外，上节的所有程序均不变，LoginAction.java修改如下：</p>
+<pre>package example;
+
+import javax.servlet.http.HttpServletRequest;
+import com.opensymphony.xwork2.ActionSupport;
+import org.apache.struts2.interceptor.ServletRequestAware;
+
+public class LoginAction extends ActionSupport implements ServletRequestAware 
+{
+	private HttpServletRequest request;
+	
+	public void setServletRequest(HttpServletRequest request) 
+	{
+		this.request = request;	
+	}
+
+<span style="color:blue">	
+	private String userName;
+	public String getUserName()
+	{
+		return this.userName;
+	}
+	public void setUserName(String userName)
+	{
+		this.userName = userName;
+	}
+	
+	private String password;
+	public String getPassword()
+	{
+		return this.password;
+	}
+	public void setPassword(String password)
+	{
+		this.password = password;
+	}
+</span>	
+	public String execute() throws Exception 
+	{
+		if(this.userName.equals(&quot;lld&quot;) &amp;&amp; this.password.equals(&quot;lld&quot;))
+		{
+			this.request.setAttribute(&quot;UserName&quot;, this.userName);
+			this.request.setAttribute(&quot;Password&quot;, this.password);
+			return &quot;success&quot;;
+		}else
+			return &quot;failed&quot;;
+			
+	}
+
+}</pre>
+<p>其中蓝色的代码为主要的修改，根据JSP页面上表单输入对象的名称，在servlet类中创建对应名称的getter及setter，运行后我们会神奇地发现，系统自动调用了setter，将表单中的数据传到了变量中！</p>
+<p>无论是以get还是以post方式传入的参数，struts POJO都能够支持。</p>
+<h2>N.3.2 高级POJO</h2>
+<p>Struts 2.0更厉害的是支持更高级的POJO访问，我们可以将userName和password从LoginAction类中分离为单独的类User。这样对我们开发多层系统尤其有用，它可以使系统结构更清晰。</p>
+<p>新建的User.java如下所示</p>
+<pre>package example;
+
+public class User
+{
+	private String userName;
+	public String getUserName()
+	{
+		return this.userName;
+	}
+	
+	public void setUserName(String userName)
+	{
+		this.userName = userName;
+	}
+	
+	private String password;
+	public String getPassword()
+	{
+		return this.password;
+	}
+	public void setPassword(String password)
+	{
+		this.password = password;
+	}
+
+}</pre>
+<p>而LoginAction.java改为如下形式：</p>
+<pre>package example;
+
+import javax.servlet.http.HttpServletRequest;
+import com.opensymphony.xwork2.ActionSupport;
+import org.apache.struts2.interceptor.ServletRequestAware;
+
+public class LoginAction extends ActionSupport implements ServletRequestAware 
+{
+	private HttpServletRequest request;
+	
+	public void setServletRequest(HttpServletRequest request) 
+	{
+		this.request = request;	
+	}
+<span style="color:blue">	
+	private User user;
+	public User getUser()
+	{
+		return this.user;
+	}
+	public void setUser(User user)
+	{
+		this.user = user;
+	}
+</span>	
+	
+	public String execute() throws Exception 
+	{
+		if(this.user.getUserName().equals(&quot;lld&quot;) &amp;&amp; this.user.getPassword().equals(&quot;lld&quot;))
+		{
+			this.request.setAttribute(&quot;UserName&quot;, this.user.getUserName());
+			this.request.setAttribute(&quot;Password&quot;, this.user.getPassword());
+			return &quot;success&quot;;
+		}else
+			return &quot;failed&quot;;
+			
+	}
+
+}</pre>
+<p>将Login.jsp修改如下：</p>
+<pre>&lt;%@ page language=&quot;java&quot; contentType=&quot;text/html; charset=GB18030&quot;
+    pageEncoding=&quot;GB18030&quot;%&gt;
+&lt;html&gt;
+&lt;head&gt;
+&lt;title&gt;Login&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;form name=&quot;form1&quot; action=&quot;/tutorial/example/Login.action&quot; method=&quot;post&quot;&gt;
+	user name: &lt;input type=&quot;text&quot; name=&quot;<span style="color:blue">user.UserName</span>&quot; /&gt; &lt;br /&gt;
+	password: &lt;input type=&quot;password&quot; name=&quot;<span style="color:blue">user.Password</span>&quot; /&gt; &lt;br /&gt;
+	&lt;input type=&quot;submit&quot; value=&quot;Submit&quot; /&gt;
+&lt;/form&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+<h1>OGNL </h1>
+<p>OGNL全称为Object-Graph Navigation Language，是一种表达式语言（EL）。</p>
+<p>EL的支持者认为，在JSP页面中应尽可能地避免 &lt;% %&gt; 这样的标记，而代之以Tag，以使页面更简洁，并体现页面与后台代码分离的设计原则。对此我持保留意见，因为我并不认为使用Tag后的页面的可读性要高于使用&lt;% %&gt;。 </p>
+<p>Struts 2支持如下几种EL：</p>
+<ul>
+  <li>OGNL(Object-Graph Navigation Language): 可以方便地操作对象属性的开源表达式语言</li>
+  <li>JSTL(JSP Standard Tag Library): JSP 2.0集成的标准的表达式语言</li>
+  <li>Groovy: 基于Java平台的动态语言，它具有时下比较流行的动态语言（如Python、Ruby和Smarttalk等）的一些新特性</li>
+  <li>Velocity: 严格来说不是表达式语言，它是一种基于Java的模板匹配引擎，据说其性能要比JSP好</li>
+</ul>
+<p>Struts 2默认的表达式语言是OGNL，原因是它相对其它表达式语言具有下面几大优势：</p>
+<ul>
+  <li>支持对象方法调用，如xxx.doSomeSpecial()； </li>
+  <li> 支持类静态的方法调用和值访问，表达式的格式为@[类全名（包括包路径）]@[方法名 | 值名]，例如： @java.lang.String@format('foo %s', 'bar')或 @tutorial.MyConstant@APP_NAME； </li>
+  <li> 支持赋值操作和表达式串联，如price=100, discount=0.8, calculatePrice()，这个表达式会返回80； </li>
+  <li> 访问OGNL上下文（OGNL context）和ActionContext； </li>
+  <li> 操作集合对象。 </li>
+</ul>
+<p>OGNL是通常要结合Struts 2的标志一起使用，如&lt;s:property value=&quot;xx&quot; /&gt;等。大家经常遇到的问题是#、%和$这三个符号的使用。下面我讲述这个问题：</p>
+<h2>N.4.1 “#”的用途</h2>
+<h3>访问OGNL上下文和Action上下文</h3>
+<p>#相当于ActionContext.getContext()；下表有几个ActionContext中有用的属性： </p>
+<ul>
+  <li> parameters：包含当前HTTP请求参数的Map，#parameters.id[0]作用相当于request.getParameter(&quot;id&quot;) </li>
+  <li> request：包含当前HttpServletRequest的属性（attribute)的Map，#request.userName相当于request.getAttribute(&quot;userName&quot;) </li>
+  <li> session：包含当前HttpSession的属性（attribute）的Ma， #session.userName相当于session.getAttribute(&quot;userName&quot;) </li>
+  <li> application：包含当前应用的ServletContext的属性（attribute）的Map，#application.userName相当于application.getAttribute(&quot;userName&quot;) </li>
+  <li> attr：用于按request &gt; session &gt; application顺序访问其属性（attribute），#attr.userName相当于按顺序在以上三个范围（scope）内读取userName属性，直到找到为止 <br />
+  </li>
+</ul>
+<h3>过滤和投影（projecting)集合</h3>
+<p>如books.{?#this.price&lt;100}</p>
+<h3>构造Map</h3>
+<p>如#{'foo1':'bar1', 'foo2':'bar2'}</p>
+<p>在此我演示一下这三种用途：</p>
+<h3>Book.java</h3>
+<p>这是一个Bean，用于描述一本书的信息</p>
+<pre>package example;
+
+public class Book {
+    private String isbn;
+    private String title;
+    private double price;
+    
+    public Book() {        
+    }
+    
+    public Book(String isbn, String title, double price) {
+        this.isbn = isbn;
+        this.title = title;
+        this.price = price;
+    }
+
+    public String getIsbn() {
+        return isbn;
+    }
+
+    public void setIsbn(String isbn) {
+        this.isbn = isbn;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }    
+}</pre>
+<h3>BookDao.java</h3>
+<p>一个伪DAO类</p>
+<pre>package example;
+
+import java.util.Collection;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+
+public class BookDao 
+{
+    private static final BookDao instance;
+    private static final ConcurrentMap&lt;String, Book&gt; data;
+    
+    static {
+        instance = new BookDao();
+        data = new ConcurrentHashMap&lt;String, Book&gt;();
+        data.put(&quot;978-0735619678&quot;, new Book(&quot;978-0735619678&quot;, &quot;Code Complete, Second Edition&quot;, 32.99));
+        data.put(&quot;978-0596007867&quot;, new Book(&quot;978-0596007867&quot;, &quot;The Art of Project Management&quot;, 35.96));
+        data.put(&quot;978-0201633610&quot;, new Book(&quot;978-0201633610&quot;, &quot;Design Patterns: Elements of Reusable Object-Oriented Software&quot;, 43.19));
+        data.put(&quot;978-0596527341&quot;, new Book(&quot;978-0596527341&quot;, &quot;Information Architecture for the World Wide Web: Designing Large-Scale Web Sites&quot;, 25.19));
+        data.put(&quot;978-0735605350&quot;, new Book(&quot;978-0735605350&quot;, &quot;Software Estimation: Demystifying the Black Art&quot;, 25.19));
+    }
+    
+    private BookDao() {}
+    
+    public static BookDao getInstance() {
+        return instance;
+    }
+    
+    public Collection&lt;Book&gt; getBooks() {
+        return data.values();
+    }
+    
+    public Book getBook(String isbn) {
+        return data.get(isbn);
+    }
+    
+    public void storeBook(Book book) {
+        data.put(book.getIsbn(), book);
+    }
+        
+    public void removeBook(String isbn) {
+        data.remove(isbn);
+    }
+    
+    public void removeBooks(String[] isbns) {
+        for(String isbn : isbns) {
+            data.remove(isbn);
+        }
+    }
+}</pre>
+<h3>OgnlAction.java</h3>
+<p>演示OGNL的Servlet类</p>
+<pre>package example;
+
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.struts2.interceptor.ServletRequestAware;
+import org.apache.struts2.interceptor.SessionAware;
+import org.apache.struts2.util.ServletContextAware;
+
+import com.opensymphony.xwork2.ActionSupport;
+
+public class OgnlAction extends ActionSupport implements ServletRequestAware, SessionAware, ServletContextAware  {
+    private static final long serialVersionUID = 1L;
+    
+    private HttpServletRequest request;
+    private Map&lt;String, String&gt; session;
+    private ServletContext application;
+    private List&lt;Book&gt; books;
+            
+    public void setServletRequest(HttpServletRequest request) {
+        this.request = request;    
+    }
+
+    @SuppressWarnings(&quot;unchecked&quot;)
+    public void setSession(Map session) {
+        this.session = session;        
+    }
+
+    public void setServletContext(ServletContext application) {
+        this.application = application;
+    }
+    
+    public List&lt;Book&gt; getBooks() {
+        return books;
+    }
+
+    @Override
+    public String execute() {
+        request.setAttribute(&quot;userName&quot;, &quot;Max From request&quot;);
+        session.put(&quot;userName&quot;, &quot;Max From session&quot;);
+        application.setAttribute(&quot;userName&quot;, &quot;Max From application&quot;);
+        
+        books = new LinkedList&lt;Book&gt;();
+        books.add(new Book(&quot;978-0735619678&quot;, &quot;Code Complete, Second Edition&quot;, 32.99));
+        books.add(new Book(&quot;978-0596007867&quot;, &quot;The Art of Project Management&quot;, 35.96));
+        books.add(new Book(&quot;978-0201633610&quot;, &quot;Design Patterns: Elements of Reusable Object-Oriented Software&quot;, 43.19));
+        books.add(new Book(&quot;978-0596527341&quot;, &quot;Information Architecture for the World Wide Web: Designing Large-Scale Web Sites&quot;, 25.19));
+        books.add(new Book(&quot;978-0735605350&quot;, &quot;Software Estimation: Demystifying the Black Art&quot;, 25.19));
+        
+        return SUCCESS;
+    }
+}</pre>
+<h3>Ognl.jsp</h3>
+<p>演示OGNL的JSP</p>
+<pre>&lt;%@ page language=&quot;java&quot; contentType=&quot;text/html; charset=utf-8&quot; pageEncoding=&quot;utf-8&quot; %&gt;
+&lt;%@ taglib prefix=&quot;s&quot; uri=&quot;/struts-tags&quot; %&gt;
+
+&lt;!DOCTYPE html PUBLIC &quot;-//W3C//DTD XHTML 1.0 Transitional//EN&quot; &quot;http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd&quot;&gt;
+&lt;html xmlns=&quot;http://www.w3.org/1999/xhtml&quot;&gt;
+&lt;head&gt;
+    &lt;title&gt;Struts OGNL Demo&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;    
+    &lt;h3&gt;访问OGNL上下文和Action上下文&lt;/h3&gt;
+    &lt;p&gt;parameters: &lt;s:property value=&quot;#parameters.userName&quot; /&gt;&lt;/p&gt;
+    &lt;p&gt;request.userName: &lt;s:property value=&quot;#request.userName&quot; /&gt;&lt;/p&gt;
+    &lt;p&gt;session.userName: &lt;s:property value=&quot;#session.userName&quot; /&gt;&lt;/p&gt;
+    &lt;p&gt;application.userName: &lt;s:property value=&quot;#application.userName&quot; /&gt;&lt;/p&gt;
+    &lt;p&gt;attr.userName: &lt;s:property value=&quot;#attr.userName&quot; /&gt;&lt;/p&gt;
+    &lt;hr /&gt;
+    &lt;h3&gt;用于过滤和投影（projecting)集合&lt;/h3&gt;
+    &lt;p&gt;Books more than $35&lt;/p&gt;
+    &lt;ul&gt;
+        &lt;s:iterator value=&quot;books.{?#this.price &gt; 35}&quot;&gt;
+            &lt;li&gt;&lt;s:property value=&quot;title&quot; /&gt; - $&lt;s:property value=&quot;price&quot; /&gt;&lt;/li&gt;
+        &lt;/s:iterator&gt;
+    &lt;/ul&gt;
+    &lt;p&gt;The price of &quot;Code Complete, Second Edition&quot; is: &lt;s:property value=&quot;books.{?#this.title=='Code Complete, Second Edition'}.{price}[0]&quot;/&gt;&lt;/p&gt;
+    &lt;hr /&gt;
+    &lt;h3&gt;构造Map&lt;/h3&gt;
+    &lt;s:set name=&quot;foobar&quot; value=&quot;#{'foo1':'bar1', 'foo2':'bar2'}&quot; /&gt;
+    &lt;p&gt;The value of key &quot;foo1&quot; is &lt;s:property value=&quot;#foobar['foo1']&quot; /&gt;&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+<h3>example.xml</h3>
+<p>struts2 的MVC配置文件</p>
+<pre>&lt;action name=&quot;Ognl&quot; class=&quot;example.OgnlAction&quot;&gt;
+	&lt;result&gt;/Ognl.jsp&lt;/result&gt;
+&lt;/action&gt;</pre>
+<h2>N.4.2 %的用法</h2>
+<p>“%”符号的用途是在标志的属性为字符串类型时，计算OGNL表达式的值。例如在Ognl.jsp中加入以下代码：</p>
+<pre>&lt;h3&gt;%的用途&lt;/h3&gt;
+&lt;p&gt;&lt;s:url value=&quot;#foobar['foo1']&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;s:url value=&quot;%{#foobar['foo1']}&quot; /&gt;&lt;/p&gt;</pre>
+<p>刷新页面，显示以下内容</p>
+<pre>%的用途
+
+#foobar['foo1']
+
+bar1</pre>
+<h2>N.4.3 $的用法</h2>
+<p>“$”有两个主要的用途：</p>
+<ol>
+  <li>用于在国际化资源文件中，引用OGNL表达式</li>
+  <li>Struts 2配置文件中，引用OGNL表达式，如
+  <pre>&lt;action name=&quot;AddPhoto&quot; class=&quot;addPhoto&quot;&gt;
+	&lt;interceptor-ref name=&quot;fileUploadStack&quot; /&gt;            
+	&lt;result type=&quot;redirect&quot;&gt;ListPhotos.action?albumId=${albumId}&lt;/result&gt;
+&lt;/action&gt;</pre>
+  </li>
+</ol>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+
+</body>
+</html>

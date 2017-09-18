@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<title>唯一应用程序实例</title>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+<p id="title">唯一应用程序实例</p>
+
+<h1>进程匹配方式</h1>
+<p>对于每一个应用程序运行实例都会包含该实例的一个或多个进程，而且在程序运行过程中可能会动态的创建或销毁进程，或者访问其他现有进程进行通信。不难发现，在程序最先初始化的那一刻只有一个进程运行，而且应用程序进程生命周期最大进程名称集合是不变的。因此，在应用程序初始化的时候，可以根据进程关键信息检查系统进程列表是否存在同当前初始化进程匹配的进程来确定是否已经运行进程实例。</p>
+<p> 逻辑处理步骤如下：</p>
+<ol>
+  <li>初始化应用程序，启动程序初始化进程； </li>
+  <li>访问系统进程列表，根据初始化进程关键信息进行匹配查找； </li>
+  <li>没有找到匹配进程（这一步是不会发生的，因为当前初始化进程也在列表中，不过还要看获取进程列表的实现代码怎么写），继续初始化进程，程序初始化完成运行。 </li>
+  <li>找到第一个匹配进程，判断找到的进程ID是否同初始化进程ID相同； </li>
+  <li>如果第一个匹配进程ID同初始化进程ID相同，则为当前初始化进程，继续查找； </li>
+  <li>没有找到第二个匹配进程，表明当前运行的是首个实例，继续初始化进程，程序初始化完成运行。 </li>
+  <li>找到第二个，表明已有一个实例在运行，停止当前程序初始化，提示已有应用程序运行。 </li>
+  <li>如果找到第一个匹配进程ID不同，表明已有一个实例在运行，停止当前程序初始化，提示已有应用程序运行。 </li>
+</ol>
+<p>可见上面的逻辑实现中用于进程匹配的信息是关键，选择不当功能就无法实现。在这个实例中笔者使用了应用程序完全文件名称作为关键信息。</p>
+<p> 在代码中首先需要引用下面命名空间，以调用WinAPI函数。 </p>
+<pre class="code" data-type="csharp">using System.Diagnostics;
+using System.Runtime.InteropServices; 
+
+public static class SingleInstance {
+	/// &lt;summary&gt;
+	/// 使用GetRunningInstance静态方法获取应用程序进程实例,如果没有匹配进程，返回Null值
+	/// &lt;/summary&gt;
+	/// &lt;returns&gt;&lt;/returns&gt;
+	public static Process GetRunningInstance()
+	{
+		Process currentProcess = Process.GetCurrentProcess(); //获取当前进程 
+		//获取当前运行程序完全限定名 
+		string currentFileName = currentProcess.MainModule.FileName;
+		//获取进程名为ProcessName的Process数组。 
+		Process[] processes = Process.GetProcessesByName(currentProcess.ProcessName);
+		//遍历有相同进程名称正在运行的进程 
+		foreach (Process process in processes)
+		{
+			if (process.MainModule.FileName == currentFileName)
+			{
+				if (process.Id != currentProcess.Id) //根据进程ID排除当前进程 
+					return process;//返回已运行的进程实例 
+			}
+		}
+		return null;
+	}}</pre>
+<p> 接下来调用两个WinAPI，其功能将在包装方法中描述， </p>
+<pre class="code" data-type="csharp">[DllImport(&quot;User32.dll&quot;)]
+private static extern bool ShowWindowAsync(IntPtr hWnd, int cmdShow);
+[DllImport(&quot;User32.dll&quot;)]
+private static extern bool SetForegroundWindow(IntPtr hWnd);</pre>
+<p>定义类成员辅助变量</p>
+<pre class="code" data-type="csharp">private const int WS_SHOWNORMAL = 1; </pre>
+<p>以上的方法声明为私有，对其进一步包装，HandleRunningInstance静态方法为获取应用程序句柄，设置应用程序为前台运行，并返回bool值。 </p>
+<pre class="code" data-type="csharp">public static bool HandleRunningInstance(Process instance)
+{
+	//确保窗口没有被最小化或最大化 
+	ShowWindowAsync(instance.MainWindowHandle, WS_SHOWNORMAL);
+	//设置为foreground window 
+	return SetForegroundWindow(instance.MainWindowHandle);
+}</pre>
+<p>对上面的方法创建一个重载版本，使调用代码更加简洁</p>
+<pre class="code" data-type="csharp">public static bool HandleRunningInstance()
+{
+	Process p = GetRunningInstance();
+	if (p != null)
+	{
+		HandleRunningInstance(p);
+		return true;
+	}
+	return false;
+}</pre>
+<p>上面的方法实现获取已经运行的进程实例的句柄，并获取其焦点显示到前台，这个很有用，在其他实现方式中也可以用到。</p>
+<p>在Main函数中调用下面代码实现单一应用程序实例， </p>
+<pre class="code" data-type="csharp">Process p = SingleInstance.GetRunningInstance();
+if (p != null) //已经有应用程序副本执行 
+{
+	SingleInstance.HandleRunningInstance(p);
+}
+else //启动第一个应用程序 
+{
+	Application.Run(new MainForm());
+}</pre>
+<p>简洁的调用为</p>
+<pre class="code" data-type="csharp">if (SingleInstance.HandleRunningInstance() == false)
+{
+	Application.Run(new MainForm());
+} </pre>
+<p>可见，在上面的实现过程中，由于关键信息采用应用程序的完整文件名，因此在文件名称或路径名称修改后，以上实现就会失效。</p>
+<h1>进程互斥方式</h1>
+<p>在这个实现方式中需要定义一个进程同步基元，可以理解为临界资源，该资源只允许一个进程使用。根据这一点实现应用程序唯一运行实例就比较简单了。</p>
+<p> 实现步骤如下：</p>
+<ol>
+  <li>应用程序初始化访问该同步基元； </li>
+  <li>可以访问，说明该同步基元未被使用，也就是说没有应用程序实例运行，使用同步基元，可以继续初始化成为第一个运行实例。 </li>
+  <li>不可以访问，说明该同步基元已被使用，也就是说已有应用程序实例运行，停止当前程序初始化，提示已有应用程序运行。 </li>
+  <li>应用程序实例退出释放同步基元占用。 </li>
+</ol>
+<p> 在代码中笔者使用System.Threading.Mutex类实现同步基元，实现应用程序实例之间互斥功能。Mutex默认名字取Assembly.GetEntryAssembly().FullName。</p>
+<p> 在类成员中声明同步基元， </p>
+<pre class="code" data-type="csharp">private static Mutex mutex = null; </pre>
+<p>CreateMutex静态方法创建应用程序进程Mutex，返回创建结果为true表示创建成功，false失败。 </p>
+<pre class="code" data-type="csharp">public static bool CreateMutex()
+{
+	return CreateMutex(Assembly.GetEntryAssembly().FullName);
+}</pre>
+<p>实现其重载方法，让用户可以自定义Mutex名字</p>
+<pre class="code" data-type="csharp">public static bool CreateMutex(string name)
+{
+	bool result = false;
+	mutex = new Mutex(true, name, out result);
+	return result;
+}</pre>
+<p>对应的释放Mutex资源方法为， </p>
+<pre class="code" data-type="csharp">public static void ReleaseMutex()
+{
+	if (mutex != null)
+	{
+		mutex.Close();
+	}
+} </pre>
+<p>在Main函数中调用下面代码实现单一应用程序实例， </p>
+<pre class="code" data-type="csharp">if (SingleInstance.CreateMutex())
+{
+	Application.Run(new MainForm());
+	SingleInstance.ReleaseMutex();
+}
+else
+{
+	MessageBox.Show(&quot;程序已经运行！&quot;);
+}</pre>
+<p>可见，在上面的实现过程中，Mutex名字是同步基元的唯一标识，如果刚好有不同的应用程序使用了相同名称的Mutex，那不同的应用程序实例也会出现互斥现象。</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+
+</body>
+</html>

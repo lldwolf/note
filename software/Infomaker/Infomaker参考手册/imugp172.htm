@@ -1,0 +1,63 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+DayName</TITLE>
+</HEAD>
+<BODY>
+<A NAME="CAICGEEJ"></A><A NAME="TI6585"></A><h1>DayName</h1>
+<A NAME="TI6586"></A><p>
+<FORM>
+<INPUT
+ TYPE = "BUTTON"
+ VALUE = "Examples"
+ onClick = "window.location = 'imugp172.htm#EX24';">
+<INPUT
+  TYPE = "BUTTON"
+ VALUE = "See also"
+ onClick = "window.location = 'imugp172.htm#SA24';">
+</FORM>
+</p>
+<h3>Description</h3><A NAME="TI6587"></A><p>Gets the day of the week in a date value and returns the weekday's
+name.</p>
+
+<h3>Syntax</h3><pre><b>DayName</b> ( <i>date</i> )</pre>
+<A NAME="TI6588"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI6589"></A>Argument</th>
+<th align="left" valign=bottom><A NAME="TI6590"></A>Description</th>
+</tr>
+<tr><td valign=top><A NAME="TI6591"></A><i>date</i></td>
+<td valign=top><A NAME="TI6592"></A>The date for which you want the name
+of the day</td>
+</tr>
+</table>
+
+<h3>Return Values</h3><A NAME="TI6593"></A><p>String. Returns a string whose value is the name of the weekday
+(Sunday, Monday, and so on) for <i>date</i>.</p>
+
+<h3>Usage</h3><A NAME="TI6594"></A><p>DayName returns a name in the language of the deployment files
+available on the machine where the application is run. If you have
+installed localized deployment files in the development environment
+or on a user's machine, then on that machine the name returned
+by DayName will be in the language of the localized files.</p>
+<A NAME="TI6595"></A><p>For information about localized deployment
+files, see <A HREF="imugp134.htm#CFHBBAEA">Chapter 18, "Deploying Your Application"</A>.</p>
+
+<A NAME="EX24"></A><h3>Examples</h3><A NAME="TI6596"></A><p>This expression for a computed field returns Okay
+if the day in date_signed is not Sunday:<pre>If(<i>DayName</i> (date_signed) &lt;&gt; "Sunday", "Okay", "Invalid Date")</pre>
+</p>
+<A NAME="TI6597"></A><p>To pass this validation rule, the day in date_signed
+must not be Sunday:<pre><i>DayName</i> (date_signed) &lt;&gt; "Sunday"</pre>
+</p>
+
+<A NAME="SA24"></A><h3>See Also</h3><A NAME="TI6598"></A><p><A NAME="TI6599"></A>
+<ul>
+<li class=fi><A HREF="imugp169.htm#CAICEIEJ">Date</A></li>
+<li class=ds><A HREF="imugp171.htm#CAICIECH">Day</A></li>
+<li class=ds><A HREF="imugp173.htm#CAIBDAFA">DayNumber</A></li>
+<li class=ds><A HREF="imugp186.htm#CAIDHDBB">IsDate</A></li>
+<li class=ds> 
+</li>
+</ul>
+</p>
+
+

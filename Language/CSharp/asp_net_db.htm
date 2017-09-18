@@ -1,0 +1,35 @@
+<%@ Page Language="C#" ContentType="text/html" ResponseEncoding="gb2312" %>
+<!DOCTYPE html> 
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<title>ASP.NET中的数据库操作</title>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+<body>
+ <p id="title">ASP.NET中的数据库操作</p>
+ 
+ <h1>连接ORACLE9i时遇到的问题</h1>
+ <p><img src="images/note.jpg" width="20" height="20">注意：在使用Oracle 9i + Windows时，在ASP.NE中（WinForm没问题）中使用System.Data.OracleClient访问Oracle数据库时收到如下信息</p>
+ <p>System.Data.OracleClient requires Oracle client software version 8.1.7 or greater.</p>
+ <p>原因是Oracle 9i Release 2 客户端在安装到Windows的NTFS分区下时的安全认证设置不正确，引起本机的Authenticated Users用户无法看到ORACLE_HOME目录下的内容; 这导致在ASP.NET以Authenticated Users权限使用System.Data.OracleClient连接Oracle数据库时报出以上错误。</p>
+ <p>要解决以上问题，只要给Authenticated Users 组加上访问Oracle Home目录的权限即可</p>
+ <ul>
+   <li>以Administrator权限登录Windows. </li>
+   <li> 启动Window 资源浏览器找到ORACLE_HOME目录，如C:\Oracle\ora92 </li>
+   <li> 右键弹出菜单，选择该目录共享与安全（Win2000下要点击属性） </li>
+   <li> 点击 “安全” 页签 </li>
+   <li> 在组和用户名称列表中点击“Authenticated Users” 项. </li>
+   <li> 在该用户的权限列表中，将“读取和运行”的选择框置为不选中状态 </li>
+   <li> 再次点击“读取和运行”的选择框，将其设置为选中状态 </li>
+   <li> 点击“高级”按钮并在权限项目中确定“Authenticated Users” 是否拥有“读取并运行”权限并应用于“该文件夹，及子文件夹和文件”. 如果不是，双击这样，并确保权限可以“应用于” “该文件夹，及子文件夹和文件”. 该项非常重要你一定要核查. </li>
+   <li> 点击“确定” 按钮 </li>
+   <li> 重启动, 以使得所有的修改生效.</li>
+ </ul>
+ <p>&nbsp;</p>
+ <p>&nbsp;</p>
+ <p>&nbsp;</p>
+ <p>&nbsp; </p>
+
+</body>
+</html>

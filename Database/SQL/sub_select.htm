@@ -1,0 +1,92 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<title>子查询的使用</title>
+<script language="javascript" src="css.js"></script>
+</head>
+
+<body>
+<h1>第四章 子查询的使用</h1>
+<h2>4.1 何为子查询</h2>
+<p>在以前几章中，无论是单表查询，还是多表查询，我们会发现一个完整的SQL语句中，SELECT关键字只出现了一次，而包含子查询的SQL语句则是在一个SQL语句中包含多个SELECT关键字，第一个SELECT（总是放在语句的开始）我们称之为主查询，其它的SELECT单元则称之为子查询，例如下面这个例子，它会取出位号及其回路名。</p>
+<p>例1：获取位号及对应回路号列表</p>
+<pre>select a.cmpnt_name,
+  (select loop_name from loop b where b.loop_id = a.loop_id) as loop_name
+from component a</pre>
+<p>其显示的结果如下：</p>
+<table width="40%" >
+  <tr>
+    <th width="50%">cmpnt_name</th>
+    <th width="50%">loop_name</th>
+  </tr>
+  <tr>
+    <td>101-FE -100</td>
+    <td>101-F -100</td>
+  </tr>
+  <tr>
+    <td>101-FT -100</td>
+    <td>101-F -100</td>
+  </tr>
+  <tr>
+    <td>...</td>
+    <td>...</td>
+  </tr>
+</table>
+<p>子查询可以出现在主查询语句的各个位置，包括SELECT的字段列表、FROM子句、WHERE条件、ORDER BY子句甚至GROUP BY子句中，下面将分别介绍。</p>
+<h2>4.2 SELECT 子句中的子查询</h2>
+<p>SELECT 子句中的子查询必须返回的值必须唯一，否则在查询时会出错，例如在SQL SERVER中返回错误512，其信息为：“子查询返回的值多于一个。当子查询跟随在 =、!=、&lt;、&lt;=、&gt;、&gt;= 之后，或子查询用作表达式时，这种情况是不允许的。”</p>
+<p>子查询可以访问上级查询的表，例如在例1中，子查询可以访问上级查询的表component</p>
+<h2>4.3 FROM 子句中的子查询</h2>
+<p>在我们以前写的查询中，FROM 子句中都是表名，子查询也可以在FROM子句中出现，代表一个表，例如下例：</p>
+<p>例2：显示New Refinery装置的所有位号及对应回路号</p>
+<pre>select a.cmpnt_name, b.loop_name
+from component a
+  inner join (select loop_id, loop_name 
+              from loop h 
+                inner join plant i on i.plant_id = h.plant_id
+              where plant_name = 'New Refinery') b on b.loop_id = a.loop_id</pre>
+<p><img src="images/bm1.BMP">注意：对于SQL SERVER，要求from子句中的子查询所有列均有列名，例如在SELECT列表中有“select count(1)”这样的列，那么需要对其指定列名，例如“select count(1) as ****”，而在ORACLE中则没有这样的强制要求。</p>
+<h2>4.4 where 子句中的子查询</h2>
+<p>子查询返回的结果集可以在WHERE子句中作为判断的依据，例如下例：</p>
+<p>例3：显示所有位号数为0的回路，即空回路</p>
+<pre>select *
+from loop a
+where (select count(1) from component h where h.loop_id = a.loop_id) = 0</pre>
+<p>根据SELECT返回的结果集的数目，其中对于操作符 =、&gt;、&lt;、&lt;&gt;、&gt;=、&lt;=，要求子查询必须返回单行记录。</p>
+<p>对子查询，可以应用如下两个操作符</p>
+<h3>4.4.1 IN 操作符</h3>
+<p>要求子查询返回的结果集只有一个字段，例如对于例3，可以作如下实现：</p>
+<p>例3：显示所有位号数为0的回路，即空回路</p>
+<pre>select *
+from loop
+where loop_id not in (select distinct loop_id from component)</pre>
+<h3>4.4.2 EXISTS 操作符 </h3>
+<p>用于判断结果集中的记录是否存在某些条件，例如对于例3，可以作如下实现：</p>
+<p>例3：显示所有位号数为0的回路，即空回路</p>
+<pre>select *
+from loop a
+where not exists(select * from component h where h.loop_id = a.loop_id)</pre>
+<h2>4.5 ORDER BY 子句中的子查询</h2>
+<p>要求子查询返回单记录。</p>
+<p>便5：显示索引表，要求按回路名排序</p>
+<pre>select *
+from component a
+order by (select loop_name from loop h where h.loop_id = a.loop_id)</pre>
+<h2>4.6 子查询嵌套</h2>
+<p>如果主查询中可以嵌子查询一样，子查询也可以继续嵌套任意数量的子查询。</p>
+<p>例6：显示包含FISHER公司所产仪表的回路</p>
+<pre>select a.*
+from loop a
+where a.loop_id in 
+  (select loop_id 
+   from component b
+   where b.cmpnt_mfr_id in
+     (select cmpnt_mfr_id 
+      from component_mfr c
+      where c.cmpnt_mfr_name = 'FISHER'))</pre>
+<h2>4.7 子查询的限制 </h2>
+<script language="javascript" src="index.js"></script>
+</body>
+</html>

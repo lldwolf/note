@@ -1,0 +1,157 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+StDev</TITLE>
+</HEAD>
+<BODY>
+<A NAME="CAICJGDJ"></A><A NAME="TI7895"></A><h1>StDev</h1>
+<A NAME="TI7896"></A><p>
+<FORM>
+<INPUT
+ TYPE = "BUTTON"
+ VALUE = "Examples"
+ onClick = "window.location = 'imugp242.htm#EX94';">
+<INPUT
+  TYPE = "BUTTON"
+ VALUE = "See also"
+ onClick = "window.location = 'imugp242.htm#SA94';">
+</FORM>
+</p>
+<h3>Description</h3><A NAME="TI7897"></A><p>Calculates an estimate of the standard deviation for the specified
+column. Standard deviation is a measurement of how widely values
+vary from average.</p>
+
+<h3>Syntax</h3><pre><b>StDev</b> ( <i>column</i> { FOR <i>range</i> { DISTINCT { <i>expres1</i> {, <i>expres2</i> {, ... } } } } } )</pre>
+<A NAME="TI7898"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI7899"></A>Argument</th>
+<th align="left" valign=bottom><A NAME="TI7900"></A>Description</th>
+</tr>
+<tr><td valign=top><A NAME="TI7901"></A><i>column</i></td>
+<td valign=top><A NAME="TI7902"></A>The column for which you want an estimate
+for the standard deviation of the values in the rows. <i>Column</i> can
+be the column name or the column number preceded by a pound sign
+(#). <i>Column</i> can also be an expression
+that includes a reference to the column. The data type of <i>column</i> must
+be numeric</td>
+</tr>
+<tr><td valign=top><A NAME="TI7903"></A>FOR <i>range</i>  (optional)</td>
+<td valign=top><A NAME="TI7904"></A>The data that will be included in the
+estimate of the standard deviation. For most presentation styles,
+values for <i>range</i> are:<A NAME="TI7905"></A><A NAME="TI7906"></A>
+<ul>
+<li class=fi>ALL -- (Default)
+The estimate of the standard deviation for all values in <i>column</i></li>
+<li class=ds>GROUP <i>n</i> -- The estimate
+of the standard deviation for values in <i>column</i> in
+the specified group. Specify the keyword GROUP followed by the group
+number: for example, GROUP 1</li>
+<li class=ds>PAGE -- The estimate of the standard deviation
+for the values in <i>column</i> on a page
+</li>
+</ul>
+<A NAME="TI7907"></A>For Crosstabs, specify CROSSTAB for <i>range</i>:<A NAME="TI7908"></A><A NAME="TI7909"></A>
+<ul>
+<li class=fi>CROSSTAB -- (Crosstabs
+only) The estimate of the standard deviation for all values in <i>column</i> in
+the crosstab
+</li>
+</ul>
+<A NAME="TI7910"></A>For Graph and OLE objects, specify one of the following:<A NAME="TI7911"></A><A NAME="TI7912"></A>
+<ul>
+<li class=fi>GRAPH -- (Graphs
+only) The estimate of the standard deviation for values in <i>column</i> in
+the range specified for the Rows option </li>
+<li class=ds>OBJECT -- (OLE objects only) The estimate
+of the standard deviation for values in <i>column</i> in
+the range specified for the Rows option
+</li>
+</ul>
+</td>
+</tr>
+<tr><td valign=top><A NAME="TI7913"></A>DISTINCT (optional)</td>
+<td valign=top><A NAME="TI7914"></A>Causes StDev to consider only the distinct
+values in <i>column</i> when determining the standard
+deviation. For a value of <i>column</i>, the first row
+found with the value is used and other rows that have the same value
+are ignored</td>
+</tr>
+<tr><td valign=top><A NAME="TI7915"></A><i>expresn</i> (optional)</td>
+<td valign=top><A NAME="TI7916"></A>One or more expressions that you want
+to evaluate to determine distinct rows. <i>Expresn</i> can
+be the name of a column, a function, or an expression</td>
+</tr>
+</table>
+
+<h3>Return Values</h3><A NAME="TI7917"></A><p>Double. Returns an estimate of the standard deviation for <i>column</i>.</p>
+
+<h3>Usage</h3><A NAME="TI7918"></A><p>If you specify <i>range</i>, StDev returns an
+estimate for the standard deviation of <i>column</i> within <i>range</i>.
+If you specify DISTINCT, StDev returns an estimate of the standard
+deviation for the distinct values in <i>column</i> or
+if you specify <i>expresn</i>, the estimate of the
+standard deviation of the rows in <i>column</i> where
+the value of <i>expresn</i> is distinct.</p>
+<A NAME="TI7919"></A><p>For graphs and OLE objects, you do not select the range when
+you call the function. The range has already been determined by
+the Rows setting on the Data tab page (the Range property), and
+the aggregation function uses that range. Settings for Rows include:</p>
+<A NAME="TI7920"></A><p><A NAME="TI7921"></A>
+<ul>
+<li class=fi>For the Graph or OLE
+presentation style, Rows is always All.</li>
+<li class=ds>For Graph controls, Rows can be All, Page, or Group.</li>
+<li class=ds>For OLE controls, Rows can be All, Current Row,
+Page, or Group. The available choices depend on the layer the control
+occupies.
+</li>
+</ul>
+</p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <p><b>Estimating or calculating actual standard
+deviation</b>   StDev assumes that the values in <i>column</i> are
+a sample of the values in the rows in the column in the database
+table. If you selected all the rows in the column in the DataWindow object's
+SELECT statement, use StDevP to compute the standard deviation of the
+population.</p>
+<p><b>Not in validation rules or filter expressions</b>   You cannot use this or other aggregate functions in validation
+rules or filter expressions.</p>
+<A NAME="TI7922"></A><p>Using an aggregate function cancels the effect of setting
+Retrieve Rows As Needed in the painter. To do the aggregation, a
+DataWindow object or report always retrieves all rows.</p>
+
+<A NAME="EX94"></A><h3>Examples</h3><A NAME="TI7923"></A><p>These examples all assume that the SELECT statement
+did not retrieve all the rows in the database table. StDev is intended
+to work with a subset of rows, which is a sample of the full set
+of data.</p>
+<A NAME="TI7924"></A><p>This expression returns an estimate for standard deviation
+of the values in the column named salary:<pre><i>StDev</i> (salary)</pre>
+</p>
+<A NAME="TI7925"></A><p>This expression returns an estimate for standard
+deviation of the values in the column named salary in group 1:<pre><i>StDev</i> (salary for group 1)</pre>
+</p>
+<A NAME="TI7926"></A><p>This expression returns an estimate for standard
+deviation of the values in column 4 on the page:<pre><i>StDev</i> (#4 for page)</pre>
+</p>
+<A NAME="TI7927"></A><p>This expression entered in the Value box on the Data
+tab page in the graph's property sheet returns an estimate
+for standard deviation of the values in qty_used column
+in the graph:<pre><i>StDev</i> (qty_used for graph)</pre>
+</p>
+<A NAME="TI7928"></A><p>This expression for a computed field in a crosstab
+returns the estimate for standard deviation of the values in qty_ordered
+column in the crosstab:<pre><i>StDev</i> (qty_ordered for crosstab)</pre>
+</p>
+<A NAME="TI7929"></A><p>Assuming a DataWindow object displays the order number,
+amount, and line items for each order, this computed field returns
+the estimated standard deviation of the order amount for the distinct
+order numbers:<pre><i>StDev</i> (order_amt for all DISTINCT order_nbr)</pre>
+</p>
+
+<A NAME="SA94"></A><h3>See Also</h3><A NAME="TI7930"></A><p><A NAME="TI7931"></A>
+<ul>
+<li class=fi><A HREF="imugp243.htm#CAIBCFHF">StDevP</A></li>
+<li class=ds><A HREF="imugp252.htm#CAIDJBFB">Var</A> 
+</li>
+</ul>
+</p>
+
+

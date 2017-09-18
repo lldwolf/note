@@ -1,0 +1,453 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<script language="javascript" src="css.js"></script>
+<title>系统函数</title>
+</head>
+
+<body>
+<h1>第N章 常用函数</h1>
+<hr>
+<h2><a href="#string">N.1 字符串处理类</a></h2>
+<h2><a href="#date">N.2 日期类</a></h2>
+<h2><a href="#calc">N.3 运算类</a></h2>
+<h2><a href="#converter">N.4 类型转换类</a></h2>
+<h2><a href="#judgment">N.5 数据类型判断类</a></h2>
+<h2><a href="#charset">N.6 字符集类</a></h2>
+<h2><a href="#others">N.8 其它</a></h2>
+<hr>
+<h2><a name="string"></a>N.1 字符串处理类</h2>
+<h3>N.1.1 Decode </h3>
+<p><B>DECODE</B>(expr,search,result[,search,result]...[,default])</p>
+<p>用于将表达式“expr”中的“search”字符串替换为“result”字符串显示例如：</p>
+<pre>create table test_table(col1 number)
+insert into test_table(col1) values(1)
+insert into test_table(col1) values(2)
+insert into test_table(col1) values(3)
+insert into test_table(col1) values(4)
+
+select decode(col1, 1, '记录1', 2, '记录2', '其它') from test_table</pre>
+<h3>N.1.2 INSTR/INSTRB</h3>
+<h3>N.1.3 Replace</h3>
+<p><B>REPLACE</B> ( char , search_string [, replacement_string] )</p>
+<p>将<strong>char</strong>中的字符串<strong>search_string</strong>替换为<strong>replacement_string</strong>，如果省略<strong>replacement_string</strong>则会从<strong>char</strong>中删除<strong>search_string</strong>。</p>
+<h3>N.1.4 Translate</h3>
+<p><B>TRANSLATE</B> ( 'char' , 'from_string' , 'to_string' )</p>
+<p>将<strong>char</strong>中的包含在<strong>from_string</strong>中的字符替换为<strong>to_string</strong>中对应位置的字符，如果from_string的长度大于to_string，则多出的字符不参与替换，即本应匹配的字符会从字符串中删掉。</p>
+<p>例1：将字符串中所有的数字替换为9，所有的字母替换为X</p>
+<pre>SELECT TRANSLATE('2KRW229',
+                 '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ', 
+                 '9999999999XXXXXXXXXXXXXXXXXXXXXXXXXX') "License"
+FROM DUAL;</pre>
+<h3>N.1.5 LPAD 和 RPAD</h3>
+<pre><B>LPAD</B> ( char1 , n [, char2] )
+<B>RPAD</B> ( char1 , n [, char2] )</pre>
+<p>在字符串<em>char1</em>的左（右）边填充<em>n</em>个<em>char2</em>，并返回结果。</p>
+<h3>N.1.6 CONCAT</h3>
+<p>连接两个字符串，等同于操作符 ||，格式如下所示： </p>
+<pre>CONCAT(char1,char2)</pre>
+<p>下例返回字符串“ab”:</p>
+<pre>select concat('a', 'b') from dual; //等于 ||</pre>
+<p>INITCAP—selectinitcap('gonewiththewind')fromdual;</p>
+<p>LOWER(str)</p>
+<h3>&nbsp;</h3>
+<p></p>
+<p>LTRIM(char)</p>
+<p>REPLACE--SelectREPLACE(‘JACKANDJUE’,’J’,’BL’)FROMDUAL;</p>
+<p>RTRIM</p>
+<p>SUBSTR—字节</p>
+<p>SUBSTRB—字符</p>
+<p>UPPER</p>
+<p>ASCII(char)</p>
+<p>LENGTH/LENGTH</p>
+<h2><a name="date"></a>N.2 日期类</h2>
+<ul>
+  <li>add_months(d,n) 日期d加n个月</li>
+  <li> last_day(d) 包含d的月的最后一天的日期</li>
+  <li> new_time(d,a,b) a区的日期和d在b区的日期和</li>
+  <li> next_day(d,day) 比日期d，由day指定的周几的日期</li>
+  <li> sysdate 当前的系日期和时间</li>
+  <li> greatest(d1,d2,...dn) 给出的日期列表中最后的日期</li>
+  <li> least(d1,k2,...dn) 给出的日期列表中最早的日期</li>
+  <li> to_char(d [,fmt]) 日期d按fmt指定的格式成字符串</li>
+  <li> to_date(st [,fmt]) 字符串st按fmt指定的格式成日期，若fmt忽略，st要用缺省格式</li>
+  <li> round(d [,fmt]) 日期d按fmt指定格式舍入到最近的日期</li>
+  <li> trunc(d [,fmt]) 日期d按fmt指定格式截断到最近的日期</li>
+  <li> to_date 字符串类型转为换日期类型 </li>
+</ul>
+<h2><a name="calc"></a>N.3 运算类</h2>
+<h3>N.3.1 数值运算</h3>
+<p>ABS 绝对值</p>
+<p>CEIL(n)—大于等于n的最小整数</p>
+<p>FLOOR(n)—小于等于n的最小整数</p>
+<p>MOD(m,n) —m除于n的余数</p>
+<p>ROUND(n,m) —四舍五入</p>
+<p>TRUNC(n,m) —截取n到m位</p>
+<h3> N.3.2 位运算</h3>
+<p>bitand </p>
+<h2><a name="converter"></a>N.4 类型转换类</h2>
+<h3>N.4.1 to_char</h3>
+<pre>select to_char(sysdate, 'YYYY-MM-DD HH:MI:SS') from dual</pre>
+<h3><a name="to_date"></a>N.4.2 to_date</h3>
+<p>将字符串转换为日期。</p>
+<PRE><B>格式：TO_DATE</B> ( char [, fmt [, 'nlsparam']] )</PRE>
+<p>例如：</p>
+<pre>select to_date('2005-8-31', 'YYYY-MM-DD') from dual</pre>
+<p>说明：char为日期字符串，fmt为日期字符串格式，格式字符串的关键字如下表：</p>
+<table width="80%" >
+  <tr>
+    <th width="20%">元素</th>
+    <th width="10%"><div align="center">可应用<br>
+    于函数</div></th>
+    <th width="70%">说明</th>
+  </tr>
+  <tr>
+    <td>-<br>
+      /<br>
+      ,<br>
+      .<br>
+      ;<br>
+      :<br>
+      &quot;text&quot;
+    </td>
+    <td><div align="center">Y</div></td>
+    <td>直接出现在结果字符串中</td>
+  </tr>
+  <tr>
+    <td>AD<br>
+    A.D.</td>
+    <td><div align="center">Y</div></td>
+    <td>公元指示符</td>
+  </tr>
+  <tr>
+    <td>AM<br>
+      A.M.</td>
+    <td><div align="center">Y</div></td>
+    <td>上下午指示符</td>
+  </tr>
+  <tr>
+    <td>BC<br>
+      B.C.</td>
+    <td><div align="center">Y</div></td>
+    <td>公元前指示符, 中文状态下显示上午或下午</td>
+  </tr>
+  <tr>
+    <td>CC<br>
+    SCC</td>
+    <td><div align="center">N</div></td>
+    <td>世纪<br>
+      2002返回21, 2000返回20 </td>
+  </tr>
+  <tr>
+    <td>D</td>
+    <td><div align="center">Y</div></td>
+    <td>星期几(1-7)</td>
+  </tr>
+  <tr>
+    <td>DAY</td>
+    <td><div align="center">Y</div></td>
+    <td>星期几的名称, 在中文状态下返回星期一至星期日, 在英文状态下返回Monday至Sunday</td>
+  </tr>
+  <tr>
+    <td>DD</td>
+    <td><div align="center">Y</div></td>
+    <td>在一个月中的第几天(1-31)</td>
+  </tr>
+  <tr>
+    <td>DDD</td>
+    <td><div align="center">Y</div></td>
+    <td>在一年中的第几天(1-366)</td>
+  </tr>
+  <tr>
+    <td>DY</td>
+    <td><div align="center">Y</div></td>
+    <td>星期几的简称, 在中文状态下与DAY相同, 在英文状态下为单词简写</td>
+  </tr>
+  <tr>
+    <td>E</td>
+    <td><div align="center">N</div></td>
+    <td>Abbreviated era name (Japanese Imperial, ROC Official, and Thai Buddha calendars).</td>
+  </tr>
+  <tr>
+    <td>EE</td>
+    <td><div align="center">N</div></td>
+    <td>Full era name (Japanese Imperial, ROC Official, and Thai Buddha calendars).</td>
+  </tr>
+  <tr>
+    <td>FF[1..9]</td>
+    <td><div align="center">Y</div></td>
+    <td>毫秒数, FF1-FF9, 数据表示毫秒的位数, 现在一般为FF3, 即精确到3位, 于例如:<br>
+    SELECT TO_CHAR(SYSTIMESTAMP, 'SS.FF2') from dual;    </td>
+  </tr>
+  <tr>
+    <td>HH</td>
+    <td><div align="center">Y</div></td>
+    <td>在一天中的第几个小时(1-12)</td>
+  </tr>
+  <tr>
+    <td>HH12</td>
+    <td><div align="center">N</div></td>
+    <td>在一天中的第几个小时(1-12)</td>
+  </tr>
+  <tr>
+    <td>HH24</td>
+    <td><div align="center">Y</div></td>
+    <td>在一天中的第几个小时(0-23)</td>
+  </tr>
+  <tr>
+    <td>IW</td>
+    <td><div align="center">N</div></td>
+    <td>在一年中的第几个星期</td>
+  </tr>
+  <tr>
+    <td>IYY<br>
+      IY<br>
+      I</td>
+    <td><div align="center">N</div></td>
+    <td>ISO年的最后3位、2位、1位</td>
+  </tr>
+  <tr>
+    <td>IYYY</td>
+    <td><div align="center">N</div></td>
+    <td>ISO年的4位表示</td>
+  </tr>
+  <tr>
+    <td>J</td>
+    <td><div align="center">Y</div></td>
+    <td>罗马儒略历，公历天数, 自公元前4712-1-1日以来的天数</td>
+  </tr>
+  <tr>
+    <td>MI</td>
+    <td><div align="center">Y</div></td>
+    <td>分钟(0-59)</td>
+  </tr>
+  <tr>
+    <td>MM</td>
+    <td><div align="center">Y</div></td>
+    <td>月(1-12)</td>
+  </tr>
+  <tr>
+    <td>MON</td>
+    <td>Y</td>
+    <td>月的名称缩写, 中文状态下与MONTH相同</td>
+  </tr>
+  <tr>
+    <td>MONTH</td>
+    <td>Y</td>
+    <td>月的名称, 中文状态下为1月-12月, 英文状态下为January-December </td>
+  </tr>
+  <tr>
+    <td>PM<br>
+      P.M.</td>
+    <td>Y</td>
+    <td>上下行指示符, 与AM功能相同 </td>
+  </tr>
+  <tr>
+    <td>Q</td>
+    <td>N</td>
+    <td>季度(1-4)</td>
+  </tr>
+  <tr>
+    <td>RM</td>
+    <td>Y</td>
+    <td>用罗马数字表示的月(I-XII), 如果用RM则用大写显示I-XII, 如果用rm则用小写显示i-xii</td>
+  </tr>
+  <tr>
+    <td>RR</td>
+    <td>Y</td>
+    <td>显示年的后两位</td>
+  </tr>
+  <tr>
+    <td>RRRR</td>
+    <td>Y</td>
+    <td>以4位显示年</td>
+  </tr>
+  <tr>
+    <td>SS</td>
+    <td>Y</td>
+    <td>秒(0-59)</td>
+  </tr>
+  <tr>
+    <td>SSSSS</td>
+    <td>Y</td>
+    <td>零点以来经过的秒数(0-86399)</td>
+  </tr>
+  <tr>
+    <td>TZD</td>
+    <td>Y</td>
+    <td>夏令时信息<br>
+    Example: PST (for US/Pacific standard time); PDT (for US/Pacific daylight time).</td>
+  </tr>
+  <tr>
+    <td>TZH</td>
+    <td>Y</td>
+    <td>时区小时信息<br>
+    Example: 'HH:MI:SS.FFTZH:TZM'.</td>
+  </tr>
+  <tr>
+    <td>TZM</td>
+    <td>Y</td>
+    <td>时区分钟信息<br>
+    Example: 'HH:MI:SS.FFTZH:TZM'.</td>
+  </tr>
+  <tr>
+    <td>TZR</td>
+    <td>Y</td>
+    <td>时区信息<br>
+    Example: US/Pacific</td>
+  </tr>
+  <tr>
+    <td>WW</td>
+    <td>N</td>
+    <td>一年中的第几个星期</td>
+  </tr>
+  <tr>
+    <td>W</td>
+    <td>N</td>
+    <td>一月中的第几个星期</td>
+  </tr>
+  <tr>
+    <td>X</td>
+    <td>Y</td>
+    <td>本地小数点格式<br>
+    Example: 'HH:MI:SSXFF'.</td>
+  </tr>
+  <tr>
+    <td>Y,YYY</td>
+    <td>Y</td>
+    <td>以千分位方式显示年, 即第一位后显示一个逗号 </td>
+  </tr>
+  <tr>
+    <td>YEAR<br>
+      SYEAR</td>
+    <td>Y</td>
+    <td>用英语显示年, 例如2005显示为TWO THOUSAND FIVE, S用来表示公元前的前缀&quot;-&quot;</td>
+  </tr>
+  <tr>
+    <td>YYYY<br>
+      SYYYY</td>
+    <td>Y</td>
+    <td>用4位数字显示年, S表示公元前的前缀&quot;-&quot; </td>
+  </tr>
+  <tr>
+    <td>YYY<br>
+      YY<br>
+      Y</td>
+    <td>Y</td>
+    <td>年的后3位、2位、1位数字</td>
+  </tr>
+</table>
+<h3>N.4.3 to_number</h3>
+<PRE><B>TO_NUMBER</B> ( char [, fmt [, 'nlsparam']] )
+</PRE>
+<p>该函数用于将字符串转换为数字类型，字符串的数字组成格式由<strong>fmt</strong>参数确定，省略的话表示默认格式。
+</p>
+<h3>N.4.4 ascii</h3>
+<PRE><B>ASCII</B>(char)</PRE>
+<p>该函数返回参数字符的ascii码值</p>
+<h3><a name="chr"></a>N.4.5 chr</h3>
+<PRE><B>CHR</B>(n [<B>USING NCHAR_CS</B>])</PRE>
+<p>返回一个ascii值所代表的字符。</p>
+<p>如果未使用选项“USING NCHAR_CS”，则返回类型为varchar2型，否则返回类型为nvarchar2型。</p>
+<p>在单字节字符集下，如果n &gt; 255，则返回n mod 255所代表的字符，而对于多字节字符集，则返回该字符集下n所代表的字符。例如，下面的语句在中文字符集下返回字符‘中’：</p>
+<pre>SELECT CHR(54992) FROM DUAL;</pre>
+<p>如果数据库已经是使用的中文字符集，则可不用加using nchar_cs选项，否则反而显示不出中文。 </p>
+<h3>N.4.6 nchr</h3>
+<p>功能等同于加了using nchar_cs选项的<a href="#chr">chr</a>函数。</p>
+<p>CHARTOROWID:<br>
+CONVERT:字符集之间的转换<br>
+SELECT CONVERT(‘ABCD’,’US7ASCII’,’ZHS16GBK’)FROMDUAL;<br>
+HEXTORAW<br>
+RAWTOHEX<br>
+ROWIDTOCHAR<br>
+TO_MULTI_BYTE<br>
+TO_SINGLE_BYTE<br>
+TRANSLATEUSING</p>
+<h2><a name="judgment"></a>N.5 数据类型判断类</h2>
+<h3>N.5.1 判断是否数字类型</h3>
+<p>ORACLE中并不提供该函数，但我们可以用以下函数组合模拟</p>
+<pre>select decode(replace(translate('123.456','0123456789.',' '),' ',''), null, 'is number','is not a number') from dual;</pre>
+<p>其中的字符串'123.456'即为待检测字符串。</p>
+<h2><a name="charset"></a>N.6 字符集类</h2>
+<p>NLS_CHARSET_NAME</p>
+<p>nls_charset_decl_len </p>
+<h2><a name="others"></a>N.8 其它</h2>
+<p>DUMP <br>
+  EMPTY_BLOB() / EMPTY_CLOB() <br>
+  BFILENAME <br>
+  CREATEST—最大值 <br>
+  LEAST—最小值 <br>
+  NVL <br>
+  UID <br>
+  USER</p>
+<h3>N.8.8 USERENV </h3>
+<p>语法：</p>
+<PRE><B>USERENV</B> ( 'parameter' )
+</PRE>
+<p>返回当前回话的一些信息，由参数parameter确定，parameter是一个字符串，大小写不敏感，可有如下值：</p>
+<table width="90%" >
+  <tr>
+    <th width="20%">parameter值</th>
+    <th width="80%">返回值</th>
+  </tr>
+  <tr>
+    <td><P class=TB><CODE>CLIENT_INFO</CODE></P></td>
+    <td><p>返回一个长度为64字节的值，可使用<CODE>DBMS_APPLICATION_INFO查看具体信息。</CODE></p>
+    <p><code>有的商业软件会用到该信息，检查在上下文中是否有何限制。具体怎么用，不懂。</code></p>
+    </td>
+  </tr>
+  <tr>
+    <td><P class=TB><CODE>ENTRYID</CODE></P></td>
+    <td>返回auditing entry identifier，不能在分布式环境中使用。在使用该参数前，ORACLE的初始化参数<CODE>AUDIT_TRAIL</CODE> 要设为TRUE。 </td>
+  </tr>
+  <tr>
+    <td><P class=TB><CODE>ISDBA</CODE></P></td>
+    <td>返回当前会话的用户是否有DBA权限</td>
+  </tr>
+  <tr>
+    <td><P class=TB><CODE>LANG</CODE></P></td>
+    <td>当前会话使用的ISO定义的语言代号，例如中文为ZHS</td>
+  </tr>
+  <tr>
+    <td><P class=TB><CODE>LANGUAGE</CODE></P></td>
+    <td>当前会话使用的语言，格式如下：language_territory.characterset，例如中文为SIMPLIFIED CHINESE_CHINA.ZHS16GBK</td>
+  </tr>
+  <tr>
+    <td><P class=TB><CODE>SESSIONID</CODE></P></td>
+    <td>当前的会话（SESSION）标识符，不能在分布式环境中使用。</td>
+  </tr>
+  <tr>
+    <td><P class=TB><CODE>TERMINAL</CODE></P></td>
+    <td>当前会话终端的名称，由操作系统确定，例如在WINDOWS下，返回终端的机器名。</td>
+  </tr>
+</table>
+<p><br>
+  l VSIZE:内码字节数 <br>
+  对象引用函数 <br>
+  DEREF <br>
+  REFTOHEX <br>
+  MAKE_REF <br>
+  组函数 <br>
+  （1，1，1，3） <br>
+  DISTINCT：非重复值 （1+3）/2 <br>
+  ALL：包括重复值（1+1+1+3）/4 <br>
+  <br>
+  在组函数中，除了COUNT(*)之外，所有的函数都忽略NULL <br>
+  A=（1，1，1，NULL，3） AVG(A)=(1+1+1+3)/4 所以一定要用NVL <br>
+  <br>
+  AVG <br>
+  COUNT <br>
+  MAX <br>
+  MIN <br>
+  STDDEV <br>
+  SUM <br>
+  VARIANCE <br>
+  <br> 
+</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<script language="javascript" src="index.js"></script>
+</body>
+</html>

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>DevExpress.XtraGrid.GridControl</title>
+<script type="text/javascript" src="../../../mylib/js/css.js"></script>
+
+<style type="text/css">
+.first_class {font-family:宋体; font-weight:bold; font-size:16px; text-align:center; layout-flow:vertical-ideographic}
+.second_class {font-weight: bold}
+</style>
+</head>
+
+<body>
+<p id="title">DevExpress.XtraTreeList.TreeList</p>
+
+<p>使用 DataSource 属性显示数据时，TreeList会自动高亮 Id = 0 的节点。可通过重载TreeList控件的MakeNodeVisible方法避免。</p>
+<pre>public override int MakeNodeVisible(DevExpress.XtraTreeList.Nodes.TreeListNode node)
+{
+    if (this.FocusedRowIndex == -1 || this.FocusedNode == null)
+        return -1;
+    else
+        return base.MakeNodeVisible(node);
+}</pre>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+
+</body>
+</html>

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+	<script type="text/javascript" src="../../../mylib/js/css.js"></script>
+	<title>C#.net使用手册</title>
+</head>
+<body>
+	<p id="title">使用资源</p>
+
+	<h1>常用资源示例</h1>
+		<pre class="code" data-type="xml">&lt;ResourceDictionary 
+  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  xmlns:sys="clr-namespace:System;assembly=mscorlib"
+  xmlns:model="clr-namespace:WpfDemo.DataBinding.Models"&gt;
+
+		&lt;!-- String resource that can be localized --&gt;
+		&lt;sys:String x:Key="localizedMessage"&gt;en-US Message&lt;/sys:String&gt;
+
+		&lt;!-- 空字符串及字符串数组 --&gt;
+		&lt;x:Array x:Key="arraySource"
+				 Type="sys:String"&gt;
+			&lt;x:Static Member="sys:String.Empty" /&gt;
+			&lt;sys:String&gt;Parent&lt;/sys:String&gt;
+			&lt;sys:String&gt;Child&lt;/sys:String&gt;
+		&lt;/x:Array&gt;
+
+		&lt;!-- 本地对象（Data Islands） --&gt;
+		&lt;model:Person x:Key="person" Name="Lindong" /&gt;
+
+		&lt;!-- 静态常量引用 --&gt;
+		&lt;x:StaticExtension x:Key="static_constant" Member="model:Constants.CONST_STRING" /&gt;
+&lt;/ResourceDictionary&gt;</pre>
+	
+	<p class="note">在 .NET Framework 4.5 后，默认用 ArrayExtension 来替代 Array.</p>
+	<p>对于上例中，我们使用了如下的一个本地类 WpfDemo.DataBinding.Models.Person，它包含一个　Name 属性</p>
+	<ol>
+		<li>空字符串
+		<pre class="code" data-type="xml">&lt;TextBlock Text="{x:Null}" /&gt;</pre>
+		</li>
+		<li>特殊字符<pre class="code" data-type="xml">&lt;TextBlock Text="A&amp;#13;&amp;#10;B" /&gt;</pre>
+		</li>
+	</ol>
+	<h1>Resource 语法</h1>
+	<h2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Resource 层次</h2>
+	<p>Resource 可放置在任意的XAML层次中，例如，最外层为 Window，可将资源放入&lt;Window.Resources&gt;中</p>
+	<h2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;资源文件拆分及合并</h2>
+	<div id="accordion-simple_binding_source">
+		<p><a href="#">代码示例</a></p>
+		<pre class="code" data-type="xml">&lt;ResourceDictionary&gt;
+	&lt;ResourceDictionary.MergedDictionaries&gt;
+		&lt;ResourceDictionary Source="/Gollf.EMCT;component/Resources/ResourcesDictionary.xaml" /&gt;
+		&lt;ResourceDictionary Source="/Gollf.Infrastructure.ControlLibraryForWPF;component/Resources/ComponentResourceDictionary.xaml" /&gt;
+	&lt;/ResourceDictionary.MergedDictionaries&gt;
+&lt;/ResourceDictionary&gt;</pre>
+	</div>
+
+</body>
+</html>

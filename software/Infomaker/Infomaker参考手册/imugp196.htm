@@ -1,0 +1,63 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+Left</TITLE>
+</HEAD>
+<BODY>
+<A NAME="CAIBIGEB"></A><A NAME="TI6983"></A><h1>Left</h1>
+<A NAME="TI6984"></A><p>
+<FORM>
+<INPUT
+ TYPE = "BUTTON"
+ VALUE = "Examples"
+ onClick = "window.location = 'imugp196.htm#EX48';">
+<INPUT
+  TYPE = "BUTTON"
+ VALUE = "See also"
+ onClick = "window.location = 'imugp196.htm#SA48';">
+</FORM>
+</p>
+<h3>Description</h3><A NAME="TI6985"></A><p>Obtains a specified number of characters from the beginning
+of a string.</p>
+
+<h3>Syntax</h3><pre><b>Left</b> ( <i>string</i>, <i>n</i> )</pre>
+<A NAME="TI6986"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI6987"></A>Argument</th>
+<th align="left" valign=bottom><A NAME="TI6988"></A>Description</th>
+</tr>
+<tr><td valign=top><A NAME="TI6989"></A><i>string</i></td>
+<td valign=top><A NAME="TI6990"></A>The string containing the characters
+you want</td>
+</tr>
+<tr><td valign=top><A NAME="TI6991"></A><i>n</i></td>
+<td valign=top><A NAME="TI6992"></A>A long specifying the number of characters
+you want</td>
+</tr>
+</table>
+
+<h3>Return Values</h3><A NAME="TI6993"></A><p>String. Returns the leftmost <i>n</i> characters
+in <i>string</i> if it succeeds and the empty string
+("") if an error occurs.</p>
+<A NAME="TI6994"></A><p>If <i>n</i> is greater than or equal to the
+length of the string, Left returns the entire string. It does not
+add spaces to make the return value's length equal to <i>n</i>.</p>
+
+<A NAME="EX48"></A><h3>Examples</h3><A NAME="TI6995"></A><p>This expression returns BABE:<pre><i>Left</i> ("BABE RUTH", 4)</pre>
+</p>
+<A NAME="TI6996"></A><p>This expression returns BABE RUTH:<pre><i>Left</i> ("BABE RUTH", 40)</pre>
+</p>
+<A NAME="TI6997"></A><p>This expression for a computed field returns the
+first 40 characters of the text in the column home_address:<pre><i>Left</i> (home_address, 40)</pre>
+</p>
+
+<A NAME="SA48"></A><h3>See Also</h3><A NAME="TI6998"></A><p><A NAME="TI6999"></A>
+<ul>
+<li class=fi><A HREF="imugp207.htm#CAIDEEGG">Mid</A></li>
+<li class=ds><A HREF="imugp221.htm#CAIBADFC">Pos</A></li>
+<li class=ds><A HREF="imugp230.htm#CAICGEFD">Right</A></li>
+<li class=ds> 
+</li>
+</ul>
+</p>
+
+

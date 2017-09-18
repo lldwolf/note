@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+	<script type="text/javascript" src="../../mylib/js/css.js"></script>
+	<title>Decorator 模式</title>
+</head>
+
+<body>
+	<p id="title">Decorator 模式</p>
+	<h1>使用 RealProxy 实现</h1>
+	<h2>Component 类</h2>
+	<pre class="code" data-type="csharp">using System;
+
+namespace ProxyImp
+{
+	public class BuzModel : MarshalByRefObject
+	{
+		public string DoSth(string args)
+		{
+			Console.WriteLine("doing sth...");
+			return "return sth...";
+		}
+	}
+}</pre>
+	<h2>Decorator 类</h2>
+	<pre class="code" data-type="csharp">namespace ProxyImp
+{
+	public class BuzFactory
+	{
+		public static BuzModel Create()
+		{
+			var model = new BuzModel();
+			var dynamicProxy = new DynamicProxy&lt;BuzModel&gt;(model);
+			return dynamicProxy.GetTransparentProxy() as BuzModel;
+		}
+	}
+}</pre>
+	<h2>Decorator 行为实现类</h2>
+	<pre class="code" data-type="csharp">using System;
+using System.Reflection;
+using System.Runtime.Remoting.Messaging;
+using System.Runtime.Remoting.Proxies;
+
+namespace ProxyImp
+{
+	public class DynamicProxy&lt;T&gt; : RealProxy
+	{
+		private readonly T _decorated;
+
+		public DynamicProxy(T decorated)
+			: base(typeof(T))
+		{
+			this._decorated = decorated;
+		}
+
+		private void Log(string msg, object arg = null)
+		{
+			Console.ForegroundColor = ConsoleColor.Yellow;
+			Console.WriteLine(msg, arg);
+			Console.ResetColor();
+		}
+
+		public override IMessage Invoke(IMessage msg)
+		{
+			var methodCall = msg as IMethodCallMessage;
+			var methodInfo = methodCall.MethodBase as MethodInfo;
+			this.Log(string.Format(&quot;Before call {0}&quot;, methodCall.MethodName));
+
+			foreach (var methodArg in methodCall.InArgs)
+			{
+				this.Log(string.Format(&quot;Arg: {0}&quot;, methodArg));
+			}
+
+			try
+			{
+				var result = methodInfo.Invoke(this._decorated, methodCall.InArgs);
+				this.Log(string.Format(&quot;After call {0}&quot;, methodCall.MethodName));
+				this.Log(string.Format(&quot;Result: {0}&quot;, result));
+				return new ReturnMessage(result, null, 0, methodCall.LogicalCallContext, methodCall);
+
+			}
+			catch (Exception ex)
+			{
+				this.Log(string.Format(&quot;Call {0} failed: {1}&quot;, methodCall.MethodName, ex));
+				throw;
+			}
+		}
+	}
+}</pre>
+	<h2>调用测试及性能测试</h2>
+	<pre class="code" data-type="csharp">BuzModel buz = BuzFactory.Create();
+buz.DoSth("CNM");</pre>
+	<p>根据我的测试，使用 RealProxy 后，性能比直接调用对象的方法性能略有下降（大约下降 10%）</p>
+</body>
+</html>

@@ -1,0 +1,72 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+Regenerating library entries</TITLE>
+</HEAD>
+<BODY>
+<A NAME="X-ref345205710"></A>
+<h1>重新生成Library的内容</h1>
+<A NAME="TI781"></A>
+<p>这个功能偶尔也会用到，例如：</p>
+<A NAME="TI782"></A><p><A NAME="TI783"></A>
+<ul>
+<li class=fi>PB程序员使用IMSTYLE7.PBL中的窗口修改了一个Form Style，而且修改的还是一个父对象，那么你就要重新生成该Form的子对象（太高深，等我学会了PB再来看看）</li>
+<li class=ds>如果作了很多很多的修改，可以使用本操作重新生成与被修改对象相关的对象。</li>
+<li class=ds>如果升级了InfoMaker的版本，也要重新生成对象。</li>
+</ul>
+</p>
+<A NAME="TI784"></A><p>When you regenerate an entry, InfoMaker recompiles the source
+form stored in the library and replaces the existing compiled form
+with the recompiled form.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To regenerate library entries:</p>
+<ol><li class=fi>
+Select the entries you want to regenerate.<br><br></li>
+<li class=ds>
+Click the Regen button.<br><br>
+<i>or</i>
+<br><br>
+Select Entry&gt;Regenerate from the menu bar.<br><br>
+InfoMaker uses the source to regenerate the library entry
+and replaces the current compiled object with the regenerated object.
+The compilation date and size are updated.<br><br></li></ol>
+<br><A NAME="BGBGBHBE"></A><h2>Rebuilding libraries</h2>
+<A NAME="TI785"></A><p>When you make modifications to objects and need to update
+one or more libraries, you should use the Rebuild option to update
+all the library objects in the correct sequence.</p>
+<A NAME="TI786"></A><p>There are two methods to use when you rebuild an application:</p>
+<A NAME="TI787"></A><p><A NAME="TI788"></A>
+<ul>
+<li class=fi><b>Incremental
+rebuild</b>   Updates all the objects and libraries referenced by any objects
+that have been changed</li>
+<li class=ds><b>Full rebuild</b>   Updates all the objects and libraries
+</li>
+</ul>
+</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To rebuild libraries:</p>
+<ol><li class=fi>
+Select the libraries you want to rebuild.<br><br></li>
+<li class=ds>
+Depending on your needs, choose either Design&gt;Incremental
+Build or Design&gt;Full Build from the menu bar.<br><br></li></ol>
+<br><A NAME="TI789"></A><h2>Migrating
+libraries</h2>
+<A NAME="TI790"></A><p>When you upgrade to a new version of InfoMaker, your existing
+libraries need to be migrated to the new version.</p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Make sure PBLs are writable</span> <A NAME="TI791"></A>If you make copies of your libraries before you migrate to
+a new version of InfoMaker, make sure that the libraries you will
+migrate are writable. </p>
+<A NAME="TI792"></A><p>Your libraries must be migrated one at a time since a library
+must be the current library for you to migrate it.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To migrate libraries:</p>
+<ol><li class=fi>
+Select the current library and then select
+Design&gt;Migrate.<br><br>
+The Migrate Application dialog box displays.<br><br><br><img src="images/Lib30.gif"><br>
+</li>
+<li class=ds>
+Click OK.<br><br>
+InfoMaker migrates all objects in the library to the current
+version.<br><br></li></ol>
+<br>

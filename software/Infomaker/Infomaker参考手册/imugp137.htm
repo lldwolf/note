@@ -1,0 +1,205 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+Making the data source available</TITLE>
+</HEAD>
+<BODY>
+<A NAME="BABDJHJB"></A><h1>Making the data source available</h1>
+<A NAME="TI5517"></A><p>Your users need access to the DBMS and to the database your
+application uses.</p>
+<A NAME="TI5518"></A><p>You need to:<A NAME="TI5519"></A>
+<ul>
+<li class=fi>If necessary,
+install the DBMS runtime files in the application directory or in
+a directory on the system path.<br>
+Follow the instructions and licensing rules specified by the
+vendor.<br></li>
+<li class=ds>Make sure each user has access to the database the
+application uses.<br>
+If your application uses a local database, install the database
+and any associated files, such as a log file, on the user's
+computer.<br><br>
+If your application uses a server database, make sure the
+user's computer is set up to access the database. This
+may be the task of a database administrator.<br></li>
+<li class=ds>Install any native database interfaces your application
+uses on the user's computer.</li>
+<li class=ds>If your application uses the ODBC interface, configure
+the ODBC database drivers and data sources, as described in <A HREF="imugp137.htm#X-ref319725643">"Configuring an ODBC
+driver"</A>.
+</li>
+</ul>
+</p>
+<A NAME="TI5520"></A><h2>Installing native database interfaces</h2>
+<A NAME="TI5521"></A><p>You need to install the database interface drivers your application
+requires, such as the ODBC interface and other native database interfaces.</p>
+<A NAME="TI5522"></A><p>The files for the native database interfaces your application
+uses belong in the same directory as the application or in a directory
+on the system path. When you install InfoMaker, these files are
+installed in the Shared\PowerBuilder directory. The first
+two characters of the filename are PB, the next three characters
+identify the database, and the last two identify the version of InfoMaker.
+For example, PBO8480.DLL is the Oracle Version 8 database interface
+and PBSYC80.DLL is the Sybase CT-LIB database interface. </p>
+<A NAME="TI5523"></A><h2>Installing ODBC and system files</h2>
+<A NAME="TI5524"></A><p>If your application uses ODBC drivers, each user's
+machine needs three types of files:<A NAME="TI5525"></A>
+<ul>
+<li class=fi><b>PowerBuilder ODBC
+interface and driver syntax files</b>    Install PBODB80<i></i>
+.DLL and PBODB80<i></i>
+.INI
+in the application directory or a directory on the system path.
+The INI and DLL files must be in the same directory. If you have
+modified the PBODB80 initialization file, make sure you
+deploy the modified version.<br>
+For information about adding sections or functions to the
+PBODB80 initialization file, see <i>Connecting to
+Your Database</i>
+.<br></li>
+<li class=ds><b>Microsoft ODBC driver and DLLs</b>   The Microsoft ODBC Driver Manager (ODBC32.DLL) and supporting
+files are usually already installed in the user's Windows
+system directory. </li>
+<li class=ds><b>ODBC database drivers and supporting
+files</b>   Sybase provides ODBC database drivers for Adaptive Server Anywhere as well
+as PB MERANT drivers for several databases. If you deploy an application
+that uses a PB MERANT driver, you should deploy the DLL for the
+specific DBMS as well as the following required files (more recent
+files may have been provided with the current release so that the
+number shown in the filenames may be different): <A NAME="TI5526"></A>
+<ul>
+<li class=fi>PBBAS15.DLL</li>
+<li class=ds>PBFLT15.DLL</li>
+<li class=ds>PBUTL15.DLL</li>
+<li class=ds>PBDRV15.CNT</li>
+<li class=ds>PBDRV15.HLP</li>
+<li class=ds>PBTRN15.DLL</li>
+<li class=ds>IVPB.LIC
+</li>
+</ul>
+
+</li>
+</ul>
+</p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Optional Help files</span> <A NAME="TI5527"></A>Help (.HLP and .CNT) files need only be deployed if you expect
+users to perform database administration tasks.</p>
+<A NAME="X-ref319725643"></A><h2>Configuring an ODBC driver</h2>
+<A NAME="TI5528"></A><p>To use an ODBC data source in your application, the ODBC configuration must
+include:</p>
+<A NAME="TI5529"></A><p><A NAME="TI5530"></A>
+<ul>
+<li class=fi>An entry for the DBMS
+driver in ODBCINST.INI</li>
+<li class=ds>An entry for the data source in ODBC.INI with instructions
+on how to start the database
+</li>
+</ul>
+</p>
+<A NAME="TI5531"></A><h4>Drivers in ODBCINST.INI</h4>
+<A NAME="TI5532"></A><p>The registry entry for ODBCINST.INI is in this location: <pre>HKEY_LOCAL_MACHINE\Software\ODBC</pre>
+</p>
+<A NAME="TI5533"></A><p>ODBCINST.INI lists the ODBC drivers installed on the machine
+and the driver and setup DLLs for each driver. </p>
+<A NAME="TI5534"></A><p>If you copy the ODBC interface files to a user's
+computer, you must modify the ODBCINST.INI registry entry. The following
+examples show typical registry entries:</p>
+<A NAME="TI5535"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI5536"></A>Key</th>
+<th align="left" valign=bottom><A NAME="TI5537"></A>Name and Value</th>
+</tr>
+<tr><td valign=top><A NAME="TI5538"></A>ODBC Drivers</td>
+<td valign=top><p><b>Adaptive Server Anywhere 7.0</b>    Installed</p>
+<p><b>PB PB MERANT OEM 3.60 32-BIT Oracle8</b>   Installed</p>
+</td>
+</tr>
+<tr><td valign=top><A NAME="TI5539"></A>Adaptive Server Anywhere 7.0</td>
+<td valign=top><p><b>Driver</b>   C:\Program Files\Sybase\SQL Anywhere 7\win32\dbodbc7.dll</p>
+<p><b>Setup</b>   C:\Program Files\Sybase\\SQL
+Anywhere 7\win32\dbodbc7.dll</p>
+</td>
+</tr>
+<tr><td valign=top><A NAME="TI5540"></A>PB MERANT OEM 3.60 32-bit Oracle8</td>
+<td valign=top><p><b>Driver</b>   C:\Program Files\sybase\shared\<br> MerantODBC\PBOR815.DLL</p>
+<p><b>Setup</b>   C:\Program Files\sybase\shared\<br> MerantODBC\PBOR815.DLL</p>
+</td>
+</tr>
+</table>
+<A NAME="TI5541"></A><h4>Data sources in ODBC.INI</h4>
+<A NAME="TI5542"></A><p>To allow the user to connect to a particular data source,
+you must provide a definition for that data source in the registry
+in this location:<pre>HKEY_CURRENT_USER\Software\ODBC\ODBC.INI</pre>
+</p>
+<A NAME="TI5543"></A><p>The data source must be listed in the section [ODBC
+Data Sources] with its associated DBMS and there must be
+a section whose name is the data source. The data source section
+specifies the connection parameters for the data source. The following
+examples show typical registry entries:</p>
+<A NAME="TI5544"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI5545"></A>Key</th>
+<th align="left" valign=bottom><A NAME="TI5546"></A>Name and Value</th>
+</tr>
+<tr><td valign=top><A NAME="TI5547"></A>ODBC Data Sources</td>
+<td valign=top><p><b>MyAppDB</b>   Adaptive Server Anywhere 7.0</p>
+</td>
+</tr>
+<tr><td valign=top><A NAME="TI5548"></A>MyAppDB</td>
+<td valign=top><p><b>Start</b>   C:\Program Files\Sybase\SQL Anywhere 7\win32\rteng7.exe
+ -c 8m</p>
+<p><b>Driver</b>   C:\Program Files\Sybase\SQL Anywhere 7\win32\dbodbc7.dll</p>
+<p><b>DatabaseName</b>   MyAppDB</p>
+<p><b>DatabaseFile</b>   C:\PRODDIR\MyAppDB.DB</p>
+</td>
+</tr>
+</table>
+<A NAME="TI5549"></A><p>You might use one of the following ways to make the modifications
+to ODBC.INI:</p>
+<A NAME="TI5550"></A><p><A NAME="TI5551"></A>
+<ul>
+<li class=fi>Use Microsoft's
+ODBC Administrator control panel, if the control panel is available
+on the user's system.</li>
+<li class=ds>Use a software distribution application that includes
+ODBC configuration instructions to do your installation.
+</li>
+</ul>
+</p>
+<A NAME="TI5552"></A><p>For more information about the contents of
+the registry entries for ODBC drivers and data sources, see <i>Connecting
+to Your Database</i>
+.</p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Database profiles</span> <A NAME="TI5553"></A><i>Connecting to Your Database</i>
+ includes
+information about database profiles. Profiles, which are defined
+in the Windows registry, provide the information necessary to connect
+to data sources from the <i>development</i>
+ environment.
+Your users do not need database profiles.</p>
+<A NAME="CFHCDIEI"></A><h2>Deploying the Adaptive Server Anywhere Desktop Runtime System</h2>
+<A NAME="TI5554"></A><p>If your InfoMaker application has reports and forms that
+access an Adaptive Server Anywhere database, you need to deploy the Adaptive Server Anywhere DBMS
+as well as Adaptive Server Anywhere's ODBC database drivers. You can
+deploy the Adaptive Server Anywhere Desktop Runtime System without incurring additional
+license fees. The runtime system allows the user to retrieve and
+modify data in the database, but does not allow modifications to
+the database schema. It does not support transaction logs, stored
+procedures, or triggers. The runtime system
+is installed on your computer when you install the EAS Demo DB or
+the tutorial.</p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Restrictions</span> <A NAME="TI5555"></A>Enterprise Application Studio includes Adaptive Server Anywhere for use during the development process.
+However, this product cannot be deployed royalty-free to your users.</p>
+<A NAME="TI5556"></A>If your application requires the data definition language
+(DDL), a transaction log, stored procedures, or triggers, see your
+Sybase sales representative.</p>
+<A NAME="TI5557"></A><p>In addition to deploying the runtime system, you need to do
+the following for your users:</p>
+<A NAME="TI5558"></A><p><A NAME="TI5559"></A>
+<ul>
+<li class=fi>Make your application's
+data source available</li>
+<li class=ds>Configure ODBC to access the data source
+</li>
+</ul>
+</p>
+<A NAME="TI5560"></A><p>For more information about deploying Adaptive Server Anywhere databases and
+applications, see the <i>Adaptive Server Anywhere User's Guide</i>
+.</p>
+

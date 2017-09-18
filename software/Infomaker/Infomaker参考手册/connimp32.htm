@@ -1,0 +1,136 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+Connecting to a database</TITLE>
+</HEAD>
+<BODY>
+<A NAME="CCJBAGDB"></A><h1>Connecting to a database</h1>
+<A NAME="TI1126"></A><p>To establish or change a database connection in InfoMaker,
+use a database profile. You can select the database profile for
+the database you want to access in the Database Profiles dialog
+box. </p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Using the Database painter to select a database profile</span> <A NAME="TI1127"></A>The Database painter is an optional InfoMaker painter. If
+the Database painter is installed, you can also select the database
+profile for the database you want to access from the Database painter's
+Objects view. However, this method uses more system resources than
+using the Database Profile dialog box. </p>
+<A NAME="TI1128"></A><h2>Selecting a database profile</h2>
+<A NAME="TI1129"></A><p>You can select a database profile from the Database Profiles
+dialog box.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To connect to a database using the Database Profiles
+dialog box:</p>
+<ol><li class=fi>
+Click the Database Profile button in the
+PowerBar.<br><br>
+<i>or</i>
+<br><br>
+Select Tools&gt;Database Profile from the PowerBar.<br><br><p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Database Profile button</span> <A NAME="TI1130"></A>If your PowerBar does not include the Database Profile button,
+use the customize feature to add the button to the PowerBar. Having
+the Database Profile button on your PowerBar is useful if you frequently
+switch connections between different databases. For instructions
+on customizing toolbars, see the <i>InfoMaker User's
+Guide</i>
+.</p>
+
+The Database Profiles dialog box displays, listing your installed
+database interfaces. <br><br><p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Where the interface list comes from</span> <A NAME="TI1131"></A>When you run the Setup program, it updates the Vendors list
+in the registry with the interfaces you install. The Database Profiles
+dialog box displays the same interfaces that appear in the Vendors
+list.</p>
+</li>
+<li class=ds>
+Click the plus sign (+) to the left of
+the interface you are using.<br><br>
+<i>or</i>
+<br><br>
+Double-click the name.<br><br>
+The list expands to display the database profiles defined
+for your interface.<br><br><br><img src="images/cn1emp.gif"><br>
+</li>
+<li class=ds>
+Select the name of the database profile you want
+to access and click Connect.<br><br>
+<i>or</i>
+<br><br>
+Display the popup menu for a database profile and select
+Connect.<br><br>
+InfoMaker connects to the specified database and returns
+you to the painter workspace.<br><br></li></ol>
+<br><A NAME="TI1132"></A><h4>Database painter Objects view</h4>
+<A NAME="TI1133"></A><p>You can select a database profile from the Database painter
+Objects view. </p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To connect to a database using the Database painter:</p>
+<ol><li class=fi>
+Click the Database painter button in the
+PowerBar.<br><br>
+The Database painter displays. The Objects view lists your
+installed database interfaces. <br><br><p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Where the interface list comes from</span> <A NAME="TI1134"></A>When you run the Setup program, it updates the Vendors list
+in the registry with the interfaces you install. The Database painter
+Objects view displays the same interfaces that appear in the Vendors
+list.</p>
+</li>
+<li class=ds>
+Click the plus sign (+) to the left of
+the interface you are using.<br><br>
+<i>or</i>
+<br><br>
+Double-click the name.<br><br>
+The list expands to display the database profiles defined
+for your interface.<br><br></li>
+<li class=ds>
+Select the name of the database profile you want
+to access and click the Connect button.<br><br>
+<i>or</i>
+<br><br>
+Display the popup menu for a database profile and select
+Connect.<br><br></li></ol>
+<br><A NAME="TI1135"></A><h2>What happens when you connect</h2>
+<A NAME="TI1136"></A><h4>Connection parameters</h4>
+<A NAME="TI1137"></A><p>When you connect to a database by selecting its database profile, InfoMaker writes
+the profile name and its connection parameters to the registry.
+It is located in HKEY_CURRENT_USER\Software\Sybase\EAstudio\<br> DBprofiles\PowerBuilder\access_ole
+registry entry.</p>
+<A NAME="TI1138"></A><p>Each time you connect to a different database, InfoMaker overwrites
+the existing profile name in the registry with the name for the
+new database connection.</p>
+<A NAME="TI1139"></A><h4>What you get connected to</h4>
+<A NAME="TI1140"></A><p>When you start InfoMaker (with the Automatically Connect
+to Database system option selected) or open a painter that accesses
+the database, you are connected to the database you used last. InfoMaker determines
+which database this is by reading the registry.</p>
+<A NAME="TI1141"></A><h2>Specifying passwords in database profiles</h2>
+<A NAME="TI1142"></A><p>As shown in the completed Database Profile Setup dialog box
+for Employees, your password does <i>not</i>
+ display
+when you specify it in the Database Profile Setup dialog box.</p>
+<A NAME="TI1143"></A><p>However, when InfoMaker stores the values for this profile
+in the registry, the actual password <i>does</i>
+ display,
+albeit in encrypted form, in the DatabasePassword or LogPassword
+field. </p>
+<A NAME="TI1144"></A><h4>Suppressing display in the profile registry entry</h4>
+<A NAME="TI1145"></A><p>To suppress password display in the profile registry entry,
+do the following when you create a database profile.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To suppress password display in the profile registry
+entry:</p>
+<ol><li class=fi>
+Select the Prompt For Database Information
+checkbox on the Connection tab in the Database Profile Setup dialog
+box.<br><br>
+This tells InfoMaker to prompt for any missing information
+when you select this profile to connect to the database.<br><br></li>
+<li class=ds>
+Leave the Password box blank. Instead, specify
+the password in the dialog box that displays to prompt you for additional
+information when you connect to the database.<br><br></li></ol>
+<br><A NAME="TI1146"></A><h4>What happens</h4>
+<A NAME="TI1147"></A><p>When you specify the password in response to a prompt instead
+of in the Database Profile Setup dialog box, the password does not
+display in the registry entry for this profile.</p>
+<A NAME="TI1148"></A><p>For example, if you do not supply a password in the Database
+Profile Setup - Adaptive Server Enterprise dialog box when creating
+a database profile, the Client Library Login dialog box displays
+to prompt you for the missing information: </p>
+<br><img src="images/cn6login.gif">
+

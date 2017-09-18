@@ -1,0 +1,37 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>使用窗体控件</title>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+<h1>第N章 使用窗体控件</h1>
+<hr />
+<h2>N.1 CheckBox</h2>
+<p> 使用<strong>控件工具箱</strong>工具面板。放置好CheckBox后，点击面板上的<img src="img/ctrl_design.jpg" width="23" height="21" />可切换设计模式，在设计模式下可更改它的属性及位置，在非设计模式下点击CheckBox即可改变它的值。</p>
+<p>使用VBA添加CheckBox的代码如下：</p>
+<pre>Sub InsertChk()
+
+    Dim r As Range
+    Set r = ActiveSheet.Range(&quot;C5&quot;)
+    Dim chk As OLEObject
+    
+    Set chk = ActiveSheet.OLEObjects.Add(ClassType:=&quot;Forms.CheckBox.1&quot;, Link:=False, _
+        DisplayAsIcon:=False, Left:=r.Left, Top:=r.Top, Width:=108, Height:= _
+        19.5)
+
+    ActiveSheet.OLEObjects(chk.Name).Object.Caption = &quot;test&quot;         '显示值
+    ActiveSheet.OLEObjects(chk.Name).Object.SpecialEffect = 0        '外观
+    ActiveSheet.OLEObjects(chk.Name).Object.AutoSize = True          '自动调整大小
+    ActiveSheet.OLEObjects(chk.Name).Object.Value = True             '设为选中状态
+
+End Sub</pre>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+
+</body>
+</html>

@@ -1,0 +1,209 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+Using a pipeline in an application</TITLE>
+</HEAD>
+<BODY>
+<A NAME="BFCBFAGF"></A><h1>Using a pipeline in an application</h1>
+<A NAME="TI5393"></A><p>When you include a pipeline in an application and run it,
+the Pipeline window displays. As the window is displaying, messages
+are written to the Pipeline Log box to indicate connection to the
+source and destination databases, when these connections are occurring,
+and the elapsed time:</p>
+<br><img src="images/wwapp210.gif">
+<A NAME="TI5394"></A><p>You can print the log or save the log to any report format.
+Users may need to send the log to you to use for debugging a pipeline.
+You can empty the log at any time by clicking the Reset Log button.</p>
+<A NAME="TI5395"></A><h2>Executing pipelines</h2>
+<A NAME="TI5396"></A><p>A pipeline in an application executes when you execute it
+manually or when you set a delayed execution mode to automatically
+execute the pipeline.</p>
+<A NAME="TI5397"></A><p>The execution mode (Manual by default) shows in the Execution
+Mode box. If you set a delayed execution mode, the time settings
+and a countdown clock display in the When box.</p>
+<A NAME="TI5398"></A><h4>Manual execution</h4>
+<A NAME="TI5399"></A><p>You can manually execute a pipeline anytime, even if you have
+set a delayed execution mode.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To execute the pipeline manually:</p>
+<ol><li class=fi>
+Click the Execute button.<br><br></li></ol>
+<br><A NAME="TI5400"></A><h4>Delayed execution</h4>
+<A NAME="TI5401"></A><p>You can specify delayed automatic execution of the pipeline.
+This setting remains in effect until you close the Pipeline window.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To delay the execution of the pipeline:</p>
+<ol><li class=fi>
+Select Actions&gt;Delayed Execution
+from the menu bar.<br><br>
+The Delayed Execution dialog box displays.<br><br></li>
+<li class=ds>
+Select the Delayed radio button if it is not already
+selected:<br><br><br><img src="images/wwapp220.gif"><br>
+</li>
+<li class=ds>
+In the Start boxes, specify the execution date
+and time.<br><br>
+The day, month, numerical day, and year for the date you specify
+display under the Start boxes. You should verify that this date
+is the date you want, because the date is based on the operating
+system's time zone settings. For example, depending on
+the time zone settings, a date of 10/12/99 could mean
+October 12th or December 10th.<br><br></li>
+<li class=ds>
+Click OK.<br><br>
+The pipeline will execute at the specified date and time.<br><br></li></ol>
+<br><A NAME="TI5402"></A><h4>Delayed/Recurring execution</h4>
+<A NAME="TI5403"></A><p>You can specify delayed and recurring automatic execution
+of the pipeline. This setting remains in effect until you close
+the Pipeline window.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To delay and repeat the execution of the pipeline
+at specified intervals:</p>
+<ol><li class=fi>
+Select Actions&gt;Delayed Execution
+from the menu bar.<br><br>
+The Delayed Execution dialog box displays.<br><br></li>
+<li class=ds>
+Select the Delayed/Recurring radio button:<br><br><br><img src="images/wwapp230.gif"><br>
+</li>
+<li class=ds>
+In the Start boxes, specify the execution date
+and time.<br><br>
+The day, month, numerical day, and year for the date you specify
+display under the Start boxes. You should verify that this date
+is the date you want because the date is based on the operating
+system's time zone settings. For example, depending on
+the time zone settings, a date of 10/12/99 could mean
+October 12th or December 10th.<br><br></li>
+<li class=ds>
+In the Every boxes, specify the time delay for
+subsequent executions of the pipeline.<br><br></li>
+<li class=ds>
+Click OK.<br><br>
+The pipeline will execute at the specified start time and
+then execute repeatedly.<br><br></li></ol>
+<br><A NAME="TI5404"></A><h4>If execution errors occur</h4>
+<A NAME="TI5405"></A><p>If execution errors occur, the errors display in the Pipeline
+Errors box. You can print the errors or save the errors to any report
+format. You can sometimes correct errors in the Pipeline Errors
+box.</p>
+<A NAME="TI5406"></A><p>Users of the application usually should not repair pipeline
+execution errors. Users should contact you if execution errors occur
+and send the error log to you for debugging of the pipeline. Usually
+you should modify the pipeline object in InfoMaker to fix errors
+and redeploy the application.</p>
+<A NAME="TI5407"></A><p>At times, you may want users to fix execution errors by modifying
+the pipeline definition from the application. Advanced users of
+the application can modify the application's initialization
+file to allow them to change the pipeline object's definition
+from the application. You can tell users how to do this if needed.</p>
+<A NAME="TI5408"></A><p>For information about adding a [Pipe] section
+to the initialization file, see <A HREF="imugp132.htm#BFCCGAIE">"Modifying the pipeline object's
+definition"</A>.</p>
+<A NAME="TI5409"></A><h4>Repairing execution errors</h4>
+<A NAME="TI5410"></A><p>When a pipeline executes and has execution errors, the error
+messages display in the Pipeline Errors box in the workspace and
+instructions for repairing the errors display in a message box:</p>
+<br><img src="images/wwapp290.gif">
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To repair pipeline errors:</p>
+<ol><li class=fi>
+In the Pipeline Errors box, look at the
+Error Message column to identify errors.<br><br></li>
+<li class=ds>
+Change the data values for the appropriate columns
+in the error rows.<br><br>
+You can extend the column borders to resize the column to
+the width needed to see error messages and column data.<br><br></li>
+<li class=ds>
+Click the Repair button to execute the pipeline.<br><br>
+If errors have been corrected, the pipeline executes and the
+Pipeline Errors box clears.<br><br></li></ol>
+<br><A NAME="BFCCGAIE"></A><h2>Modifying the pipeline object's definition</h2>
+<A NAME="TI5411"></A><p>By default, you can execute a pipeline in an application,
+but you cannot modify the pipeline object's definition.</p>
+<A NAME="TI5412"></A><p>If you are deploying your application to advanced users, however,
+you may want to give users the ability to modify the pipeline object
+from the application. Allowing users to modify pipelines means that
+you do not have to modify the pipeline object in InfoMaker, recreate
+the application, and deploy it immediately, but since the pipeline
+object definition is not saved when you modify a pipeline in an
+application, you should redeploy the application later.</p>
+<A NAME="TI5413"></A><h4>What you can allow users to modify</h4>
+<A NAME="TI5414"></A><p>To modify a pipeline definition, either you or your users
+must add a new section to the application's initialization
+file. Users can change the type of pipeline operation and the Commit
+and Max Errors values. Depending on the quality of the network connection
+(particularly if users are connecting by telephone from laptops),
+lowering the Commit and Max Errors values could result in more efficient
+committing of rows to the database. For example, committing all
+rows when the database connection is through a 14.4 Kb/sec modem
+could take a long time and your phone connection could fail. It
+may be better to change the Commit value to 10.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To enable users to modify the pipeline's
+definition:</p>
+<ol><li class=fi>
+Open the application's initialization
+file and create a Pipe section by adding the following line:<br><br>
+<pre>[Pipe]</pre>
+<br><br></li>
+<li class=ds>
+Include these lines in the Pipe section:<br><br>
+<pre>[Pipe]<br> AllowTypeChange = 1<br> AllowRunTimeChange = 1</pre>
+<br><br><A NAME="TI5415"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI5416"></A>This keyword</th>
+<th align="left" valign=bottom><A NAME="TI5417"></A>Allows the user to change the</th>
+</tr>
+<tr><td valign=top><A NAME="TI5418"></A>AllowTypeChange</td>
+<td valign=top><A NAME="TI5419"></A>Type of pipeline operation: Create, Refresh, Replace,
+Append, and Update</td>
+</tr>
+<tr><td valign=top><A NAME="TI5420"></A>AllowRunTimeChange</td>
+<td valign=top><A NAME="TI5421"></A>Commit value, Max Errors value, and whether
+to pipe extended attributes</td>
+</tr>
+</table>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Omitting lines in the [Pipe] section</span> <A NAME="TI5422"></A>If you do not want users to change the pipeline type, you
+can omit the AllowTypeChange line in the [Pipe] section.
+You cannot omit the AllowRunTimeChange line.</p>
+</li>
+<li class=ds>
+Save the initialization file.<br><br>
+Now when you select the Actions menu in a pipeline, you see
+new menu items that enable you to change the pipeline type, the
+Commit value, the Max Errors value, and whether the pipeline copies
+extended attributes:<br><br><br><img src="images/wwapp240.gif"><br>
+</li></ol>
+<br><A NAME="TI5423"></A><h4>Modifying the pipeline definition</h4>
+<A NAME="TI5424"></A><p>After a user's application initialization file has
+been modified to include the [Pipe] section, the
+user can use items on the Actions menu to modify the pipeline definition.</p>
+<A NAME="TI5425"></A><p>For complete information about pipeline types,
+the Commit value, and the Max Errors value, see <A HREF="imugp106.htm#CAIBCHIF">Chapter 14, "Working with Data Pipelines "</A>.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To modify the pipeline type:</p>
+<ol><li class=fi>
+Select Actions&gt;Pipeline Type from
+the menu bar.<br><br>
+A menu of pipeline types displays.<br><br></li>
+<li class=ds>
+Select the pipeline type:<br><br><br><img src="images/wwapp250.gif"><br>
+</li></ol>
+<br><p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To modify the Commit value:</p>
+<ol><li class=fi>
+Select Actions&gt;Pipeline Commit
+After from the menu bar.<br><br>
+A menu of Commit values displays.<br><br></li>
+<li class=ds>
+Select the Commit value:<br><br><br><img src="images/wwapp260.gif"><br>
+</li></ol>
+<br><p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To modify the Max Errors value:</p>
+<ol><li class=fi>
+Select Actions&gt;Pipeline Max Errors
+Allowed from the menu bar.<br><br>
+A menu of Max Errors values displays.<br><br></li>
+<li class=ds>
+Select the Max Errors value:<br><br><br><img src="images/wwapp270.gif"><br>
+</li></ol>
+<br><p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To specify whether or not to pipe extended attributes:</p>
+<ol><li class=fi>
+Select or clear the Actions&gt;Pipeline
+Copy Extended Attributes menu item:<br><br><br><img src="images/wwapp280.gif"><br>
+</li></ol>
+<br>

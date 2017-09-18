@@ -1,0 +1,70 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+Pipeline examples </TITLE>
+</HEAD>
+<BODY>
+<A NAME="BCDDJHEI"></A><h1>Pipeline examples </h1>
+<A NAME="TI4727"></A><h4>Updating data in a destination table</h4>
+<A NAME="TI4728"></A><p>You may want to pipe data and then update the data often.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To update a destination table:</p>
+<ol><li class=fi>
+Click the Pipeline button, select an existing
+pipeline that you executed before, and click OK.<br><br>
+The pipeline definition displays. Since this pipeline has
+been executed before, the table exists in the destination database.<br><br></li>
+<li class=ds>
+Select the Update option in the pipeline definition.<br><br></li>
+<li class=ds>
+Execute the pipeline.<br><br>
+The destination table is updated with current data from the
+source database.<br><br></li></ol>
+<br><A NAME="TI4729"></A><h4>Reproducing a table definition with no data</h4>
+<A NAME="TI4730"></A><p>You can force a pipeline to create a table definition and
+not pipe data. To do this, you must use Quick Select, SQL Select,
+or Query as the data source, but it's easiest to do it
+using SQL Select.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To reproduce a table definition with no data:</p>
+<ol><li class=fi>
+Click the Pipeline button, click New, select
+SQL Select as the data source and specify the source and destination
+databases, and click OK.<br><br></li>
+<li class=ds>
+In the Select painter, open the table you want
+to reproduce and select all columns.<br><br></li>
+<li class=ds>
+In the Where tab, type an expression that will
+never evaluate to true, such as 1 = 2.<br><br></li>
+<li class=ds>
+Click the SQL Select button to create the pipeline
+definition.<br><br></li>
+<li class=ds>
+Select the Extended Attributes checkbox.<br><br></li>
+<li class=ds>
+Click the Execute button to execute the pipeline.<br><br>
+The table definition is piped to the destination database,
+but no rows of data are piped. You can open the new table in the
+Database painter and then click the Grid, Table, or Freeform button
+to view the data. As specified, there is no data.<br><br></li></ol>
+<br><p><b>If you do not use SQL Select</b>   If you use a data source other than SQL Select, you can reproduce
+a table definition by creating the pipeline definition, editing
+the data source (which opens the Select painter), and then typing
+the expression that will never evaluate to true in the Where tab.</p>
+<A NAME="TI4731"></A><h4>Piping a table to many databases</h4>
+<A NAME="TI4732"></A><p>In the Data Pipeline painter workspace, you can execute a
+pipeline many times with a different destination database each time.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To pipe a table to many databases:</p>
+<ol><li class=fi>
+Select File&gt;Destination Connect
+from the menu bar to change the destination to the database you
+want.<br><br></li>
+<li class=ds>
+Execute the pipeline.<br><br></li>
+<li class=ds>
+Repeat steps 1 and 2 for each database you want.<br><br></li></ol>
+<br><A NAME="TI4733"></A><A NAME="TI4734"></A><p>This part describes how to use forms to display and change
+information in your database</p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Access to the Form painter</span> <A NAME="TI4735"></A>To have access to the Form painter, install InfoMaker's
+form component.</p>
+

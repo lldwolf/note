@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>常见数据库错误分析</title>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+<p id="title">常见数据库错误分析
+</p>
+
+<h1>数字小数位数溢出</h1>
+<h1>Oracle字符集</h1>
+
+<h1>数字小数位数溢出</h1>
+<p>1、异常信息如下</p>
+<p>Wrong SQL Statement:<br />
+  指定的参数已超出有效值的范围。<br />
+参数名：十进制数的小数位数值必须介于0和28之间（包括0和28）</p>
+<p>解答：其实这是ORACLE和.net间的一个兼容性的问题，若oracle的字段类型为float，可以取值范围超过28位小数（Float型最高可达126位），而.net的DataTable对小数只能保留到28位（简直是个白痴），所以，你对float字段用round(字段名，28）处理一下，即可排除掉该错误</p>
+<h1>Oracle字符集</h1>
+<p>2、字符集错误</p>
+<p>如果安装的ORACLE字符集为非中文字符集（例如WE8ISO8859P1），使用System.Data.OracleClient作为驱动插入的中文字符串会全部变成“靠靠靠”之类的怪串（两个汉字一个字符串），可以使用如下两种解决方案：</p>
+<p>1、使用System.Data.OleDb作为数据驱动，其连接字符串格式如下所示：</p>
+<pre class="code" data-type="csharp">Provider=MSDAORA.1; Data Source=服务名; User Id=用户名; Password=口令; conn.cursorlocation=3</pre>
+<p>2、重新编码字符串</p>
+<pre class="code" data-type="csharp">public string GetOracleCh(string str)
+{
+	Encoding gbk_encoder = Encoding.GetEncoding(936);	//GBK
+	byte[] bs = gbk_encoder.GetBytes(str);
+	char[] cs = new char[bs.Length];
+	for (int i = 0; i < bs.Length; i++)
+		cs[i] = Convert.ToChar(bs[i]);
+	return new String(cs);
+}</pre>
+<p>同时也出现了对应的问题，那就是使用常规手段从数据库出中取出的字符串是乱码，同样使用上面的两种解决方案，第二种解决方案对应的代码如下所示：</p>
+<pre class="code" data-type="csharp">public string GetChString(string str)
+{
+	byte[] bs = new byte[str.Length];
+	for (int i = 0; i < str.Length; i++)
+		bs[i] = Convert.ToByte(str[i]);
+	Encoding gbk_encoder = Encoding.GetEncoding(936);
+	return gbk_encoder.GetString(bs);
+}</pre>
+<p>&nbsp;</p>
+
+</body>
+</html>

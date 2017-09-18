@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+    <title>Console 应用开发技巧</title>
+    <script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+    <p id="title">Console 应用开发技巧</p>
+    <h1>技巧</h1>
+    <h2>改变输出颜色</h2>
+    <pre class="code" data-type="csharp">
+public static void Error(string msg)
+{
+	ConsoleColor oldColor = Console.ForegroundColor;
+	Console.ForegroundColor = ConsoleColor.Red;
+	Console.WriteLine(msg);
+	Console.ForegroundColor = oldColor;
+}</pre>
+    <h2>设置错误代码</h2>
+    <pre class="code" data-type="csharp">Environment.Exit(1);</pre>
+    <h2>输入密码</h2>
+    <pre class="code" data-type="csharp">private static string ReadPassword()
+{
+	string pass = string.Empty;
+	ConsoleKeyInfo key = Console.ReadKey(true);
+
+	while (key.Key != ConsoleKey.Enter)
+	{
+		// Backspace Should Not Work
+		if (key.Key != ConsoleKey.Backspace && key.Key != ConsoleKey.Enter)
+		{
+			pass += key.KeyChar;
+			Console.Write("*");
+		}
+		else
+		{
+			if (key.Key == ConsoleKey.Backspace && pass.Length > 0)
+			{
+				pass = pass.Substring(0, (pass.Length - 1));
+				Console.Write("\b \b");
+			}
+		}
+
+		key = Console.ReadKey(true);
+	}
+
+	return pass;
+}</pre>
+
+</body>
+</html>

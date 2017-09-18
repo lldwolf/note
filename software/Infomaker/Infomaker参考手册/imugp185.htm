@@ -1,0 +1,60 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+Integer</TITLE>
+</HEAD>
+<BODY>
+<A NAME="CAIDIIGH"></A><A NAME="TI6793"></A><h1>Integer</h1>
+<A NAME="TI6794"></A><p>
+<FORM>
+<INPUT
+ TYPE = "BUTTON"
+ VALUE = "Examples"
+ onClick = "window.location = 'imugp185.htm#EX37';">
+<INPUT
+  TYPE = "BUTTON"
+ VALUE = "See also"
+ onClick = "window.location = 'imugp185.htm#SA37';">
+</FORM>
+</p>
+<h3>Description</h3><A NAME="TI6795"></A><p>Converts the value of a string to an integer.</p>
+
+<h3>Syntax</h3><pre><b>Integer</b> ( <i>string</i> )</pre>
+<A NAME="TI6796"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI6797"></A>Argument</th>
+<th align="left" valign=bottom><A NAME="TI6798"></A>Description</th>
+</tr>
+<tr><td valign=top><A NAME="TI6799"></A><i>string</i></td>
+<td valign=top><A NAME="TI6800"></A>The string you want returned as an integer</td>
+</tr>
+</table>
+
+<h3>Return Values</h3><A NAME="TI6801"></A><p>Integer. Returns the contents of <i>string</i> as
+an integer if it succeeds and 0 if <i>string</i> is
+not a number.</p>
+
+<A NAME="EX37"></A><h3>Examples</h3><A NAME="TI6802"></A><p>This expression converts the string 24 to an integer:<pre><i>Integer</i> ("24")</pre>
+</p>
+<A NAME="TI6803"></A><p>This expression for a computed field returns "Not
+a valid age" if age does not contain a number. The expression checks
+whether the Integer function returns 0, which means it failed to
+convert the value:<pre>If (<i>Integer</i> (age) &lt;&gt; 0, age, "Not a valid age")</pre>
+</p>
+<A NAME="TI6804"></A><p>This expression returns 0:<pre><i>Integer</i> ("3ABC")  <i></i>   // 3ABC is not a number</pre>
+</p>
+<A NAME="TI6805"></A><p>This validation rule checks that the value in the
+column the user entered is less than 100:<pre><i>Integer</i> (GetText()) &lt; 100</pre>
+</p>
+<A NAME="TI6806"></A><p>This validation rule for the column named age insures
+that age contains a string:<pre><i>Integer</i> (age) &lt;&gt; 0</pre>
+</p>
+
+<A NAME="SA37"></A><h3>See Also</h3><A NAME="TI6807"></A><p><A NAME="TI6808"></A>
+<ul>
+<li class=fi><A HREF="imugp188.htm#CAIBFFEI">IsNumber</A></li>
+<li class=ds> 
+</li>
+</ul>
+</p>
+
+

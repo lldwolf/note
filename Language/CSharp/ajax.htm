@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<title>ajax</title>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+<p id="title">AJAXPro的使用</p>
+
+<h1>N.1. 概述</h1>
+<p><a href="downloads/AJAXDemo.zip">官方示例</a></p>
+<p><a href="downloads/AJAX_6.5.17.1_DLL.zip">下载</a></p>
+<h1>一个简单的例子 </h1>
+<p>本例子只是演示AjaxPro的功能，具体实现的功能并不具有实用性。</p>
+<p>该例子从服务器获取一个对象，并显示，使用如下步骤：</p>
+<p>第一步，引用AjaxPro.dll</p>
+<p>第二步，在Web.config的&lt;System.web&gt;标签内添加如下段：</p>
+<pre class="code" data-type="xml">httpHandlers&gt;
+	&lt;add verb=&quot;POST,GET&quot; path=&quot;ajaxpro/*.ashx&quot; type=&quot;AjaxPro.AjaxHandlerFactory, AjaxPro&quot;/&gt;
+&lt;/httpHandlers&gt;</pre>
+<p>第三步，新建一个AjaxMethod.cs，存放要使用Ajax访问的类，内容如下：</p>
+<pre class="code" data-type="csharp">using System;
+using System.Collections;
+using AjaxPro;
+
+namespace ajax_test
+{
+	public class AjaxMethod
+	{
+		[AjaxMethod]
+		public static ArrayList GetNIVNumber(string str)
+		{
+			ArrayList arr = new ArrayList();
+			arr.Add(str.ToUpper());
+			return arr;
+		}
+	}
+}</pre>
+<p><img src="images/note.jpg" width="20" height="20">注意：在此需加入标签[AjaxMethod]，表示该方法可以通过AjaxPro来调用，在这里我们不需要使用Session，如果需要读取或设置Session的值，需要加入AjaxMethod的参数，例如：</p>
+<pre class="code" data-type="csharp">[AjaxMethod(HttpSessionStateRequirement.ReadWrite)]</pre>
+<p>第四步，在Page_Load事件中注册需要在Ajax中用到的类，如下所示：</p>
+<pre class="code" data-type="csharp">private void Page_Load(object sender, System.EventArgs e)
+{
+	AjaxPro.Utility.RegisterTypeForAjax(typeof(System.Collections.ArrayList)); 
+	AjaxPro.Utility.RegisterTypeForAjax(typeof(ajax_test.AjaxMethod)); 
+}</pre>
+<p>第五步，制作调用Ajax方法的页面，代码如下：</p>
+<pre class="code" data-type="xml">HTML&gt;
+&lt;HEAD&gt;
+	&lt;title&gt;AjaxForm&lt;/title&gt;
+	&lt;script language=&quot;javascript&quot;&gt;
+function testAjax()
+{
+	ajax_test.AjaxMethod.GetNIVNumber(document.Form1.text1.value, callback_GetNIVNumber);
+}
+  
+function callback_GetNIVNumber(res)
+{
+	var obj = res.value;
+	alert(obj[0]);    
+}
+	&lt;/script&gt;
+&lt;/HEAD&gt;
+&lt;body&gt;
+	&lt;form id=&quot;Form1&quot; method=&quot;post&quot; runat=&quot;server&quot;&gt;
+		&lt;input type=&quot;text&quot; name=&quot;text1&quot;/&gt;
+		&lt;input type=&quot;button&quot; value=&quot;test_ajax&quot; onclick=&quot;testAjax()&quot; /&gt;
+	&lt;/form&gt;
+&lt;/body&gt;
+&lt;/HTML&gt;</pre>
+<p>现在你可以运行测试了，该例子将输入的字符串变为大写显示。</p>
+<p>这段代码有几个地方需要注意：</p>
+<ul>
+  <li>调用Ajax的控件一定要写在runat=&quot;server&quot;的form中，不管是窗体控件还是超级链接还是别的HTML控件，否则IE会报错，提示找不到AJAX方法</li>
+  <li>不要忘记在服务器端代码中注册使用AJAX的类</li>
+  <li>调用Ajax的javascript函数可以比服务器端的定义多加一个参数，指示处理返回值的函数。</li>
+  <li>C#的ArrayList类到了客户端后会自动转为javascript数组，因为如果取元素个数的话，是用length属性而非Count属性。</li>
+</ul>
+<p>我第一次看到这段代码时，简直是惊为天人，Ajax实现了每个Web开发人员心中曾有过的梦。那就是在不刷新页面的情况下，就可以将请求请交到服务器，并得到服务器的返回结果。</p>
+<p><a href="demo/ajax_test.zip">下载本例源程序(.net framework 1.1, vs.net 2003)</a></p>
+<h1>FAX</h1>
+<p>又一次我发现在使用AjaxPro后，form的名字在编译后变掉了，例如，本来的名字为form1，但运行时javascript却提示找不到，打开源码一看，名字已经被换掉了，没办法，只好用document.forms[0]来取代原来的document.form1。</p>
+<h1>Ajax的竞争对手</h1>
+<h2>Macromedia Flash</h2>
+<p>Flash技术已经存在多年，它可以在web页面中播放交互式的视频和音乐，可以使用ActionScript编程实现与服务器的交互，能够很好的支持向量图，这些都是它相对于Ajax所具有的优势。另外flash拥有强大的组建和可视化制作工具，这是Ajax目前所缺乏的。</p>
+<p>但是运行flash必须在浏览器上安装插件，这是限制flash应用发展的原因之一。由于先天的原因，flash对搜索引擎的支持不够好，在处理大量文本的网页时性能表现不如Ajax。</p>
+<h2>Java Web Start</h2>
+<p>Java Web Start是基于Java技术的应用程序的一种部署解决方案。传统情况下，通过web发布软件需要用户在web上查找，下载，而后在系统中存放并执行可安装程序。执行安装程序后，将提示指定安装路径和安装选项，例如完全典型或最小安装。这是一项耗时而又复杂的任务，并且在安装软件的每个新版本时都必须重复进行。</p>
+<p>相反，通过web部署的应用程序，都非常容易安装和使用。Web浏览器使整个过程自动完成，没有复杂的升级过程。</p>
+<p>当然使用Java Web Start相关技术必须要求客户端安装Java运行时环境。</p>
+<h2>Microsoft Smart Client</h2>
+<p>Smart Client(智能客户端)是微软基于.NET平台推出的应用程序自动部署，更新的机制，它结合了B/S和C/S应用的长处。智能客户端是部署在IIS服务器上的，用户只需要访问相应的网址就可以运行程序，智能客户端应用本质上是基于.NET的WinForm程序，因此客户端也必须安装.NET框架才能运行。</p>
+<p>从技术实现思路的角度来比较，智能客户端技术和Java Web Start技术非常类似，只是支持的平台分别是.NET和Java。他们从本质上都属于C/S架构的应用程序，通过B/S的方式进行应用程序的下载，安装和升级。而Ajax技术则是对传统的B/S应用进行了改进，增强了其交互能力，提高了其响应速度。</p>
+<h2>IE Host WinForm</h2>
+<p>在安装了.NET框架的客户端，可以通过IE浏览器直接运行基于.NET的WinForm应用程序。从某种意义上说，IE Host WinForm和Java Applet技术很相似，是通过浏览器加载的小应用程序，需要提前下载响应的程序，它的运行依赖于.NET Framework.。而Ajax所采用的技术是标准支持的，不需要下载任何插件和程序。</p>
+<p>&nbsp; </p>
+<p>&nbsp; </p>
+
+</body>
+</html>

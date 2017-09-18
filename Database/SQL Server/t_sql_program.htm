@@ -1,0 +1,308 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>T-SQL程序设计</title>
+<script language="javascript" src="css.js"></script>
+</head>
+
+<body>
+<h1>第N章 T-SQL程序设计
+</h1>
+<hr />
+<h2>N.1 定义变量</h2>
+<p>变量的定义格式如下：</p>
+<pre>declare 变量名 变量类型 </pre>
+<p>变量名需以字符“@”开头，例如，下例声明一个整理变量：</p>
+<pre>declare @var1 int</pre>
+<p>在T-SQL中，可用的变量类型如下：</p>
+<table width="95%"  border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <th width="20%">类别</th>
+    <th width="20%">标识</th>
+    <th width="60%">说明</th>
+  </tr>
+  <tr>
+    <td rowspan="5">整型</td>
+    <td>bit</td>
+    <td>1位，0或1</td>
+  </tr>
+  <tr>
+    <td>tinyint</td>
+    <td>1字节，0~255</td>
+  </tr>
+  <tr>
+    <td>smallint</td>
+    <td>2字节，-2^15 (-32,768) 到 2^15 - 1 (32,767)</td>
+  </tr>
+  <tr>
+    <td>int</td>
+    <td>4字节，-2^31 (-2,147,483,648) 到 2^31 - 1 (2,147,483,647)</td>
+  </tr>
+  <tr>
+    <td>bigint</td>
+    <td>8字节，-2^63 (-9223372036854775808) 到 2^63-1 (9223372036854775807)</td>
+  </tr>
+  <tr>
+    <td rowspan="3">实型</td>
+    <td>real</td>
+    <td>4字节，浮点型，3.40E + 38 到 3.40E + 38，同义词为float(24)</td>
+  </tr>
+  <tr>
+    <td>float[(n)]</td>
+    <td>- 1.79E + 308 到 1.79E + 308，n尾数位数，取值范围为1-53, 默认为float(53)<br/><br/>
+	<table>
+		<tr>
+			<th>n所在范围</th>
+			<th>精度范围</th>
+			<th>存储大小</th>
+		</tr>
+		<tr>
+			<td>1 - 24</td>
+			<td>7位小数</td>
+			<td>4 byte</td>
+		</tr>
+		<tr>
+			<td>25 - 53</td>
+			<td>15位小数</td>
+			<td>8 byte</td>
+		</tr>
+	</table></td>
+  </tr>
+  <tr>
+    <td>decimal[p, [s]]<br />
+    numeric[p, [s]]</td>
+    <td><p>定点小数</p>
+      <p>p为精度，指定小数点左边和右边可以存储的十进制数字的最大个数。精度必须是从 1 到最大精度之间的值。最大精度为 38。 </p>
+    <p>s为小数位数，指定小数点右边可以存储的十进制数字的最大个数。小数位数必须是从 0 到 p 之间的值。默认小数位数是 0，因而 0 &lt;= s &lt;= p。最大存储大小基于精度而变化。 
+	</p>
+	<table>
+	<tr>
+		<th>精度</th>
+		<th>存储字节数</th>
+	</tr>
+	<tr>
+		<td>1 - 9</td>
+		<td>5</td>
+	</tr>
+	<tr>
+		<td>10 - 19</td>
+		<td>9</td>
+	</tr>
+	<tr>
+		<td>20 - 28</td>
+		<td>13</td>
+	</tr>
+	<tr>
+		<td>29 - 38</td>
+		<td>17</td>
+	</tr>
+	</table>
+	</td>
+  </tr>
+  <tr>
+    <td rowspan="4">字符型</td>
+    <td>char</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>nchar</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>varchar</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>nvarchar</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td rowspan="3">大型数据</td>
+    <td>text</td>
+    <td>大型非 Unicode 字符</td>
+  </tr>
+  <tr>
+    <td>ntext</td>
+    <td>大型 Unicode 字符</td>
+  </tr>
+  <tr>
+    <td>image</td>
+    <td>二进制数据</td>
+  </tr>
+  <tr>
+    <td rowspan="2">其它</td>
+    <td>uniqueidentifier</td>
+    <td>全局唯一标识符，可使用newid()函数生成</td>
+  </tr>
+  <tr>
+    <td>table</td>
+    <td>临时表</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+<h3>N.1.9 cursor </h3>
+<pre>DECLARE cursor_name CURSOR 
+[ LOCAL | GLOBAL ] 
+[ FORWARD_ONLY | SCROLL ] 
+[ STATIC | KEYSET | DYNAMIC | FAST_FORWARD ] 
+[ READ_ONLY | SCROLL_LOCKS | OPTIMISTIC ] 
+[ TYPE_WARNING ] 
+FOR select_statement 
+[ FOR UPDATE [ OF column_name [ ,...n ] ] ]</pre>
+<p>示例程序:</p>
+<pre>declare @user_id varchar(20)
+
+set @user_id = 'stone'
+
+declare cur_works cursor local forward_only for
+select works_no
+from design_works 
+order by works_no
+
+declare @score int
+declare @works_no varchar(20)
+
+open cur_works
+
+fetch next from cur_works into @works_no
+
+while @@fetch_status = 0
+begin
+	set @score = round(rand() * 100, 0)
+
+	insert into works_score([user_id], works_no, score)
+	values(@user_id, @works_no, @score)
+
+	fetch next from cur_works into @works_no
+end
+
+close cur_works
+deallocate cur_works</pre>
+<h3>N.1.10 table 型变量 </h3>
+<p>table型变量可做为临时表使用，如下例所示：</p>
+<pre>declare @temp_tb_lld table(a int, b int)
+insert into @temp_tb_lld values(1, 1)
+insert into @temp_tb_lld values(2, 2)
+insert into @temp_tb_lld values(3, 3)
+select * from @temp_tb_lld</pre>
+<p>值得注意是字符集问题，如果在临时表中使用varchar、text等类型的字段，它们的collate并不是当前数据库的collate，而是tempdb库的collate，这在一些情况下会引表collate冲突，例如从代码页1252到936转换错误（代码页代号具体代表的编码可在控制面板的区域选项中查，1252为ANSI Windows 1252，936为Chinese Simple GBK）。例如下例：</p>
+<pre>--当前库的collate为Latin1_General_CI_AS，tempdb库为Chinese_PRC_CI_AS
+create table test_table(a text)
+
+declare @tb table(a text)
+
+insert into @tb values('1243')
+
+insert into test_table
+select * from @tb</pre>
+<p>如果执行时，则会出现异常：对 text 数据类型不支持代码页转换。从: 936 到: 1252。需更改如下：</p>
+<pre>create table test_table(a text)
+
+declare @tb table(a text collate Latin1_General_CI_AS)
+
+insert into @tb values('1243')
+
+insert into test_table
+select * from @tb</pre>
+<h2>N.2 控制语句 </h2>
+<h3>N.2.1 赋值语句</h3>
+<p>使用set和select，set只能给一个变量赋值，而select可同时给多个变量赋值，且可根据查询结果给变量赋值。</p>
+<h3>N.2.2 if...else...</h3>
+<pre>declare @a int, @b int
+select @a = 1, @b = 2
+if @a = 2
+	select 'aaaa'
+else if @a = 1
+	select 'bbbb'
+else 
+	select 'cccc'</pre>
+<h3>N.2.3 while</h3>
+<pre>WHILE Boolean_expression
+    { sql_statement | statement_block }
+    [ BREAK ]
+    { sql_statement | statement_block }
+    [ CONTINUE ]</pre>
+<h2>N.100 游标</h2>
+<h3>N.100.1 声明语法</h3>
+<pre>DECLARE cursor_name CURSOR 
+[ LOCAL | GLOBAL ] 
+[ FORWARD_ONLY | SCROLL ] 
+[ STATIC | KEYSET | DYNAMIC | FAST_FORWARD ] 
+[ READ_ONLY | SCROLL_LOCKS | OPTIMISTIC ] 
+[ TYPE_WARNING ] 
+FOR select_statement 
+[ FOR UPDATE [ OF column_name [ ,...n ] ] ]</pre>
+<h3>N.100.2 使用举例</h3>
+<pre>DECLARE @au_id varchar(11), @au_fname varchar(20), @au_lname varchar(40),
+   @message varchar(80), @title varchar(80)
+
+PRINT &quot;-------- Utah Authors report --------&quot;
+
+DECLARE authors_cursor CURSOR FOR 
+SELECT au_id, au_fname, au_lname
+FROM authors
+WHERE state = &quot;UT&quot;
+ORDER BY au_id
+
+OPEN authors_cursor
+
+FETCH NEXT FROM authors_cursor 
+INTO @au_id, @au_fname, @au_lname
+
+WHILE @@FETCH_STATUS = 0
+BEGIN
+   PRINT &quot; &quot;
+   SELECT @message = &quot;----- Books by Author: &quot; + 
+      @au_fname + &quot; &quot; + @au_lname
+
+   PRINT @message
+
+   -- Declare an inner cursor based   
+   -- on au_id from the outer cursor.
+
+   DECLARE titles_cursor CURSOR FOR 
+   SELECT t.title
+   FROM titleauthor ta, titles t
+   WHERE ta.title_id = t.title_id AND
+   ta.au_id = @au_id   -- Variable value from the outer cursor
+
+   OPEN titles_cursor
+   FETCH NEXT FROM titles_cursor INTO @title
+
+   IF @@FETCH_STATUS &lt;&gt; 0 
+      PRINT &quot;         &lt;&lt;No Books&gt;&gt;&quot;     
+
+   WHILE @@FETCH_STATUS = 0
+   BEGIN
+      
+      SELECT @message = &quot;         &quot; + @title
+      PRINT @message
+      FETCH NEXT FROM titles_cursor INTO @title
+   
+   END
+
+   CLOSE titles_cursor
+   DEALLOCATE titles_cursor
+   
+   -- Get the next author.
+   FETCH NEXT FROM authors_cursor 
+   INTO @au_id, @au_fname, @au_lname
+END
+
+CLOSE authors_cursor
+DEALLOCATE authors_cursor</pre>
+<p>&nbsp;</p>
+<p>&nbsp; </p>
+<script language="javascript" src="index.js"></script>
+</body>
+</html>

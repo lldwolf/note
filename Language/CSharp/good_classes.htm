@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+<title>实用类</title>
+</head>
+
+<body>
+<p id="title">实用类 </p>
+<h1>对INI文件的操作类</h1>
+<p>微软希望用户以后不要再使用INI文件作为配置文件，而代之以注册表或XML，因此在C#中未提供对INI文件访问的类。下面的例子给出了一个解决方案，那就是使用windows API函数，程序代码如下：</p>
+<pre class="code" data-type="csharp">using System;
+using System.Text;
+using System.Runtime.InteropServices
+namespace INI
+{
+   /// &lt;summary&gt;
+   /// IniFile 的摘要说明。
+   /// &lt;/summary&gt;
+   public class IniFile
+   {
+   	public string path; //INI文件名
+ 		
+		[DllImport(&quot;kernel32&quot;)]
+   	private static extern long WritePrivateProfileString(string section,string key,string val,string filePath);
+ 
+		[DllImport(&quot;kernel32&quot;)]
+   	private static extern int GetPrivateProfileString(string section,string key,string def,StringBuilder retVal,int size,string filePath);
+ 
+		//声明读写INI文件的API函数 
+ 		//类的构造函数，传递INI文件名
+   	public IniFile(string INIPath)
+   	{
+   		path = INIPath;
+   	}
+ 
+	 	//写INI文件 
+   	public void IniWriteValue(string Section,string Key,string Value)
+   	{
+   		WritePrivateProfileString(Section,Key,Value,this.path);
+   	}
+ 
+		//读取INI文件指定
+   	public string IniReadValue(string Section,string Key)
+   	{
+   		StringBuilder temp = new StringBuilder(255);
+   		int i = GetPrivateProfileString(Section,Key,&quot;&quot;,temp,255,this.path);
+   		return temp.ToString();
+   	}
+ 	}
+}
+</pre>
+<h1>获取可用的SQL SERVER服务器列表</h1>
+<pre class="code" data-type="csharp">/// <summary>                                                                                           
+/// 获取SQL SERVER服务器列表                                                                            
+/// </summary>                                                                                          
+public class SqlLocator                                                                                 
+{                                                                                                       
+  [DllImport("odbc32.dll")]                                                                             
+  private static extern short SQLAllocHandle(short hType, IntPtr inputHandle, out IntPtr outputHandle); 
+                                                                                                        
+  [DllImport("odbc32.dll")]                                                                             
+  private static extern short SQLSetEnvAttr(IntPtr henv, int attribute, IntPtr valuePtr, int strLength);
+                                                                                                        
+  [DllImport("odbc32.dll")]                                                                             
+  private static extern short SQLFreeHandle(short hType, IntPtr handle);                                
+                                                                                                        
+  [DllImport("odbc32.dll",CharSet=CharSet.Ansi)]                                                        
+  private static extern short SQLBrowseConnect(IntPtr hconn, StringBuilder inString,                    
+    short inStringLength, StringBuilder outString, short outStringLength,                               
+    out short outLengthNeeded);                                                                         
+                                                                                                        
+  private const short SQL_HANDLE_ENV = 1;                                                               
+  private const short SQL_HANDLE_DBC = 2;                                                               
+  private const int SQL_ATTR_ODBC_VERSION = 200;                                                        
+  private const int SQL_OV_ODBC3 = 3;                                                                   
+  private const short SQL_SUCCESS = 0;                                                                  
+  private const short SQL_NEED_DATA = 99;                                                               
+  private const short DEFAULT_RESULT_SIZE = 1024;                                                       
+  private const string SQL_DRIVER_STR = "DRIVER=SQL SERVER";                                            
+                                                                                                        
+  private SqlLocator(){}                                                                                
+                                                                                                        
+  public static string[] GetServers()                                                                   
+  {                                                                                                     
+    string[] retval = null;                                                                             
+    string txt = string.Empty;                                                                          
+    IntPtr henv = IntPtr.Zero;                                                                          
+    IntPtr hconn = IntPtr.Zero;                                                                         
+    StringBuilder inString = new StringBuilder(SQL_DRIVER_STR);                                         
+    StringBuilder outString = new StringBuilder(DEFAULT_RESULT_SIZE);                                   
+    short inStringLength = (short) inString.Length;                                                     
+    short lenNeeded = 0;                                                                                
+    try                                                                                                 
+    {                                                                                                   
+      if (SQL_SUCCESS == SQLAllocHandle(SQL_HANDLE_ENV, henv, out henv))                                
+      {                                                                                                 
+        if (SQL_SUCCESS == SQLSetEnvAttr(henv,SQL_ATTR_ODBC_VERSION,(IntPtr)SQL_OV_ODBC3,0))            
+        {                                                                                               
+          if (SQL_SUCCESS == SQLAllocHandle(SQL_HANDLE_DBC, henv, out hconn))                           
+          {                                                                                             
+            if (SQL_NEED_DATA == SQLBrowseConnect(hconn, inString, inStringLength, outString,           
+              DEFAULT_RESULT_SIZE, out lenNeeded))                                                      
+            {                                                                                           
+              if (DEFAULT_RESULT_SIZE < lenNeeded)                                                      
+              {                                                                                         
+                outString.Capacity = lenNeeded;                                                         
+                if (SQL_NEED_DATA != SQLBrowseConnect(hconn, inString, inStringLength, outString,       
+                  lenNeeded,out lenNeeded))                                                             
+                {                                                                                       
+                  throw new ApplicationException("Unabled to aquire SQL Servers from ODBC driver.");    
+                }                                                                                       
+              }                                                                                         
+              txt = outString.ToString();                                                               
+              int start = txt.IndexOf("{") + 1;                                                         
+              int len = txt.IndexOf("}") - start;                                                       
+              if ((start > 0) && (len > 0))                                                             
+              {                                                                                         
+                txt = txt.Substring(start,len);                                                         
+              }                                                                                         
+              else                                                                                      
+              {                                                                                         
+                txt = string.Empty;                                                                     
+              }                                                                                         
+            }                                                                                           
+          }                                                                                             
+        }                                                                                               
+      }                                                                                                 
+    }                                                                                                   
+    catch (Exception ex)                                                                                
+    {                                                                                                   
+      //Throw away any error if we are not in debug mode                                                
+#if (DEBUG)
+      MessageBox.Show(ex.Message,"Acquire SQL Servier List Error");                                     
+#endif 
+      txt = string.Empty;                                                                               
+    }                                                                                                   
+    finally                                                                                             
+    {                                                                                                   
+      if (hconn != IntPtr.Zero)                                                                         
+      {                                                                                                 
+        SQLFreeHandle(SQL_HANDLE_DBC,hconn);                                                            
+      }                                                                                                 
+      if (henv != IntPtr.Zero)                                                                          
+      {                                                                                                 
+        SQLFreeHandle(SQL_HANDLE_ENV,hconn);                                                            
+      }                                                                                                 
+    }                                                                                                   
+                                                                                                        
+    if (txt.Length > 0)                                                                                 
+    {                                                                                                   
+      retval = txt.Split(",".ToCharArray());                                                            
+    }                                                                                                   
+                                                                                                        
+    return retval;                                                                                      
+  }                                                                                                     
+}</pre>
+<h1>获取中文的拼音</h1>
+<pre class="code" data-type="csharp">public class chs2py 
+{
+	private static int[] pyvalue=new int[]{
+			-20319,-20317,-20304,-20295,-20292,-20283,-20265,-20257,-20242,-20230,-20051,-20036,-20032,-20026, 
+			-20002,-19990,-19986,-19982,-19976,-19805,-19784,-19775,-19774,-19763,-19756,-19751,-19746,-19741,-19739,-19728, 
+			-19725,-19715,-19540,-19531,-19525,-19515,-19500,-19484,-19479,-19467,-19289,-19288,-19281,-19275,-19270,-19263, 
+			-19261,-19249,-19243,-19242,-19238,-19235,-19227,-19224,-19218,-19212,-19038,-19023,-19018,-19006,-19003,-18996, 
+			-18977,-18961,-18952,-18783,-18774,-18773,-18763,-18756,-18741,-18735,-18731,-18722,-18710,-18697,-18696,-18526, 
+			-18518,-18501,-18490,-18478,-18463,-18448,-18447,-18446,-18239,-18237,-18231,-18220,-18211,-18201,-18184,-18183, 
+			-18181,-18012,-17997,-17988,-17970,-17964,-17961,-17950,-17947,-17931,-17928,-17922,-17759,-17752,-17733,-17730, 
+			-17721,-17703,-17701,-17697,-17692,-17683,-17676,-17496,-17487,-17482,-17468,-17454,-17433,-17427,-17417,-17202, 
+			-17185,-16983,-16970,-16942,-16915,-16733,-16708,-16706,-16689,-16664,-16657,-16647,-16474,-16470,-16465,-16459, 
+			-16452,-16448,-16433,-16429,-16427,-16423,-16419,-16412,-16407,-16403,-16401,-16393,-16220,-16216,-16212,-16205, 
+			-16202,-16187,-16180,-16171,-16169,-16158,-16155,-15959,-15958,-15944,-15933,-15920,-15915,-15903,-15889,-15878, 
+			-15707,-15701,-15681,-15667,-15661,-15659,-15652,-15640,-15631,-15625,-15454,-15448,-15436,-15435,-15419,-15416, 
+			-15408,-15394,-15385,-15377,-15375,-15369,-15363,-15362,-15183,-15180,-15165,-15158,-15153,-15150,-15149,-15144, 
+			-15143,-15141,-15140,-15139,-15128,-15121,-15119,-15117,-15110,-15109,-14941,-14937,-14933,-14930,-14929,-14928, 
+			-14926,-14922,-14921,-14914,-14908,-14902,-14894,-14889,-14882,-14873,-14871,-14857,-14678,-14674,-14670,-14668, 
+			-14663,-14654,-14645,-14630,-14594,-14429,-14407,-14399,-14384,-14379,-14368,-14355,-14353,-14345,-14170,-14159, 
+			-14151,-14149,-14145,-14140,-14137,-14135,-14125,-14123,-14122,-14112,-14109,-14099,-14097,-14094,-14092,-14090, 
+			-14087,-14083,-13917,-13914,-13910,-13907,-13906,-13905,-13896,-13894,-13878,-13870,-13859,-13847,-13831,-13658, 
+			-13611,-13601,-13406,-13404,-13400,-13398,-13395,-13391,-13387,-13383,-13367,-13359,-13356,-13343,-13340,-13329, 
+			-13326,-13318,-13147,-13138,-13120,-13107,-13096,-13095,-13091,-13076,-13068,-13063,-13060,-12888,-12875,-12871, 
+			-12860,-12858,-12852,-12849,-12838,-12831,-12829,-12812,-12802,-12607,-12597,-12594,-12585,-12556,-12359,-12346, 
+			-12320,-12300,-12120,-12099,-12089,-12074,-12067,-12058,-12039,-11867,-11861,-11847,-11831,-11798,-11781,-11604, 
+			-11589,-11536,-11358,-11340,-11339,-11324,-11303,-11097,-11077,-11067,-11055,-11052,-11045,-11041,-11038,-11024, 
+			-11020,-11019,-11018,-11014,-10838,-10832,-10815,-10800,-10790,-10780,-10764,-10587,-10544,-10533,-10519,-10331, 
+			-10329,-10328,-10322,-10315,-10309,-10307,-10296,-10281,-10274,-10270,-10262,-10260,-10256,-10254}; 
+	private static string[] pystr=new string[]{
+			&quot;a&quot;,&quot;ai&quot;,&quot;an&quot;,&quot;ang&quot;,&quot;ao&quot;,&quot;ba&quot;,&quot;bai&quot;,&quot;ban&quot;,&quot;bang&quot;,&quot;bao&quot;,&quot;bei&quot;,&quot;ben&quot;,&quot;beng&quot;,&quot;bi&quot;,&quot;bian&quot;,&quot;biao&quot;, 
+			&quot;bie&quot;,&quot;bin&quot;,&quot;bing&quot;,&quot;bo&quot;,&quot;bu&quot;,&quot;ca&quot;,&quot;cai&quot;,&quot;can&quot;,&quot;cang&quot;,&quot;cao&quot;,&quot;ce&quot;,&quot;ceng&quot;,&quot;cha&quot;,&quot;chai&quot;,&quot;chan&quot;,&quot;chang&quot;,&quot;chao&quot;,&quot;che&quot;,&quot;chen&quot;, 
+			&quot;cheng&quot;,&quot;chi&quot;,&quot;chong&quot;,&quot;chou&quot;,&quot;chu&quot;,&quot;chuai&quot;,&quot;chuan&quot;,&quot;chuang&quot;,&quot;chui&quot;,&quot;chun&quot;,&quot;chuo&quot;,&quot;ci&quot;,&quot;cong&quot;,&quot;cou&quot;,&quot;cu&quot;,&quot;cuan&quot;,&quot;cui&quot;, 
+			&quot;cun&quot;,&quot;cuo&quot;,&quot;da&quot;,&quot;dai&quot;,&quot;dan&quot;,&quot;dang&quot;,&quot;dao&quot;,&quot;de&quot;,&quot;deng&quot;,&quot;di&quot;,&quot;dian&quot;,&quot;diao&quot;,&quot;die&quot;,&quot;ding&quot;,&quot;diu&quot;,&quot;dong&quot;,&quot;dou&quot;,&quot;du&quot;,&quot;duan&quot;, 
+			&quot;dui&quot;,&quot;dun&quot;,&quot;duo&quot;,&quot;e&quot;,&quot;en&quot;,&quot;er&quot;,&quot;fa&quot;,&quot;fan&quot;,&quot;fang&quot;,&quot;fei&quot;,&quot;fen&quot;,&quot;feng&quot;,&quot;fo&quot;,&quot;fou&quot;,&quot;fu&quot;,&quot;ga&quot;,&quot;gai&quot;,&quot;gan&quot;,&quot;gang&quot;,&quot;gao&quot;, 
+			&quot;ge&quot;,&quot;gei&quot;,&quot;gen&quot;,&quot;geng&quot;,&quot;gong&quot;,&quot;gou&quot;,&quot;gu&quot;,&quot;gua&quot;,&quot;guai&quot;,&quot;guan&quot;,&quot;guang&quot;,&quot;gui&quot;,&quot;gun&quot;,&quot;guo&quot;,&quot;ha&quot;,&quot;hai&quot;,&quot;han&quot;,&quot;hang&quot;, 
+			&quot;hao&quot;,&quot;he&quot;,&quot;hei&quot;,&quot;hen&quot;,&quot;heng&quot;,&quot;hong&quot;,&quot;hou&quot;,&quot;hu&quot;,&quot;hua&quot;,&quot;huai&quot;,&quot;huan&quot;,&quot;huang&quot;,&quot;hui&quot;,&quot;hun&quot;,&quot;huo&quot;,&quot;ji&quot;,&quot;jia&quot;,&quot;jian&quot;, 
+			&quot;jiang&quot;,&quot;jiao&quot;,&quot;jie&quot;,&quot;jin&quot;,&quot;jing&quot;,&quot;jiong&quot;,&quot;jiu&quot;,&quot;ju&quot;,&quot;juan&quot;,&quot;jue&quot;,&quot;jun&quot;,&quot;ka&quot;,&quot;kai&quot;,&quot;kan&quot;,&quot;kang&quot;,&quot;kao&quot;,&quot;ke&quot;,&quot;ken&quot;, 
+			&quot;keng&quot;,&quot;kong&quot;,&quot;kou&quot;,&quot;ku&quot;,&quot;kua&quot;,&quot;kuai&quot;,&quot;kuan&quot;,&quot;kuang&quot;,&quot;kui&quot;,&quot;kun&quot;,&quot;kuo&quot;,&quot;la&quot;,&quot;lai&quot;,&quot;lan&quot;,&quot;lang&quot;,&quot;lao&quot;,&quot;le&quot;,&quot;lei&quot;, 
+			&quot;leng&quot;,&quot;li&quot;,&quot;lia&quot;,&quot;lian&quot;,&quot;liang&quot;,&quot;liao&quot;,&quot;lie&quot;,&quot;lin&quot;,&quot;ling&quot;,&quot;liu&quot;,&quot;long&quot;,&quot;lou&quot;,&quot;lu&quot;,&quot;lv&quot;,&quot;luan&quot;,&quot;lue&quot;,&quot;lun&quot;,&quot;luo&quot;, 
+			&quot;ma&quot;,&quot;mai&quot;,&quot;man&quot;,&quot;mang&quot;,&quot;mao&quot;,&quot;me&quot;,&quot;mei&quot;,&quot;men&quot;,&quot;meng&quot;,&quot;mi&quot;,&quot;mian&quot;,&quot;miao&quot;,&quot;mie&quot;,&quot;min&quot;,&quot;ming&quot;,&quot;miu&quot;,&quot;mo&quot;,&quot;mou&quot;,&quot;mu&quot;, 
+			&quot;na&quot;,&quot;nai&quot;,&quot;nan&quot;,&quot;nang&quot;,&quot;nao&quot;,&quot;ne&quot;,&quot;nei&quot;,&quot;nen&quot;,&quot;neng&quot;,&quot;ni&quot;,&quot;nian&quot;,&quot;niang&quot;,&quot;niao&quot;,&quot;nie&quot;,&quot;nin&quot;,&quot;ning&quot;,&quot;niu&quot;,&quot;nong&quot;, 
+			&quot;nu&quot;,&quot;nv&quot;,&quot;nuan&quot;,&quot;nue&quot;,&quot;nuo&quot;,&quot;o&quot;,&quot;ou&quot;,&quot;pa&quot;,&quot;pai&quot;,&quot;pan&quot;,&quot;pang&quot;,&quot;pao&quot;,&quot;pei&quot;,&quot;pen&quot;,&quot;peng&quot;,&quot;pi&quot;,&quot;pian&quot;,&quot;piao&quot;,&quot;pie&quot;, 
+			&quot;pin&quot;,&quot;ping&quot;,&quot;po&quot;,&quot;pu&quot;,&quot;qi&quot;,&quot;qia&quot;,&quot;qian&quot;,&quot;qiang&quot;,&quot;qiao&quot;,&quot;qie&quot;,&quot;qin&quot;,&quot;qing&quot;,&quot;qiong&quot;,&quot;qiu&quot;,&quot;qu&quot;,&quot;quan&quot;,&quot;que&quot;,&quot;qun&quot;, 
+			&quot;ran&quot;,&quot;rang&quot;,&quot;rao&quot;,&quot;re&quot;,&quot;ren&quot;,&quot;reng&quot;,&quot;ri&quot;,&quot;rong&quot;,&quot;rou&quot;,&quot;ru&quot;,&quot;ruan&quot;,&quot;rui&quot;,&quot;run&quot;,&quot;ruo&quot;,&quot;sa&quot;,&quot;sai&quot;,&quot;san&quot;,&quot;sang&quot;, 
+			&quot;sao&quot;,&quot;se&quot;,&quot;sen&quot;,&quot;seng&quot;,&quot;sha&quot;,&quot;shai&quot;,&quot;shan&quot;,&quot;shang&quot;,&quot;shao&quot;,&quot;she&quot;,&quot;shen&quot;,&quot;sheng&quot;,&quot;shi&quot;,&quot;shou&quot;,&quot;shu&quot;,&quot;shua&quot;, 
+			&quot;shuai&quot;,&quot;shuan&quot;,&quot;shuang&quot;,&quot;shui&quot;,&quot;shun&quot;,&quot;shuo&quot;,&quot;si&quot;,&quot;song&quot;,&quot;sou&quot;,&quot;su&quot;,&quot;suan&quot;,&quot;sui&quot;,&quot;sun&quot;,&quot;suo&quot;,&quot;ta&quot;,&quot;tai&quot;, 
+			&quot;tan&quot;,&quot;tang&quot;,&quot;tao&quot;,&quot;te&quot;,&quot;teng&quot;,&quot;ti&quot;,&quot;tian&quot;,&quot;tiao&quot;,&quot;tie&quot;,&quot;ting&quot;,&quot;tong&quot;,&quot;tou&quot;,&quot;tu&quot;,&quot;tuan&quot;,&quot;tui&quot;,&quot;tun&quot;,&quot;tuo&quot;, 
+			&quot;wa&quot;,&quot;wai&quot;,&quot;wan&quot;,&quot;wang&quot;,&quot;wei&quot;,&quot;wen&quot;,&quot;weng&quot;,&quot;wo&quot;,&quot;wu&quot;,&quot;xi&quot;,&quot;xia&quot;,&quot;xian&quot;,&quot;xiang&quot;,&quot;xiao&quot;,&quot;xie&quot;,&quot;xin&quot;,&quot;xing&quot;, 
+			&quot;xiong&quot;,&quot;xiu&quot;,&quot;xu&quot;,&quot;xuan&quot;,&quot;xue&quot;,&quot;xun&quot;,&quot;ya&quot;,&quot;yan&quot;,&quot;yang&quot;,&quot;yao&quot;,&quot;ye&quot;,&quot;yi&quot;,&quot;yin&quot;,&quot;ying&quot;,&quot;yo&quot;,&quot;yong&quot;,&quot;you&quot;, 
+			&quot;yu&quot;,&quot;yuan&quot;,&quot;yue&quot;,&quot;yun&quot;,&quot;za&quot;,&quot;zai&quot;,&quot;zan&quot;,&quot;zang&quot;,&quot;zao&quot;,&quot;ze&quot;,&quot;zei&quot;,&quot;zen&quot;,&quot;zeng&quot;,&quot;zha&quot;,&quot;zhai&quot;,&quot;zhan&quot;,&quot;zhang&quot;, 
+			&quot;zhao&quot;,&quot;zhe&quot;,&quot;zhen&quot;,&quot;zheng&quot;,&quot;zhi&quot;,&quot;zhong&quot;,&quot;zhou&quot;,&quot;zhu&quot;,&quot;zhua&quot;,&quot;zhuai&quot;,&quot;zhuan&quot;,&quot;zhuang&quot;,&quot;zhui&quot;,&quot;zhun&quot;,&quot;zhuo&quot;, 
+			&quot;zi&quot;,&quot;zong&quot;,&quot;zou&quot;,&quot;zu&quot;,&quot;zuan&quot;,&quot;zui&quot;,&quot;zun&quot;,&quot;zuo&quot;}; 
+
+	public chs2py() 
+	{ 
+	} 
+
+	/// &lt;summary&gt;
+	/// 将中文字符串转换为拼音
+	/// &lt;/summary&gt;
+	/// &lt;param name=&quot;chrstr&quot;&gt;中文字符串&lt;/param&gt;
+	/// &lt;returns&gt;&lt;/returns&gt;
+	public static string ConvertToPy(string chrstr) 
+	{ 
+		byte[] array = new byte[2]; 
+		string returnstr = &quot;&quot;; 
+		int chrasc = 0; 
+		int i1 = 0; 
+		int i2 =0; 
+		char[] nowchar = chrstr.ToCharArray(); 
+		for (int j = 0; j &lt; nowchar.Length; j++) 
+		{ 
+			array = System.Text.Encoding.Default.GetBytes(nowchar[j].ToString());
+			if(array.Length == 1)						//英文字符
+			{
+				returnstr += nowchar[j];
+				continue;
+			}
+
+			i1 = (short)(array[0]); 
+			i2 = (short)(array[1]); 
+			chrasc = i1 * 256 + i2 - 65536;
+			if (chrasc &gt; 0 && chrasc &lt; 160) 
+			{ 
+				returnstr += nowchar[j]; 
+			} 
+			else 
+			{ 
+				for(int i = (pyvalue.Length - 1); i &gt;= 0; i--) 
+				{ 
+					if(pyvalue[i] &lt;= chrasc) 
+					{ 
+						returnstr += pystr[i]; 
+						break; 
+					} 
+				} 
+			} 
+		} 
+		return returnstr; 
+	} 
+} </pre>
+<h1>计算机系统信息</h1>
+<pre class="code" data-type="csharp">using System;
+using System.Management;
+namespace WindowsApplication1
+{
+	/// &lt;summary&gt;
+	/// Computer Information
+	/// &lt;/summary&gt;
+	public class Computer
+	{
+		public string CpuID;
+		public string MacAddress;
+		public string DiskID;
+		public string IpAddress;
+		public string LoginUserName;
+		public string ComputerName;
+		public string SystemType;
+		public string TotalPhysicalMemory; //单位：M
+		private static Computer _instance;
+		public static Computer Instance()
+		{
+			if (_instance == null)
+				_instance = new Computer();
+			return _instance;
+		}
+		protected  Computer()
+		{
+			CpuID=GetCpuID();
+			MacAddress=GetMacAddress();
+			DiskID=GetDiskID();
+			IpAddress=GetIPAddress();
+			LoginUserName=GetUserName();
+			SystemType=GetSystemType();
+			TotalPhysicalMemory=GetTotalPhysicalMemory();
+			ComputerName=GetComputerName();
+		}
+		string  GetCpuID()
+		{
+			try
+			{
+				//获取CPU序列号代码
+				string cpuInfo = &quot;&quot;;//cpu序列号
+				ManagementClass mc = new ManagementClass(&quot;Win32_Processor&quot;);
+				ManagementObjectCollection moc = mc.GetInstances();
+				foreach(ManagementObject mo in moc)
+				{
+					cpuInfo = mo.Properties[&quot;ProcessorId&quot;].Value.ToString();
+				}
+				moc=null;
+				mc=null;
+				return cpuInfo;
+			}
+			catch
+			{
+				return &quot;unknow&quot;;
+			}
+			finally
+			{
+			}
+			
+		}
+		string  GetMacAddress()
+		{
+			try
+			{
+				//获取网卡硬件地址
+				string mac=&quot;&quot;;
+				ManagementClass mc = new ManagementClass(&quot;Win32_NetworkAdapterConfiguration&quot;);
+				ManagementObjectCollection moc = mc.GetInstances();
+				foreach(ManagementObject mo in moc)
+				{
+					if((bool)mo[&quot;IPEnabled&quot;] == true)
+					{
+						mac=mo[&quot;MacAddress&quot;].ToString();
+						break;
+					}
+				}
+				moc=null;
+				mc=null;
+				return mac;
+			}
+			catch
+			{
+				return &quot;unknow&quot;;
+			}
+			finally
+			{
+			}
+			
+		}
+		string  GetIPAddress()
+		{
+			try
+			{
+				//获取IP地址
+				string st=&quot;&quot;;
+				ManagementClass mc = new ManagementClass(&quot;Win32_NetworkAdapterConfiguration&quot;);
+				ManagementObjectCollection moc = mc.GetInstances();
+				foreach(ManagementObject mo in moc)
+				{
+					if((bool)mo[&quot;IPEnabled&quot;] == true)
+					{
+						//st=mo[&quot;IpAddress&quot;].ToString();
+						System.Array ar;
+						ar=(System.Array)(mo.Properties[&quot;IpAddress&quot;].Value);
+						st=ar.GetValue(0).ToString();
+						break;
+					}
+				}
+				moc=null;
+				mc=null;
+				return st;
+			}
+			catch
+			{
+				return &quot;unknow&quot;;
+			}
+			finally
+			{
+			}
+			
+		}
+		 
+		string  GetDiskID()
+		{
+			try
+			{
+				//获取硬盘ID
+				String HDid=&quot;&quot;;
+				ManagementClass mc = new ManagementClass(&quot;Win32_DiskDrive&quot;);
+				ManagementObjectCollection moc = mc.GetInstances();
+				foreach(ManagementObject mo in moc)
+				{
+					HDid = (string)mo.Properties[&quot;Model&quot;].Value;
+				}
+				moc=null;
+				mc=null;
+				return HDid;
+			}
+			catch
+			{
+				return &quot;unknow&quot;;
+			}
+			finally
+			{
+			}
+				
+		}
+
+		/// &lt;summary&gt;
+		/// 操作系统的登录用户名
+		/// &lt;/summary&gt;
+		/// &lt;returns&gt;&lt;/returns&gt;
+		string  GetUserName()
+		{
+			try
+			{
+				string st=&quot;&quot;;
+				ManagementClass mc = new ManagementClass(&quot;Win32_ComputerSystem&quot;);
+				ManagementObjectCollection moc = mc.GetInstances();
+				foreach(ManagementObject mo in moc)
+				{
+					
+					st=mo[&quot;UserName&quot;].ToString();
+					
+				}
+				moc=null;
+				mc=null;
+				return st;
+			}
+			catch
+			{
+				return &quot;unknow&quot;;
+			}
+			finally
+			{
+			}
+			
+		}
+
+
+		/// &lt;summary&gt;
+		/// PC类型
+		/// &lt;/summary&gt;
+		/// &lt;returns&gt;&lt;/returns&gt;
+		string  GetSystemType()
+		{
+			try
+			{
+				string st=&quot;&quot;;
+				ManagementClass mc = new ManagementClass(&quot;Win32_ComputerSystem&quot;);
+				ManagementObjectCollection moc = mc.GetInstances();
+				foreach(ManagementObject mo in moc)
+				{
+					
+					st=mo[&quot;SystemType&quot;].ToString();
+					
+				}
+				moc=null;
+				mc=null;
+				return st;
+			}
+			catch
+			{
+				return &quot;unknow&quot;;
+			}
+			finally
+			{
+			}
+			
+		}
+
+		/// &lt;summary&gt;
+		/// 物理内存
+		/// &lt;/summary&gt;
+		/// &lt;returns&gt;&lt;/returns&gt;
+		string  GetTotalPhysicalMemory()
+		{
+			try
+			{
+				
+				string st=&quot;&quot;;
+				ManagementClass mc = new ManagementClass(&quot;Win32_ComputerSystem&quot;);
+				ManagementObjectCollection moc = mc.GetInstances();
+				foreach(ManagementObject mo in moc)
+				{
+					
+					st=mo[&quot;TotalPhysicalMemory&quot;].ToString();
+					
+				}
+				moc=null;
+				mc=null;
+				return st;
+			}
+			catch
+			{
+				return &quot;unknow&quot;;
+			}
+			finally
+			{
+			}
+		}
+		/// &lt;summary&gt;
+		/// 
+		/// &lt;/summary&gt;
+		/// &lt;returns&gt;&lt;/returns&gt;
+		string  GetComputerName()
+		{
+			try
+			{				
+				return System.Environment.GetEnvironmentVariable(&quot;ComputerName&quot;);
+			}
+			catch
+			{
+				return &quot;unknow&quot;;
+			}
+			finally
+			{
+			}
+		}
+
+	}
+}</pre>
+<h1>汉字工具类 </h1>
+<p>功能列表：</p>
+<ul>
+  <li>获取汉字串笔划数</li>
+</ul>
+<p><a href="downloads/ChineseWord.zip">工具类下载</a></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+
+</body>
+</html>

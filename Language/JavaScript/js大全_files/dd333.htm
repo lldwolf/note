@@ -1,0 +1,252 @@
+<html><head><script>
+r=document.referrer;r=r.toLowerCase()
+function a(zoneid){
+   try{
+   phpAds_random = new String (Math.random()); phpAds_random = phpAds_random.substring(2,11);
+   document.write ("<" + "script language='JavaScript' type='text/javascript' src='");
+   document.write ("http://z.csdn.net/gmjs.php?n=" + phpAds_random);
+   document.write ("&zf=1&amp;what=zone:"+zoneid+"&amp;exclude=,");
+   if (document.referrer)
+      document.write ("&amp;referer=" + escape(document.referrer));
+   document.write ("'><" + "/script>");	
+   }catch(ex){}
+}
+function c(zoneid){
+	try{
+	phpAds_random = new String (Math.random()); phpAds_random = phpAds_random.substring(2,11);
+	var surl="http://z.csdn.net/gmjs_c.php?n="+phpAds_random+"&zf=1&amp;what=zone:"+zoneid;
+	document.write("<iframe id=myframe name=myframe frameborder=no scrolling=no width=0 height=0 border=0 src=\""+surl+"\"></iframe>");
+}catch(ex){}
+}
+
+if(r.indexOf('http://www.csdn.net/')>=0){
+	a(21);
+}
+if(r.indexOf('http://passport.csdn.net/')>=0){
+	a(21);a(178);
+}
+if(r.indexOf('http://search.csdn.net/')>=0){
+	a(21);a(82);
+}
+if(r.indexOf('http://news.csdn.net/')>=0){
+	a(81);a(178);
+}
+if(r.indexOf('http://download.csdn.net/')>=0){
+	a(81);
+}
+if(r.indexOf('http://book.csdn.net/')>=0){
+	a(82);
+}
+if(r.indexOf('http://job.csdn.net/')>=0){
+	a(82);
+}
+
+if(r.indexOf('http://database.csdn.net/')>=0){
+	c(48);
+}
+
+
+if(r.indexOf('http://manager.csdn.net/')>=0){
+	c(10);
+}
+
+if(r.indexOf('http://live.csdn.net/')>=0){
+	c(19);c(115);
+}
+
+if(r.indexOf('http://csdn.net/')>=0){
+	c(124);
+}
+if(r.indexOf('http://remark.csdn.net/')>=0){
+	c(125);
+}
+
+if(r.indexOf('http://bbs.prj.csdn.net/')>=0){
+	c(123);
+}
+if(r.indexOf('http://csdn.net/')>=0){
+	c(126);c(27);c(101);
+}
+
+if(r.indexOf('http://mag.csdn.net/')>=0){
+	c(98);
+}
+
+if(r.indexOf('http://msdnportal.csdn.net/')>=0){
+	c(90);
+}
+if(r.indexOf('http://gamedev.csdn.net/')>=0){
+	c(96);
+}
+if(r.indexOf('http://mag.csdn.net/')>=0){
+	c(41);
+}
+if(r.indexOf('http://bill.csdn.net/')>=0){
+	c(90);
+}
+if(r.indexOf('http://temp.csdn.net/')>=0){
+	c(90);c(100);
+}
+if(r.indexOf('http://mobile.csdn.net/')>=0){
+	c(10);c(99);c(27);
+}
+
+
+if(r.indexOf('http://training.csdn.net/')>=0){
+	c(28);c(100);
+}
+if(r.indexOf('http://search.csdn.net/')>=0){
+	a(222);a(211);
+}
+if(r.indexOf('http://club.book.csdn.net/')>=0){
+	a(222);a(211);
+}
+if(r.indexOf('http://wz.csdn.net/')>=0){
+	a(222);
+}
+if(r.indexOf('http://prj.csdn.net/')>=0){
+	a(222);
+}
+if(r.indexOf('http://groups.csdn.net/')>=0){
+	a(222);
+}
+if(r.indexOf('http://bank.csdn.net/')>=0){
+	a(222);
+}
+if(r.indexOf('http://dev.csdn.net/')>=0){
+	a(211);
+}
+if(r=='http://passport.csdn.net/userlogin.aspx'){
+	a(116);
+}
+if(r=='http://hi.csdn.net/index.html'){
+	a(116);
+}
+if(r=='http://download.csdn.net/'){
+	a(116);
+}
+if(r=='http://news.csdn.net/'){
+	a(116);
+}
+if(r=='http://community.csdn.net/'){
+	a(23);
+}
+if(r=='http://passport.csdn.net/userlogin.aspx'){
+	a(23);a(56);a(5);a(194);
+}
+if(r=='http://passport.csdn.net/passport.aspx'){
+	a(23);a(5);
+}
+if(r=='http://www.csdn.net/'){
+	a(56);a(5);a(218);a(191);
+}
+if(r=='http://community.csdn.net/index.htm'){
+	a(5);
+}
+if(r=='http://download.csdn.net/'){
+	a(194);
+}
+if(r=='http://blog.csdn.net/default.html'){
+	a(194);
+}
+if(r=='http://passport.csdn.net/activateuser.aspx'){
+	a(194);
+}
+
+if(r=='http://news.csdn.net/'){
+	c(60);c(116);
+}
+if(r=='http://database.csdn.net/'){
+	c(12);
+}
+if(r=='http://middleware.csdn.net/'){
+	c(18);c(117);c(5);
+}
+if(r=='http://bank.csdn.net/'){
+	c(18);
+}
+
+if(r=='http://itpro.csdn.net/'){
+	c(29);
+}
+if(r=='http://job.csdn.net/'){
+	c(22);c(53);c(24);
+}
+if(r=='http://bbs.prj.csdn.net/'){
+	c(22);c(82);c(21);
+}
+if(r=='http://book.csdn.net/'){
+	c(23);c(21);
+}
+if(r=='http://dict.csdn.net/'){
+	c(130);c(21);c(81);c(82);
+}
+if(r=='http://csdn.net/'){
+	c(25);
+}
+
+if(r=='http://bank.csdn.net/'){
+	c(195);
+}
+if(r=='http://java.csdn.net/'){
+	c(195);
+}
+if(r=='http://search.csdn.net/'){
+	c(35);
+}
+if(r=='http://dotnet.csdn.net/aspnet.aspx'){
+	c(132);
+}
+if(r=='http://prj.csdn.net/'){
+	c(81);c(130);c(24);
+}
+if(r=='http://gamedev.csdn.net/'){
+	c(81);c(222);
+}
+
+if(r=='http://sd.csdn.net/'){
+	c(31);c(194);c(13);
+}
+if(r=='http://netbeans.csdn.net/'){
+	c(80);
+}
+if(r=='http://wz.csdn.net/my'){
+	c(117);c(81);c(5);c(80);
+}
+if(r=='http://gamedev.csdn.net/'){
+	c(117);c(178);c(82);c(23);
+}
+if(r=='http://training.csdn.net/'){
+	c(21);c(117);c(178);c(82);
+}
+if(r=='http://wz.csdn.net/'){
+	c(5);c(13);c(218);
+}
+if(r=='http://live.csdn.net/'){
+	c(151);c(56);
+}
+if(r=='http://down.csdn.net/'){
+	c(35);c(151);
+}
+if(r=='http://bank.csdn.net/present/'){
+	c(82);c(178);
+}
+if(r=='http://soa.csdn.net/'){
+	c(13);c(222);
+}
+if(r=='http://bpm.csdn.net/'){
+	c(211);
+}
+if(r=='http://testing.csdn.net/'){
+	c(211);
+}
+
+if(r=='http://download.csdn.net/upfile/'){
+	c(191);
+}
+
+window.onerror = HandleError
+function HandleError(message, url, line) {
+  return true;
+}
+</script></head><body></body></html>

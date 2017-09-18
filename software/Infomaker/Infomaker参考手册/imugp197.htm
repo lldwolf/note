@@ -1,0 +1,53 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+LeftTrim</TITLE>
+</HEAD>
+<BODY>
+<A NAME="CAIBJDIF"></A><A NAME="TI7000"></A><h1>LeftTrim</h1>
+<A NAME="TI7001"></A><p>
+<FORM>
+<INPUT
+ TYPE = "BUTTON"
+ VALUE = "Examples"
+ onClick = "window.location = 'imugp197.htm#EX49';">
+<INPUT
+  TYPE = "BUTTON"
+ VALUE = "See also"
+ onClick = "window.location = 'imugp197.htm#SA49';">
+</FORM>
+</p>
+<h3>Description</h3><A NAME="TI7002"></A><p>Removes spaces from the beginning of a string.</p>
+
+<h3>Syntax</h3><pre><b>LeftTrim</b> ( <i>string</i> )</pre>
+<A NAME="TI7003"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI7004"></A>Argument</th>
+<th align="left" valign=bottom><A NAME="TI7005"></A>Description</th>
+</tr>
+<tr><td valign=top><A NAME="TI7006"></A><i>string</i></td>
+<td valign=top><A NAME="TI7007"></A>The string you want returned with leading
+spaces deleted</td>
+</tr>
+</table>
+
+<h3>Return Values</h3><A NAME="TI7008"></A><p>String. Returns a copy of <i>string</i> with
+leading spaces deleted if it succeeds and the empty string ("")
+if an error occurs.</p>
+
+<A NAME="EX49"></A><h3>Examples</h3><A NAME="TI7009"></A><p>This expression returns RUTH:<pre><i>LeftTrim</i> (" RUTH")</pre>
+</p>
+<A NAME="TI7010"></A><p>This expression for a computed field deletes any
+leading blanks from the value in the column lname and returns the
+value preceded by the salutation specified in salut_emp:<pre>salut_emp + " " +  <i>LeftTrim</i> (lname)</pre>
+</p>
+
+<A NAME="SA49"></A><h3>See Also</h3><A NAME="TI7011"></A><p><A NAME="TI7012"></A>
+<ul>
+<li class=fi><A HREF="imugp231.htm#CAIBGGAI">RightTrim</A></li>
+<li class=ds><A HREF="imugp249.htm#CAIBIEHJ">Trim</A></li>
+<li class=ds> 
+</li>
+</ul>
+</p>
+
+

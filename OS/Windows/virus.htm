@@ -1,0 +1,26 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<title>病毒、木马清除手记</title>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+ <h1>病毒、木马清除手记 </h1>
+ <hr>
+ <h2>stdup.dll</h2>
+ <p>属广告软件，在windows2000下表现为上网时，不停弹出广告，若系统安装了屏蔽广告的插件（如Google工具条）,会导制explorer.exe的CPU占用率100%，出现IE假死的情况，使用filemon查看，发现explorer.exe不停读写stdd.ini文件。</p>
+ <p>进安全模式，删除system32目录下的stdup.dll和stdsver.dll，在注册表项中删除HKLM\Software\STDUP，若c:\program files下有目录STDUP，也一块儿删除，在windows服务中删除服务StdService.</p>
+ <h2>Logo1_.exe, rundl132.exe</h2>
+ <p>病毒及木马的复合体，感染可执行文件，截止2006-10-18日未发现有杀毒软件能对其进行彻底查杀。</p>
+ <p>感染后，程序图标会变花，在所有目录下自动生成文件“_desktop.ini”，该病毒可以通过网络传播，传播周期为很短。如果是新做的系统处于中了毒的网络环境内，只要那个机器一上网，3分钟内必定中招。</p>
+ <p>该病毒在%windir%下生成Logo1_.exe及rundl132.exe文件（注意，与系统的rundll32.exe不同，它的为数字1，而不是字母l），以及Dll.dll和%SYSTEM32%目录下的2Sy.dLL、Launcher.exe、mywl.dll等文件，视变种不同而文件名不同。创建自动运用的服务“IPSEC Policy Agent”，其描述为“管理 IP 安全策略以及启动 ISAKMP/Oakley (IKE) 和 IP 安全驱动程序。”，隐蔽性极强，对应文件为%system32%\setup\server.exe。并创建注册表项&quot;HKEY_CURRENT_USER\Software\Microsoft\Windows NT\CurrentVersion\Windows\load&quot;，其值为rundl132.exe的路径。</p>
+ <p>要删除，需进入安全模式，删除上述文件、服务及注册表项，同时对删除的文件都要起一个同名的文件夹。因为很多可执行文件已被感染，只要一运行这些被感染的文件，上述文件就会再次被自动创建。因此需创建同名文件夹以获得免疫效果（同名文件不行，该病毒会覆盖）。</p>
+ <p>因可执行文件已被感染，因此需彻底重装机器方可彻底删除，以上方法只是临时应对措施。至于变花的图标，无法恢复为原状。</p>
+ <h3>http://about.blank.la</h3>
+ <p>除了将主页改为 http://about.blank.la 外，未发现有其它破坏，删除system32/msqmx.sys </p>
+ <script language="javascript" src="index.js"></script>
+</body>
+</html>

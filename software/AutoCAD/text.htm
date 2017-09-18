@@ -1,0 +1,201 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>文字</title>
+<script language="javascript" src="css.js"></script>
+</head>
+
+<body>
+<h1>第N章 文字
+</h1>
+<hr />
+<h2>N.1 文本相关命令</h2>
+<table width="80%" >
+  <tr>
+    <th width="20%">命令</th>
+    <th width="80%">说明</th>
+  </tr>
+  <tr>
+    <td>text</td>
+    <td>单行文本</td>
+  </tr>
+  <tr>
+    <td>mtext</td>
+    <td>多行文本</td>
+  </tr>
+  <tr>
+    <td>find</td>
+    <td>查找替换文本</td>
+  </tr>
+  <tr>
+    <td>-style</td>
+    <td>载入大字体，使用SHX或TTF文件</td>
+  </tr>
+  <tr>
+    <td>style</td>
+    <td>图形方式查看、加载、修改文字样式</td>
+  </tr>
+  <tr>
+    <td>ddedit</td>
+    <td>编辑文字</td>
+  </tr>
+  <tr>
+    <td>justifytext</td>
+    <td>修改选定文字对象的对正点而不改变其位置</td>
+  </tr>
+  <tr>
+    <td>spacetrans</td>
+    <td>转换模型空间单位和图纸空单位之间的距离</td>
+  </tr>
+  <tr>
+    <td>spell</td>
+    <td>拼写检查</td>
+  </tr>
+  <tr>
+    <td>qtext</td>
+    <td>控制文本是否显示</td>
+  </tr>
+</table>
+<h2>N.2 特殊字符 </h2>
+<p>可使用如下方式输入特殊字符</p>
+<table width="80%" >
+  <tr>
+    <th width="50%">特殊字符</th>
+    <th width="80%">控制符</th>
+  </tr>
+  <tr>
+    <td>°(度数符号)</td>
+    <td>%%d</td>
+  </tr>
+  <tr>
+    <td>±(加/减公差符号)</td>
+    <td>%%p</td>
+  </tr>
+  <tr>
+    <td>φ(直径符号)</td>
+    <td>%%c</td>
+  </tr>
+  <tr>
+    <td>%(单个百分号，只有当另一个控制字符以它开始时才使用)</td>
+    <td>%%%</td>
+  </tr>
+  <tr>
+    <td>特殊的代码符号(其中nnn表示一个三位的代码)</td>
+    <td>%%nnn</td>
+  </tr>
+</table>
+<h2>N.3 文字样式 </h2>
+<h3>N.3.1 AutoCAD 提供的字体</h3>
+<p>大字体是指亚洲文字字体</p>
+<table width="80%" >
+  <tr>
+    <th width="30%">字体文件</th>
+    <th width="70%">字体</th>
+  </tr>
+  <tr>
+    <td>txt.shx</td>
+    <td>默认字体，使用形文件定义，可节省空间，字体全部由直线构成</td>
+  </tr>
+  <tr>
+    <td>gbcbig.shx</td>
+    <td>汉字字体</td>
+  </tr>
+  <tr>
+    <td>gbeitc.shx</td>
+    <td>斜体西文</td>
+  </tr>
+  <tr>
+    <td>gbenor.shx</td>
+    <td>正体西文</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+<h3>N.3.2 使用VBA创建文字样式</h3>
+<p>需使用AcadTextStyle对象，使用AcadDocument.TextStyles.Add方法创建，对于该对象，下面的两个属性需要设置好：</p>
+<ul>
+  <li>fontFile：字体名</li>
+  <li>BigFontStyle：使用大字体时的字体样式</li>
+</ul>
+<p>对于.shx字体，可以直接赋文件名，对于TTF字体，在使用style设置属性时所用的中文字体均属于TTF字体，则需要设置对应的TTF文件名的全路径，这样相当不方便，其实我们还有更好的方法，那就是使用AcadTextStyle.SetFont方法，它的定义如下：</p>
+<pre>RetVal = object.SetFont(Typeface, Bold, Italic, CharSet, PitchAndFamily)</pre>
+<p>其中Typeface即为字体名，至于Charset和PitchAndFamily的值，属于系统内部定义，其值在AutoCAD的VBA帮助中作了如下描述，</p>
+<pre>Public Const ANSI_CHARSET = 0
+Public Const DEFAULT_CHARSET = 1
+Public Const SYMBOL_CHARSET = 2
+Public Const SHIFTJIS_CHARSET = 128
+Public Const OEM_CHARSET = 255
+
+' Pitch Values
+Public Const DEFAULT_PITCH = 0
+Public Const FIXED_PITCH = 1
+Public Const VARIABLE_PITCH = 2
+' Family Values
+Public Const FF_DONTCARE = 0    '  Don't care or don't know.
+Public Const FF_ROMAN = 16      '  Variable stroke width, serifed.
+Public Const FF_SWISS = 32      '  Variable stroke width, sans-serifed.
+Public Const FF_MODERN = 48     '  Constant stroke width, serifed or sans-serifed.
+Public Const FF_SCRIPT = 64     '  Cursive, etc.
+Public Const FF_DECORATIVE = 80 '  Old English, etc.
+' TrueType Flag
+Public Const TMPF_TRUETYPE = &amp;H4</pre>
+<p>但也并不全，因为我测试对于宋体，其CharSet值为134。</p>
+<p>下面是一个我写的小程序，用来在两个文件之间复制文字样式</p>
+<pre>'复制文字样式
+Public Function CopyTextStyle(srcDoc As AcadDocument, srcStyleName As String, objDoc As AcadDocument) As AcadTextStyle
+
+    Dim srcStyle As AcadTextStyle
+    Dim objStyle As AcadTextStyle
+    
+    Set srcStyle = GetTextStyle(srcDoc, srcStyleName)
+    Set objStyle = objDoc.TextStyles.Add(srcStyleName)
+    
+    '大字体文件, 仅限于shx文件, 在autocad安装目录的fonts目录下检索是否能找到这个文件
+    If Trim(srcStyle.BigFontFile) &lt;&gt; &quot;&quot; And UCase(Right(srcStyle.BigFontFile, 3)) = &quot;SHX&quot; Then
+        If ExistsFile(GetAutocadDirectory() &amp; &quot;\fonts&quot;, srcStyle.BigFontFile) Then
+            objStyle.BigFontFile = srcStyle.BigFontFile
+        End If
+    End If
+    
+    Dim typeFace As String
+    Dim Bold As Boolean
+    Dim Italic As Boolean
+    Dim charSet As Long
+    Dim PitchandFamily As Long
+    
+    
+    '文样样式, 可为TTF, 也可能为SHX, TTF要到Windows目录下去找
+    If Trim(srcStyle.fontFile) &lt;&gt; &quot;&quot; Then
+        srcStyle.GetFont typeFace, Bold, Italic, charSet, PitchandFamily
+        If UCase(Right(srcStyle.fontFile, 3)) = &quot;TTF&quot; Then
+            objStyle.SetFont typeFace, Bold, Italic, charSet, PitchandFamily
+        ElseIf UCase(Right(srcStyle.fontFile, 3)) = &quot;SHX&quot; Then
+            objStyle.SetFont typeFace, Bold, Italic, charSet, PitchandFamily
+        End If
+    End If
+    
+    objStyle.Height = srcStyle.Height
+    objStyle.LastHeight = srcStyle.LastHeight
+    objStyle.ObliqueAngle = srcStyle.ObliqueAngle
+    objStyle.TextGenerationFlag = srcStyle.TextGenerationFlag
+    objStyle.Width = srcStyle.Width
+
+    Set CopyTextStyle = objStyle
+    
+End Function</pre>
+<h2>N.100 命令解释</h2>
+<h3>N.100.1 -style</h3>
+<pre>-style
+输入文字样式名或[?]&lt;Standard&gt;: hz			//输入自定义样式名 
+指定完整的字体名或字体文件名(TTF或SHX): &lt;txt&gt;: txt,hztxt		//其中hztxt是定义的大字体样式
+……</pre>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<script language="javascript" src="index.js"></script>
+</body>
+</html>

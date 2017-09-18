@@ -1,0 +1,227 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<script type="text/javascript" src="css.js"></script>
+<title>第N章 存储过程</title>
+</head>
+
+<body>
+<h1>第N章 存储过程与函数</h1>
+<hr>
+<h2><a href="#create_proc">N.1 存储过程的创建及使用</a></h2>
+<h2><a href="#syntax">N.2 语法</a></h2>
+<h2><a href="#cursor">N.3 使用光标 </a></h2>
+<h2><a href="#exception">N.4 使用异常</a></h2>
+<h2><a href="#skills">N.5 一些在存储过程中使用的技巧</a></h2>
+<h2><a href="#function">N.6 函数</a></h2>
+<h2><a href="#debug">N.7 调试</a></h2>
+<h2><a href="#notice">N.8 注意点</a></h2>
+<h2><a href="#limitation">N.9 存储过程的功能限制 </a></h2>
+<hr />
+<h2><a name="create_proc"></a>N.1 存储过程的创建及使用</h2>
+<h3>N.1.1 创建样例 </h3>
+<p>我们先建一张测试用表“test_table”</p>
+<pre>create table test_table(a int, b int default 10) </pre>
+<p>建立存储过程“test_proc”，其功能为向测试表中插入一条记录：</p>
+<pre>CREATE OR REPLACE  PROCEDURE "TJDG"."TEST_PROC" (
+ val in int default 10
+)
+as
+begin
+ insert into test_table(a) values(val);
+ commit;
+end TEST_PROC;</pre>
+<h3>N.1.2 执行</h3>
+
+<p>可以在PL/SQL的“Command Window”或ORACLE自带的SQL*Plus中执行如下命令：</p>
+<pre>exec test_proc(100)
+或
+execute test_proc(100)</pre>
+<h3>N.1.3 查看SP的内容</h3>
+<p>除了使用数据库工具查看外，我们可以使用系统表来查看SP内容</p>
+<pre>SELECT TEXT FROM USER_SOURCE WHERE NAME='SP Name';</pre>
+<h2><a name="syntax"></a>N.2 语法</h2>
+<h3>N.2.1 参数</h3>
+<p>参数声明在过程名后的“()”中，多个参数间用“,”隔开。</p>
+<p>在参数声明中，不能使用括号，例如不能使用number(10, 0)这种声明方式，直接声明为number类型即可，同理，number类型直接声明为number即可。</p>
+<h3>N.2.2 变量</h3>
+<p>在参数声明完成的as之后，可加入变量声明语句，例如</p>
+<pre>CREATE OR REPLACE  PROCEDURE "TJDG"."TEST_PROC" (
+ val in int default 10
+)
+as
+ var1 number(10, 0);
+begin
+ insert into test_table(a) values(val);
+ commit;
+end TEST_PROC;</pre>
+<p>变量的赋值有两种方式，一种是直接赋值，例如：</p>
+<pre>var1 := 100;</pre>
+<p>另一种是通过SQL语句赋值，例如：</p>
+<pre> select max(a) into var1 from test_table;</pre>
+<h3>N.2.3 条件语句</h3>
+<pre> if var1 = 10 then
+   var1 := 100;
+ else
+   var1 := 200;
+ end if;</pre>
+<h3>N.2.4 循环语句</h3>
+<p>在ORACLE的循环语句中，循环体不能为空。</p>
+<h4>N.2.4.1 Loop循环 </h4>
+<pre> loop <br>   exit when var1 &gt; 100;<br>   var1 := var1 + 1;<br> end loop;</pre>
+<h4>N.2.4.2 for循环</h4>
+<pre>FOR i IN 1..10 LOOP
+	……
+END LOOP;</pre>
+<h2><a name="cursor"></a>N.3 使用光标 </h2>
+<h3>N.3.1 声明</h3>
+<pre> cursor cur1 is<br> select a, b from test_table;</pre>
+<h3>N.3.2 使用 </h3>
+<pre> open cur1;
+ loop<br>   fetch cur1 into var1, var2;<br>   exit when cur1%notfound;<br> end loop;
+ close cur1;</pre>
+<h3>N.3.3 使用参数</h3>
+<p>在代表cursor的SQL语句中，可以使用定义的定量，如下所示：</p>
+<pre>m_table_id int;
+cursor cur1 is
+select a, b from test_table where table_id = m_table_id ;</pre>
+<p>可读性更好的方法是使用参数，如下所示：</p>
+<pre>cursor cur1(p_table_id int) is
+select a, b from test_table where table_id = p_table_id ;
+...
+open cursor(10);</pre>
+<h2><a name="exception"></a>N.4 使用异常</h2>
+<h3>N.4.1 基本语法</h3>
+<pre>begin
+...
+exception
+  when others then
+    handle_error(...);
+end;</pre>
+<h3>N.4.2 自定义异常</h3>
+<pre>declare 
+e_excption_1 exception;
+declare e_excption_2 exception;
+...
+declare e_excption_n exception;
+begin
+  if condtion1 then
+    raise e_exception_1;
+  else if condition2 then
+    raise e_exception_2;
+  ...
+  else if condition_n then
+    raise e_exception_n;
+  end if;
+exception
+  when e_exception_1 then
+    handle_error_1(...);
+  ...
+  when e_exception_n then
+    handle_error_n(...);
+  when others then
+    handl_other_error(...);
+end;</pre>
+<h2><a name="skills"></a>N.5 一些在存储过程中使用的技巧</h2>
+<h3>N.5.1 执行以参数形式传入的SQL语句</h3>
+<pre>--示例，传入表名，删除该表
+CREATE OR REPLACE  PROCEDURE "REPORT_SYS"."DROP_TABLE" (
+ table_name in varchar2 
+)
+as
+str_sql varchar2(1000);
+begin
+  str_sql := 'drop table ' || table_name;
+  execute immediate str_sql;
+  commit;
+end;</pre>
+<h3>N.5.2 使用DBMS_SQL执行传入SQL语句</h3>
+<pre>CREATE OR REPLACE  PROCEDURE "REPORT_SYS"."DROP_TABLE" (
+ table_name in varchar2 
+)
+as
+cursor_id  INTEGER;  
+BEGIN  
+  cursor_id  :=  DBMS_SQL.OPEN_CURSOR;  
+  DBMS_SQL.PARSE(cursor_id,  'DROP  table  ' ||  table_name,  DBMS_SQL.NATIVE);  
+
+  DBMS_SQL.CLOSE_CURSOR  (cursor_id);  
+EXCEPTION  
+  WHEN  OTHERS  THEN  
+  DBMS_SQL.CLOSE_CURSOR  (cursor_id);  
+end;</pre>
+<h2><a name="function"></a>N.6 函数</h2>
+<p>函数与存储过程基本相同，主要是创建声明不同，其创建声明的方式为</p>
+<pre>create or replace function [schema.]function_name(参数列表)
+return 返回值类型
+as
+begin
+  函数体
+end;</pre>
+<p>另外就是在函数体中要使用return 语句返回一个值。</p>
+<p>下面是一个简单的示例，返回传入参数+1的值</p>
+<pre>REATE OR REPLACE  FUNCTION "TEST_FUNC" (
+ parm1 in number
+)
+return number
+as
+  val number(10, 0);
+begin
+  val := parm1 + 1;
+  return val;
+
+end test_func;</pre>
+<p>以如下方式调用：</p>
+<pre>select test_func(10) from dual;</pre>
+<h2><a id="debug"></a>N.7 调试</h2>
+<p>下面是一个存储过程的调试例子</p>
+<p>存储过程声明</p>
+<pre>PROCEDURE       SCORE_CARD_GENERATE_QUERY (
+    columnList        varchar2_tabtyp,
+    criteriaFields    varchar2_tabtyp,
+    criteria          varchar2,
+    message     OUT   varchar2,
+    query       OUT   clob
+    )</pre>
+<p>测试程序</p>
+<pre>DECLARE
+  COLUMNLIST GOLLF.VARCHAR2_TABTYP;
+  CRITERIAFIELDS GOLLF.VARCHAR2_TABTYP;
+  CRITERIA VARCHAR2(200);
+  MESSAGE VARCHAR2(200);
+  QUERY CLOB;
+BEGIN
+  -- Modify the code to initialize the variable
+  -- COLUMNLIST := NULL;
+  -- Modify the code to initialize the variable
+  -- CRITERIAFIELDS := NULL;
+  COLUMNLIST := GOLLF.VARCHAR2_TABTYP('10045', '10359', '10360');
+  CRITERIAFIELDS := GOLLF.VARCHAR2_TABTYP('10041', '10045');
+  CRITERIA := '(DEAL.SOEID = ''IQ15757'' And DEAL.DEAL_PROJECT_NAME = ''Tamar Project Bridge'')';
+
+  SCORE_CARD_GENERATE_QUERY(
+    COLUMNLIST => COLUMNLIST,
+    CRITERIAFIELDS => CRITERIAFIELDS,
+    CRITERIA => CRITERIA,
+    MESSAGE => MESSAGE,
+    QUERY => QUERY
+  );
+  DBMS_OUTPUT.PUT_LINE('MESSAGE = ' || MESSAGE);
+  DBMS_OUTPUT.PUT_LINE('QUERY = ' || QUERY);
+END;</pre>
+<h2><a name="notice"></a>N.8 注意点</h2>
+<p>1、在存储过程中执行完更新操作后，一定要在最后加入“commit”命令提交</p>
+<h2><a name="limitation"></a>N.9 存储过程的功能限制 </h2>
+<p>1、默认情况下，不能在存储过程中执行创建表、视图、存储过程的语句</p>
+<p><img src="images/note.jpg" width="20" height="20">注意：在存储过程中的所有操作都必须直接显式授权，不能通过角色授权。必须把 CREATE TABLE 权限显式授予创建 plsql 的这个用户，授权方式如下：</p>
+<pre>grant create table to plsql</pre>
+<p>2、如果要在存储过程中访问别的用户所属的对象，需要将该对象的相应访问权限赋给当前用户</p>
+<p>3、不能在存储过程中使用纯粹的查询语句，也就是说，不能指望用存储过程返回一个结果集。</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp; </p>
+<script type="text/javascript" src="index.js"></script>
+</body>
+</html>

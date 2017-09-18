@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<title>网页对话框</title>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+<p id="title">网页对话框 </p>
+
+<h1>基本介绍</h1>
+<ul>
+  <li> showModalDialog() (IE 4+ 支持)，用来创建一个显示HTML内容的模态对话框。</li>
+  <li> showModelessDialog() (IE 5+ 支持) ，用来创建一个显示HTML内容的非模态对话框。   </li>
+</ul>
+<h1>使用方法</h1>
+<ul>
+  <li> vReturnValue = window.showModalDialog(sURL [, vArguments] [,sFeatures])</li>
+  <li> vReturnValue = window.showModelessDialog(sURL [, vArguments] [,sFeatures])</li>
+</ul>
+<h2>N.2.1 参数说明：</h2>
+<ul>
+  <li> sURL--
+  必选参数，类型：字符串。用来指定对话框要显示的文档的URL。</li>
+  <li> vArguments--
+  可选参数，类型：变体。用来向对话框传递参数。传递的参数类型不限，包括数组等。对话框通过window.dialogArguments来取得传递进来的参数。</li>
+  <li> sFeatures--
+    可选参数，类型：字符串。用来描述对话框的外观等信息，可以使用以下的一个或几个，用分号“;”隔开。</li>
+	<ol>
+		<li>dialogHeight :对话框高度，不小于１００px，ＩＥ４中dialogHeight 和 dialogWidth 默认的单位是em，而ＩＥ５中是px，为方便其见，在定义modal方式的对话框时，用px做单位。</li>
+      <li>dialogWidth: 对话框宽度。</li>
+	    <li> dialogLeft: 离屏幕左的距离。</li>
+	    <li>dialogTop: 离屏幕上的距离。</li>
+	    <li>center: {yes | no | 1 | 0 }：窗口是否居中，默认yes，但仍可以指定高度和宽度。</li>
+	    <li>help: {yes | no | 1 | 0 }：是否显示帮助按钮，默认yes。</li>
+	    <li>resizable: {yes | no | 1 | 0 } ［ＩＥ５＋］：是否可被改变大小。默认no。</li>
+	    <li>status: {yes | no | 1 | 0 } ［IE5+］：是否显示状态栏。默认为yes[ Modeless]或no[Modal]。</li>
+	    <li>scroll:{ yes | no | 1 | 0 | on | off }：指明对话框是否显示滚动条。默认为yes。</li>
+	    <li> 下面几个属性是用在HTA中的，在一般的网页中一般不使用。</li>
+	    <li>dialogHide:{ yes | no | 1 | 0 | on | off }：在打印或者打印预览时对话框是否隐藏。默认为no。</li>
+	    <li>edge:{ sunken | raised }：指明对话框的边框样式。默认为raised。</li>
+	    <li>unadorned:{ yes | no | 1 | 0 | on | off }：默认为no。</li>
+	</ol>
+</ul>
+
+<h1>参数传递：</h1>
+<p> 1.要想对话框传递参数，是通过vArguments来进行传递的。类型不限制，对于字符串类型，最大为4096个字符。也可以传递对象，例如：</p>
+<pre>parent.htm
+&lt;script&gt;
+var obj = new Object();
+obj.name=&quot;51js&quot;;
+window.showModalDialog(&quot;modal.htm&quot;,obj,&quot;dialogWidth=200px;dialogHeight=100px&quot;);
+&lt;/script&gt;
+
+modal.htm
+&lt;script&gt;
+var obj = window.dialogArguments
+alert(&quot;您传递的参数为：&quot; + obj.name)
+&lt;/script&gt;
+</pre>
+<p>2.可以通过window.returnValue向打开对话框的窗口返回信息，当然也可以是对象。例如：</p>
+<pre>parent.htm
+&lt;script&gt;
+str =window.showModalDialog(&quot;modal.htm&quot;, &quot;&quot;,&quot;dialogWidth=200px;dialogHeight=100px&quot;);
+alert(str);
+&lt;/script&gt;
+
+modal.htm
+&lt;script&gt;
+window.returnValue=&quot;http://www.51js.com&quot;;
+&lt;/script&gt;
+</pre>
+<p>如果直接点右上角的关闭按钮关闭，那么返回undefined，可用是否为null来检测。</p>
+<h1>Firefox替代方案</h1>
+<p>Firefox不支持showModalDialog，其实一开始是支持的，但后来发现它有安全性上的隐患，就把这个功能取消了。可使用window.open代替，不过第三个参数要加上“modal=yes”，下面是一个示例，被打开的窗口修改父窗口的页面数据，值得注意的是，对于innerText属性，修改后Firefox不会刷新页面，需要使用innerHTML属性：</p>
+<pre>function test2()
+{
+	var frm = window.opener;
+	frm.document.all["td22"].innerHTML = "abcd";
+	window.close();
+}</pre>
+<h1>技巧集</h1>
+<h2>N.5.1 使showModalDialog打开的页面自动刷新</h2>
+<p>通过ShowModalDialog打开的页面会自动从IE的缓存中获得内容并显示。如果想每次通过ShowModalDialog打开的页面都自动刷新的话，只需要在脚本中设定一个参数，例如：</p>
+<pre>ShowModalDialog("xxx.aspx?id=1&amp;tempid=" + Math.random());</pre>
+<p> 其中tempid是一个xxx.aspx中并不需要使用到的参数，只要这个参数每次不同，通过ShowModalDialog打开的页面就都会自动刷新。</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<script language="javascript" src="index.js"></script>
+</body>
+</html>

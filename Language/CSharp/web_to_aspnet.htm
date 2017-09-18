@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<title>网站项目转为ASP.NET应用程序</title>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+<p id="title">网站项目转为ASP.NET应用程序</p>
+
+<p>安装vs2005 sp1 CHS, 英文的装不上</p>
+<p> 下载地址 <a href="http://download.microsoft.com/download/8/0/7/8071514d-9370-45c3-8af1-4ff09a70e59d/VS80sp1-KB926604-X86-CHS.exe">http://download.microsoft.com/download/8/0/7/8071514d-9370-45c3-8af1-4ff09a70e59d/VS80sp1-KB926604-X86-CHS.exe</a></p>
+<p>新建一个Web应用程序项目, 删除自动生成的Default.aspx和Web.config,</p>
+<p>添加原网站程序需要的引用</p>
+<p>在Windows资源管理器中复制网站下所有的文件, 然后在VS2005的解决方案资源管理器中粘贴</p>
+<p>在解决方案资源管理器的项目结点上运行鼠标右键菜单命令&quot;转换为Web应用程序&quot;，进行格式转换，其中自动为每个.aspx添加.designer.cs文件，将原先的App_Code目录转为Old_App_Code目录</p>
+<p>将Old_App_Code目录中的所有类的“生成操作” 属性设为“编译”</p>
+<p>如果有Global.asax文件，备份其内容，然后删除，新建一个默认的“全局应用程序类”，并将原先的内容添加到合适的位置。</p>
+<p>重新编译项目，祈祷。</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+
+</body>
+</html>

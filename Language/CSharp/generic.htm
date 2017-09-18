@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+<title>C#语言基础</title>
+</head>
+
+<body>
+ <p id="title">泛型</p>
+ 
+ <h1>泛型声明</h1>
+ <h2>泛型类</h2>
+ <h2>泛型方法</h2>
+ <h1>泛型的声明限制</h1>
+ <p>详细说明可参考 <a href="http://msdn.microsoft.com/en-us/library/d5x73970.aspx">http://msdn.microsoft.com/en-us/library/d5x73970.aspx</a></p>
+<h2>可使用的限制列表</h2>
+ <table style="width:95%">
+	<tr>
+		<th>限制</th>
+		<th>说明</th>
+	</tr>
+	<tr>
+		<td>where T: struct</td>
+		<td>T必须为值类型</td>
+	</tr>
+	<tr>
+		<td>where T : class</td>
+		<td>T必须为引用类型</td>
+	</tr>
+	<tr>
+		<td>where T : new()</td>
+		<td>T必须实现一个无参构造函数</td>
+	</tr>
+	<tr>
+		<td>where T : &lt;base class name&gt;</td>
+		<td>T必须为指定类或其继承类</td>
+	</tr>
+	<tr>
+		<td>where T : &lt;interface name&gt;</td>
+		<td>T必须实现指定的接口，可使用多个接口，以逗号分隔，接口也可以为泛型接口</td>
+	</tr>
+	<tr>
+		<td>where T : U</td>
+		<td>泛型间的继承限制，T必须为U或U的继承类</td>
+	</tr>
+ </table>
+ <h2>示例</h2>
+ <h3>多重限制</h3>
+ <pre class="code" data-type="csharp">class EmployeeList&lt;T&gt; where T : Employee, IEmployee, System.IComparable&lt;T&gt;, new()
+{
+    // ...
+}</pre>
+<h3>操作符重载失效问题</h3>
+<p>如果使用了 <i>Where T : class</i> 的限制，需避免使用类似 == 或 != 之类的操作符，因为这些操作将永远使用引用比较，即使泛型对象重载了这些操作符。如下面的代码，虽然string重载了 == 操作符，但仍将打印False。</p>
+<pre class="code" data-type="csharp">public static void OpTest&lt;T&gt;(T s, T t) where T : class
+{
+	System.Console.WriteLine(s == t);
+}
+static void Main()
+{
+	string s1 = &quot;target&quot;;
+	System.Text.StringBuilder sb = new System.Text.StringBuilder(&quot;target&quot;);
+	string s2 = sb.ToString();
+	OpTest&lt;string&gt;(s1, s2);
+}</pre>
+<p>这是因为在编译时，编译只知道这些是引用类型，因此使用了引用类型缺省的比较方式。如果需要使用比较功能，建议方式为使用限制 <i>where T : IComparable&lt;T&gt;</i></p>
+<h3>多重泛型限制</h3>
+<pre class="code" data-type="csharp">class Base { }
+class Test&lt;T, U&gt;
+    where U : struct
+    where T : Base, new() { }</pre>
+<h3>无限制</h3>
+<p>如果对泛型参数不作限制，则有如下注意点</p>
+<ul>
+	<li>不能使用 == 和 != 操作符，因为编译器不知道该使用值判断还是引用判断</li>
+	<li>可使用任意的强制类型转换（仅保证编译通过）</li>
+	<li>可与 null 进行比较。</li>
+</ul>
+<h3>泛型间继承限制</h3>
+<p>常用于泛型类下的泛型方法</p>
+<pre class="code" data-type="csharp">class List&lt;T&gt;
+{
+    void Add&lt;U&gt;(List&lt;U&gt; items) where U : T {/*...*/}
+}</pre>
+  
+</body>
+</html>

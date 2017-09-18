@@ -1,0 +1,45 @@
+unit MemoStrFrm;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, ModuleFrm, StdCtrls;
+
+type
+  TFrmMemoStr = class(TFrm)
+    Memo1: TMemo;
+    Button1: TButton;
+    Button2: TButton;
+    Button3: TButton;
+    OpenDialog1: TOpenDialog;
+    procedure Button1Click(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  FrmMemoStr: TFrmMemoStr;
+
+implementation
+
+{$R *.dfm}
+
+procedure TFrmMemoStr.Button1Click(Sender: TObject);
+var
+  MyStream: TFileStream;
+begin
+  if OpenDialog1.Execute then
+  begin
+    MyStream := TFileStream.Create(OpenDialog1.FileName, fmOpenRead);
+    try
+      Memo1.Lines.LoadFromStream(MyStream);
+    finally
+      MyStream.Free;
+    end;
+  end;
+end;
+
+end.

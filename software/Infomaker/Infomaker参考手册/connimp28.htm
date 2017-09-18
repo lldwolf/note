@@ -1,0 +1,282 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+Sybase DirectConnect </TITLE>
+</HEAD>
+<BODY>
+<A NAME="BFCDDIEI"></A><h1>Sybase DirectConnect </h1>
+<A NAME="TI1001"></A><p>This section describes how to use the Sybase DirectConnect
+interface in InfoMaker.</p>
+<A NAME="TI1002"></A><h2>Using the DirectConnect interface</h2>
+<A NAME="TI1003"></A><p>The DirectConnect interface uses Sybase's Open Client
+CT-Library (CT-Lib) API to access a database via Sybase middleware
+data access products such as DirectConnect for DB2/MVS
+and Open ServerConnect.</p>
+<A NAME="TI1004"></A><h3>Connecting via the DirectConnect middleware product</h3>
+<A NAME="TI1005"></A><p>Sybase DirectConnect is a data access server that provides
+a standardized middleware interface between your applications and
+your enterprise data sources. Data access services to a particular
+database are defined in a DirectConnect server. Since a DirectConnect
+server can support multiple access services, you can access multiple
+databases through a single server. When you use the DirectConnect
+interface to connect to a particular database, your connection is
+routed through the access service for that database. An access service
+consists of a named set of configuration properties and a specific access
+service library. </p>
+<A NAME="TI1006"></A><p>To access DB2 data on an IBM mainframe via a DirectConnect
+server, you can use the DirectConnect interface to connect via either
+a Sybase DirectConnect for MVS access service or a Sybase DirectConnect
+Transaction Router Service (TRS). </p>
+<A NAME="TI1007"></A><p>TRS provides fast access to a DB2/MVS database by
+using remote stored procedures. The DirectConnect interface supports
+both versions of the TRS library: TRSLU62 and TRSTCP. </p>
+<A NAME="TI1008"></A><p>The Sybase DirectConnect server operates in two modes: SQL
+transformation and passthrough. The DirectConnect interface for
+DB2/MVS uses passthrough mode, which allows your InfoMaker application
+to have direct access to the capabilities of the DB2/MVS
+data source.</p>
+<A NAME="TI1009"></A><h3>Connecting via the Open ServerConnect middleware
+product</h3>
+<A NAME="TI1010"></A><p>Sybase's Open ServerConnect supports mainframe applications
+that retrieve and update data stored on the mainframe that Sybase
+client applications can execute. Client applications can connect
+directly to a DB2/MVS database via an Open ServerConnect
+application residing on the mainframe, eliminating the need for
+an intermediate gateway like DirectConnect. (This type of connection is
+also known as a <i>gateway-less</i>
+ connection.) In
+addition, an Open ServerConnect application presents mainframe Remote
+Procedure Calls (RPCs) as database stored procedures to the client
+application. </p>
+<A NAME="TI1011"></A><p>To access DB2 data on an IBM mainframe via Open ServerConnect,
+you can use the DirectConnect interface to connect via Open ServerConnect
+for IMS and MVS. </p>
+<A NAME="TI1012"></A><h3>Selecting the type of connection</h3>
+<A NAME="TI1013"></A><p>To select how InfoMaker accesses the database, use the
+Choose Gateway dropdown listbox on the Connection tab of the DirectConnect
+Database Profile Setup dialog box and select one of the following:<A NAME="TI1014"></A>
+<ul>
+<li class=fi>Access Service</li>
+<li class=ds>Gatewayless</li>
+<li class=ds>TRS
+</li>
+</ul>
+</p>
+<A NAME="TI1015"></A><p>All the DBParm parameters defined for the DirectConnect interface
+are applicable to all three connections except the following: <A NAME="TI1016"></A>
+<ul>
+<li class=fi>HostReqOwner applies to Access
+Service and Gatewayless only</li>
+<li class=ds>Request, ShowWarnings, and SystemOwner apply to
+Access Service only</li>
+<li class=ds>UseProcSyntax applies to Gatewayless only
+</li>
+</ul>
+</p>
+<A NAME="TI1017"></A><p>See the online help for the complete list of DBParm parameters
+applicable to the DirectConnect interface.</p>
+<A NAME="TI1018"></A><h2>Basic software components for the DirectConnect
+interface</h2>
+<A NAME="TI1019"></A><p>The following diagram shows the basic software components
+required to access a database using the DirectConnect interface
+and the DirectConnect middleware data access product: </p>
+<br><img src="images/Cnw5dc.gif">
+<A NAME="TI1020"></A><p>This diagram shows the basic software components required
+to access a database using the DirectConnect interface and the Open
+ServerConnect middleware data access product: </p>
+<br><img src="images/Cnw5dcocs.gif">
+<A NAME="TI1021"></A><h2>Supported versions for the DirectConnect interface</h2>
+<A NAME="TI1022"></A><p>The DirectConnect interface uses a DLL named PBDIR80.DLL to
+access a database via either DirectConnect or Open ServerConnect. </p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Required DirectConnect versions</span> <A NAME="TI1023"></A>To access a DB2/MVS database via the access service,
+it is strongly recommended that you use Sybase DirectConnect for
+MVS access service Version 11.1.1p4 or higher.</p>
+<A NAME="TI1024"></A>To access a DB2/MVS database via TRS, it is strongly
+recommended that you use Sybase DirectConnect TRS Version 11.1.1p4
+or higher.</p>
+<A NAME="TI1025"></A>For information on DirectConnect for MVS and
+TRS, see your Sybase DirectConnect documentation.</p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Required Open ServerConnect versions</span> <A NAME="TI1026"></A>To access a DB2/MVS database via Open ServerConnect,
+it is strongly recommended that you use Sybase Open ServerConnect
+IMS and MVS Version 4.0 or higher. </p>
+<A NAME="TI1027"></A>For information on Open ServerConnect for
+MVS, see your Sybase Open ServerConnect documentation.</p>
+<A NAME="TI1028"></A><h2>Supported DirectConnect interface data types</h2>
+<A NAME="TI1029"></A><p>The DirectConnect interface supports the following InfoMaker data
+types in reports:</p>
+<A NAME="TI1030"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><td valign=top><A NAME="TI1031"></A>Char (fewer
+than 255 characters)</td>
+<td valign=top><A NAME="TI1032"></A>Long VarChar</td>
+</tr>
+<tr><td valign=top><A NAME="TI1033"></A>Char for Bit
+Data</td>
+<td valign=top><A NAME="TI1034"></A>Real</td>
+</tr>
+<tr><td valign=top><A NAME="TI1035"></A>Date</td>
+<td valign=top><A NAME="TI1036"></A>SmallInt</td>
+</tr>
+<tr><td valign=top><A NAME="TI1037"></A>Decimal</td>
+<td valign=top><A NAME="TI1038"></A>Time</td>
+</tr>
+<tr><td valign=top><A NAME="TI1039"></A>Double Precision</td>
+<td valign=top><A NAME="TI1040"></A>Timestamp (DateTime)</td>
+</tr>
+<tr><td valign=top><A NAME="TI1041"></A>Float</td>
+<td valign=top><A NAME="TI1042"></A>VarChar</td>
+</tr>
+<tr><td valign=top><A NAME="TI1043"></A>Integer</td>
+<td valign=top><A NAME="TI1044"></A>VarChar for Bit Data</td>
+</tr>
+</table>
+<A NAME="TI1045"></A><h2>Preparing to use the database with DirectConnect</h2>
+<A NAME="TI1046"></A><p>Before you define the interface and connect to a database
+via the DirectConnect interface, follow these steps to prepare the
+database for use: <A NAME="TI1047"></A>
+<ol>
+</li>
+<li class=ds>Install and configure the Sybase
+middleware data access products, network, and client software.</li>
+<li class=ds>Install the DirectConnect interface.</li>
+<li class=ds>Verify that you can connect to your middleware product
+and your database outside InfoMaker.</li>
+<li class=ds>Create the extended attribute system tables outside InfoMaker. 
+</li>
+</ol>
+</p>
+<A NAME="TI1048"></A><h4>Step 1: install and configure the Sybase middleware
+product</h4>
+<A NAME="TI1049"></A><p>You must install and configure the Sybase middleware data
+access product, network, and client software. </p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To install and configure the Sybase middleware
+data access product, network, and client software:</p>
+<ol><li class=fi>
+Make sure the appropriate database software
+is installed and running on its server.<br><br>
+You must obtain the database server software from your database
+vendor.<br><br>
+For installation instructions, see your database
+vendor's documentation.<br><br></li>
+<li class=ds>
+Make sure the appropriate DirectConnect access
+service software is installed and running on the Sybase DirectConnect
+server specified in your database profile. <br><br>
+<i>or</i>
+<br><br>
+Make sure the appropriate Open ServerConnect software is installed
+and running on the mainframe specified in your database profile.<br><br></li>
+<li class=ds>
+Make sure the required network software (such
+as TCP/IP) is installed and running on your computer and
+is properly configured so you that can connect to the Sybase DirectConnect
+server or mainframe at your site.<br><br>
+You must install the network communication driver that supports
+the network protocol and operating system platform you are using. <br><br>
+For installation and configuration instructions,
+see your network or database administrator.<br><br></li>
+<li class=ds>
+Install the required Sybase Open Client CT-Library
+(CT-Lib) software on each client computer on which InfoMaker is
+installed.<br><br>
+You must obtain the Open Client software from Sybase. Make
+sure the version of Open Client you install supports <i>both</i>
+ of
+the following:<A NAME="TI1050"></A>
+<ul>
+<li class=fi>The operating
+system running on the client computer</li>
+<li class=ds>The version of InfoMaker that you are running
+</li>
+</ul>
+<br><br><p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Required Open Client versions</span> <A NAME="TI1051"></A>To use the DirectConnect interface, you must install Sybase
+Open Client Version 10.0.4, 11.1 or higher.</p>
+
+For information about Open Client, see your
+Sybase Open Client documentation.<br><br></li>
+<li class=ds>
+Make sure the Sybase Open Client software is properly
+configured so you can connect to the middleware data access product
+at your site.<br><br>
+Installing the Open Client software places the SQL.INI configuration
+file in the SQL Server directory on your computer.<br><br>
+SQL.INI provides information that SQL Server uses to find
+and connect to the middleware product at your site. You can enter
+and modify information in SQL.INI with the configuration utility
+or editor that comes with the Open Client software.<br><br>
+For information about setting up the SQL.INI
+or other required configuration file, see your SQL Server documentation.<br><br><p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Editing the SQL.INI file</span> <A NAME="TI1052"></A>Make sure the SQL.INI file provides an entry about either
+the access service being used and the DirectConnect server on which
+it resides or the Open ServerConnect program being used and the
+mainframe on which it resides. </p>
+<p><b>Using DirectConnect</b>   For the server object name, you need to provide the exact
+access service name as it is defined in the access service library configuration
+file on the DirectConnect server. You must also specify the network
+communication DLL being used, the TCP/IP address or alias
+used for the DirectConnect server on which the access service resides,
+and the port on which the DirectConnect server listens for requests: <pre>[<i>access_service_name</i>]</pre>
+<pre>query=<i>network_dll</i>,<i>server_alias,server_port_no</i></pre>
+</p>
+<A NAME="TI1053"></A>InfoMaker users must also specify the access service name
+in the SQLCA.ServerName property of the Transaction object. </p>
+</li>
+<li class=ds>
+If required by your operating system, make sure
+the directory containing the Open Client software is in your system
+path.<br><br></li>
+<li class=ds>
+Make sure only one copy of each of the following
+files is installed on your client computer:<A NAME="TI1054"></A>
+<ul>
+<li class=fi>DirectConnect interface DLL</li>
+<li class=ds>Network communication DLL (such as NLWNSCK.DLL for Windows
+Sockets-compliant TCP/IP)</li>
+<li class=ds>Open Client DLLs (such as LIBCT.DLL and LIBCS.DLL)
+</li>
+</ul>
+
+                        <br><br></li></ol>
+<br><A NAME="TI1055"></A><h4>Step 2: install the interface</h4>
+<A NAME="TI1056"></A><p>When prompted to do so by the InfoMaker Setup program, select
+the InfoMaker DirectConnect (CT-Lib) database interface. </p>
+<A NAME="TI1057"></A><p>For instructions, see the <i>Installation
+Guide</i>
+<i></i>
+.</p>
+<A NAME="TI1058"></A><h4>Step 3: verify the connection</h4>
+<A NAME="TI1059"></A><p>Make sure you can connect to the your middleware product and
+your database and log in to the database you want to access from
+outside InfoMaker.</p>
+<A NAME="TI1060"></A><p>Some possible ways to verify the connection are by running
+the following tools:<A NAME="TI1061"></A>
+<ul>
+<li class=fi><b>Accessing the database server</b>   Tools such as the Sybase Open Client/Open Server
+Configuration utility (or any Ping utility) check whether you can
+reach the database server from your computer.</li>
+<li class=ds><b>Accessing the database</b>   Tools such as ISQL or SQL Advantage (interactive SQL utilities)
+check whether you can log in to the database and perform database
+operations. It is a good idea to specify the same connection parameters
+you plan to use in your InfoMaker database profile to access the
+database.
+</li>
+</ul>
+</p>
+<A NAME="TI1062"></A><h4>Step 4: create the extended attribute system
+tables</h4>
+<A NAME="TI1063"></A><p>InfoMaker uses a collection of five system tables to store
+extended attribute information. When using the DirectConnect interface,
+you <i>must</i>
+ create the extended attribute system
+tables outside InfoMaker to control the access rights and location
+of these tables. </p>
+<A NAME="TI1064"></A><p>Run the DB2SYSPB.SQL script outside InfoMaker using the SQL
+tool of your choice.</p>
+<A NAME="TI1065"></A><p>For instructions, see <A HREF="connimp29.htm#CCJDFDBI">"Creating the extended attribute
+system tables in DB2 databases"</A>. </p>
+<A NAME="TI1066"></A><h2>Defining the DirectConnect interface</h2>
+<A NAME="TI1067"></A><p>To define a connection through the DirectConnect interface,
+you must create a database profile by supplying values for at least
+the basic connection parameters in the Database Profile Setup -
+DirectConnect dialog box. You can then select this profile anytime
+to connect to your database in the development environment.</p>
+<A NAME="TI1068"></A><p>For information on how to define a database profile, see <A HREF="connimp5.htm#X-ref289075262">"Using database profiles"</A>. </p>
+

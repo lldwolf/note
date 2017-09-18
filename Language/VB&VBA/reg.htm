@@ -1,0 +1,21 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<script language="javascript" src="css.js"></script>
+<title>使用注册表</title>
+</head>
+
+<body>
+
+<h1>第N章 使用注册表</h1>
+<h2>N.1 在VBA中使用默认的注册表函数</h2>
+<p>Visual Basic 提供了一个标准的注册位置（主键）以存储创建于 Visual Basic的应用程序的程序信息：HKEY_CURRENT_USER\Software\VB and VBA Program Settings\，下面的所有函数所读写的注册表路径都是以这个路径为根的相对位置。</p>
+<pre>SaveSetting appname, section, key, setting</pre>
+<p>这个函数用来向注册表数据库写入一些数据，执行完后，在注册表的HKEY_CURRENT_USER\Software\VB and VBA Program Settings\appname\section\主键下面的名为“key”的键将被赋值为“setting”，如果相应的主键或者键名不存在，将会被创建。</p>
+<pre>GetSetting(appname, section, key[, default])</pre>
+<p>这个函数用来从注册表中提取数据。Appname，section和key的含义和上面的一样。如果Visual Basic没有找到指定的键，函数将返回参数default中得值。这个参数是可选的，但是对错误情况的处理很方便。如果没有选用这个参数，而指定的键的名称不存在，函数将返回一个长度为0的字符串。</p>
+<p>注意：使用GetSetting只能读取类型为REG_SZ的注册表项，即值为字符串的项。</p>
+<p>&nbsp;</p>
+<script language="javascript" src="index.js"></script>
+</body>
+</html>

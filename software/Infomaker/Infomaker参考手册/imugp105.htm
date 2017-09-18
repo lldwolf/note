@@ -1,0 +1,156 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+Using OLE columns in a report </TITLE>
+</HEAD>
+<BODY>
+<A NAME="BFCDFGDJ"></A><h1>Using OLE columns in a report </h1>
+<A NAME="TI4438"></A><p>You can create OLE columns in a report.An OLE column allows
+you to retrieve blob (binary large-object) data from a database
+into a report. </p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Database support for OLE columns</span> <A NAME="TI4439"></A>If your database supports a blob data type, then you can implement
+OLE columns in a report. The name of the data type that supports
+blob data varies. For information on which data types your DBMS
+supports, see your DBMS documentation.</p>
+<A NAME="TI4440"></A><h2>Creating an OLE column</h2>
+<A NAME="TI4441"></A><p>This section describes how to create an OLE column in a report.
+The steps are illustrated using a table that you can create in the
+Database painter. It must contain at least two columns, id and object:<A NAME="TI4442"></A>
+<ul>
+<li class=fi>The id column is an integer
+and serves as the table's key.</li>
+<li class=ds>The object column is a blob data type and contains
+OLE objects associated with several OLE servers.
+</li>
+</ul>
+</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To create the database table:</p>
+<ol><li class=fi>
+In the Database painter, create a table
+to hold the blob (binary large-object) data. <br><br>
+The table must have at least two columns: a key column and
+a column with the blob data type. The actual data type you choose
+depends on your DBMS. For example, in Adaptive Server Anywhere, choose long binary as
+the data type for the blob column. For information about
+data types, see your DBMS documentation.<br><br></li>
+<li class=ds>
+Define the blob columns as allowing NULLs (this
+allows you to store a row that doesn't contain a blob).<br><br></li></ol>
+<br><A NAME="TI4443"></A><h4>Adding a blob column to the report</h4>
+<A NAME="TI4444"></A><p>This procedure describes how to add a blob column to a report.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To add a blob column to a new report:</p>
+<ol><li class=fi>
+Create a new report.<br><br></li>
+<li class=ds>
+Specify the table containing the blob as the data
+source for the report. <br><br>
+Be sure to include the key column in the data source. You
+cannot include the blob column in the data source; if you try, a
+message tells you that its data type requires the use of an embedded
+SQL statement. You will add the blob column later in the Report painter workspace.
+(If you use Quick Select, the blob column is not listed in the dialog
+box.)<br><br></li>
+<li class=ds>
+Select Insert&gt;Control&gt;OLE Database
+Blob and click where you want the blob column in the Design view.<br><br>
+The Database Binary/Text Large Object dialog box
+displays:<br><br><br><img src="images/oleblob1.gif"><br>
+</li></ol>
+<br><A NAME="TI4445"></A><h4>Setting properties for the blob column</h4>
+<A NAME="TI4446"></A><p>This procedure describes the properties you need to set for
+the blob column.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To set properties for a blob column:</p>
+<ol><li class=fi>
+(Optional) Enter the client class in the
+Client Class box. The default is DataWindow.<br><br>
+This value is used in some OLE server applications to build
+the title that displays at the top of the server window.<br><br></li>
+<li class=ds>
+(Optional) Enter the client name in the Client
+Name box. The default is Untitled.<br><br>
+This value is used in some OLE server applications to build
+the title that displays in the title bar of the server window.<br><br></li>
+<li class=ds>
+In the Table box, select the database table that
+contains the blob database column you want to place in the report.<br><br>
+The names of the columns in the selected table display in
+the Large Binary/Text Columns listbox.<br><br></li>
+<li class=ds>
+In the Large Binary/Text Columns box,
+select the column that contains the blob data type from the list.<br><br></li>
+<li class=ds>
+If necessary, change the default key clause in
+the Key Clause box.<br><br>
+InfoMaker uses the key clause to build the WHERE clause of
+the SELECT statement used to retrieve and update the blob column
+in the database. It can be any valid WHERE clause.<br><br>
+Use colon variables to specify report columns. For example,
+if you enter this key clause:<pre>id = :id</pre>
+<br><br>
+the WHERE clause will be:<pre>WHERE id = :id</pre>
+<br><br></li>
+<li class=ds>
+Identify the OLE server application by doing one
+of the following:<A NAME="TI4447"></A>
+<ul>
+<li class=fi>If you
+always want to open the same file in the OLE server application,
+enter the name of the file in the File Template box.<br>
+For example, to specify a particular Microsoft Word document,
+enter the name of the DOC file. If the file is not on the current
+path, enter the fully qualified name.<br><br><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Use the Browse button to find the file</span> <A NAME="TI4448"></A>If you do not know the name of the file you want to use, click
+the Browse button to display a list of available files. Select the
+file you want from the resulting window.
+<br>
+</li>
+<li class=ds>If you do not want to open the same file each time,
+select an OLE server application from the OLE Class: Description
+dropdown listbox.<br><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>When the server doesn't match the OLE blob
+data</span> <A NAME="TI4449"></A>If you specify a server that doesn't match the OLE
+blob object or if your database contains objects belonging to different
+servers, the OLE mechanism can usually handle the situation. It
+looks for the server specified in the object and starts it instead
+of the server you specified.
+<br>
+
+</li>
+</ul>
+
+                      <br><br></li>
+<li class=ds>
+Enter text or an expression that evaluates to
+a string in the Client Name Expression box.<br><br>
+The server may use this expression in the title of the window
+in the OLE server application. The expression you specify can identify
+the current row in the report.<br><br><p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Use an expression to make sure the name is unique</span> <A NAME="TI4450"></A>Use an expression to make sure the name is unique. For example,
+you might enter the following expression to identify a document
+(where ID is the integer key column):<pre>"Document " + String(id)</pre>
+</p>
+</li>
+<li class=ds>
+Click OK.<br><br>
+InfoMaker closes the dialog box. The blob column is represented
+by a box labeled Blob in the Design view.<br><br></li>
+<li class=ds>
+Save the report.<br><br></li></ol>
+<br><A NAME="TI4451"></A><p>Here is what a completed Definition page for a Blob object
+in a table called ole looks like in the Properties view:</p>
+<br><img src="images/oleblob2.gif">
+<A NAME="TI4452"></A><h4>Making the blob column visible</h4>
+<A NAME="TI4453"></A><p>If the blob column is invisible in the report until you
+activate the OLE server, you can make it easy to find the blob column
+by adding a border to the object.</p>
+<A NAME="TI4454"></A><h4>Previewing an OLE column</h4>
+<A NAME="TI4455"></A><p>Before using the report in an application, you should
+preview it in the Preview view or in preview mode to see how it
+works.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To preview an OLE column in preview mode:</p>
+<ol><li class=fi>
+Select File&gt;Run/Preview
+from the menu bar and select the report.<br><br></li></ol>
+<br><A NAME="TI4456"></A><A NAME="TI4457"></A><p>This part introduces the Data Pipeline painter and describes
+how to use it to pipe data.</p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Access to the Data Pipeline painter</span> <A NAME="TI4458"></A>To have access to the Data Pipeline painter, install InfoMaker's pipeline
+component.</p>
+

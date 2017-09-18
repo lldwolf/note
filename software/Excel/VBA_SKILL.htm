@@ -1,0 +1,53 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>二次开发技巧</title>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+<h1>第N章 二次开发技巧</h1>
+<hr />
+<h2>N.1 导入Access表</h2>
+<pre>Public Sub ImportAccessTable(db_path As String, sql As String)
+    
+    Dim conn As ADODB.Connection
+    
+    Set conn = New ADODB.Connection
+    conn.ConnectionString = &quot;Provider=Microsoft.Jet.OLEDB.4.0;Data Source=&quot; &amp; db_path
+    conn.Open
+    
+    Dim rec As ADODB.Recordset
+    Set rec = New ADODB.Recordset
+    rec.ActiveConnection = conn
+    rec.Open sql, conn, adOpenDynamic, adLockReadOnly, adCmdText
+
+    With Sheet1.QueryTables.Add(rec, Range(&quot;A1&quot;))
+        .Name = &quot;Contact List&quot;
+        .FieldNames = True
+        .RowNumbers = False
+        .FillAdjacentFormulas = False
+        .PreserveFormatting = True
+        .RefreshOnFileOpen = False
+        .BackgroundQuery = True
+        .RefreshStyle = xlInsertDeleteCells
+        .SavePassword = True
+        .SaveData = True
+        .AdjustColumnWidth = True
+        .RefreshPeriod = 0
+        .PreserveColumnInfo = True
+        .Refresh BackgroundQuery:=False
+    End With
+       
+    conn.Close
+       
+End Sub</pre>
+<h2>N.2 全局宏</h2>
+<p>全局宏是指制作好的宏能够被所有打开的Excel表自动载入。</p>
+<p>写一个宏文件并保存到Office的Xlstart目录下，注意保存时文件类型为Excel加载宏而不是工作簿，这样每次Excel启动时就会自动加载此宏文件，所有打开的工作簿都可以使用加载宏中的功能。</p>
+<p>或者录制宏的时候选择保存在个人宏工作簿中。</p>
+<p>&nbsp;</p>
+
+</body>
+</html>

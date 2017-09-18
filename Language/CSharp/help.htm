@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<title>帮助文件制作</title>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+<p id="title">帮助文件</p>
+<h1>序</h1>
+<p>我在这里只介绍CHM格式的帮助文件，CHM格式文件可以用微软的HTML Help Workshop制作，具体制作方法请参考本人相关作品《HTML Help Workshop 使用手册》。</p>
+<p>本章主要介绍如下几方面内容：</p>
+<ol>
+  <li>如何在应用程序中打开帮助文件</li>
+  <li>打开帮助文件时直接定位到相关页</li>
+</ol>
+<h1>在应用程序中打开帮助文件</h1>
+<p>以打开windows“画图 ”工具的帮助为例 </p>
+<h2>命令行方式</h2>
+<p>DOS命令：</p>
+<pre class="code" data-type="csharp">hh mspaint.chm
+
+//使用C#
+System.Diagnostics.Process.Start("hh.exe", "mspaint.chm");</pre>
+<h2>使用Help.ShowHelp</h2>
+<pre class="code" data-type="csharp">Help.ShowHelp(this, &quot;mspaint.chm&quot;);</pre>
+<h1>打开帮助文件时直接定位到相关页</h1>
+<p>以打开windows“画图 ”工具的帮助的“喷枪绘图”索引为例 </p>
+<h2>命令行方式</h2>
+<pre class="code" data-type="csharp">hh mspaint.chm::/paint_airbrush.htm
+
+//C#代码
+System.Diagnostics.Process.Start("hh.exe", "mspaint.chm::/paint_airbrush.htm");</pre>
+<h2>Help.ShowHelp</h2>
+<pre class="code" data-type="csharp">Help.ShowHelp(this, &quot;mspaint.chm&quot;, &quot;mspaint.chm::/paint_airbrush.htm&quot;); </pre>
+<p>或</p>
+<pre class="code" data-type="csharp">Help.ShowHelp(this, &quot;mspaint.chm&quot;, HelpNavigator.KeywordIndex, &quot;喷射颜色&quot;);</pre>
+<p><img src="images/bm1.BMP">注意：“mspaint.chm::/paint_airbrush.htm”为标准写法，其实也可以直接写“paint_airbrush.htm”，“/”表示根目示，如果帮助文件的源文件在子目录中，要写上相应的路径。</p>
+<h1>Help类的主要用途 </h1>
+
+</body>
+</html>

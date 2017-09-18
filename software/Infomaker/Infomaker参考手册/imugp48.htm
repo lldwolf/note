@@ -1,0 +1,95 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+Generating and saving a report </TITLE>
+</HEAD>
+<BODY>
+<A NAME="CFHBFDDF"></A><h1>Generating and saving a report </h1>
+<A NAME="TI1605"></A><p>Once you have finished interacting with the wizard for the
+presentation style you are using, InfoMaker generates the report and
+takes you to the Report painter.</p>
+<A NAME="TI1606"></A><p>When generating the report, InfoMaker may use information
+from a facility called the <strong>extended attribute system
+tables</strong>. If this information is available, InfoMaker uses
+it.</p>
+<A NAME="TI1607"></A><h2>About the extended attribute system tables and reports</h2>
+<A NAME="TI1608"></A><p>The extended attribute system tables is a set of tables maintained
+by the Database painter. It contains information about database
+tables and columns. Extended attribute information extends database
+definitions by recording information that is relevant to using database
+data in screens and reports.</p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Extended attribute information applies to forms, too</span> <A NAME="TI1609"></A>InfoMaker uses extended attribute information when generating
+a form the same way it uses it when generating a report.</p>
+<A NAME="TI1610"></A><p>For example, labels and headings you defined for columns in
+the Database painter are used in the generated report. Similarly,
+if you associated an edit style with a column in the Database painter,
+that edit style is automatically used for the column in the report.</p>
+<A NAME="TI1611"></A><p>When generating a report, InfoMaker uses the following
+information from the extended attribute system tables:</p>
+<A NAME="TI1612"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI1613"></A>For</th>
+<th align="left" valign=bottom><A NAME="TI1614"></A>InfoMaker uses</th>
+</tr>
+<tr><td valign=top><A NAME="TI1615"></A>Tables</td>
+<td valign=top><A NAME="TI1616"></A>Fonts specified for labels, headings,
+and data</td>
+</tr>
+<tr><td valign=top><A NAME="TI1617"></A>Columns</td>
+<td valign=top><A NAME="TI1618"></A>Text specified for labels and headings<br> Display
+formats<br> Column widths, heights, and justifications<br> Edit
+styles</td>
+</tr>
+</table>
+<A NAME="TI1619"></A><p>If there is no extended attribute information for the database
+tables and columns you are using, you can set the text for headings
+and labels, the fonts, and the display formats in the Report painter.
+The difference is that you have to do this individually for every report that
+you create using the data.</p>
+<A NAME="TI1620"></A><p>If you want to change something that came from the extended
+attribute system tables, you can change it in the Report painter.
+The changes you make in the Report painter apply only to the report you
+are working on.</p>
+<A NAME="TI1621"></A><p>The advantage of using the extended attribute system tables
+is that it saves time and ensures consistency. You only have to
+specify the information once, in the database. Since InfoMaker uses
+the information whenever anyone creates a new report with the
+data, it's more likely that the appearance and labels of
+data items will be consistent.</p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>If you have installed InfoMaker without the Database
+painter</span> <A NAME="TI1622"></A>You cannot create extended attribute information if you have
+installed InfoMaker without the Database painter. Another InfoMaker user
+with the Database painter or a PowerBuilder user can add extended
+attribute information into the database for you. Or you can change
+the extended attributes individually in each report.</p>
+<A NAME="TI1623"></A><p>For more information about the extended attribute
+system tables, see <A HREF="imugp31.htm#BFCDFDFD">Chapter 3, "Managing the Database"</A>,
+and <A HREF="imugp256.htm#CCJEBFGB">Appendix A, "The Extended
+Attribute System Tables"</A>.</p>
+<A NAME="TI1624"></A><h2>Saving the report</h2>
+<A NAME="TI1625"></A><p>When you have created a report, you should save it. The
+first time you save it you will give it a name. As you work, you
+should save your report frequently so that you don't
+lose changes.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To save the report:</p>
+<ol><li class=fi>
+Select File&gt;Save from the menu
+bar.<br><br>
+If you have previously saved the report, InfoMaker saves
+the new version in the same library and returns you to the Report painter.<br><br>
+If you have not previously saved the report, InfoMaker displays
+the Save Report dialog box.<br><br></li>
+<li class=ds>
+(Optional) Enter comments in the Comments box
+to describe the report.<br><br></li>
+<li class=ds>
+Enter a name for the report in the Reports
+box.<br><br></li>
+<li class=ds>
+Click OK.<br><br></li></ol>
+<br><A NAME="TI1626"></A><h3>Naming the report</h3>
+<A NAME="TI1627"></A><p>The report name can be any valid InfoMaker identifier
+up to 40 contiguous characters.</p>
+<A NAME="TI1628"></A><p>For information about InfoMaker identifiers,
+see <i></i>
+<A HREF="imugp140.htm#CAIBEHFJX">Chapter 19, "Identifiers"</A>.</p>
+

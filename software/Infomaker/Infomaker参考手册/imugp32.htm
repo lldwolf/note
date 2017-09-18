@@ -1,0 +1,122 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+About working with database components</TITLE>
+</HEAD>
+<BODY>
+<A NAME="BFCCAEFF"></A><h1>About working with database components</h1>
+<A NAME="TI815"></A><p>A database is an electronic storage place for data. Databases
+are designed to ensure that data is valid and consistent and that
+it can be accessed, modified, and shared.</p>
+<A NAME="TI816"></A><p>A <strong>database management system (DBMS)</strong> governs
+the activities of a database and enforces rules that ensure data
+integrity. A <i>relational</i>
+ DBMS stores and organizes
+data in tables.</p>
+<p><b>How you work with databases in InfoMaker</b>   You can use InfoMaker to work with the following database
+components:<A NAME="TI817"></A>
+<ul>
+<li class=fi>Tables and columns</li>
+<li class=ds>Keys</li>
+<li class=ds>Indexes</li>
+<li class=ds>Database views</li>
+<li class=ds>Extended attributes</li>
+<li class=ds>Additional database components
+</li>
+</ul>
+</p>
+<A NAME="TI818"></A><h4>Tables and columns</h4>
+<A NAME="TI819"></A><p>A database usually has many tables, each of which contains
+rows and columns of data. Each row in a table has the same columns,
+but a column's value for a particular row could be empty
+or NULL if the column's definition allows it. </p>
+<A NAME="TI820"></A><p>Tables often have relationships with other tables. For example,
+in the EAS Demo DB that is included with InfoMaker, the Department
+table has a Dept_id column, and the Employee table also
+has a Dept_id column that identifies the department in
+which the employee works. When you work with the Department table
+and the Employee table, the relationship between them is specified
+by a <strong>join</strong> of the two tables.</p>
+<A NAME="TI821"></A><h4>Keys</h4>
+<A NAME="TI822"></A><p>Relational databases use keys to ensure database integrity. </p>
+<p><b>Primary keys</b>   A <strong>primary key</strong> is a column or set of
+columns that uniquely identifies each row in a table. For example,
+two employees may have the same first and last names, but they have
+unique ID numbers. The Emp_id column in the Employee table
+is the primary key column.</p>
+<p><b>Foreign keys</b>   A <strong>foreign key</strong> is a column or set of
+columns that contains primary key values from another table. For
+example, the Dept_id column is the primary key column in
+the Department table and a foreign key in the Employee table.</p>
+<p><b>Key icons</b>   In InfoMaker, columns defined as keys are displayed with <strong>key icons</strong> that
+include a P for primary or F for foreign. InfoMaker automatically joins
+tables that have a primary/foreign key relationship, with
+the join on the key columns:</p>
+<br><img src="images/db0001.gif">
+<A NAME="TI823"></A><p>For more information, see <A HREF="imugp37.htm#CCJDECFJ">"Working with keys"</A>.</p>
+<A NAME="TI824"></A><h4>Indexes</h4>
+<A NAME="TI825"></A><p>An <strong>index</strong> is a column or set of columns
+you identify to improve database performance when searching for
+data specified by the index. You index a column that contains information
+you will need frequently. Primary and foreign keys are special examples
+of indexes.</p>
+<A NAME="TI826"></A><p>You specify a column or set of columns with unique values
+as a <strong>unique index</strong>, represented by an icon
+with a single key.</p>
+<A NAME="TI827"></A><p>You specify a column or set of columns that has values that
+are not unique as a <strong>duplicate index</strong>, represented
+by an icon with two keys.</p>
+<A NAME="TI828"></A><p>For more information, see <A HREF="imugp38.htm#BFCDAGAJ">"Working with indexes"</A>.</p>
+<A NAME="TI829"></A><h4>Database views</h4>
+<A NAME="TI830"></A><p>If you often select data from the same tables and columns,
+you can create a database <strong>view</strong> of the tables.
+You give the database view a name, and each time you refer to it
+the associated SELECT command executes to find the data. </p>
+<A NAME="TI831"></A><p>Database views are listed in the Objects view of the Database
+painter and can be displayed in the Object Layout view, but a database
+view does not physically exist in the database in the same way that
+a table does. Only its definition is stored in the database, and
+the view is re-created whenever the definition is used. </p>
+<A NAME="TI832"></A><p>Database administrators often create database views for security
+purposes. For example, a database view of an Employee table that
+is available to users who are not in Human Resources might show
+all columns except Salary.</p>
+<A NAME="TI833"></A><p>For more information, see <A HREF="imugp39.htm#CCJCAHJF">"Working with database views "</A>.</p>
+<A NAME="TI834"></A><h4>Extended attributes</h4>
+<A NAME="TI835"></A><p><strong>Extended attributes</strong> enable you to store
+information about a table's columns in special system tables.
+Unlike tables, keys, indexes, and database views (which are DBMS-specific)
+extended attributes are InfoMaker-specific. The most powerful extended
+attributes determine the edit style, display format, and validation
+rules for the column. </p>
+<A NAME="TI836"></A><p>For more information about extended attributes,
+see <A HREF="imugp36.htm#BABBHCBH">"Specifying column extended
+attributes"</A>.
+For more information about the extended attribute system tables,
+see <A HREF="imugp256.htm#CCJEBFGB">Appendix A, "The Extended
+Attribute System Tables"</A>.</p>
+<A NAME="TI837"></A><h4>Additional database components</h4>
+<A NAME="TI838"></A><p>Depending on the database to which you are connected and on
+your user privileges, you may be able to view or work with a variety
+of additional database components through InfoMaker. These components
+may include:<A NAME="TI839"></A>
+<ul>
+<li class=fi>Driver information</li>
+<li class=ds>Groups</li>
+<li class=ds>Metadata types</li>
+<li class=ds>Procedures and functions</li>
+<li class=ds>Users</li>
+<li class=ds>Logins
+</li>
+</ul>
+</p>
+<A NAME="TI840"></A><p>For example, driver information is relevant to ODBC connections.
+It lists all the ODBC options associated with the ODBC driver, allowing
+you to determine how the ODBC interface will behave for a given
+connection. Login information is listed for Adaptive Server Enterprise
+(SYC) and Microsoft SQL Server (MSS) database connections. Groups
+and users information is listed for several of the databases and
+allows you to add new users and groups and maintain passwords for
+existing users. </p>
+

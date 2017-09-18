@@ -1,0 +1,30 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+	<title>客户端基本操作</title>
+	<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+	<p id="title">第2章 客户端基本操作</p>
+	<p>本节操作需要安装 TortoiseSVN 客户端工具。 </p>
+	<h1>初始化导入</h1>
+	<p>初始化导入是将我们的项目导入到版本库，以后由版本库管理数据，例如，我的项目根目录为MyProject，在此文件夹上使用右键菜单【TortoiseSVN】-【Import...】，在弹出对话框的URL中输入“svn://localhost/svn_prj/project1”，如果是在客户端机器，则需要将 localhost 换成服务器的IP地址；【Import message】中可以输入该项目的描述性信息，点 OK 按钮后要求输入帐号，输入我上节建立的lld帐号及口令，完成后MyProject中的所有内容即全部上传到版本服务器中了。</p>
+	<p>初始化导入完成之后，原始的MyProject目录就没用了，完全可以删掉。如果以前习惯于VSS的模式，想继续保留该目录开发是不可行的。</p>
+	<h1>Check out </h1>
+	<p>该操作取出一份版本库拷贝，例如，任意建一个空目录d:\work，然后在上面使用右键菜单【SVN Checkout】，输入URL后按OK，即得到一份拷贝。你会发现文件夹以及里面的文件图标都给换掉了。</p>
+	<p>要使用SVN进行版本控制，初始的工作目录必须使用Check out生成， 没有VSS中的【Set working directory】之类的功能。 这里多几句嘴，如果从VSS改用SVN，在行为模式上会有些不习惯，如果原来是用CVS的话，那就基本没啥不习惯。</p>
+	<h1>修改提交</h1>
+	<p>在修改文档之前，应先使用check in功能，也就是从服务器下载该文档最新的版本。方法为使用右键菜单【SVN Update】。如果选中的是一个文件，则加载选中文件，如果选中的是一个目录，则加载整个目录。</p>
+	<p>修改项目文档后，在资源管理器中刷新一下，你会看到文档图标上加了一个红色惊叹号，对该文档使用右键菜单【SVN Commit】即可将修改后的结果存入到SVN中。使用文件的右键菜单【TortoiseSVN】-【Show Log】，可以看到这个文件的所有提交，在不同的条目上使用右键菜单【Compare with working copy】，可以比较工作拷贝和所选版本的区别。</p>
+	<p>如果两个人同时修改了某文档，第二个人在提交时会失败，提示冲突，这时如果使用【SVN Update】同步本地文档，会生成数个临时文件，而要提交的文档的内容里面包含了冲突的文档内容（服务器上的内容以及你自己修改的内容），其文档图标变成了黄色的惊叹号，你做好修改后，使用右键菜单【TortoiseSVN】-【Resolve】，表示你已经处理好了冲突内容，并将修改后的文档提交到了服务器。</p>
+	<p>如果想直接用服务器版本覆盖本地版本，那么使用右键菜单【TortoiseSVN】-【Revert】</p>
+	<p>如果是新建的文档，先使用右键菜单【TortoiseSVN】-【Add】标识为版本库文件，这时文件图标加上了蓝色+号，再使用右键菜单【SVN Commit】提交到服务器。</p>
+	<h1>Create Branch/Tag</h1>
+	<p>在 SVN Reporsitory 中任意目录结点上，使用右键菜单选择 "Branch/Tag"，首先弹出选择目标的对话框</p>
+	<img alt="" src="img/svn-branch1.png" />
+	<p>如果选中多个目录，则 "Copy top URL" 中只需输入目标根目录即可，否则需要输入相应子目录名，点 "Next" 后选择源版本</p>
+	<img alt="" src="img/svn-branch2.png" />
+</body> 
+</html>

@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>JNDI</title>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+<p id="title">JNDI</p>
+
+<h1>N.1 概述</h1>
+<p>JNDI，Java Naming Directory Interface，J2EE的标准之一，所有的J2EE容器都必须提供一个JNDI的服务，但是，我一直都没用过，至少是没有刻意地去用过。因为，我也曾经把数据源配置在Tomcat的JNDI服务中，但那时，我也只是刚刚涉足JAVA，有人告诉我应该这么干而已。后来，我开始使用自定义的数据库连接配置文件，就再也没有跟JNDI打过交道了，直到今天。</p>
+<p>现在之所以又想看一下，只是因为觉得这是J2EE的重要标准之一，如果不懂得的话，似乎有点说不过去。</p>
+<p>JNDI的主要功能可以这样描述，它使用一张哈希表存储对象（大多数的J2EE容器也的确是这样做的），然后，开发人员可以使用键值――也就是一个字符串――来获取这个对象。这里就包括取JNDI的两个最主要操作，bind和lookup。bind操作负责往哈希表里存对象，存对象的时候要定义好对象的键值字符串，lookup则根据这个键值字符串往外取对象。</p>
+<p>JNDI的命称可能会让人产生混淆，似乎觉得这是一个用来操作目录的，事实上，我更愿意把这个目录理解成为JNDI存放对象时使用的格式，也就是说，JNDI以目录的方式存储对象的属性。例如，用户通过JNDI存储一个汽车对象，那么，汽车就是根目录，汽车的轮子、引擎之类的子对象就算是子目录，而属性，比如说汽车的牌子、重量之类，就算是汽车目录下的文件。</p>
+<p>JNDI的功能既然就是根据一个字符串键值就可以取得一个想要得到的对象，我一开始就觉得这不是跟COM或CORBA一样吗？SUN也是有野心的企业啊，JNDI应该就是它要努力推行的JAVA下的分布式开发的标准吧。</p>
+<p>JNDI的出现应该就是为了分步式开发服务的，有人负责开发这种分布式对象，有人只需要使用这些分布式对象就可以了，这两组人不必属于同一个公司，而且这种开发通常应该是不并行的，也不必是会了同一个项目服务。就如果数据源对象，它放在JNDI中，只要想要用的人，直接通过JNDI服务取来用就可以了，至于当初是谁把它放进JNDI中的，还是不用操这份心了吧。而我一直没有使用JNDI，也就是这个原因，项目中的所有对象都在我控制之下，我不去使用别人的对象，也没打算把我的对象贡献出来给别人使用，那自然也就没必要去跟JNDI打交道。我觉得是否使用JNDI，这应该是关键原因，至于什么方便性、安全性之类的考虑，应该不是JNDI的主要目的，就如同你可以用JAVA来做网站，但JAVA并不是专门用来做网站的。</p>
+<p>可能有人觉得这种功能跟IoC也很象，这个我倒不觉得，虽然对于对象的使用人员来说的确是这种感觉，且不说IoC需要为对象定义接口，而JNDI并无此限制，先说这里有一个使用环境问题，我觉得IoC是用来解决并行开发问题的，也就是说IoC主要是用于明确设计人员与实现/使用人员的分工，无论是设计的，还是使用的，通常是一个项目组里的人，使用IoC，可以使得设计人员专注于设计，加快设计速度。因此，IoC的用途要比JNDI广泛的多，现在大型系统中，不使用IoC的，几稀矣。</p>
+<p>以上废话是为题记。</p>
+<h1>N.2 J2EE下使用JNDI</h1>
+<p>在J2EE环境下使用JNDI是非常简单的事，因为所有的J2EE容器都要实现JNDI服务，所以，在J2EE环境下使用JNDI，与使用Hashtable也没有什么太大区别。只有一点限制，那就是绑定对象时，对象所属的类必须实现java.io.Serializable接口，这一点也实在一点也不困难，几乎所有用到的Java类都实现了这个接口，对于自定义的类，在接口实现列表里把这个接口加进去也就是了。</p>
+<p>下面，我将演示一下如何在J2EE环境下使用JNDI，为了保证代码的通用性，我不使用struts之类的框架，而是直接使用标准JSP和Servlet实现。我将该项目的名称定为jndi_test</p>
+<p>要使用JNDI，需要先到SUN的网站上去下载jndi.jar。</p>
+<h2>N.2.1 JSP</h2>
+<p>本项目包括5个JSP，功能说明如下：</p>
+<ul>
+	<li>index.jsp：首页</li>
+	<li>bind.jsp：用于在JNDI中绑定对象</li>
+	<li>bind_result.jsp：绑定对象后的返回页面</li>
+	<li>lookup.jsp：用于在JNDI中检索对象</li>
+	<li>lookup_result.jsp：用于显示检索对象</li>
+</ul>
+<p>本节中用到的JSP代码如下，代码都简单地很，就不多做解释了。</p>
+<h3>N.2.1.1 index.jsp</h3>
+<pre>&lt;%@ page language=&quot;java&quot; contentType=&quot;text/html; charset=GB18030&quot;
+    pageEncoding=&quot;GB18030&quot;%&gt;
+&lt;!DOCTYPE html PUBLIC &quot;-//W3C//DTD HTML 4.01 Transitional//EN&quot; &quot;http://www.w3.org/TR/html4/loose.dtd&quot;&gt;
+&lt;html&gt;
+&lt;head&gt;
+&lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=GB18030&quot;&gt;
+&lt;title&gt;JNDI Test&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;a href=&quot;bind.jsp&quot; target=&quot;_blank&quot;&gt;bind.jsp&lt;/a&gt;
+&lt;br /&gt;
+&lt;a href=&quot;lookup.jsp&quot; target=&quot;_blank&quot;&gt;lookup.jsp&lt;/a&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+<h3>N.2.1.2 bind.jsp</h3>
+<pre>&lt;%@ page language=&quot;java&quot; contentType=&quot;text/html; charset=GB18030&quot;
+    pageEncoding=&quot;GB18030&quot;%&gt;
+&lt;!DOCTYPE html PUBLIC &quot;-//W3C//DTD HTML 4.01 Transitional//EN&quot; &quot;http://www.w3.org/TR/html4/loose.dtd&quot;&gt;
+&lt;html&gt;
+&lt;head&gt;
+&lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=GB18030&quot;&gt;
+&lt;title&gt;JNDI Test - Bind&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;a href=&quot;bind.do&quot;&gt;bind an object&lt;/a&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+<h3>N.2.1.3 bind_result.jsp</h3>
+<pre>&lt;%@ page language=&quot;java&quot; contentType=&quot;text/html; charset=GB18030&quot;
+    pageEncoding=&quot;GB18030&quot;%&gt;
+&lt;!DOCTYPE html PUBLIC &quot;-//W3C//DTD HTML 4.01 Transitional//EN&quot; &quot;http://www.w3.org/TR/html4/loose.dtd&quot;&gt;
+&lt;html&gt;
+&lt;head&gt;
+&lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=GB18030&quot;&gt;
+&lt;title&gt;JNDI Test - Bind result&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;p&gt;Binded successfully!&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+<h3>N.2.1.4 lookup.jsp</h3>
+<pre>&lt;%@ page language=&quot;java&quot; contentType=&quot;text/html; charset=GB18030&quot;
+    pageEncoding=&quot;GB18030&quot;%&gt;
+&lt;!DOCTYPE html PUBLIC &quot;-//W3C//DTD HTML 4.01 Transitional//EN&quot; &quot;http://www.w3.org/TR/html4/loose.dtd&quot;&gt;
+&lt;html&gt;
+&lt;head&gt;
+&lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=GB18030&quot;&gt;
+&lt;title&gt;JNDI Test - lookup&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;a href=&quot;lookup.do&quot;&gt;lookup the binded object&lt;/a&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+<h3>N.2.1.5 lookup_result.jsp</h3>
+<pre>&lt;%@ page language=&quot;java&quot; contentType=&quot;text/html; charset=GB18030&quot;
+    pageEncoding=&quot;GB18030&quot;%&gt;
+&lt;!DOCTYPE html PUBLIC &quot;-//W3C//DTD HTML 4.01 Transitional//EN&quot; &quot;http://www.w3.org/TR/html4/loose.dtd&quot;&gt;
+&lt;html&gt;
+&lt;head&gt;
+&lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=GB18030&quot;&gt;
+&lt;title&gt;JNDI Test - Lookup result&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;%
+	Object o = request.getAttribute(&quot;found_jndi_obj&quot;);
+	out.println(o);
+%&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+<h2>N.2.2 Servlet</h2>
+<p>本例包括两个Servlet，功能说明如下：</p>
+<ul>
+	<li>BindServlet：用于在JNDI服务中绑定一个对象</li>
+	<li>LookupServlet：用于在JNDI服务中取出一个对象</li>
+</ul>
+<h3>N.2.2.1 BindServlet.java</h3>
+<pre>package lld.test.jndi;
+
+import java.io.IOException;
+import java.util.Date;
+
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.http.*;
+
+public class BindServlet extends HttpServlet
+{
+
+	private static final long serialVersionUID = 5219969790998794367L;
+
+	@Override
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+			throws ServletException, IOException
+	{
+		this.doPost(req, resp);
+	}
+
+	@Override
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
+			throws ServletException, IOException
+	{
+		try
+		{
+			Context jndi_ctx = new InitialContext();
+			String key = "jndi_object";
+			jndi_ctx.rebind(key, new Date());
+		}catch(Exception ex)
+		{
+			ex.printStackTrace();
+		}
+		
+		ServletContext context = this.getServletContext();
+		RequestDispatcher dispatcher = context.getRequestDispatcher("/bind_result.jsp");
+		dispatcher.forward(req, resp);
+	}
+	
+}</pre>
+<p>使用rebind而不是bind绑定对象是因为，使用bind时，如果已经有对象绑定到该键值上，则会抛出异常。</p>
+<p>因为只是示例代码，所以我只是绑定了一个最简单的日期对象。</p>
+<h3>N.2.2.2 LookupServlet.java</h3>
+<pre>package lld.test.jndi;
+
+import java.io.IOException;
+
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+public class LookupServlet extends HttpServlet
+{
+	private static final long serialVersionUID = 6677219828267184673L;
+
+	@Override
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+			throws ServletException, IOException
+	{
+		this.doPost(req, resp);
+	}
+
+	@Override
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
+			throws ServletException, IOException
+	{
+		try
+		{
+			Context jndi_ctx = new InitialContext();
+			String key = "jndi_object";
+			Object o = jndi_ctx.lookup(key);
+			req.setAttribute("found_jndi_obj", o);
+		}catch(Exception ex)
+		{
+			ex.printStackTrace();
+		}
+		
+		ServletContext context = this.getServletContext();
+		RequestDispatcher dispatcher = context.getRequestDispatcher("/lookup_result.jsp");
+		dispatcher.forward(req, resp);
+	}
+	
+}</pre>
+<h2>N.2.3 web.xml</h2>
+<p>在web.xml中，加入了servlet映射</p>
+<pre>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;web-app id="WebApp_ID" version="2.4" xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"&gt;
+	&lt;display-name&gt;jndi_test&lt;/display-name&gt;
+	
+	&lt;servlet&gt;
+		&lt;servlet-name&gt;BindServlet&lt;/servlet-name&gt;
+		&lt;servlet-class&gt;lld.test.jndi.BindServlet&lt;/servlet-class&gt;
+	&lt;/servlet&gt;
+	&lt;servlet-mapping&gt;
+		&lt;servlet-name&gt;BindServlet&lt;/servlet-name&gt;
+		&lt;url-pattern&gt;/bind.do&lt;/url-pattern&gt;
+	&lt;/servlet-mapping&gt;
+	
+	&lt;servlet&gt;
+		&lt;servlet-name&gt;LookupServlet&lt;/servlet-name&gt;
+		&lt;servlet-class&gt;lld.test.jndi.LookupServlet&lt;/servlet-class&gt;
+	&lt;/servlet&gt;
+	
+	&lt;servlet-mapping&gt;
+		&lt;servlet-name&gt;LookupServlet&lt;/servlet-name&gt;
+		&lt;url-pattern&gt;/lookup.do&lt;/url-pattern&gt;
+	&lt;/servlet-mapping&gt;
+	
+	&lt;welcome-file-list&gt;
+		&lt;welcome-file&gt;index.jsp&lt;/welcome-file&gt;
+	&lt;/welcome-file-list&gt;
+&lt;/web-app&gt;</pre>
+<p>OK，所有的代码都在这里了，部署到Tomcate下运行即可。</p>
+<h2>N.2.4 示例下载</h2>
+<a href="example/jndi_test.zip">示例下载</a>
+<h1>N.3 J2SE下使用JNDI</h1>
+<p>在J2SE下使用JNDI下就显得困难一些，首先，我们没有单独的JNDI服务器可以用，JBoss提供了一个免费的JNP服务，通过配置可以作为单独的JNDI服务器启用。不过这里就不这么麻烦了，如何使用JBOSS作为JNDI服务器，以后将单独撰文讲述，这里我使用sun提供的com.sun.jndi.fscontext.RefFSContextFactory作为JNDI服务器，其实这是使用文件系统来存储JNDI对象。至于如何存储后文还将专门描述。</p>
+<p>为了在J2SE下使用JNDI，我们首先得到sun的网站上下载3个包，jndi.jar、fscontext.jar和providerutil.jar，前者提供了JNDI服务的接口，后两者是我们要使用的文件系统作为JNDI服务器的支持包。</p>
+<p>使用RefFSContextFactory，要求绑定的对象必须实现javax.naming.Referencable接口，否则在绑定时将报如下错误：</p>
+<pre>Can only bind References or Referenceable objects</pre>
+<p>不过如果使用各个JDBC驱动提供商提供的DataSource类都实现了Referencable接口，可以直接使用。不过本着学习的态度，我还是在这里演示一下如何实现Referencable接口。</p>
+<p>这个如何实现将在后文结合代码详细介绍。本例包括4个类，说明如下：</p>
+<ul>
+	<li>BindedClass：自定义的实现Referenceable接口的类</li>
+    <li>BindedClassFactory：工厂类，能够把一个Reference对象转换为BindedClass对象</li>
+    <li>Bind：测试类，用于在JNDI中绑定对象</li>
+    <li>Loopup：测试类，用于从JNDI中获取对象</li>
+</ul>
+<h2>N.3.1 BindedClass和BindedClassFactory</h2>
+<h3>N.3.1.1 BindedClass</h3>
+<pre>package lld.test.jndi;
+
+import javax.naming.NamingException;
+import javax.naming.Reference;
+import javax.naming.Referenceable;
+import javax.naming.StringRefAddr;
+
+public class BindedClass implements Referenceable 
+{
+	public String value; 
+	
+	public BindedClass()
+	{
+	}
+	
+	@Override
+	public Reference getReference() throws NamingException
+	{
+		Reference r = new Reference(this.getClass().getName(), BindedClassFactory.class.getName(), null);
+		r.add(new StringRefAddr("value", this.getValue()));
+		return r;
+	}
+
+	public String getValue()
+	{
+		return value;
+	}
+
+	public void setValue(String value)
+	{
+		this.value = value;
+	}
+
+}</pre>
+<h3>N.3.1.2 BindedClassFactory</h3>
+<pre>package lld.test.jndi;
+
+import java.util.Hashtable;
+
+import javax.naming.*;
+import javax.naming.spi.*;
+
+public class BindedClassFactory implements ObjectFactory
+{
+	@Override
+	public Object getObjectInstance(Object obj, Name name, Context nameCtx,
+			Hashtable&lt;?, ?&gt; environment) throws Exception
+	{
+		if(obj instanceof Reference)
+		{
+			Reference ref = (Reference)obj;
+			String val = (String)ref.get(&quot;value&quot;).getContent();
+			BindedClass o = new BindedClass();
+			o.setValue(val);
+			return o;
+			
+		}
+		return null;
+	}
+}</pre>
+<h3>N.3.1.3 代码解释 </h3>
+<p>Referenable接口只有一个方法，就是getReference()，返回一个Reference对象，BindedClass只设了一个示例成员变量Value，存储一个字符串值，在创建Refernce对象时，要指定它引用的类名以及创建该类的工厂对象，JNDI Context在绑定该对象时就会将这些信息都存到文件中，将来从JNDI中取对象时可就全靠工厂对象根据文件中的内容重建BindedClass对象了。我这里提前把绑定后生成的文件内容说一下，大家会更有一个直观的印象，其内容如下所示：</p>
+<pre>bind1/RefAddr/0/Type=value
+bind1/ClassName=lld.test.jndi.BindedClass
+bind1/RefAddr/0/Encoding=String
+bind1/FactoryName=lld.test.jndi.BindedClassFactory
+bind1/RefAddr/0/Content=abcdefg</pre>
+<p>大家看到了，前面在BindedClass.getReference()方法中使用了如下语句：</p>
+<pre>r.add(new StringRefAddr(&quot;value&quot;, this.getValue()));</pre>
+<p>就是定义要将这些信息存储到JNDI中呢，至于最后的“bind1/RefAddr/0/Content=abcdefg”，那是因为我在后面的示例Bind.java中将其值设成了“abcdefg”而已，呵呵。而BindedClassFactory.getObjectInstance()方法中</p>
+<pre>String val = (String)ref.get(&quot;value&quot;).getContent();</pre>
+<p>就是用来取到存储的值呢。</p>
+<h2>N.3.2 Bind.java</h2>
+<p>本例用来绑定一个BindedClass对象</p>
+<pre>package lld.test.jndi;
+
+import java.util.Properties;
+
+import javax.naming.Context;
+import javax.naming.directory.DirContext;
+import javax.naming.directory.InitialDirContext;
+
+public class Bind
+{
+	public static void main(String[] args) throws Exception
+	{
+		Properties ps = new Properties();
+		ps.setProperty(Context.INITIAL_CONTEXT_FACTORY, &quot;com.sun.jndi.fscontext.RefFSContextFactory&quot;);
+		ps.setProperty(Context.PROVIDER_URL, &quot;file:JNDI_REF&quot;);
+		DirContext ctx = new InitialDirContext(ps);
+		String key = &quot;bind1&quot;;
+
+		BindedClass b = new BindedClass();
+		b.setValue(&quot;abcdefg&quot;);
+		ctx.rebind(key, b);
+
+		System.out.println(&quot;Binded successfully!&quot;);
+		ctx.close();
+	}
+}</pre>
+<h2>N.3.3 Lookup.java</h2>
+<p>本例用来从JNDI中获取绑定的BindedClass对象</p>
+<pre>package lld.test.jndi;
+
+import java.util.Properties;
+
+import javax.naming.Context;
+import javax.naming.directory.DirContext;
+import javax.naming.directory.InitialDirContext;
+
+public class Lookup
+{
+	public static void main(String[] args) throws Exception
+	{
+		Properties ps = new Properties();
+		ps.setProperty(Context.INITIAL_CONTEXT_FACTORY, &quot;com.sun.jndi.fscontext.RefFSContextFactory&quot;);
+		ps.setProperty(Context.PROVIDER_URL, &quot;file:JNDI_REF&quot;);
+		DirContext ctx = new InitialDirContext(ps);
+		String key = &quot;bind1&quot;;
+		BindedClass o = (BindedClass)ctx.lookup(key);
+		System.out.println(o.getValue());	
+		
+		ctx.close();
+	}
+
+}</pre>
+<h2>N.3.4 示例下载</h2>
+<p><a href="example/JNDITest.zip">示例下载</a> </p>
+<h1>N.100 转载自网络的资料</h1>
+<p>JNDI(Java Naming and Directory Interface)是一个应用程序设计的API，为开发人员提供了查找和访问各种命名和目录服务的通用、统一的接口，类似JDBC都是构建在抽象层上。</p>
+<p> JNDI可访问的现有的目录及服务有：</p>
+<ul>
+  <li> DNS</li>
+  <li>XNam</li>
+  <li>Novell目录服务</li>
+  <li>LDAP(Lightweight Directory Access Protocol 轻型目录访问协议)</li>
+  <li>CORBA对象服务</li>
+  <li>文件系统</li>
+  <li>Windows XP/2000/NT/Me/9x的注册表</li>
+  <li>RMI</li>
+  <li>DSML v1&amp;v2</li>
+  <li>NIS</li>
+</ul>
+<p> JNDI优点：</p>
+<ul>
+  <li> 包含了大量的命名和目录服务，使用通用接口来访问不同种类的服务；</li>
+  <li> 可以同时连接到多个命名或目录服务上；</li>
+  <li> 建立起逻辑关联，允许把名称同Java对象或资源关联起来，而不必指导对象或资源的物理ID。</li>
+</ul>
+
+<p> JNDI程序包：</p>
+<ul>
+  <li> javax.naming：命名操作；</li>
+  <li> javax.naming.directory：目录操作；</li>
+  <li> javax.naming.event：在命名目录服务器中请求事件通知；</li>
+  <li> javax.naming.ldap：提供LDAP支持；</li>
+  <li> javax.naming.spi：允许动态插入不同实现。  </li>
+</ul>
+<p>利用JNDI的命名与服务功能来满足企业级APIs对命名与服务的访问，诸如EJBs、JMS、JDBC 2.0以及IIOP上的RMI通过JNDI来使用CORBA的命名服务。</p>
+<p> JNDI与JDBC：</p>
+<p> JNDI提供了一种统一的方式，可以用在网络上查找和访问服务。通过指定一个资源名称，该名称对应于数据库或命名服务中的一个纪录，同时返回数据库连接建立所必须的信息。</p>
+<p> 代码示例：</p>
+<pre>try
+{
+	Context cntxt = new InitialContext();
+	DataSource ds = (DataSource) cntxt.lookup("jdbc/dpt");
+}
+catch(NamingException ne)
+{
+	...
+}</pre>
+<p> JNDI与JMS：</p>
+<p> 消息通信是软件组件或应用程序用来通信的一种方法。JMS就是一种允许应用程序创建、发送、接收、和读取消息的JAVA技术。
+  代码示例：</p>
+<pre>try
+{
+	Properties env = new Properties();
+	InitialContext inictxt = new InitialContext(env);
+	TopicConnectionFactory connFactory = (TopicConnectionFactory) inictxt.lookup("TTopicConnectionFactory");
+	...
+}
+catch(NamingException ne)
+{
+	...
+}</pre>
+<p>访问特定目录：举个例子，人是个对象，他有好几个属性，诸如这个人的姓名、电话号码、电子邮件地址、邮政编码等属性。通过getAttributes()方法</p>
+<pre>Attribute attr = directory.getAttributes(personName).get("email");
+String email = (String)attr.get();</pre>
+<p>通过使用JNDI让客户使用对象的名称或属性来查找对象：</p>
+<pre>foxes = directory.search(&quot;o=Wiz,c=US&quot;, &quot;sn=Fox&quot;, controls);</pre>
+<p> 通过使用JNDI来查找诸如打印机、数据库这样的对象，查找打印机的例子：</p>
+<pre>Printer printer = (Printer)namespace.lookup(printerName);
+printer.print(document);</pre>
+<p> 浏览命名空间：</p>
+<pre>NamingEnumeration list = namespace.list("o=Widget, c=US");
+while (list.hasMore()) 
+{
+	NameClassPair entry = (NameClassPair)list.next();
+	display(entry.getName(), entry.getClassName());
+}</pre>
+<p>常用的JNDI操作：</p>
+<ul>
+  <li>void bind(String sName,Object object);????绑定：把名称同对象关联的过程</li>
+  <li> void rebind(String sName,Object object);????重新绑定：用来把对象同一个已经存在的名称重新绑定</li>
+  <li> void unbind(String sName);????释放：用来把对象从目录中释放出来</li>
+  <li> void lookup(String sName,Object object);????查找：返回目录总的一个对象</li>
+  <li> void rename(String sOldName,String sNewName);????重命名：用来修改对象名称绑定的名称</li>
+  <li> NamingEnumeration listBinding(String sName);????清单：返回绑定在特定上下文中对象的清单列表</li>
+  <li> NamingEnumeration list(String sName);  </li>
+</ul>
+<p>代码示例：重新得到了名称、类名和绑定对象。</p>
+<pre>NamingEnumeration namEnumList = ctxt.listBinding("cntxtName");
+...
+while ( namEnumList.hasMore() )  
+{
+	Binding bnd = (Binding) namEnumList.next();
+	String sObjName = bnd.getName();
+	String sClassName = bnd.getClassName();
+	SomeObject objLocal = (SomeObject) bnd.getObject();
+}</pre>
+<h1>N.2 启用JNDI服务</h1>
+<p>像 JDBC 和 JMS 一样，JNDI 是一种中间件。像 JMS 一样，在 J2SE 应用程序中使用 JNDI 不像使用 JDBC 那么容易。JDBC 提供者无处不在--有数十种兼容 JDBC 的商业和开放源代码数据库服务器。虽然所有 J2EE 容器都必须包括一个 JNDI 提供者，但是对于不属于 J2EE 容器的 JNDI，数量相对就少了。这不仅使在 J2SE 应用程序中使用 JNDI 更困难了，而且还意味着 J2SE 开发人员不太可能接触到 JNDI 并认识它的优势。</p>
+<p>根据所使用的 JNDI 提供者和应用程序配置，JNDI 可能在 JNDI 名称空间中存储任意的 Java 对象（有一些限制：有些 JNDI 提供者限制存储的对象是可序列化的）。一般用 JNDI 存储静态配置数据（整型和字符串型）、JDBC DataSource 对象、JMS Connection 和 Topic 对象，以及无状态的对象（包括工厂对象）。完整地存储已配置对象，比如 JDBC DataSource 对象，而不只是配置数据，比如 JDBC URL，还可以增强应用程序的安全性，因为像授权凭证这样的敏感信息不能被应用程序直接使用。</p>
+<p>J2EE 应用程序使用 JNDI 作为连接松散耦合组件之间的“开关板”--J2EE 组件使用 JNDI 寻找其他想要使用的组件，如 EJB 组件，并寻找 JDBC 和 JMS 连接这样的资源。J2EE 组件之间的互连是在组件的部署描述符中声明式地定义的，容器自动将对象绑定到名称空间中的特定位置，并保证在部署组件之前组件之间的所有资源依赖关系都得到满足。</p>
+<p>J2SE 应用程序可以以类似于 J2EE 应用程序的方式使用 JNDI，只是它们必须多做一些填充名称空间的工作。但是好处是相同的--应用程序可以更松散地耦合，组件在运行时彼此发现。</p>
+<h2>N.2.1 免费 JNDI 提供者</h2>
+<p> 虽然 JNDI 参考实现不包括一般性的 JDNI 提供者，但是可以下载 Sun 网站提供的 File System （FSContext）。这是一个示例 JNDI 提供者，它是以源代码的方式提供的，它访问并存储文件中的可序列化对象，还使名称空间的内容可以保证跨程序调用的一致性。虽然 FSContext JNDI 提供者主要是做为编写 JNDI 提供者的一个示例，但是简单的应用程序也可以使用它作为序列化对象的持久性数据存储，或者是作为“存根” JNDI 提供者，对从 JNDI 获得其配置的组件进行单元测试。</p>
+<p>JBoss 开放源代码 J2EE 容器还包括一个更一般性的 JNDI 提供者 JNPServer，它可以容易地作为单独的 JNDI 提供者运行，不需要 JBoss 容器。可以通过 RMI 从远程 JVM 访问 JNP，而在本地 JVM 中不会产生 RMI 开销。它在内部将对象存储到内存中的一个 HashMap 中。</p>
+<p>在 JBoss 发行版的 jnpserver.jarJAR 文件中可以找到 JNP JNDI 服务器，它还依赖于 log4j 日志引擎。要使用它，必须配置 log4j，创建相应的 jndi.properties文件（参见清单 1），并安排通过调用同一 JVM 或者另一个 JVM 中的 org.jnp.server.Main 的主入口点来启动服务器。访问 JNDI 名称空间的类文件在 JBoss 发行版的 jnpclient.jarJAR 文件中。 </p>
+<p>&nbsp; </p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+
+</body>
+</html>

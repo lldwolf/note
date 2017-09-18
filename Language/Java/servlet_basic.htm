@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>Servlet基本知识</title>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+<p id="title">Servlet基本知识</p>
+
+<p>需j2ee支持，如果不从java.sun.com下载，Tomcat下就自带，例如tomcat6下的lib目录下有servlet-api.jar，如需使用JSTL及标签支持，还需要使用jsp-api.jar</p>
+<h1>标准Servlet</h1>
+<p>最常用的使用方式为创建 javax.servlet.http.HttpServlet 的派生类，并重载其doGet和doPost方法。</p>
+<h2>获取页面传来的参数</h2>
+<p>使用对象javax.servlet.http.HttpServletRequest，是doGet或doPost方法的第一个参数，使用其 getParameter 方法获取页面传递的参数（GET方式和POST方式均可）</p>
+<p>getParameter和getAttribute的区别</p>
+<p>getParameter()是获取请求参数的值；getAttribute（）是获取保存在request|session|application中的一个名对应的对象</p>
+<h2>设置返回值</h2>
+<p>使用HttpServletRequest对象的setAttribute方法，设置JSP页面用到的服务器变量，在JSP中可以使用request.getAttribute获取。</p>
+<h2>跳转到返回页页</h2>
+<p>示例代码如下所示：</p>
+<pre class="code" data-type="java">import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletContext;
+...
+ServletContext context = this.getServletContext();
+RequestDispatcher dispatcher = context.getRequestDispatcher(&quot;/hello/servlet_jsp2.jsp&quot;);
+dispatcher.forward(request, response);</pre>
+
+</body>
+</html>

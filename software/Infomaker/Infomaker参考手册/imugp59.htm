@@ -1,0 +1,66 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+Storing data in a report using the Data view</TITLE>
+</HEAD>
+<BODY>
+<A NAME="CAIDGFJC"></A><h1>Storing data in a report using the Data view</h1>
+<A NAME="TI2134"></A><p>Usually you retrieve data into a report from the database--the
+data is changeable and you want the latest. But sometimes the data you
+display in a report is static--it never changes. Or
+you may want a snapshot of the data at a certain point in time.
+In these situations, you may want to store the data in the report itself.
+That way you don't need to go out to the database or other
+data source to display the data.</p>
+<A NAME="TI2135"></A><p>The most common reason to store data in a report is for
+use as a dropdown DataWindow where the data is not coming from a
+database. For example, you might want to display a list of state
+postal codes for entering values in a State column in a form.
+You can store those codes in a report and use the DropDownDataWindow
+edit style for the State column.</p>
+<A NAME="TI2136"></A><p>For more information about using the DropDownDataWindow
+edit style, see <A HREF="imugp62.htm#CAIDCCJB">Chapter 6, "Displaying and Validating
+Data "</A>.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To store data in a report:</p>
+<ol><li class=fi>
+Select View&gt;Data from the menu bar.<br><br>
+The Data view displays. All columns defined for the report are
+listed at the top.<br><br></li>
+<li class=ds>
+Do any of the following:<A NAME="TI2137"></A>
+<ul>
+<li class=fi>Click the Insert Row button in the PainterBar to create an
+empty row and type a row of data. You can enter as many rows as
+you want.</li>
+<li class=ds>Click the Retrieve button in the PainterBar to retrieve
+all the rows of data from the database. If you want, you can delete
+rows you don't want to save or manually add new rows.</li>
+<li class=ds>Click the Delete button in the PainterBar to delete
+unwanted rows.
+</li>
+</ul>
+<br><br><br><img src="images/dwen33.gif"><br>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Data changes are local to the report</span> <A NAME="TI2138"></A>Adding or deleting data here does not change the data in the
+database. It only determines what data will be stored with the report when
+you save it. The Update DB button is disabled.</p>
+</li>
+<li class=ds>
+When you have finished, save the report.<br><br></li></ol>
+<br><A NAME="TI2139"></A><p>When you save the report, the data is stored in the report. </p>
+<A NAME="TI2140"></A><h4>Sharing data with the Preview view</h4>
+<A NAME="TI2141"></A><p>To see changes you make in the Data view reflected in the
+Preview view, select ShareData from the popup menu in the Data view. The Preview view shows data
+from the storage buffer associated with the Data view.</p>
+<A NAME="TI2142"></A><h2>What happens when you run the report</h2>
+<A NAME="TI2143"></A><p>When you run a report with stored data, the data is already
+there. InfoMaker does not retrieve data.</p>
+<A NAME="TI2144"></A><p>With one exception, if you <i>do</i>
+ issue Retrieve
+for a report stored with data, InfoMaker handles it the same
+as a report that is not stored with data: InfoMaker gets the
+latest data by retrieving rows from the database.</p>
+<A NAME="TI2145"></A><h4>The exception</h4>
+<A NAME="TI2146"></A><p>InfoMaker never retrieves data into a dropdown DataWindow
+that already contains data.</p>
+

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<title>Remoting</title>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+<p id="title">Remoting</p>
+
+<h1>简介 </h1>
+<p>Remoting有点类似COM技术，客户端向服务端申请创建对象，然后服务器创建对象，并提供相应的服务。</p>
+<p>在这里，我以一个简单的例子说明一下Remoting的用法。客户端向服务器端提出要求，要求提供将两个数相加的功能。</p>
+<h2>实体类项目 </h2>
+<p>新建一个类库项目，命名为RemoteNumber，里面包含一个类NumberAdd，这是一个实体类，用于提供两个数相加的功能，唯一要注意的一点就是，该类需要派生自System.MarshalByRefObject。代码如下所示：</p>
+<pre class="code" data-type="csharp">using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace RemoteNumber
+{
+	public class NumberAdd : System.MarshalByRefObject
+	{
+		public NumberAdd()
+		{
+			Console.WriteLine(&quot;Construct NumberAdd Object!&quot;);
+		}
+
+		~NumberAdd()
+		{
+			Console.WriteLine(&quot;Destroy NumberAdd Object!&quot;);
+		}
+
+
+		public int Add(int number1, int number2)
+		{
+			return number1 + number2;
+		}
+	}
+}</pre>
+<h2>服务器项目</h2>
+<p>新建一个控制台应用程序项目NumberServer，引用RemoteNumber项目（引用DLL也行），添加对System.Remoting.Runtime库的引用，主函数如下所示：</p>
+<pre class="code" data-type="csharp">using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Runtime.Remoting;
+using System.Runtime.Remoting.Channels;
+using System.Runtime.Remoting.Channels.Tcp;
+using RemoteNumber;
+
+namespace NumberServer
+{
+	class Program
+	{
+		static void Main(string[] args)
+		{
+			TcpServerChannel channel = new TcpServerChannel(6667);
+			ChannelServices.RegisterChannel(channel, false);
+			RemotingConfiguration.RegisterWellKnownServiceType(typeof(NumberAdd), &quot;NumberAdd&quot;, WellKnownObjectMode.Singleton);
+			Console.WriteLine(&quot;Press any key to exit!&quot;);
+			Console.Read();
+		}
+	}
+}</pre>
+<p>上例在注册Remoting服务器对象时，我使用了WellKnownObjectMode.Singleton方式，这表示创建一个对象处理所有的请求，也可以使用WellKnownObjectMode.SingleCall方式，这样的话对每个请求创建一个对象。</p>
+<h2>客户端项目</h2>
+<p>新建一个控制台应用程序项目NumberClient，引用RemoteNumber项目和System.Remoting.Runtime库，主函数如下所示：</p>
+<pre class="code" data-type="csharp">using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Runtime.Remoting.Channels;
+using System.Runtime.Remoting.Channels.Tcp;
+using RemoteNumber;
+
+namespace NumberClient
+{
+	class Program
+	{
+		static void Main(string[] args)
+		{
+			ChannelServices.RegisterChannel(new TcpClientChannel(), false);
+			NumberAdd obj = (NumberAdd)Activator.GetObject(typeof(NumberAdd), &quot;tcp://localhost:6667/NumberAdd&quot;);
+			if (obj == null)
+			{
+				Console.WriteLine(&quot;Cannot connect to server!&quot;);
+				return;
+			}
+			else
+			{
+				Console.WriteLine(&quot;Input number1: &quot;);
+				int n1 = Convert.ToInt32(Console.ReadLine());
+				Console.WriteLine(&quot;Input number2: &quot;);
+				int n2 = Convert.ToInt32(Console.ReadLine());
+				Console.WriteLine(&quot;The result is: &quot; +  obj.Add(n1, n2));
+
+			}
+		}
+	}
+}</pre>
+<h2>下载示例代码</h2>
+<p><a href="demo/RemoteDemo.zip">示例代码</a></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+
+</body>
+</html>

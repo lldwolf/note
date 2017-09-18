@@ -1,0 +1,1 @@
+document.write('<a target="_top" href="http://ads.aspalliance.com/adredir.asp?id=570&m=59&amp;s=&amp;">ANTS Profiler &ndash; V 2.0 out now!</a><br />The simple .NET profiler for improving the performance of your application. Click for a free trial.');

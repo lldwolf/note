@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+	<title>DevExpress WPF (XPF) 基本组件</title>
+	<script type="text/javascript" src="../../../mylib/js/css.js"></script>
+
+</head>
+
+<body>
+	<p id="title">WPF Basic Control</p>
+	<h1>Overview</h1>
+	<h2>本例用到的 Namespace</h2>
+	<pre class="code">xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"</pre>
+	<h1>ComboBox</h1>
+	<h2>CheckedList 选项 &amp; Data Binding</h2>
+	<pre class="code" data-type="xml" data-collapsed="true" title="XAML">&lt;Window x:Class="DXWPFApplication1.Window18"
+		xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+		xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
+		xmlns:sys="clr-namespace:System;assembly=mscorlib"
+		xmlns:convert="clr-namespace:DXWPFApplication1.Converters"
+		Title="Window18"
+		Height="300"
+		Width="300"&gt;
+	&lt;Window.Resources&gt;
+		&lt;ResourceDictionary&gt;
+			&lt;x:Array x:Key="cb_source"
+					 Type="sys:String"&gt;
+				&lt;sys:String&gt;Ticker&lt;/sys:String&gt;
+				&lt;sys:String&gt;ISIN&lt;/sys:String&gt;
+			&lt;/x:Array&gt;
+			&lt;convert:ObjectListObservableConverter x:Key="listConverter" /&gt;
+		&lt;/ResourceDictionary&gt;
+	&lt;/Window.Resources&gt;
+	&lt;StackPanel&gt;
+		&lt;dxe:ComboBoxEdit x:Name="cmb"
+						  SeparatorString="/"
+						  EditValue="{Binding Path=Ticker, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource ResourceKey=listConverter}}"
+						  ItemsSource="{StaticResource ResourceKey=cb_source}"&gt;
+			&lt;dxe:ComboBoxEdit.StyleSettings&gt;
+				&lt;dxe:CheckedComboBoxStyleSettings&gt; /&gt;
+			&lt;/dxe:ComboBoxEdit.StyleSettings&gt;
+		&lt;/dxe:ComboBoxEdit&gt;
+	&lt;/StackPanel&gt;
+&lt;/Window&gt;</pre>
+	<p>使用的 ViewModel 类如下所示 (需引用 GalaSoft.MvvmLight)</p>
+	<pre class="code" data-type="csharp" data-collapsed="true" title="C# - ViewModel">class CbViewModel : ViewModelBase
+{
+	public CbViewModel()
+	{
+		this.ticker = new List&lt;string&gt;();
+	}	
+
+	private List&lt;string&gt; ticker;
+	public List&lt;string&gt; Ticker
+	{
+		get { return this.ticker; }
+		set { this.Set(() =&gt; this.Ticker, ref this.ticker, value); }
+	}
+}</pre>
+	<p>CobmoBox 在多选情况下，使用 List&lt;object&gt; 作为数据源，所以，如果我们想使用 List&lt;string&gt;，需声明 Covnerter 如下所示</p>
+	<pre class="code" data-type="csharp" data-collapsed="true" title="C# - Converter">public class ObjectListObservableConverter : IValueConverter
+{
+	public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+	{
+		List&lt;string&gt; strList = value as List&lt;string&gt;;
+		List&lt;object&gt; objList = new List&lt;object&gt;();
+
+		if (strList != null)
+		{
+			foreach (var item in strList)
+			{
+				objList.Add(item);
+			}
+		}
+
+		return objList;
+	}
+
+	public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+	{
+		var lst = value as List&lt;object&gt;;
+
+		if (lst == null)
+		{
+			return new List&lt;string&gt;();
+		}
+
+		List&lt;string&gt; intList = new List&lt;string&gt;();
+		foreach (object o in lst)
+		{
+			if (o is string)
+			{
+				intList.Add((string)o);
+			}
+		}
+		return intList;
+	}
+}</pre>
+	<p>如果想在事件中直接对 EditValue 赋值，则需要使用 List&amp;object&gt;, 如下所示. 否则虽然会显示, 但点开时相应项不会被勾上</p>
+	<pre class="code" data-type="csharp">this.cmb.EditValue = new List&lt;object&gt;() { "Ticker" };</pre>
+</body>
+</html>

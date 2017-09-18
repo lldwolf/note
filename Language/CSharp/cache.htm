@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>缓存</title>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+<p id="title">缓存</p>
+    <h1>Overview</h1>
+    <p>System.Runtime.Caching 提供了一组运行时缓存的工具类。主要类为 ObjectCache 和 MemoryCache，其中　MemoryCache 是　ObjectCache 的实现。</p>
+    <p>如下例所示，它将一个文本文件的内容放在缓存中，如果文件没改动，则直接从缓存中读取，如果有改动，则重新加载，代码如下所示：</p>
+    <pre class="code" data-type="csharp">MemoryCache cache = MemoryCache.Default;
+string filePath = "c:\\temp\\1.txt";
+string fileContents = cache["filecontents"] as string;
+
+if (fileContents == null)
+{
+    CacheItemPolicy policy = new CacheItemPolicy();
+    List<string> filePaths = new List<string>();
+    filePaths.Add(filePath);
+    policy.ChangeMonitors.Add(new
+    HostFileChangeMonitor(filePaths));
+    // Fetch the file contents.
+    fileContents = File.ReadAllText(filePath);
+    cache.Set("filecontents", fileContents, policy);
+}
+
+this.textBox1.Text = cache["filecontents"] as string;
+</pre>
+</body>
+</html>

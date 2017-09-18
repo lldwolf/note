@@ -1,0 +1,36 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<title>规格书</title>
+<script language="javascript" src="css.js"></script>
+</head>
+
+<body>
+<h1>第N章 规格书</h1>
+<hr>
+<h2>N.1 添加字段</h2>
+<p>例如，要在规格书中添加spec_udf_c50字段，在“Page Editor”模块中，打开要编辑的Page，选择“Regenerate”按钮，在弹出窗中选择表“spec_sheet_data”，点其右侧的按钮“show columns”，在右侧会显示出该表所有的列，然后找到列“spec_udf_c50”并选中（按住CTRL键，以避免取消以前的选择），然后确认即可。</p>
+<p>在INTOOLS中规格书中能添加的字段是有限制的，并不是所有的字段都能随便往时添加。能添加的字段包括以下几种：</p>
+<ol>
+  <li>与规格项相关的字段，是pd_general表和line表中的一些字段</li>
+  <li>一些INTOOLS支持的表，也就是在使用regeneration功能时出现的表集合，包括自定义字段，是add_spec1到add_spec9，spec_sheet_data表，对这些表，你可以定义它们使用的列。还有一些视图，如view_line等，这些视图都是域用户的成员视图，可以在数据库的管理器中找到。</li>
+</ol>
+<p>这就意味着，不属于这些范围的字段是不能添加的，这与PSR文件中的SQL语句无关，例如对于管道的壁厚，对应line.wall_thick，我试图在PSR中加入，但导入INTOOLS后无法正常使用。</p>
+<p>如果非要加入该字段，也不是没有办法，你可以修改视图view_line，在其中加入line.wall_thick字段，这样你在regeneration时选择view_line，regeneration后你就可以使用wall_thick字段了。但这样毕竟不是INTOOLS的默认项，在与其它公司合作时会有移值性的问题。</p>
+<h2>N.100 常见问题</h2>
+<h3>N.100.1 错误 Select error: Row's length exceeded 32767 bytes...</h3>
+<p>见于ORACLE版INtools中，在SQL SERVER版中制作的模板，导入到ORACLE版中时可能会发生。因为规格书SQL语句中使用的字段数太多。</p>
+<p>一般解决方案为点击“regenerate”工具栏按钮，在弹出窗口中对使用的表选择“Selected Used Columns”按钮即可，如下图扭示：</p>
+<p><img src="images/regenerate_spec_selected_used_columns.jpg" width="583" height="329"></p>
+<p>但我还碰到一次意外，那是同时使用了add_spec1表和spec_sheet_data表，即使精简了字段，系统仍然报错，错误内容为莫名其妙的“SQL命令未正确结束”，不晓得咋回事，只是add_spec1表中用的字段不多，干脆用spec_sheet_data表中的字段代替，去掉了add_spec1表后才正常。</p>
+<h3>N.100.2 对于多页规格书打不开第二页</h3>
+<p>在查看数据时提示打不开第二页，使用设计器查看时除了第一页外，其它页均显示为空。</p>
+<p>出现该问题的原因为INTOOLS的Temp文件夹设置错误，在电脑中不存在该文件夹。</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp; </p>
+<script language="javascript" src="index.js"></script>
+</body>
+</html>

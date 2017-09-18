@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+	<script type="text/javascript" src="../../../mylib/js/css.js"></script>
+	<title>C#.net使用手册</title>
+</head>
+<body>
+	<p id="title">MVVMLight</p>
+	<h1>MVVM 概述</h1>
+	<p>MVVM 是 Model-View-ViewModel 框架的缩写。它的主要目的是实现界面与数据逻辑的分离。</p>
+	<p>MVVMLight 是 MVVM 的一个轻量级实现，它的官方主页是<a href="http://www.galasoft.ch/mvvm/">http://www.galasoft.ch/mvvm/</a></p>
+	<p>MVVM 应用的极端便是在 .xaml 文件对应的类中没有任何手写的代码（系统自动生成的例外）。不过这种作法也值得商榷，我更推荐的说法是只有纯粹的界面形为代码可以放在 .xaml.cs。例如：将窗体关闭，如果不涉及数据校验的话，就是一个纯粹的界面行为。</p>
+	<p>一般情况下，MVVM在实际开发中遇到的的挑战有如下方式</p>
+	<table style="width:95%">
+		<tr>
+			<th style="width:150px">Item</th>
+			<th>Sample</th>
+			<th style="width:200px">Solution</th>
+		</tr>
+		<tr>
+			<td>需要在 ViewModel 使用界面行为</td>
+			<td>例如，在关闭界面时，我需要进行如下操作：
+				<ol>
+					<li>验证数据是否已被更改</li>
+					<li>如果已更改，弹出一个确认框，让用户确认放弃更改</li>
+					<li>如果未修改，则关闭窗口</li>
+				</ol>
+				其中，弹出确认框和关闭窗口这两个动作可以认为是 View 的行为。经常会有这两种不太好的解决方案：
+				<ol>
+					<li>在 ViewModel 中添加对 View 的引用，由 ViewModel 直接调用 View 的方法。这一下子就违反了 View/ViewModel 的设计初衷</li>
+					<li>放弃 Command 改用事件，将逻辑行为保留在 ViewModel 中，由 View 调用 ViewModel，而所有的界面操作则在 View 中进行。这种方式貌似合理，但经常会因为实际情况而使代码难于控制。例如，如果界面行为和数据逻辑反复交替进行的时候，ViewModel层的代码会变得支离破碎，而且还会不得不声明莫名其秒的返回值。</li>
+				</ol>
+				而且使用这种方式后，也意味着不能使用 Unit Test 对 ViewModel 进行测试了，你也不能想象在 Unit Test 过程中还要去操作下界面吧，这实际上是 WinForm 时代就遇到的难题。
+
+			</td>
+			<td>使用 Message 解耦 View 和 ViewModel</td>
+		</tr>
+	</table>
+	<h1>ViewModelLocator</h1>
+	<p>MVVMLight 本身不提供 ViewModelLocator 功能。</p>
+	<h1>Message</h1>
+	<p>MVVMLight 提供 Message 机制作为 View 和 ViewModel 的通信机制，例如，如果在 ViewModel 中需要弹出一个提示框，可以将这个属于 UI 的行为放在 View 类中，示例如下</p>
+	<p style="font-weight:bold">ViewModel 类，发送消息</p>
+	<pre class="code" data-type="csharp">Messenger.Default.Send(new GenericMessage&lt;string&gt;(&quot;Hello&quot;));</pre>
+	<p style="font-weight:bold">View 类，处理消息</p>
+	<pre class="code" data-type="csharp">Messenger.Default.Register&lt;GenericMessage&lt;string&gt;&gt;(this, true, (msg) =&gt; { MessageBox.Show(msg.Content); });</pre>
+	<p>MVVMLight 提供一个基类 MessageBase 作为消息基类，同时提供了一些常用的消息类型</p>
+	<ul>
+		<li>GenericMessage&lt;T&gt;: 通用消息类</li>
+	</ul>
+	<h1>RelayCommand</h1>
+	<h1>BaseViewModel &amp; BaseView</h1>
+	<h2>BaseViewModel</h2>
+	<p>下面是一个使用 MVVMLight 的 ViewModelBase 改造后 ViewModel 基类的示例代码</p>
+	<pre class="code" data-type="csharp" data-collapsed="true">using System;
+using System.Windows.Input;
+using GalaSoft.MvvmLight;
+using GalaSoft.MvvmLight.Command;
+using GalaSoft.MvvmLight.Messaging;
+
+namespace ViewModels
+{
+	public class BaseViewModel : ViewModelBase
+	{
+		public BaseViewModel()
+		{
+			this.Token = System.Guid.NewGuid().ToString();
+			this.CloseCommand = new RelayCommand(this.CloseUI);
+		}
+
+		private static log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+		public ICommand CloseCommand { get; private set; }
+		public ICommand SaveFileCommand { get; private set; }
+		public string Token { get; private set; }
+
+		protected virtual void CloseUI()
+		{
+			Messenger.Default.Send&lt;CloseWindowMessage&gt;(new CloseWindowMessage(this.Token));
+		}
+
+		protected virtual void Info(string msg)
+		{
+			Messenger.Default.Send(new InfoMessage(msg));
+		}
+
+		protected virtual void Warning(string msg)
+		{
+			Messenger.Default.Send(new WarningMessage(msg));
+		}
+
+		protected virtual void Error(string msg)
+		{
+			Messenger.Default.Send(new ErrorMessage(msg));
+		}
+	}
+}</pre>
+	<h1>Event Command</h1>
+</body>
+</html>

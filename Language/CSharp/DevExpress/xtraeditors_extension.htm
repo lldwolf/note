@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>XtraEditors Extension</title>
+<script type="text/javascript" src="../../../mylib/js/css.js"></script>
+</head>
+<body>
+<p id="title">XtraEditors Extension</p>	
+
+<h1>Key Points</h1>
+<ol>
+    <li><a href="#RepositoryItem">RepostiroItem*</a></li>
+</ol>
+<h1><a name="RepositoryItem"></a>RepositoryItem*</h1>
+<h2>Register</h2>
+<p>Register this control and its owner control so DevExpress can create the correct control automactically. for ex. RepositoryItemTextEdit can be created for TextEdit. In grid control, TextEdit can be created for RepositoryItemEdit automatically.</p>
+<p>The register method should be put both in Edit and RepostoryItemEdit.</p>
+<pre>public class RepositoryItemCustomTextEdit : DevExpress.XtraEditors.Repository.RepositoryItemTextEdit
+{
+    #region Register To IDE
+	
+	static RepositoryItemCustomTextEdit()
+	{
+		Register();
+	}
+
+	public override string EditorTypeName
+	{
+        get { return CustomTextEdit.EditorName; }
+	}
+
+	public static void Register()
+	{
+        EditorRegistrationInfo.Default.Editors.Add(new EditorClassInfo(
+            CustomTextEdit.EditorName,
+            typeof(CustomTextEdit),
+            typeof(RepositoryItemCustomTextEdit),
+            typeof(DevExpress.XtraEditors.ViewInfo.TextEditViewInfo),
+            new DevExpress.XtraEditors.Drawing.TextEditPainter(),
+            true,
+            null));
+	}
+	#endregion
+}</pre>
+<p>We can also register the <i>EditorClassInfo</i> as same as the way of DevExpress.</p>
+<p><a href="sample/EditorRegister.zip">Registor Sample</a></p>
+<h2>Override Assign method</h2>
+<p>If you add new property, then this method should be overrided.</p>
+<pre>public override void Assign(DevExpress.XtraEditors.Repository.RepositoryItem item)
+{
+	base.Assign(item);
+
+	GollfAmountRepositoryItemTextEdit srcItem = item as GollfAmountRepositoryItemTextEdit;
+	if (srcItem == null)
+		return;
+
+	this.AllowNumberAbbr = srcItem.AllowNumberAbbr;
+	this.AmountNonDecimalLength = srcItem.AmountNonDecimalLength;
+	this.AmountDecimalLength = srcItem.AmountDecimalLength;
+	this.AmountThousandFormat = srcItem.AmountThousandFormat;
+	this.MaxValue = srcItem.MaxValue;
+	this.PreserveNumberAbbr = srcItem.PreserveNumberAbbr;
+}</pre>
+<h2>Event</h2>
+<p>如需加入默认的事件处理，对于DevExpress自定义的事件，例如EditValueChanged，仅需在RepositoryItem*中加入即可。如果事件是由Control继承而来，例如Click，则需要同时在RepositoryItem*和Editor本体中加入。</p>
+<h1>Edit</h1>
+<pre>public class CustomTextEdit : DevExpress.XtraEditors.TextEdit
+{
+    internal const string EditorName = "CustomTextEdit";
+
+    #region Register RepositoryItemTextEdit
+	static CustomTextEdit()
+	{
+		RepositoryItemCustomTextEdit.Register();
+	}
+
+	public override string EditorTypeName
+	{
+		get { return EditorName; }
+	}
+	
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
+	public new RepositoryItemCustomTextEdit Properties
+	{
+		get
+		{
+			return base.Properties as RepositoryItemCustomTextEdit;
+		}
+	}
+
+	#endregion
+}</pre>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+
+</body>
+</html>

@@ -1,0 +1,221 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<script language="javascript" src="css.js"></script>
+<title>系统存储过程</title>
+</head>
+
+<body>
+<h1>第N章 系统存储过程</h1>
+<hr>
+<h2>N.1 获取SQL Server安装目录</h2>
+<pre>--方法一，读取注册表
+declare  @path  varchar(200)  
+exec  master.dbo.xp_regread    
+           'HKEY_LOCAL_MACHINE',  
+           'SOFTWARE\Microsoft\MSSQLSERVER\setup',  
+           'SQLPath',@path  output  
+set  @path  =  @path  +  '\data\'  
+print  @path  
+
+--方法二，根据master库的文件位置
+declare  @path  varchar(200)  
+select  @path  =  filename  from  master.dbo.sysfiles  
+set  @path  =  ltrim(REVERSE(@path))  
+set  @path  =  REVERSE(substring(@path,CHARINDEX('\',@path),len(@path)))  
+print  @path  </pre>
+<h2>N.2 设置数据库的属性</h2>
+<p>sp_dboptions</p>
+<pre>sp_dboptions 'database_name', 'single user', 'true'		--将数据库设置为单用户模式</pre>
+<h2>N.3 运行SQL语句</h2>
+<pre>exec sp_executesql N'select * from table_name'</pre>
+<p>其参数必须为nvarchar或nchar型</p>
+<h2>N.4 打印输入</h2>
+<pre>print '信息' </pre>
+<h2>N.5 获取列的属性 </h2>
+<p><A name=_columnproperty></A>COLUMNPROPERTY</p>
+<P>返回有关列或存储过程参数的信息</P>
+<H5>语法</H5>
+<P>COLUMNPROPERTY <B>( </B><I>id </I><B>,</B> <I>column </I><B>,</B> <I>property </I><B>) </B></P>
+<H5>参数</H5>
+<P><I>id</I></P>
+<P>表或存储过程的ID，存储在sysobjects表中。</P>
+<P><I>column</I></P>
+<P>列名或参数名</P>
+<P><I>property</I></P>
+<P>要检查的属性，可以下列值。</P>
+<table width="90%" >
+  <tr>
+    <th width="20%">值</th>
+    <th width="50%">说明</th>
+    <th width="30%">返回值</th>
+  </tr>
+  <tr>
+    <td><B>AllowsNull</B></td>
+    <td>是否允许空</td>
+    <td>1 = TRUE<BR>
+      0 = FALSE<BR>
+    NULL = Invalid input</td>
+  </tr>
+  <tr>
+    <td><B>IsComputed</B></td>
+    <td>是否为计算列</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td><B>sCursorType</B></td>
+    <td>参数类型是否为CURSOR</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td><B>IsDeterministic</B></td>
+    <td>The column is deterministic. This property applies only to computed columns and view columns.</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td><B>IsFulltextIndexed</B></td>
+    <td>The column has been registered for full-text indexing.</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td><B>IsIdentity</B></td>
+    <td>是否使用了identity属性</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td><B>IsIdNotForRepl</B></td>
+    <td>The column checks for the IDENTITY_INSERT setting. If IDENTITY NOT FOR REPLICATION is specified, the IDENTITY_INSERT setting is not checked.</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td><B>IsIndexable</B></td>
+    <td>The column can be indexed.</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td><B>IsOutParam</B></td>
+    <td>The procedure parameter is an output parameter.</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td><B>IsPrecise</B></td>
+    <td>The column is precise. This property applies only to deterministic columns.</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td><B>IsRowGuidCol</B></td>
+    <td>The column has the <B>uniqueidentifier</B> data type and is defined with the ROWGUIDCOL property.</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td><B>Precision</B></td>
+    <td>Precision for the data type of the column or parameter.</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td><B>Scale</B></td>
+    <td>Scale for the data type of the column or parameter.</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td><B>UsesAnsiTrim</B></td>
+    <td>ANSI padding setting was ON when the table was initially created.</td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+<P>对于IDENTITY列，可用如下两个存储过程获取其种子和增量</P>
+<P>select IDENT_INCR('report_sys.table1')<br>
+select IDENT_SEED('report_sys.table1')</P>
+<h2>N.1 安全类</h2>
+<h3>N.1.1 sp_addlogin</h3>
+<h3>N.1.2 sp_adduser</h3>
+<h3> N.1.3 sp_addrolemember</h3>
+<p>将登录名与角色相联，示例：</p>
+<pre>sp_add_rolemember 'db_owner', 'liu'</pre>
+<p> 将用户（不是登录名）“liu”赋予“db_onwer”权限
+</p>
+<h3>N.1. sp_defaultdb</h3>
+<p>更改登录的默认数据库，格式：</p>
+<pre>sp_defaultdb 'login_name', 'database_name'</pre>
+<h2>N.2 活动目录类</h2>
+<h3>N.2.1 sp_ActiveDirectory_Obj</h3>
+<h3>N.2.2 sp_ActiveDirectory_SCP</h3>
+<h2>N.3 目录类</h2>
+<h3>N.3.1 sp_column_privileges</h3>
+<h3>N.3.2 sp_columns</h3>
+<h3>N.3.3 sp_databases </h3>
+<h3>N.3.4 sp_fkeys </h3>
+<h3>N.3.5 sp_pkeys</h3>
+<h3>N.3.6 sp_server_info </h3>
+<h3>N.3.7 sp_special_columns </h3>
+<h3>N.3.8 sp_sproc_columns </h3>
+<h3>N.3.9 sp_statistics </h3>
+<h3>N.3.10 sp_stored_procedures </h3>
+<h3>N.3.11 sp_table_privileges </h3>
+<h3>N.3.12 sp_tables </h3>
+<h2>N.4 系统过程 </h2>
+<table width="90%"  border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <th width="20%">存储过程名</th>
+    <th width="80%">说明</th>
+  </tr>
+  <tr>
+    <td>sp_helpdb</td>
+    <td>获取数据库的一些信息，如大小、字符集、文件集合等</td>
+  </tr>
+  <tr>
+    <td>sp_helpconstraint</td>
+    <td>获取约束的信息</td>
+  </tr>
+  <tr style="color:red">
+    <td>sp_helpdevice</td>
+    <td>报告有关 SQL Server数据库文件的信息。用于向后兼容那些使用数据库文件的检索设备的 SQL Server 的早期版本。</td>
+  </tr>
+  <tr>
+    <td>sp_helpfile</td>
+    <td>返回与当前数据库关联的文件的物理名称及特性。使用此存储过程确定附加到服务器或从服务器分离的文件名。</td>
+  </tr>
+  <tr>
+    <td>sp_rename</td>
+    <td>更改系统对象的名称, 如数据库、表、存储过程、视图、触发器、列等</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+  <script language="javascript" src="index.js"></script>
+</body>
+</html>

@@ -1,0 +1,55 @@
+﻿<!DOCTYPE html>
+
+<html lang="zh-cn" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta charset="utf-8" />
+	<script type="text/javascript" src="../../mylib/js/css.js"></script>
+	<title>SonarQube Note</title>
+</head>
+<body>
+	<p id="title">.NET Rules</p>
+	<h1>Disable FxCop Rules</h1>
+	<p>对于 SonarQube 4.5 以上版本，默认集成了 FxCop Rules，但需要 MSBuild 14 支持。</p>
+	<p>对于老的项目，可使用以下方式禁用所有的 FxCop rules</p>
+	<ol>
+		<li>login SonarQube with admin access</li>
+		<li>Quality Profiles &rarr; C# Profiles &rarr; Sonar way
+			<br />
+			<img alt="" src="img/sonar_csharp_rules01.png" />
+		</li>
+		<li>Choose FxCop Repository
+			<br />
+			<img alt="" src="img/sonar_csharp_rules02.png" />
+		</li>
+		<li>Disable all FxCop rules in the searching result
+			<br />
+			<img alt="" src="img/sonar_csharp_rules03.png" />
+		</li>
+	</ol>
+	<h1>Other Rules</h1>
+	<p>I also update some sonar way rules according to my project.</p>
+
+	<table>
+		<tr>
+			<th>Rule</th>
+			<th>Change</th>
+		</tr>
+		<tr>
+			<td>"value" parameters should be used</td>
+			<td>I updated its severity from Critical to Minor. Sometimes I need a property for data-binding field which is a popup window. </td>
+		</tr>
+		<tr>
+			<td>Method name should comply with a naming convention</td>
+			<td>I updated the format to "^[A-Z][a-zA-Z0-9_]*[a-zA-Z0-9]$" because the default auto-generated event method name doesn't comply the default format.</td>
+		</tr>
+		<tr>
+			<td>Source files should have a sufficient density of comment lines</td>
+			<td>I updated its severity from Majo to Info</td>
+		</tr>
+		<tr>
+			<td>Multiline blocks should be enclosed in curly braces</td>
+			<td>I updated its severity from Critical to Majo</td>
+		</tr>
+	</table>
+</body>
+</html>

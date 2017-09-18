@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+	<script type="text/javascript" src="../../mylib/js/css.js"></script>
+	<title>MS Test</title>
+</head>
+
+<body>
+	<p id="title">MS Test</p>
+	<h1>Overview</h1>
+	<h2>Library</h2>
+	<p>Refer the library: <span class="emphasis">Microsoft.VisualStudio.QualityTools.UnitTestFramework</span></p>
+	<h2>Attributes</h2>
+	<table style="width: 90%">
+		<tr>
+			<th>Attribute</th>
+			<th>Level</th>
+			<th>Desc.</th>
+		</tr>
+		<tr>
+			<td>TestClass</td>
+			<td>Class</td>
+			<td>表示这是一个 Test Suite</td>
+		</tr>
+		<tr>
+			<td>TestInitialize</td>
+			<td>Method</td>
+			<td>在所有的 Test Cases 开始之前调用</td>
+		</tr>
+		<tr>
+			<td>TestCleanup</td>
+			<td>Method</td>
+			<td>在所有的 Test Cases 结束之后调用</td>
+		</tr>
+		<tr>
+			<td>TestMethod</td>
+			<td>Method</td>
+			<td>Test Case</td>
+		</tr>
+	</table>
+	<h2>Assert</h2>
+	<p>Microsoft.VisualStudio.TestTools.UnitTesting.Assert</p>
+	<h2>Sample Code</h2>
+	<pre class="code" data-type="csharp">using System;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+namespace MyTest
+{
+	[TestClass]
+	public class TestClass1
+	{
+		[TestInitialize]
+		private void Init()
+		{
+			Console.WriteLine("Start testing...");
+		}
+
+		[TestCleanup]
+		private void CleanUp()
+		{
+			Console.WriteLine("Complete testing.");
+		}
+
+		[TestMethod]
+		public void TestMethod()
+		{
+			Assert.IsTrue(true);
+		}
+	}
+}</pre>
+	<h2>运行</h2>
+	<p>Open the window: TEST &rarr; Windows &rarr; Test Explorer</p>
+	<p>在选定的方法上使用右键菜单 Run Tests (Ctrl + R,T)</p>
+</body>
+</html>

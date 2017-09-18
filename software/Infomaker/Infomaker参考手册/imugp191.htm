@@ -1,0 +1,55 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+IsSelected</TITLE>
+</HEAD>
+<BODY>
+<A NAME="DWFIsSelected"></A><A NAME="TI6868"></A><h1>IsSelected</h1>
+<A NAME="TI6869"></A><p>
+<FORM>
+<INPUT
+ TYPE = "BUTTON"
+ VALUE = "Examples"
+ onClick = "window.location = 'imugp191.htm#EX43';">
+<INPUT
+  TYPE = "BUTTON"
+ VALUE = "See also"
+ onClick = "window.location = 'imugp191.htm#SA43';">
+</FORM>
+</p>
+<h3>Description</h3><A NAME="TI6870"></A><p>Determines whether the row is selected. A selected row is
+highlighted using reverse video.</p>
+
+<h3>Syntax</h3><pre><b>IsSelected</b> ( )</pre>
+
+<h3>Return Values</h3><A NAME="TI6871"></A><p>Boolean. Returns TRUE if the row is selected and FALSE if
+it is not selected.</p>
+
+<h3>Usage</h3><A NAME="TI6872"></A><p>When you use IsSelected in bands other than the detail band,
+it reports on a row in the detail band. See GetRow for a table specifying
+which row is associated with each band for reporting purposes.</p>
+
+<A NAME="EX43"></A><h3>Examples</h3><A NAME="TI6873"></A><p>This expression for a computed field in the detail
+area displays a bitmap if the row is selected:<pre>Bitmap(If(<i>IsSelected</i> (), "beach.bmp", ""))</pre>
+</p>
+<A NAME="TI6874"></A><p>This example allows the DataWindow object to display
+a salary total for all the selected rows. The expression for a computed
+field in the detail band returns the salary only when the row is
+selected so that another computed field in the summary band can
+add up all the selected salaries.</p>
+<A NAME="TI6875"></A><p>The expression for cf_selected_salary (the
+computed field in the detail band) is:<pre>If(<i>IsSelected</i> (), salary, 0)</pre>
+</p>
+<A NAME="TI6876"></A><p>The expression for the computed field in the summary
+band is:<pre>Sum(cf_selected_salary for all)</pre>
+</p>
+
+<A NAME="SA43"></A><h3>See Also</h3><A NAME="TI6877"></A><p><A NAME="TI6878"></A>
+<ul>
+<li class=fi><A HREF="imugp180.htm#CAIBGHBE">GetRow</A>
+</li>
+</ul>
+</p>
+
+

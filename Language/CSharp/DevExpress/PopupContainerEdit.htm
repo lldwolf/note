@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>PopupContainerEdit</title>
+<script type="text/javascript" src="../../../mylib/js/css.js"></script>
+</head>
+<body>
+<p id="title">PopupContainerEdit</p>
+
+<h1>基本信息</h1>
+<p>全路径：DevExpress.XtraEditors.PopupContainerEdit</p>
+<p>备注：本控件需与PopupContainerControl配合使用</p>
+<h1>Detail</h1>
+<h2>关键事件</h2>
+<p>事件触发顺序</p>
+<p><img src="img/popupcontaineredit_event_flow.PNG" alt="event firing list" /></p>
+<p>事件选用注意事项</p>
+<ul>
+    <li>QueryPopup触发时，子窗口尚未弹出，而触发Popup时，子窗口已弹出。因此，如果初始化弹出窗口需要较长时间，建议使用QueryPopup事件</li>
+    <li>点击弹出窗口外部使之关闭，触发QueryResultValue事件；点击弹出窗口的关闭按钮或使用ESC键使之关闭，触发QueryCloseUp事件</li>
+    <li>在ClosedUp事件中，有如下关闭类型：
+        <ul>
+            <li>Normal: 点击文本区域关闭</li>
+            <li>ButtonClick: 点击按钮（默认为右侧）关闭</li>
+            <li>Immediate: 点击非控件区域关闭</li>
+            <li>CloseUpKey: 按CloseUpKey关闭，默认为F4，可在CloseUpKey中设置</li>
+            <li>Cancel： 按Esc或关闭按钮关闭</li>
+        </ul>
+    </li>
+    <li>如果想只要关闭弹出窗口，即应用窗口中的值，建议使用CloseUp事件，但不要遗忘如下代码
+    <pre class="code" data-type="csharp">e.AcceptValue = true;</pre>
+    </li>
+    <li>如果要在多个PopupContainerEdit间共享同一个PopupContainerControl，建议使用Enter事件，代码如下：
+    <pre class="code" data-type="csharp">(sender as PopupContainerEdit).Properties.PopupControl = popupContainerControl1;</pre>
+    注意：对于GridControl中的PopupContainerControl共享，使用相同的代码。
+    </li>
+</ul>
+<h2>N.2.２ Interaction with PoupContainerControl</h2>
+<h3>Open PopupContainerControl</h3>
+<ol>
+    <li>Create a temporay form</li>
+    <li>Put the related PopupContainerEdit control into the temp form. And remove the relations from its original owner. For example, if the control is owned by form1.Controls, it will be removed from form1.Controls after this step.</li>
+</ol>
+<h3>Close PopupContainerControl</h3>
+<ol>
+    <li>Remove the related PopupContainerEdit control from the temp form. But it will not be put into its original container.</li>
+    <li>Destroy the temp form.</li>
+</ol>
+<h1>Extend</h1>
+<p>我们经常需要扩展PopupContainerEdit，来实现定制的弹出窗口编辑控件。</p>
+<p>扩展的关键点在与预定义PopupControl并进行绑定。至于扩展DevExpress Editor空间的基础知识，请参考<a href="xtraeditors_extension.htm">XtraEditors Extension</a></p>
+<p>下面展示了几个扩展示例。</p>
+<h2>定制注意事项</h2>
+<ol>
+	<li>Override EditValue
+	<pre class="code" data-type="csharp">public override object EditValue
+{
+	get
+	{
+		return base.EditValue;
+	}
+	set
+	{
+		base.EditValue = value;
+		this.CustomizedValue = value as CustomizedType;
+	}
+}</pre>
+	</li>
+</ol>
+<h2>定制PopupContainerControl</h2>
+<p>它的弹出窗口为一个MemoEdit。使用该控件，我们就不用创建PopupContainerControl了。组成文件：</p>
+<ul>
+    <li>RepositoryItemCommentsEdit.cs</li>
+    <li>RepositoryItemCommentsEdit.designer.cs</li>
+    <li>CommentsEdit.cs</li>
+    <li>CommentsEdit.designer.cs</li>
+</ul>
+<h3>RepositoryItemCommentsEdit.cs</h3>
+<pre class="code" data-type="csharp">using System;
+using System.ComponentModel;
+using DevExpress.Accessibility;
+using DevExpress.XtraEditors.Drawing;
+using DevExpress.XtraEditors.Registrator;
+using DevExpress.XtraEditors.ViewInfo;
+using Gollf.Infrastructure.ControlLibrary.DXExt;
+
+namespace Gollf.DS.LFPL.CustomizedComponents
+{
+	internal partial class RepositoryItemCommentsEdit : RepositoryItemGollfPopupContainerEdit
+	{
+		#region Constructor
+
+		static RepositoryItemCommentsEdit()
+		{
+			Register();
+		}
+
+		public RepositoryItemCommentsEdit()
+		{
+			InitializeComponent();
+		}
+
+		public RepositoryItemCommentsEdit(IContainer container)
+		{
+			container.Add(this);
+
+			InitializeComponent();
+		}
+
+		#endregion Constructor
+
+		private static bool registered = false;
+		internal new const string EditorName = &quot;LFPLCommentsEdit&quot;;
+
+		public new static void Register()
+		{
+			if (!registered)
+			{
+			    EditorRegistrationInfo.Default.Editors.Add(
+				    new EditorClassInfo(
+					    EditorName,
+					    typeof(CommentsEdit),
+					    typeof(RepositoryItemCommentsEdit),
+					    typeof(PopupContainerEditViewInfo),
+					    new ButtonEditPainter(),
+					    true,
+					    EditImageIndexes.PopupContainerEdit,
+					    typeof(PopupEditAccessible)));
+				registered = true;
+			}
+		}
+
+		#region Extend Base
+
+		public override string EditorTypeName
+		{
+			get { return EditorName; }
+		}
+
+		[Browsable(false), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+		public new CommentsEdit OwnerEdit
+		{
+			get
+			{
+				return (base.OwnerEdit as CommentsEdit);
+			}
+		}
+
+		public override void Assign(DevExpress.XtraEditors.Repository.RepositoryItem item)
+		{
+			RepositoryItemCommentsEdit edit = item as RepositoryItemCommentsEdit;
+			this.BeginUpdate();
+			try
+			{
+				base.Assign(item);
+			}
+			finally
+			{
+				this.EndUpdate();
+			}
+
+		}
+
+		
+
+		#endregion Extend Base
+
+		private void RepositoryItemCommentsEdit_QueryPopUp(object sender, System.ComponentModel.CancelEventArgs e)
+		{
+			CommentsEdit editor = sender as CommentsEdit;
+			if (editor == null)
+				return;
+
+			this.memoComments.EditValue = editor.EditValue;
+		}
+
+		private void RepositoryItemCommentsEdit_CloseUp(object sender, DevExpress.XtraEditors.Controls.CloseUpEventArgs e)
+		{
+			CommentsEdit editor = sender as CommentsEdit;
+			if (editor == null)
+				return;
+
+			string comments = this.memoComments.Text.Trim();
+			editor.EditValue = comments;
+			e.Value = comments;
+			e.AcceptValue = true;
+		}
+
+
+	}
+}</pre>
+<h3>RepositoryItemCommentsEdit.designer.cs</h3>
+<pre class="code" data-type="csharp">namespace Gollf.DS.LFPL.CustomizedComponents
+{
+	partial class RepositoryItemCommentsEdit
+	{
+		/// &lt;summary&gt;
+		/// Required designer variable.
+		/// &lt;/summary&gt;
+		private System.ComponentModel.IContainer components = null;
+
+		/// &lt;summary&gt; 
+		/// Clean up any resources being used.
+		/// &lt;/summary&gt;
+		/// &lt;param name=&quot;disposing&quot;&gt;true if managed resources should be disposed; otherwise, false.&lt;/param&gt;
+		protected override void Dispose(bool disposing)
+		{
+			if (disposing &amp;&amp; (components != null))
+			{
+				components.Dispose();
+			}
+			base.Dispose(disposing);
+		}
+
+		#region Component Designer generated code
+
+		/// &lt;summary&gt;
+		/// Required method for Designer support - do not modify
+		/// the contents of this method with the code editor.
+		/// &lt;/summary&gt;
+		private void InitializeComponent()
+		{
+			components = new System.ComponentModel.Container();
+			this.memoComments = new DevExpress.XtraEditors.MemoEdit();
+			this.popupControl = new DevExpress.XtraEditors.PopupContainerControl();
+			// 
+			// popupControl
+			// 
+			this.popupControl.Controls.Add(this.memoComments);
+			this.popupControl.Location = new System.Drawing.Point(21, 91);
+			this.popupControl.Name = &quot;popupControl&quot;;
+			this.popupControl.Size = new System.Drawing.Size(200, 100);
+			this.popupControl.TabIndex = 74;
+			// 
+			// memoComments
+			// 
+			this.memoComments.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.memoComments.Location = new System.Drawing.Point(0, 0);
+			this.memoComments.Name = &quot;memoComments&quot;;
+			this.memoComments.Properties.MaxLength = 1500;
+			this.memoComments.Size = new System.Drawing.Size(200, 100);
+			this.memoComments.TabIndex = 0;
+			//
+			// RepositoryItemCommentsEdit
+			//
+			this.Name = &quot;RepositoryItemCommentsEdit&quot;;
+			this.PopupControl = this.popupControl;
+			this.QueryPopUp += new System.ComponentModel.CancelEventHandler(RepositoryItemCommentsEdit_QueryPopUp);
+			this.CloseUp += new DevExpress.XtraEditors.Controls.CloseUpEventHandler(RepositoryItemCommentsEdit_CloseUp);
+		}
+
+		#endregion
+
+		DevExpress.XtraEditors.MemoEdit memoComments;
+		private DevExpress.XtraEditors.PopupContainerControl popupControl;
+	}
+}</pre>
+<h3>CommentsEdit.cs</h3>
+<pre class="code" data-type="csharp">using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.Linq;
+using System.Text;
+using DevExpress.XtraEditors;
+using Gollf.DS.LFPL.Model;
+using Gollf.Infrastructure.ControlLibrary.DXExt;
+
+namespace Gollf.DS.LFPL.CustomizedComponents
+{
+	internal partial class CommentsEdit : GollfPopupContainerEdit
+	{
+		static CommentsEdit()
+		{
+			RepositoryItemCommentsEdit.Register();
+		}
+
+		public CommentsEdit()
+		{
+			InitializeComponent();
+		}
+
+		public CommentsEdit(IContainer container)
+		{
+			container.Add(this);
+
+			InitializeComponent();
+		}
+
+		#region Extend Base
+
+		public override string EditorTypeName
+		{
+			get { return RepositoryItemCommentsEdit.EditorName; }
+		}
+
+		[Category(&quot;Properties&quot;), DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
+		public new RepositoryItemCommentsEdit Properties
+		{
+			get
+			{
+				return base.Properties as RepositoryItemCommentsEdit;
+			}
+		}
+
+		#endregion Extend Base
+	}
+}</pre>
+<h3>CommentsEdit.designer.cs</h3>
+<pre class="code" data-type="csharp">namespace Gollf.DS.LFPL.CustomizedComponents
+{
+	partial class CommentsEdit
+	{
+		/// &lt;summary&gt;
+		/// Required designer variable.
+		/// &lt;/summary&gt;
+		private System.ComponentModel.IContainer components = null;
+
+		/// &lt;summary&gt; 
+		/// Clean up any resources being used.
+		/// &lt;/summary&gt;
+		/// &lt;param name=&quot;disposing&quot;&gt;true if managed resources should be disposed; otherwise, false.&lt;/param&gt;
+		protected override void Dispose(bool disposing)
+		{
+			if (disposing &amp;&amp; (components != null))
+			{
+				components.Dispose();
+			}
+			base.Dispose(disposing);
+		}
+
+		#region Component Designer generated code
+
+		/// &lt;summary&gt;
+		/// Required method for Designer support - do not modify
+		/// the contents of this method with the code editor.
+		/// &lt;/summary&gt;
+		private void InitializeComponent()
+		{
+			components = new System.ComponentModel.Container();
+		}
+
+		#endregion
+	}
+}</pre>
+<h2>通用扩展：自动提交</h2>
+<p>对于PopupControl，它在关闭时上面的控件并不会触发失去焦点的事件，因此如果有控件依赖该事件的话，将会不work。例如GridControl，它在失去焦点时会将当前的修改内容提交到DataSource，但如果放在PopupControl中，则在关闭后，当前编辑的单元格内容不会被提交。</p>
+<p>文件列表:</p>
+<ul>
+    <li>RepositoryItemGollfPopupContainerEdit.cs</li>
+    <li>RepositoryItemGollfPopupContainerEdit.designer.cs</li>
+    <li>GollfPopupContainerEdit.cs</li>
+    <li>GollfPopupContainerEdit.designer.cs</li>
+</ul>
+<h3>RepositoryItemGollfPopupContainerEdit.cs</h3>
+<pre class="code" data-type="csharp">using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.Linq;
+using System.Text;
+using DevExpress.Accessibility;
+using DevExpress.XtraEditors.Drawing;
+using DevExpress.XtraEditors.Registrator;
+using DevExpress.XtraEditors.Repository;
+using DevExpress.XtraEditors.ViewInfo;
+using DevExpress.XtraEditors;
+using System.Windows.Forms;
+using System.Drawing;
+
+namespace Gollf.Infrastructure.ControlLibrary.DXExt
+{
+	public partial class RepositoryItemGollfPopupContainerEdit : RepositoryItemPopupContainerEdit
+	{
+		static RepositoryItemGollfPopupContainerEdit()
+		{
+			Register();
+		}
+
+		public RepositoryItemGollfPopupContainerEdit()
+		{
+			InitializeComponent();
+		}
+
+		public RepositoryItemGollfPopupContainerEdit(IContainer container)
+		{
+			container.Add(this);
+
+			InitializeComponent();
+		}
+
+		internal const string EditorName = &quot;GollfPopupContainerEdit&quot;;
+
+		public static void Register()
+		{
+			EditorRegistrationInfo.Default.Editors.Add(
+				new EditorClassInfo(
+					EditorName,
+					typeof(GollfPopupContainerEdit),
+					typeof(RepositoryItemGollfPopupContainerEdit),
+					typeof(PopupContainerEditViewInfo),
+					new ButtonEditPainter(),
+					true,
+					EditImageIndexes.PopupContainerEdit,
+					typeof(PopupEditAccessible)));
+		}
+
+		#region Extend Base
+
+		public override string EditorTypeName
+		{
+			get { return EditorName; }
+		}
+
+		[Browsable(false), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+		public new GollfPopupContainerEdit OwnerEdit
+		{
+			get
+			{
+				return (base.OwnerEdit as GollfPopupContainerEdit);
+			}
+		}
+
+		[DefaultValue(false)]
+		public override bool CloseOnOuterMouseClick
+		{
+			get
+			{
+				return base.CloseOnOuterMouseClick;
+			}
+			set
+			{
+				base.CloseOnOuterMouseClick = value;
+			}
+		}
+
+		public override void Assign(DevExpress.XtraEditors.Repository.RepositoryItem item)
+		{
+			RepositoryItemGollfPopupContainerEdit edit = item as RepositoryItemGollfPopupContainerEdit;
+			this.BeginUpdate();
+			try
+			{
+				base.Assign(item);
+			}
+			finally
+			{
+				this.EndUpdate();
+			}
+
+		}
+
+
+
+		#endregion Extend Base
+
+		#region Internal Events
+
+		private void RepositoryItemGollfPopupContainerEdit_QueryCloseUp(object sender, CancelEventArgs e)
+		{
+			SimpleButton hiddenBtn = this.GetHiddenButton();
+			if (hiddenBtn != null)
+				hiddenBtn.Focus();
+		}
+
+		private void RepositoryItemGollfPopupContainerEdit_QueryResultValue(object sender, DevExpress.XtraEditors.Controls.QueryResultValueEventArgs e)
+		{
+			SimpleButton hiddenBtn = this.GetHiddenButton();
+			if (hiddenBtn != null)
+				hiddenBtn.Focus();
+		}
+
+		private void RepositoryItemGollfPopupContainerEdit_QueryPopUp(object sender, CancelEventArgs e)
+		{
+			this.GetHiddenButton();
+		}
+
+		#endregion Internal Events
+
+		private SimpleButton GetHiddenButton()
+		{
+			if (this.PopupControl == null)
+				return null;
+
+			foreach (Control ctrl in this.PopupControl.Controls)
+			{
+				if (ctrl is SimpleButton &amp;&amp; ctrl.Name == &quot;HiddenButton&quot;)
+					return ctrl as SimpleButton;
+			}
+
+			SimpleButton hiddenBtn = new SimpleButton();
+			hiddenBtn.Name = &quot;HiddenButton&quot;;
+			hiddenBtn.Text = &quot;HiddenButton&quot;;
+			hiddenBtn.Size = new Size(0, 0);
+			this.PopupControl.Controls.Add(hiddenBtn);
+			return hiddenBtn;
+		}
+
+	}
+}</pre>
+<h3>RepositoryItemGollfPopupContainerEdit.designer.cs</h3>
+<pre class="code" data-type="csharp">namespace Gollf.Infrastructure.ControlLibrary.DXExt
+{
+	partial class RepositoryItemGollfPopupContainerEdit
+	{
+		/// &lt;summary&gt;
+		/// Required designer variable.
+		/// &lt;/summary&gt;
+		private System.ComponentModel.IContainer components = null;
+
+		/// &lt;summary&gt; 
+		/// Clean up any resources being used.
+		/// &lt;/summary&gt;
+		/// &lt;param name=&quot;disposing&quot;&gt;true if managed resources should be disposed; otherwise, false.&lt;/param&gt;
+		protected override void Dispose(bool disposing)
+		{
+			if (disposing &amp;&amp; (components != null))
+			{
+				components.Dispose();
+			}
+			base.Dispose(disposing);
+		}
+
+		#region Component Designer generated code
+
+		/// &lt;summary&gt;
+		/// Required method for Designer support - do not modify
+		/// the contents of this method with the code editor.
+		/// &lt;/summary&gt;
+		private void InitializeComponent()
+		{
+			((System.ComponentModel.ISupportInitialize)(this)).BeginInit();
+			this.CloseOnOuterMouseClick = false;
+			this.QueryPopUp += new System.ComponentModel.CancelEventHandler(RepositoryItemGollfPopupContainerEdit_QueryPopUp);
+			this.QueryResultValue += new DevExpress.XtraEditors.Controls.QueryResultValueEventHandler(RepositoryItemGollfPopupContainerEdit_QueryResultValue);
+			this.QueryCloseUp += new System.ComponentModel.CancelEventHandler(RepositoryItemGollfPopupContainerEdit_QueryCloseUp);
+			((System.ComponentModel.ISupportInitialize)(this)).EndInit();
+		}
+
+		#endregion
+
+
+	}
+}</pre>
+<h3>GollfPopupContainerEdit.cs</h3>
+<pre class="code" data-type="csharp">using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.Linq;
+using System.Text;
+using DevExpress.XtraEditors;
+
+namespace Gollf.Infrastructure.ControlLibrary.DXExt
+{
+	public partial class GollfPopupContainerEdit : PopupContainerEdit
+	{
+		static GollfPopupContainerEdit()
+		{
+			RepositoryItemGollfPopupContainerEdit.Register();
+		}
+
+		public GollfPopupContainerEdit()
+		{
+			InitializeComponent();
+		}
+
+		public GollfPopupContainerEdit(IContainer container)
+		{
+			container.Add(this);
+
+			InitializeComponent();
+		}
+
+		#region Extend Base
+
+		public override string EditorTypeName
+		{
+			get { return RepositoryItemGollfPopupContainerEdit.EditorName; }
+		}
+
+		[Category("Properties"), DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
+		public new RepositoryItemGollfPopupContainerEdit Properties
+		{
+			get
+			{
+				return base.Properties as RepositoryItemGollfPopupContainerEdit;
+			}
+		}
+
+		#endregion Extend Base
+	}
+}</pre>
+<h3>GollfPopupContainerEdit.designer.cs</h3>
+<pre class="code" data-type="csharp">namespace Gollf.Infrastructure.ControlLibrary.DXExt
+{
+	partial class GollfPopupContainerEdit
+	{
+		/// &lt;summary&gt;
+		/// Required designer variable.
+		/// &lt;/summary&gt;
+		private System.ComponentModel.IContainer components = null;
+
+		/// &lt;summary&gt; 
+		/// Clean up any resources being used.
+		/// &lt;/summary&gt;
+		/// &lt;param name=&quot;disposing&quot;&gt;true if managed resources should be disposed; otherwise, false.&lt;/param&gt;
+		protected override void Dispose(bool disposing)
+		{
+			if (disposing &amp;&amp; (components != null))
+			{
+				components.Dispose();
+			}
+			base.Dispose(disposing);
+		}
+
+		#region Component Designer generated code
+
+		/// &lt;summary&gt;
+		/// Required method for Designer support - do not modify
+		/// the contents of this method with the code editor.
+		/// &lt;/summary&gt;
+		private void InitializeComponent()
+		{
+			components = new System.ComponentModel.Container();
+		}
+
+		#endregion
+	}
+}</pre>
+
+
+<h1>Common Errors</h1>
+<table width="95%">
+	<tbody>
+		<tr>
+			<th>Issue</th>
+			<th>Analysis</th>
+		</tr>
+		<tr>
+			<td>In GridControl, the cell's inner editor is a customized PopupContainerEdit. The value doesn't display </td>
+		</tr>
+	</tbody>
+</table>
+<h2>Travesing controls</h2>
+<p>Because it will be removed from its original container, it cannot be accessed by traversing the form.Controls.</p>
+<h2>Leave event</h2>
+<p>Because it is owned by a seperated form, the losting focus events of inner controls within the related PopupContainerControl will not raise when the popup control is closed.</p>
+<h2>Error icon</h2>
+<p>DXErrorProvider control is required to display error message and icon for PopupContainerEdit control, or the error icon will disappear after a popup action.</p>
+<h2>Share PopupContainerControl</h2>
+<p>In IDE environment, one PopupContainerControl control cannot be shared among serveral PopupContainerEdit controls. We have to identify the target PopupContainerControl in PopupContainerEdit control's enter event.</p>
+<h2>Dispose Exception</h2>
+<p>When we use RepositoryItemPopupContainerEdit, we should avoid use its PopupControl directly in its events. For example:</p>
+<pre class="code" data-type="csharp">this.repositoryItemPopupContainerEdit1.PopupControl = popupControl1;</pre>
+<p>The right way should be:</p>
+<pre class="code" data-type="csharp">(sender as PopupContainerEdit).Properties.PopupControl = popupControl1;</pre>
+<p>Or the Disposed Exception will raise. The following code is the example of this issue.</p>
+<pre class="code" data-type="csharp">public partial class Form1 : Form
+{
+	public Form1()
+	{
+		InitializeComponent();
+		ctrl1 = this.popupContainerControl1;
+		ctrl2 = this.popupContainerControl2;
+	}
+
+	private int ControlFlag = 0;
+	private PopupContainerControl ctrl1, ctrl2;
+
+	private void Form1_Load(object sender, EventArgs e)
+	{
+		DataTable tb = new DataTable();
+		tb.Columns.Add(&quot;col1&quot;, typeof(string));
+		this.gridControl1.DataSource = tb;
+	}
+
+	private void simpleButton1_Click(object sender, EventArgs e)
+	{
+		this.repositoryItemPopupContainerEdit1.PopupControl = (++this.ControlFlag % 2 == 0) ? this.popupContainerControl1 : this.popupContainerControl2;
+	}
+}</pre>
+<p><a href="sample/DisposeControl.zip">Sample Project</a></p>
+
+</body>
+</html>

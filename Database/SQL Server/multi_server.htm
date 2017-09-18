@@ -1,0 +1,100 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<script language="javascript" src="css.js"></script>
+<title>多服务器</title>
+</head>
+
+<body>
+<h1>第N章 多服务器</h1>
+<p>本章主要讲述如何在SQL语句中访问多个服务器上的属于多个用户的表。</p>
+<h2>N.1 创建链接服务器</h2>
+<p>链接服务器用于经常访问或数据量大的情况，其过程如下：</p>
+<h3>N.1.1 创建链接服务器</h3>
+<pre>--创建链接服务器
+exec sp_addlinkedserver  'srv_lnk','','SQLOLEDB','远程服务器名或ip地址'
+exec sp_addlinkedsrvlogin 'srv_lnk','false',null,'用户名','密码'
+go</pre>
+<p>其中 srv_link 是用于访问远程服务器的别名。这两个函数的参数说明如下：</p>
+<table width="90%">
+  <caption align="top">
+  sp_addlinkedserver
+  </caption>
+  <tr>
+    <th width="20%">参数</th>
+    <th width="70%">说明</th>
+  </tr>
+  <tr>
+    <td>@server</td>
+    <td>要创建的链接服务器的别名。如果不指定@datasrc参数，那么默认实例名也为@server。</td>
+  </tr>
+  <tr>
+    <td>@srvproduct</td>
+    <td>要创建的链接服务器的OLE DB，现在还不明白干嘛用，置为空即可</td>
+  </tr>
+  <tr>
+    <td>@provider</td>
+    <td><p>即对应@datasrc的OLE DB驱动，对应如下：</p>
+      <ul>
+        <li>SQLOLEDB：SQL SERVER</li>
+        <li>MSDAORA：ORACLE</li>
+        <li>Microsoft.Jet.OLEDB.4.0：Access或Excel</li>
+        <li>MSDASQL：ODBC</li>
+        <li>MSIDXS：文件系统</li>
+    </ul></td>
+  </tr>
+  <tr>
+    <td>@datasrc</td>
+    <td>服务器的IP地址或名称，对于ORACLE则为服务名</td>
+  </tr>
+  <tr>
+    <td>@location</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>@provstr</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>@catalog</td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+<p>示例如下：</p>
+<pre>--链接SQL SERVER
+select * from openrowset('SQLOLEDB','192.168.1.72'; 'iou'; 'iou', 'select * from basf.iou.hook_up')
+
+--链接ORACLE
+select * from openrowset('MSDAORA','OEMREP'; 'system'; 'password', 'select * from logmnrc_gsii')</pre>
+<p>访问不同电脑上的数据库(远程只要联好网就一样)，如果经常访问或数据量大,建议用链接服务器</p>
+<pre>--创建链接服务器
+exec sp_addlinkedserver 'srv_lnk','','SQLOLEDB','远程服务器名或ip地址'
+exec sp_addlinkedsrvlogin 'srv_lnk','false',null,'用户名','密码'
+go
+
+--查询示例
+select * from srv_lnk.数据库名.dbo.表名
+
+--导入示例
+select * into 表 from srv_lnk.数据库名.dbo.表名
+
+go
+--以后不再使用时删除链接服务器
+exec sp_dropserver 'srv_lnk','droplogins'
+
+
+--如果只是临时访问,可以直接用openrowset
+--查询示例
+select * from openrowset('SQLOLEDB', 'sql服务器名';'用户名';'密码', 数据库名.dbo.表名)
+
+
+--导入示例
+select * into 表 from openrowset('SQLOLEDB', 'sql服务器名';'用户名'</pre>
+<p>&nbsp;</p>
+<p>&nbsp; </p>
+<p>&nbsp;</p>
+<script language="javascript" src="index.js"></script>
+</body>
+</html>

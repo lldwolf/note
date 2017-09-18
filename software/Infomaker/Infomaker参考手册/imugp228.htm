@@ -1,0 +1,63 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+Replace</TITLE>
+</HEAD>
+<BODY>
+<A NAME="DWFReplace"></A><A NAME="TI7610"></A><h1>Replace</h1>
+<A NAME="TI7611"></A><p>
+<FORM>
+<INPUT
+ TYPE = "BUTTON"
+ VALUE = "Examples"
+ onClick = "window.location = 'imugp228.htm#EX80';">
+</FORM>
+</p>
+<h3>Description</h3><A NAME="TI7612"></A><p>Replaces a portion of one string with another.</p>
+
+<h3>Syntax</h3><pre><b>Replace</b> ( <i>string1</i>, <i>start</i>, <i>n</i>, <i>string2</i> )</pre>
+<A NAME="TI7613"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI7614"></A>Argument</th>
+<th align="left" valign=bottom><A NAME="TI7615"></A>Description</th>
+</tr>
+<tr><td valign=top><A NAME="TI7616"></A><i>string1</i></td>
+<td valign=top><A NAME="TI7617"></A>The string in which you want to replace
+characters with <i>string2</i></td>
+</tr>
+<tr><td valign=top><A NAME="TI7618"></A><i>start</i></td>
+<td valign=top><A NAME="TI7619"></A>A long whose value is the number of the
+first character you want replaced. (The first character in the string
+is number 1)</td>
+</tr>
+<tr><td valign=top><A NAME="TI7620"></A><i>n</i></td>
+<td valign=top><A NAME="TI7621"></A>A long whose value is the number of characters
+you want to replace</td>
+</tr>
+<tr><td valign=top><A NAME="TI7622"></A><i>string2</i></td>
+<td valign=top><A NAME="TI7623"></A>The string that will replace characters
+in <i>string1</i>. The number of characters in <i>string2</i> can
+be greater than, equal to, or fewer than the number of characters
+you are replacing</td>
+</tr>
+</table>
+
+<h3>Return Values</h3><A NAME="TI7624"></A><p>String. Returns the string with the characters replaced if
+it succeeds and the empty string ("") if it fails.</p>
+
+<h3>Usage</h3><A NAME="TI7625"></A><p>If the start position is beyond the end of the string, Replace
+appends <i>string2</i> to <i>string1</i>.
+If there are fewer characters after the start position than specified
+in <i>n</i>, Replace replaces all the characters to
+the right of character start.</p>
+<A NAME="TI7626"></A><p>If <i>n</i> is zero, then in effect Replace
+inserts <i>string2</i> into <i>string1</i>.</p>
+
+<A NAME="EX80"></A><h3>Examples</h3><A NAME="TI7627"></A><p>This expression changes the last two characters of
+the string David to e to make it Dave:<pre><i>Replace</i> ("David", 4, 2, "e")</pre>
+</p>
+<A NAME="TI7628"></A><p>This expression returns BABY RUTH:<pre><i>Replace</i> ("BABE RUTH", 1, 4, "BABY")</pre>
+</p>
+<A NAME="TI7629"></A><p>This expression returns Closed for the Winter:<pre><i>Replace</i> ("Closed for Vacation", 12, 8, "the Winter")</pre>
+</p>
+
+

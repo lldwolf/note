@@ -1,0 +1,32 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+    <script type="text/javascript" src="../../../mylib/js/css.js"></script>
+    <title>C#.net使用手册</title>
+</head>
+<body>
+    <p id="title">
+        布局时常用效果</p>
+    
+<h1>Splitter</h1>
+<p>类似于 WinForm 中的Splitter控件，可实现通过拖拽实现尺寸调整。示例代码如下</p>
+<pre>&lt;Grid&gt;
+    &lt;Grid.ColumnDefinitions&gt;
+        &lt;ColumnDefinition Width=&quot;150&quot;&gt;&lt;/ColumnDefinition&gt;
+        &lt;ColumnDefinition Width=&quot;Auto&quot;&gt;&lt;/ColumnDefinition&gt;
+        &lt;ColumnDefinition&gt;&lt;/ColumnDefinition&gt;
+    &lt;/Grid.ColumnDefinitions&gt;
+    &lt;Grid.RowDefinitions&gt;
+        &lt;RowDefinition Height=&quot;25&quot;&gt;&lt;/RowDefinition&gt;
+        &lt;RowDefinition&gt;&lt;/RowDefinition&gt;
+    &lt;/Grid.RowDefinitions&gt;
+    &lt;TextBox Grid.ColumnSpan=&quot;3&quot;&gt;&lt;/TextBox&gt;
+    &lt;TextBox Grid.Row=&quot;1&quot;&gt;&lt;/TextBox&gt;
+    &lt;GridSplitter Grid.Row=&quot;1&quot; Grid.Column=&quot;1&quot; HorizontalAlignment=&quot;Center&quot; Width=&quot;5&quot; ShowsPreview=&quot;True&quot; VerticalAlignment=&quot;Stretch&quot;&gt;&lt;/GridSplitter&gt;
+    &lt;TextBox Grid.Row=&quot;1&quot; Grid.Column=&quot;2&quot;&gt;&lt;/TextBox&gt;
+&lt;/Grid&gt;</pre>
+    
+</body>
+</html>

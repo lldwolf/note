@@ -1,0 +1,38 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<script type="text/javascript" src="css.js"></script>
+<title>ORACLE 笔记</title>
+</head>
+
+<body>
+<h1>第N章 权限管理</h1>
+<hr />
+<table width="95%">
+	<tr>
+		<th>操作</th>
+		<th>命令</th>
+	</tr>
+	<tr>
+		<td>授权对表 Table1 的查询权限 user1</td>
+		<td>GRANT SELECT ON Table1 TO user1</td>
+	</tr>
+	<tr>
+		<td>解除 user1 表 Table1 的查询权限 user1</td>
+		<td>REVOKE SELECT ON Table1 FROM user1</td>
+	</tr>
+	<tr>
+		<td>授权对存储过程 SP1 的执行权限给user1</td>
+		<td>GRANT EXECUTE ON SP1 TO user1</td>
+	</tr>
+	<tr>
+		<td>解除 user1 对存储过程 SP1 的执行权限</td>
+		<td>REVOKE EXECUTE ON SP1 FROM user1</td>
+	</tr>
+</table>
+<p>&nbsp; </p>
+<script type="text/javascript" src="index.js"></script>
+</body>
+</html>

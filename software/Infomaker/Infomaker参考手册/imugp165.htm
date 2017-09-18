@@ -1,0 +1,101 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+CrosstabSum</TITLE>
+</HEAD>
+<BODY>
+<A NAME="CAIBIJHD"></A><A NAME="TI6436"></A><h1>CrosstabSum</h1>
+<A NAME="TI6437"></A><p>
+<FORM>
+<INPUT
+ TYPE = "BUTTON"
+ VALUE = "Examples"
+ onClick = "window.location = 'imugp165.htm#EX17';">
+<INPUT
+  TYPE = "BUTTON"
+ VALUE = "See also"
+ onClick = "window.location = 'imugp165.htm#SA17';">
+</FORM>
+</p>
+<h3>Description</h3><A NAME="TI6438"></A><p>Calculates the sum of the values returned by an expression
+in the values list of the crosstab. When the crosstab definition
+has more than one column, CrosstabSum can also calculate the sum
+of the expression's values for groups of column values.</p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>For crosstabs only</span> <A NAME="TI6439"></A>You can use this function <i>only</i>
+ in a crosstab
+DataWindow object or report.</p>
+
+<h3>Syntax</h3><pre><b>CrosstabSum</b> ( <i>n</i> {, <i>column</i>, <i>groupvalue</i> } )</pre>
+<A NAME="TI6440"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI6441"></A>Argument</th>
+<th align="left" valign=bottom><A NAME="TI6442"></A>Description</th>
+</tr>
+<tr><td valign=top><A NAME="TI6443"></A><i>n</i></td>
+<td valign=top><A NAME="TI6444"></A>The number of the crosstab-values expression
+for which you want the sum of the returned values. The expression's
+data type must be numeric</td>
+</tr>
+<tr><td valign=top><A NAME="TI6445"></A><i>column</i> (optional)</td>
+<td valign=top><A NAME="TI6446"></A>The number of the crosstab column as
+it is listed in the Columns box of the Crosstab Definition dialog
+box for which you want intermediate calculations</td>
+</tr>
+<tr><td valign=top><A NAME="TI6447"></A><i>groupvalue</i> (optional)</td>
+<td valign=top><A NAME="TI6448"></A>A string whose value controls the grouping
+for the calculation. <i>Groupvalue</i> is usually
+a value from another column in the crosstab. To specify the current
+column value in a dynamic crosstab, rather than a specific value,
+specify @ plus the column name as a quoted string</td>
+</tr>
+</table>
+
+<h3>Return Values</h3><A NAME="TI6449"></A><p>Double. Returns the total of the values returned by expression <i>n</i> for
+all the column values or, optionally, for a subset of column values.</p>
+
+<h3>Usage</h3><A NAME="TI6450"></A><p>This function is meaningful <i>only</i>
+ for
+the sum of the values of the expression in a <i>row</i>
+ in
+the crosstab. This means you can use it only in the detail band,
+not in a header, trailer, or summary band.</p>
+<A NAME="TI6451"></A><p>NULL values are ignored and are not included in the sum.</p>
+<A NAME="TI6452"></A><p>For more information about restricting the
+calculation to groups of values when the crosstab definition has
+more than one column, see Usage for CrosstabAvg.</p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Reviewing the expressions</span> <A NAME="TI6453"></A>To review the expressions defined for the crosstab values,
+open the Crosstab Definition dialog box (select Design&gt;Crosstab
+from the menubar).</p>
+
+<A NAME="EX17"></A><h3>Examples</h3><A NAME="TI6454"></A><p>These examples all use the crosstab-values expressions
+shown below:<pre>Count(emp_id for crosstab),Sum(salary for crosstab)</pre>
+</p>
+<A NAME="TI6455"></A><p>This expression for a computed field in the crosstab
+returns the sum of the employee counts (the first expression):<pre><i>CrosstabSum</i> (1)</pre>
+</p>
+<A NAME="TI6456"></A><p>This expression for a computed field in the crosstab
+returns the sum of the salary totals (the second expression):<pre><i>CrosstabSum</i> (2)</pre>
+</p>
+<A NAME="TI6457"></A><p>The next two examples use a crosstab with two columns
+(year and quarter), a row (product), and the values expression Avg(sales
+for crosstab).</p>
+<A NAME="TI6458"></A><p>This expression for a computed field returns the sum of the
+quarterly average sales for each year:<pre><i>CrosstabSum</i> (1, 2, "@year")</pre>
+</p>
+<A NAME="TI6459"></A><p>This expression for a computed field returns the
+sum of all the average sales in the row:<pre><i>CrosstabSum</i> (1)</pre>
+</p>
+<A NAME="TI6460"></A><p>For an example illustrating how the painter automatically
+defines a crosstab by creating computed fields using the Crosstab
+functions, see CrosstabAvg.</p>
+
+<A NAME="SA17"></A><h3>See Also</h3><A NAME="TI6461"></A><p><A NAME="TI6462"></A>
+<ul>
+<li class=fi><A HREF="imugp161.htm#CAICGAGE">CrosstabAvg</A></li>
+<li class=ds><A HREF="imugp162.htm#CAIBCHGE">CrosstabCount</A></li>
+<li class=ds><A HREF="imugp163.htm#CAIDGJBH">CrosstabMax</A></li>
+<li class=ds><A HREF="imugp164.htm#CAIBJFGH">CrosstabMin</A>
+</li>
+</ul>
+</p>
+
+

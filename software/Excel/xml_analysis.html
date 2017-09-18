@@ -1,0 +1,252 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>XML解析</title>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+<h1>第N章 XML解析</h1>
+<hr />
+<p>对于中文Excel，它的XML字符集为gb2312</p>
+<p>首先，我们来看一个空的EXCEL表生成的XML文档，它有3个Worksheet，生成的XML文档如下所示：</p>
+<pre>&lt;?xml version=&quot;1.0&quot;?&gt;
+<a href="#mso_application">&lt;?mso-application progid=&quot;Excel.Sheet&quot;?&gt;</a>
+<a href="#Workbook">&lt;Workbook xmlns=&quot;urn:schemas-microsoft-com:office:spreadsheet&quot;
+ xmlns:o=&quot;urn:schemas-microsoft-com:office:office&quot;
+ xmlns:x=&quot;urn:schemas-microsoft-com:office:excel&quot;
+ xmlns:ss=&quot;urn:schemas-microsoft-com:office:spreadsheet&quot;
+ xmlns:html=&quot;http://www.w3.org/TR/REC-html40&quot;&gt;</a>
+<a href="#DocumentProperties"> &lt;DocumentProperties xmlns=&quot;urn:schemas-microsoft-com:office:office&quot;&gt;
+  &lt;Author&gt;liuld&lt;/Author&gt;
+  &lt;LastAuthor&gt;liuld&lt;/LastAuthor&gt;
+  &lt;Created&gt;2007-02-21T03:06:01Z&lt;/Created&gt;
+  &lt;Company&gt;autosh&lt;/Company&gt;
+  &lt;Version&gt;11.5606&lt;/Version&gt;
+ &lt;/DocumentProperties&gt;</a>
+ <a href="#ExcelWorkbook">&lt;ExcelWorkbook xmlns=&quot;urn:schemas-microsoft-com:office:excel&quot;&gt;</a>
+  &lt;WindowHeight&gt;8550&lt;/WindowHeight&gt;
+  &lt;WindowWidth&gt;10620&lt;/WindowWidth&gt;
+  &lt;WindowTopX&gt;480&lt;/WindowTopX&gt;
+  &lt;WindowTopY&gt;60&lt;/WindowTopY&gt;
+  &lt;ProtectStructure&gt;False&lt;/ProtectStructure&gt;
+  &lt;ProtectWindows&gt;False&lt;/ProtectWindows&gt;
+ &lt;/ExcelWorkbook&gt;
+ <a href="#Styles">&lt;Styles&gt;</a>
+  &lt;Style ss:ID=&quot;Default&quot; ss:Name=&quot;Normal&quot;&gt;
+   &lt;Alignment ss:Vertical=&quot;Center&quot;/&gt;
+   &lt;Borders/&gt;
+   &lt;Font ss:FontName=&quot;宋体&quot; x:CharSet=&quot;134&quot; ss:Size=&quot;12&quot;/&gt;
+   &lt;Interior/&gt;
+   &lt;NumberFormat/&gt;
+   &lt;Protection/&gt;
+  &lt;/Style&gt;
+ &lt;/Styles&gt;
+ <a href="#Worksheet">&lt;Worksheet ss:Name=&quot;Sheet1&quot;&gt;</a>
+  &lt;Table ss:ExpandedColumnCount=&quot;0&quot; ss:ExpandedRowCount=&quot;0&quot; x:FullColumns=&quot;1&quot;
+   x:FullRows=&quot;1&quot; ss:DefaultColumnWidth=&quot;54&quot; ss:DefaultRowHeight=&quot;14.25&quot;/&gt;
+  &lt;WorksheetOptions xmlns=&quot;urn:schemas-microsoft-com:office:excel&quot;&gt;
+   &lt;Unsynced/&gt;
+   &lt;Selected/&gt;
+   &lt;ProtectObjects&gt;False&lt;/ProtectObjects&gt;
+   &lt;ProtectScenarios&gt;False&lt;/ProtectScenarios&gt;
+  &lt;/WorksheetOptions&gt;
+ &lt;/Worksheet&gt;
+ &lt;Worksheet ss:Name=&quot;Sheet2&quot;&gt;
+  &lt;Table ss:ExpandedColumnCount=&quot;0&quot; ss:ExpandedRowCount=&quot;0&quot; x:FullColumns=&quot;1&quot;
+   x:FullRows=&quot;1&quot; ss:DefaultColumnWidth=&quot;54&quot; ss:DefaultRowHeight=&quot;14.25&quot;/&gt;
+  &lt;WorksheetOptions xmlns=&quot;urn:schemas-microsoft-com:office:excel&quot;&gt;
+   &lt;Unsynced/&gt;
+   &lt;ProtectObjects&gt;False&lt;/ProtectObjects&gt;
+   &lt;ProtectScenarios&gt;False&lt;/ProtectScenarios&gt;
+  &lt;/WorksheetOptions&gt;
+ &lt;/Worksheet&gt;
+ &lt;Worksheet ss:Name=&quot;Sheet3&quot;&gt;
+  &lt;Table ss:ExpandedColumnCount=&quot;0&quot; ss:ExpandedRowCount=&quot;0&quot; x:FullColumns=&quot;1&quot;
+   x:FullRows=&quot;1&quot; ss:DefaultColumnWidth=&quot;54&quot; ss:DefaultRowHeight=&quot;14.25&quot;/&gt;
+  &lt;WorksheetOptions xmlns=&quot;urn:schemas-microsoft-com:office:excel&quot;&gt;
+   &lt;Unsynced/&gt;
+   &lt;ProtectObjects&gt;False&lt;/ProtectObjects&gt;
+   &lt;ProtectScenarios&gt;False&lt;/ProtectScenarios&gt;
+  &lt;/WorksheetOptions&gt;
+ &lt;/Worksheet&gt;
+&lt;/Workbook&gt;</pre>
+<h2>N.1 结构 </h2>
+<p><a name="mso_application" id="mso_application"></a>首先，EXCEL先用&lt;mso-application&gt;标签说明本XML是用EXCEL生成的。</p>
+<p><a name="Workbook" id="Workbook"></a>使用&lt;Workbook&gt;标签作为整个XML的根结点。该标签的属性可作为固定值对待。</p>
+<p><a name="DocumentProperties" id="DocumentProperties"></a>&lt;DocumentProperties&gt;标签用于指示EXCEL表的一些信息，包括：创建人、最后修改人、创建时间、文件版本</p>
+<p><a name="ExcelWorkbook" id="ExcelWorkbook"></a>&lt;ExcelWorkbook&gt;标签指示工作薄的一些设置，它有如下子标签（对于只在很少情况下使用的子标签在此不作介绍，下同）</p>
+<table width="80%">
+	<tr>
+	 	<th>标签</td>
+		<th>说明</td>
+	</tr>	
+	<tr>
+		<td>ProtectStructure</td>
+		<td>使用EXCEL菜单中的<b>保护 - 保护工作薄</b>中的<b>结构</b>选项</td>
+	</tr>
+	<tr>
+		<td>ProtectWindows</td>
+		<td>使用EXCEL菜单中的<b>保护 - 保护工作薄</b>中的<b>窗口</b>选项</td>
+	</tr>
+</table>
+<p><img src="img/note.jpg" />要注意，XML不支持使用密码保护的工作薄。</p>
+<h2><a name="Styles" id="Styles"></a>N.2 格式</h2>
+<p>在Excel中，很容易存在这么一种情况，那就是很大的一个表格，但各个单元格的格式都差不多，例如作一份电话通讯录，内容可能有个万八千行，但格式也不过就表头和表体两种，因此，将格式的描述从单元格中抽取出来，单元格中只存放一个ID，类似于一个指向实际格式的指针，以节约存储空间。</p>
+<p>&lt;Styles&gt;标签用于储存EXCEL表中单元格中用到的样式，样式内容包括：</p>
+<ul>
+	<li>对齐方式</li>
+	<li>边框格式</li>
+	<li>文字样式</li>
+	<li>数字格式</li>
+	<li>保护类型</li>
+</ul>
+<p>下表是它的子标签说明：</p>
+<table width="90%">
+	<tr>
+		<th width="20%">标签</th>
+		<th width="80%">说明</th>
+	</tr>
+	<tr>
+		<td>Alignment</td>
+		<td>它有两个子属性：
+		<ul>
+			<li>ss:Horizontal：水平对齐方式：
+				<ul>
+					<li>Left</li>
+					<li>Right</li>
+					<li>Center</li>
+					<li>Justify: 两端对齐(缩进)</li>
+					<li>CenterAcrossSelection: 跨列居中</li>
+					<li>Distributed: 两端对齐(分散)</li>
+				</ul>默认为Left</li>
+			<li>ss:Vertical: 垂直对齐方式
+				<ul>
+					<li>Top</li>
+					<li>Bottom</li>
+					<li>Center</li>
+				</ul>默认为Center</li>
+		</ul></td>
+	</tr>
+	<tr>
+		<td>Borders</td>
+		<td>是&lt;Border&gt;标签的集合，最多有4个&lt;Border&gt;标签，分别表示上下下左右4条边，每个Border标签包括如下属性：
+		<ul>
+			<li>ss:Position：位置，可取值为Top, Bottom, Left, Right</li>
+			<li>ss:LineStyle：线型，可为</li>
+		</ul>
+		</td>
+	</tr>
+	<tr>
+		<td>Font</td>
+		<td>对中文字体，有如下属性：
+		<ul>
+			<li>ss:FontName：字体名</li>
+			<li>x:CharSet：一直是134，不知道是按啥规矩</li>
+			<li>ss:Size：字体大小</li>
+			<li>ss:Color：字体颜色</li>
+			<li>ss:Bold：是否为粗体，粗体取值为1</li>
+			<li>ss:Italic：是否为斜体</li>
+			<li>ss:Underline：下划线类型
+				<ul>
+					<li>Single：单线</li>
+					<li>Double：双线</li>
+					<li>SingleAccounting：会计用单线</li>
+					<li>DoubleAccounting：会计用双线</li>
+				</ul>
+			</li>
+		</ul>
+		例如，对于黑体14号字，XML如下所示
+		<pre>&lt;Font ss:FontName=&quot;黑体&quot; x:CharSet=&quot;134&quot; ss:Size=&quot;14&quot;/&gt;</pre>
+		而对英文字体，一般不带 x:CharSet 属性，增加如下属性：
+		<ul>
+			<li>x:Family：一般为Swiss, Roman, Script等</li>
+		</ul>
+		例如，对于Arial 14号字，XML如下所示
+		<pre>&lt;Font x:Family=&quot;Swiss&quot; ss:Size=&quot;14&quot;/&gt;</pre></td>
+	</tr>
+	<tr>
+		<td>Interior</td>
+		<td>表示单元格的一些颜色设置等
+		<br/>
+		<b>底色设置属性</b>
+		<ul>
+			<li>ss:Color：颜色，格式为“#xxxxxx”(RGB)</li>
+			<li>ss:Pattern：模式
+				<ul>
+					<li>Solid：实心填充</li>
+				</ul>
+			</li>
+		</ul>
+		</td>
+	</tr>
+	<tr>
+		<td>NumberFormat</td>
+		<td>&nbsp;</td>
+	</tr>
+	<tr>
+		<td>Protection</td>
+		<td>&nbsp;</td>
+	</tr>
+</table>
+<h2><a name="Worksheet" id="Worksheet"></a>N.3 数据</h2>
+<p>&lt;Worksheet&gt;标签就是存数据的地方了，Excel表中有几个Worksheet，在XML中就会有几个&lt;Worksheet&gt;标签。Excel以存储稀疏矩阵的方式来存储数据，其存储方式描述如下：</p>
+<ul>
+  <li>每个&lt;Worksheet&gt;标签下是一个&lt;Table&gt;标签，它有如下有用的属性：
+    <ul>
+      <li>ss:ExpandedColumnCount：列数</li>
+      <li>ss:ExpandedRowCount：行数</li>
+      <li>x:FullColumns：值为1，具体情况不明</li>
+      <li>x:FullRows：值为1，具体情况不明</li>
+      <li>ss:DefaultColumnWidth：默认列宽值，一般为54</li>
+      <li>ss:DefaultRowHeight：默认行高值，一般为14.25</li>
+    </ul>
+  </li>
+  <li>使用逐行描述的方式，每个&lt;Row&gt;标签代表一行数据，如果遇到一行为空，则使用空的&lt;Row&gt;标签，如果空行不止一行，则使用 ss:Span 属性，它表示在该行后还有多少空行，假如一共有3个空行，则该值为2，在跨行后下一&lt;Row&gt;标签会有一个 ss:Index 属性指示这是第几行。 其它属性描述如下：
+    <ul>
+      <li>ss:AutoFitHeight：是否自动调整高度，0为否，1为是，默认为0</li>
+      <li>ss:Height：行高，若无该值则使用默认值</li>
+    </ul>
+  </li>
+  <li>行内使用逐单元格描述，每个&lt;Cell&gt;标签代表一个单元格，每个单元格有一个 ss:Index 属性指示这是第几列，如果是第一列或者列号紧跟上一列，则省略该属性。 </li>
+  <li>数据存放在&lt;Cell&gt;下的&lt;Data&gt;标签中</li>
+  <li>如果使用合并单元格的方式，使用 ss:MergeAcross 属性描述跨的列数（为所占总列数-1），ss:MergeDown 属性描述跨行数（为所占总行数-1）。</li>
+  <li>&lt;Cell&gt;标签下的&lt;Comment&gt;标签存储批注内容。下面可能夹杂&lt;ss:Data&gt;&lt;B&gt;&lt;Font&gt;等子标签，一直到最深层才能看到批注的内容，其中&lt;ss:Data&gt;内容为必须，&lt;B&gt;&lt;Font&gt;标签可有可无。例如使用Excel插入一个批注，内容为“ABCD”，对应的XML的内容如下所示 
+    <pre>&lt;Comment ss:Author=&quot;liuld&quot;&gt;
+	&lt;ss:Data xmlns=&quot;http://www.w3.org/TR/REC-html40&quot;&gt;
+		&lt;B&gt;
+			&lt;Font html:Size=&quot;9&quot; html:Color=&quot;#000000&quot;&gt;ABCD&lt;/Font&gt;
+		&lt;/B&gt;
+	&lt;/ss:Data&gt;
+&lt;/Comment&gt;</pre></li>
+</ul>
+<p>下面的示例描述了XML代码与Excel表格的对应关系</p>
+<pre>&lt;Row ss:AutoFitHeight=&quot;0&quot;&gt;
+    &lt;Cell&gt;&lt;Data ss:Type=&quot;Number&quot;&gt;1&lt;/Data&gt;&lt;/Cell&gt;
+    &lt;Cell ss:Index=&quot;3&quot;&gt;&lt;Data ss:Type=&quot;String&quot;&gt;aaa&lt;/Data&gt;&lt;/Cell&gt;
+   &lt;/Row&gt;
+   &lt;Row ss:AutoFitHeight=&quot;0&quot;&gt;
+    &lt;Cell&gt;&lt;Data ss:Type=&quot;Number&quot;&gt;2&lt;/Data&gt;&lt;/Cell&gt;
+    &lt;Cell&gt;&lt;Data ss:Type=&quot;Number&quot;&gt;3&lt;/Data&gt;&lt;/Cell&gt;
+   &lt;/Row&gt;
+   &lt;Row ss:AutoFitHeight=&quot;0&quot; ss:Span=&quot;1&quot;/&gt;
+   &lt;Row ss:Index=&quot;5&quot; ss:AutoFitHeight=&quot;0&quot;&gt;
+    &lt;Cell&gt;&lt;Data ss:Type=&quot;Number&quot;&gt;5&lt;/Data&gt;&lt;/Cell&gt;
+    &lt;Cell&gt;&lt;Data ss:Type=&quot;String&quot;&gt;bb&lt;/Data&gt;&lt;/Cell&gt;
+   &lt;/Row&gt;</pre>
+<p><img src="img/xml_excel.jpg" width="253" height="117" /></p>
+<h2>N.4 有效性规则</h2>
+<p>有效性规则是指单元格内的数据限制，例如在单元格中做一个下拉列表框，用户只能填入下拉列表框内的内容，其XML定义如下所示：</p>
+<pre>&lt;DataValidation xmlns=&quot;urn:schemas-microsoft-com:office:excel&quot;&gt;
+   &lt;Range&gt;R1C1&lt;/Range&gt;
+   &lt;Type&gt;List&lt;/Type&gt;
+   &lt;CellRangeList/&gt;
+   &lt;Value&gt;&amp;quot;1,2,3&amp;quot;&lt;/Value&gt;
+&lt;/DataValidation&gt;</pre>
+<p>上面表示在单元格A1中只能输入值1、2、3，如果有多个单元格具有相同的有效性规则，Excel会存放在同一个&lt;DataValidation&gt;标签中，在&lt;Range&gt;子标签中存放多个单元格位置信息，之间用“,”隔开。</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+
+</body>
+</html>

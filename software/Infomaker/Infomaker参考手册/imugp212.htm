@@ -1,0 +1,56 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+Month</TITLE>
+</HEAD>
+<BODY>
+<A NAME="CAIBDIIC"></A><A NAME="TI7371"></A><h1>Month</h1>
+<A NAME="TI7372"></A><p>
+<FORM>
+<INPUT
+ TYPE = "BUTTON"
+ VALUE = "Examples"
+ onClick = "window.location = 'imugp212.htm#EX64';">
+<INPUT
+  TYPE = "BUTTON"
+ VALUE = "See also"
+ onClick = "window.location = 'imugp212.htm#SA64';">
+</FORM>
+</p>
+<h3>Description</h3><A NAME="TI7373"></A><p>Gets the month of a date value.</p>
+
+<h3>Syntax</h3><pre><b>Month</b> ( <i>date</i> )</pre>
+<A NAME="TI7374"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI7375"></A>Argument</th>
+<th align="left" valign=bottom><A NAME="TI7376"></A>Description</th>
+</tr>
+<tr><td valign=top><A NAME="TI7377"></A><i>date</i></td>
+<td valign=top><A NAME="TI7378"></A>The date from which you want the month</td>
+</tr>
+</table>
+
+<h3>Return Values</h3><A NAME="TI7379"></A><p>Integer. Returns an integer (1 to 12) whose value is the month
+portion of <i>date</i>.</p>
+
+<A NAME="EX64"></A><h3>Examples</h3><A NAME="TI7380"></A><p>This expression returns 1:<pre><i>Month</i> (1999-01-31)</pre>
+</p>
+<A NAME="TI7381"></A><p>This expression for a computed column returns Wrong
+Month if the month in the column expected_grad_date
+is not 6:<pre>If(<i>Month</i> (expected_grad_date) <i>=</i>  6, "June", "Wrong <br> Month")</pre>
+</p>
+<A NAME="TI7382"></A><p>This validation rule expression checks that the value
+of the month in the date in the column expected_grad_date
+is 6:<pre><i>Month</i> (expected_grad_date) <i>=</i>  6</pre>
+</p>
+
+<A NAME="SA64"></A><h3>See Also</h3><A NAME="TI7383"></A><p><A NAME="TI7384"></A>
+<ul>
+<li class=fi><A HREF="imugp171.htm#CAICIECH">Day</A></li>
+<li class=ds><A HREF="imugp169.htm#CAICEIEJ">Date</A></li>
+<li class=ds><A HREF="imugp255.htm#CAICAIAI">Year</A></li>
+<li class=ds> 
+</li>
+</ul>
+</p>
+
+

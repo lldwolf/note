@@ -1,0 +1,1987 @@
+﻿<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Win32 Type Map between C++ &amp; C#</title>
+    <link rel="stylesheet" href="css/CodeProject.min.css" type="text/css">
+</head>
+<body>
+<p id="title">Win32 Type Map between C++ &amp; C#</p>
+    <table cellspacing="0" cellpadding="0" width="60%" border="1">
+        <tbody>
+            <tr>
+                <td bgcolor="#cccccc" height="31">
+                    <p>
+                        <b>Term</b></p>
+                </td>
+                <td bgcolor="#cccccc" height="31">
+                    <p>
+                        <b>Description</b></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <code><b>ATOM</b></code></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code lang="cs">ushort</code></p>
+                    <p>
+                        C++ = <code>typedef WORD ATOM;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>BOOL</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code lang="cs">bool</code> or <code lang="cs">int</code></p>
+                    <p>
+                        C++ = <code>typedef int BOOL;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>BOOLEAN</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code lang="cs">bool</code> or <code lang="cs">byte</code></p>
+                    <p>
+                        C++ = <code>typedef BYTE BOOLEAN;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>BYTE</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code lang="cs">byte</code></p>
+                    <p>
+                        C++ = <code>typedef unsigned char BYTE;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>CALLBACK</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code lang="cs">delegate</code></p>
+                    <p>
+                        C++ = <code>#define CALLBACK __stdcall</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>CHAR</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code lang="cs">char</code></p>
+                    <p>
+                        C++ = <code>typedef char CHAR;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>COLORREF</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code lang="cs">uint</code></p>
+                    <p>
+                        C++ = <code>typedef DWORD COLORREF;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>CONST</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code lang="cs">const</code></p>
+                    <p>
+                        C++ = <code>#define CONST const</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>DWORD</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code lang="cs">uint</code></p>
+                    <p>
+                        C++ = <code>typedef unsigned long DWORD;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>DWORDLONG</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        <code>ulong</code></p>
+                    <p>
+                        C++ = <code>typedef ULONGLONG DWORDLONG;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>DWORD_PTR</code></b></p>
+                    <p>
+                        <b><code>DWORD *</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code lang="cs">uint</code> or <code>IntPtr</code></p>
+                    <p>
+                        C++ = <code>typedef ULONG_PTR DWORD_PTR;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>DWORD32</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code lang="cs">uint</code></p>
+                    <p>
+                        C++ = <code>typedef unsigned int DWORD32;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>DWORD64</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code lang="cs">ulong</code></p>
+                    <p>
+                        C++ = <code>typedef unsigned __int64 DWORD64;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>FLOAT</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code lang="cs">single</code></p>
+                    <p>
+                        C++ = <code>typedef float FLOAT;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>HACCEL</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code>IntPtr</code></p>
+                    <p>
+                        C++ = <code>typedef HANDLE HACCEL;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>HANDLE</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code>IntPtr</code></p>
+                    <p>
+                        C++ = <code>typedef PVOID HANDLE;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>HBITMAP</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code>IntPtr</code></p>
+                    <p>
+                        C++ = <code>typedef HANDLE HBITMAP;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>HBRUSH</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code>IntPtr</code></p>
+                    <p>
+                        C++ = <code>typedef HANDLE HBRUSH;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>HCOLORSPACE</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code>IntPtr</code></p>
+                    <p>
+                        C++ = <code>if(WINVER &gt;= 0x0400)</code></p>
+                    <p>
+                        C++ = <code>typedef HANDLE HCOLORSPACE;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>HCONV</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code>IntPtr</code></p>
+                    <p>
+                        C++ = <code>typedef HANDLE HCONV;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>HCONVLIST</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code>IntPtr</code></p>
+                    <p>
+                        C++ = <code>typedef HANDLE HCONVLIST;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>HCURSOR</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code>IntPtr</code></p>
+                    <p>
+                        C++ = <code>typedef HICON HCURSOR;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>HDC</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code>IntPtr</code></p>
+                    <p>
+                        C++ = <code>typedef HANDLE HDC;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>HDDEDATA</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code>IntPtr</code></p>
+                    <p>
+                        C++ = <code>typedef HANDLE HDDEDATA;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>HDESK</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code>IntPtr</code></p>
+                    <p>
+                        C++ = <code>typedef HANDLE HDESK;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>HDROP</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code>IntPtr</code></p>
+                    <p>
+                        C++ = <code>typedef HANDLE HDROP;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>HDWP</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code>IntPtr</code></p>
+                    <p>
+                        C++ = <code>typedef HANDLE HDWP;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>HENHMETAFILE</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code>IntPtr</code></p>
+                    <p>
+                        C++ = <code>typedef HANDLE HENHMETAFILE;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>HFILE</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code lang="cs">int</code></p>
+                    <p>
+                        C++ = <code>typedef int HFILE;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>HFONT</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code>IntPtr</code></p>
+                    <p>
+                        C++ = <code>typedef HANDLE HFONT;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>HGDIOBJ</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code>IntPtr</code></p>
+                    <p>
+                        C++ = <code>typedef HANDLE HGDIOBJ;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>HGLOBAL</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code>IntPtr</code></p>
+                    <p>
+                        C++ = <code>typedef HANDLE HGLOBAL;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>HHOOK</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code>IntPtr</code></p>
+                    <p>
+                        C++ = <code>typedef HANDLE HHOOK;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>HICON</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code>IntPtr</code>
+                    </p>
+                    <p>
+                        C++ = <code>typedef HANDLE HICON;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>HINSTANCE</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code>IntPtr</code></p>
+                    <p>
+                        C++ = <code>typedef HANDLE HINSTANCE;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>HKEY</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code>IntPtr</code></p>
+                    <p>
+                        C++ = <code>typedef HANDLE HKEY;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>HKL</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code>IntPtr</code></p>
+                    <p>
+                        C++ = <code>typedef HANDLE HKL;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>HLOCAL</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code>IntPtr</code></p>
+                    <p>
+                        C++ = <code>typedef HANDLE HLOCAL;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>HMENU</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code>IntPtr</code></p>
+                    <p>
+                        C++ = <code>typedef HANDLE HMENU;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>HMETAFILE</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code>IntPtr</code></p>
+                    <p>
+                        C++ = <code>typedef HANDLE HMETAFILE;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>HMODULE</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code>IntPtr</code>
+                    </p>
+                    <p>
+                        C++ = <code>typedef HINSTANCE HMODULE;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>HMONITOR</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code>IntPtr</code></p>
+                    <p>
+                        <code>if(WINVER &gt;= 0x0500)</code></p>
+                    <p>
+                        C++ = <code>typedef HANDLE HMONITOR;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>HPALETTE</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code>IntPtr</code>
+                    </p>
+                    <p>
+                        C++ = <code>typedef HANDLE HPALETTE;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>HPEN</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code>IntPtr</code></p>
+                    <p>
+                        C++ = <code>typedef HANDLE HPEN;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>HRESULT</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code lang="cs">int</code> or <code lang="cs">uint</code></p>
+                    <p>
+                        C++ = <code>typedef LONG HRESULT;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>HRGN</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code>IntPtr</code>
+                    </p>
+                    <p>
+                        C++ = <code>typedef HANDLE HRGN;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>HRSRC</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code>IntPtr</code></p>
+                    <p>
+                        C++ = <code>typedef HANDLE HRSRC;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>HSZ</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code>IntPtr</code></p>
+                    <p>
+                        C++ = <code>typedef HANDLE HSZ;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>HWINSTA</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code>IntPtr</code></p>
+                    <p>
+                        C++ = <code>typedef HANDLE WINSTA;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>HWND</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code>IntPtr</code>
+                    </p>
+                    <p>
+                        C++ = <code>typedef HANDLE HWND;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>INT</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code lang="cs">int</code></p>
+                    <p>
+                        C++ = <code>typedef int INT;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>INT_PTR</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code>IntPtr</code></p>
+                    <p>
+                        <code>#if defined(_WIN64)</code></p>
+                    <p>
+                        C++ = <code>typedef __int64 INT_PTR;</code></p>
+                    <p>
+                        <code>#else</code></p>
+                    <p>
+                        C++ = <code>typedef int INT_PTR;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>INT32</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code lang="cs">int</code></p>
+                    <p>
+                        C++ = <code>typedef signed int INT32;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>INT64</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code lang="cs">long</code></p>
+                    <p>
+                        C++ = <code>typedef signed __int64 INT64;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>LANGID</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code lang="cs">ushort</code> or <code lang="cs">int</code>
+                    </p>
+                    <p>
+                        C++ = <code>typedef WORD LANGID;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>LCID</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code lang="cs">uint</code></p>
+                    <p>
+                        C++ = <code>typedef DWORD LCID;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>LCTYPE</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code lang="cs">uint</code></p>
+                    <p>
+                        C++ = <code>typedef DWORD LCTYPE;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>LGRPID</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code lang="cs">uint</code></p>
+                    <p>
+                        C++ = <code>typedef DWORD LGRPID;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>LONG</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code lang="cs">int</code></p>
+                    <p>
+                        C++ = <code>typedef long LONG;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>LONGLONG</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code lang="cs">long</code></p>
+                    <p>
+                        <code>#if !defined(_M_IX86)</code></p>
+                    <p>
+                        C++ = <code>typedef __int64 LONGLONG;</code></p>
+                    <p>
+                        <code>#else</code></p>
+                    <p>
+                        C++ = <code>typedef double LONGLONG;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>LONG_PTR</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code>IntPtr</code></p>
+                    <p>
+                        <code>#if defined(_WIN64)</code></p>
+                    <p>
+                        C++ = <code>typedef __int64 LONG_PTR;</code></p>
+                    <p>
+                        <code>#else</code></p>
+                    <p>
+                        C++ = <code>typedef long LONG_PTR;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>LONG32</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code lang="cs">int</code></p>
+                    <p>
+                        C++ = <code>typedef signed int LONG32;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>LONG64</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code lang="cs">long</code></p>
+                    <p>
+                        C++ = <code>typedef __int64 LONG64;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>LPARAM</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code>IntPtr</code></p>
+                    <p>
+                        C++ = <code>typedef LONG_PTR LPARAM;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>LPBOOL</code></b></p>
+                    <p>
+                        <b><code>Bool *</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code>IntPtr</code> or <code lang="cs">bool</code></p>
+                    <p>
+                        C++ = <code>typedef BOOL *LPBOOL;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>LPBYTE</code></b></p>
+                    <p>
+                        <b><code>Byte *</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code>IntPtr</code> or <code lang="cs">byte</code></p>
+                    <p>
+                        C++ = <code>typedef BYTE *LPBYTE;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>LPCOLORREF</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code>IntPtr</code> or <code lang="cs">uint</code></p>
+                    <p>
+                        C++ = <code>typedef DWORD *LPCOLORREF;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>LPCSTR</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code lang="cs">string</code> or <code>IntPtr</code> or <code>StringBuilder</code></p>
+                    <p>
+                        C++ = <code>typedef CONST CHAR *LPCSTR;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>LPCTSTR</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code lang="cs">string</code> or <code>IntPtr</code> or <code>StringBuilder</code></p>
+                    <p>
+                        <code>#ifdef UNICODE</code></p>
+                    <p>
+                        C++ = <code>typedef LPCWSTR LPCTSTR;</code></p>
+                    <p>
+                        <code>#else</code></p>
+                    <p>
+                        C++ = <code>typedef LPCSTR LPCTSTR;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>LPCVOID</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code>IntPtr</code></p>
+                    <p>
+                        C++ = <code>typedef CONST void *LPCVOID;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>LPCWSTR</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code lang="cs">string</code> or <code>IntPtr</code> or <code>StringBuilder</code></p>
+                    <p>
+                        C++ = <code>typedef CONST WCHAR *LPCWSTR;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>LPDWORD</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code>IntPtr</code> or <code lang="cs">uint</code></p>
+                    <p>
+                        C++ = <code>typedef DWORD *LPDWORD;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>LPHANDLE</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code>IntPtr</code></p>
+                    <p>
+                        C++ = <code>typedef HANDLE *LPHANDLE;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>LPINT</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code>IntPtr</code> or <code lang="cs">int</code></p>
+                    <p>
+                        C++ = <code>typedef int *LPINT;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>LPLONG</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code>IntPtr</code> or <code lang="cs">int</code></p>
+                    <p>
+                        C++ = <code>typedef long *LPLONG;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>LPSTR</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code lang="cs">string</code> or <code>IntPtr</code> or <code>StringBuilder</code></p>
+                    <p>
+                        C++ = <code>typedef CHAR *LPSTR;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>LPTSTR</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code lang="cs">string</code> or <code>IntPtr</code> or <code>StringBuilder</code></p>
+                    <p>
+                        <code>#ifdef UNICODE</code></p>
+                    <p>
+                        C++ = <code>typedef LPWSTR LPTSTR;</code></p>
+                    <p>
+                        <code>#else</code></p>
+                    <p>
+                        C++ = <code>typedef LPSTR LPTSTR;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>LPVOID</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code>IntPtr</code></p>
+                    <p>
+                        C++ = <code>typedef void *LPVOID;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>LPWORD</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code>IntPtr</code> or <code lang="cs">ushort</code></p>
+                    <p>
+                        C++ = <code>typedef WORD *LPWORD;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>LPWSTR</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code lang="cs">string</code> or <code>IntPtr</code> or <code>StringBuilder</code></p>
+                    <p>
+                        C++ = <code>typedef WCHAR *LPWSTR;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>LRESULT</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code>IntPtr</code> or <code lang="cs">int</code></p>
+                    <p>
+                        C++ = <code>typedef LONG_PTR LRESULT;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>PBOOL</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code>IntPtr</code> or <code lang="cs">bool</code></p>
+                    <p>
+                        C++ = <code>typedef BOOL *PBOOL;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>PBOOLEAN</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code>IntPtr</code> or <code lang="cs">bool</code></p>
+                    <p>
+                        C++ = <code>typedef BOOLEAN *PBOOLEAN;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>PBYTE</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code>IntPtr</code> or <code lang="cs">byte</code></p>
+                    <p>
+                        C++ = <code>typedef BYTE *PBYTE;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>PCHAR</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code>IntPtr</code> or <code lang="cs">char</code></p>
+                    <p>
+                        C++ = <code>typedef CHAR *PCHAR;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>PCSTR</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code lang="cs">string</code> or <code>IntPtr</code> or <code>StringBuilder</code></p>
+                    <p>
+                        C++ = <code>typedef CONST CHAR *PCSTR;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>PCTSTR</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code lang="cs">string</code> or <code>IntPtr</code> or <code>StringBuilder</code></p>
+                    <p>
+                        <code>#ifdef UNICODE</code></p>
+                    <p>
+                        C++ = <code>typedef LPCWSTR PCTSTR;</code></p>
+                    <p>
+                        <code>#else</code></p>
+                    <p>
+                        C++ = <code>typedef LPCSTR PCTSTR;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>PCWSTR</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code lang="cs">string</code> or <code>IntPtr</code> or <code>StringBuilder</code></p>
+                    <p>
+                        C++ = <code>typedef CONST WCHAR *PCWSTR;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>PDWORD</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code>IntPtr</code> or <code lang="cs">uint</code></p>
+                    <p>
+                        C++ = <code>typedef DWORD *PDWORD;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>PDWORDLONG</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code>IntPtr</code> or <code lang="cs">ulong</code></p>
+                    <p>
+                        C++ = <code>typedef DWORDLONG *PDWORDLONG;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>PDWORD_PTR</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code>IntPtr</code> or <code lang="cs">uint</code></p>
+                    <p>
+                        C++ = <code>typedef DWORD_PTR *PDWORD_PTR;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>PDWORD32</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code>IntPtr</code> or <code lang="cs">uint</code></p>
+                    <p>
+                        C++ = <code>typedef DWORD32 *PDWORD32;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>PDWORD64</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code>IntPtr</code> or <code lang="cs">ulong</code></p>
+                    <p>
+                        C++ = <code>typedef DWORD64 *PDWORD64;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>PFLOAT</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code>IntPtr</code> or <code lang="cs">single</code></p>
+                    <p>
+                        C++ = <code>typedef FLOAT *PFLOAT;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>PHANDLE</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code>IntPtr</code></p>
+                    <p>
+                        C++ = <code>typedef HANDLE *PHANDLE;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>PHKEY</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code>IntPtr</code></p>
+                    <p>
+                        C++ = <code>typedef HKEY *PHKEY;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>PINT</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code>IntPtr</code> or <code lang="cs">int</code></p>
+                    <p>
+                        C++ = <code>typedef int *PINT;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>PINT_PTR</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code>IntPtr</code></p>
+                    <p>
+                        C++ = <code>typedef INT_PTR *PINT_PTR;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>PINT32</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code>IntPtr</code> or <code lang="cs">int</code></p>
+                    <p>
+                        C++ = <code>typedef INT32 *PINT32;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>PINT64</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code>IntPtr</code> or <code lang="cs">long</code></p>
+                    <p>
+                        C++ = <code>typedef INT64 *PINT64;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>PLCID</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code>IntPtr</code> or <code lang="cs">uint</code></p>
+                    <p>
+                        C++ = <code>typedef PDWORD PLCID;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>PLONG</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code>IntPtr</code> or <code lang="cs">int</code></p>
+                    <p>
+                        C++ = <code>typedef LONG *PLONG;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>PLONGLONG</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code>IntPtr</code> or <code lang="cs">long</code></p>
+                    <p>
+                        C++ = <code>typedef LONGLONG *PLONGLONG;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>PLONG_PTR</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code>IntPtr</code> or <code lang="cs">int</code></p>
+                    <p>
+                        C++ = <code>typedef LONG_PTR *PLONG_PTR;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>PLONG32</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code>IntPtr</code> or <code lang="cs">int</code></p>
+                    <p>
+                        C++ = <code>typedef LONG32 *PLONG32;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>PLONG64</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code>IntPtr</code> or <code lang="cs">long</code></p>
+                    <p>
+                        C++ = <code>typedef LONG64 *PLONG64;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>POINTER_32</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code>IntPtr</code> or <code lang="cs">int</code></p>
+                    <p>
+                        <code>#if defined(_WIN64)</code></p>
+                    <p>
+                        <code>#define POINTER_32 __ptr32</code></p>
+                    <p>
+                        <code>#else</code></p>
+                    <p>
+                        <code>#define POINTER32</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>POINTER_64</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code>IntPtr</code> or <code lang="cs">long</code></p>
+                    <p>
+                        <code>#define POINTER_64 __ptr64</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>PSHORT</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code>IntPtr</code> or <code lang="cs">short</code></p>
+                    <p>
+                        C++ = <code>typedef SHORT *PSHORT;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>PSIZE_T</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code>IntPtr</code></p>
+                    <p>
+                        C++ = <code>typedef SIZE_T *PSIZE_T;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>PSSIZE_T</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code>IntPtr</code></p>
+                    <p>
+                        C++ = <code>typedef SSIZE_T *PSSIZE_T;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>PSTR</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code>IntPtr</code> or <code lang="cs">string</code> or <code>StringBuilder</code></p>
+                    <p>
+                        C++ = <code>typedef CHAR *PSTR;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>PTBYTE</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code>IntPtr</code> or <code lang="cs">char</code></p>
+                    <p>
+                        C++ = <code>typedef TBYTE *PTBYTE;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>PTCHAR</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code>IntPtr</code> or <code lang="cs">string</code> or <code>StringBuilder</code></p>
+                    <p>
+                        C++ = <code>typedef TCHAR *PTCHAR;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>PTSTR</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code>IntPtr</code> or <code lang="cs">string</code> or <code>StringBuilder</code></p>
+                    <p>
+                        <code>#ifdef UNICODE</code></p>
+                    <p>
+                        C++ = <code>typedef LPWSTR PTSTR;</code></p>
+                    <p>
+                        <code>#else</code></p>
+                    <p>
+                        C++ = <code>typedef LPSTR PTSTR;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>PUCHAR</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code>IntPtr</code> or <code lang="cs">string</code> or <code>StringBuilder</code></p>
+                    <p>
+                        C++ = <code>typedef UCHAR *PUCHAR;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>PUINT</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code>IntPtr</code> or <code lang="cs">uint</code></p>
+                    <p>
+                        C++ = <code>typedef UINT *PUINT;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>PUINT_PTR</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code>IntPtr</code> or <code lang="cs">uint</code></p>
+                    <p>
+                        C++ = <code>typedef UINT_PTR *PUINT_PTR;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>PUINT32</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code>IntPtr</code> or <code lang="cs">uint</code></p>
+                    <p>
+                        C++ = <code>typedef UINT32 *PUINT32;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>PUINT64</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code>IntPtr</code> or <code lang="cs">ulong</code></p>
+                    <p>
+                        C++ = <code>typedef UINT64 *PUINT64;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>PULONG</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code>IntPtr</code> or <code lang="cs">uint</code></p>
+                    <p>
+                        C++ = <code>typedef ULONG *PULONG;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>PULONGLONG</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code>IntPtr</code> or <code lang="cs">ulong</code></p>
+                    <p>
+                        C++ = <code>typedef ULONGLONG *PULONGLONG;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>PULONG_PTR</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code>IntPtr</code> or <code lang="cs">uint</code>:</p>
+                    <p>
+                        C++ = <code>typedef ULONG_PTR *PULONG_PTR;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>PULONG32</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code>IntPtr</code> or <code lang="cs">uint</code></p>
+                    <p>
+                        C++ = <code>typedef ULONG32 *PULONG32;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>PULONG64</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code>IntPtr</code> or <code lang="cs">ulong</code></p>
+                    <p>
+                        C++ = <code>typedef ULONG64 *PULONG64;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>PUSHORT</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code>IntPtr</code> or <code lang="cs">ushort</code></p>
+                    <p>
+                        C++ = <code>typedef USHORT *PUSHORT;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>PVOID</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code>IntPtr</code></p>
+                    <p>
+                        C++ = <code>typedef void *PVOID;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>PWCHAR</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code>IntPtr</code> or <code lang="cs">string</code>:</p>
+                    <p>
+                        C++ = <code>typedef WCHAR *PWCHAR;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>PWORD</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code>IntPtr</code> or <code lang="cs">ushort</code></p>
+                    <p>
+                        C++ = <code>typedef WORD *PWORD;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>PWSTR</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code>IntPtr</code> or <code lang="cs">string</code> or <code>StringBuilder</code></p>
+                    <p>
+                        C++ = <code>typedef WCHAR *PWSTR;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>SC_HANDLE</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code>IntPtr</code>
+                    </p>
+                    <p>
+                        C++ = <code>typedef HANDLE SC_HANDLE;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>SC_LOCK</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code>IntPtr</code></p>
+                    <p>
+                        C++ = <code>typedef LPVOID SC_LOCK;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>SERVICE_STATUS_HANDLE</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code>IntPtr</code></p>
+                    <p>
+                        C++ = <code>typedef HANDLE SERVICE_STATUS_HANDLE;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>SHORT</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code lang="cs">short</code>
+                    </p>
+                    <p>
+                        C++ = <code>typedef short SHORT;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>SIZE_T</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code lang="cs">uint</code> or <code>IntPtr</code></p>
+                    <p>
+                        C++ = <code>typedef ULONG_PTR SIZE_T;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>SSIZE_T</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code lang="cs">int</code> or <code>IntPtr</code></p>
+                    <p>
+                        C++ = <code>typedef LONG_PTR SSIZE_T;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>TBYTE</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code lang="cs">char</code></p>
+                    <p>
+                        <code>#ifdef UNICODE</code></p>
+                    <p>
+                        C++ = <code>typedef WCHAR TBYTE;</code></p>
+                    <p>
+                        <code>#else</code></p>
+                    <p>
+                        C++ = <code>typedef unsigned char TBYTE;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>TCHAR</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code lang="cs">char</code></p>
+                    <p>
+                        <code>#ifdef UNICODE</code></p>
+                    <p>
+                        C++ = <code>typedef WCHAR TCHAR;</code></p>
+                    <p>
+                        <code>#else</code></p>
+                    <p>
+                        C++ = <code>typedef char TCHAR;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>UCHAR</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code lang="cs">char</code></p>
+                    <p>
+                        C++ = <code>typedef unsigned char UCHAR;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>UINT</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code lang="cs">uint</code>:</p>
+                    <p>
+                        C++ = <code>typedef unsigned int UINT;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>UINT_PTR</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code>UIntPtr</code> or <code lang="cs">uint</code>:</p>
+                    <p>
+                        <code>#if defined(_WIN64)</code></p>
+                    <p>
+                        C++ = <code>typedef unsigned __int64 UINT_PTR;</code></p>
+                    <p>
+                        <code>#else</code></p>
+                    <p>
+                        C++ = <code>typedef unsigned int UINT_PTR;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>UINT32</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code lang="cs">uint</code></p>
+                    <p>
+                        C++ = <code>typedef unsigned int</code>
+                    </p>
+                    <p>
+                        <code>UINT32;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>UINT64</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code lang="cs">ulong</code></p>
+                    <p>
+                        C++ = <code>typedef usigned __int</code></p>
+                    <p>
+                        <code>64 UINT64;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>ULONG</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code lang="cs">uint</code>:</p>
+                    <p>
+                        C++ = <code>typedef unsigned long ULONG;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>ULONGLONG</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code lang="cs">ulong</code>:</p>
+                    <p>
+                        <code>#if !defined(_M_IX86)</code></p>
+                    <p>
+                        C++ = <code>typedef unsigned __int64 ULONGLONG;</code></p>
+                    <p>
+                        <code>#else</code></p>
+                    <p>
+                        C++ = <code>typedef double ULONGLONG</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>ULONG_PTR</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code>IntPtr</code> or <code lang="cs">uint</code></p>
+                    <p>
+                        <code>#if defined(_WIN64)</code></p>
+                    <p>
+                        C++ = <code>typedef unsigned __int64 ULONG_PTR;</code></p>
+                    <p>
+                        <code>#else</code></p>
+                    <p>
+                        C++ = <code>typedef unsigned long ULONG_PTR;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>ULONG32</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code lang="cs">uint</code></p>
+                    <p>
+                        C++ = <code>typedef unsigned int ULONG32;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>ULONG64</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code lang="cs">ulong</code></p>
+                    <p>
+                        C++ = <code>typedef unsigned __int64 ULONG64;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>USHORT</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code lang="cs">ushort</code></p>
+                    <p>
+                        C++ = <code>typedef unsigned short USHORT;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>USN</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code lang="cs">long</code></p>
+                    <p>
+                        C++ = <code>typedef LONGLONG USN;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>VOID</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code lang="cs">void</code>:</p>
+                    <p>
+                        <code>#define VOID void</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>WCHAR</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code lang="cs">char</code></p>
+                    <p>
+                        C++ = <code>typedef wchar_t WCHAR;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>WINAPI</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = standard is default, look at the <code>CallingConvention</code> enumeration:</p>
+                    <p>
+                        <code>#define WINAPI __stdcall</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>WORD</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code lang="cs">ushort</code></p>
+                    <p>
+                        C++ = <code>typedef unsigned short WORD;</code></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <b><code>WPARAM</code></b></p>
+                </td>
+                <td>
+                    <p>
+                        .NET = <code>IntPtr</code> or <code lang="cs">uint</code>:</p>
+                    <p>
+                        C++ = <code>typedef UINT_PTR WPARAM;</code></p>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+</body>
+</html>

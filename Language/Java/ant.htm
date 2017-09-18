@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+	<title>Ant</title>
+	<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+	<p id="title">Ant</p>
+	<h1>Overview</h1>
+	<p>首先我们需要知道，Ant 能做什么，下面是一个汇总</p>
+	<table style="width:90%">
+		<tr>
+			<th>功能</th>
+			<th>标签</th>
+		</tr>
+		<tr>
+			<td>打印消息</td>
+			<td>echo</td>
+		</tr>
+		<tr>
+			<td>文件/文件夹操作</td>
+			<td>copy, mkdir</td>
+		</tr>
+		<tr>
+			<td>编译 Java 代码</td>
+			<td>javac</td>
+		</tr>
+		<tr>
+			<td>执行 Java 程序</td>
+			<td>java</td>
+		</tr>
+	</table>
+	<h1>Ant 入门</h1>
+	<h2>要素</h2>
+	<ul>
+		<li>&lt;project&gt; 标签的 default 属性表示 ant 执行的第一个 target</li>
+		<li>&lt;target&gt; 标签的 depends 属性表示该 target 依赖的 target</li>
+	</ul>
+	
+
+	<h2>示例</h2>
+	<p>说来惭愧，作为最著名的部署工具，我一直只是使用其中的copy功能，将改动过后的文件复复制到目标目录中，下面是一个示例：</p>
+	<pre class="code" data-type="xml">&lt;?xml version=&quot;1.0&quot;?&gt;
+
+	&lt;project default=&quot;main&quot; basedir=&quot;.&quot;&gt;
+
+	&lt;echo message=&quot;copy all class to target&quot;/&gt;
+	&lt;property name=&quot;class_root&quot; location=&quot;D:/Work/Java/spring_test/WebContent/WEB-INF/classes&quot; /&gt;
+	&lt;property name=&quot;obj&quot; location=&quot;D:/java/Tomcat 6.0/webapps/spring_test/WEB-INF/classes&quot; /&gt;
+	
+	 &lt;target name=&quot;main&quot; &gt;
+	  	 &lt;copy todir=&quot;${obj}/lld/test/spring/ioc&quot;&gt;
+	  	 	&lt;fileset dir=&quot;${class_root}/lld/test/spring/ioc&quot;&gt;
+	  	 		&lt;include name=&quot;*.class&quot; /&gt;
+	  	 	&lt;/fileset&gt;
+  	 	&lt;/copy&gt;	
+	  	 &lt;copy todir=&quot;${obj}/lld/test/hibernate/bean&quot;&gt;
+	  	 	&lt;fileset dir=&quot;${class_root}/lld/test/hibernate/bean&quot;&gt;
+	  	 		&lt;include name=&quot;*.class&quot; /&gt;
+	  	 	&lt;/fileset&gt;
+ 	 	&lt;/copy&gt;	
+	 &lt;/target&gt;
+  
+&lt;/project&gt;</pre>
+	<h1>常见用法</h1>
+	<h2>信息</h2>
+	<h3>打印信息</h3>
+	<pre class="code" data-type="xml">&lt;echo message="Create Hermes Source Directory"/&gt;
+&lt;echo&gt; Hello, world.&lt;/echo&gt;&gt;</pre>
+	<h2>变量</h2>
+	<h3>声明常量</h3>
+	<pre class="code" data-type="xml">&lt;property name=&quot;var_name&quot; value=&quot;value&quot; /&gt;</pre>
+	<h3>引用变量</h3>
+	<p>将已有变量值赋给新变量</p>
+	<pre class="code" data-type="xml">&lt;property name=&quot;new_var_name&quot; value=&quot;${var_name}&quot; /&gt;</pre>
+	<h3>由命令行输入变量</h3>
+	<pre class="code" data-type="xml">&lt;input message=&quot;Please enter value:&quot; addproperty=&quot;var_name&quot; /&gt;</pre>
+	<p>如果需要输入密码，需使用如下格式，这样输入的字符将不会显示在屏幕上</p>
+	<pre class="code" data-type="xml">&lt;input message=&quot;Please enter svn-password:&quot; addproperty=&quot;svn.password&quot; &gt;
+	&lt;handler classname=&quot;org.apache.tools.ant.input.SecureInputHandler&quot; /&gt;
+&lt;/input&gt;</pre>
+	<h3>命令行参数</h3>
+	<p>在命令行中使用 -D 来传入参数</p>
+	<pre class="code" data-type="sh">ant -Dtest.module=MyClassUnderTest ...</pre>
+	<pre class="code" data-type="xml">&lt;target name=&quot;single_test&quot; depends=&quot;compile&quot; description=&quot;Run one unit test&quot;&gt;
+    &lt;junit&gt;
+        &lt;batchtest&gt;
+            &lt;fileset dir=&quot;${test.dir}&quot; includes=&quot;**/${test.module}.class&quot; /&gt;
+        &lt;/batchtest&gt;
+    &lt;/junit&gt;
+&lt;/target&gt;</pre>
+	<h2>文件集声明</h2>
+	<pre class="code" data-type="xml">&lt!-- 指定目录 --&gt;
+&lt;fileset dir=&quot;目录路径&quot;&gt;
+
+&lt!-- 指定目录下的某些文件(不包括子目录) --&gt;
+&lt;fileset dir=&quot;目录路径&quot; includes=&quot;*.class&quot; /&gt;
+
+&lt!-- 指定目录下的某些文件(包括子目录) --&gt;
+&lt;fileset dir=&quot;目录路径&quot; includes=&quot;**/*.class&quot; /&gt;
+
+&lt!-- 指定目录下包含的文件和不包含的的文件 --&gt;
+&lt;fileset dir=&quot;源文件目录&quot;&gt;
+	&lt!-- 包含指定文件 --&gt;
+	&lt;include name=&quot;*.class&quot; /&gt;
+	&lt!-- 排除指定目录 --&gt;
+	&lt;exclude name=&quot;serverOne/&quot; /&gt;
+	&lt!-- 排除指定文件 --&gt;
+	&lt;exclude name=&quot;lib/*.gif&quot; /&gt;
+&lt;/fileset&gt;
+
+&lt!-- 指定所有文件 --&gt;
+&lt;fileset dir=&quot;目录路径&quot; includes=&quot;**/*.*&quot; /&gt;</pre>
+	<h2>目录操作</h2>
+	<pre class="code" data-type="xml">&lt;!-- delete folder --&gt;
+&lt;delete dir=&quot;path&quot; /&gt;
+
+&lt;!-- create folder --&gt;
+&lt;mkdir dir=&quot;path&quot; /&gt;</pre>
+	<pre class="code" data-type="xml"></pre>
+	<h2>文件操作</h2>
+	<h3>复制单个文件</h3>
+	<pre class="code" data-type="xml">&lt;copy file=&quot;源文件&quot; tofile=&quot;目标文件&quot;/&gt;</pre>
+	<h3>复制多个文件</h3>
+	<pre class="code" data-type="xml">&lt;copy todir=&quot;目标目录&quot;&gt;
+	&lt;fileset dir=&quot;源文件目录&quot;&gt;
+		&lt!-- 不复制指定目录 --&gt;
+		&lt;exclude name=&quot;serverOne/&quot; /&gt;
+		&lt!-- 不复制指定文件 --&gt;
+		&lt;exclude name=&quot;lib/*.gif&quot; /&gt;
+	&lt;/fileset&gt;
+&lt;/copy&gt;
+</pre>
+	<h2>Dos/Unix 换行符变换</h2>
+	<pre class="code" data-type="xml">&lt;?xml version=&quot;1.0&quot;?&gt;
+&lt;project name=&quot;fix&quot; basedir=&quot;.&quot; default=&quot;all&quot;&gt;
+	&lt;target name=&quot;fixCRLF&quot;&gt;
+		&lt;echo message=&quot;+++Fixing CRLF+++&quot;/&gt;
+		&lt;fixcrlf srcdir=&quot;.&quot; includes=&quot;**/makefile,**/*&quot; excludes=&quot;**/*.gif,**/*.jpg,**/*.dat&quot; eol=&quot;lf&quot;/&gt;
+	&lt;/target&gt;
+	&lt;target name=&quot;all&quot; depends=&quot;fixCRLF&quot;/&gt;
+&lt;/project&gt;</pre>
+</body>
+</html>

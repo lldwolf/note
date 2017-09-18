@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>文档注释标记</title>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+<p id="title">文档注释标记</p>
+
+<p>C# 编译器将代码中的文档注释处理到 XML 文件中。需要在您的站点实现的具体内容是处理 XML 文件以创建文档。</p>
+<table style="width:100%" cellspacing="2" cellpadding="5"><tr>
+          <td>
+            <p> <a href="#c">&lt;c&gt;</a>
+            </p>
+          </td>
+          <td>
+            <p> <a href="#para">&lt;para&gt;
+            </a> </p>
+          </td>
+          <td>
+            <p> <a href="#see">&lt;see&gt;*</a></p>
+          </td>
+        </tr><tr>
+          <td>
+            <p> <a href="#code">&lt;code&gt;</a>
+            </p>
+          </td>
+          <td>
+            <p> <a href="#param">&lt;param&gt;*</a></p>
+          </td>
+          <td>
+            <p> <a href="#seealso">&lt;seealso&gt;*</a></p>
+          </td>
+        </tr><tr>
+          <td>
+            <p> <a href="#example">&lt;example&gt;</a>
+            </p>
+          </td>
+          <td>
+            <p> <a href="#paramref">&lt;paramref&gt;
+            </a> </p>
+          </td>
+          <td>
+            <p> <a href="#summary">&lt;summary&gt;
+            </a> </p>
+          </td>
+        </tr><tr>
+          <td>
+            <p> <a href="#exception">&lt;exception&gt;*</a></p>
+          </td>
+          <td>
+            <p> <a href="#permission">&lt;permission&gt;*</a></p>
+          </td>
+          <td>
+            <p> <a href="#typeparam">&lt;typeparam&gt;*</a></p>
+          </td>
+        </tr><tr>
+          <td>
+            <p> <a href="#include">&lt;include&gt;*</a></p>
+          </td>
+          <td>
+            <p> <a href="#remarks">&lt;remarks&gt;
+            </a> </p>
+          </td>
+          <td>
+            <p> <a href="#typeparamref">&lt;typeparamref&gt;
+            </a> </p>
+          </td>
+        </tr><tr>
+          <td>
+            <p> <a href="#list">&lt;list&gt;
+            </a> </p>
+          </td>
+          <td>
+            <p>
+              <a href="#returns">&lt;returns&gt;
+              </a> </p>
+          </td>
+          <td>
+            <p> <a href="#value">&lt;value&gt;</a>
+            </p>
+          </td>
+        </tr></table>
+<p>（* 表示编译器验证语法。）</p>
+<p>使用 <MSHelp:link tabIndex=0 
+keywords="849EEA59-C936-4311-BAD8-D07404480F2A">/doc</MSHelp:link> 进行编译可以将文档注释处理到文件中。</p>
+<h1>&lt;c&gt;</h1>
+<pre class="code" data-type="xml">c&gt;text&lt;/c&gt;</pre>
+<p>&lt;c&gt; 标记为您提供了一种将说明中的文本标记为代码的方法。使用 <a href="#code">&lt;code&gt;</a> 将多行指示为代码。</p>
+<h1>&lt;code&gt;</h1>
+<pre class="code" data-type="xml">code&gt;content&lt;/code&gt;</pre>
+<p>&lt;code&gt; 标记为您提供了一种将多行指示为代码的方法。使用 <a 
+href="aad5b16e-a29e-445e-bd0d-eea0b138d7b2.htm">&lt;c&gt;</a> 指示应将说明中的文本标记为代码。</p>
+<h1>&lt;example&gt;</h1>
+<pre class="code" data-type="xml">example&gt;description&lt;/example&gt;</pre>
+<p>使用 &lt;example&gt; 标记可以指定使用方法或其他库成员的示例。这通常涉及使用 <a 
+href="f235e3bc-a709-43cf-8a9f-bd57cabdf6da.htm">&lt;code&gt;</a> 标记。</p>
+<h1>&lt;exception&gt;</h1>
+<pre class="code" data-type="xml">exception cref="<span class="parameter">member</span>"&gt;description&lt;/exception&gt;</pre>
+<p>&lt;exception&gt; 标记使您可以指定哪些异常可被引发。该标记应用于方法定义。</p>
+<p>示例:</p>
+<pre class="code" data-type="csharp">// compile with: /doc:DocFileName.xml 
+
+/// comment for class
+public class EClass : System.Exception
+{
+    // class definition...
+}
+
+/// &lt;exception cref=&quot;System.Exception&quot;&gt;Thrown when...&lt;/exception&gt;
+class TestClass
+{
+    static void Main()
+    {
+        try
+        {
+        }
+        catch (EClass)
+        {
+        }
+    }
+}</pre>
+<h1>&lt;include&gt;</h1>
+<pre class="code" data-type="xml">include file='<span class="parameter">filename</span>' path='<span class="parameter">tagpath</span>[@<span class="parameter">name</span>="<span class="parameter">id</span>"]' /&gt;</pre>
+<p>&lt;include&gt; 标记使您得以引用描述源代码中类型和成员的另一文件中的注释。这是除了将文档注释直接置于源代码文件中之外的另一种可选方法。</p>
+<p>&lt;include&gt; 标记使用 XML XPath 语法。有关自定义 &lt;include&gt; 使用的方法，请参见 XPath 文档。</p>
+<h2>示例:</h2>
+<p>第一个文件使用 &lt;include&gt;，如下所列：</p>
+<pre class="code" data-type="csharp">// compile with: /doc:DocFileName.xml 
+
+/// &lt;include file='xml_include_tag.doc' path='MyDocs/MyMembers[@name=&quot;test&quot;]/*' /&gt;
+class Test
+{
+    static void Main()
+    {
+    }
+}
+
+/// &lt;include file='xml_include_tag.doc' path='MyDocs/MyMembers[@name=&quot;test2&quot;]/*' /&gt;
+class Test2
+{
+    public void Test()
+    {
+    }
+}</pre>
+<p>第二个文件 xml_include_tag.doc 包含下列文档注释：</p>
+<pre class="code" data-type="xml">MyDocs&gt;
+
+&lt;MyMembers name=&quot;test&quot;&gt;
+&lt;summary&gt;
+The summary for this type.
+&lt;/summary&gt;
+&lt;/MyMembers&gt;
+
+&lt;MyMembers name=&quot;test2&quot;&gt;
+&lt;summary&gt;
+The summary for this other type.
+&lt;/summary&gt;
+&lt;/MyMembers&gt;
+
+&lt;/MyDocs&gt;</pre>
+<h1>&lt;list&gt;</h1>
+<pre class="code" data-type="xml">list type=&quot;bullet&quot; | &quot;number&quot; | &quot;table&quot;&gt;
+    &lt;listheader&gt;
+        &lt;term&gt;term&lt;/term&gt;
+        &lt;description&gt;description&lt;/description&gt;
+    &lt;/listheader&gt;
+    &lt;item&gt;
+        &lt;term&gt;term&lt;/term&gt;
+        &lt;description&gt;description&lt;/description&gt;
+    &lt;/item&gt;
+&lt;/list&gt;</pre>
+<p>&lt;listheader&gt; 块用于定义表或定义列表中的标题行。定义表时，只需为标题中的项提供一个项。</p>
+<p>列表中的每一项都用一个 &lt;item&gt; 块来描述。创建定义列表时，既需要指定 <span class="parameter">term</span> 也需要指定 <span class="parameter">description</span>。但是，对于表、项目符号列表或编号列表，只需为 <span 
+class="parameter">description</span> 提供一个项。</p>
+<h1>&lt;para&gt;</h1>
+<pre class="code" data-type="xml">para&gt;content&lt;/para&gt;</pre>
+<p>&lt;para&gt; 标记用于诸如<a 
+href="#summary">&lt;summary&gt;</a>、<a 
+href="#remarks">&lt;remarks&gt;</a> 或 <a 
+href="#returns">&lt;returns&gt;</a> 等标记内，使您得以将结构添加到文本中。</p>
+<h1>&lt;param&gt;</h1>
+<pre class="code" data-type="xml">param name='<span class="parameter">name</span>'&gt;description&lt;/param&gt;</pre>
+<p>&lt;param&gt; 标记应当用于方法声明的注释中，以描述方法的一个参数。</p>
+<h1>&lt;paramref&gt;</h1>
+<pre class="code" data-type="xml">paramref name="name"/&gt;</pre>
+<p>&lt;paramref&gt; 标记提供了指示代码注释中的某个单词（例如在 &lt;summary&gt; 或 &lt;remarks&gt; 块中）引用某个参数的方式。可以处理 XML 文件来以不同的方式格式化此单词，比如将其设置为粗体或斜体。</p>
+<h1>&lt;permission&gt;</h1>
+<pre class="code" data-type="xml">permission cref="<span class="parameter">member</span>"&gt;description&lt;/permission&gt;</pre>
+<p>&lt;permission&gt; 标记使您得以将成员的访问记入文档。使用 <MSHelp:link tabIndex=0 
+keywords="T:System.Security.PermissionSet">PermissionSet</MSHelp:link> 类可以指定对成员的访问。</p>
+<h1>&lt;remarks&gt;</h1>
+<pre class="code" data-type="xml">remarks&gt;description&lt;/remarks&gt;</pre>
+<p>&lt;remarks&gt; 标记用于添加有关某个类型的信息，从而补充由 <a 
+href="#summary">&lt;summary&gt;</a> 所指定的信息。此信息显示在<MSHelp:link tabIndex=0 
+keywords="f89acfc5-1152-413d-9f56-3dc16e3f0470">对象浏览器</MSHelp:link>中。</p>
+<p>示例</p>
+<pre class="code" data-type="csharp">// compile with: /doc:DocFileName.xml 
+
+/// &lt;summary&gt;
+/// You may have some primary information about this class.
+/// &lt;/summary&gt;
+/// &lt;remarks&gt;
+/// You may have some additional information about this class.
+/// &lt;/remarks&gt;
+public class TestClass
+{
+    /// text for Main
+    static void Main()
+    {
+    }
+}</pre>
+<h1>&lt;returns&gt;</h1>
+<pre class="code" data-type="xml">returns&gt;description&lt;/returns&gt;</pre>
+<p>&lt;returns&gt; 标记应当用于方法声明的注释，以描述返回值。</p>
+<h1>&lt;see&gt;</h1>
+<pre class="code" data-type="xml">see cref="member"/&gt;</pre>
+<p>&lt;see&gt; 标记使您得以从文本内指定链接。使用 <a 
+href="#seealso">&lt;seealso&gt;</a> 指示文本应该放在“另请参见”节中。</p>
+<p>有关使用 &lt;see&gt; 的示例，请参见 <a 
+href="#summary">&lt;summary&gt;</a>。</p>
+<h1>&lt;seealso&gt;</h1>
+<pre class="code" data-type="xml">seealso cref="member"/&gt;</pre>
+<p>&lt;seealso&gt; 标记使您得以指定希望在“请参见”一节中出现的文本。使用 <a 
+href="#see">&lt;see&gt;</a> 从文本内指定链接。</p>
+<p>有关使用 &lt;seealso&gt; 的示例，请参见 <a 
+href="#summary">&lt;summary&gt;</a>。</p>
+<h1>&lt;summary&gt;</h1>
+<pre class="code" data-type="xml">summary&gt;description&lt;/summary&gt;</pre>
+<p>&lt;summary&gt; 标记应当用于描述类型或类型成员。使用 <a 
+href="#remarks">&lt;remarks&gt;</a> 添加针对某个类型说明的补充信息。</p>
+<pre class="code" data-type="csharp">// compile with: /doc:DocFileName.xml 
+
+/// text for class TestClass
+public class TestClass
+{
+    /// &lt;summary&gt;DoWork is a method in the TestClass class.
+    /// &lt;para&gt;Here's how you could make a second paragraph in a description. &lt;see cref=&quot;System.Console.WriteLine(System.String)&quot;/&gt; for information about output statements.&lt;/para&gt;
+    /// &lt;seealso cref=&quot;TestClass.Main&quot;/&gt;
+    /// &lt;/summary&gt;
+    public static void DoWork(int Int1)
+    {
+    }
+
+    /// text for Main
+    static void Main()
+    {
+    }
+}</pre>
+<h1>&lt;typeparam&gt;</h1>
+<pre class="code" data-type="xml">typeparam name=&quot;name&quot;&gt;description&lt;/typeparam&gt;</pre>
+<p>在泛型类型或方法声明的注释中应该使用 &lt;typeparam&gt; 标记描述类型参数。为泛型类型或方法的每个类型参数添加标记。</p>
+<p>有关显示如何使用 &lt;typeparam&gt; 的代码示例，请参见 <a 
+href="#typeparamref">&lt;typeparamref&gt;</a>。</p>
+<h1>&lt;typeparamref&gt;</h1>
+<pre class="code" data-type="xml">typeparamref name=&quot;name&quot;/&gt;</pre>
+<p>使用此标记，文档文件的使用者能够以某种独特的方式设置单词的格式，例如以斜体显示。</p>
+<pre class="code" data-type="csharp">// compile with: /doc:DocFileName.xml 
+
+/// comment for class
+public class TestClass
+{
+    /// &lt;summary&gt;
+    /// Creates a new array of arbitrary type &lt;typeparamref name=&quot;T&quot;/&gt;
+    /// &lt;/summary&gt;
+    /// &lt;typeparam name=&quot;T&quot;&gt;The element type of the array&lt;/typeparam&gt;
+    public static T[] mkArray&lt;T&gt;(int n)
+    {
+        return new T[n];
+    }
+}</pre>
+<h1>&lt;value&gt;</h1>
+<pre class="code" data-type="xml">value&gt;property-description&lt;/value&gt;</pre>
+<p>&lt;value&gt; 标记使您得以描述属性所代表的值。请注意，当在 Visual Studio .NET 开发环境中通过代码向导添加属性时，它将会为新属性添加 <a 
+href="#summary">&lt;summary&gt;</a> 标记。然后，应该手动添加 &lt;value&gt; 标记以描述该属性所表示的值。</p>
+<p>示例</p>
+<pre class="code" data-type="csharp">// compile with: /doc:DocFileName.xml 
+
+/// text for class Employee
+public class Employee
+{
+    private string _name;
+
+    /// &lt;summary&gt;The Name property represents the employee's name.&lt;/summary&gt;
+    /// &lt;value&gt;The Name property gets/sets the _name data member.&lt;/value&gt;
+    public string Name
+    {
+        get
+        {
+            return _name;
+        }
+        set
+        {
+            _name = value;
+        }
+    }
+}
+
+/// text for class MainClass
+public class MainClass
+{
+    /// text for Main
+    static void Main()
+    {
+    }
+}</pre>
+<p>&nbsp;</p>
+
+</body>
+</html>

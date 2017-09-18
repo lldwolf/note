@@ -1,0 +1,237 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>HEAD区标签</title>
+<script type="text/javascript" src="css.js"></script>
+</head>
+
+<body>
+<h1>第N章 HEAD区标签</h1>
+<hr />
+<h2>N.1 META</h2>
+<p>meta是用来在HTML文档中模拟HTTP协议的响应头报文。meta 标签用于网页的&lt;head&gt;与&lt;/head&gt;中，meta 标签的用处很多。meta 的属性有两种：name和http-equiv。</p>
+<p>name属性主要用于描述网页，对应于content（网页内容），以便于搜索引擎机器人查找、分类（目 前几乎所有的搜索引擎都使用网上机器人自动查找meta值来给网页分类）。这其中最重要的是description（站点在搜索引擎上的描述）和 keywords（分类关键词），所以应该给每页加一个meta值。比较常用的有以下几个：</p>
+<p><font id="zoom">HTTP-EQUIV</font>属性来实现不同的功能。</p>
+<h3>N.1.1 NAME</h3>
+<p>格式如下：</p>
+<pre>&lt;META NAME=&quot;&quot; CONTENT=&quot;&quot; /&gt;</pre>
+<h4>N.1.1.1 Generator</h4>
+<p>用以说明生成工具（如Microsoft FrontPage 4.0）等。</p>
+<p>&nbsp;</p>
+<h4>N.1.1.2 KEYWORDS</h4>
+<p>搜索引擎说明你的网页的关键词。</p>
+<pre>&lt;Meta name="Keywords" Content="关键词1,关键词2，关键词3,关键词4,……"&gt;</pre>
+<p>各关键词间用英文逗号“,”隔开。META的通常用处是指定搜索引擎用来提高搜索质量的关键词。当数个META元素提供文档语言从属信息时，搜索引擎会使用lang特性来过滤并通过用户的语言优先参照来显示搜索结果。</p>
+<pre>&lt;Meta name="Kyewords" Lang="EN" Content="vacation,greece,sunshine"&gt;</pre>
+<h4>N.1.1.3 Description</h4>
+<p>告诉搜索引擎你的站点的主要内容</p>
+<pre>&lt;Meta name="Description" Content="你网页的简述"&gt;</pre>
+<h4>N.1.1.4 Author</h4>
+<p>告诉搜索引擎你的站点的制作的作者 </p>
+<pre>&lt;Meta name="Author" Content="张三，abc@sina.com"&gt;</pre>
+<h4>N.1.1.5 Robots (机器人向导)</h4>
+<p>Robots用来告诉搜索机器人哪些页面需要索引，哪些页面不需要索引。Content的参数有all、none、index、noindex、follow、nofollow。默认是all。</p>
+<pre>&lt;Meta name="Robots" Content="All|None|Index|Noindex|Follow|Nofollow"&gt;</pre>
+<p>许多搜索引擎都通过放出robot/spider搜索来登录网站，这些robot/spider就要用到meta元素的一些特性来决定怎样登录。 </p>
+<ul>
+  <li>all：文件将被检索，且页面上的链接可以被查询；</li>
+  <li> none：文件将不被检索，且页面上的链接不可以被查询；(和 "noindex, no follow" 起相同作用)</li>
+  <li>index：文件将被检索；（让robot/spider登录）</li>
+  <li> follow：页面上的链接可以被查询；</li>
+  <li> noindex：文件将不被检索，但页面上的链接可以被查询；(不让robot/spider登录)</li>
+  <li> nofollow：文件将不被检索，页面上的链接可以被查询。(不让robot/spider顺着此页的连接往下探找) </li>
+</ul>
+<h4>N.1.1.6 Copyright (版权)</h4>
+<p>标注版权</p>
+<pre>&lt;Meta name="Copyright" Content="本页版权归Zerospace所有。All Rights Reserved"&gt;</pre>
+<h4>N.1.1.7 revisit-after（重访）</h4>
+<p>&lt;META name="revisit-after" CONTENT="7 days" &gt;</p>
+<h3>N.1.2 HTTP-EQUIV </h3>
+<h4>N.1.2.1 Content-Type</h4>
+<p>用以说明主页制作所使用的文字以及语言</p>
+<pre>&lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=gb2312&quot; /&gt;</pre>
+<h4>N.1.2.2 Expires</h4>
+<p>可以用于设定网页的到期时间，一旦过期则必须到服务器上重新调用。需要注意的是必须使用GMT时间格式</p>
+<pre>&lt;meta http-equiv="Expires" contect="Mon,12 May 2001 00:20:00 GMT"&gt;</pre>
+<h4>N.1.2.3 Pragma</h4>
+<p>禁止浏览器从本地机的缓存中调阅页面内容。</p>
+<p>网页不保存在缓存中，每次访问都刷新页面。这样设定，访问者将无法脱机浏览。</p>
+<pre>&lt;Meta http-equiv="Pragma" Content="No-cach"&gt;</pre>
+<h4>N.1.2.4 <font id="zoom">REFRESH</font>(自动刷新)</h4>
+<pre><font id="zoom">&lt; <strong>META</strong> <strong>HTTP-EQUIV</strong>="REFRESH" <strong>CONTENT</strong>="x; URL=*.*"&gt; </font></pre>
+<p><font id="zoom">x 是刷新的时间，单位是秒。*.* 是刷新的文件。 </font></p>
+<h4>N.1.2.5 Set-Cookie</h4>
+<p>浏览器访问某个页面时会将它存在缓存中，下次再次访问时就可从缓存中读取，以提高速度。当你希望访问者每次都刷新你广告的图标，或每次都刷新你的计数器， 就要禁用缓存了。通常HTML文件没有必要禁用缓存，对于ASP等页面，就可以使用禁用缓存，因为每次看到的页面都是在服务器动态生成的，缓存就失去意 义。如果网页过期，那么存盘的cookie将被删除。</p>
+<pre>&lt;Meta http-equiv="Set-Cookie" Content="cookievalue=xxx; expires=Wednesday, 21-Oct-98 16:14:21 GMT; path=/"&gt;</pre>
+<p>注意：必须使用GMT的时间格式。</p>
+<h4>N.1.2.6 Window-target </h4>
+<p>强制页面在当前窗口以独立页面显示。这个属性是用来防止别人在框架里调用你的页面。Content选项：_blank、_top、_self、_parent。</p>
+<pre>&lt;Meta http-equiv="Widow-target" Content="_top"&gt;</pre>
+<h4>N.1.2.7 Pics-label</h4>
+<p>在IE的Internet选项中有一项内容设置，可以防止浏览一些受限制的网站，而网站的限制级别就是通过该参数来设置的。</p>
+<pre>&lt;META http-equiv="Pics-label" Contect="(PICS－1.1'http://www.rsac.org/ratingsv01.html'
+   　　　I gen comment 'RSACi North America Sever' by 'inet@microsoft.com' 
+ 　　　　for 'http://www.microsoft.com' on '1997.06.30T14:21－0500' r(n0 s0 v0 l0))"&gt;</pre>
+<p>注意：不要将级别设置的太高。RSAC的评估系统提供了一种用来评价Web站点内容的标准。用户可以设置Microsoft Internet Explorer（IE3.0以上）来排除包含有色情和暴力内容的站点。上面这个例子中的HTML取自Microsoft的主页。代码中的（n 0 s 0 v 0 l 0）表示该站点不包含不健康内容。级别的评定是由RSAC，即美国娱乐委员会的评级机构评定的，如果你想进一步了解RSAC评估系统的等级内容，或者你需 要评价自己的网站，可以访问RSAC的站点：http://www.rsac.org/。</p>
+<h4>N.1.2.8 Page-Enter和Page-Exit（页面的进入/退出特效）</h4>
+<p>IE 5.5版本以上支持该特效，Firefox 2.0尚不支持</p>
+<p>IE使用如下方式支持页面的进入及退出特效。</p>
+<pre>&lt;meta HTTP-EQUIV=&quot;Page-Enter&quot; CONTENT=&quot;revealtrans(duration=0.8, transition=23)&quot;&gt;
+&lt;meta HTTP-EQUIV=&quot;Page-Exit&quot; CONTENT=&quot;revealtrans(duration=0.8, transition=23)&quot;&gt;</pre>
+<p>其中第一个是页页的进入时显示特效，第二个是页面的退出时显示特效，使用了函数revealtrans，第一个参数表示特效的运行间隔时间，设置得最大则特效显示越慢，第二个表示使用何种特效，其值说明如下表所示：</p>
+<table width="80%" >
+  <tr>
+    <th width="30%">值</th>
+    <th width="70%">效果</th>
+  </tr>
+  <tr>
+    <td>0</td>
+    <td>由外至内圆形</td>
+  </tr>
+  <tr>
+    <td>1</td>
+    <td>由内至外矩形</td>
+  </tr>
+  <tr>
+    <td>2</td>
+    <td>由外至内圆形</td>
+  </tr>
+  <tr>
+    <td>3</td>
+    <td>由内至外圆形</td>
+  </tr>
+  <tr>
+    <td>4</td>
+    <td>由下至上</td>
+  </tr>
+  <tr>
+    <td>5</td>
+    <td>由上至下</td>
+  </tr>
+  <tr>
+    <td>6</td>
+    <td>由左至右</td>
+  </tr>
+  <tr>
+    <td>7</td>
+    <td>由右至左</td>
+  </tr>
+  <tr>
+    <td>8</td>
+    <td>由左到右，百页窗</td>
+  </tr>
+  <tr>
+    <td>9</td>
+    <td>由上至下，百页窗</td>
+  </tr>
+  <tr>
+    <td>10</td>
+    <td>由左到右，交错百页窗</td>
+  </tr>
+  <tr>
+    <td>11</td>
+    <td>由上至下，交错百页窗</td>
+  </tr>
+  <tr>
+    <td>12</td>
+    <td>雾状</td>
+  </tr>
+  <tr>
+    <td>13</td>
+    <td>左右至中间</td>
+  </tr>
+  <tr>
+    <td>14</td>
+    <td>中间至左右</td>
+  </tr>
+  <tr>
+    <td>15</td>
+    <td>上下至中间</td>
+  </tr>
+  <tr>
+    <td>16</td>
+    <td>中间至上下</td>
+  </tr>
+  <tr>
+    <td>17</td>
+    <td>右上至左下</td>
+  </tr>
+  <tr>
+    <td>18</td>
+    <td>右下至左上</td>
+  </tr>
+  <tr>
+    <td>19</td>
+    <td>左上至右下</td>
+  </tr>
+  <tr>
+    <td height="20">20</td>
+    <td>左下至右上</td>
+  </tr>
+  <tr>
+    <td>21</td>
+    <td>水平线</td>
+  </tr>
+  <tr>
+    <td>22</td>
+    <td>竖直线</td>
+  </tr>
+  <tr>
+    <td>其它</td>
+    <td>随机</td>
+  </tr>
+</table>
+<p>使用如下两个网页，可以看一下这两个网页在切换时的效果。</p>
+<p>1.htm</p>
+<pre>&lt;html&gt;
+&lt;head&gt;
+&lt;meta HTTP-EQUIV=&quot;Page-Enter&quot; CONTENT=&quot;revealtrans(duration=0.8, transition=23)&quot;&gt;
+&lt;meta HTTP-EQUIV=&quot;Page-Exit&quot; CONTENT=&quot;revealtrans(duration=0.8, transition=23)&quot;&gt; 
+&lt;title&gt;TEST&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;p&gt;&lt;a href=&quot;2.htm&quot;&gt;222222222222222&lt;/a&gt;&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+<p>2.htm</p>
+<pre>&lt;html&gt;
+&lt;head&gt;
+&lt;meta HTTP-EQUIV=&quot;Page-Enter&quot; CONTENT=&quot;revealtrans(duration=0.3, transition=23)&quot;&gt;
+&lt;meta HTTP-EQUIV=&quot;Page-Exit&quot; CONTENT=&quot;revealtrans(duration=0.3, transition=23)&quot;&gt; 
+	&lt;title&gt;TEST&lt;/title&gt;
+&lt;/head&gt;
+&lt;body bgcolor=&quot;blue&quot;&gt;
+&lt;p&gt;&lt;a href=&quot;1.htm&quot;&gt;1111111111111&lt;/a&gt;&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+<h4>N.1.2.9 MSThemeCompatible</h4>
+<p>是否在IE中关闭 xp 的主题，关闭 xp 的蓝色立体按钮系统显示样式，从而和win2k 很象。</p>
+<pre>&lt;Meta http-equiv="MSThemeCompatible" Content="Yes"&gt;</pre>
+<h4>N.1.2.10 IE6 (页面生成器)</h4>
+<p>页面生成器generator，说明用什么东西做的，类似商品出厂厂商。</p>
+<pre>&lt;Meta http-equiv="IE6" Content="Generator"&gt;</pre>
+<h4>N.1.2.11 Content-Script-Type (脚本相关)</h4>
+<p>这是近来W3C的规范，指明页面中脚本的类型。</p>
+<pre>&lt;Meta http-equiv="Content-Script-Type" Content="text/javascript"&gt;</pre>
+<h2>N.2 scheme (方案)</h2>
+<p>说明：scheme can be used when name is used to specify how the value of content should be interpreted.</p>
+<pre>&lt;meta scheme="ISBN" name="identifier" content="0-14-043205-1" /&gt;</pre>
+<h2>N.3 Link (链接)</h2>
+<h3>N.3.1 设置IE地址栏图标</h3>
+<pre>&lt;Link href="soim.ico" rel="Shortcut Icon"&gt;</pre>
+<h3>N.3.2 设置收藏夹图标</h3>
+<pre><span>&lt;link rel="Bookmark" href="favicon.ico"&gt; </span></pre>
+<h3>N.3.2 链接文件 </h3>
+<p>&lt;LINK&gt; 用来将目前文件与其它 URL 作连结，但不会有连结按钮，用於 &lt;HEAD&gt; 标记间， 格式如下：</p>
+<pre>&lt;link href="URL" rel="relationship"&gt; </pre>
+<h3>N.3.3 链接CSS</h3>
+<p>&lt;link rel=&quot;stylesheet&quot; href=&quot;CSS文件路径&quot; type=&quot;text/css&quot; / &gt;</p>
+<h3>N.3.4 Base (基链接)</h3>
+<p>插入网页基链接属性</p>
+<pre>&lt;Base href="http://www.xia8.net/" target="_blank"&gt;</pre>
+<p>你网页上的所有相对路径在链接时都将在前面加上“http://www.cn8cn.com/”。其中target="_blank"是链接文件在新的窗口中打开，你可以做其他设置。将“_blank”改为“_parent”是链接文件将在当前窗口的父级窗口中打开；改为“_self”链接文件在当前窗口（帧）中打开；改为“_top”链接文件全屏显示。</p>
+<p>&nbsp;</p>
+<script type="text/javascript" src="css.js"></script>
+</body>
+</html>

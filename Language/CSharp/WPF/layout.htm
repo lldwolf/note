@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+	<script type="text/javascript" src="../../../mylib/js/css.js"></script>
+	<title>C#.net使用手册</title>
+</head>
+<body>
+	<p id="title">
+		常用布局
+	</p>
+
+	<h1>StackPanel</h1>
+	<p>流式布局（横向或纵向）</p>
+	<table style="width:80%">
+		<tbody>
+			<tr>
+				<th>Property</th>
+				<th>Desc.</th>
+			</tr>
+			<tr>
+				<td>Orientation</td>
+				<td>控件排列方向</td>
+			</tr>
+			<tr>
+				<td>HorizontalAlignment</td>
+				<td>水平对齐方式</td>
+			</tr>
+		</tbody>
+	</table>
+	<h1>DockPanel</h1>
+	<p>DockPanel 内的元素会被附加上 "DockPanel.Dock" 属性，用于指定元素将被 Dock 到哪个位置。没有 DockPanel.Dock 属性的元素将被认为将占据剩余空间，该元素应放在所有被 Dock 的元素后面。</p>
+	<h1>Grid</h1>
+	<p>类似于HTML中的Table布局方式。Grid 中分为三个区：</p>
+	<ul>
+		<li>Grid.ColumnDefinitions: 内含 ColumnDefinition 元素，定义列</li>
+		<li>Grid.RowDefinitions: 内含 RowDefinition 元素，定义行</li>
+		<li>元素区，元素将被附加上 Grid.Row 和 Grid.Column 属性，用于指示元素所在的行列。</li>
+	</ul>
+	<h2>ColumnDefinition</h2>
+	<p>Width 属性用于设置列宽，可使用如下值</p>
+	<ul>
+		<li>80: 表示列宽为80px</li>
+		<li>Auto: 表示列宽将由控件的最大宽度决定</li>
+		<li>*: 表示将填满剩余空间</li>
+		<li>80*: 表示列宽为80，若父控件（如窗体）尺寸改变，将同步改变</li>
+	</ul>
+	<p>其它属性</p>
+	<table style="width:80%">
+		<tbody>
+			<tr>
+				<th>Property</th>
+				<th>Desc.</th>
+			</tr>
+			<tr>
+				<td>MinWidth</td>
+				<td>最小列宽，常在 Width 包含 “*” 的列中设定</td>
+			</tr>
+			<tr>
+				<td>MaxWidth</td>
+				<td>最大列宽，常在 Width 包含 “*” 的列中设定</td>
+			</tr>
+		</tbody>
+	</table>
+	<h2>Grid 布局示例</h2>
+	<pre class="code" data-type="xml" data-collapsed="true" title="查看代码">&lt;Grid&gt;
+    &lt;Grid.ColumnDefinitions&gt;
+        &lt;ColumnDefinition Width=&quot;Auto&quot; MinWidth=&quot;100&quot; MaxWidth=&quot;150&quot;&gt;&lt;/ColumnDefinition&gt;
+        &lt;ColumnDefinition Width=&quot;*&quot;&gt;&lt;/ColumnDefinition&gt;
+        &lt;ColumnDefinition Width=&quot;80&quot;&gt;&lt;/ColumnDefinition&gt;
+        &lt;ColumnDefinition Width=&quot;4&quot;&gt;&lt;/ColumnDefinition&gt;
+        &lt;ColumnDefinition Width=&quot;80&quot;&gt;&lt;/ColumnDefinition&gt;
+    &lt;/Grid.ColumnDefinitions&gt;
+    &lt;Grid.RowDefinitions&gt;
+        &lt;RowDefinition Height=&quot;25px&quot;&gt;&lt;/RowDefinition&gt;
+        &lt;RowDefinition Height=&quot;4&quot;&gt;&lt;/RowDefinition&gt;
+        &lt;RowDefinition Height=&quot;*&quot;&gt;&lt;/RowDefinition&gt;
+        &lt;RowDefinition Height=&quot;4&quot;&gt;&lt;/RowDefinition&gt;
+        &lt;RowDefinition Height=&quot;25&quot;&gt;&lt;/RowDefinition&gt;
+    &lt;/Grid.RowDefinitions&gt;
+    &lt;TextBlock Grid.Row=&quot;0&quot; Grid.Column=&quot;0&quot; VerticalAlignment=&quot;Center&quot;&gt;Approver:&lt;/TextBlock&gt;
+    &lt;TextBox Grid.Row=&quot;0&quot; Grid.Column=&quot;1&quot; Grid.ColumnSpan=&quot;4&quot; Height=&quot;20&quot; VerticalAlignment=&quot;Center&quot;&gt;&lt;/TextBox&gt;
+    &lt;TextBox Grid.Row=&quot;2&quot; Grid.Column=&quot;0&quot; Grid.ColumnSpan=&quot;5&quot; BorderBrush=&quot;Black&quot; AcceptsReturn=&quot;True&quot;&gt;&lt;/TextBox&gt;
+    &lt;Button Content=&quot;Submit&quot; Grid.Column=&quot;2&quot; Grid.Row=&quot;4&quot;&gt;&lt;/Button&gt;
+    &lt;Button Content=&quot;Cancel&quot; Grid.Column=&quot;4&quot; Grid.Row=&quot;4&quot;&gt;&lt;/Button&gt;
+&lt;/Grid&gt;</pre>
+	
+	<h1>Canvas</h1>
+	<p>类似于 WinForm 布局。控件会被附加上 Canvas.X 和 Canvas.Y 属性用于指定控件的位置。</p>
+	<h1>布局技巧</h1>
+	<h2>Splitter</h2>
+	<p>需基于 Grid 布局方式实现</p>
+	<pre class="code" data-type="xml" data-collapsed="true" title="查看代码">&lt;Window x:Class=&quot;WpfDemo.Layout.SplitterWindow&quot;
+        xmlns=&quot;http://schemas.microsoft.com/winfx/2006/xaml/presentation&quot;
+        xmlns:x=&quot;http://schemas.microsoft.com/winfx/2006/xaml&quot;
+        Title=&quot;SplitterWindow&quot; Height=&quot;400&quot; Width=&quot;616&quot;&gt;
+    &lt;Grid&gt;
+		&lt;Grid.ColumnDefinitions&gt;
+			&lt;ColumnDefinition Width=&quot;150&quot;&gt;&lt;/ColumnDefinition&gt;
+			&lt;ColumnDefinition Width=&quot;Auto&quot;&gt;&lt;/ColumnDefinition&gt;
+			&lt;ColumnDefinition&gt;&lt;/ColumnDefinition&gt;
+		&lt;/Grid.ColumnDefinitions&gt;
+		&lt;Grid.RowDefinitions&gt;
+			&lt;RowDefinition Height=&quot;25&quot;&gt;&lt;/RowDefinition&gt;
+			&lt;RowDefinition&gt;&lt;/RowDefinition&gt;
+		&lt;/Grid.RowDefinitions&gt;
+		&lt;TextBox Grid.ColumnSpan=&quot;3&quot;&gt;&lt;/TextBox&gt;
+		&lt;TextBox Grid.Row=&quot;1&quot;&gt;&lt;/TextBox&gt;
+		&lt;GridSplitter Grid.Row=&quot;1&quot;
+					  Grid.Column=&quot;1&quot;
+					  HorizontalAlignment=&quot;Center&quot;
+					  Width=&quot;5&quot;
+					  ShowsPreview=&quot;True&quot;
+					  VerticalAlignment=&quot;Stretch&quot;&gt;&lt;/GridSplitter&gt;
+		&lt;TextBox Grid.Row=&quot;1&quot;
+				 Grid.Column=&quot;2&quot;&gt;&lt;/TextBox&gt;
+	&lt;/Grid&gt;
+&lt;/Window&gt;</pre>
+
+</body>
+</html>

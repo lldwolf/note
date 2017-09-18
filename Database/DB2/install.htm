@@ -1,0 +1,31 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>安装</title>
+<script language="javascript" src="css.js"></script>
+</head>
+
+<body>
+<h1>第1章 安装</h1>
+<hr /> 
+<p>安装完后的几个默认值：</p>
+<ul>
+  <li>用户名：db2admin</li>
+  <li>服务：db2c_DB2</li>
+  <li>端口：50000</li>
+</ul>
+<p>工具目录：</p>
+<ul>
+  <li>数据库：TOOLSDB</li>
+  <li>模式：SYSTOOLS</li>
+</ul>
+<p>刚完装成后进入“命令行处理器”，做任何操作都提示“SQL1032N 未发出启动数据库管理器的命令。 SQLSTATE=57019。”，到“命令窗口”下运行命令</p>
+<pre>db2licm -l</pre>
+<p>发现证书过期了，Faint，修改系统日期后就可以了（即对应的后台服务【DB2-DB2-0】能够正常启动）。然后在【命令行处理器】中做各种数据库操作就都可以了，值得注意的是连接到某个数据库时，使用的命令不是use，而是</p>
+<pre>connect to 数据库名 </pre>
+<p>【控制中心】类似于数据库管理器</p>
+<p>&nbsp;</p>
+<script language="javascript" src="index.js"></script>
+</body>
+</html>

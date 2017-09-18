@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+	<script type="text/javascript" src="../../mylib/js/css.js"></script>
+	<title>Java 笔记</title>
+</head>
+
+<body>
+	<p id="title">文件系统</p>
+	<h1>文本文件</h1>
+	<h2>基本 I/O</h2>
+	<h3>读文本文件</h3>
+	<p>下例展示了如何读取一个文本文件内容</p>
+	<pre class="code" data-type="java" data-collapsed="true" title="文本文件读取示例代码">import java.io.BufferedReader;
+import java.io.FileReader;
+
+public class FileTest {
+	
+	public static void main(String[] args) throws Exception {
+		String configPath = "c:/temp/reg.txt";
+		BufferedReader reader = new BufferedReader(new FileReader(configPath));
+		String line;
+
+		while ((line = reader.readLine()) != null) {
+			System.out.println(line);
+		}
+	}
+
+}</pre>
+	<h1>Appache Commons IO</h1>
+	<h2>简介</h2>
+	<p>官方网址 <a href="http://commons.apache.org/proper/commons-io/">http://commons.apache.org/proper/commons-io/</a>.</p>
+	<p>常用功能示例</p>
+	<table style="width:95%">
+		<tr>
+			<th>功能</th>
+			<th>示例代码</th>
+		</tr>
+		<tr>
+			<td>取文件的扩展名</td>
+			<td>
+				<pre class="code" data-type="java">import org.apache.commons.io.FilenameUtils;
+
+String ext = FilenameUtils.getExtension(fileName);</pre>
+			</td>
+		</tr>
+	</table>
+	
+	</body>
+</html>

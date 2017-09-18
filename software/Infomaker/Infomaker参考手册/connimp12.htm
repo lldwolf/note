@@ -1,0 +1,222 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+Sybase Adaptive Server Anywhere</TITLE>
+</HEAD>
+<BODY>
+<A NAME="CCJECADD"></A><h1>Sybase Adaptive Server Anywhere</h1>
+<A NAME="TI270"></A><p>This section describes how to prepare and define a Sybase Adaptive Server Anywhere data
+source in order to connect to it using the Adaptive Server Anywhere ODBC driver. </p>
+<A NAME="TI271"></A><p>Adaptive Server Anywhere includes two database servers--a
+personal database server and a network database server. For information
+about using Sybase Adaptive Server Anywhere, see the Adaptive Server Anywhere documentation.</p>
+<A NAME="TI272"></A><h2>Supported versions for Adaptive Server Anywhere</h2>
+<A NAME="TI273"></A><p>The Adaptive Server Anywhere ODBC driver supports connection to local and remote
+databases created with the following:<A NAME="TI274"></A>
+<ul>
+<li class=fi>InfoMaker running on your
+computer</li>
+<li class=ds>Adaptive Server Anywhere Version 7.x</li>
+<li class=ds>Adaptive Server Anywhere Version 6.x</li>
+<li class=ds>SQL Anywhere Version 5.x
+</li>
+</ul>
+</p>
+<A NAME="TI275"></A><h2>Basic software components for Adaptive Server Anywhere</h2>
+<A NAME="TI276"></A><p>The following diagram show the basic software components required
+to connect to an Adaptive Server Anywhere data source in InfoMaker.</p>
+<br><img src="images/cnw2ANY.gif">
+<A NAME="CCJDBJBJ"></A><h2>Preparing to use the Adaptive Server Anywhere data source</h2>
+<A NAME="TI277"></A><p>Before you define and connect to an Adaptive Server Anywhere data source
+in InfoMaker, follow these steps to prepare the data source.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To prepare an Adaptive Server Anywhere data source:</p>
+<ol><li class=fi>
+Make sure the database file for the Adaptive Server Anywhere data
+source already exists. You can create a new database by:<A NAME="TI278"></A>
+<ul>
+<li class=fi><A NAME="TI279"></A>
+<ul>
+<li class=fi>Launching the Create ASA Database utility. This
+utility can be accessed from the Utilities folder for the ODBC interface
+in the Database profile or Database painter when InfoMaker is running on
+your computer.<br>
+This method creates a local Adaptive Server Anywhere database on your computer,
+and also creates the data source definition and database profile
+for this connection. (For instructions, see the <i></i>
+<i>InfoMaker
+User's Guide</i>
+.)<br></li>
+<li class=ds>Creating the database some other way, such as with InfoMaker running
+on another user's computer or by using Adaptive Server Anywhere outside InfoMaker.
+(For instructions, see the Adaptive Server Anywhere documentation.) 
+</li>
+</ul>
+
+</li>
+</ul>
+
+                      <br><br></li>
+<li class=ds>
+Make sure you have the LOG file associated with
+the Adaptive Server Anywhere database so that you can fully recover the database
+if it becomes corrupted.<br><br>
+If the LOG file for the Adaptive Server Anywhere database does not exist, the Adaptive Server Anywhere database
+engine creates it. However, if you are copying or moving a database
+from another computer or directory, you should copy or move the
+LOG file with it.<br><br></li></ol>
+<br><A NAME="CCJEAGJH"></A><h2>Defining the Adaptive Server Anywhere data source</h2>
+<A NAME="TI280"></A><p>When you create a local Adaptive Server Anywhere database, InfoMaker automatically
+creates the data source definition and database profile for you. </p>
+<A NAME="TI281"></A><p>Therefore, you need only use the following procedure to define
+an Adaptive Server Anywhere data source when you want to access an Adaptive Server Anywhere database
+not created using InfoMaker on your computer. </p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To define an Adaptive Server Anywhere data source for the Adaptive Server Anywhere driver:</p>
+<ol><li class=fi>
+Launch the ODBC Data Source Administrator
+utility. From the User DSN tab, click the Add button. <br><br>
+The Create New Data Source dialog box displays. <br><br></li>
+<li class=ds>
+Select the Adaptive Server Anywhere driver and click Finish.<br><br>
+The ODBC Configuration for Adaptive Server Anywhere dialog box displays:<br><br><br><img src="images/cn2odbc.gif"><br>
+</li>
+<li class=ds>
+You must supply the following values:<A NAME="TI282"></A>
+<ul>
+<li class=fi>Data source name on the ODBC tab</li>
+<li class=ds>User ID and password on the Login tab</li>
+<li class=ds>Database file on the Database tab
+</li>
+</ul>
+
+                      <br><br>
+Use the Help button to get information about boxes in the
+dialog box. <br><br><p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Using the Browse button</span> <A NAME="TI283"></A>When you use the Browse button to supply the Database File
+name (for example, SALES.DB), this name also displays without the
+extension in both the Data Source Name and Database Name boxes.
+This may change values that you previously supplied in these boxes. </p>
+<A NAME="TI284"></A>If you want to specify a different name for the data source
+or database, you can edit one or both of these boxes <i>after</i>
+ using
+the Browse button.</p>
+</li>
+<li class=ds>
+(Optional) To select an ODBC translator to translate
+your data from one character set to another, click the Select button
+on the ODBC tab.<br><br>
+See <A HREF="connimp10.htm#CCJDDEEA">"Selecting an ODBC translator"</A>.<br><br></li>
+<li class=ds>
+Click OK to save the data source definition.<br><br></li></ol>
+<br><A NAME="TI285"></A><h4>Specifying a Start Line value</h4>
+<A NAME="TI286"></A><p>When the Adaptive Server Anywhere ODBC driver cannot find a running personal
+or network database server using the PATH variable and Database Name
+setting, it uses the commands specified in the Start Line field
+to start the personal or network database servers. </p>
+<A NAME="TI287"></A><p>Specify one of the following commands in the Start Line field
+on the Database tab.</p>
+<A NAME="TI288"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI289"></A>Specify this command</th>
+<th align="left" valign=bottom><A NAME="TI290"></A>To</th>
+</tr>
+<tr><td valign=top><A NAME="TI291"></A>dbeng7.exe</td>
+<td valign=top><A NAME="TI292"></A>Start the personal database server and
+the database specified in the Database File box</td>
+</tr>
+<tr><td valign=top><A NAME="TI293"></A>dbsrv7.exe</td>
+<td valign=top><A NAME="TI294"></A>Start the network database server and
+the database specified in the Database File box</td>
+</tr>
+</table>
+<A NAME="TI295"></A><p>For information on completing the ODBC Configuration For Adaptive Server Anywhere dialog
+box, see the Adaptive Server Anywhere documentation. </p>
+<A NAME="TI296"></A><h2>Support for Transact-SQL special timestamp columns</h2>
+<A NAME="TI297"></A><p>When you work with an Adaptive Server Anywhere table in the Database or Data
+Pipeline painter, the default behavior is to treat any column named <i>timestamp</i>
+ as
+an Adaptive Server Anywhere Transact-SQL special timestamp column.</p>
+<A NAME="TI298"></A><h4>Creating special timestamp columns</h4>
+<A NAME="TI299"></A><p>You can create a Transact-SQL special timestamp column in
+an Adaptive Server Anywhere table.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To create a Transact-SQL special timestamp column
+in an Adaptive Server Anywhere table in InfoMaker:</p>
+<ol><li class=fi>
+Give the name <i>timestamp</i>
+ to
+any column having a timestamp data type that you want treated as
+a Transact-SQL special timestamp column. Do this in one of the following
+ways:<A NAME="TI300"></A>
+<ul>
+<li class=fi><b>In the
+Database or Data Pipeline painter</b>   Select <i>timestamp</i>
+ as the column name.
+(For instructions, see the <i>InfoMaker User's Guide</i>
+.)</li>
+<li class=ds><b>In a SQL CREATE TABLE statement</b>   Follow the <A HREF="connimp12.htm#CCJDBHFJ">"CREATE TABLE example"</A>.
+</li>
+</ul>
+
+                      <br><br></li>
+<li class=ds>
+Specify <i>timestamp</i>
+ as the
+default value for the column. Do this in one of the following ways:<A NAME="TI301"></A>
+<ul>
+<li class=fi><b>In the Database or
+Data Pipeline painter</b>   Select <i>timestamp</i>
+ as the default value
+for the column. (For instructions, see the <i>InfoMaker User's
+Guide</i>
+.)</li>
+<li class=ds><b>In a SQL CREATE TABLE statement</b>   Follow the <A HREF="connimp12.htm#CCJDBHFJ">"CREATE TABLE example"</A>.
+</li>
+</ul>
+
+                      <br><br></li>
+<li class=ds>
+If you are working with the table in the Data
+Pipeline painter, select the initial value <i>exclude</i>
+ for
+the special timestamp column from the dropdown listbox in the Initial
+Value column of the workspace.<br><br>
+You must select <i>exclude</i>
+ as the initial
+value to exclude the special timestamp column from INSERT or UPDATE
+statements.<br><br>
+For instructions, see the <i>InfoMaker
+User's Guide</i>
+.<br><br></li></ol>
+<br><A NAME="CCJDBHFJ"></A><h4>CREATE TABLE example</h4>
+<p><b>CREATE TABLE example</b>   The following CREATE TABLE statement defines an Adaptive Server Anywhere table
+named <i>timesheet</i>
+ containing three columns: employee_ID
+(integer data type), hours (decimal data type), and timestamp (timestamp
+data type and timestamp default value):</p>
+<A NAME="TI302"></A><p><pre>CREATE TABLE timesheet (</pre>
+<pre>   employee_ID INTEGER,</pre>
+<pre>   hours DECIMAL,</pre>
+<pre>   <i>timestamp TIMESTAMP default timestamp</i>  )</pre>
+</p>
+<A NAME="TI303"></A><h4>Not using special timestamp columns</h4>
+<A NAME="TI304"></A><p>If you want to change the default behavior, you can specify
+that InfoMaker <i>not</i>
+ treat Adaptive Server Anywhere columns
+named <i>timestamp</i>
+ as Transact-SQL special timestamp
+columns. </p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To specify that InfoMaker <i>not</i>
+ treat
+columns named <i>timestamp</i>
+ as a Transact-SQL special
+timestamp column:</p>
+<ol><li class=fi>
+Edit the Sybase Adaptive Server Anywhere section of the
+PBODB<i>n</i>
+0 initialization file to change the value
+of SQLSrvrTSName from <pre>'Yes'</pre>
+ to <pre>'No'</pre>
+.<br><br>
+See <A HREF="connimp47.htm#BJBBHCIE">Appendix A, "Adding
+Functions to the PBODB80 Initialization File"</A>.<br><br></li></ol>
+<br><A NAME="TI305"></A><h2>What to do next</h2>
+<A NAME="TI306"></A><p>For instructions on connecting to the ODBC
+data source, see <A HREF="connimp32.htm#CCJBAGDB">"Connecting to a database"</A>.</p>
+

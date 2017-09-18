@@ -1,0 +1,168 @@
+IMG {
+	BORDER-TOP-WIDTH: 0px; PADDING-RIGHT: 0px; PADDING-LEFT: 0px; BORDER-LEFT-WIDTH: 0px; BORDER-BOTTOM-WIDTH: 0px; PADDING-BOTTOM: 0px; MARGIN: 0px auto; PADDING-TOP: 0px; BORDER-RIGHT-WIDTH: 0px
+}
+FORM {
+	BORDER-TOP-WIDTH: 0px; PADDING-RIGHT: 0px; PADDING-LEFT: 0px; BORDER-LEFT-WIDTH: 0px; BORDER-BOTTOM-WIDTH: 0px; PADDING-BOTTOM: 0px; MARGIN: 0px auto; PADDING-TOP: 0px; BORDER-RIGHT-WIDTH: 0px
+}
+A {
+	BORDER-TOP-WIDTH: 0px; PADDING-RIGHT: 0px; PADDING-LEFT: 0px; BORDER-LEFT-WIDTH: 0px; BORDER-BOTTOM-WIDTH: 0px; PADDING-BOTTOM: 0px; MARGIN: 0px auto; PADDING-TOP: 0px; BORDER-RIGHT-WIDTH: 0px
+}
+DIV {
+	BORDER-TOP-WIDTH: 0px; PADDING-RIGHT: 0px; PADDING-LEFT: 0px; BORDER-LEFT-WIDTH: 0px; BORDER-BOTTOM-WIDTH: 0px; PADDING-BOTTOM: 0px; MARGIN: 0px auto; PADDING-TOP: 0px; BORDER-RIGHT-WIDTH: 0px
+}
+H6 {
+	BORDER-TOP-WIDTH: 0px; PADDING-RIGHT: 0px; PADDING-LEFT: 0px; BORDER-LEFT-WIDTH: 0px; BORDER-BOTTOM-WIDTH: 0px; PADDING-BOTTOM: 0px; MARGIN: 0px auto; PADDING-TOP: 0px; BORDER-RIGHT-WIDTH: 0px
+}
+BODY {
+	PADDING-RIGHT: 0px; PADDING-LEFT: 0px; FONT-SIZE: 12px; BACKGROUND: #fff; PADDING-BOTTOM: 0px; MARGIN: 0px auto; PADDING-TOP: 0px; FONT-FAMILY: arial, verdana, tahoma, '宋体', sans-serif
+}
+A {
+	COLOR: #03b
+}
+A:hover {
+	COLOR: #fff; BACKGROUND-COLOR: #ff6722; TEXT-DECORATION: none
+}
+.orange A {
+	COLOR: #ff6722
+}
+.orange A:hover {
+	COLOR: #fff
+}
+INPUT {
+	FONT-SIZE: 12px
+}
+.orange {
+	COLOR: #ff6722
+}
+.co_999 {
+	COLOR: #999
+}
+.co_666 {
+	COLOR: #666
+}
+.co_000 {
+	COLOR: #000
+}
+.si14 {
+	FONT-SIZE: 14px
+}
+.weight {
+	FONT-WEIGHT: bold
+}
+.h18 {
+	FONT-WEIGHT: bold; FONT-SIZE: 14px; FONT-FAMILY: "宋体", sans-serif
+}
+.btn {
+	PADDING-TOP: 3px; HEIGHT: 24px
+}
+.btn4 {
+	FONT-SIZE: 12px; PADDING-TOP: 2px; HEIGHT: 21px
+}
+.hidden {
+	DISPLAY: none
+}
+.lihe18 {
+	LINE-HEIGHT: 18px
+}
+.lihe22 {
+	LINE-HEIGHT: 22px
+}
+.lihe25 {
+	LINE-HEIGHT: 25px
+}
+.topdh {
+	PADDING-RIGHT: 10px; PADDING-LEFT: 10px; PADDING-BOTTOM: 1px; OVERFLOW: hidden; LINE-HEIGHT: 20px; PADDING-TOP: 2px; BORDER-BOTTOM: #ddd 1px solid; BACKGROUND-COLOR: #f4f4f4
+}
+.clear {
+	CLEAR: both
+}
+.space6 {
+	PADDING-RIGHT: 6px; PADDING-LEFT: 6px; PADDING-BOTTOM: 6px; PADDING-TOP: 6px
+}
+.space10 {
+	PADDING-RIGHT: 6px; PADDING-LEFT: 6px; PADDING-BOTTOM: 10px; PADDING-TOP: 15px
+}
+.fleft {
+	FLOAT: left
+}
+.fright {
+	FLOAT: right
+}
+.footer {
+	CLEAR: both; PADDING-BOTTOM: 20px; MARGIN: 12px 0px; COLOR: #999; TEXT-ALIGN: center
+}
+.lk {
+	MARGIN: 6px 0px
+}
+.lk A {
+	COLOR: #999; TEXT-DECORATION: none
+}
+.ti {
+	PADDING-RIGHT: 0px; PADDING-LEFT: 6px; FONT-WEIGHT: bold; FONT-SIZE: 14px; BACKGROUND: #e5f3ff; PADDING-BOTTOM: 2px; BORDER-LEFT: #5e94ef 4px solid; PADDING-TOP: 7px
+}
+.ti1 {
+	PADDING-RIGHT: 0px; PADDING-LEFT: 6px; FONT-WEIGHT: bold; FONT-SIZE: 14px; BACKGROUND: #eee; PADDING-BOTTOM: 2px; BORDER-LEFT: #999 5px solid; PADDING-TOP: 7px
+}
+.con {
+	BORDER-RIGHT: #ddd 1px solid; PADDING-RIGHT: 5px; BORDER-TOP: #ddd 1px solid; PADDING-LEFT: 5px; PADDING-BOTTOM: 5px; BORDER-LEFT: #ddd 1px solid; PADDING-TOP: 5px; BORDER-BOTTOM: #ddd 1px solid
+}
+.point {
+	PADDING-RIGHT: 5px; PADDING-LEFT: 12px; BACKGROUND: url(http://htm.jobui.com/images_www/point.gif) no-repeat 0px 5px; PADDING-BOTTOM: 4px; COLOR: #999; PADDING-TOP: 5px
+}
+.point_h {
+	PADDING-RIGHT: 5px; PADDING-LEFT: 12px; BACKGROUND: url(http://htm.jobui.com/images_www/point.gif) no-repeat 0px 5px; PADDING-BOTTOM: 2px; COLOR: #999; PADDING-TOP: 4px
+}
+.point_y {
+	PADDING-RIGHT: 5px; PADDING-LEFT: 0px; PADDING-BOTTOM: 2px; COLOR: #999; PADDING-TOP: 3px
+}
+.logo_top {
+	PADDING-RIGHT: 0px; PADDING-LEFT: 20px; FLOAT: left; PADDING-BOTTOM: 18px; MARGIN: 0px auto; PADDING-TOP: 22px
+}
+.win_top {
+	FLOAT: left; BACKGROUND-COLOR: #c0e0ff
+}
+.win_title {
+	PADDING-RIGHT: 10px; PADDING-LEFT: 10px; FONT-WEIGHT: bold; FONT-SIZE: 14px; FLOAT: left; PADDING-BOTTOM: 8px; COLOR: #03b; PADDING-TOP: 10px
+}
+.win_con {
+	CLEAR: both; PADDING-RIGHT: 10px; PADDING-LEFT: 10px; BACKGROUND: #e5f3ff; PADDING-BOTTOM: 10px; LINE-HEIGHT: 18px; PADDING-TOP: 10px; FONT-FAMILY: arial, verdana, tahoma, '宋体', sans-serif
+}
+.close {
+	FLOAT: right; FONT-FAMILY: arial, verdana, tahoma, '宋体', sans-serif
+}
+.close A {
+	COLOR: #000; TEXT-DECORATION: none
+}
+.close A:hover {
+	COLOR: #f00; BACKGROUND-COLOR: transparent; TEXT-DECORATION: none
+}
+.win_wait {
+	CLEAR: both; PADDING-RIGHT: 10px; PADDING-LEFT: 10px; PADDING-BOTTOM: 10px; COLOR: #fff; PADDING-TOP: 10px; BACKGROUND-COLOR: #c00; TEXT-ALIGN: center
+}
+.win_con A {
+	COLOR: #03b
+}
+.win_con A:hover {
+	COLOR: #fff; BACKGROUND-COLOR: #ff6722; TEXT-DECORATION: none
+}
+.win_con .btn4 {
+	FONT-SIZE: 12px; PADDING-TOP: 2px; HEIGHT: 21px
+}
+.updated {
+	BORDER-RIGHT: #f4b907 1px solid; PADDING-RIGHT: 0px; BORDER-TOP: #f4b907 1px solid; PADDING-LEFT: 30px; FONT-SIZE: 14px; BACKGROUND: url(http://htm.jobui.com/images_www/t_ok.gif) #ffc no-repeat 10px 10px; PADDING-BOTTOM: 10px; BORDER-LEFT: #f4b907 1px solid; COLOR: #b34502; PADDING-TOP: 10px; BORDER-BOTTOM: #f4b907 1px solid
+}
+.ok {
+	BORDER-RIGHT: #00be00 1px solid; PADDING-RIGHT: 0px; BORDER-TOP: #00be00 1px solid; PADDING-LEFT: 30px; FONT-SIZE: 14px; BACKGROUND: url(http://htm.jobui.com/images_www/r_ok.gif) #e6ffe6 no-repeat 10px 10px; PADDING-BOTTOM: 10px; BORDER-LEFT: #00be00 1px solid; COLOR: green; PADDING-TOP: 10px; BORDER-BOTTOM: #00be00 1px solid
+}
+.blue {
+	PADDING-RIGHT: 4px; PADDING-LEFT: 4px; BACKGROUND: #ecf6ff; PADDING-BOTTOM: 4px; PADDING-TOP: 4px
+}
+.bluecon {
+	BORDER-RIGHT: #9fcaf3 1px solid; BORDER-TOP: #9fcaf3 1px solid; BACKGROUND: #fff; BORDER-LEFT: #9fcaf3 1px solid; BORDER-BOTTOM: #9fcaf3 1px solid
+}
+H6 {
+	PADDING-RIGHT: 20px; PADDING-LEFT: 0px; FONT-SIZE: 14px; PADDING-BOTTOM: 3px; PADDING-TOP: 4px
+}
+TEXTAREA {
+	FONT-SIZE: 12px
+}

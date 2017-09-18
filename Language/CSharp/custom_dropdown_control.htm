@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+	<title>自定义下拉组件</title>
+	<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+	<p id="title">
+		自定义下拉组件
+	</p>
+
+	<h1>序 </h1>
+	<p>之所以将自定义下拉式组件单独拿出来讲述，实在是因为下拉组件用得实在是太多了，也因此有了相当的扩充需求。自带的下拉组件显然不能满足一些常用的要求，例如，表格式下拉框、树形下拉框，所有这些，都需要我们自己去实现。</p>
+	<h1>起步</h1>
+	<h2>树形下拉框</h2>
+	<p>简单起见，我通常都是从ComboBox继承，然后使用两个控件ToolStripControlHost和ToolStripDropDown，它们都是属于System.Windows.Forms命名空间。其中ToolStripControlHost控件用于包含实际下拉显示的控件，而ToolStripDropDown则用于表示用户点击下拉按钮时，用户可以从列表中选择多个项的控件（也就是说，可以做到下拉时有N个树让你选，呵呵，似乎一般没这个必要了）。下面我们以自定义一个树形的下拉框为例说明实现方法：</p>
+	<pre class="code" data-type="csharp">public class ComboBoxTreeView : ComboBox
+{
+	private const int WM_LBUTTONDOWN = 0x201, WM_LBUTTONDBLCLK = 0x203;
+	ToolStripControlHost treeViewHost;
+	ToolStripDropDown dropDown;
+	public ComboBoxTreeView()
+	{
+		TreeView treeView = new TreeView();
+		treeView.AfterSelect += new TreeViewEventHandler(treeView_AfterSelect);
+		treeView.BorderStyle = BorderStyle.None;
+
+		treeViewHost = new ToolStripControlHost(treeView);
+		dropDown = new ToolStripDropDown();
+		dropDown.Width = this.Width;
+		dropDown.Items.Add(treeViewHost);
+	}
+
+	private void treeView_AfterSelect(object sender, TreeViewEventArgs e)
+	{
+		this.Text = TreeView.SelectedNode.Text;
+		dropDown.Close();
+	}
+	public TreeView TreeView
+	{
+		get { return treeViewHost.Control as TreeView; }
+	}
+	private void ShowDropDown()
+	{
+		if (dropDown != null)
+		{
+			treeViewHost.Size = new Size(DropDownWidth - 2, DropDownHeight);
+			dropDown.Show(this, 0, this.Height);
+		}
+	}
+	protected override void WndProc(ref Message m)
+	{
+		if (m.Msg == WM_LBUTTONDBLCLK || m.Msg == WM_LBUTTONDOWN)
+		{
+			ShowDropDown();
+			return;
+		}
+		base.WndProc(ref m);
+	}
+	protected override void Dispose(bool disposing)
+	{
+		if (disposing)
+		{
+			if (dropDown != null)
+			{
+				dropDown.Dispose();
+				dropDown = null;
+			}
+		}
+		base.Dispose(disposing);
+	}
+}</pre>
+	<p>还有一个就是我重载了WndProc消息处理函数，重新处理了鼠标左键单击和双击事件。并且开放了TreeView属性</p>
+	<p>我使用如下代码添加控件，如下所示：</p>
+	<pre class="code" data-type="csharp">TreeNode root = new TreeNode(&quot;全部&quot;, 0, 0);
+root.Nodes.Add(&quot;CPU&quot;);
+root.Nodes.Add(&quot;内存&quot;);
+root.Nodes.Add(&quot;硬盘&quot;);
+root.Nodes.Add(&quot;显卡&quot;);
+ComboBoxTreeView cmb = new ComboBoxTreeView();
+cmb.Parent = this;
+this.Controls.Add(cmb);
+cmb.Location = new Point(20, 20);
+cmb.Width = 100;
+cmb.TreeView.Nodes.Add(root);</pre>
+	<p>显示效果如下图所示：</p>
+	<p>
+		<img src="images/treeview_combobox.jpg" width="120" height="148"></p>
+	<h2>DropDownList风格</h2>
+	<p>上例的代码仅适用于DropDownStyle为DropDown的情况，对于DropDownList就玩不转了，无论你选啥，都不会显示在文本框中。这是因为对于DropDownList风格，如果显示内容不在其Items列表中，则不显示，因此，需要对其做一下特殊处理，更改treeView_AfterSelect如下所示：</p>
+	<pre class="code" data-type="csharp">private void treeView_AfterSelect(object sender, TreeViewEventArgs e)
+{
+	string display_text = TreeView.SelectedNode.Text;
+	this.Items.Clear();
+	this.Items.Add(display_text);
+	this.Text = display_text;
+	dropDown.Close();
+}</pre>
+	<h2>示例程序</h2>
+	<p><a href="demo/TreeViewComboBox.zip">树形下拉框示例程序</a></p>
+	<h1>表格下拉框</h1>
+	<p>在此使用一个DataGridView控件来显示下拉的内容，其效果如下图所示：</p>
+	<p>
+		<img src="images/datagridview_dropdown.jpg" width="218" height="142"></p>
+	<h2>控件源码</h2>
+	<pre class="code" data-type="csharp">/// &lt;summary&gt;
+/// 下拉方式为DataGridView的ComboBox
+/// &lt;/summary&gt;
+public partial class DataGridViewComboBox : ComboBox
+{
+	private const int WM_LBUTTONDOWN = 0x201, WM_LBUTTONDBLCLK = 0x203;
+	private ToolStripControlHost _DataGridViewHost;
+	private ToolStripDropDown _DropDown;
+
+	private int _IdColumn;
+	/// &lt;summary&gt;
+	/// 从0开始的指示ID的列号
+	/// &lt;/summary&gt;
+	public int IdColumn
+	{
+		get { return this._IdColumn; }
+		set { this._IdColumn = value; }
+	}
+
+	/// &lt;summary&gt;
+	/// 从0开始的指示显示值的列号
+	/// &lt;/summary&gt;
+	public int DisplayColumn = 0;
+
+	private object _RealValue;
+	/// &lt;summary&gt;
+	/// 选中值
+	/// &lt;/summary&gt;
+	public object RealValue
+	{
+		get { return this._RealValue; }
+	}
+
+	private DataTable _DataSource;
+	/// &lt;summary&gt;
+	/// 数据源，为要显示的数据表
+	/// &lt;/summary&gt;
+	public new DataTable DataSource
+	{
+		get
+		{
+			return _DataSource;
+		}
+
+		set
+		{
+			_DataSource = value;
+			this.SetDataGridViewSource(this.DataGridView, value);
+		}
+	}
+
+	public DataGridViewComboBox()
+	{
+		this.InitializeDataGridView();
+	}
+
+	/// &lt;summary&gt;
+	/// 用于显示的DataGridView控件
+	/// &lt;/summary&gt;
+	public DataGridView DataGridView
+	{
+		get
+		{
+			return this._DataGridViewHost.Control as DataGridView;
+		}
+	}
+
+	/// &lt;summary&gt;
+	/// DataGridView控件的宽度
+	/// &lt;/summary&gt;
+	public int DataGridViewWidth
+	{
+		get
+		{
+			return this._DataGridViewHost.Width;
+		}
+
+		set
+		{
+			this._DataGridViewHost.Width = value;
+		}
+	}
+
+	/// &lt;summary&gt;
+	/// DataGridView控件的高度
+	/// &lt;/summary&gt;
+	public int DataGridViewHeight
+	{
+		get
+		{
+			return this._DataGridViewHost.Height;
+		}
+		set
+		{
+			this._DataGridViewHost.Height = value;
+		}
+	}
+
+	private void InitializeDataGridView()
+	{
+		DataGridView view = new DataGridView();
+		view.BorderStyle = BorderStyle.None;
+		view.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+		view.AutoGenerateColumns = true;
+		view.RowHeadersVisible = false;
+		view.AllowUserToAddRows = false;
+		view.AllowUserToDeleteRows = false;
+		view.AllowUserToResizeColumns = true;
+		view.AllowUserToResizeRows = false;
+		view.AllowUserToOrderColumns = false;
+		view.ReadOnly = true;
+		view.CellMouseClick += new DataGridViewCellMouseEventHandler(this.DataGridView_CellMouseClick);
+		//view.DataSourceChanged += new EventHandler(this.DataGridView_DataSourceChanged);
+
+		this._DataGridViewHost = new ToolStripControlHost(view);
+		this._DataGridViewHost.AutoSize = false;
+		this._DataGridViewHost.Width = this.Width;
+		this._DataGridViewHost.Height = 150;
+		this._DropDown = new ToolStripDropDown();
+		this._DropDown.Items.Add(this._DataGridViewHost);
+	}
+
+	private void DataGridView_CellMouseClick(Object sender, DataGridViewCellMouseEventArgs e)
+	{
+		DataGridView grid = this.DataGridView;
+		this._RealValue = grid[this.IdColumn, e.RowIndex].Value;
+		this.Items.Clear();
+		this.Items.Add(grid[this.DisplayColumn, grid.CurrentCell.RowIndex].Value);
+		this.Text = (string)grid[this.DisplayColumn, grid.CurrentCell.RowIndex].Value;
+		this._DropDown.Close();
+	}
+
+	private void DataGridView_DataSourceChanged(object sender, EventArgs e)
+	{
+		DataGridView grid = sender as DataGridView;
+		DataTable tb_data = grid.DataSource as DataTable;
+		this.SetDataGridViewSource(grid, tb_data);
+	}
+
+
+	private void ShowDropDown()
+	{
+		if (this._DropDown != null)
+		{
+			//this._DataGridViewHost.Size = new Size(this._DataGridViewHost.Width, this._DataGridViewHost.Height);
+			this._DropDown.Show(this, 0, this.Height);
+		}
+	}
+
+	protected override void WndProc(ref Message m)
+	{
+		if (m.Msg == WM_LBUTTONDBLCLK || m.Msg == WM_LBUTTONDOWN)
+		{
+			ShowDropDown();
+			return;
+		}
+		base.WndProc(ref m);
+	}
+
+	protected override void Dispose(bool disposing)
+	{
+		if (disposing)
+		{
+			if (this._DropDown != null)
+			{
+				this._DropDown.Dispose();
+				this._DropDown = null;
+			}
+		}
+		base.Dispose(disposing);
+	}
+
+	private void SetDataGridViewSource(DataGridView grid, DataTable table)
+	{
+		grid.Columns.Clear();
+
+		for (int iCol = 0; iCol &lt; table.Columns.Count; iCol++)
+		{
+			DataGridViewTextBoxColumn col = new DataGridViewTextBoxColumn();
+			col.HeaderText = table.Columns[iCol].ColumnName;
+			grid.Columns.Add(col);
+		}
+
+		for (int iRow = 0; iRow &lt; table.Rows.Count; iRow++)
+		{
+			object[] values = new object[table.Columns.Count];
+			for (int iCol = 0; iCol &lt; table.Columns.Count; iCol++)
+				values[iCol] = table.Rows[iRow][iCol];
+			grid.Rows.Add(values);
+		}
+	}
+
+}</pre>
+	<p>对于使用DataGridView作为下拉框，有如下几个注意点：</p>
+	<ol>
+		<li>直接对DataGridView.DataSource赋值已经不起作用，不能显示表格，需要手工生成。不过一般用来下拉的内容也不会太长。</li>
+	</ol>
+	<h2>使用方法</h2>
+	<pre class="code" data-type="csharp">//创建数据源
+DataTable tb_data = new DataTable();
+tb_data.Columns.Add(&quot;名称&quot;);
+tb_data.Columns.Add(&quot;数量&quot;);
+
+tb_data.Rows.Add(new string[] {&quot;硬盘&quot;, &quot;100&quot; });
+tb_data.Rows.Add(new string[] { &quot;CPU&quot;, &quot;70&quot; });
+tb_data.Rows.Add(new string[] { &quot;光驱&quot;, &quot;50&quot; });
+tb_data.Rows.Add(new string[] { &quot;主板&quot;, &quot;50&quot; });
+tb_data.Rows.Add(new string[] { &quot;显示器&quot;, &quot;60&quot; });
+tb_data.Rows.Add(new string[] { &quot;机箱&quot;, &quot;60&quot; });
+
+
+DataGridViewComboBox cmb = new DataGridViewComboBox();
+cmb.Parent = this;
+this.Controls.Add(cmb);
+cmb.Location = new Point(10, 10);
+cmb.Width = 100;
+cmb.DataSource = tb_data;		//设定数据源
+cmb.DataGridView.ColumnHeadersVisible = false;	//不显示标题行
+cmb.DataGridView.Columns[0].Width = 90;
+cmb.DataGridView.Columns[1].Width = 90;
+cmb.DataGridView.Width = 200;
+cmb.DataGridView.Height = 100;
+cmb.DataGridView.GridColor = Color.White;		//不显示表格线
+cmb.DisplayColumn = 0;		//设定第1列为显示列（选中后的值显示在文本框中）
+cmb.IdColumn = 1;			//设定第2列为值列（存放在RealValue中）
+cmb.SelectedIndexChanged += new EventHandler(Cmb_SelectedIndexChanged);		//选中后的处理方工式
+
+this.textBox1 = new TextBox();
+this.textBox1.Parent = this;
+this.Controls.Add(this.textBox1);
+this.textBox1.Location = new Point(10, 50);</pre>
+	<h2>示例下载 </h2>
+	<p><a href="demo/DataGridViewDropDown.zip">表格下拉框源程序</a></p>
+	<p>&nbsp;</p>
+
+</body>
+</html>

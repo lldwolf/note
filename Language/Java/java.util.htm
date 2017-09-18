@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+<title>java.util 包</title>
+</head>
+
+<body>
+<p id="title">java.util 包 使用指南</p>
+<p>N.1 Collection<br>
+  N.2 Comparator <br>
+  N.3 Enumeration <br>
+  N.4 EventListener <br>
+  N.5 Iterator <br>
+  N.6 List <br>
+  N.7 ListIterator <br>
+  N.8 Map <br>
+  N.9 Map.Entry <br>
+  N.10 Observer <br>
+  N.11 RandomAccess <br>
+  N.12 Set <br>
+  N.13 SortedMap <br>
+  N.14 SortedSet <br>
+  N.15 Classes <br>
+  N.16 AbstractCollection <br>
+  N.17 AbstractList <br>
+  N.18 AbstractMap <br>
+  N.19 AbstractSequentialList <br>
+  N.20 AbstractSet <br>
+  N.21 ArrayList <br>
+  N.22 Arrays <br>
+  N.23 BitSet <br>
+  N.24 Calendar <br>
+  N.25 Collections <br>
+  N.26 Currency <br>
+  N.27 Date <br>
+  N.28 Dictionary <br>
+  N.29 EventListenerProxy <br>
+  N.30 EventObject <br>
+  N.31 GregorianCalendar <br>
+  N.32 HashMap <br>
+  N.33 HashSet <br>
+  N.34 Hashtable <br>
+  N.35 IdentityHashMap <br>
+  N.36 LinkedHashMap <br>
+  N.37 LinkedHashSet <br>
+  N.38 LinkedList <br>
+  N.39 ListResourceBundle <br>
+  N.40 Locale <br>
+  N.41 Observable <br>
+  N.42 Properties <br>
+  N.43 PropertyPermission <br>
+  N.44 PropertyResourceBundle <br>
+N.45 Random </p>
+<h2>  <a href="#ResourceBundle">N.46 ResourceBundle </a></h2>
+<p>  N.47 SimpleTimeZone <br>
+  N.48 Stack <br>
+  N.49 StringTokenizer <br>
+  N.50 Timer <br>
+  N.51 TimerTask <br>
+  N.52 TimeZone <br>
+  N.53 TreeMap <br>
+  N.54 TreeSet <br>
+  N.55 Vector <br>
+  N.56 WeakHashMap <br>
+  N.57 Exceptions <br>
+  N.58 ConcurrentModificationException <br>
+  N.59 EmptyStackException <br>
+  N.60 MissingResourceException <br>
+  N.61 NoSuchElementException <br>
+  N.62 TooManyListenersException <br>
+</p>
+<h1>java.util.ResourceBundle</h1>
+<p>该类功能为从一个资源中取名称-值对，可应用于读取配置文件或多国语言系统。下面是一个例子，首先是一个资源类MyResources，代码如下：</p>
+<pre>package res;
+
+import java.util.ListResourceBundle;
+
+public class MyResources extends ListResourceBundle {
+
+	protected Object[][] getContents() {
+		return contents;
+	}
+	
+	static final Object[][] contents = {
+		{"key1", "value1"},			
+		{"key2", "value2"}
+	};
+}</pre>
+<p>然后使用ResourceBundle读取这个资源类：</p>
+<pre>import java.util.ResourceBundle;
+
+public class Test {
+
+	public static void main(String[] args) {
+		ResourceBundle res = ResourceBundle.getBundle("res.MyResources");
+		System.out.println(res.getString("key1"));
+	}
+}</pre>
+<p>运行该程序，应该输出值“value1”。除了使用资源类外，还有一种更常用的方法是使用资源文件，在上例如，我们可以使用 MyResources.properties 文件代替 MyResources 类，该文件内容如下：</p>
+<pre>key1=value1
+key2=value2</pre>
+<p>测试用例代码不变</p>
+</body>
+</html>

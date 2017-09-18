@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<title>Hello world —— 标签 </title>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+<p id="title">Hello world —— 标签 </p>
+
+<p>使用一个标签，传入一个name参数，在页面上显示 Hello (name)。</p>
+<p>实现上述功能，需要制作如下几个文件</p>
+<ul>
+  <li>标签实现类</li>
+  <li>TLD标签定义文件</li>
+  <li>web.xml中引入TLD</li>
+  <li>JSP</li>
+</ul>
+<p>如果要使用包，需要引用包jsp-api.jar，对Tomcat 6.0，在其lib目录下有该文件。 </p>
+<h1>N.1 标签实现类</h1>
+<pre>package lld.test.helloworld;
+
+import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.tagext.TagSupport;
+
+
+public class HelloTag extends TagSupport
+{
+	private String name;
+	
+	public int doEndTag() throws JspException
+	{
+		try
+		{
+			this.pageContext.getOut().println(&quot;Hello, &quot; + this.name + &quot;!&quot;);
+		}
+		catch(Exception ex)
+		{
+			throw new JspException(ex.toString());
+		}
+		
+		return SKIP_BODY;
+	}
+
+	public String getName()
+	{
+		return name;
+	}
+
+	public void setName(String name)
+	{
+		this.name = name;
+	}
+}</pre>
+<h1>N.2 TLD标签定义文件</h1>
+<p>文件名为hellotag.tld，放于WEB-INF目录下</p>
+<pre>&lt;?xml version=&quot;1.0&quot; encoding=&quot;ISO-8859-1&quot;?&gt;
+&lt;!DOCTYPE taglib
+    PUBLIC &quot;-//Sun Microsystems, Inc.//DTD JSP Tag Library 1.2/EN&quot;
+           &quot;http://java.sun.com/dtd/web-jsptaglibrary_1_2.dtd&quot;&gt;
+&lt;taglib&gt;
+    &lt;tlib-version&gt;1.0&lt;/tlib-version&gt;
+    &lt;jsp-version&gt;1.2&lt;/jsp-version&gt;
+    &lt;short-name&gt;hellotaglib&lt;/short-name&gt;
+    &lt;uri&gt;/hellotaglib&lt;/uri&gt;
+    &lt;tag&gt;
+      &lt;name&gt;hello&lt;/name&gt;
+      &lt;tag-class&gt;lld.test.helloworld.HelloTag&lt;/tag-class&gt;
+      &lt;body-content&gt;empty&lt;/body-content&gt;
+		&lt;attribute&gt;
+			&lt;name&gt;name&lt;/name&gt;
+			&lt;required&gt;true&lt;/required&gt;
+		&lt;/attribute&gt;
+    &lt;/tag&gt;
+&lt;/taglib&gt;</pre>
+<h1>N.3 在web.xml中引入TLD</h1>
+<pre>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;web-app id=&quot;WebApp_ID&quot; version=&quot;2.4&quot; 
+	xmlns=&quot;http://java.sun.com/xml/ns/j2ee&quot; 
+	xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; 
+	xsi:schemaLocation=&quot;http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd&quot;&gt;
+	&lt;display-name&gt;jsp_test&lt;/display-name&gt;
+	&lt;welcome-file-list&gt;
+		&lt;welcome-file&gt;index.jsp&lt;/welcome-file&gt;
+	&lt;/welcome-file-list&gt;
+  	
+	&lt;jsp-config&gt;
+		&lt;taglib&gt;
+			&lt;taglib-uri&gt;/hellotaglib&lt;/taglib-uri&gt;
+			&lt;taglib-location&gt;/WEB-INF/hellotag.tld&lt;/taglib-location&gt;
+		&lt;/taglib&gt;
+	&lt;/jsp-config&gt;
+&lt;/web-app&gt;</pre>
+<p>针对不同的DTD中，使用不同的配置方式，如果出现web.xml对&lt;taglib&gt;标签报错的情况，使用如下解决方案：</p>
+<p>在web.xml不认&lt;taglib&gt;解决办法: </p>
+<p>如果是头是这样的</p>
+<pre>&lt;!DOCTYPE web-app PUBLIC &quot;-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN&quot; &quot;http://java.sun.com/dtd/web-app_2_3.dtd&quot;&gt; </pre>
+<p>直接在后面加&lt;taglib&gt;标签即可</p>
+<p>如果头是这样的 </p>
+<pre>&lt;web-app xmlns=&quot;http://java.sun.com/xml/ns/j2ee&quot; 
+	xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; 
+	version=&quot;2.4&quot; xsi:schemaLocation=&quot;http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd&quot;&gt; </pre>
+<p>在后面加&lt;jsp-config&gt;，&lt;taglib&gt;作为&lt;jsp-config&gt;的子标签</p>
+<h1>N.4 JSP</h1>
+<p>关键代码如下</p>
+<pre>&lt;%@ taglib uri=&quot;/hellotaglib&quot; prefix=&quot;h&quot; %&gt; 
+...
+&lt;p&gt;&lt;h:hello name=&quot;Peter&quot; /&gt;&lt;/p&gt;</pre>
+<h1>N.5 使用Tomcat的注意事项</h1>
+<p>我使用的Tomcat版本为6，如果在应用程序的WEB-INF/lib下有与tomcat安装目录的lib目录下有重复的文件，例如servlet-api.jar或jsp-api.jar，在Tomcat启动时会报错：servlet-api.jar not loaded。</p>
+<p>因此，在部署时需要删除WEB-INF/lib目录下的与Tomcat的重复包。</p>
+<p>为了不生成重复包，你可以将tomcat/lib/jsp-api.jar添加到你的CLASSPATH中，如果使用Eclipse的话，在项目的Properties - Java Build Path - Libraries 中，使用“Add External JARs...” 按钮将Tomcat/lib/jsp-api.jar 添加进来即可，这样就不会在WEB-INF/lib下生成jsp-api.jar文件。</p>
+<p>&nbsp;</p>
+
+</body>
+</html>

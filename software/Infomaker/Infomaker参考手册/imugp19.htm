@@ -1,0 +1,100 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+Using the Query Governor</TITLE>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312"></HEAD>
+<BODY>
+<A NAME="BFCBCFIE"></A>
+<h1>使用查询生成器</h1>
+<A NAME="TI566"></A><p>The Query Governor lets you set data selection and retrieval
+options for InfoMaker. Then, when you select and
+retrieve data, the Query Governor limits that you set apply.</p>
+<A NAME="TI567"></A><h4>Data selection options</h4>
+<A NAME="TI568"></A><p>Here are the data selection options you can set:</p>
+<A NAME="TI569"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI570"></A>Data selection options</th>
+<th align="left" valign=bottom><A NAME="TI571"></A>Description</th>
+</tr>
+<tr><td valign=top><A NAME="TI572"></A>Specify the maximum number of tables
+in a join</td>
+<td valign=top><A NAME="TI573"></A>Specifying a maximum limits data selection. Increasing
+the maximum means fewer restrictions on data selection and longer
+retrieval times</td>
+</tr>
+<tr><td valign=top><A NAME="TI574"></A>Allow cross products</td>
+<td valign=top><A NAME="TI575"></A>When cross products are allowed, you
+can have tables not joined by the join operator. One row is retrieved
+for each combination of rows in the tables. If table A has x rows
+and table B has y rows, a cross product of A and B has x times y
+rows, unless you specify WHERE criteria</td>
+</tr>
+<tr><td valign=top><A NAME="TI576"></A>Allow outer joins</td>
+<td valign=top><A NAME="TI577"></A>When outer joins are allowed, all rows
+in a table are retrieved whether or not a matching row exists in another
+table</td>
+</tr>
+<tr><td valign=top><A NAME="TI578"></A>Allow SELECT DISTINCT statements</td>
+<td valign=top><A NAME="TI579"></A>Usually a SELECT statement retrieves
+all rows satisfying the SELECT statement. If SELECT DISTINCT is
+specified, duplicate rows are not retrieved. Retrieval time is often
+much longer when DISTINCT is specified</td>
+</tr>
+</table>
+<A NAME="TI580"></A><h4>Data retrieval options</h4>
+<A NAME="TI581"></A><p>These data retrieval settings specify rows retrieved and maximum
+time on the client, not the server:</p>
+<A NAME="TI582"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI583"></A>Data retrieval options</th>
+<th align="left" valign=bottom><A NAME="TI584"></A>Description</th>
+</tr>
+<tr><td valign=top><A NAME="TI585"></A>Specify the maximum number of rows retrieved</td>
+<td valign=top><A NAME="TI586"></A>With no maximum set, all rows are retrieved. Specifying
+a maximum number limits retrieval and means shorter retrieval times</td>
+</tr>
+<tr><td valign=top><A NAME="TI587"></A>Specify the maximum time for retrieval</td>
+<td valign=top><A NAME="TI588"></A>With no maximum set, retrieval time is
+not limited. Specifying a maximum time limits retrieval time</td>
+</tr>
+</table>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Using a shared InfoMaker initialization file</span> <A NAME="TI589"></A>In some organizations, Query Governor options are specified
+in a shared InfoMaker initialization file.</p>
+<A NAME="TI590"></A>For information about using a shared initialization
+file, see <i>Connecting to Your Database</i>
+.</p>
+<A NAME="TI591"></A><h2>Accessing the Query Governor</h2>
+<A NAME="TI592"></A><p>The Query Governor button is not in the PowerBar when you
+install InfoMaker.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To access the Query Governor from the PowerBar:</p>
+<ol><li class=fi>
+Customize the PowerBar to add the Query
+Governor button.<br><br>
+For information about customizing toolbars,
+see <A HREF="imugp10.htm#X-ref342453953">"Customizing toolbars"</A>.<br><br></li>
+<li class=ds>
+Click the Query Governor button in the PowerBar.<br><br></li></ol>
+<br><A NAME="TI593"></A><h2>Using the Query Governor</h2>
+<A NAME="TI594"></A><p>When you select and retrieve data, the default Query Governor
+options limit you in the following ways:</p>
+<A NAME="TI595"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI596"></A>You can do this</th>
+<th align="left" valign=bottom><A NAME="TI597"></A>You cannot do this</th>
+</tr>
+<tr><td valign=top><A NAME="TI598"></A>Join an unlimited number of tables</td>
+<td valign=top><A NAME="TI599"></A>Specify cross products</td>
+</tr>
+<tr><td valign=top><A NAME="TI600"></A>Retrieve an unlimited number of rows</td>
+<td valign=top><A NAME="TI601"></A>Specify outer joins</td>
+</tr>
+<tr><td valign=top><A NAME="TI602"></A>Retrieve for an unlimited time</td>
+<td valign=top><A NAME="TI603"></A>Use SELECT DISTINCT statements</td>
+</tr>
+</table>
+<A NAME="TI604"></A><p>You can change the Query Governor default options anytime
+by selecting or deselecting the options in the Query Governor dialog
+box. If you are in the Select painter when you change a data selection
+option, the change is not enabled until you leave the Select painter
+and open it again.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To use the Query Governor:</p>
+<ol><li class=fi>
+Access the Query Governor dialog box as
+described above and select options:<br><br><br><img src="images/Mang261.gif"><br>
+</li></ol>
+<br>

@@ -1,0 +1,83 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+Date</TITLE>
+</HEAD>
+<BODY>
+<A NAME="CAICEIEJ"></A><A NAME="TI6536"></A><h1>Date</h1>
+<A NAME="TI6537"></A><p>
+<FORM>
+<INPUT
+ TYPE = "BUTTON"
+ VALUE = "Examples"
+ onClick = "window.location = 'imugp169.htm#EX21';">
+<INPUT
+  TYPE = "BUTTON"
+ VALUE = "See also"
+ onClick = "window.location = 'imugp169.htm#SA21';">
+</FORM>
+</p>
+<h3>Description</h3><A NAME="TI6538"></A><p>Converts a string whose value is a valid date to a value of
+data type date.</p>
+
+<h3>Syntax</h3><pre><b>Date</b> ( <i>string</i> )</pre>
+<A NAME="TI6539"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI6540"></A>Argument</th>
+<th align="left" valign=bottom><A NAME="TI6541"></A>Description</th>
+</tr>
+<tr><td valign=top><A NAME="TI6542"></A><i>string</i></td>
+<td valign=top><A NAME="TI6543"></A>A string containing a valid date (such
+as Jan 1, 1998, or 12-31-99) that you want returned as a date</td>
+</tr>
+</table>
+
+<h3>Return Values</h3><A NAME="TI6544"></A><p>Date. Returns the date in <i>string</i> as a
+date. If <i>string</i> does not contain a valid date, Date
+returns NULL.</p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Platform information for Windows</span> <A NAME="TI6545"></A>To make sure you get correct return values for the year, you
+must verify that yyyy is the Short Date Style for year in the Regional
+Settings of the user's Control Panel. Your program can
+check this with the RegistryGet function. </p>
+<A NAME="TI6546"></A>If the setting is not correct, you can ask the user to change
+it manually or to have the application change it (by calling the
+RegistrySet function). The user may need to reboot after the setting
+is changed.</p>
+
+<h3>Usage</h3><A NAME="TI6547"></A><p>The value of the string must be a valid date.</p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Valid dates</span> <A NAME="TI6548"></A>Valid dates can include any combination of day (1-31),
+month (1-12 or the name or abbreviation of a month), and
+year (two or four digits). Leading zeros are optional for month
+and day. If the month is a name or an abbreviation, it can come
+before or after the day; if it is a number, it must be in the month
+location specified in the Windows control panel. A 4-digit number
+is assumed to be a year.</p>
+<A NAME="TI6549"></A>If the year is two digits, the assumption of century follows
+this rule: for years between 00 and 49, the first two digits are
+assumed to be 20; for years between 50 and 99, the first two digits
+are assumed to be 19. If your data includes dates before 1950, such
+as birth dates, always specify a four-digit year to ensure the correct
+interpretation.</p>
+<A NAME="TI6550"></A>Years from 1000 to 3000 inclusive are handled.</p>
+<A NAME="TI6551"></A><p>An expression has a more limited set of data types than the
+functions that can be part of the expression. Although the Date
+function returns a date value, the whole expression is promoted
+to a DateTime value. Therefore, if your expression consists of a
+single Date function, it will appear that Date returns the wrong
+data type. To display the date without the time, choose an appropriate
+display format. (See <A HREF="imugp148.htm#BFCDFAJD">"Using DataWindow
+expression and InfoMaker functions"</A>.)</p>
+
+<A NAME="EX21"></A><h3>Examples</h3><A NAME="TI6552"></A><p>These expressions all return the date data type for
+July 4, 1999 (1999-07-04), when the default position of month is
+center:<pre><i>Date</i> ("1999/07/04")<br> <i>Date</i> ("1999 July 4")<br> <i>Date</i> ("July 4, 1999")</pre>
+</p>
+
+<A NAME="SA21"></A><h3>See Also</h3><A NAME="TI6553"></A><p><A NAME="TI6554"></A>
+<ul>
+<li class=fi><A HREF="imugp186.htm#CAIDHDBB">IsDate</A></li>
+<li class=ds>
+</li>
+</ul>
+</p>
+
+

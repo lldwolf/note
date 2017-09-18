@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>硬件信息</title>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+<p id="title">硬件信息</p>
+
+<h1>CPU信息</h1>
+<h2>CPU序列号</h2>
+<pre class="code" data-type="csharp">private static string GetCpuID()
+{
+	//获得CPU序列号
+	string CpuID=&quot;&quot;; 
+	ManagementClass mc = new ManagementClass(&quot;Win32_Processor&quot;);
+	ManagementObjectCollection moc = mc.GetInstances();
+	foreach(ManagementObject mo in moc)
+	{
+		CpuID+= mo.Properties[&quot;ProcessorId&quot;].Value.ToString();
+	}
+	mc.Dispose();
+	moc.Dispose();
+	return CpuID;
+}</pre>
+<p><img src="images/note.jpg" width="20" height="20" />注意：CPU序列号并不是唯一的，而是同一批次的CPU序列号一样。</p>
+<h1>硬盘</h1>
+<h2>获取硬盘序列号</h2>
+<p>可能有多个，以换行符隔开</p>
+<pre class="code" data-type="csharp">private static string GetHardDiskID() 
+{
+	String HDid;
+	ManagementClass cimobject = new ManagementClass(&quot;Win32_DiskDrive&quot;);
+	ManagementObjectCollection moc = cimobject.GetInstances();
+	string hid = &quot;&quot;;
+	foreach(ManagementObject mo in moc)
+	{
+		HDid = (string)mo.Properties[&quot;Model&quot;].Value;
+
+		hid += HDid;
+	}
+	
+	return hid;
+}//end</pre>
+<h1>网卡</h1>
+<h2>网卡MAC地址</h2>
+<p>可能有多个，以换行符隔开</p>
+<pre class="code" data-type="csharp">private static string GetNetworkID() 
+{
+	ManagementClass mc = new ManagementClass(&quot;Win32_NetworkAdapterConfiguration&quot;);
+	ManagementObjectCollection moc = mc.GetInstances();
+	string nid = &quot;&quot;;
+	foreach(ManagementObject mo in moc)
+	{
+		if((bool)mo[&quot;IPEnabled&quot;] == true)
+			nid += mo[&quot;MacAddress&quot;] + &quot;\r\n&quot;;
+		mo.Dispose();
+	}
+
+	return nid;
+}//end</pre>
+<p>&nbsp; </p>
+
+</body>
+</html>

@@ -1,0 +1,36 @@
+sd = sc = ja = ck = 0; jsv = "1.0";
+document.cookie = "eztest=true";
+ck = (document.cookie.indexOf("eztest") >= 0 ? 1 : 0);
+ja = (navigator.javaEnabled() ? 1 : 0);
+bn = navigator.appName;
+bv = Math.round(parseFloat(navigator.appVersion)*100);
+if (bn == "Netscape") {
+ if (bv >= 300) jsv = "1.1";
+ if (bv >= 400) {
+  jsv = "1.2";
+  sd = screen.width+'x'+screen.height;
+  sc = screen.pixelDepth;
+ }
+ if (bv >= 406) jsv = "1.3";
+}
+msie_index = navigator.userAgent.indexOf("MSIE");
+if (msie_index != -1) bn = "MSIE";
+if (bn == "MSIE") {
+ bv_str = navigator.userAgent.substr(msie_index+5, navigator.userAgent.length);
+ bv = Math.round(parseFloat(bv_str)*100);
+ if (bv >= 400) {
+  jsv = "1.2";
+  sd = screen.width+'x'+screen.height;
+  sc = screen.colorDepth;
+ }
+}
+var t = new Date;
+rand = Math.random();
+ezimg = new Image();
+ezimg.src = "http://ssl.svenskawebb.com//stats/easystat.exe?acct=kund2292&js=1"
++ "&ref=" + escape(parent.document.referrer)
++ "&pg=" + escape(window.location.href)
++ "&pt=" + escape(document.title)
++ "&tz=" + t.getTimezoneOffset()
++ "&vh=" + t.getHours()
++ "&ck="+ck+"&ja="+ja+"&jsv="+jsv+"&sd="+sd+"&sc="+sc+"&rand="+rand;

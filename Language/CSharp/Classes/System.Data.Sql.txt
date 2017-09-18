@@ -1,0 +1,2 @@
+SqlDataSourceEnumerator	提供了一种枚举本地网络内的所有可用 SQL Server 实例的机制。
+SqlNotificationRequest	表示对给定命令的通知的请求。

@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+	<script type="text/javascript" src="../../../mylib/js/css.js"></script>
+	<title>C#.net使用手册</title>
+</head>
+<body>
+	<p id="title">第N章 WPF Ribbon 组件</p>
+	<img alt="" src="img/ribbon_sample.png" />
+	<p>以Excel为例，Ribbon组件包括以下内容：</p>
+	<ul>
+		<li>Page: 包括上例中的Home, Insert, ...，Page 包括标题和脚注</li>
+		<li>Button: Page 中的每个元素</li>
+		<li>工具栏</li>
+		<li>Application Menu，在上例为 File 页</li>
+		<li>与之配套的底端状态栏</li>
+	</ul>
+	<h1>创建 Ribbon 组件</h1>
+	<p>首先创建一个不带任何内容的 Ribbon 示例</p>
+	<div id="accordion-simple_binding_source">
+		<p><a href="#">XAML</a></p>
+		<pre>&lt;Window x:Class=&quot;XpfDemo.RibbonWindow&quot;
+		xmlns=&quot;http://schemas.microsoft.com/winfx/2006/xaml/presentation&quot;
+		xmlns:x=&quot;http://schemas.microsoft.com/winfx/2006/xaml&quot;
+		xmlns:dxb=&quot;http://schemas.devexpress.com/winfx/2008/xaml/bars&quot;
+		xmlns:dxr=&quot;http://schemas.devexpress.com/winfx/2008/xaml/ribbon&quot;
+		Title=&quot;RibbonWindow&quot;
+		Height=&quot;488&quot;
+		Width=&quot;914&quot;&gt;
+	&lt;dxb:BarManager&gt;
+		&lt;Grid&gt;
+			&lt;Grid.RowDefinitions&gt;
+				&lt;RowDefinition Height=&quot;Auto&quot; /&gt;
+				&lt;RowDefinition Height=&quot;*&quot; /&gt;
+				&lt;RowDefinition Height=&quot;Auto&quot; /&gt;
+			&lt;/Grid.RowDefinitions&gt;
+			&lt;dxr:RibbonControl&gt;
+
+			&lt;/dxr:RibbonControl&gt;
+			&lt;Image Grid.Row=&quot;1&quot;&gt;&lt;/Image&gt;
+			&lt;dxr:RibbonStatusBarControl Grid.Row=&quot;2&quot;&gt;
+
+			&lt;/dxr:RibbonStatusBarControl&gt;
+		&lt;/Grid&gt;
+	&lt;/dxb:BarManager&gt;
+&lt;/Window&gt;</pre>
+	</div>
+	<p>可以为 RibbonControl 设置如下属性</p>
+	<table width="500">
+		<tbody>
+			<tr>
+				<th>属性</th>
+				<th>说明</th>
+				<th>默认值</th>
+			</tr>
+			<tr>
+				<td>RibbonStyle</td>
+				<td>样式，可设为Office2007 或 Office2010</td>
+				<td>Office2007</td>
+			</tr>
+			<tr>
+				<td>ToolbarShowMode</td>
+				<td>工具栏的显示位置</td>
+				<td>Default，显示在顶部</td>
+			</tr>
+			<tr>
+				<td>PageCategoryAlignment</td>
+				<td>Page 内容的对齐方式</td>
+				<td>Default</td>
+			</tr>
+		</tbody>
+	</table>
+	<h1>创建工具栏</h1>
+	<div id="accordion-ribbon-toobar">
+		<p><a href="#">XAML</a></p>
+		<pre>&lt;Window x:Class=&quot;XpfDemo.RibbonWindow&quot;
+		xmlns=&quot;http://schemas.microsoft.com/winfx/2006/xaml/presentation&quot;
+		xmlns:x=&quot;http://schemas.microsoft.com/winfx/2006/xaml&quot;
+		xmlns:dxb=&quot;http://schemas.devexpress.com/winfx/2008/xaml/bars&quot;
+		xmlns:dxr=&quot;http://schemas.devexpress.com/winfx/2008/xaml/ribbon&quot;
+		Title=&quot;RibbonWindow&quot;
+		Height=&quot;488&quot;
+		Width=&quot;914&quot;&gt;
+	&lt;dxb:BarManager&gt;
+	<span style="color:Blue;font-weight:bold">
+		&lt;dxb:BarManager.Items&gt;
+			&lt;dxb:BarButtonItem x:Name=&quot;toolbtn1&quot;
+							   Glyph=&quot;/XpfDemo;component/Images/img1.png&quot;
+							   Content=&quot;Button1&quot; /&gt;
+		&lt;/dxb:BarManager.Items&gt;
+		</span>
+		&lt;Grid&gt;
+			&lt;Grid.RowDefinitions&gt;
+				&lt;RowDefinition Height=&quot;Auto&quot; /&gt;
+				&lt;RowDefinition Height=&quot;*&quot; /&gt;
+				&lt;RowDefinition Height=&quot;Auto&quot; /&gt;
+			&lt;/Grid.RowDefinitions&gt;
+			&lt;dxr:RibbonControl RibbonStyle=&quot;Office2010&quot;
+							   ToolbarShowMode=&quot;Default&quot;
+							   PageCategoryAlignment=&quot;Default&quot;&gt;
+							   <span style="color:Blue;font-weight:bold">
+				&lt;dxr:RibbonControl.ToolbarItemLinks&gt;
+					&lt;dxb:BarButtonItemLink BarItemName=&quot;toolbtn1&quot; /&gt;
+				&lt;/dxr:RibbonControl.ToolbarItemLinks&gt;
+				</span>
+			&lt;/dxr:RibbonControl&gt;
+			&lt;Image Grid.Row=&quot;1&quot;&gt;&lt;/Image&gt;
+			&lt;dxr:RibbonStatusBarControl Grid.Row=&quot;2&quot;&gt;
+			&lt;/dxr:RibbonStatusBarControl&gt;
+		&lt;/Grid&gt;
+	&lt;/dxb:BarManager&gt;
+&lt;/Window&gt;</pre>
+		</div>
+	<h1>创建 Application Menu</h1>
+	<div id="accordion-app-menu">
+		<p><a href="#">XAML</a></p>
+		<pre>&lt;Window x:Class=&quot;XpfDemo.RibbonWindow&quot;
+		xmlns=&quot;http://schemas.microsoft.com/winfx/2006/xaml/presentation&quot;
+		xmlns:x=&quot;http://schemas.microsoft.com/winfx/2006/xaml&quot;
+		xmlns:dxb=&quot;http://schemas.devexpress.com/winfx/2008/xaml/bars&quot;
+		xmlns:dxr=&quot;http://schemas.devexpress.com/winfx/2008/xaml/ribbon&quot;
+		Title=&quot;RibbonWindow&quot;
+		Height=&quot;488&quot;
+		Width=&quot;914&quot;&gt;
+	&lt;dxb:BarManager&gt;
+		&lt;dxb:BarManager.Items&gt;
+			&lt;dxb:BarButtonItem x:Name=&quot;toolbtn1&quot;
+							   Glyph=&quot;/XpfDemo;component/Images/img1.png&quot;
+							   Content=&quot;Button1&quot; /&gt;
+							   <span style="color:Blue;font-weight:bold">
+			&lt;dxb:BarButtonItem x:Name=&quot;appMenuItem1&quot;
+							   Content=&quot;App Menu Item1&quot;
+							   LargeGlyph=&quot;/XpfDemo;component/Images/img2.png&quot; /&gt;
+							   </span>
+		&lt;/dxb:BarManager.Items&gt;
+		&lt;Grid&gt;
+			&lt;Grid.RowDefinitions&gt;
+				&lt;RowDefinition Height=&quot;Auto&quot; /&gt;
+				&lt;RowDefinition Height=&quot;*&quot; /&gt;
+				&lt;RowDefinition Height=&quot;Auto&quot; /&gt;
+			&lt;/Grid.RowDefinitions&gt;
+			&lt;dxr:RibbonControl RibbonStyle=&quot;Office2010&quot;
+							   ToolbarShowMode=&quot;Default&quot;
+							   PageCategoryAlignment=&quot;Default&quot;&gt;
+				&lt;dxr:RibbonControl.ToolbarItemLinks&gt;
+					&lt;dxb:BarButtonItemLink BarItemName=&quot;toolbtn1&quot; /&gt;
+				&lt;/dxr:RibbonControl.ToolbarItemLinks&gt;
+				<span style="color:Blue;font-weight:bold">
+				&lt;dxr:RibbonControl.ApplicationMenu&gt;
+					&lt;dxr:ApplicationMenuInfo&gt;
+						&lt;dxr:ApplicationMenuInfo.ItemLinks&gt;
+							&lt;dxb:BarButtonItemLink BarItemName=&quot;appMenuItem1&quot; /&gt;
+						&lt;/dxr:ApplicationMenuInfo.ItemLinks&gt;
+					&lt;/dxr:ApplicationMenuInfo&gt;
+				&lt;/dxr:RibbonControl.ApplicationMenu&gt;
+				</span>
+			&lt;/dxr:RibbonControl&gt;
+			&lt;Image Grid.Row=&quot;1&quot;&gt;&lt;/Image&gt;
+			&lt;dxr:RibbonStatusBarControl Grid.Row=&quot;2&quot;&gt;
+			&lt;/dxr:RibbonStatusBarControl&gt;
+		&lt;/Grid&gt;
+	&lt;/dxb:BarManager&gt;
+&lt;/Window&gt;
+</pre>
+		</div>
+	<h1>创建 Page</h1>
+		<div id="accordion-ribbon-page">
+		<p><a href="#">XAML</a></p>
+<pre>&lt;Window x:Class=&quot;XpfDemo.RibbonWindow&quot;
+		xmlns=&quot;http://schemas.microsoft.com/winfx/2006/xaml/presentation&quot;
+		xmlns:x=&quot;http://schemas.microsoft.com/winfx/2006/xaml&quot;
+		xmlns:dxb=&quot;http://schemas.devexpress.com/winfx/2008/xaml/bars&quot;
+		xmlns:dxr=&quot;http://schemas.devexpress.com/winfx/2008/xaml/ribbon&quot;
+		xmlns:dxe=&quot;http://schemas.devexpress.com/winfx/2008/xaml/editors&quot;
+		Title=&quot;RibbonWindow&quot;
+		Height=&quot;488&quot;
+		Width=&quot;914&quot;&gt;
+	&lt;dxb:BarManager&gt;
+		&lt;dxb:BarManager.Items&gt;
+			&lt;dxb:BarButtonItem x:Name=&quot;toolbtn1&quot;
+							   Glyph=&quot;/XpfDemo;component/Images/img1.png&quot;
+							   Content=&quot;Button1&quot; /&gt;
+			&lt;dxb:BarButtonItem x:Name=&quot;appMenuItem1&quot;
+							   Content=&quot;App Menu Item1&quot;
+							   LargeGlyph=&quot;/XpfDemo;component/Images/img2.png&quot; /&gt;
+<span style="color:Blue;font-weight:bold">
+			&lt;dxb:BarEditItem x:Name=&quot;colorEdit&quot;
+							 Content=&quot;Tool Color&quot;
+							 EditWidth=&quot;100&quot;&gt;
+				&lt;dxb:BarEditItem.EditSettings&gt;
+					&lt;dxe:PopupColorEditSettings /&gt;
+				&lt;/dxb:BarEditItem.EditSettings&gt;
+			&lt;/dxb:BarEditItem&gt;
+			&lt;dxb:BarCheckItem x:Name=&quot;checkItem&quot;
+							  Content=&quot;Brush Tool&quot;
+							  Glyph=&quot;/XpfDemo;component/Images/img1.png&quot; /&gt;
+</span>
+		&lt;/dxb:BarManager.Items&gt;
+		&lt;Grid&gt;
+			&lt;Grid.RowDefinitions&gt;
+				&lt;RowDefinition Height=&quot;Auto&quot; /&gt;
+				&lt;RowDefinition Height=&quot;*&quot; /&gt;
+				&lt;RowDefinition Height=&quot;Auto&quot; /&gt;
+			&lt;/Grid.RowDefinitions&gt;
+			&lt;dxr:RibbonControl RibbonStyle=&quot;Office2010&quot;
+							   ToolbarShowMode=&quot;Default&quot;
+							   PageCategoryAlignment=&quot;Default&quot;&gt;
+				&lt;dxr:RibbonControl.ToolbarItemLinks&gt;
+					&lt;dxb:BarButtonItemLink BarItemName=&quot;toolbtn1&quot; /&gt;
+				&lt;/dxr:RibbonControl.ToolbarItemLinks&gt;
+				&lt;dxr:RibbonControl.ApplicationMenu&gt;
+					&lt;dxr:ApplicationMenuInfo&gt;
+						&lt;dxr:ApplicationMenuInfo.ItemLinks&gt;
+							&lt;dxb:BarButtonItemLink BarItemName=&quot;appMenuItem1&quot; /&gt;
+						&lt;/dxr:ApplicationMenuInfo.ItemLinks&gt;
+					&lt;/dxr:ApplicationMenuInfo&gt;
+				&lt;/dxr:RibbonControl.ApplicationMenu&gt;
+<span style="color:Blue;font-weight:bold">
+				&lt;dxr:RibbonDefaultPageCategory&gt;
+					&lt;dxr:RibbonPage Caption=&quot;Home&quot;&gt;
+						&lt;dxr:RibbonPageGroup Caption=&quot;Tools&quot;&gt;
+							&lt;dxb:BarEditItemLink BarItemName=&quot;colorEdit&quot; /&gt;
+							&lt;dxb:BarEditItemLink BarItemName=&quot;colorEdit&quot; /&gt;
+							&lt;dxb:BarEditItemLink BarItemName=&quot;colorEdit&quot; /&gt;
+							&lt;dxb:BarItemLinkSeparator /&gt;
+							&lt;dxb:BarCheckItemLink BarItemName=&quot;checkItem&quot; /&gt;
+							&lt;dxb:BarCheckItemLink BarItemName=&quot;checkItem&quot; /&gt;
+						&lt;/dxr:RibbonPageGroup&gt;
+					&lt;/dxr:RibbonPage&gt;
+				&lt;/dxr:RibbonDefaultPageCategory&gt;
+</span>
+			&lt;/dxr:RibbonControl&gt;
+			&lt;Image Grid.Row=&quot;1&quot;&gt;&lt;/Image&gt;
+			&lt;dxr:RibbonStatusBarControl Grid.Row=&quot;2&quot;&gt;
+			&lt;/dxr:RibbonStatusBarControl&gt;
+		&lt;/Grid&gt;
+	&lt;/dxb:BarManager&gt;
+&lt;/Window&gt;
+</pre></div>
+<p>默认情况下，Ribbon Page 纵向可容纳3行控件，若填满则自动生成到下一列。</p>
+<p>RibbonDefaultPageCategory 为默认的 Page 容器，Page 则为 容器。也可以创建其它的 RibbonPageCategory，如下所示：</p>
+<div id="accordion-ribbon-page-category">
+		<p><a href="#">XAML</a></p>
+		<pre>				&lt;dxr:RibbonPageCategory Caption=&quot;Appearance&quot;&gt;
+					&lt;dxr:RibbonPage Caption=&quot;Page1&quot;&gt;
+						&lt;dxr:RibbonPageGroup Caption=&quot;Group1&quot;&gt;
+							&lt;dxb:BarEditItemLink BarItemName=&quot;colorEdit&quot; /&gt;
+							&lt;dxb:BarEditItemLink BarItemName=&quot;colorEdit&quot; /&gt;
+							&lt;dxb:BarEditItemLink BarItemName=&quot;colorEdit&quot; /&gt;
+							&lt;dxb:BarItemLinkSeparator /&gt;
+							&lt;dxb:BarCheckItemLink BarItemName=&quot;checkItem&quot; /&gt;
+							&lt;dxb:BarCheckItemLink BarItemName=&quot;checkItem&quot; /&gt;
+						&lt;/dxr:RibbonPageGroup&gt;
+					&lt;/dxr:RibbonPage&gt;
+				&lt;/dxr:RibbonPageCategory&gt;</pre>
+		</div>
+	<p align="center"><a href="DevExpress.htm">回目录</a></p>
+</body>
+</html>

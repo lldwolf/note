@@ -1,0 +1,1136 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+Defining the data source </TITLE>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312"></HEAD>
+<BODY>
+<A NAME="CFHDGEIA"></A>
+<h1>定义数据源</h1>
+<A NAME="TI1351"></A>
+<p>数据源是你从数据库中的取数据逻辑。</p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>术语解释：数据源<i></i>
+</span> <A NAME="TI1352"></A>数据源表示报表如何从数据库中取得所需的数据。</p>
+<A NAME="TI1353"></A>Data source can also refer to where the data comes from, such
+as an Adaptive Server Anywhere data source (meaning a database file) or a dBASE
+data source (meaning a DBF file). <i>Connecting to Your Database</i>
+ uses
+the term data source this second way.</p>
+<A NAME="TI1354"></A>
+<h4>InfoMaker数据源</h4>
+<A NAME="TI1355"></A>
+<p>InfoMaker支持五种数据源，所有的均可用于报表，但只有一部分能够应用于数据通道：</p>
+<A NAME="TI1356"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI1357"></A>Data source</th>
+<th align="left" valign=bottom><A NAME="TI1358"></A>Reports</th>
+<th align="left" valign=bottom><A NAME="TI1359"></A>Forms</th>
+<th align="left" valign=bottom><A NAME="TI1360"></A>Pipelines</th>
+</tr>
+<tr><td valign=top><A NAME="TI1361"></A>Quick Select</td>
+<td valign=top><A NAME="TI1362"></A>X</td>
+<td valign=top><A NAME="TI1363"></A>X</td>
+<td valign=top><A NAME="TI1364"></A>X</td>
+</tr>
+<tr><td valign=top><A NAME="TI1365"></A>SQL Select</td>
+<td valign=top><A NAME="TI1366"></A>X</td>
+<td valign=top><A NAME="TI1367"></A>X</td>
+<td valign=top><A NAME="TI1368"></A>X</td>
+</tr>
+<tr><td valign=top><A NAME="TI1369"></A>Query</td>
+<td valign=top><A NAME="TI1370"></A>X</td>
+<td valign=top><A NAME="TI1371"></A>X</td>
+<td valign=top><A NAME="TI1372"></A>X</td>
+</tr>
+<tr><td valign=top><A NAME="TI1373"></A>External</td>
+<td valign=top><A NAME="TI1374"></A>X</td>
+<td valign=top><A NAME="TI1375"></A></td>
+<td valign=top><A NAME="TI1376"></A></td>
+</tr>
+<tr><td valign=top><A NAME="TI1377"></A>Stored Procedure</td>
+<td valign=top><A NAME="TI1378"></A>只要DBMS支持返回结果集的存储过程即可。</td>
+<td valign=top><A NAME="TI1379"></A></td>
+<td valign=top><A NAME="TI1380"></A>X</td>
+</tr>
+</table>
+<A NAME="TI1381"></A><p>You cannot create a form for data that is not stored in a
+database. A form allows you to display and change data in a database.</p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>存储过程</span> <A NAME="TI1382"></A>The Stored Procedure data source icon displays only if the
+DBMS you are currently connected to supports stored procedures that
+return result sets.</p>
+<A NAME="TI1383"></A>
+<h2>选择数据源</h2>
+<A NAME="TI1384"></A><h4> </h4>
+<A NAME="TI1385"></A>
+<p>下面是对各种数据源类型的简单介绍：</p>
+<A NAME="TI1386"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr>
+  <th align="left" valign=bottom><A NAME="TI1387"></A>数据源</th>
+  <th align="left" valign=bottom><A NAME="TI1388"></A>用途</th>
+</tr>
+<tr><td valign=top><A NAME="TI1389"></A>Quick Select</td>
+<td valign=top><A NAME="TI1390"></A>数据来源于一张单表（或通过外键关联的几个表），你需要做的只是选择列、条件和排序规则。</td>
+</tr>
+<tr><td valign=top><A NAME="TI1391"></A>SQL Select</td>
+<td valign=top><A NAME="TI1392"></A>你需要对SQL语句做更多的控制，表间并不一定是通过外键关联的。例如：你需要定义分组、计算列等</td>
+</tr>
+<tr><td valign=top><A NAME="TI1393"></A>Query</td>
+<td valign=top><A NAME="TI1394"></A>数据被定义为一个查询</td>
+</tr>
+<tr><td valign=top><A NAME="TI1395"></A>External</td>
+<td valign=top><A NAME="TI1396"></A>数据来源于一个文本文件（TXT）或dBASE数据库（DBF）</td>
+</tr>
+<tr><td valign=top><A NAME="TI1397"></A>Stored Procedure</td>
+<td valign=top><A NAME="TI1398"></A>数据来源于一个存储过程</td>
+</tr>
+</table>
+<A NAME="TI1399"></A><h4> </h4>
+<A NAME="TI1400"></A>
+<p>一段没营养的废话！After you choose a data source in the various DataWindow wizards,
+you specify the data. The data source you choose determines what
+displays in the wizards and how you define the data.</p>
+<A NAME="BFCDBCEF"></A>
+<h2>使用 Quick Select</h2>
+<A NAME="TI1401"></A>
+<p>这是定义数据源的最快方法，你可以从一个或多个表（要有外键关联）中选择列，选择完后你可以定义如下两方面内容：</p>
+<A NAME="TI1402"></A><p><A NAME="TI1403"></A>
+<ul>
+<li class=fi>排序规格</li>
+<li class=ds>查询条件</li>
+</ul>
+</p>
+<A NAME="TI1404"></A>
+<h4>Quick Select 的限制 </h4>
+<A NAME="TI1405"></A>
+<p>你不在使用Quick Slelect完成如下功能：<A NAME="TI1406"></A>
+<ul>
+<li class=fi>分组</li>
+<li class=ds>计算列</li>
+<li class=ds>参数</li>
+</ul>
+</p>
+<A NAME="TI1407"></A>
+<p>要使用这些功能，需要用SQL Select作为数据源。</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> 定义Quick Select的步骤（估计我以后也不用这个，以后再翻译吧）：</p>
+<ol><li class=fi>
+Click Quick Select in the wizard's
+Choose Data Source dialog box and click Next.<br><br>
+The Quick Select dialog box displays. The Tables box lists
+tables and views in the current database.<br><br>
+To display a comment about a table, position the pointer on
+the table and click the right mouse button <i>or</i>
+ select
+the table.<br><br><p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Which tables and views display</span> <A NAME="TI1408"></A>The DBMS determines what tables and views display. For some
+DBMSs, all tables and views display, whether or not you have authorization.
+Then if you select a table or view you aren't authorized
+to access, the DBMS issues a message.</p>
+<A NAME="TI1409"></A>For ODBC databases, the tables and views that display depend
+on the driver for the data source. Adaptive Server Anywhere does not restrict
+the display, so all tables and views display, whether or not you
+have authorization.</p>
+</li>
+<li class=ds>
+Select a table containing the data you want to
+use.<br><br>
+The table's column names display in the Columns box,
+and any tables having a key relationship with the selected table
+display in the Tables box. These tables are indented and marked
+with an arrow to show their relationship to the selected table:<br><br><br><img src="images/defin27.gif"><br>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Meaning of the up and down arrows</span> <A NAME="TI1410"></A>An arrow displays next to a table to indicate its relationship
+to the selected table. The arrow always points in the <i>many</i>
+ direction
+of the relationship--toward the selected table (up) if the
+selected table contains a foreign key in the relationship and away
+from the selected table (down) if the selected table contains a
+primary key in the relationship:</p>
+<br><img src="images/defin28.gif">
+<A NAME="TI1411"></A>In this example, a foreign key in the sales_order
+table is mapped to the primary key in the customer, employee, and
+fin_code tables. The sales_order_items
+table contains a foreign key mapped to the primary key in the sales_order
+table.</p>
+</li>
+<li class=ds>
+Select any additional tables containing data you
+want to use.<br><br>
+The column names of selected tables display in the Columns
+box. If you select more than one table, the column names are identified
+as:<pre><i>tablename.columnname</i></pre>
+<br><br>
+For example, department.dept_name and employee.emp_id
+display when the Employee table and the Department table are selected.<br><br><p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>To return to the original table list</span> <A NAME="TI1412"></A>Click the table you first selected at the top of the table
+list.</p>
+</li>
+<li class=ds>
+Select the columns you want to use:<A NAME="TI1413"></A>
+<ul>
+<li class=fi>To add a column, select it
+in the Columns box.</li>
+<li class=ds>To add all columns, click Add All.</li>
+<li class=ds>To remove a column, deselect it in the Columns box.</li>
+<li class=ds>To view comments that describe a table or column,
+position the pointer on a table or column name, and press and hold
+the right mouse button.
+</li>
+</ul>
+
+                      <br><br>
+The selected columns display at the bottom of the dialog box.<br><br></li>
+<li class=ds>
+Use the grid to reorder columns, sort rows before
+you retrieve data, and specify what data to retrieve:<A NAME="TI1414"></A>
+<ul>
+<li class=fi>To reorder a column, drag
+the column name where you want it.</li>
+<li class=ds>To specify the sorting of rows before retrieval,
+select the sorting order in the Sort row.<br>
+For information, see <A HREF="imugp47.htm#CFHBCJBJ">"Specifying sorting criteria"</A>.<br></li>
+<li class=ds>To specify restrictions on what data to retrieve,
+enter expressions in the Criteria row.<br>
+For information, see <A HREF="imugp47.htm#CFHDACCF">"Specifying selection criteria"</A>.<br>
+</li>
+</ul>
+
+                      <br><br></li>
+<li class=ds>
+Click OK.<br><br>
+The Quick Select dialog box closes and you continue in the
+wizard. <br><br></li></ol>
+<br><p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Quick Select and retrieval arguments</span> <A NAME="TI1415"></A>When you use Quick Select to define the data, you cannot define
+retrieval arguments for the SELECT statement that are supplied during
+execution. If you decide later that you want to use retrieval arguments,
+you can define them by modifying the data source.</p>
+<A NAME="TI1416"></A>For more information, see <A HREF="imugp51.htm#CAICGCGD">Chapter 5, "Enhancing Reports "</A>.</p>
+<A NAME="CFHBCJBJ"></A><h3>Specifying sorting criteria</h3>
+<A NAME="TI1417"></A><p>In the grid at the bottom of the Quick Select dialog box,
+you can specify if you want the retrieved rows to be sorted. As
+you specify sorting criteria, InfoMaker builds an ORDER BY clause
+for the SELECT statement.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To sort retrieved rows on a column:</p>
+<ol><li class=fi>
+Click in the Sort row for the column you
+want to sort on.<br><br>
+InfoMaker displays a dropdown listbox:<br><br><br><img src="images/defin29.gif"><br>
+</li>
+<li class=ds>
+Select the sorting order for the rows: Ascending
+or Descending.<br><br></li></ol>
+<br><A NAME="TI1418"></A><h4>Multilevel sorts</h4>
+<A NAME="TI1419"></A><p>You can specify as many columns for sorting as you want. InfoMaker processes the
+sorting criteria left to right in the grid: the first column with
+Ascending or Descending specified becomes the highest level sorting
+column, the next column with Ascending or Descending specified becomes
+the next level sorting column, and so on.</p>
+<A NAME="TI1420"></A><p>If you want to do a multilevel sort that doesn't
+match the column order in the grid, drag the columns to the correct
+order and then specify the columns for sorting.</p>
+<A NAME="CFHDACCF"></A><h3>Specifying selection criteria</h3>
+<A NAME="TI1421"></A><p>You can enter selection criteria in the grid to specify which
+rows to retrieve. For example, instead of retrieving data about
+all employees, you might want to limit the data to employees in
+Sales and Marketing or to employees in Sales and Marketing who make
+more than $50,000.</p>
+<A NAME="TI1422"></A><p>As you specify selection criteria, InfoMaker builds a WHERE
+clause for the SELECT statement.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To specify selection criteria:</p>
+<ol><li class=fi>
+Click the Criteria row below the first
+column for which you want to select the data to retrieve.<br><br></li>
+<li class=ds>
+Enter an expression, or if the column has an edit
+style, select or enter a value.<br><br>
+If the column is too narrow for the criteria, drag the grid
+line to enlarge the column. This enlargement does not affect the
+column size in a report.<br><br></li>
+<li class=ds>
+Enter additional expressions until you have specified
+the data you want to retrieve.<br><br></li></ol>
+<br><p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>About edit styles</span> <A NAME="TI1423"></A>If a column has an edit style associated with it in the extended
+attribute system tables (that is, the association was made in the
+Database painter), the edit style is used in the grid--except
+that dropdown listboxes are used for columns with code tables and
+columns using the CheckBox and RadioButton edit styles.</p>
+<A NAME="TI1424"></A><h4>SQL operators supported in Quick Select</h4>
+<A NAME="TI1425"></A><p>You can use these SQL relational operators in the retrieval
+criteria:</p>
+<A NAME="TI1426"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI1427"></A>Operator</th>
+<th align="left" valign=bottom><A NAME="TI1428"></A>Meaning</th>
+</tr>
+<tr><td valign=top><A NAME="TI1429"></A>=</td>
+<td valign=top><A NAME="TI1430"></A>Is equal to (default operator)</td>
+</tr>
+<tr><td valign=top><A NAME="TI1431"></A>&gt;</td>
+<td valign=top><A NAME="TI1432"></A>Is greater than</td>
+</tr>
+<tr><td valign=top><A NAME="TI1433"></A>&lt;</td>
+<td valign=top><A NAME="TI1434"></A>Is less than</td>
+</tr>
+<tr><td valign=top><A NAME="TI1435"></A>&lt; &gt;</td>
+<td valign=top><A NAME="TI1436"></A>Is not equal to</td>
+</tr>
+<tr><td valign=top><A NAME="TI1437"></A>&gt; =</td>
+<td valign=top><A NAME="TI1438"></A>Is greater than or equal to</td>
+</tr>
+<tr><td valign=top><A NAME="TI1439"></A>&lt; =</td>
+<td valign=top><A NAME="TI1440"></A>Is less than or equal to</td>
+</tr>
+<tr><td valign=top><A NAME="TI1441"></A>LIKE</td>
+<td valign=top><A NAME="TI1442"></A>Matches this pattern</td>
+</tr>
+<tr><td valign=top><A NAME="TI1443"></A>NOT LIKE</td>
+<td valign=top><A NAME="TI1444"></A>Does not match this pattern</td>
+</tr>
+<tr><td valign=top><A NAME="TI1445"></A>IN</td>
+<td valign=top><A NAME="TI1446"></A>Is in this set of values</td>
+</tr>
+<tr><td valign=top><A NAME="TI1447"></A>NOT IN</td>
+<td valign=top><A NAME="TI1448"></A>Is not in this set of values</td>
+</tr>
+</table>
+<A NAME="TI1449"></A><p>Because = is the default operator, you can enter
+the value <i>100</i>
+ instead of <i>= 100</i>
+, or
+the value <i>New Hampshire</i>
+ instead of <i>= New
+Hampshire</i>
+.</p>
+<A NAME="TI1450"></A><h4>Comparison operators</h4>
+<A NAME="TI1451"></A><p>You can use the LIKE, NOT LIKE, IN, and NOT IN operators to
+compare expressions.</p>
+<p><b>The LIKE and NOT LIKE operators</b>   Use LIKE to search for strings that match a predetermined
+pattern; use NOT LIKE to find strings that do not match a predetermined
+pattern. When you use LIKE or NOT LIKE, you can use wildcards:<A NAME="TI1452"></A>
+<ul>
+<li class=fi>The percent sign (%),
+like the DOS wildcard asterisk (*), matches multiple characters.
+For example, Good% matches all names that begin with Good.</li>
+<li class=ds>The underscore character (_) matches a
+single character. For example, Good _ _ _ matches
+all 7-letter names that begin with Good.
+</li>
+</ul>
+</p>
+<p><b>The IN and NOT IN operators</b>   Use IN
+to compare and include a value to a set of values; use NOT IN to
+compare and include values that are not in a set of values. For
+example, the following clause selects all employees in department
+100, 200, or 500:<pre>SELECT * from employee<br> <br> WHERE dept_id<i> IN (100, 200, 500)</i> </pre>
+</p>
+<A NAME="TI1453"></A><p>Using NOT IN would exclude employees in those departments.</p>
+<A NAME="TI1454"></A><h4>Connection operators</h4>
+<A NAME="TI1455"></A><p>You can use the OR and AND logical operators to connect expressions.</p>
+<A NAME="TI1456"></A><p>InfoMaker makes some assumptions based on how you specify
+selection criteria. When you specify:<A NAME="TI1457"></A>
+<ul>
+<li class=fi><b>Criteria for more than one column on one line</b>   InfoMaker assumes a logical AND between the criteria. A row
+from the database is retrieved if <i>all</i>
+ criteria
+in the line are met.</li>
+<li class=ds><b>Two or more lines of selection criteria</b>   InfoMaker assumes a logical OR. A row from the database is
+retrieved if the criteria in <i>any</i>
+ of the lines is
+met.
+</li>
+</ul>
+</p>
+<A NAME="TI1458"></A><p>By default, criteria expressions in one line are logically
+ANDed; expressions in different lines are logically ORed. To override
+these defaults, begin an expression with the AND or OR operator:</p>
+<A NAME="TI1459"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI1460"></A>Operator</th>
+<th align="left" valign=bottom><A NAME="TI1461"></A>Meaning</th>
+</tr>
+<tr><td valign=top><A NAME="TI1462"></A>OR</td>
+<td valign=top><A NAME="TI1463"></A>The row is selected if one expression
+OR another expression is true</td>
+</tr>
+<tr><td valign=top><A NAME="TI1464"></A>AND</td>
+<td valign=top><A NAME="TI1465"></A>The row is selected if one expression
+AND another expression are true</td>
+</tr>
+</table>
+<A NAME="TI1466"></A><p>This technique is particularly handy when you want to retrieve
+a range of values in a column. See example 6 below.</p>
+<A NAME="TI1467"></A><h4>SQL expression examples</h4>
+<p><b>Example 1</b>    The following expression in the grid retrieves information
+for employees whose salaries are less than $50,000:</p>
+<br><img src="images/defin30.gif">
+<A NAME="TI1468"></A><p>The SELECT statement that InfoMaker creates is:<pre>SELECT emp_id, dept_id, salary<br> FROM employee<br> WHERE salary &lt; 50000</pre>
+</p>
+<p><b>Example 2</b>    The following expression in the grid retrieves information
+for employees who belong to department 100:</p>
+<br><img src="images/defin31.gif">
+<A NAME="TI1469"></A><p>The SELECT statement that InfoMaker creates is:<pre>SELECT emp_id, dept_id, salary<br> FROM employee<br> WHERE dept_id = 100</pre>
+</p>
+<p><b>Example 3</b>    The following expressions in the grid retrieve information
+for employees whose employee ID is greater than 300 <i>and</i>
+ whose
+salary is less than $50,000:</p>
+<br><img src="images/defin32.gif">
+<A NAME="TI1470"></A><p>The SELECT statement that InfoMaker creates is:<pre>SELECT emp_id, dept_id, salary<br> FROM employee<br> WHERE emp_id &gt;300 AND salary &lt;50000</pre>
+</p>
+<p><b>Example 4</b>    The following expressions in the grid retrieve information
+for employees who either belong to:<A NAME="TI1471"></A>
+<ul>
+<li class=fi>Department 100 <i>and</i>
+ have a salary less
+than $50,000<br>
+<i>or</i>
+<br></li>
+<li class=ds>A department whose ID is greater than 300, no matter
+what their salary
+</li>
+</ul>
+</p>
+<br><img src="images/defin33.gif">
+<A NAME="TI1472"></A><p>The SELECT statement that InfoMaker creates is:<pre>SELECT emp_id, dept_id, salary<br> FROM employee<br> WHERE (dept_id = 100 AND salary &lt; 50000)<br> OR dept_id &gt; 300</pre>
+</p>
+<p><b>Example 5</b>    The following expression in the grid retrieves information
+for employees who are in department 100 <i>or</i>
+ 200 <i>or</i>
+ 500:</p>
+<br><img src="images/defin34.gif">
+<A NAME="TI1473"></A><p>The SELECT statement that InfoMaker creates is:<pre>SELECT emp_id, dept_id, salary<br> FROM employee<br> WHERE dept_id IN (100, 200, 500)</pre>
+</p>
+<p><b>Example 6</b>    The following expressions in the grid retrieve information
+for employees who have an employee ID from 500 to 1000 and a salary
+from $30,000 to $50,000:</p>
+<br><img src="images/defin35.gif">
+<A NAME="TI1474"></A><p>The SELECT statement that InfoMaker creates is:<pre>SELECT emp_id, dept_id, salary<br> FROM employee<br> WHERE (emp_id &gt;= 500 AND emp_id &lt;= 1000)<br> AND (salary &gt;= 30000 AND salary &lt;= 50000)</pre>
+</p>
+<p><b>Example 7</b>    The following expressions in the grid retrieve information
+for employees who have last names that begin with C or G:</p>
+<br><img src="images/defin36.gif">
+<A NAME="TI1475"></A><p>The SELECT statement that InfoMaker creates is:<pre>SELECT emp_last_name, emp_first_name, salary<br> FROM employee<br> WHERE emp_last_name LIKE 'C%'<br> OR emp_last_name LIKE 'G%'</pre>
+</p>
+<A NAME="CFHDDDHF"></A>
+<h2>使用 SQL Select</h2>
+<A NAME="TI1476"></A>
+<p>使用SQL Select可以定义更加复杂的SQL语句。在对应的Painter中你可以实现如下功能：<A NAME="TI1477"></A>
+<ul>
+<li class=fi>多个表</li>
+<li class=ds>查询条件（WHERE子句）</li>
+<li class=ds>排序方式（ORDER BY 子句）</li>
+<li class=ds>分组方式（GROUP BY 和 HAVING子句）</li>
+<li class=ds>计算列</li>
+<li class=ds>参数</li>
+</ul>
+</p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>保存查询</span> <A NAME="TI1478"></A>在Select Painter中，你可以把当前select语句保存为一个查询，方法为菜单中的File &gt; Save。这样你就可以在多个报表中对它进行重复使用。</p>
+<A NAME="TI1479"></A>有关查询的更多信息，请参考<A HREF="imugp49.htm#CFHECFDH">"定义查询"</A>.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> 步骤如下： </p>
+<ol>
+  <li class=fi>
+在选择数据源的对话框中点 SQL Select ，点Next<br>
+<br></li>
+<li class=ds>
+选择用到的表或视图。具体做法参考<A HREF="imugp47.htm#CFHDACIE">"选择表和视图"</A>.<br>
+<br></li>
+<li class=ds>
+选择列，具体做法参考 <A HREF="imugp47.htm#CFHBFFFG">"选择列"</A>.<br>
+<br></li>
+<li class=ds>
+对于多个表，设好表间连接关系。具体做法参考 <A HREF="imugp47.htm#CFHBIAHB">"表间联接"</A>.<br>
+<br></li>
+<li class=ds>
+如果需要的话，设好参数，具体做法参考 <A HREF="imugp47.htm#CFHEAGCA">"使用参数"</A>.<br>
+<br></li>
+<li class=ds>
+设好WHERE、ORDER BY 、GROUP BY、HAVING等子句，请参考<A HREF="imugp47.htm#CFHBADIA"> "定制查询、排序和分组"</A>。<br>
+<br></li>
+<li class=ds>
+用Distinct关键字合并重复行。<br>
+<br></li>
+<li class=ds>
+点击工具栏上的Return按钮，完成查询定义。<br>
+<br></li></ol>
+<br><A NAME="CFHDACIE"></A>
+<h3>选择表和视图</h3>
+<A NAME="TI1480"></A>
+<p>选完SQL Select后，打开选择表的对话框，显面有所有的表和视图（注：不管是不是当前用户的都有）。选中你需要的表，愿老天保佑你对选中的表有操作的权限。</p>
+<A NAME="TI1481"></A>
+<p>对ODBC数据库，表和视图的显示依赖于数据源类型。</p>
+<A NAME="TI1482"></A>
+<p>下面的表中有多个视口（例如：Sort、Compute、Group等），是否显示在View菜单中的views项上设定，下图是使用的是(Default)视口。</p>
+<br><img src="images/db0030.gif">
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To select the tables and views:</p>
+<ol><li class=fi>
+Do one of the following:<A NAME="TI1483"></A>
+<ul>
+<li class=fi>Click the name of each table or view you want to
+open.<br>
+Each table you select is highlighted (to deselect a table,
+click it again). Click the Open button to close the Select Tables
+dialog box.<br></li>
+<li class=ds>Double-click the name of each table or view you
+want to open.<br>
+Each object opens immediately behind the Select Tables dialog
+box. Click the Cancel button to close the Select Tables dialog box.<br>
+</li>
+</ul>
+
+                        <br><br></li></ol>
+<br><A NAME="TI1484"></A><p>Representations of the selected tables and views display.
+You can move or size each table to fit the space as needed.</p>
+<A NAME="TI1485"></A><h4>Specifying what is displayed</h4>
+<A NAME="TI1486"></A><p>You can display the label and data type of each column in
+the tables (the label information comes from the extended attribute
+system tables). If you need more space, you can choose to hide this
+information. </p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To hide or display comments, data types, and labels:</p>
+<ol><li class=fi>
+Position the pointer on any unused area of the
+Table Layout view and select Show from the popup menu.<br><br>
+A cascading menu displays.<br><br></li>
+<li class=ds>
+Select or clear Datatypes, Labels, or Comments as needed.<br><br></li></ol>
+<br><A NAME="TI1487"></A><h4>Colors in the Select painter</h4>
+<A NAME="TI1488"></A><p>The colors used by the Select painter to display the Table
+Layout view background and table information are specified in the
+Database painter. You can also set colors for the text and background
+components in the table header and detail areas.</p>
+<A NAME="TI1489"></A><p>For more information about specifying colors
+in the Database painter, see <A HREF="imugp34.htm#BABDFCJG">"Modifying database preferences"</A>.</p>
+<A NAME="TI1490"></A><h4>Adding and removing tables and views</h4>
+<A NAME="TI1491"></A><p>At any time, you can add tables and views to your Table Layout
+view: </p>
+<A NAME="TI1492"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI1493"></A>To do this</th>
+<th align="left" valign=bottom><A NAME="TI1494"></A>Do this</th>
+</tr>
+<tr><td valign=top><A NAME="TI1495"></A>Add tables or views</td>
+<td valign=top><A NAME="TI1496"></A>Click the Tables button in the PainterBar
+and select tables or views to add</td>
+</tr>
+<tr><td valign=top><A NAME="TI1497"></A>Remove a table or view</td>
+<td valign=top><A NAME="TI1498"></A>Display its popup menu and select Close</td>
+</tr>
+<tr><td valign=top><A NAME="TI1499"></A>Remove all tables and views</td>
+<td valign=top><A NAME="TI1500"></A>Select Design&gt;Undo All from
+the menu bar</td>
+</tr>
+</table>
+<A NAME="TI1501"></A><p>You can also remove individual tables and views from the Table
+Layout view, or clear them all at once and begin selecting a new
+set of tables.</p>
+<A NAME="TI1502"></A>
+<h4>做表间连接</h4>
+<A NAME="TI1503"></A>
+<p>对于多表间的连接，InfoMaker会自作聪明地自动连接，不过大部分情况下都会搞错的。</p>
+<A NAME="TI1504"></A>
+<p>有关表间连接的信息，请参考 <A HREF="imugp47.htm#CFHBIAHB">"表间连接"</A>.</p>
+<A NAME="CFHBFFFG"></A><h3>Selecting columns</h3>
+<A NAME="TI1505"></A><p>You can click each column you want to include from the table
+representations in the Table Layout view. InfoMaker highlights
+selected columns and places them in the Selection List at the top
+of the Select painter.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To reorder the selected columns:</p>
+<ol><li class=fi>
+Drag a column in the Selection List with
+the mouse. Release the mouse button when the column is in the proper
+position in the list:<br><br></li></ol>
+<br><br><img src="images/Defin37.gif">
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To select all columns from a table:</p>
+<ol><li class=fi>
+Move the pointer to the table name and
+select Select All from the popup menu.<br><br></li></ol>
+<br><p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To include computed columns:</p>
+<ol><li class=fi>
+Click the Compute tab to make the Compute
+view available (or select View&gt;Compute if the Compute view
+is not currently displayed).<br><br>
+Each row in the Compute view is a place for entering an expression
+that defines a computed column.<br><br></li>
+<li class=ds>
+Enter an expression for the computed column--for
+example:<br><br>
+<pre>salary / 12</pre>
+<br><br>
+or a function supported by your DBMS (the following is an Adaptive Server Anywhere function):<pre>substr("employee"."emp_fname",1,2)</pre>
+<br><br>
+You can display the popup menu for any row in the Compute
+view. Using the popup menu, you can select and paste columns, functions,
+and arguments (if you have created any) into the expression:<A NAME="TI1506"></A>
+<ul>
+<li class=fi>Names of columns in the tables
+used in the report, form, or pipeline</li>
+<li class=ds>Any retrieval arguments you have specified</li>
+<li class=ds>Functions supported by the DBMS<br><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>About these functions</span> <A NAME="TI1507"></A>The functions listed here are functions provided <i>by
+your DBMS</i>
+. They are not InfoMaker functions. (This is
+because you are now defining a SELECT statement that will be sent
+to your DBMS for processing.)
+<br>
+
+</li>
+</ul>
+<br><br></li>
+<li class=ds>
+Press the tab key to get to
+the next row to define another computed column.<br><br>
+<i>or</i>
+<br><br>
+Click another tab to make additional specifications.<br><br>
+InfoMaker adds the computed columns to the list of columns
+you have selected.<br><br></li></ol>
+<br><p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>About defining computed columns here</span> <A NAME="TI1508"></A>Computed columns you define in the Select painter are added
+to the SQL statement and used by the DBMS to retrieve the data.
+The expression you define here follows your DBMS's rules.</p>
+<A NAME="TI1509"></A>You can also choose to define computed fields, which are created
+and processed dynamically by InfoMaker after the data has been
+retrieved from the DBMS. There are advantages to doing this. For
+example, work is offloaded from the database server, and the computer
+fields update dynamically as data changes in the report (though
+if you have many rows, this updating can result in slower performance).</p>
+<A NAME="TI1510"></A>For more information, see <A HREF="imugp51.htm#CAICGCGD">Chapter 5, "Enhancing Reports "</A>.</p>
+<A NAME="TI1511"></A>
+<h3>显示后对SQL语句</h3>
+<A NAME="TI1512"></A>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> 步骤 </p>
+<ol>
+  <li class=fi>
+点Syntax视口（或选择菜单项中的View &gt; Syntax）。<br>
+<br>
+You may need to use the scroll bar to see all parts of the
+SQL SELECT statement. This statement is updated each time you make
+a change.<br></li>
+</ol>
+<p>另外，如果想直接很爽地自己想怎么写SQL就怎么写SQL的话，在报表Painter的工具栏中选Data Source（就是画着SQL的那个），进入数据源编辑界面后点菜单项Design &gt; Convert To Syntax。切换回来的话是Convert To Graphics，不过这样修改只会修改报表，不会修改查询对象的内容。</p>
+<p><br>
+  <A NAME="TI1513"></A></p>
+<h4>直接编辑SELECT语句</h4>
+<A NAME="TI1514"></A>
+<p>可以在Select Painter中直接编辑SQL语句（注：×你老木，早就想这么干了）。</p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>在图形界面和SQL界面间切换</span> <A NAME="TI1515"></A>如果SQL语句中包含UNION或BETWEEN操作符，那么将无法从SQL界面切换到图形界面，通常情况下，一旦你使用的是SQL界面编辑，最好还是在SQL界面中维护。</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> 切换到SQL界面的步骤如下： </p>
+<ol>
+  <li class=fi>
+选择菜单中的 Design&gt;Convert to Syntax。InfoMaker显示SQL文本编辑器。<br><br></li>
+<li class=ds> 编辑SELECT语句<br><br></li>
+<li class=ds>
+返回到一个Painter:<br><br>
+<A NAME="TI1516"></A>
+<ul>
+<li class=fi><b>Select
+painter</b>   选择菜单上的 Design&gt;Convert to Graphics</li>
+<li class=ds><b>Report painter</b> 点工具栏上的Return按钮   </li>
+</ul>
+<br><br></li></ol>
+<br><A NAME="CFHBIAHB"></A>
+<h3>表间连接</h3>
+<A NAME="TI1517"></A>
+<p>如果有多张表，InfoMaker会根据外键关系做连接：<A NAME="TI1518"></A>
+<ul>
+<li class=fi><b>主/外键关系</b> 自动连接   </li>
+<li class=ds><b>没有主/外键关系</b>   <i></i>
+根据列命自动连接（注：狂晕）。</li>
+</ul>
+</p>
+<A NAME="TI1519"></A><p><img src="images/defin38.gif">
+  <A NAME="TI1520"></A></p>
+<p>因为InfoMaker太喜欢自作聪明，因此你可能需要手工删除一些连接。</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> 删除连接的步骤： </p>
+<ol>
+  <li class=fi>
+点表间的连接操作符（注：就是那个傻×一样的等于号），打开Join对话框。<br>
+<br></li>
+<li class=ds> 按Delete按钮。<br>
+<br></li></ol>
+<br>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> 新建表间连接的步骤 </p>
+<ol>
+  <li class=fi> 点Join按钮<br>
+<br></li>
+<li class=ds>
+点需要连接的接。<br>
+<br></li>
+<li class=ds>
+选择连接操作符，一般都是=，显示如下：<br>
+<br><br><img src="images/defin39.gif"><br>
+</li>
+<li class=ds>
+按OK。<br>
+<br>
+如果DBMS支持外连接，并且在Query Governor中打开了选项Allow Cross Product，外连接也会显示在该对话框中。<br>
+<br>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Query Governor</span> <A NAME="TI1521"></A>用来设置数据连接和返回的一些选项。</p>
+<A NAME="TI1522"></A>有关Query Governor, 请参考
+<A HREF="imugp19.htm#BFCBCFIE">"使用 the Query Governor"</A>.</p>
+</li>
+</ol>
+<br><A NAME="CACJAHDI"></A><h3>Using ANSI outer joins</h3>
+<A NAME="TI1523"></A><p>All InfoMaker database interfaces except Oracle provide support
+for ANSI SQL-92 outer join SQL syntax generation. InfoMaker supports
+both left and right outer joins in graphics mode in the SQL painter,
+and full outer and inner joins in syntax mode. </p>
+<A NAME="TI1524"></A><p>For the DIR, SYC, and MSS database interfaces, the database
+connection defaults to ANSI outer join SQL syntax if the database
+server supports ANSI. For the remaining database interfaces, you
+must select the version of outer join SQL syntax you want InfoMaker to
+generate by setting the OJSyntax DBParm.</p>
+<A NAME="TI1525"></A><p>When OJSyntax is set to ANSI or ANSI_Escape, the
+syntax is generated according to the following BNF (Backus Naur
+form): </p>
+<A NAME="TI1526"></A><p><pre>OUTER-join ::= <br> <i>table-reference</i> {LEFT | RIGHT} OUTER JOIN <i>table-reference</i> ON <i>search-condition</i> <br> <br> <i>table-reference</i> ::= <br> <i>table_view_name</i> [<i>correlation_name</i>] | OUTER-join</pre>
+</p>
+<A NAME="TI1527"></A><h4>Order of evaluation and nesting</h4>
+<A NAME="TI1528"></A><p>In ANSI SQL-92, when nesting joins, the result of the first
+outer join (determined by order of ON conditions) is the operand
+of the outer join that follows it. In InfoMaker, an outer join
+is considered to be nested if the left hand <i>table-reference</i> has
+been used before within the same outer join nested sequence. </p>
+<A NAME="TI1529"></A><p>The order of evaluation for ANSI syntax nested outer joins
+is determined by the order of the ON search conditions. This means
+that you must create the outer joins in the intended evaluation
+order and add nested outer joins to the end of the existing sequence,
+so that the second table-reference in the outer join BNF above will
+always be a <i>table_view_name</i>.
+For example, if you create a left outer join between a column in
+Table1 and a column in Table2, then join the column in Table2 to
+a column in Table3, the product of the outer join between Table1
+and Table2 is the operand for the outer join with Table3. </p>
+<A NAME="TI1530"></A><p>If OJSyntax is set to ANSI_Escape, this generates
+the following syntax: <pre>SELECT Table1.col1, Table2.col1, Table3.col1<br> FROM {oj {oj Table1 LEFT OUTER JOIN Table2 ON Table1.col1 = Table2.col1}<br> LEFT OUTER JOIN Table3 ON Table2.col1 = Table3.col1} </pre>
+</p>
+<A NAME="TI1531"></A><h4>Table references</h4>
+<A NAME="TI1532"></A><p>Table references are considered equal when the table names
+are equal and there is either no alias (correlation name) or the
+same alias for both. Reusing the right hand operand is not allowed,
+because ANSI does not allow referencing the <i>table_view_name</i> twice
+in the same statement without an alias. </p>
+<A NAME="TI1533"></A><h4>Determining left and right outer joins</h4>
+<A NAME="TI1534"></A><p>When you create a join condition, the table you select first
+in the painter is the left operand of the outer join. The table
+that you select second is the right operand. The condition you select
+from the Joins dialog box determines whether the join is a left
+or right outer join.</p>
+<A NAME="TI1535"></A><p>For example, suppose you select the dept_id column
+in the employee table, then select the dept_id column in
+the department table, then choose the following condition: <pre>employee.dept_id = department.dept_id and rows from department that have no employee</pre>
+</p>
+<A NAME="TI1536"></A><p>The syntax generated is: <pre>SELECT employee.dept_id, department.dept_id<br> FROM {oj "employee"  LEFT OUTER JOIN "department"  ON "employee"."dept_id" = "department"."dept_id"}</pre>
+</p>
+<A NAME="TI1537"></A><p>If you select the condition with <pre>rows
+from department that have no employee</pre>
+, you
+create a right outer join instead.</p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Equivalent statements</span> <A NAME="TI1538"></A>The syntax generated when you select Table A then Table B
+and create a left outer join is equivalent to the syntax generated
+when you select Table B then Table A and create a right outer join.</p>
+<A NAME="TI1539"></A><p>For more about outer joins, see your DBMS
+documentation.</p>
+<A NAME="CFHEAGCA"></A><h3>Using retrieval arguments</h3>
+<A NAME="TI1540"></A><p>If you want a report, form, or pipeline to prompt for criteria
+to determine which rows to retrieve when you preview the report,
+run the form, or execute the pipeline, you can use retrieval arguments
+in the SQL SELECT statement. If you define the data source without
+defining retrieval arguments and decide later that you need arguments,
+you can return to the Select painter to define the arguments.</p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Another way to prompt for retrieval criteria</span> <A NAME="TI1541"></A>You can select View&gt;Column Specifications from the
+menu bar. In the Column Specification view, a column of checkboxes
+next to the columns in the data source lets you identify the columns
+to be prompted for. This, like the Retrieval Arguments prompt, calls
+the Retrieve function.</p>
+<A NAME="TI1542"></A>See <A HREF="imugp51.htm#CAICGCGD">Chapter 5, "Enhancing Reports "</A> and <A HREF="imugp119.htm#BFCEACJI">Chapter 16, "Enhancing Forms"</A>.</p>
+<A NAME="TI1543"></A><p>For example, suppose you are creating a report that provides
+information about any employee. When you are defining the report
+in the Report painter, you pass the employee ID as an argument (placeholder).
+When you run the report, you are prompted for the employee ID, you
+supply the ID number, and the report displays information about
+that employee.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To define retrieval arguments:</p>
+<ol><li class=fi>
+Make sure you are in the Select painter
+(from the Report painter or the Form painter, select Design&gt;Data
+Source from the menu bar).<br><br></li>
+<li class=ds>
+In the Select painter, select Design&gt;Retrieval
+Arguments from the menu bar.<br><br></li>
+<li class=ds>
+Enter a name and data type for each argument.<br><br>
+The first character must be alphabetic (a-z); subsequent characters
+can be alphanumeric (a-z, 1-9), an underscore ( _ ), or
+a dollar sign ($).<br><br></li>
+<li class=ds>
+Click the Add button to define additional arguments
+as needed and click OK when done.<br><br></li></ol>
+<br><A NAME="TI1544"></A><h4>Specifying an array as a retrieval argument</h4>
+<A NAME="TI1545"></A><p>You can specify an array of values as your retrieval argument.
+For example, suppose you want a report that shows employee names
+and IDs for a few departments and prompts you to enter the IDs when
+you preview the report.</p>
+<A NAME="TI1546"></A><p>In the Specify Retrieval Arguments dialog box, choose the
+type of array from the Type dropdown listbox. For the case of department
+IDs, the array is a number array.</p>
+<A NAME="TI1547"></A><h3>Referencing retrieval arguments</h3>
+<A NAME="TI1548"></A><p>After you define retrieval arguments, you must reference the
+arguments in the Where tab or Having tab in the Select painter.</p>
+<A NAME="TI1549"></A><p>To <i>reference an argument</i>
+ means to refer
+to the argument in an expression so that InfoMaker can use it as
+a placeholder until you provide the actual value. For example, if
+a report is retrieving all rows from the Department table where the
+DeptID matches a value provided, the WHERE clause looks something
+like this:<pre>WHERE DeptID = :Entered_id</pre>
+</p>
+<A NAME="TI1550"></A><p>where Entered_id was defined previously as a retrieval
+argument in the Specify Retrieval Arguments dialog box.</p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>How retrieval arguments are referenced</span> <A NAME="TI1551"></A>In SQL statements, variables (called host variables) are always
+prefaced with a colon to distinguish them from column names.</p>
+<A NAME="TI1552"></A>A retrieval argument is a variable. To reference the retrieval
+argument Entered_id in a SQL statement, enter:	<pre>:Entered_id</pre>
+</p>
+<A NAME="TI1553"></A><h4>Referencing an array</h4>
+<A NAME="TI1554"></A><p>To reference an array, use the IN operator and reference the
+retrieval argument in the WHERE or HAVING clause.</p>
+<A NAME="TI1555"></A><p>For the case of the array defined as deptarray, the expression
+in the Where view will look like the following expression. You can
+paste the :deptarray argument in using the popup menus in the value
+area of the Where view:</p>
+<br><img src="images/defin39i.gif">
+<A NAME="TI1556"></A><h4>Supplying values for an array argument</h4>
+<A NAME="TI1557"></A><p>When you preview the report, you are prompted to supply the
+department values. InfoMaker retrieves rows that match one of the
+set of values that you supply. For example, if you supply the department
+IDs 100, 200, and 500 as shown, your report displays information
+about these departments:</p>
+<br><img src="images/defin40i.gif">
+<A NAME="CFHBADIA"></A><h3>Specifying selection, sorting,and grouping criteria</h3>
+<A NAME="TI1558"></A><p>In the SELECT statement associated with a report, you
+can add selection, sorting, and grouping criteria that are added
+to the SQL Statement and processed by the DBMS as part of the retrieval.</p>
+<A NAME="TI1559"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI1560"></A>To do this</th>
+<th align="left" valign=bottom><A NAME="TI1561"></A>Use this clause</th>
+</tr>
+<tr><td valign=top><A NAME="TI1562"></A>Limit the data that is retrieved from
+the database</td>
+<td valign=top><A NAME="TI1563"></A>WHERE</td>
+</tr>
+<tr><td valign=top><A NAME="TI1564"></A>Sort the retrieved data before it is
+brought into the report</td>
+<td valign=top><A NAME="TI1565"></A>ORDER BY</td>
+</tr>
+<tr><td valign=top><A NAME="TI1566"></A>Group the retrieved data before it is
+brought into the report</td>
+<td valign=top><A NAME="TI1567"></A>GROUP BY</td>
+</tr>
+<tr><td valign=top><A NAME="TI1568"></A>Limit the groups specified in the GROUP
+BY clause</td>
+<td valign=top><A NAME="TI1569"></A>HAVING</td>
+</tr>
+</table>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Dynamically selecting, sorting, and grouping data</span> <A NAME="TI1570"></A>Selection, sorting, and grouping criteria that you define
+in the Select painter are added to the SQL statement and processed
+by the DBMS as part of the retrieval. You can also define selection,
+sorting, and grouping criteria that are created and processed dynamically
+by InfoMaker <i>after</i>
+ data has been retrieved from
+the DBMS.</p>
+<A NAME="TI1571"></A>For more information, see <A HREF="imugp68.htm#BFCBAIEB">Chapter 7, "Filtering, Sorting, and
+Grouping Rows "</A>.</p>
+<A NAME="CEADJJDC"></A><h4>Defining WHERE criteria</h4>
+<A NAME="TI1572"></A><p>You can limit the rows that are retrieved into the report by
+specifying selection criteria that correspond to the WHERE clause
+in the SELECT statement.</p>
+<A NAME="TI1573"></A><p>For example, if you are retrieving information about employees,
+you can limit the employees to those in Sales and Marketing, or
+to those in Sales and Marketing who make more than $50,000.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To define WHERE criteria:</p>
+<ol><li class=fi>
+Click the Where tab to make the Where view
+available (or select View&gt;Where if the Where view is not
+currently displayed).<br><br>
+Each row in the Where view is a place for entering an expression
+that limits the retrieval of rows.<br><br></li>
+<li class=ds>
+Click in the first row under Column to display
+columns in a dropdown list.<br><br>
+<i>or</i>
+<br><br>
+Select Columns from the popup menu.<br><br></li>
+<li class=ds>
+Select the column you want to use in the left-hand
+side of the expression.<br><br>
+The equality (=) operator displays in the Operator
+column.<br><br><p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Using a function or retrieval argument in the expression</span> <A NAME="TI1574"></A>To use a function, select Functions from the popup menu and
+click a listed function. These are the functions provided by the
+DBMS.</p>
+<A NAME="TI1575"></A>To use a retrieval argument, select Arguments from the popup
+menu. You must have defined a retrieval argument already.</p>
+</li>
+<li class=ds>
+(Optional) Change the default equality operator.<br><br>
+Enter the operator you want, or click to display a list of
+operators and select an operator.<br><br></li>
+<li class=ds>
+Under Value, specify the right-hand side of the
+expression. You can:<A NAME="TI1576"></A>
+<ul>
+<li class=fi>Type
+a value.</li>
+<li class=ds>Paste a column, function, or retrieval argument
+(if there is one) by selecting Columns, Functions, or Arguments
+from the popup menu. </li>
+<li class=ds>Paste a value from the database by selecting Value
+from the popup menu, then selecting a value from the list of values
+retrieved from the database. (It may take some time to display values
+if the column has many values in the database.)</li>
+<li class=ds>Define a nested SELECT statement by selecting Select
+from the popup menu. In the Nested Select dialog box you can define
+a nested SELECT statement. Click Return when you have finished.
+</li>
+</ul>
+
+                          <br><br></li>
+<li class=ds>
+Continue to define additional WHERE expressions as needed.<br><br>
+For each additional expression, select a logical operator
+(AND or OR) to connect the multiple boolean expressions into one
+expression that InfoMaker evaluates as true or false to limit the
+rows that are retrieved.<br><br></li>
+<li class=ds>
+Define sorting (Sort tab), grouping (Group tab), and
+limiting (Having tab) criteria as appropriate.<br><br></li>
+<li class=ds>
+Click the Return button to return to the Report painter.<br><br></li></ol>
+<br><A NAME="TI1577"></A><h4>Defining ORDER BY criteria</h4>
+<A NAME="TI1578"></A><p>You can sort the rows that are retrieved into the report by
+specifying columns that correspond to the ORDER BY clause in the
+SELECT statement.</p>
+<A NAME="TI1579"></A><p>For example, if you are retrieving information about employees,
+you can sort on department, and then within each department, you
+can sort on employee ID.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To define ORDER BY criteria:</p>
+<ol><li class=fi>
+Click the Sort tab to make the Sort view
+available (or select View&gt;Sort if the Sort view is not
+currently displayed).<br><br>
+The columns you selected display in the order of selection.
+You may need to scroll to see your selections.<br><br></li>
+<li class=ds>
+Drag the first column you want to sort on to the
+right side of the Sort view.<br><br>
+This specifies the column for the first level of sorting.
+By default, the column is sorted in ascending order. To specify
+descending order, clear the Ascending checkbox.<br><br></li>
+<li class=ds>
+Continue to specify additional columns for sorting
+in ascending or descending order as needed. <br><br>
+You can change the sorting order by dragging the selected
+column names up or down.With the following sorting specification,
+rows will be sorted first by department name, then by employee ID:<br><br><br><img src="images/defin40.gif"><br>
+</li>
+<li class=ds>
+Define limiting (Where tab), grouping (Group tab),
+and limiting groups (Having tab) criteria as appropriate.<br><br></li>
+<li class=ds>
+Click the SQL Select button to return to the Report painter.<br><br></li></ol>
+<br><A NAME="TI1580"></A><h4>Defining GROUP BY criteria</h4>
+<A NAME="TI1581"></A><p>You can group the retrieved rows by specifying groups that
+correspond to the GROUP BY clause in the SELECT statement. This
+grouping happens <i>before</i>
+ the data is retrieved
+into the report. Each group is retrieved as one row into the report.</p>
+<A NAME="TI1582"></A><p>For example, if in the SELECT statement you group data from
+the Employee table by department ID, you will get one row back from
+the database for every department represented in the Employee table.
+You can also specify computed columns, such as total and average
+salary, for the grouped data. Here is the corresponding SELECT statement:<pre>SELECT dept_id, sum(salary), avg(salary)<br> FROM employee<i><br> GROUP BY dept_id</i> </pre>
+</p>
+<A NAME="TI1583"></A><p>If you specify this with the Employee table in the EAS Demo DB,
+you will get five rows back, one for each department:</p>
+<br><img src="images/defin41.gif">
+<A NAME="TI1584"></A><p>For more about GROUP BY, see your DBMS documentation.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To define GROUP BY criteria:</p>
+<ol><li class=fi>
+Click the Group tab to make the Group view
+available (or select View&gt;Group if the Group view is not
+currently displayed).<br><br>
+The columns in the tables you selected display in the left
+side of the Group view. You may need to scroll to see your selections.<br><br></li>
+<li class=ds>
+Drag the first column you want to group on to
+the right side of the Group view.<br><br>
+This specifies the column for grouping. Columns are grouped
+in the order they are displayed in the right side of the Group view.
+In the following, the report will be grouped by department ID:<br><br><br><img src="images/defin42.gif"><br>
+</li>
+<li class=ds>
+Continue to specify additional columns for grouping
+within the first grouping column as needed.<br><br>
+To change the grouping order, drag the column names in the
+right side to the positions you want.<br><br></li>
+<li class=ds>
+Define sorting (Sort tab), limiting (Where tab),
+and limiting groups (Having tab) criteria as appropriate.<br><br></li>
+<li class=ds>
+Click the Return button to return to the DataWindow
+painter.<br><br></li></ol>
+<br><A NAME="TI1585"></A><h4>Defining HAVING criteria</h4>
+<A NAME="TI1586"></A><p>If you have defined groups, you can define HAVING criteria
+to restrict the retrieved groups. For example, if you group employees
+by department, you can restrict the retrieved groups to departments
+whose employees have an average salary of less than $50,000.
+This corresponds to:</p>
+<A NAME="TI1587"></A><p><pre>SELECT dept_id, sum(salary), avg(salary)<br> FROM employee<br> GROUP BY dept_id<i><br> HAVING avg(salary) &lt; 50000</i> </pre>
+</p>
+<A NAME="TI1588"></A><p>If you specify this with the Employee table in the EAS Demo DB,
+you will get three rows back, because there are three departments
+that have average salaries less than $50,000:</p>
+<br><img src="images/defin43.gif">
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To define HAVING criteria:</p>
+<ol><li class=fi>
+Click the Having tab to make the Having
+view available (or select View&gt;Having if the Having view
+is not currently displayed).<br><br>
+Each row in the Having view is a place for entering an expression
+that limits which groups are retrieved. For information on how to
+define criteria in the Having view, see the procedure in <A HREF="imugp47.htm#CEADJJDC">"Defining WHERE criteria"</A>.<br><br></li></ol>
+<br><A NAME="CACHAFFD"></A><h2>Using Query</h2>
+<A NAME="TI1589"></A><p>When you choose Query as the data source, you select a predefined
+SQL SELECT statement (a <strong>query</strong>) as specifying
+the data for your report.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To define the data using Query:</p>
+<ol><li class=fi>
+While using any of the DataWindow wizards,
+click Query in the Choose Data Source dialog box. Then click Next.<br><br>
+The Select Query dialog box displays.<br><br></li>
+<li class=ds>
+Type the name of a query or use the Browse button
+to find the query. Then click Next.<br><br></li>
+<li class=ds>
+Finish interacting with the DataWindow wizard
+as needed for the presentation style you are using.<br><br></li></ol>
+<br><A NAME="TI1590"></A><p>To learn how to create queries, see <A HREF="imugp49.htm#CFHECFDH">"Defining queries "</A>.</p>
+<A NAME="CACCDGDC"></A><h2>Using External</h2>
+<A NAME="TI1591"></A><p>If the data for the report is not coming from a database (either
+through a native Sybase database interface or through ODBC), specify
+External as the data source. You then specify the data columns and
+their types so InfoMaker can build the appropriate report to
+hold the data. These columns make up the <strong>result set</strong>. InfoMaker places
+the columns you specified in the result set in the report.</p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Using ODBC drivers instead of External</span> <A NAME="TI1592"></A>If you installed ODBC drivers when you installed InfoMaker,
+you have an ODBC dBASE driver and an ODBC text driver on your computer.</p>
+<A NAME="TI1593"></A>If you configure ODBC data sources for the text file driver
+and the dBASE driver, you can access data that resides in a dBASE
+file or a tab-separated text file. To configure data sources, use
+the ODBC Administrator, a Windows utility that is accessible from
+within InfoMaker Utilities folder in the Database painter.</p>
+<A NAME="TI1594"></A>Accessing data by means of the ODBC drivers is easier than
+using External as your InfoMaker data source, because External
+requires you to specify your data as a result set. In other words,
+to use External you have to <i>know</i>
+ your data.</p>
+<A NAME="TI1595"></A>For information on ODBC drivers, see <i>Connecting
+to Your Database</i>
+.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To define the data using External:</p>
+<ol><li class=fi>
+Click External in the Choose Data Source
+dialog box in the wizard. Then click Next.<br><br>
+The Define Result Set dialog box displays for you to specify
+the first column in the result set.<br><br></li>
+<li class=ds>
+Enter the name and type of the column. <br><br>
+Available data types are listed in the dropdown listbox.<br><br></li>
+<li class=ds>
+Click Add to enter the name and type of any additional
+columns you want in the result set.<br><br></li>
+<li class=ds>
+Click Next when you have added all the columns
+you want.<br><br></li></ol>
+<br><A NAME="TI1596"></A><h4>What you do next</h4>
+<A NAME="TI1597"></A><p>Now you must import the data values from the file into the
+report. This is similar to retrieving data from the database.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To import the data values from an external file:</p>
+<ol><li class=fi>
+Make sure the Preview view of the report is
+selected.<br><br></li>
+<li class=ds>
+Select Rows&gt;Import from the menu bar.<br><br>
+The Select Import File dialog box displays.<br><br></li>
+<li class=ds>
+Select the type of files to list from the List
+Files of Type dropdown listbox (either TXT or DBF files).<br><br></li>
+<li class=ds>
+Enter the name of the import file and click OK.<br><br>
+Alternatively, you can select the name from the file list.
+Use the Drives dropdown listbox and the Directories box as needed
+to display the list of files that includes the one you want.<br><br></li></ol>
+<br><A NAME="CACEBEGC"></A><h2>Using Stored Procedure</h2>
+<A NAME="TI1598"></A><p>A <strong>stored procedure</strong> is a set of precompiled
+and preoptimized SQL statements that performs some database operation.
+Stored procedures reside where the database resides, and you can
+access them as needed.</p>
+<A NAME="TI1599"></A><p>You can specify a stored procedure as the data source for
+a report if your DBMS supports stored procedures.</p>
+<A NAME="TI1600"></A><p>For information on support for stored procedures,
+see your database documentation.</p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>If the Stored Procedure icon is not displayed</span> <A NAME="TI1601"></A>The icon for the Stored Procedure data source displays in
+the Choose Data Source dialog box in the DataWindow wizards only
+if the database to which you are connected supports stored procedures.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To define the data using Stored Procedure:</p>
+<ol><li class=fi>
+Select Stored Procedure in the Choose Data
+Source dialog box in the wizard. Then click Next.<br><br>
+The Select Stored Procedure dialog box displays a list of
+the stored procedures in the current database:<br><br><br><img src="images/defin44.gif"><br>
+</li>
+<li class=ds>
+Select a stored procedure from the list.<br><br>
+To list system procedures, select the System Procedure checkbox.<br><br>
+The syntax of the selected stored procedure displays below
+the list of stored procedures. <br><br></li>
+<li class=ds>
+Specify how you want the result set description
+built:<A NAME="TI1602"></A>
+<ul>
+<li class=fi><b>Build the result set description
+automatically</b>   Clear the Manual Result Set checkbox and click Next.<br>
+InfoMaker executes the stored procedure and builds the result
+set description for you. <br></li>
+<li class=ds><b>Define the result set description manually</b>   Select the Manual Result Set checkbox and click Next.<br>
+In the Define Stored Procedure Result Set dialog box:<A NAME="TI1603"></A>
+<ul>
+<li class=fi>Enter the name and type of
+the first column in the result set.</li>
+<li class=ds>To Add additional columns, click Add.</li>
+<li class=ds>To define retrieval arguments or change to another
+stored procedure, click More.
+</li>
+</ul>
+<br>
+</li>
+</ul>
+
+                      <br><br><p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Your preference is saved</span> <A NAME="TI1604"></A>InfoMaker records your preference for building result set
+descriptions for stored procedure reports in the variable Stored_Procedure_Build
+in the InfoMaker initialization file. If this variable is set to
+1, InfoMaker will automatically build the result set; if the variable
+is set to 0, you will be prompted to define the result set description.</p>
+</li>
+<li class=ds>
+Continue in the DataWindow wizard as needed for
+the presentation style you are using.<br><br>
+When you have finished interacting with the wizard, you go
+to the Report painter with the columns specified in the result
+set placed in the report.<br><br>
+For information about defining retrieval arguments
+for reports, see <A HREF="imugp51.htm#CAICGCGD">Chapter 5, "Enhancing Reports "</A>.<br><br></li></ol>
+<br><p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To edit the result set description:</p>
+<ol><li class=fi>
+Select Design&gt;Data Source from
+the menu bar.<br><br>
+This displays the Column Specification view if it's
+not already displayed.<br><br></li>
+<li class=ds>
+Select Stored Procedure from the Column Specification
+view's popup menu.<br><br>
+The Modify Stored Procedure dialog box displays.<br><br></li>
+<li class=ds>
+Edit the Execute statement, select another stored
+procedure, or add arguments.<br><br></li>
+<li class=ds>
+When you have defined the entire result set, click
+OK.<br><br>
+You return to the Report painter with the columns specified
+in the result set placed in the report.<br><br>
+For information about defining retrieval arguments
+for reports, see <A HREF="imugp51.htm#CAICGCGD">Chapter 5, "Enhancing Reports "</A>.<br><br></li></ol>
+<br>

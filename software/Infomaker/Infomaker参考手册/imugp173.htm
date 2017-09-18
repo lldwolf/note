@@ -1,0 +1,59 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+DayNumber</TITLE>
+</HEAD>
+<BODY>
+<A NAME="CAIBDAFA"></A><A NAME="TI6600"></A><h1>DayNumber</h1>
+<A NAME="TI6601"></A><p>
+<FORM>
+<INPUT
+ TYPE = "BUTTON"
+ VALUE = "Examples"
+ onClick = "window.location = 'imugp173.htm#EX25';">
+<INPUT
+  TYPE = "BUTTON"
+ VALUE = "See also"
+ onClick = "window.location = 'imugp173.htm#SA25';">
+</FORM>
+</p>
+<h3>Description</h3><A NAME="TI6602"></A><p>Gets the day of the week of a date value and returns the number
+of the weekday.</p>
+
+<h3>Syntax</h3><pre><b>DayNumber</b> ( <i>date</i> )</pre>
+<A NAME="TI6603"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI6604"></A>Argument</th>
+<th align="left" valign=bottom><A NAME="TI6605"></A>Description</th>
+</tr>
+<tr><td valign=top><A NAME="TI6606"></A><i>date</i></td>
+<td valign=top><A NAME="TI6607"></A>The date from which you want the number
+of the day of the week</td>
+</tr>
+</table>
+
+<h3>Return Values</h3><A NAME="TI6608"></A><p>Integer. Returns an integer (1-7) representing the
+day of the week of <i>date</i>. Sunday is day 1, Monday
+is day 2, and so on.</p>
+
+<A NAME="EX25"></A><h3>Examples</h3><A NAME="TI6609"></A><p>This expression for a computed field returns Wrong
+Day if the date in start_date is not a Sunday or a Monday:<pre>If(<i>DayNumber</i> (start_date) &gt; 2, "Okay", "Wrong Day")</pre>
+</p>
+<A NAME="TI6610"></A><p>This expression for a computed field returns Wrong
+Day if the date in end_date is not a Saturday or a Sunday:<pre>If(<i>DayNumber</i> (end_date) &gt; 1 and <i>DayNumber</i> (end_date) <br> &lt; 7, "Okay", "Wrong Day")</pre>
+</p>
+<A NAME="TI6611"></A><p>This validation rule for the column end_date
+ensures that the day is not a Saturday or Sunday:<pre><i>DayNumber</i> (end_date) &gt;1 and <i>DayNumber</i> (end_date) &lt; 7</pre>
+</p>
+
+<A NAME="SA25"></A><h3>See Also</h3><A NAME="TI6612"></A><p><A NAME="TI6613"></A>
+<ul>
+<li class=fi><A HREF="imugp169.htm#CAICEIEJ">Date</A></li>
+<li class=ds><A HREF="imugp171.htm#CAICIECH">Day</A></li>
+<li class=ds><A HREF="imugp172.htm#CAICGEEJ">DayName</A></li>
+<li class=ds><A HREF="imugp186.htm#CAIDHDBB">IsDate</A></li>
+<li class=ds> 
+</li>
+</ul>
+</p>
+
+

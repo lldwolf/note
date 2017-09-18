@@ -1,0 +1,163 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+RGB</TITLE>
+</HEAD>
+<BODY>
+<A NAME="DWFRGB"></A><A NAME="TI7630"></A><h1>RGB</h1>
+<A NAME="TI7631"></A><p>
+<FORM>
+<INPUT
+ TYPE = "BUTTON"
+ VALUE = "Examples"
+ onClick = "window.location = 'imugp229.htm#EX81';">
+<INPUT
+  TYPE = "BUTTON"
+ VALUE = "See also"
+ onClick = "window.location = 'imugp229.htm#SA81';">
+</FORM>
+</p>
+<h3>Description</h3><A NAME="TI7632"></A><p>Calculates the long value that represents the color specified
+by numeric values for the red, green, and blue components of the
+color.</p>
+
+<h3>Syntax</h3><pre><b>RGB</b> ( <i>red</i>, <i>green</i>, <i>blue</i> )</pre>
+<A NAME="TI7633"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI7634"></A>Argument</th>
+<th align="left" valign=bottom><A NAME="TI7635"></A>Description</th>
+</tr>
+<tr><td valign=top><A NAME="TI7636"></A><i>red</i></td>
+<td valign=top><A NAME="TI7637"></A>The integer value of the red component
+of the color</td>
+</tr>
+<tr><td valign=top><A NAME="TI7638"></A><i>green</i></td>
+<td valign=top><A NAME="TI7639"></A>The integer value of the green component
+of the color</td>
+</tr>
+<tr><td valign=top><A NAME="TI7640"></A><i>blue</i></td>
+<td valign=top><A NAME="TI7641"></A>The integer value of the blue component
+of the color</td>
+</tr>
+</table>
+
+<h3>Return Values</h3><A NAME="TI7642"></A><p>Long. Returns the long that represents the color created by
+combining the values specified in red, green, and blue. If an error
+occurs, RGB returns NULL.</p>
+
+<h3>Usage</h3><A NAME="TI7643"></A><p>The formula for combining the colors is:</p>
+<A NAME="TI7644"></A><p>	Red + (256 * Green) + (65536 * Blue)</p>
+<A NAME="TI7645"></A><p>Use RGB to obtain the long value required to set the color
+for text and drawing objects. You can also set an object's
+color to the long value that represents the color. The RGB function
+provides an easy way to calculate that value.</p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Determining color components</span> <A NAME="TI7646"></A>The value of a component color is an integer between 0 and
+255 that represents the amount of the component that is required
+to create the color you want. The lower the value, the darker the
+color; the higher the value, the lighter the color.</p>
+<A NAME="TI7647"></A><p>The following table lists red, green, and blue values for
+the 16 standard colors:</p>
+<A NAME="TI7648"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI7649"></A>Color</th>
+<th align="left" valign=bottom><A NAME="TI7650"></A>Red value</th>
+<th align="left" valign=bottom><A NAME="TI7651"></A>Green value</th>
+<th align="left" valign=bottom><A NAME="TI7652"></A>Blue value</th>
+</tr>
+<tr><td valign=top><A NAME="TI7653"></A>Black</td>
+<td valign=top><A NAME="TI7654"></A>0</td>
+<td valign=top><A NAME="TI7655"></A>0</td>
+<td valign=top><A NAME="TI7656"></A>0</td>
+</tr>
+<tr><td valign=top><A NAME="TI7657"></A>White</td>
+<td valign=top><A NAME="TI7658"></A>255</td>
+<td valign=top><A NAME="TI7659"></A>255</td>
+<td valign=top><A NAME="TI7660"></A>255</td>
+</tr>
+<tr><td valign=top><A NAME="TI7661"></A>Light Gray</td>
+<td valign=top><A NAME="TI7662"></A>192</td>
+<td valign=top><A NAME="TI7663"></A>192</td>
+<td valign=top><A NAME="TI7664"></A>192</td>
+</tr>
+<tr><td valign=top><A NAME="TI7665"></A>Dark Gray</td>
+<td valign=top><A NAME="TI7666"></A>128</td>
+<td valign=top><A NAME="TI7667"></A>128</td>
+<td valign=top><A NAME="TI7668"></A>128</td>
+</tr>
+<tr><td valign=top><A NAME="TI7669"></A>Red</td>
+<td valign=top><A NAME="TI7670"></A>255</td>
+<td valign=top><A NAME="TI7671"></A>0</td>
+<td valign=top><A NAME="TI7672"></A>0</td>
+</tr>
+<tr><td valign=top><A NAME="TI7673"></A>Dark Red</td>
+<td valign=top><A NAME="TI7674"></A>128</td>
+<td valign=top><A NAME="TI7675"></A>0</td>
+<td valign=top><A NAME="TI7676"></A>0</td>
+</tr>
+<tr><td valign=top><A NAME="TI7677"></A>Green</td>
+<td valign=top><A NAME="TI7678"></A>0</td>
+<td valign=top><A NAME="TI7679"></A>255</td>
+<td valign=top><A NAME="TI7680"></A>0</td>
+</tr>
+<tr><td valign=top><A NAME="TI7681"></A>Dark Green</td>
+<td valign=top><A NAME="TI7682"></A>0</td>
+<td valign=top><A NAME="TI7683"></A>128</td>
+<td valign=top><A NAME="TI7684"></A>0</td>
+</tr>
+<tr><td valign=top><A NAME="TI7685"></A>Blue</td>
+<td valign=top><A NAME="TI7686"></A>0</td>
+<td valign=top><A NAME="TI7687"></A>0</td>
+<td valign=top><A NAME="TI7688"></A>255</td>
+</tr>
+<tr><td valign=top><A NAME="TI7689"></A>Dark Blue</td>
+<td valign=top><A NAME="TI7690"></A>0</td>
+<td valign=top><A NAME="TI7691"></A>0</td>
+<td valign=top><A NAME="TI7692"></A>128</td>
+</tr>
+<tr><td valign=top><A NAME="TI7693"></A>Magenta</td>
+<td valign=top><A NAME="TI7694"></A>255</td>
+<td valign=top><A NAME="TI7695"></A>0</td>
+<td valign=top><A NAME="TI7696"></A>255</td>
+</tr>
+<tr><td valign=top><A NAME="TI7697"></A>Dark Magenta</td>
+<td valign=top><A NAME="TI7698"></A>128</td>
+<td valign=top><A NAME="TI7699"></A>0</td>
+<td valign=top><A NAME="TI7700"></A>128</td>
+</tr>
+<tr><td valign=top><A NAME="TI7701"></A>Cyan</td>
+<td valign=top><A NAME="TI7702"></A>0</td>
+<td valign=top><A NAME="TI7703"></A>255</td>
+<td valign=top><A NAME="TI7704"></A>255</td>
+</tr>
+<tr><td valign=top><A NAME="TI7705"></A>Dark Cyan</td>
+<td valign=top><A NAME="TI7706"></A>0</td>
+<td valign=top><A NAME="TI7707"></A>128</td>
+<td valign=top><A NAME="TI7708"></A>128</td>
+</tr>
+<tr><td valign=top><A NAME="TI7709"></A>Yellow</td>
+<td valign=top><A NAME="TI7710"></A>255</td>
+<td valign=top><A NAME="TI7711"></A>255</td>
+<td valign=top><A NAME="TI7712"></A>0</td>
+</tr>
+<tr><td valign=top><A NAME="TI7713"></A>Brown</td>
+<td valign=top><A NAME="TI7714"></A>128</td>
+<td valign=top><A NAME="TI7715"></A>128</td>
+<td valign=top><A NAME="TI7716"></A>0</td>
+</tr>
+</table>
+
+<A NAME="EX81"></A><h3>Examples</h3><A NAME="TI7717"></A><p>This expression returns as a long 8421376, which
+represents dark cyan:<pre><i>RGB</i> (0,128,128)</pre>
+</p>
+<A NAME="TI7718"></A><p>This expression for the Background.Color property
+of a salary column returns a long that represents red if an employee's
+salary is greater than $50,000 and white if salary is less
+than or equal to $50,000:<pre>If(salary&gt;50000, <i>RGB</i> (255,0,0), <i>RGB</i> (255,255,255))</pre>
+</p>
+
+<A NAME="SA81"></A><h3>See Also</h3><A NAME="TI7719"></A><p><A NAME="TI7720"></A>
+<ul>
+<li class=fi><A HREF="imugp148.htm#X-ref350653848">"Example 3: creating
+a row indicator"</A>
+</li>
+</ul>
+</p>
+
+

@@ -1,0 +1,59 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<script language="javascript" src="css.js"></script>
+<title>权限管理</title>
+</head>
+
+<body>
+<h1>第N章 权限管理
+</h1>
+<h2>N.1 设定对表的访问权限</h2>
+<p>表的权限有如下几种：</p>
+<table width="80%" border="1">
+  <tr>
+    <th width="30%">权限名</th>
+    <th width="70%">说明</th>
+  </tr>
+  <tr>
+    <td>ALTER</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>DELETE</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>INDEX</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>INSERT</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>REFERENCES</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>SELECT</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>UPDATE</td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+<p>赋权限的命令为grant，格式如下：</p>
+<pre>grant 权限名 on 用户名1.表名 to 用户名2</pre>
+<p>例如把用户user1的表table1的select权限赋给用户user2，SQL语句如下：</p>
+<pre>grant select on user1.table1 to user2</pre>
+<p>如果使user2对user1.table1有全部权限，可用如下语句</p>
+<pre>grant all privilege on user1.table1 to user2</pre>
+<h2>N.2 SYSDBA权限</h2>
+<p>虽然可将DBA权限赋给用户，但实际上只有SYS用户拥有DBA权限并可使用SYSDBA身份登录，其实在WINDOWS下，你会发现你随便输入用户名和口令都可以以SYSDBA身份登录，这是因为在安装ORACLE时，默认地把Administrator操作系统用户加到了ORA_DBA组中了，只要把该组中的Administrator用户删掉就可以限制在使用SYSDBA身份登录时只能用SYS用户了。</p>
+<script language="javascript" src="index.js"></script>
+</body>
+</html>

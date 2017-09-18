@@ -1,0 +1,147 @@
+.margin_right20 {
+	MARGIN-RIGHT: 20px
+}
+.newInfo {
+	PADDING-RIGHT: 0px; PADDING-LEFT: 0px; FLOAT: left; PADDING-BOTTOM: 0px; WIDTH: 366px; MARGIN-RIGHT: 10px; PADDING-TOP: 0px
+}
+.newInfo .infoCon {
+	PADDING-RIGHT: 10px; PADDING-LEFT: 10px; PADDING-BOTTOM: 5px; MARGIN: 0px; WIDTH: 351px; PADDING-TOP: 5px; LIST-STYLE-TYPE: none
+}
+.newInfo A {
+	PADDING-RIGHT: 0px; DISPLAY: inline; PADDING-LEFT: 0px; PADDING-BOTTOM: 0px; MARGIN: 0px 10px 0px 0px; LINE-HEIGHT: 25px; PADDING-TOP: 0px
+}
+.sorryInfo {
+	FONT-SIZE: 14px; COLOR: #000; TEXT-ALIGN: center
+}
+.kb_ti {
+	PADDING-RIGHT: 0px; PADDING-LEFT: 10px; FONT-SIZE: 14px; BACKGROUND: #e5f3ff; PADDING-BOTTOM: 3px; PADDING-TOP: 6px
+}
+.cityLay_1 {
+	BORDER-RIGHT: #7f9db9 1px solid; PADDING-RIGHT: 0px; BORDER-TOP: #7f9db9 0px solid; PADDING-LEFT: 0px; Z-INDEX: 999; BACKGROUND: #fff; LEFT: -136px; PADDING-BOTTOM: 0px; BORDER-LEFT: #7f9db9 1px solid; WIDTH: 151px; PADDING-TOP: 5px; BORDER-BOTTOM: #7f9db9 1px solid; POSITION: absolute; TOP: 38px; HEIGHT: 92px; TEXT-ALIGN: center
+}
+.cityLay_1 A {
+	PADDING-RIGHT: 0px; DISPLAY: inline; PADDING-LEFT: 0px; FONT-WEIGHT: normal; FONT-SIZE: 12px; PADDING-BOTTOM: 0px; MARGIN: 0px 6px; LINE-HEIGHT: 25px; PADDING-TOP: 0px
+}
+.cityLay_2 {
+	BORDER-RIGHT: #7f9db9 1px solid; BORDER-TOP: #7f9db9 1px solid; Z-INDEX: 998; BACKGROUND: #fff; LEFT: -344px; BORDER-LEFT: #7f9db9 1px solid; WIDTH: 390px; BORDER-BOTTOM: #7f9db9 1px solid; POSITION: absolute; TOP: 17px; HEIGHT: 300px
+}
+.cityLay_2 .letter {
+	PADDING-LEFT: 10px; FONT-WEIGHT: bold; FONT-SIZE: 14px; WIDTH: 65px; COLOR: #ff6315
+}
+.cityLay_2 .cityNale {
+	PADDING-LEFT: 10px; FONT-SIZE: 12px; WIDTH: 65px
+}
+.cityLaySo_1 {
+	BORDER-RIGHT: #7f9db9 1px solid; PADDING-RIGHT: 0px; BORDER-TOP: #7f9db9 0px solid; PADDING-LEFT: 0px; Z-INDEX: 998; BACKGROUND: #fff; LEFT: 241px; PADDING-BOTTOM: 0px; BORDER-LEFT: #7f9db9 1px solid; WIDTH: 151px; PADDING-TOP: 5px; BORDER-BOTTOM: #7f9db9 1px solid; POSITION: absolute; TOP: 72px; HEIGHT: 92px; TEXT-ALIGN: center
+}
+.cityLaySo_1 A {
+	PADDING-RIGHT: 0px; DISPLAY: inline; PADDING-LEFT: 0px; PADDING-BOTTOM: 0px; MARGIN: 0px 6px; LINE-HEIGHT: 25px; PADDING-TOP: 0px
+}
+.cityLaySo_2 {
+	BORDER-RIGHT: #7f9db9 1px solid; BORDER-TOP: #7f9db9 1px solid; Z-INDEX: 999; BACKGROUND: #fff; LEFT: 409px; BORDER-LEFT: #7f9db9 1px solid; WIDTH: 390px; BORDER-BOTTOM: #7f9db9 1px solid; POSITION: absolute; TOP: 21px; HEIGHT: 300px
+}
+.cityLaySo_2 .letter {
+	PADDING-LEFT: 10px; FONT-WEIGHT: bold; FONT-SIZE: 14px; WIDTH: 65px; COLOR: #ff6315
+}
+.cityLaySo_2 .cityNale {
+	PADDING-LEFT: 10px; FONT-SIZE: 12px; WIDTH: 65px
+}
+.cityLaySearch_1 {
+	BORDER-RIGHT: #7f9db9 1px solid; PADDING-RIGHT: 0px; BORDER-TOP: #7f9db9 0px solid; PADDING-LEFT: 0px; Z-INDEX: 999; BACKGROUND: #fff; LEFT: -136px; PADDING-BOTTOM: 0px; BORDER-LEFT: #7f9db9 1px solid; WIDTH: 151px; PADDING-TOP: 5px; BORDER-BOTTOM: #7f9db9 1px solid; POSITION: absolute; TOP: 21px; HEIGHT: 92px; TEXT-ALIGN: center
+}
+.cityLaySearch_1 A {
+	PADDING-RIGHT: 0px; DISPLAY: inline; PADDING-LEFT: 0px; FONT-WEIGHT: normal; FONT-SIZE: 12px; PADDING-BOTTOM: 0px; MARGIN: 0px 6px; LINE-HEIGHT: 25px; PADDING-TOP: 0px
+}
+.cityLaySearch_2 {
+	BORDER-RIGHT: #7f9db9 1px solid; BORDER-TOP: #7f9db9 1px solid; Z-INDEX: 998; BACKGROUND: #fff; LEFT: -310px; BORDER-LEFT: #7f9db9 1px solid; WIDTH: 390px; BORDER-BOTTOM: #7f9db9 1px solid; POSITION: absolute; TOP: 17px; HEIGHT: 300px
+}
+.cityLaySearch_2 .letter {
+	PADDING-LEFT: 10px; FONT-WEIGHT: bold; FONT-SIZE: 14px; WIDTH: 65px; COLOR: #ff6315
+}
+.cityLaySearch_2 .cityNale {
+	PADDING-LEFT: 10px; FONT-SIZE: 12px; WIDTH: 65px
+}
+.cityLayExpert_2 {
+	Z-INDEX: 998; BACKGROUND: #fff; LEFT: -344px; WIDTH: 390px; POSITION: absolute; TOP: 17px; HEIGHT: 300px
+}
+.cityLayExpert_2 .letter {
+	PADDING-LEFT: 10px; FONT-WEIGHT: bold; FONT-SIZE: 14px; WIDTH: 65px; COLOR: #ff6315
+}
+.cityLayExpert_2 .cityNale {
+	PADDING-LEFT: 10px; FONT-SIZE: 12px; WIDTH: 65px
+}
+.jobType {
+	PADDING-LEFT: 0px; MARGIN-BOTTOM: 8px; COLOR: #999; LINE-HEIGHT: 27px; HEIGHT: 27px
+}
+.jobType SPAN {
+	MARGIN-TOP: 2px; DISPLAY: block; FLOAT: left
+}
+.jobType .chosedSpan {
+	BACKGROUND: url(http://htm.jobui.com/images_so/jobTypeChosed.gif) no-repeat center 2px; WIDTH: 67px; COLOR: #fff; HEIGHT: 29px; TEXT-ALIGN: center
+}
+.jobType A {
+	TEXT-DECORATION: none
+}
+.jobType A:hover {
+	BACKGROUND: none transparent scroll repeat 0% 0%; COLOR: #03b; TEXT-DECORATION: none
+}
+.lh20 {
+	LINE-HEIGHT: 20px
+}
+.lh25 {
+	LINE-HEIGHT: 25px
+}
+.co_bbb {
+	COLOR: #bbb
+}
+.co_666 {
+	COLOR: #333
+}
+.pad15 {
+	PADDING-RIGHT: 15px; PADDING-LEFT: 15px; PADDING-BOTTOM: 0px; PADDING-TOP: 0px
+}
+.pad20 {
+	PADDING-RIGHT: 20px; PADDING-LEFT: 20px; PADDING-BOTTOM: 0px; PADDING-TOP: 0px
+}
+.moreCity {
+	
+}
+.moreCity A {
+	COLOR: #000; TEXT-DECORATION: none
+}
+.moreCity A:hover {
+	BACKGROUND: none transparent scroll repeat 0% 0%; COLOR: #000; TEXT-DECORATION: underline
+}
+.moreClose {
+	
+}
+.moreClose A {
+	COLOR: #f00; TEXT-DECORATION: none
+}
+.moreClose A:hover {
+	BACKGROUND: none transparent scroll repeat 0% 0%; COLOR: #f00; TEXT-DECORATION: underline
+}
+.table_1 {
+	BACKGROUND: #f3f8ff; MARGIN-BOTTOM: 5px
+}
+.table_1 TD {
+	PADDING-RIGHT: 0px; PADDING-LEFT: 5px; PADDING-BOTTOM: 0px; VERTICAL-ALIGN: text-top; WIDTH: 11%; PADDING-TOP: 10px; HEIGHT: 20px; TEXT-ALIGN: left
+}
+.table_1 TD.pName {
+	BORDER-RIGHT: #fff 2px solid; PADDING-LEFT: 23px; FONT-WEIGHT: bold; COLOR: #000; min-width: 70px
+}
+.table_1 A {
+	TEXT-DECORATION: none
+}
+.table_1 A:hover {
+	BACKGROUND: none transparent scroll repeat 0% 0%; COLOR: #03b; TEXT-DECORATION: underline
+}
+.noBackground {
+	BACKGROUND: none transparent scroll repeat 0% 0%
+}
+.pos_rel {
+	POSITION: relative
+}
+TD {
+	VERTICAL-ALIGN: middle
+}

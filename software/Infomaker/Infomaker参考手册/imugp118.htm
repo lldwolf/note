@@ -1,0 +1,239 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+Controlling updates </TITLE>
+</HEAD>
+<BODY>
+<A NAME="CDECDGJE"></A><h1>Controlling updates </h1>
+<A NAME="TI5021"></A><p>When InfoMaker generates the basic form, it defines
+whether the data is updatable by default as follows: <A NAME="TI5022"></A>
+<ul>
+<li class=fi>If the form contains columns from a single
+table and includes that table's key columns, InfoMaker defines
+all columns as updatable and specifies a nonzero tab order for each
+column, allowing users to tab to the columns.</li>
+<li class=ds>If the form contains columns from two or more
+tables or from a view, InfoMaker defines all columns as not being
+updatable and sets all tab orders to zero, preventing users from
+tabbing to them.
+</li>
+</ul>
+</p>
+<A NAME="TI5023"></A><p>You can accept the default settings or modify the update characteristics
+for a form.</p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Data sources in the master/detail styles</span> <A NAME="TI5024"></A>The master/detail styles have a data source for the
+master area and a data source for the detail area. Each of the data
+sources can be updatable.</p>
+<A NAME="TI5025"></A><h2>What you can do</h2>
+<A NAME="TI5026"></A><p>You can:<A NAME="TI5027"></A>
+<ul>
+<li class=fi>Allow updates
+in a form associated with multiple tables or a view; you can define
+one of the tables as being updatable</li>
+<li class=ds>Prevent updates in a form associated with
+one table</li>
+<li class=ds>Prevent updates to specific columns in a form that
+is associated with an updatable table</li>
+<li class=ds>Specify which columns uniquely identify a row to
+be updated</li>
+<li class=ds>Specify which columns should be included in the
+WHERE clause of the UPDATE or DELETE statement InfoMaker generates
+to update the database</li>
+<li class=ds>Specify whether InfoMaker generates an UPDATE statement,
+or a DELETE then an INSERT statement, to update the database when users modify
+the values in a key column
+</li>
+</ul>
+</p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Updatability of views</span> <A NAME="TI5028"></A>Some views are logically updatable; some are not.</p>
+<A NAME="TI5029"></A>For the rules your DBMS follows for updating
+views, see your DBMS documentation.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To specify update characteristics for a form:</p>
+<ol><li class=fi>
+Select Design&gt;Update Properties
+from the menu bar.<br><br></li>
+<li class=ds>
+If the form is a master/detail style,
+select the data source as prompted.<br><br>
+The Specify Update Properties dialog box displays.<br><br></li>
+<li class=ds>
+To prevent updates to the data, make sure the
+Allow Updates box is not selected.<br><br>
+To allow updates, select the Allow Updates box and specify
+the other settings as described below.<br><br></li>
+<li class=ds>
+Click OK.<br><br></li></ol>
+<br><A NAME="TI5030"></A><h4>Changing tab values</h4>
+<A NAME="TI5031"></A><p>InfoMaker does not change the tab values associated with
+columns after you change the update characteristics of the form.
+If you have allowed updates to a table in a multitable form,
+you should change the tab values for the updatable columns so that users can
+tab to them.</p>
+<A NAME="TI5032"></A><p>For more information, see <A HREF="imugp123.htm#BJDDGICH">"Defining the tab order in
+a form"</A>.</p>
+<A NAME="TI5033"></A><h2>Specifying the table to update</h2>
+<A NAME="TI5034"></A><p>Each form can update one table, which you select from
+the Table to Update box in the Specify Update Properties dialog
+box.</p>
+<br><img src="images/Aacu02.gif">
+<A NAME="TI5035"></A><h2>Specifying the unique key columns</h2>
+<A NAME="TI5036"></A><p>The Unique Key Columns box in the Specify Update Properties
+dialog box specifies which columns InfoMaker uses to identify a
+row being updated. InfoMaker uses the column or columns you specify
+here as the key columns when generating the WHERE clause to update
+the database (as described below):</p>
+<br><img src="images/Aacu03.gif">
+<A NAME="TI5037"></A><p>The key columns you select here must uniquely identify a row
+in the table. They can be the table's primary key, though
+they do not have to be.</p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Using the primary key</span> <A NAME="TI5038"></A>Clicking the Primary Key button cancels any changes in the
+Unique Key Columns box and highlights the primary key for the updatable
+table.</p>
+<A NAME="TI5039"></A><h2>Specifying an identity column</h2>
+<A NAME="TI5040"></A><p>Many DBMSs allow you to specify that the value for a column
+in a new row is to be automatically assigned by the DBMS. This kind
+of column is called an <strong>identity column</strong>. Different
+DBMSs provide different types of identity columns. For example,
+some DBMSs allow you to define autoincrement columns so that the
+column for a new row is automatically assigned a value one greater
+than that of the previous highest value. You could use this feature
+to specify that order number be automatically incremented when someone
+adds a new order:</p>
+<br><img src="images/Aacu04.gif">
+<A NAME="TI5041"></A><p>By specifying an identity column in the Specify Update Properties
+dialog box, you tell InfoMaker to bring back the value of a new
+row's identity column after an insert in the form so
+that you can see it.</p>
+<A NAME="TI5042"></A><p>For information about identity columns in
+your DBMS, see your DBMS documentation.</p>
+<A NAME="TI5043"></A><h2>Specifying updatable columns</h2>
+<A NAME="TI5044"></A><p>You can make all or some of the columns in a table updatable.</p>
+<br><img src="images/Aacu05.gif">
+<A NAME="TI5045"></A><p>Updatable columns are displayed with highlighting. Click a
+nonupdatable column to make it updatable. Click an updatable column
+to make it nonupdatable.</p>
+<A NAME="TI5046"></A><h4>Changing tab values</h4>
+<A NAME="TI5047"></A><p>If you have changed the updatability of a column, you should
+change its tab value. For example, if you have allowed a column
+to be updated, you should change its tab value to a nonzero number
+so that users can tab to it.</p>
+<A NAME="TI5048"></A><h2>Specifying the WHERE clause for update/delete</h2>
+<A NAME="TI5049"></A><p>Sometimes multiple users are accessing the same tables at
+the same time. In these situations, you need to decide when to allow
+your form to update the database. If you allow your form to
+always update the database, it could overwrite changes made by other
+users:</p>
+<br><img src="images/Aacu06.gif">
+<A NAME="TI5050"></A><p>You can control when updates succeed by specifying which columns InfoMaker includes
+in the WHERE clause in the UPDATE or DELETE statement used to update
+the database:<pre>UPDATE table...<br> SET <i>column = newvalue</i><b><br> WHERE </b><i>col1 = value1</i><br> AND <i>col2 = value2 ...</i><br> <br> DELETE<br> FROM <i>table</i><b><br> WHERE</b> <i>col1 = value1</i><br> AND <i>col2 = value2 ...</i></pre>
+</p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Using timestamps</span> <A NAME="TI5051"></A>Some DBMSs maintain timestamps so that you can ensure that users are working
+with the most current data. If the SELECT statement for the form contains
+a timestamp column, InfoMaker includes the key column and the timestamp
+column in the WHERE clause for an UPDATE or DELETE statement regardless
+of which columns you specify in the Where Clause for Update/Delete
+box.</p>
+<A NAME="TI5052"></A>If the value in the timestamp column changes (possibly due
+to another user modifying the row), the update fails.</p>
+<A NAME="TI5053"></A>To see whether you can use timestamps with
+your DBMS, see <i>Connecting to Your Database</i>
+.</p>
+<A NAME="TI5054"></A><p>Choose one of the following in the Where Clause for Update/Delete
+box (the results are illustrated by an example following the table):</p>
+<A NAME="TI5055"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI5056"></A>Option</th>
+<th align="left" valign=bottom><A NAME="TI5057"></A>Result</th>
+</tr>
+<tr><td valign=top><A NAME="TI5058"></A>Key Columns</td>
+<td valign=top><A NAME="TI5059"></A>The WHERE clause includes the key columns
+only (these are the columns you specified in the Unique Key Columns
+box)<A NAME="TI5060"></A>The values in the originally retrieved key columns for the
+row are compared against the key columns in the database. No other comparisons
+are done. If the key values match, the update succeeds<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Caution</span> <A NAME="TI5061"></A>Be very careful when using this option. If you tell InfoMaker to include
+only the key columns in the WHERE clause and others modify the same
+row after you retrieve it, their changes are overwritten when you
+update the database (see the example following this table)</p>
+<A NAME="TI5062"></A>Use this option only with a single-user database or if you
+are using database locking. In other situations, choose one of the
+other two options described in this table</td>
+</tr>
+<tr><td valign=top><A NAME="TI5063"></A>Key and Updateable Columns</td>
+<td valign=top><A NAME="TI5064"></A>The WHERE clause includes all key and
+updatable columns<A NAME="TI5065"></A>The values in the originally retrieved key columns and the originally
+retrieved updatable columns are compared against the values in the
+database. If any of the columns has changed in the database since
+the row was retrieved, the update fails</td>
+</tr>
+<tr><td valign=top><A NAME="TI5066"></A>Key and Modified Columns</td>
+<td valign=top><A NAME="TI5067"></A>The WHERE clause includes all key and
+modified columns<A NAME="TI5068"></A>The values in the originally retrieved key columns and the
+modified columns are compared against the values in the database.
+If any of the columns has changed in the database since the row
+was retrieved, the update fails</td>
+</tr>
+</table>
+<A NAME="TI5069"></A><h4>Example</h4>
+<A NAME="TI5070"></A><p>Consider this situation: a form is updating the Employee
+table, whose key is Emp_ID; all columns in the table are
+updatable. Say you have changed the salary of employee 1001 from $50,000
+to $65,000. This is what happens with the different settings
+for the WHERE clause columns:<A NAME="TI5071"></A>
+<ul>
+<li class=fi>If
+you choose Key Columns for the WHERE clause, the UPDATE statement
+looks like this:<pre>UPDATE Employee<br> SET Salary = 65000<br> WHERE Emp_ID = 1001</pre>
+<br>
+This statement succeeds <i>regardless of whether other
+users have modified the row since your form retrieved the
+row</i>
+. For example, if another user had modified the salary
+to $70,000, that change is overwritten when your form updates
+the database.<br></li>
+<li class=ds>If you choose Key and Modified Columns for the WHERE
+clause, the UPDATE statement looks like this:<pre>UPDATE Employee<br> SET Salary = 65000<br> WHERE Emp_ID = 1001<i>	<br> 			AND Salary = 50000</i> </pre>
+<br>
+Here the UPDATE statement is also checking the original value
+of the modified column in the WHERE clause. The statement fails
+if another user changed the salary of employee 1001 after your form retrieved
+the row.<br></li>
+<li class=ds>If you choose Key and Updateable Columns for the
+WHERE clause, the UPDATE statement looks like this:<pre>UPDATE Employee<br> SET Salary = 65000<br> WHERE Emp_ID = 1001	<i><br> 			AND Salary = 50000</i> <i>	<br> 			AND Emp_Fname = original_value</i> <i>	<br> 			AND Emp_Lname = original_value</i> <i>	<br> 			AND Status = original_value</i> 	<i><br> 			...</i> </pre>
+<br>
+Here the UPDATE statement is checking all updatable columns
+in the WHERE clause. This statement fails if any of the updatable
+columns for employee 1001 have been changed since your form retrieved
+the row.<br>
+</li>
+</ul>
+</p>
+<A NAME="TI5072"></A><h2>Specifying update when key is modified</h2>
+<A NAME="TI5073"></A><p>The Key Modification property determines the SQL statements InfoMaker generates
+whenever a key column--a column you specified in the Unique
+Key Columns box--is changed:</p>
+<br><img src="images/Aacu07.gif">
+<A NAME="TI5074"></A><p>The options are:<A NAME="TI5075"></A>
+<ul>
+<li class=fi>Use
+DELETE then INSERT (default)</li>
+<li class=ds>Use UPDATE
+</li>
+</ul>
+</p>
+<A NAME="TI5076"></A><h4>How to choose a setting</h4>
+<A NAME="TI5077"></A><p>Consider the following when choosing the Key Modification
+setting:<A NAME="TI5078"></A>
+<ul>
+<li class=fi>If multiple rows
+are changed, DELETE and INSERT always work. In some DBMSs, UPDATE
+fails if the user modifies two keys and sets the value in one row
+to the original value of the other row.</li>
+<li class=ds>You might choose the setting here based on your
+DBMS triggers. For example, if there is an Insert trigger, you should
+select Use Delete then Insert.</li>
+<li class=ds>If only one row can be modified by the user before
+the database is updated, use UPDATE; it is faster.
+</li>
+</ul>
+</p>
+

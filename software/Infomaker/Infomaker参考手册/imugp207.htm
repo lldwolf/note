@@ -1,0 +1,61 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+Mid</TITLE>
+</HEAD>
+<BODY>
+<A NAME="CAIDEEGG"></A><A NAME="TI7254"></A><h1>Mid</h1>
+<A NAME="TI7255"></A><p>
+<FORM>
+<INPUT
+ TYPE = "BUTTON"
+ VALUE = "Examples"
+ onClick = "window.location = 'imugp207.htm#EX59';">
+</FORM>
+</p>
+<h3>Description</h3><A NAME="TI7256"></A><p>Obtains a specified number of characters from a specified
+position in a string.</p>
+
+<h3>Syntax</h3><pre><b>Mid</b> ( <i>string</i>, <i>start</i> {, <i>length</i> } )</pre>
+<A NAME="TI7257"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI7258"></A>Argument</th>
+<th align="left" valign=bottom><A NAME="TI7259"></A>Description</th>
+</tr>
+<tr><td valign=top><A NAME="TI7260"></A><i>string</i></td>
+<td valign=top><A NAME="TI7261"></A>The string from which you want characters
+returned</td>
+</tr>
+<tr><td valign=top><A NAME="TI7262"></A><i>start</i></td>
+<td valign=top><A NAME="TI7263"></A>A long specifying the position of the
+first character you want returned (the position of the first character
+of the string is 1)</td>
+</tr>
+<tr><td valign=top><A NAME="TI7264"></A><i>length</i>  (optional)</td>
+<td valign=top><A NAME="TI7265"></A>A long whose value is the number of characters
+you want returned. If you do not enter <i>length</i> or
+if <i>length</i> is greater than the number of characters
+to the right of <i>start</i>, Mid returns the remaining
+characters in the string</td>
+</tr>
+</table>
+
+<h3>Return Values</h3><A NAME="TI7266"></A><p>String. Returns characters specified in <i>length</i> of <i>string</i> starting
+at character <i>start</i>. If <i>start</i> is
+greater than the number of characters in <i>string</i>,
+the Mid function returns the empty string (""). If <i>length</i> is
+greater than the number of characters remaining after the <i>start</i> character,
+Mid returns the remaining characters. The return string is not filled
+with spaces to make it the specified length.</p>
+
+<A NAME="EX59"></A><h3>Examples</h3><A NAME="TI7267"></A><p>This expression returns "":<pre><i>Mid</i> ("BABE RUTH", 40, 5)</pre>
+</p>
+<A NAME="TI7268"></A><p>This expression returns BE RUTH:<pre><i>Mid</i> ("BABE RUTH", 3)</pre>
+</p>
+<A NAME="TI7269"></A><p>This expression in a computed field returns ACCESS
+DENIED if the fourth character in the column password is not R:<pre>If(<i>Mid</i> (password, 4, 1) = "R", "ENTER", "ACCESS DENIED")</pre>
+</p>
+<A NAME="TI7270"></A><p>To pass this validation rule the fourth character
+in the column password must be 6:<pre><i>Mid</i> (password, 4, 1) = "6"</pre>
+</p>
+
+

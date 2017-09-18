@@ -1,0 +1,41 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>页面布局</title>
+<script type="text/javascript" src="css.js"></script>
+</head>
+
+<body>
+<h1>第N章 页面布局</h1>
+<hr />
+<h2>N.1 基于表格</h2>
+<h3>N.1.10 常见错误</h3>
+<h4>表格不能填充整个页面</h4>
+<p>表现形式：</p>
+<p>表格的样式如下，三行，上下两行在页面两端，中间行填充剩余区域。</p>
+<pre>&lt;table width=&quot;100%&quot; style=&quot;height: 100%&quot; border=&quot;1&quot;&gt;
+	&lt;tr style=&quot;height:40px&quot; valign=&quot;top&quot;&gt;
+		&lt;td&gt;&amp;nbsp;&lt;/td&gt;
+	&lt;/tr&gt;
+	&lt;tr&gt;
+		&lt;td&gt;&amp;nbsp;&lt;/td&gt;
+	&lt;/tr&gt;
+	&lt;tr style=&quot;height:40px&quot; valign=&quot;bottom&quot;&gt;
+		&lt;td&gt;&amp;nbsp;&lt;/td&gt;
+	&lt;/tr&gt;
+&lt;/table&gt;</pre>
+<p>正常情况下应该是填满整个页面的，但如果页面使用了XHTML 1.0规范，则在某些浏览器上（例如Firefox）不能正常显示。使用该规范时，页面开始的代码如下所示：</p>
+<pre>&lt;!DOCTYPE html PUBLIC &quot;-//W3C//DTD XHTML 1.0 Transitional//EN&quot; &quot;http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd&quot;&gt;
+&lt;html xmlns=&quot;http://www.w3.org/1999/xhtml&quot;&gt;</pre>
+<p>将该段代码删除，直接使用&lt;html&gt;标签，则可解决此问题，此时默认使用的规范是HTML 4。</p>
+<h2>N.2 基于DIV </h2>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<script type="text/javascript" src="css.js"></script>
+</body>
+</html>

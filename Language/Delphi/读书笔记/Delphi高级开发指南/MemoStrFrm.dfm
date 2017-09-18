@@ -1,0 +1,50 @@
+inherited FrmMemoStr: TFrmMemoStr
+  Left = 271
+  Caption = 'FrmMemoStr'
+  ClientWidth = 609
+  PixelsPerInch = 96
+  TextHeight = 12
+  object Memo1: TMemo
+    Left = 145
+    Top = 0
+    Width = 464
+    Height = 453
+    Align = alRight
+    TabOrder = 0
+  end
+  object Button1: TButton
+    Left = 32
+    Top = 40
+    Width = 75
+    Height = 25
+    Caption = #35013#20837#25991#20214
+    TabOrder = 1
+    OnClick = Button1Click
+  end
+  object Button2: TButton
+    Left = 32
+    Top = 120
+    Width = 75
+    Height = 25
+    Caption = #20445#23384#25991#20214
+    TabOrder = 2
+    OnClick = Button2Click
+  end
+  object Button3: TButton
+    Left = 32
+    Top = 200
+    Width = 75
+    Height = 25
+    Caption = #22797#21046#25991#20214
+    TabOrder = 3
+    OnClick = Button3Click
+  end
+  object OpenDialog1: TOpenDialog
+    Left = 112
+    Top = 80
+  end
+  object SaveDialog1: TSaveDialog
+    Left = 120
+    Top = 120
+  end
+end

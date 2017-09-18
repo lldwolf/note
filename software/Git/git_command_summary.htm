@@ -1,0 +1,453 @@
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+	<script type="text/javascript" src="../../mylib/js/css.js"></script>
+	<title>Git Note</title>
+</head>
+
+<body>
+	<p id="title">Git 命令汇总</p>
+	<h1>Git 的一些通用术语</h1>
+	<h2>Git 的几个区</h2>
+	<ul>
+		<li>worktree: 工作区</li>
+		<li>index/stage: 暂存区</li>
+		<li>commit: 本地 repository</li>
+		<li>stash: 备份区</li>
+	</ul>
+	<h2>如何标识 Git 的某次提交</h2>
+	<ul>
+		<li>用 SHA 码标识</li>
+		<li>HEAD，表示当前 repository 的最后一次提交</li>
+		<li>HEAD^，表示当前 repository 的前一次提交，加两个 ^ 就表示前两次提交</li>
+		<li>HEAD~4，表示当前 repository 的前4次提交</li>
+	</ul>
+	<h1>Git 配置</h1>
+	<h2>配置</h2>
+	<pre class="code" data-type="sh">
+# 设置本地用户信息
+git config --global user.name "ll52957"
+git config --global user.email lindong.liu@citi.com
+
+# 默认 push 当前 branch
+git config --global push.default simple
+
+# checkout 时将 LF 换为 CRLF, commit 时自动将 CRLF 换为 LF (适用在 Windows 上开发 Linux 的程序员)
+git config --global core.autocrlf true
+
+# 只在 commit 时自动将 CRLF 换为 LF (适用在 Linux/Mac 程序员)
+git config --global core.autocrlf input
+
+# 保留原始的 LF/CRLF 信息 （适用于 Windows 程序员）
+git config --global core.autocrlf false
+
+# 设定 Notepad++ 为默认的文本编辑器，在提交时如未提供 comments，将自动弹出该文本编辑器
+git config --global core.editor '"C:\Program Files (x86)\Notepad++\notepad++.exe"'</pre>
+	<h2>读取配置</h2>
+	<p>可在 C:\Users\用户名\.gitconfig 文件中看到所有的酌置项。</p>
+	<p>或者使用命令行查看，与设置相似，不加最后的参数就行了</p>
+	<pre class="code" data-type="sh"># 读取本地用户信息
+git config --global user.name</pre>
+	<h2>与 Beyond Compare 集成</h2>
+	<p>对于 3.0.13 版本，其 .gitconfig 如下所示</p>
+	<pre class="code">[diff]
+	external = \"C:\\Program Files (x86)\\Beyond Compare 3\\BCompare.exe\"</pre>
+	<p>对于 3.3.5 版本，.gitconfig 如下所示</p>
+	<pre>[diff]
+	tool = bc3
+[difftool]
+	prompt = false
+[difftool "bc3"]
+	cmd = \"c:/Program Files (x86)/beyond compare 3/bcomp.exe\" "$(cygpath -w $LOCAL)" "$REMOTE"
+[merge]
+	tool = bc3
+[mergetool]
+	prompt = false
+[mergetool "bc3"]
+	cmd = \"c:/program files/beyond compare 3/bcomp.exe\" "$LOCAL" "$REMOTE" "$BASE" "$MERGED"</pre>
+	<p>配置完成后，需使用 git difftool 命令代替 git diff, git mergetool 代替 git merge</p>
+	<h2>一些常用的配置项</h2>
+	<table style="width:80%">
+		<tr>
+			<th>配置项</th>
+			<th>说明</th>
+		</tr>
+		<tr>
+			<td>core.safecrlf</td>
+			<td>
+				<ul>
+					<li>false: 不做任何检查</li>
+					<li>warn: 在提交时检查并警告 (default)</li>
+					<li>true: 在提交时检查，如果发现混用则拒绝提交</li>
+				</ul>
+			</td>
+		</tr>
+	</table>
+	<h1>版本库信息</h1>
+	<pre class="code" data-type="sh">
+# 获取远端 URL 信息 
+git remote -v
+
+# 查看远端 repository id
+git remote show
+
+# 远看远端详细 branch 信息
+git remote show origin
+	</pre>
+	<h1>repository 管理</h1>
+	<pre class="code" data-type="sh">
+# clone master repository
+git clone ssh://git@cedt-icg-bitbucketcli.nam.nsroot.net:7999/c153263/client.git
+
+# clone branch repository
+git clone -b develop/2016_07_bond_analytics ssh://git@cedt-icg-bitbucketcli.nam.nsroot.net:7999/c153263/client.git
+
+# 新建版本库
+mkdir git_test
+cd git_test
+		
+# 初始化 git 环境 
+git init
+
+# 将当前目录加为 Git Repository
+git add .</pre>
+	<h1>branch 管理</h1>
+	<pre class="code" data-type="sh">
+# 创建本地 branch
+git branch [branch_name]
+
+# 切换 branch
+git checkout [branch_name]
+
+# 创建本地 branch 并切换
+git checkout -b [branch_name]
+
+# checkout remote branch to local
+git checkout -b [local_branch] [remote_branch]
+# For ex, git checkout -b release/20160729 remotes/origin/release/20160729
+
+# 将本地 branch 上传至远程
+# 可省略 local_branch_name:remote_branch_name 即是推送当前本地分支
+# 如果只指定本地分支名，远程分支名默认为本地分支名
+# 如果远端没有指定分支名，会自动创建
+# 但要小心 :remote_branch_name 表示删除远端分支，即用空分支来覆盖远端分支
+git push origin [local_branch_name]:[remote_branch_name]
+
+# 获取远程 branch 信息
+git branch -a
+
+# 刷新远程 branch 信息 （如果其他人创建了远程 branch，本地想获取该 branch 信息）
+# 同时该命令将会使用远程 repository 更新本地 repository
+git fetch origin
+
+# 删除本地的远程 branch 信息，如果该 branch 在远程已被删除 (就是那些显示为红色的 remotes/****)
+git fetch -p
+
+# 创建与远程 branch 同名本地 branch 并将代码从远程更新至本地
+# 假设远程分支名为 dev，本地也想使用同样的分支名
+git checkout -b dev origin/dev
+
+# 删除本地 branch
+git branch -d [branch_name]
+
+# 删除远程 branch
+git push origin --delete branch_name
+	</pre>
+	<h1>Tag 管理</h1>
+	<pre class="code" data-type="sh">
+# 查看所有的 tag
+git tag
+
+# 新建 tag
+git tag [tag_name]
+
+# 删除 tag
+git tag -d [tag_name]
+	</pre>
+	<h1>日志</h1>
+	<h2>查看修改日志</h2>
+<pre class="code" data-type="sh"># 查看所有提交记录
+git log
+
+# 查看某文件的改动历史
+git log -- [path]
+
+# 查看某文件的改动历史 (简洁版)
+git log --oneline -- [path]
+
+# 查看某文件的改动历史 (简洁版但SHA完整)
+git log --pretty=oneline -- [path]
+
+# 查看某文件在某时间范围的改动历史
+git log --since 2016-08-08 --until 2016-08-12 -- [path]
+
+# 查看某文件在某时间范围的改动历史(近1月)
+git log --since 1.months -- [path]
+# 查看某文件在某时间范围的改动历史(近7天)
+git log --since 7.days -- [path]
+
+# 查看某提交者对某文件的改动历史
+git log --author="ll52957" -- [path]
+
+# 查看每次提交的行数改动，第1个数字为新增行数，第2个数字为删除行数
+git log --numstat -- [path]
+
+# 显示新增、修改、删除的文件清单
+git log --name-status
+
+# 显示 ASCII 图形表示的分支合并历史
+git log --graph
+
+#-p 选项展开显示每次提交的内容差异
+git log -p
+
+# 用 -2 则仅显示最近的两次更新
+git log -2
+
+# pretty 使用其他格式显示历史提交信息。可用的选项包括 oneline，short，full，fuller 和 format（后跟指定格式）
+# pretty=tformat: 可以定制要显示的记录格式，这样的输出便于后期编程提取分析
+# 下面列出了常用的格式占位符写法及其代表的意义。# #      
+# 选项# 说明# #     
+# %H      提交对象（commit）的完整哈希字串# #  
+# %h      提交对象的简短哈希字串# #  
+# %T      树对象（tree）的完整哈希字串# #      
+# %t      树对象的简短哈希字串# #       
+# %P      父对象（parent）的完整哈希字串# #  
+# %p      父对象的简短哈希字串# #      
+# %an     作者（author）的名字# # 
+# %ae     作者的电子邮件地址# #   
+# %ad     作者修订日期（可以用 -date= 选项定制格式）# #      
+# %ar     作者修订日期，按多久以前的方式显示# #       
+# %cn     提交者(committer)的名字# #   
+# %ce     提交者的电子邮件地址    
+git log --pretty=format:"%h - %an, %ar : %s"
+
+# 查看某个文件的相关提交改动记录
+git blame [path] --date short</pre>	
+	<h2>信息统计</h2>
+	<pre class="code" data-type="sh">
+#--stat   显示每次更新的文件修改统计信息，会列出具体文件列表
+#--shortstat    统计每个commit 的文件修改行数，包括增加，删除，但不列出文件列表
+#--numstat   统计每个commit 的文件修改行数，包括增加，删除，并列出文件列表
+
+# 查看某人在某时间段内的新增/删除行数
+git log --author="ll52957" --pretty=tformat: --numstat --since 2016-08-01 | gawk '{ add += $1 ; subs += $2 ; loc += $1 - $2 } END { printf "added lines: %s removed lines : %s total lines: %s\n",add,subs,loc }'
+
+# 仓库提交次数排名前 5（如果看全部，去掉 head 管道即可）：
+git log --pretty='%an' | sort | uniq -c | sort -k1 -n -r | head -n 5
+
+# 提交数统计
+git log --oneline | wc -l 
+
+# 添加或修改的代码行数
+git log --stat | perl -ne 'END { print $c } $c += $1 if /(\d+) insertions/;'</pre>
+
+# 显示所有贡献者及其commit数
+git shortlog --numbered --summary
+	<h2>操作日志</h2>
+	<pre class="code" data-type="sh"># 查看自己做过的操作
+git reflog
+	</pre>
+	<h1>改动管理</h1>
+	<h2>信息查看</h2>
+	<pre class="code" data-type="sh"># 查看本地代码改动
+git status
+
+# 查看本地代码改动 （简洁版）
+git status -s
+
+# Merge 时列出所有冲突的文件
+git diff --name-only --diff-filter=U
+
+# 查看某文件某次提交时的内容
+git show [commit]:[path]
+
+# 查看某被删除文件的内容
+git show HEAD^:[path]</pre>
+	<h2>工作区与暂存区(Index)互操作</h2>
+	<pre class="code" data-type="sh">
+# 使用通配符将本地改动或新增文件放到暂存区
+git add '*.dll'
+
+# 将本地所有修改/新增文件放到暂存区
+git add .
+
+# 将本地删除的文件放到暂存区
+git rm file_name
+
+# 将本地删除的所有文件放到暂存区
+git rm .
+
+# 将本地所有新增/修改/删除的文件都提交到暂存区
+git add -A
+
+# 将本地所有修改/删除过的文件提交到暂存区
+git add -u
+
+# 将某文件的部分修改放到暂存区
+git add -p [path]
+
+# 将文件从暂存区恢复至工作区
+git reset HEAD [path]</pre>
+	<h2>提交代码</h2>
+	<pre class="code" data-type="sh">
+# 将晳存区的文件提交至本地 repository
+git commit -m comments
+
+# 将本地 repository 改动提交至远程，如果其他人已在远程进行过推送，需使用 pull 命令合并
+git push origin [branch]</pre>
+	<h2>Stash 管理</h2>
+	<pre class="code" data-type="sh"># 将本地所有改动文件标记为 stash 状态
+git stash
+# 完整的 stash 命令
+git stash save "comments"
+
+# 显示 stash 区文件列表(默认显示最新)
+git stash show [stash id]
+
+# 将 stash 文件恢复并删除 stash 进度 (默认最新)
+git stash pop [stash id]
+		
+# 将 stash 文件恢复并保留 stash 进度（默认最新）
+$git stash apply [stash id]
+
+# 列出 stash 区所有版本
+$git stash list
+
+# 将 stash 清空
+$git stash clean
+
+# 删除某个 stash 进度
+$git stash drop [stash id]</pre>
+	<h2>比较</h2>
+	<h3>所有文件比较</h3>
+	<pre class="code" data-type="sh">
+# 比较工作区和暂存区
+git diff
+
+# 比较本地 repository 和工作区
+git diff HEAD
+
+# 比较本地 repository 和暂存区
+git diff --cached
+
+# 比较本地 repository 与远程 repository 区别, 会分页列出改动的文件名及内容，按 q 退出, d 为下一页
+git fetch origin
+git diff dev origin/dev
+
+# 比较本地 repository 与远程 repository 区别，只列出有变化的文件名
+git fetch origin
+git diff --name-only dev origin/dev
+
+# 比较两次提交间的变化
+git diff --name-only SHA1 SHA2
+
+# 列出工作区与本地 repository 中的变化的文件列表（也就是工作区与本地 repository 的区别）
+git diff --name-only
+
+# 列出暂存区与本地 repository 中的变化的文件列表
+git diff --name-only --cached
+
+# 列出本地 repository 当前版本与前一次提交变化的文件列表
+git diff --name-only HEAD^ HEAD
+
+# 列出本地 repository 当前版本与前两次提交变化的文件列表
+git diff --name-only HEAD^^ HEAD
+
+# 列出本地 repository 当前版本与前三次提交变化的文件列表
+git diff --name-only HEAD~3 HEAD
+
+# 比较不同 commit, commit1 为要较新的 commit，commit2 为较旧的 commit
+git diff --name-only commit1..commit2
+
+# 比较当前 branch 与其它 branch 
+git diff --name-only [branch]
+
+# 比较不同 branch, branch1 为要较新的 branch，branch2 为较旧的 branch
+git diff --name-only branch1..branch2
+git diff branch1..branch2 -- [file path]</pre>
+	<h3>单个文件比较</h3>
+	<pre class="code" data-type="sh">
+# 比较指定文件在工作区与暂存区/本地 Repository 的差别
+# 如果暂存区有该文件则与暂存区比较，否则与本地 repository 比较
+git diff -- path
+
+# 比较指定文件在暂存区与本地 repository 的区别
+git diff --cached -- path
+
+# 比较指定文件在本地 repository 与远程 repository 的区别
+git diff origin/master -- [path]
+git diff HEAD origin/master -- [path]
+
+# 比较指定文件在暂存区与远程 repository 的区别
+git diff --cached origin/master -- [path]
+
+# 比较文件工作区与某次提示的区别
+git diff [commit] -- [path]
+
+# 比较不同 commit, commit1 为要较新的 commit，commit2 为较旧的 commit
+git diff commit1..commit2 -- [path]
+
+# 比较当前 branch 与其它 branch 
+git diff --name-only [branch] -- [path]
+
+# 比较不同 branch, branch1 为要较新的 branch，branch2 为较旧的 branch
+git diff branch1..branch2 -- [path]</pre>
+
+	<h2>合并代码</h2>
+	<pre class="code" data-type="sh">
+# 从 dev1 branch 合并到当前 branch
+git merge dev1
+
+# 从远端代码获取最新改动并合并至当前 branch 
+git pull origin master
+
+# 从远端代码获取最新改动并合并至当前 branch (使用 fetch 和 merge )
+# 获取远端change
+git fetch origin
+# 比较远端代码与本地代码区别
+git diff master origin/master
+# 合并远端change
+git merge origin/master
+# 合并远端change的指定文件(同样适用于从其它 branch merge 到当前 branch)
+git checkout --patch origin/master [path]
+
+# 产生冲突时忽略远程修改，使用本地版本
+git checkout --ours [path]
+# 产生冲突时忽略本地修改，使用远程版本
+git checkout --theirs [path]
+
+# 忽略远程修改，强行用本地代码覆盖远端文件
+git push -f origin master</pre>
+	<h2>恢复代码</h2>
+	<pre class="code" data-type="sh">
+# 使用暂存区版本恢复到工作区
+git checkout -- [path]
+
+# 使用某次历史提交覆盖本地修改（覆盖后会自动进入暂存区）
+git checkout [commit] -- [path]
+
+# 使用最新一次提交覆盖本地工作区版本
+git checkout HEAD -- [path]
+
+# 使用远程版本覆盖本地工作区版本
+git checkout origin/master [path]
+
+# 使用远程版本覆盖本地所有改动的文件 (即使有冲突也可以无视)
+git fetch --all
+git reset --hard origin/master
+
+# 回滚到上次提交
+# hard 参数表示同时回滚工作区和暂存区，否则只是简单更改 HEAD 指针位置
+git reset --hard HEAD^
+
+# 回滚到指定提交(包括回滚后悔了可以用 SHA 码前滚到原状态^_^)
+git reset --hard [commit]
+
+# 恢复删除后的文件
+# 获取最后一次提交信息
+git rev-list -n 1 HEAD -- [path]
+# 恢复
+git checkout [deleting_commit]^ -- [path]</pre>
+</body>
+</html>

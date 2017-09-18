@@ -1,0 +1,87 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<title>安装INTools</title>
+<script language="javascript" src="css.js"></script>
+</head>
+
+<body>
+<h1>安装INTools</h1>
+<p>运行安装目录下的Setup.exe文件，出现界面如下：</p>
+<p><img src="images/001.jpg" width="551" height="474"></p>
+<p>运行“INTools Installation”，只要不要求输入就直接点“Next”，直到出现如下界面：</p>
+<p><img src="images/002.jpg" width="503" height="379"></p>
+<p>点击“Display”按钮（须提前安装 Adobe Acrobat），Acrobat运行完毕之后，“Yes”按钮变为可用，进入下一界面：</p>
+<p><img src="images/003.jpg" width="504" height="379"></p>
+<p>选择注册文件所在的目录，注册文件为“C_INDEX.PBD”，选择后点“Next”：</p>
+<p><img src="images/004.jpg" width="505" height="380"></p>
+<p>选择“Standard”按钮：</p>
+<p><img src="images/005.jpg" width="503" height="378"></p>
+<p>输入序列号，Next：</p>
+<p><img src="images/006.jpg" width="322" height="220"></p>
+<p>Yes：</p>
+<p><img src="images/007.jpg" width="504" height="380"></p>
+<p>Full：</p>
+<p><img src="images/008.jpg" width="503" height="380"></p>
+<p>选择安装目录，Next：</p>
+<p><img src="images/009.jpg" width="505" height="378"></p>
+<p>输入SQL Server服务器所在的机器名，下面的INTOOLS为系统自己带出，用途不明，然后就一直Next，直到出现安装进程界面：</p>
+<p><img src="images/010.jpg" width="506" height="379"></p>
+<p><img src="images/011.jpg" width="503" height="379"></p>
+<p><img src="images/012.jpg" width="505" height="379"></p>
+<p><img src="images/013.jpg" width="505" height="379"></p>
+<p><img src="images/014.jpg" width="504" height="380"></p>
+<p>OK，安装安成！</p>
+<h2>安装补丁包</h2>
+<p>下一步是安装补丁包，运行补丁安装程序“Setup.exe”：</p>
+<p><img src="images/015.jpg" width="505" height="380"></p>
+<p><img src="images/016.jpg" width="504" height="380"></p>
+<p>选择“Service Pack nstallation”，Next：</p>
+<p><img src="images/017.jpg" width="503" height="379"></p>
+<p>选择INTools的安装目录，Next：</p>
+<p><img src="images/018.jpg" width="504" height="379"></p>
+<p>选择“Overwrite old database”，Next，开始安装：</p>
+<p><img src="images/019.jpg" width="504" height="382"></p>
+<p><img src="images/020.jpg" width="504" height="379"></p>
+<p>OK，安装完成。</p>
+<h2>安装Intergraph IEE</h2>
+<p>运行“Setup.exe”：</p>
+<p><img src="images/021.jpg" width="504" height="379"></p>
+<p><img src="images/022.jpg" width="504" height="379"></p>
+<p>点“Display”，Acrobat打开后，“Yes”按钮变为可用：</p>
+<p><img src="images/023.jpg" width="506" height="378"></p>
+<p>选择安装目录，与INTools安装目录无关，Next：</p>
+<p><img src="images/024.jpg" width="503" height="377"></p>
+<p><img src="images/025.jpg" width="504" height="380"></p>
+<p><img src="images/026.jpg" width="504" height="378"></p>
+<p><img src="images/027.jpg" width="504" height="379"></p>
+<p>OK，安装完成！</p>
+<h2>安装INTools SmartPlant Report Generator</h2>
+<p>运行“Setup.exe”：</p>
+<p><img src="images/028.jpg" width="504" height="380"></p>
+<p><img src="images/029.jpg" width="505" height="378"></p>
+<p>点“Display”，Acrobat打开后，“Yes”按钮变为可用：</p>
+<p><img src="images/030.jpg" width="505" height="379"></p>
+<p>Full：</p>
+<p><img src="images/031.jpg" width="505" height="378"></p>
+<p>选择安装目录，Next：</p>
+<p><img src="images/032.jpg" width="504" height="378"></p>
+<p><img src="images/033.jpg" width="504" height="379"></p>
+<p><img src="images/034.jpg" width="637" height="118"></p>
+<p>选择“是”：</p>
+<p><img src="images/035.jpg" width="503" height="377"></p>
+<p>OK，完成全部全装，重新启动机器。</p>
+<h2>ORACLE版的特殊配置</h2>
+<p>需要修改下列注册表项</p>
+<ul>
+  <li>HKEY_LOCAL_MACHINE\SOFTWARE\ORACLE\NLS_LANG</li>
+  <li>HKEY_LOCAL_MACHINE\SOFTWARE\ORACLE\HOME0\NLS_LANG </li>
+</ul>
+<p>若ORACLE字符集为中文，则设为SIMPLIFIED CHINESE_CHINA.ZHS16GBK，若为英文，则设为AMERICAN_AMERICA.WE8ISO8859P1，英文可能会有不同，可用下列SQL语句查看</p>
+<pre>select userenv('language') from dual </pre>
+<p>&nbsp;</p>
+<script language="javascript" src="index.js"></script>
+</body>
+</html>

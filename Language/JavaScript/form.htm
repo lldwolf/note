@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+<title>控制表单元素</title>
+</head>
+
+<body>
+<p id="title">控制表单元素</p>
+
+<p>表单元素获取焦点的方法为</p>
+<pre>element.focus();</pre>
+<p>获取表单的方法如下：</p>
+<pre>document.form_name
+document.forms[0]</pre>
+<p>获取表单元素的方式如下</p>
+<pre>form.element_name
+form[&quot;element_name&quot;]</pre>
+<h1>文本框</h1>
+<p>通过其value属性以设置或读取文本框的值，注意，value要小写，不能写成Value，在写成Value的情况下系统不会报错，但不会出现你想要的效果。</p>
+<p>在IE中还可以使用如下方法获取当前光标的位置:</p>
+<pre>&lt;html&gt;
+&lt;head&gt;
+&lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=gb2312&quot;&gt;
+&lt;title&gt;&lt;/title&gt;
+&lt;/head&gt;
+
+&lt;body&gt;
+&lt;script language=&quot;JavaScript&quot;&gt;
+function cc(a)
+{
+	form1.username.focus();
+	var  s=document.selection.createRange(); 
+	s.setEndPoint(&quot;StartToStart&quot;,form1.username.createTextRange());
+	var l=s.text.length;
+	alert(&quot;光标所在伴置：&quot;+l);
+	var str=form1.username.value.substring(0,l)+a+form1.username.value.substring(l,form1.username.value.length);
+	form1.username.value=str;
+	alert(&quot;在光标中间新增字符：&quot;+a);
+}
+&lt;/script&gt;
+&lt;form name=&quot;form1&quot; method=&quot;post&quot; action=&quot;&quot;&gt;
+  &lt;p&gt;
+    &lt;input name=&quot;username&quot; type=&quot;text&quot; id=&quot;username&quot; value=&quot;123456789&quot; size=&quot;50&quot;&gt;
+  &lt;/p&gt;
+  &lt;p&gt;
+    &lt;input type=&quot;button&quot; name=&quot;Submit&quot; value=&quot;测试&quot; onclick='cc(&quot;zuoyefeng&quot;)'&gt;
+  &lt;/p&gt;
+&lt;/form&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+<h1>选择框/列表框</h1>
+<h2>HTML 代码</h2>
+<pre>&lt;!--选择框，若 size 属性大于1则为列表框，加入属性 multiple 则允许多选--&gt;
+&lt;select id=&quot;sel&quot;&gt;
+  &lt;option value=&quot;1&quot;&gt;1&lt;/option&gt;
+  &lt;option value=&quot;2&quot;&gt;2&lt;/option&gt;
+  &lt;option value=&quot;3&quot;&gt;3&lt;/option&gt;
+&lt;/select&gt;</pre>
+<h2>设置选中值</h2>
+<pre>form.sel.selectedIndex = 2;	//选中第3项</pre>
+<h2>取出选中值 </h2>
+<pre>//单选情况
+var val = form.sel.options[form.sel.selectedIndex].value;
+
+//或者
+var val2 = form.sel.value;
+
+//取出选中的项的显示内容，而不是其内部value值
+var val3 = form.sel.options[form.sel.selectedIndex].innerText;
+
+//多选情况
+var i;
+for(i = 0; i < form.sel.options.length; i++)
+{
+  if(form.sel.options[i].selected)
+    ...
+}</pre>
+<h2>添加及删除项</h2>
+<pre>form.sel.options.length = 0;		//删除所有项
+
+//添加新项
+var new_op = new Option(
+    "4", 		//text
+    "value", 	//value
+    false,		//是否为默认选中项
+    false);	//是否选中
+form1.sel.options[form1.sel.options.length] = new_op;</pre>
+<h1>检查框/单选框</h1>
+<p>设定其选中状态：</p>
+<pre>form.chk.checked = true;</pre>
+<p>对于单选框/复选框，一般是网页上有好几个同名的，使用 frm.element_name 方式获取控件时，实际上获取的是一个控件数组，可使用从0开始索引每一个控件。但如果对应名字的检查框只有一个，则返回的就是控件本身，而不是长度为1的数组。</p>
+<p>&nbsp; </p>
+<p>&nbsp; </p>
+<p>&nbsp; </p>
+<p>&nbsp; </p>
+<p>&nbsp; </p>
+<script language="javascript" src="index.js"></script>
+</body>
+</html>

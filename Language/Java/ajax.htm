@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>AJAX</title>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+<p id="title">AJAX</p>
+
+<h1>原始方法</h1>
+<p>本方法不借助于任何的框架及开源项目，体现AJAX在J2EE中的实现如下功能，由页面向服务器发出请求，返回一个字符串，客户端页面显示该字符串。</p>
+<h2>N.1.1 Servlet</h2>
+<p>响应客户端请求的Servlet类为一普通的Servlet，关键在于使用了ServletOutputStream控制输出流，该输出即可则客户端获取。代码如下所示：</p>
+<pre>package lld.test.ajax;
+
+import java.io.IOException;
+
+import javax.servlet.ServletException;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+public class SimpleAjaxServlet extends HttpServlet
+{
+	private static final long serialVersionUID = -668635463669389981L;
+
+	@Override
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+			throws ServletException, IOException
+	{
+		this.doPost(req, resp);
+	}
+
+	@Override
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
+			throws ServletException, IOException
+	{
+		String uname = req.getParameter(&quot;uname&quot;);
+		ServletOutputStream os = resp.getOutputStream();
+		os.print(&quot;Hello, &quot; + uname);
+		System.out.println(&quot;Hello, AJAX!&quot;);
+	}
+}</pre>
+<p>如果客户端传入参数 uname=London，则该Servlet将字符串“Hello, London”输出至客户端。</p>
+<h2>N.1.2 JSP</h2>
+<p>在JSP中使用如下HTML代码发送请求</p>
+<pre>&lt;input type=&quot;button&quot; value=&quot;Simple&quot; onclick=&quot;simple_ajax()&quot; /&gt;</pre>
+<p>关键在于JavaScript代码的写法，如下所示：</p>
+<pre>var bXmlHttpSupport = (typeof XMLHttpRequest != &quot;undefined&quot; || window.ActiveXObject);
+
+function GetXMLHttpRequest() 
+{
+	var oRequest;
+	if(window.ActiveXObject)
+	{
+		var arrSignatures = [&quot;MSXML2.XMLHTTP.6.0&quot;, &quot;MSXML2.XMLHTTP.5.0&quot;, &quot;MSXML2.XMLHTTP.4.0&quot;,
+							 &quot;MSXML2.XMLHTTP.3.0&quot;, &quot;MSXML2.XMLHTTP&quot;,
+							 &quot;Microsoft.XMLHTTP&quot;];
+						 
+		for (var i=0; i &lt; arrSignatures.length; i++) {
+			try {        
+				oRequest = new ActiveXObject(arrSignatures[i]);            
+				return oRequest;        
+			} catch (oError) { /*ignore*/ }
+		}          
+	}
+	else if(window.XMLHttpRequest)
+	{
+		oRequest = new XMLHttpRequest();
+        //oRequest.overrideMimeType('text/html');
+        return oRequest;
+	}
+
+	throw new Error(&quot;MSXML is not installed on your system.&quot;);               
+}
+
+function simple_ajax()
+{
+	if(bXmlHttpSupport)
+	{
+		var frm = document.form1;
+		var sUrl = &quot;SimpleAjax.do?uname=London&quot;;
+		var oRequest = GetXMLHttpRequest();
+		oRequest.onreadystatechange = function() 
+		{
+			if(oRequest.readyState == 4) 
+			{
+				if(oRequest.status == 200)<br />					alert(oRequest.responseText);<br />				else<br />					alert(&quot;无法打开指定资源: &quot; + oRequest.statusText);<br />			}
+		};
+		oRequest.open('POST', sUrl);
+		oRequest.send(null);
+	}
+}</pre>
+<p>其中的XMLHttpRequest用于获取发送异步XML请求的ActiveX对象，可作为一个通用函数在项目中使用。</p>
+<p>在simple_ajax函数中，关键在于定义XMLHttpRequest.onReadyStateChange事件，指定请求返回后的动作，在此我只是简单地显示从服务器返回的结果。</p>
+<p>oRequest对象有一个readyState属性，该属性从请求发送到接收响应期间会发生变化。readyState共有5种可能的取值：</p>
+<table width="60%" >
+  <tr>
+    <th>readyState</th>
+    <th>说明</th>
+  </tr>
+  <tr>
+    <td>0</td>
+    <td>uninitialized，未初始化，即对象已经创建，但还没有调用open()方法</td>
+  </tr>
+  <tr>
+    <td>1</td>
+    <td>loading，载入中，即 open()方法已经调用，但请求还没有发送</td>
+  </tr>
+  <tr>
+    <td>2</td>
+    <td>loaded，已载入，即请求已经发送</td>
+  </tr>
+  <tr>
+    <td>3</td>
+    <td>interactive，交互中，即已经接收到部分响应</td>
+  </tr>
+  <tr>
+    <td>4</td>
+    <td>complete，完成，即所有数据都已经收到，连接已经关闭</td>
+  </tr>
+</table>
+<p>但如果出现意外情况，例如，如果请求的URL地址写错了，其readyState仍然会设为4，不过只有在其status为200时，才表示正确返回。</p>
+<h2>N.1.3 web.xml </h2>
+<p>在其中添加servlet支持，如下所示：</p>
+<pre>&lt;servlet&gt;
+	&lt;servlet-name&gt;SimpleAjax&lt;/servlet-name&gt;
+	&lt;servlet-class&gt;lld.test.ajax.SimpleAjaxServlet&lt;/servlet-class&gt;
+&lt;/servlet&gt;
+
+&lt;servlet-mapping&gt;
+	&lt;servlet-name&gt;SimpleAjax&lt;/servlet-name&gt;
+	&lt;url-pattern&gt;/SimpleAjax.do&lt;/url-pattern&gt;
+&lt;/servlet-mapping&gt;</pre>
+<h1>使用Prototype</h1>
+<p>需提前下载prototype.js并置于自己的项目中，本例实现的功能与上例类似，Prototype对XMLHttpRequest进行了封装，我们可以使用较为简单的方式发送请求。</p>
+<h2>N.2.1 Servlet</h2>
+<p>实际上与上例的Servlet完全一样。内容如下：</p>
+<pre>package lld.test.ajax;
+
+import java.io.IOException;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+public class PrototypeAjaxServlet extends HttpServlet
+{
+	private static final long serialVersionUID = -839091745512216332L;
+
+	@Override
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+			throws ServletException, IOException
+	{
+		this.doPost(req, resp);
+	}
+
+	@Override
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
+			throws ServletException, IOException
+	{
+		String uname = req.getParameter(&quot;uname&quot;);
+		String return_str = &quot;Hello, &quot; + uname;
+		resp.getOutputStream().print(return_str);
+		resp.getOutputStream().close();
+		System.out.println(return_str);
+	}
+
+}</pre>
+<h2>N.2.2 JSP</h2>
+<p>首先，要在页面中引用prototype.js</p>
+<pre>&lt;script type=&quot;text/javascript&quot; src=&quot;js/prototype.js&quot;&gt;&lt;/script&gt;</pre>
+<p>发送请求的HTML代码</p>
+<pre>&lt;input type=&quot;button&quot; value=&quot;Prototype&quot; onclick=&quot;prototype_ajax()&quot; /&gt;</pre>
+<p>发送/接收请求的JavaScript代码</p>
+<pre>function prototype_ajax()
+{
+	var url = &quot;PrototypeAjax.do&quot;;
+	var pars = &quot;uname=London&amp;reqid=&quot; + Math.random();
+	var myAjax = new Ajax.Request(
+		url,
+		{method: 'post', parameters: pars, onComplete: prototype_response}
+	);
+}
+
+function prototype_response(req)
+{
+	alert(req.responseText);
+}</pre>
+<p>与使用原始方法相比，该方式更为简洁直观。</p>
+<p>在发送请求时，使用了一个随机数作为参数，是因为浏览器缓存的缘故，如果在调试过程中更改了程序，使用随机数参数可以强制程序不使用缓存中的数据，从而可反映出程序最新的变化。</p>
+<h2>N.2.3 web.xml</h2>
+<pre>&lt;servlet&gt;
+	&lt;servlet-name&gt;PrototypeAjax&lt;/servlet-name&gt;
+	&lt;servlet-class&gt;lld.test.ajax.PrototypeAjaxServlet&lt;/servlet-class&gt;
+&lt;/servlet&gt;
+
+&lt;servlet-mapping&gt;
+	&lt;servlet-name&gt;PrototypeAjax&lt;/servlet-name&gt;
+	&lt;url-pattern&gt;/PrototypeAjax.do&lt;/url-pattern&gt;
+&lt;/servlet-mapping&gt;</pre>
+<h1>DWR</h1>
+<p>DWR框架是当前比较流行的一个AJAX框架，通过DWR，用户可以以透明的方式在JavaScript中使用Java对象，当然，要提前把需要的配置文件做好。</p>
+<p>目录的DWR官方网站为 <a href="http://getahead.org/dwr/">http://getahead.org/dwr/</a></p>
+<h2>N.3.1 Java对象 </h2>
+<p>如果使用DWR，就不需要使用Servlet对象了，下面是一个简单的Java类，功能我不说了，我实在懒得描述如此简单的类的功能。</p>
+<pre>package lld.test.ajax;
+
+public class DwrAjaxBean
+{
+	public String sayHello(String uname)
+	{
+		return &quot;Hello, &quot; + uname;
+	}
+}</pre>
+<h2>N.3.2 配置</h2>
+<p>要使用DWR框架，需要做以下配置</p>
+<h3>N.3.2.1 dwr.xml</h3>
+<p>在WEB-INF根目录下建立dwr.xml，内容如下：</p>
+<pre>&lt;!DOCTYPE dwr PUBLIC
+    &quot;-//GetAhead Limited//DTD Direct Web Remoting 2.0//EN&quot;
+    &quot;http://getahead.org/dwr/dwr20.dtd&quot;&gt;
+
+&lt;dwr&gt;
+  &lt;allow&gt;
+    &lt;create creator=&quot;new&quot; javascript=&quot;DwrAjaxBean&quot;&gt;
+      &lt;param name=&quot;class&quot; value=&quot;lld.test.ajax.DwrAjaxBean&quot;/&gt;
+    &lt;/create&gt;
+  &lt;/allow&gt;
+&lt;/dwr&gt;</pre>
+<p>在里面定义了要在JSP中使用的Java对象，其中 javascript=&quot;DwrAjaxBean&quot; 表示将生成一个 DwrAjaxBean.js 文件，javascript可使用该对象来模拟使用真正的Java对象。</p>
+<h3>N.3.2.2 web.xml</h3>
+<p>在Web.xml中加入如下Servlet</p>
+<pre>&lt;servlet&gt;
+  &lt;servlet-name&gt;dwr-invoker&lt;/servlet-name&gt;
+  &lt;servlet-class&gt;org.directwebremoting.servlet.DwrServlet&lt;/servlet-class&gt;
+  &lt;init-param&gt;
+	 &lt;param-name&gt;debug&lt;/param-name&gt;
+	 &lt;param-value&gt;true&lt;/param-value&gt;
+  &lt;/init-param&gt;
+&lt;/servlet&gt;
+
+&lt;servlet-mapping&gt;
+  &lt;servlet-name&gt;dwr-invoker&lt;/servlet-name&gt;
+  &lt;url-pattern&gt;/dwr/*&lt;/url-pattern&gt;
+&lt;/servlet-mapping&gt;</pre>
+<h2>N.3.3 在JSP中使用</h2>
+<p>相对前面两例，使用DWR框架的JSP页面要显得复杂，首先，要引入如下3个js包</p>
+<pre>&lt;script type='text/javascript' src='dwr/interface/DwrAjaxBean.js'&gt;&lt;/script&gt;
+&lt;script type='text/javascript' src='dwr/engine.js'&gt;&lt;/script&gt;
+&lt;script type='text/javascript' src='dwr/util.js'&gt;&lt;/script&gt;</pre> 
+<p>只要正确配置了DWR，上述的js文件会在运行时自动生成。关键是第一个js文件，它的名称要与dwr.xml中设置的一致。</p>
+<p>JSP中的HTML代码如下所示：</p>
+<pre>&lt;input type='button' value='Hello' onclick='hello();' /&gt;</pre>
+<p>发送/接受请求的javascript代码如下所示：</p>
+<pre>function hello() 
+{
+    var user = &quot;London&quot;;
+    DwrAjaxBean.sayHello(user, callbackAjax);
+}
+ 
+function callbackAjax(msg) 
+{
+   alert(msg);
+}</pre>
+<h1>隐藏帧</h1>
+<p>在我们的第一个例子中，我使用XmlHttpRequest实现AJAX，我称之为原始的AJAX实现，那么，使用隐藏帧来实现AJAX，则可称之为史前的AJAX实现了。这是AJAX最早的实现方法，事实上，Google的主页及Gmail都是使用隐藏帧技术实现的AJAX。</p>
+<p>隐藏帧技术描述如下：使用一个隐藏的frame/iframe，主页面发送请求时，指定返回页面为该隐藏帧，这样，整个页面就不会被刷新，然后，主页面到隐藏帧中去取得返回的数据并进行处理即可。</p>
+<p>使用隐藏帧技术实现AJAX有如下好处：</p>
+<ul>
+  <li>只需浏览器支持HTML 4即可，不须ActiveX之类的支持</li>
+  <li>可以维护浏览器历史，用户仍然可以使用浏览器上的后退和前进按钮。</li>
+</ul>
+<p>尤其是第2个优点，如果用户有很强烈的要求的话，使用隐藏帧几乎就成了惟一的选择（如果使用AJAX），曾经看到有人提出了在使用AJAX的情况下如何保持前进/后退按钮的功能，主要就是如可以时间键存储页面信息，JS代码写得繁复无比，并且也没有完全解决这个问题。呵呵，如果使用隐藏帧技术，就不用这么麻烦了。</p>
+<p>使用隐藏帧的缺点是如果隐藏帧载入失败，用户得不到任何出错信息，调试起来会比较费力一点。</p>
+<p>好了，言归正传，我使用隐藏帧技术实现前面例子的简单功能，根据页面传入的一个字符串参数后台生成一个字符串，并在前台显示，为了显示前进/后退按钮是可用的，我加了一个时间标记。</p>
+<p>本例包含如下几个文件：</p>
+<ul>
+  <li>hidden_frame.jsp: 用于发送AJAX请求 </li>
+  <li>ajax_callback.jsp: 用于隐藏帧，接收AJAX请求</li>
+  <li> HiddenFrameAjaxServlet.java: 后台的servlet类</li>
+  <li>web.xml</li>
+</ul>
+<h2>N.4.1 hidden_frame.jsp</h2>
+<pre>&lt;%@ page language=&quot;java&quot; contentType=&quot;text/html; charset=GB18030&quot;
+    pageEncoding=&quot;GB18030&quot;%&gt;
+&lt;!DOCTYPE html PUBLIC &quot;-//W3C//DTD HTML 4.01 Transitional//EN&quot; &quot;http://www.w3.org/TR/html4/loose.dtd&quot;&gt;
+&lt;html&gt;
+&lt;head&gt;
+&lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=GB18030&quot;&gt;
+&lt;title&gt;Insert title here&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;form name=&quot;form1&quot;&gt;
+	&lt;input type='button' value='Hello' onclick='hello()' /&gt; 
+&lt;/form&gt;
+&lt;div id=&quot;div1&quot;&gt;&lt;/div&gt;
+&lt;iframe id=&quot;frame1&quot; src=&quot;about:blank&quot; width=&quot;0&quot; height=&quot;0&quot; style=&quot;display:none&quot;&gt;
+&lt;/iframe&gt;
+&lt;script type=&quot;text/javascript&quot;&gt;
+
+function hello() 
+{
+    var user = &quot;London&quot;;
+    var hid_frame = document.getElementById(&quot;frame1&quot;);
+    hid_frame.src = &quot;HiddenFrameAjax.do?uname=&quot; + user + &quot;&amp;reqid=&quot; + Math.random();
+    
+}
+ 
+function callbackAjax(msg) 
+{
+   document.getElementById(&quot;div1&quot;).innerHTML = msg;
+} 
+&lt;/script&gt; 
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+<p>页面里我定义了一个iframe，使用CSS属性定义为隐藏，对于Firefox，仅设其高度和宽度为0是不够的，你会看到有一个小点，呵呵，不晓得Mozila这样的目的是啥。</p>
+<h2>N.4.2 ajax_callback.jsp</h2>
+<pre>&lt;%@ page language=&quot;java&quot; contentType=&quot;text/html; charset=GB18030&quot;
+    pageEncoding=&quot;GB18030&quot;%&gt;
+&lt;!DOCTYPE html PUBLIC &quot;-//W3C//DTD HTML 4.01 Transitional//EN&quot; &quot;http://www.w3.org/TR/html4/loose.dtd&quot;&gt;
+&lt;html&gt;
+&lt;head&gt;
+&lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=GB18030&quot;&gt;
+&lt;title&gt;Insert title here&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;h1&gt;aaa&lt;/h1&gt;
+&lt;div id=&quot;div1&quot;&gt;${uname}&lt;/div&gt;
+&lt;script type=&quot;text/javascript&quot;&gt;
+window.onload = function()
+{
+	var retstr = document.getElementById(&quot;div1&quot;).innerHTML;
+	parent.callbackAjax(retstr);
+}
+&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+<p>这个页面功能更简单，用于接收请求结果，该页面是要放到隐藏帧中的。关键在于设定window.onload事件，在页面载入完成后调用父页面的响应函数callbackAjax。</p>
+<h2>N.4.3 HiddenFrameAjaxServlet.java</h2>
+<pre>package lld.test.ajax;
+
+import java.io.IOException;
+import java.util.Date;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+public class HiddenFrameAjaxServlet extends HttpServlet
+{
+	private static final long serialVersionUID = -595334169176542957L;
+
+	@Override
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+			throws ServletException, IOException
+	{
+		this.doPost(req, resp);
+	}
+
+	@Override
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
+			throws ServletException, IOException
+	{
+		String uname = req.getParameter(&quot;uname&quot;);
+		System.out.println(&quot;get uname = &quot; + uname);
+		String retstr = &quot;Hello, &quot; + uname + &quot;, &quot; + (new Date());
+		req.setAttribute(&quot;uname&quot;, retstr);
+		req.getRequestDispatcher(&quot;/ajax_callback.jsp&quot;).forward(req, resp);
+	}
+
+}</pre>
+<p>这是用于处理请求的普通Servelt，与非AJAX的Servlet完全一样，这是与前几例不同的地方。使用隐藏帧，功夫全在前台javascript上，后台不用去操心。</p>
+<h2>N.4.4 web.xml</h2>
+<p>添加Servlet描述</p>
+<pre>&lt;servlet&gt;
+	&lt;servlet-name&gt;HiddenFrameAjax&lt;/servlet-name&gt;
+	&lt;servlet-class&gt;lld.test.ajax.HiddenFrameAjaxServlet&lt;/servlet-class&gt;
+&lt;/servlet&gt;
+
+&lt;servlet-mapping&gt;
+	&lt;servlet-name&gt;HiddenFrameAjax&lt;/servlet-name&gt;
+	&lt;url-pattern&gt;/HiddenFrameAjax.do&lt;/url-pattern&gt;
+&lt;/servlet-mapping&gt;</pre>
+<h2>N.4.5 Post方式</h2>
+<p>上例我是使用了Get方式发送请求，如果要使用post方式的话，只需要一个简单的小技巧，那就是使用form标签的target属性，将其设为隐藏帧即可。</p>
+<h1>N.5 Struts2下的jsonplugin</h1>
+<p>对于前面的例子，如果使用XmlHttpRequest实现AJAX，依赖于在服务器端使用Response对象生成返回结果。在struts 1.x版本中，这一点不成问题，但对于struts2中，其MVC框架中隐藏了Request、Response这些对象。不过这一点问题不大，我们仍然可以使用某些手段取得这些对象。但这不是本节讲述的内容，本节主要讲述struts2下的AJAX工具jsonplugin，它是由Google发布的，也算是身出名门，其官方首页为<a href="http://cwiki.apache.org/S2PLUGINS/json-plugin.html">http://cwiki.apache.org/S2PLUGINS/json-plugin.html</a></p>
+<p>该插件可以将Action类中的属性（带getter和setter的成员变量）以JSON格式返回，与struts2集成的相当完美，只需在映射配置文件中做很少的改动即可。</p>
+<p>本节只讲述如何使用jsonplugin，有关struts2的使用及JSON格式说明，请参考本人相关的文章。</p>
+<p>与jsonplugin相关的内容体现在如下几个文件中：</p>
+<ul>
+  <li>index.jsp：发送请求并获取JSON格式结果</li>
+  <li>struts-test.xml：struts2的action映射配置</li>
+  <li>JsonTestAction.java：请求处理Action类</li>
+</ul>
+<h2>N.5.1 index.jsp</h2>
+<p>为了避免麻烦，我仍然使用最原始的XmlHttpRequest请求方式，相关JS代码如下所示：</p>
+<pre>&lt;script type=&quot;text/javascript&quot;&gt;
+var bXmlHttpSupport = (typeof XMLHttpRequest != &quot;undefined&quot; || window.ActiveXObject);
+
+function GetXMLHttpRequest() 
+{
+	var oRequest;
+	if(window.ActiveXObject)
+	{
+		var arrSignatures = [&quot;MSXML2.XMLHTTP.6.0&quot;, &quot;MSXML2.XMLHTTP.5.0&quot;, &quot;MSXML2.XMLHTTP.4.0&quot;,
+							 &quot;MSXML2.XMLHTTP.3.0&quot;, &quot;MSXML2.XMLHTTP&quot;,
+							 &quot;Microsoft.XMLHTTP&quot;];
+						 
+		for (var i=0; i &lt; arrSignatures.length; i++) {
+			try {        
+				oRequest = new ActiveXObject(arrSignatures[i]);            
+				return oRequest;        
+			} catch (oError) { /*ignore*/ }
+		}          
+	}
+	else if(window.XMLHttpRequest)
+	{
+		oRequest = new XMLHttpRequest();
+        //oRequest.overrideMimeType('text/html');
+        return oRequest;
+	}
+
+	throw new Error(&quot;MSXML is not installed on your system.&quot;);               
+}
+
+function json_ajax()
+{
+	if(bXmlHttpSupport)
+	{
+		var frm = document.form1;
+		var sUrl = &quot;test/Hello.action?helloStr=London&quot;;
+		var oRequest = GetXMLHttpRequest();
+		oRequest.onreadystatechange = function() 
+		{
+			if(oRequest.readyState == 4) 
+			{
+				if(oRequest.status == 200)
+				{
+					var o = eval(&quot;(&quot; + oRequest.responseText + &quot;)&quot;);
+					alert(o.helloStr);
+				}
+				else
+					alert(&quot;Unknown resource: &quot; + oRequest.statusText);
+			}
+		};
+		oRequest.open('POST', sUrl);
+		oRequest.send(null);
+	}
+}
+&lt;/script&gt;</pre>
+<p>与例1最大的改变在于使用如下代码</p>
+<pre>var o = eval(&quot;(&quot; + oRequest.responseText + &quot;)&quot;);</pre>
+<p>获取返回的JSON对象。</p>
+<h2>N.5.2 struts-test.xml</h2>
+<pre>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;!DOCTYPE struts PUBLIC
+        &quot;-//Apache Software Foundation//DTD Struts Configuration 2.0//EN&quot;
+        &quot;http://struts.apache.org/dtds/struts-2.0.dtd&quot;&gt;
+
+&lt;struts&gt;
+
+	&lt;package name=&quot;test&quot; namespace=&quot;/test&quot; extends=&quot;json-default&quot;&gt;
+
+		&lt;action name=&quot;Hello&quot; class=&quot;lld.test.ajax.struts2json.JsonTestAction&quot;&gt;
+			&lt;result type=&quot;json&quot; /&gt;
+		&lt;/action&gt;
+		
+	&lt;/package&gt;
+&lt;/struts&gt;</pre>
+<p>这个与标准的struts2映射配置的区别为，在package标签中，extends的属性为“json-default”，而不是“struts-default”，同里，对每个action标签中的result，添加属性</p>
+<p>type=&quot;json&quot;</p>
+<h2>N.5.3 JsonTestAction.java</h2>
+<pre>package lld.test.ajax.struts2json;
+import com.opensymphony.xwork2.ActionSupport;
+
+
+public class JsonTestAction extends ActionSupport
+{
+	private static final long serialVersionUID = 2949104549856769172L;
+	
+	private String helloStr;
+
+	public String getHelloStr()
+	{
+		return helloStr;
+	}
+
+	public void setHelloStr(String helloStr)
+	{
+		this.helloStr = helloStr;
+	}
+	
+	public String execute() throws Exception
+	{
+		this.setHelloStr(&quot;Hello, &quot; + this.helloStr); 
+		return SUCCESS;
+	}
+}</pre>
+<p>这个类与标准的struts2 Action类没有任何区别。</p>
+<h1>示例下载</h1>
+<p><a href="example/ajax_test.zip">常规示例代码下载</a></p>
+<p><a href="example/struts2_json.zip">struts2 json示例代码下载 </a></p>
+<p>&nbsp; </p>
+
+</body>
+</html>

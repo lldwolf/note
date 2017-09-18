@@ -1,0 +1,166 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+Associating data with a crosstab </TITLE>
+</HEAD>
+<BODY>
+<A NAME="X-ref352128847"></A><h1>Associating data with a crosstab </h1>
+<A NAME="TI3975"></A><p>You associate crosstab columns, rows, and cell values with
+columns in a database table or other data source.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To associate data with a crosstab:</p>
+<ol><li class=fi>
+If you are defining a new crosstab, the
+Define Crosstab Rows, Columns, Values dialog box displays after
+you specify the data source.<br><br><br><img src="images/Cros05.gif"><br>
+</li>
+<li class=ds>
+Specify the database columns that will populate
+the columns, rows, and values in the crosstab, as described below.<br><br></li>
+<li class=ds>
+To build a dynamic crosstab, make sure the Rebuild
+Columns At Runtime box is selected.<br><br>
+For information about static crosstabs, see <A HREF="imugp97.htm#X-ref305373728">"Creating static crosstabs"</A>.<br><br></li>
+<li class=ds>
+Click Next.<br><br></li></ol>
+<br><A NAME="TI3976"></A><h2>Specifying the information</h2>
+<A NAME="TI3977"></A><p>To define the crosstab, you simply drag the column names from
+the Source Data box in the Crosstab Definition dialog box (or Wizard
+page) into the Columns, Rows, or Values box, as appropriate.</p>
+<A NAME="TI3978"></A><p>If you change your mind or want to edit the report later,
+select Design&gt;Crosstab from the menu bar and drag the column
+name out of the Columns, Row, or Values box and drop it. Then specify
+a different column.</p>
+<A NAME="TI3979"></A><p>The process is illustrated using the following dynamic crosstab.
+The columns in the database are Rep, Quarter, Product, and Units.
+The crosstab shows the number of printers sold by Quarter:</p>
+<br><img src="images/cros06.gif">
+<A NAME="TI3980"></A><h4>Specifying the columns</h4>
+<A NAME="TI3981"></A><p>You use the Columns box to specify one or more of the retrieved
+columns to provide the columns in the crosstab. When users run
+the crosstab, there will be one column in the crosstab for each
+unique value of the database column(s) you specify here.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To specify the crosstab's columns:</p>
+<ol><li class=fi>
+Drag the database column from the Source
+Data box into the Columns box.<br><br></li></ol>
+<br><A NAME="TI3982"></A><p>Using the printer example, to create a crosstab where the
+quarters form the columns, specify Quarter as the Columns value.
+Because there are four values in the table for Quarter (Q1, Q2,
+Q3, and Q4), there will be four columns in the crosstab.</p>
+<A NAME="TI3983"></A><h4>Specifying the rows</h4>
+<A NAME="TI3984"></A><p>You use the Rows box to specify one or more of the retrieved
+columns to provide the rows in the crosstab. When users run
+the crosstab, there will be one row in the crosstab for each unique
+value of the database column(s) you specify here.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To specify the crosstab's rows:</p>
+<ol><li class=fi>
+Drag the database column from the Source
+Data box into the Rows box.<br><br></li></ol>
+<br><A NAME="TI3985"></A><p>Using the printer example, to create a crosstab where the
+printers form the rows, specify Product as the Rows value. Because
+there are three products (Cosmic, Galactic, and Stellar), during
+execution there will be three rows in the crosstab.</p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>For columns that use code tables, display values are
+used in the crosstab</span> <A NAME="TI3986"></A>If you specify columns in the database that use code tables--data
+is stored with a data value but displayed with more meaningful display
+values--the crosstab uses the column's display
+values, not the data values.</p>
+<A NAME="TI3987"></A>For more about code tables, see <A HREF="imugp62.htm#CAIDCCJB">Chapter 6, "Displaying and Validating
+Data "</A>.</p>
+<A NAME="TI3988"></A><h4>Specifying the values</h4>
+<A NAME="TI3989"></A><p>Each cell in a crosstab holds a value. You specify that value
+in the Values box. Typically you specify an aggregate function,
+such as Sum or Avg, to summarize the data. At execution time, each
+cell has a calculated value based on the function you provide here
+and the column and row values for the particular cell.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To specify the crosstab's values:</p>
+<ol><li class=fi>
+Drag the database column from the Source
+Data box into the Values box.<br><br>
+InfoMaker displays an aggregate function for the value. If
+the column is numeric, InfoMaker uses Sum. If the column is not
+numeric, InfoMaker uses Count.<br><br></li>
+<li class=ds>
+If you want to use an aggregate function other
+than the one suggested by InfoMaker, double-click the item in the
+Values box and edit the expression. You can use any of the other
+aggregate functions supported in the Report painter, such as Max, Min,
+and Avg.<br><br></li></ol>
+<br><A NAME="TI3990"></A><p>Using the printer example, you would drag the Units column
+into the Values box and accept the expression sum(units for crosstab).</p>
+<A NAME="X-ref305465003"></A><h4>Using expressions</h4>
+<A NAME="TI3991"></A><p>Instead of simply specifying database columns, you can use
+any valid InfoMaker expression to define the columns, rows, and values used
+in the crosstab. You can use any InfoMaker function in the expression.</p>
+<A NAME="TI3992"></A><p>For example, say a table contains a date column named SaleDate,
+and you want a column in the crosstab for each month. You could
+enter the following expression for the Columns definition:</p>
+<A NAME="TI3993"></A><p><pre>Month(SaleDate)</pre>
+</p>
+<A NAME="TI3994"></A><p>The Month function returns the integer value (1-12)
+for the specified month. Using this expression, you get columns
+labeled 1 through 12 in the crosstab. Each database row for January
+sales is evaluated in the column under 1, each database row for
+February sales is evaluated in the column under 2, and so on.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To specify an expression for columns, rows, or
+values:</p>
+<ol><li class=fi>
+In the Crosstab Definition dialog box (or
+Wizard page), double-click the item in the Columns, Rows, or Values
+box.<br><br>
+The Modify Expression dialog box displays.<br><br></li>
+<li class=ds>
+Specify the expression and click OK.<br><br></li></ol>
+<br><A NAME="TI3995"></A><h2>What happens</h2>
+<A NAME="TI3996"></A><p>After you have specified the data for the crosstab's
+columns, rows, and values, InfoMaker displays the crosstab definition
+in the Design view.</p>
+<A NAME="TI3997"></A><p>For example, to create the dynamic crosstab shown earlier,
+you would enter these values:</p>
+<br><img src="images/cros11.gif">
+<A NAME="TI3998"></A><p>In the Design view, the crosstab looks like this:</p>
+<br><img src="images/cros12.gif">
+<A NAME="TI3999"></A><p>Notice that in the Design view InfoMaker shows the Quarter
+entries using the symbolic notation <b>@quarter</b> (with
+dynamic crosstabs, the actual data values are not known at definition
+time). @quarter is resolved into the actual data values (in
+this case, Q1, Q2, Q3, and Q4) when the crosstab runs.</p>
+<A NAME="TI4000"></A><p>The crosstab is generated with summary statistics: the rows
+and columns are totaled for you.</p>
+<A NAME="TI4001"></A><p>At this point, the crosstab looks like this in the Preview
+view with data retrieved:</p>
+<br><img src="images/cros13.gif">
+<A NAME="TI4002"></A><p><A NAME="TI4003"></A>
+<ul>
+<li class=fi>Because Quarter was
+selected as the Columns definition, there is one column in the crosstab
+for each unique quarter (Q1, Q2, Q3, and Q4).</li>
+<li class=ds>Because Product was selected as the Rows definition,
+there is one row in the crosstab for each unique product (Cosmic,
+Galactic, and Stellar).</li>
+<li class=ds>Because sum(units for crosstab) was selected as
+the Values definition, each cell contains the total unit sales for
+the corresponding quarter (the Columns definition) and product (the
+Rows definition).</li>
+<li class=ds>InfoMaker displays the grand totals for each column
+and row in the crosstab.
+</li>
+</ul>
+</p>
+<A NAME="TI4004"></A><h2>Specifying more than one row or column</h2>
+<A NAME="TI4005"></A><p>Typically you will specify one database column as the Columns
+definition and one database column for the Rows definition, as in
+the printer crosstab. But you can specify as many columns (or expressions)
+as you want.</p>
+<A NAME="TI4006"></A><p>For example, consider the following, which specifies two database
+columns as the Columns definition. Here we want columns in the crosstab
+for quarters and for sales reps:</p>
+<br><img src="images/cros14.gif">
+<A NAME="TI4007"></A><p>InfoMaker displays this in the Design view:</p>
+<br><img src="images/cros15.gif">
+<A NAME="TI4008"></A><p>This is what you get during execution:</p>
+<br><img src="images/cros16.gif">
+<A NAME="TI4009"></A><p>For each quarter, the crosstab shows sales of each printer
+by each sales representative.</p>
+

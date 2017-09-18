@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<title>类</title>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+<p id="title">类</p>
+
+<h1>静态成员</h1>
+<h2>声明及使用 </h2>
+<p>类的静态成员变量的声明示例如下：</p>
+<pre class="code" data-type="csharp">public class Class1
+{
+	static public string static_test = &quot;&quot;; 
+}</pre>
+<p>在类的外部使用类的静态成员时，调用方法为：</p>
+<pre class="code" data-type="csharp">类名.成员名</pre>
+<p>而对于非静态成员，则为： </p>
+<pre class="code" data-type="csharp">对象实例名.成员名</pre>
+<p>在类的内部使用类的静态成员时，可以省略前面的类名。</p>
+<p>静态成员若声明为private，则只能在类的内部使用。</p>
+<p>静态成员函数不能访问类的非静态成员变量。</p>
+<h2>静态成员变量的初始化</h2>
+<p>静态成员变量可能过静态构造函数来初始化，例如：</p>
+<pre class="code" data-type="csharp">public class Class1
+{
+	static public string static_test = &quot;&quot;;
+
+	static Class1()
+	{
+		static_test = &quot;aaaa&quot;;
+	}
+}</pre>
+<h1>使用属性</h1>
+<pre class="code" data-type="csharp">private string url;
+public string Url
+{
+	get
+	{
+		return this.url;
+	}
+
+	set
+	{
+		this.url = value;
+	}
+}</pre>
+<h1>类的继承</h1>
+<p>子类要调用父类的方法时，使用关键字base。</p>
+<h2>调用基类的构造函数</h2>
+<pre class="code" data-type="csharp">public class MyDerived: MyBase
+{
+   // This constructor will call MyBase.MyBase()
+   public MyDerived() : base()
+   {
+   }
+
+    // This constructor will call MyBase.MyBase(int i)
+   public MyDerived(int i) : base(i)
+   {
+   }</pre>
+<h2>常用判断</h2>
+<table style="width:95%">
+    <tr>
+        <th>操作</th>
+        <th>代码</th>
+    </tr>
+    <tr>
+        <td>判断一个类是否是另一个类的子类</td>
+        <td>Type.IsSubclassOf(Type) 函数</td>
+    </tr>
+</table>
+<h1>索引器 </h1>
+<p>类似于重载操作符[]，可以使用索引值索引对象内的信息，如下例所示：</p>
+<pre class="code" data-type="csharp">public int this[int index]    // Indexer declaration
+{
+    // get and set accessors
+}</pre>
+<p>&nbsp;</p>
+
+</body>
+</html>

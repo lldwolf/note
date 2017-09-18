@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>类型库导入程序 Tlbimp.exe</title>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+<p id="title">类型库导入程序 Tlbimp.exe</p>
+
+<p>类型库导入程序将 COM 类型库中的类型定义转换为公共语言运行库程序集中的等效定义。Tlbimp.exe 的输出为二进制文件（程序集），该文件中包含在原始类型库中定义的类型的运行库元数据。可以使用诸如 Ildasm.exe 这样的工具检查此文件。</p>
+<pre class="code" data-type="csharp">tlbimp tlbFile [options]</pre>
+<TABLE cellSpacing=2 cellPadding=5 width="100%">
+  
+  <TR>
+    <TH>参数 </TH>
+    <TH>说明 </TH></TR>
+  <TR>
+    <TD>
+      <P><I>tlbFile</I> </P></TD>
+    <TD>
+      <P>包含 COM 类型库的任意文件的名称。</P></TD></TR></TABLE>
+<TABLE cellSpacing=2 cellPadding=5 width="100%">
+  
+  <TR>
+    <TH>选项 </TH>
+    <TH>说明 </TH></TR>
+  <TR>
+    <TD>
+      <P><B>/asmversion:</B> <I>versionNumber</I> </P></TD>
+    <TD>
+      <P>指定要生成的程序集的版本号。以 <I>major.minor.build.revision</I> 格式指定 
+      <I>versionNumber</I>。</P></TD></TR>
+  <TR>
+    <TD>
+      <P><B>/delaysign</B> </P></TD>
+    <TD>
+      <P>向 Tlbimp.exe 指定使用延迟签名以强名称对结果程序集进行签名。此选项必须与 
+      <B>/keycontainer:</B>、<B>/keyfile:</B> 或 <B>/publickey:</B> 
+      选项一起指定。有关延迟签名进程的更多信息，请参见<A 
+      onclick="javascript:Track('ctl00_LibFrame_ctl01|ctl00_LibFrame_ctl04',this);" 
+      href="http://msdn2.microsoft.com/zh-cn/library/t07a3dye(VS.80).aspx">延迟为程序集签名</A>。</P></TD></TR>
+  <TR>
+    <TD>
+      <P><B>/help</B> </P></TD>
+    <TD>
+      <P>显示该工具的命令语法和选项。</P></TD></TR>
+  <TR>
+    <TD>
+      <P><B>/keycontainer:</B> <I>containername</I> </P></TD>
+    <TD>
+      <P>使用在 <I>containername </I>指定的密钥容器中找到的公钥/私钥对，签发具有强名称的结果程序集。</P></TD></TR>
+  <TR>
+    <TD>
+      <P><B>/keyfile:</B> <I>filename</I> </P></TD>
+    <TD>
+      <P>使用在 <I>filename</I> 中找到的发行者的正式公钥/私钥对，签发具有强名称的结果程序集。</P></TD></TR>
+  <TR>
+    <TD>
+      <P><B>/namespace:</B> <I>namespace</I> </P></TD>
+    <TD>
+      <P>指定在其中生成程序集的命名空间。</P></TD></TR>
+  <TR>
+    <TD>
+      <P><B>/noclassmembers</B> </P></TD>
+    <TD>
+      <P>防止 Tlbimp.exe 向类添加成员。这样可避免潜在的 <A 
+      onclick="javascript:Track('ctl00_LibFrame_ctl01|ctl00_LibFrame_ctl05',this);" 
+      href="http://msdn2.microsoft.com/zh-cn/library/system.typeloadexception(VS.80).aspx">TypeLoadException</A>。</P></TD></TR>
+  <TR>
+    <TD>
+      <P><B>/nologo</B> </P></TD>
+    <TD>
+      <P>取消显示 Microsoft 启动标题。</P></TD></TR>
+  <TR>
+    <TD>
+      <P><B>/out:</B> <I>filename</I> </P></TD>
+    <TD>
+      <P>指定输出文件、程序集以及要写入元数据定义的命名空间的名称。如果类型库指定的接口定义语言 (IDL) 自定义属性显式控制该程序集的命名空间，则 
+      <B>/out</B> 选项对程序集的命名空间没有影响。如果您没有指定此选项，则 Tlbimp.exe 
+      将元数据写入与在输入文件内定义的实际类型库同名的文件中，并且为其分配 .dll 
+      扩展名。如果输出文件的名称与输入文件的名称相同，则该工具将生成一个错误，以防止重写该类型库。</P></TD></TR>
+  <TR>
+    <TD>
+      <P><B>/primary</B> </P></TD>
+    <TD>
+      <P>生成指定类型库的主 interop 程序集。相关信息将被添加到该程序集中，以指示类型库的发行者已生成该程序集。通过指定主 interop 
+      程序集，您可以将一个发行者的程序集与使用 Tlbimp.exe 从该类型库创建的任何其他程序集区分开来。如果您是正使用 Tlbimp.exe 
+      导入的类型库的发行者，则只应使用 <B>/primary</B> 选项。请注意，您必须签发具有<A 
+      onclick="javascript:Track('ctl00_LibFrame_ctl01|ctl00_LibFrame_ctl06',this);" 
+      href="http://msdn2.microsoft.com/zh-cn/library/wd40t7ad(VS.80).aspx">强名称</A>的主 
+      interop 程序集。有关更多信息，请参见<A 
+      onclick="javascript:Track('ctl00_LibFrame_ctl01|ctl00_LibFrame_ctl07',this);" 
+      href="http://msdn2.microsoft.com/zh-cn/library/aax7sdch(VS.80).aspx">主互操作程序集</A>。</P></TD></TR>
+  <TR>
+    <TD>
+      <P><B>/publickey:</B> <I>filename</I> </P></TD>
+    <TD>
+      <P>指定包含用来签发结果程序集的公钥的文件。如果您指定了 <B>/keyfile:</B> 或 <B>/keycontainer:</B> 
+      选项而非 <B>/publickey:</B>，则 Tlbimp.exe 将根据由 <B>/keyfile:</B> 或 
+      <B>/keycontainer:</B> 提供的公钥/私钥对来生成公钥。<B>publickey: 
+      </B>选项支持测试键和延迟签名方案。该文件采用由 Sn.exe 生成的格式。有关更多信息，请参见<A 
+      onclick="javascript:Track('ctl00_LibFrame_ctl01|ctl00_LibFrame_ctl08',this);" 
+      href="http://msdn2.microsoft.com/zh-cn/library/k5b5tt23(VS.80).aspx">强名称工具 
+      (Sn.exe)</A> 中 Sn.exe 的 <B>-p</B> 选项。</P></TD></TR>
+  <TR>
+    <TD>
+      <P><B>/reference:</B> <I>filename</I> </P></TD>
+    <TD>
+      <P>指定程序集文件，用以解析对在当前类型库外定义的类型的引用。如果您没有指定 <B>/reference </B>选项，Tlbimp.exe 
+      将自动以递归的方式导入任何被导入的类型库引用的外部类型库。如果您指定了 <B>/reference 
+      </B>选项，那么在导入其他类型库之前，该工具将尝试解析被引用程序集中的外部类型。</P></TD></TR>
+  <TR>
+    <TD>
+      <P><B>/silent</B> </P></TD>
+    <TD>
+      <P>取消显示成功消息。</P></TD></TR>
+  <TR>
+    <TD>
+      <P><B>/strictref</B> </P></TD>
+    <TD>
+      <P>如果此工具不能解析当前程序集、<B>/reference</B> 选项指定的程序集或已注册的主互操作程序集 (PIA) 
+      内的所有引用，则不要导入类型库。</P></TD></TR>
+  <TR>
+    <TD>
+      <P><B>/strictref:nopia</B> </P></TD>
+    <TD>
+      <P>与 <B>/strictref</B> 相同，但忽略 PIA。</P></TD></TR>
+  <TR>
+    <TD>
+      <P><B>/sysarray</B> </P></TD>
+    <TD>
+      <P>指定该工具将 COM 样式 SafeArray 作为托管 <A 
+      onclick="javascript:Track('ctl00_LibFrame_ctl01|ctl00_LibFrame_ctl09',this);" 
+      href="http://msdn2.microsoft.com/zh-cn/library/system.array(VS.80).aspx">System.Array 
+      类</A>类型导入。</P></TD></TR>
+  <TR>
+    <TD>
+      <P><B>/tlbreference:</B> <I>filename</I> </P></TD>
+    <TD>
+      <P>指定类型库文件，用于在不参考注册表的情况下解析类型库引用。</P>
+      <P>请注意，此选项不加载某些较早的类型库格式。但是，您仍可以通过注册表或当前目录隐式加载较早的类型库格式。</P></TD></TR>
+  <TR>
+    <TD>
+      <P><B>/transform:</B> <I>transformName</I> </P></TD>
+    <TD>
+      <P>按 <I>transformName</I> 参数的指定转换元数据。</P>
+      <P>指定 <B>dispret</B> 作为 <I>transformName</I> 参数，可以将仅支持调度的接口（调度接口）的方法的 
+      [out, retval] 参数转换为返回值。</P>
+      <P>有关此选项的更多信息，请参见本主题后面的示例。</P></TD></TR>
+  <TR>
+    <TD>
+      <P><B>/unsafe</B> </P></TD>
+    <TD>
+      <P>在不进行 .NET Framework 
+      安全检查的情况下生成接口。调用以此方式公开的方法可能会导致安全风险。如果您不了解公开此类代码的风险，则不应使用此选项。</P></TD></TR>
+  <TR>
+    <TD>
+      <P><B>/verbose</B> </P></TD>
+    <TD>
+      <P>指定详细模式；显示有关导入的类型库的附加信息。</P></TD></TR>
+  <TR>
+    <TD>
+      <P><B>/?</B> </P></TD>
+    <TD>
+      <P>显示该工具的命令语法和选项。</P></TD></TR></TABLE>
+<p>Tlbimp.exe 的命令行选项不区分大小写，并可以按任何顺序提供。只需指定足够的选项来唯一标识它。因此，/n 与 /nologo 等效，/ou:outfile.dll 与 /out:outfile.dll 等效。</p>
+<h1>备注</h1>
+<p>Tlbimp.exe 同时执行整个类型库的转换。该工具不能用于为在单个类型库中定义的类型子集生成类型信息。</p>
+<p>能够将强名称分配给程序集通常是有用或必需的。因此，Tlbimp.exe 包括相应的选项，用以提供必需的信息来生成具有强名称的程序集。/keyfile: 和 /keycontainer: 选项均签发具有强名称的程序集。因此，一次只提供这些选项中的一个是合理的。</p>
+<p>在从包含多个类型库的模块中导入类型库时，可以选择将资源 ID 追加到一个类型库文件中。只有当类型库文件位于当前目录或者您指定了完整的路径时，Tlbimp.exe 才能找到该文件。请参见本主题中后面的示例。</p>
+<p></p>
+<p>&nbsp;</p>
+<p>&nbsp; </p>
+
+</body>
+</html>

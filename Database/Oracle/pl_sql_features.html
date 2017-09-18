@@ -1,0 +1,56 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>PL/SQL特色语句</title>
+<script type="text/javascript" src="css.js"></script>
+</head>
+
+<body>
+<h1>第N章 T-SQL特色语句</h1>
+<hr />
+<h2>minus</h2>
+<p>返回两个表间的不同记录，例如，假设返回存在于table1但不存在于table2中的记录，测试代码如下所示:</p>
+<pre>create table test1(a int primary key)
+insert into test1 values(1)
+insert into test1 values(2)
+insert into test1 values(3)
+
+create table test2(a int primary key)
+insert into test2 values(2)
+
+select * from test1
+minus
+select * from test2</pre>
+<p>返回结果为1、3</p>
+<h2>rownum</h2>
+<p>在ORACLE中，查询结果有一个不可见的列rownum，指示结果集中的行号</p>
+<h2>update, delete</h2>
+<p>这两个语句之所以在这里写出来，是因为它的多表关联更改的语法，与SQL Server不同，Oracle 是不支持如下的语法</p>
+<pre>update ... from ... 
+delete ... from ...</pre>
+<p>那么如何进行多表关联删除呢，可参考如下的示例</p>
+<pre>delete from test_table2 a
+where exists (select * from test_table1 b where b.id1 = a.id1 and b.id1 in (1,2))</pre>
+<h2>Merge</h2>
+<p>可以合并两个表的内容，完成如下操作：如果表1没有表2的数据则插入，否则更新</p>
+<pre>create table test_table1(id1 number(10), value1 varchar2(10));
+
+create table test_table2(id2 number(10), value2 varchar2(10));
+
+insert into test_table1 values(1, 'aa');
+insert into test_table2 values(1, 'a');
+insert into test_table2 values(2, 'b');
+
+merge into test_table1 a
+using test_table2 b
+on (a.id1 = b.id2)
+when matched then
+  update set a.value1 = b.value2
+when not matched then
+  insert (id1, value1) values(b.id2, b.value2);</pre>
+<p>&nbsp;</p>
+<p>&nbsp; </p>
+<script type="text/javascript" src="index.js"></script>
+</body>
+</html>

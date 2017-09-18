@@ -1,0 +1,88 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+Filtering rows </TITLE>
+</HEAD>
+<BODY>
+<A NAME="BFCDJDCA"></A><h1>Filtering rows </h1>
+<A NAME="TI2780"></A><p>You can use WHERE and HAVING clauses and retrieval arguments
+in the SQL SELECT statement for the report to limit the data
+that is retrieved from the database. This reduces retrieval time
+and space requirements for the report data.</p>
+<A NAME="TI2781"></A><p>However, you may want to further limit the data that displays
+in the report. For example, you might want to:<A NAME="TI2782"></A>
+<ul>
+<li class=fi>Retrieve many rows and initially
+display only a subset</li>
+<li class=ds>Limit the data that is displayed using InfoMaker functions
+(such as If) that are not valid in the SELECT statement
+</li>
+</ul>
+</p>
+<A NAME="TI2783"></A><h4>Using filters</h4>
+<A NAME="TI2784"></A><p>In the Report painter, you can define filters, which will limit
+the rows that display when you run the report. Filters can use most InfoMaker functions.</p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Filters don't affect which rows are retrieved</span> <A NAME="TI2785"></A>A filter operates against the retrieved data. It does not
+re-execute the SELECT statement.</p>
+<A NAME="TI2786"></A><h4>Defining a filter</h4>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To define a filter:</p>
+<ol><li class=fi>
+In the Report painter, select Rows&gt;Filter
+from the menu bar.<br><br>
+The Specify Filter dialog box displays:<br><br><br><img src="images/Filt01.gif"><br>
+</li>
+<li class=ds>
+In the Specify Filter dialog box, enter a boolean
+expression that InfoMaker will test against each retrieved row.<br><br>
+If the expression evaluates to TRUE, the row will be displayed.
+You can specify any valid expression in a filter. You can paste
+commonly used functions, names of columns, computed fields, retrieval
+arguments, and operators into the filter.<br><br><p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>International considerations</span> <A NAME="TI2787"></A>So that anything you create will run the same no matter in
+which country it is deployed, filter expressions require U.S. notation
+for numbers. That is, comma always represents the thousands delimiter
+and period always represents the decimal place when you specify
+expressions in the InfoMaker environment.</p>
+</li>
+<li class=ds>
+(Optional) Click Verify to make sure the expression
+is valid.<br><br></li>
+<li class=ds>
+Click OK.<br><br>
+Only rows meeting the filter criteria are displayed in the
+Preview view.<br><br><p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Filtered rows and updates </span> <A NAME="TI2788"></A>Modifications of filtered rows are applied to the database
+when you issue an update request.</p>
+</li></ol>
+<br><A NAME="TI2789"></A><h4>Removing a filter</h4>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To remove a filter:</p>
+<ol><li class=fi>
+Select Rows&gt;Filter from the menu
+bar.<br><br></li>
+<li class=ds>
+Delete the filter expression from the Specify
+Filter dialog box, then click OK.<br><br></li></ol>
+<br><A NAME="TI2790"></A><h4>Examples of filters</h4>
+<A NAME="TI2791"></A><p>Assume that a report retrieves employee rows. Three of
+the columns are Salary, Status, and Emp_Lname:</p>
+<A NAME="TI2792"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI2793"></A>To display these rows</th>
+<th align="left" valign=bottom><A NAME="TI2794"></A>Use this filter</th>
+</tr>
+<tr><td valign=top><A NAME="TI2795"></A>Employees with salaries over $50,000</td>
+<td valign=top><A NAME="TI2796"></A><pre>Salary &gt; 50000</pre>
+</td>
+</tr>
+<tr><td valign=top><A NAME="TI2797"></A>Active employees</td>
+<td valign=top><A NAME="TI2798"></A><pre>Status = 'A'</pre>
+</td>
+</tr>
+<tr><td valign=top><A NAME="TI2799"></A>Active employees with salaries over $50,000</td>
+<td valign=top><A NAME="TI2800"></A><pre>Salary &gt; 50000 AND Status = 'A'</pre>
+</td>
+</tr>
+<tr><td valign=top><A NAME="TI2801"></A>Employees whose last names begin with
+H</td>
+<td valign=top><A NAME="TI2802"></A><pre>left(Emp_Lname, 1) = 'H'</pre>
+</td>
+</tr>
+</table>
+

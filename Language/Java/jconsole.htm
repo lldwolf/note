@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+	<script type="text/javascript" src="../../mylib/js/css.js"></script>
+	<title>Java Note</title>
+</head>
+
+<body>
+	<p id="title">JConsole</p>
+    <h1>Overview</h1>
+    <p>JConsole 可用来查看 Java 程序当前的执行情况，包括内存使用、Class 变化等情况。</p>
+    <p>程序位于 %JAVA_HOME%\bin\jconsole.exe</p>
+    <p>在启动 Java 程序时加入如下参数可以支持 JConsole</p>
+    <p>-Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=[端口号] -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false</p>
+    <h1>示例</h1>
+    <h2>本地示例</h2>
+    <p>写一个如下的 Java 程序</p>
+    <pre class="code" data-type="java">package lld.test;
+
+import java.util.Date;
+
+public class ThreadTest {
+
+	public static void main(String[] args) {
+		Thread thread = new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
+				while (true) {
+					try {
+						Thread.sleep(1000);
+						int[] buf = new int[1000 * 1000];
+						System.out.println(buf.length);
+						System.out.println(new Date().toLocaleString());
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		});
+
+		thread.start();
+	}
+
+}</pre>
+    <p>然后在命令行窗口中启动，设定监听端口号为 9006，如下所示</p>
+    <pre>java -cp . -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=9006 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false lld.test.ThreadTest</pre>
+    <p>启动 JConsole，在 Local Process 中选择我们刚才启动的程序，如下图所示：</p>
+    <p><img alt="" src="images/JConsole-01.png" /></p>
+    <p>可获得如下所示的监控图像：</p>
+    <p><img alt="" src="images/JConsole-02.png" /></p>
+    <h2>远程示例</h2>
+    <p>把本地程序上传到远端服务器，然后用同样命令行启动，用 JConsole 连接远端，如下图所示：</p>
+    <p><img alt="" src="images/JConsole-03.png" /></p>
+    <h2>远程示例 - Tomcat</h2>
+    <p>将启动 JConsole 监听的参数放到 Tomcat 的启动参数中，如下所示：</p>
+    <pre class="code" data-type="sh">export CATALINA_OPTS="$CATALINA_OPTS -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=9001 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false"
+
+sh $CATALINA_HOME/bin/startup.sh</pre>
+    <p>把本地程序上传到远端服务器，然后用同样命令行启动，用 JConsole 连接远端，如下图所示，注意需要输入 Tomcat 的管理员账号密码（如果有的话）</p>
+    <p><img alt="" src="images/JConsole-04.png" /></p>
+    <h1>详解</h1>
+    <h1>Others</h1>
+    <h2>内存溢出示例</h2>
+    <pre class="code" data-type="java">Collection&lt;Object&gt; data = new LinkedList&lt;Object&gt;();
+while(true) {
+    long[] canBeGarbageCollected = new long[10000];
+    long[] canNotBeGarbageCollected = new long[100];
+    data.add(Arrays.asList(canNotBeGarbageCollected));
+}</pre>
+</body>
+</html>

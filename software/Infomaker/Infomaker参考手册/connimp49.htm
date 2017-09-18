@@ -1,0 +1,270 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+Adding functions to the PBODB80 initialization file</TITLE>
+</HEAD>
+<BODY>
+<A NAME="CBBECEEF"></A><h1>Adding functions to the PBODB80 initialization file</h1>
+<A NAME="TI1505"></A><p>The PBODB80 initialization file lists the functions for certain
+DBMSs that have ODBC drivers. If you need to add a function to the
+PBODB80 initialization file for use with your backend DBMS, you
+can do either of the following:<A NAME="TI1506"></A>
+<ul>
+<li class=fi><b>Existing sections</b>   Add the function to the Functions section for your backend
+database if this section exists in the PBODB80 initialization file.</li>
+<li class=ds><b>New sections</b>   Create new sections for your backend DBMS in the PBODB80 initialization
+file and add the function to the newly created Functions section.
+</li>
+</ul>
+</p>
+<A NAME="TI1507"></A><h2>Adding functions to an existing section in the file</h2>
+<A NAME="TI1508"></A><p>If sections for your backend DBMS <i>already exist</i>
+ in
+the PBODB80 initialization file, use the following procedure to
+add new functions.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To add functions to an existing section in the
+PBODB80 initialization file:</p>
+<ol><li class=fi>
+Open the PBODB80 initialization file in
+one of the following ways:<A NAME="TI1509"></A>
+<ul>
+<li class=fi>Use
+the File Editor in InfoMaker. (For instructions, see the <i>InfoMaker User's
+Guide</i>
+.)</li>
+<li class=ds>Use any text editor outside InfoMaker.
+</li>
+</ul>
+
+                      <br><br></li>
+<li class=ds>
+Locate
+the entry for your backend DBMS in the DBMS Driver/DBMS Settings
+section of the PBODB80 initialization file.<br><br>
+For example, here is the PBODB80 initialization file entry
+for Adaptive Server Anywhere:<pre>;*********************************************</pre>
+<pre>;DBMS Driver/DBMS Settings see comments at end</pre>
+<pre>;of file</pre>
+<pre>;*********************************************</pre>
+<pre>...</pre>
+<pre>[Adaptive Server Anywhere]</pre>
+<pre>PBSyntax='WATCOM50_SYNTAX'</pre>
+<pre>PBDateTime='STANDARD_DATETIME'</pre>
+<pre>PBFunctions='ASA_FUNCTIONS'</pre>
+<pre>PBDefaultValues='autoincrement,current date,</pre>
+<pre>			current time,current timestamp,timestamp,</pre>
+<pre>			null,user'</pre>
+<pre>PBDefaultCreate='YES'</pre>
+<pre>PBDefaultAlter='YES'</pre>
+<pre>PBDefaultExpressions='YES'</pre>
+<pre>DelimitIdentifier='YES'</pre>
+<pre>PBDateTimeInvalidInSearch='NO'</pre>
+<pre>PBTimeInvalidInSearch='YES'</pre>
+<pre>PBQualifierIsOwner='NO'</pre>
+<pre>PBSpecialDataTypes='WATCOM_SPECIALDATATYPES'</pre>
+<pre>IdentifierQuoteChar='"'</pre>
+<pre>PBSystemOwner='sys,dbo'</pre>
+<pre>PBUseProcOwner='YES'</pre>
+<pre>SQLSrvrTSName='YES'</pre>
+<pre>SQLSrvrTSQuote='YES'</pre>
+<pre>SQLSrvrTSDelimit='YES'</pre>
+<pre>ForeignKeyDeleteRule='Disallow if Dependent Rows</pre>
+<pre>			Exist (RESTRICT),Delete any Dependent Rows</pre>
+<pre>			(CASCADE),Set Dependent Columns to NULL</pre>
+<pre>			(SET NULL)'</pre>
+<pre>TableListType='GLOBAL TEMPORARY'</pre>
+<br><br></li>
+<li class=ds>
+Find the name of the section in the PBODB80 initialization
+file that contains function information for your backend DBMS.<br><br>
+To find this section, look for a line similar to the following
+in the DBMS Driver/DBMS Settings entry:<pre>PBFunctions='<i>section_name</i>'</pre>
+<br><br>
+For example, the following line in the DBMS Driver/DBMS
+Settings entry for Adaptive Server Anywhere indicates that the name
+of the Functions section is ASA_FUNCTIONS:<pre>PBFunctions='ASA_FUNCTIONS'</pre>
+<br><br></li>
+<li class=ds>
+Find the Functions section for your backend DBMS
+in the PBODB80 initialization file.<br><br>
+For example, here is the Functions section for Adaptive Server
+Anywhere:<pre>;*********************************************</pre>
+<pre>;Functions</pre>
+<pre>;*********************************************</pre>
+<pre>[ASA_FUNCTIONS]</pre>
+<pre>AggrFuncs=avg(x),avg(distinct x),count(x),</pre>
+<pre>			count(distinct x),count(*),list(x),</pre>
+<pre>			list(distinct x),max(x),max(distinct x),</pre>
+<pre>			min(x),min(distinct x),sum(x),sum(distinct x)</pre>
+<pre>Functions=abs(x),acos(x),asin(x),atan(x),</pre>
+<pre>			atan2(x,y),ceiling(x),cos(x),cot(x),degrees(x),</pre>
+<pre>			exp(x),floor(x),log(x),log10(x),</pre>
+<pre>			mod(dividend,divisor),pi(*),power(x,y),</pre>
+<pre>			radians(x),rand(),rand(x),</pre>
+<pre>			remainder(dividend,divisor),round(x,y),</pre>
+<pre>			sign(x),sin(x),sqrt(x),tan(x),</pre>
+<pre>			"truncate"(x,y),ascii(x),byte_length(x),</pre>
+<pre>			byte_substr(x,y,z),char(x),char_length(x),</pre>
+<pre>			charindex(x,y),difference(x,y)insertstr(x,y,z),</pre>
+<pre>			lcase(x),left(x,y),length(x), locate(x,y,z),</pre>
+<pre>			lower(x),ltrim(x),patindex('x',y),repeat(x,y),</pre>
+<pre>			replicate(x,y),right(x,y),rtrim(x),</pre>
+<pre>			similar(x,y),soundex(x),space(x),str(x,y,z),</pre>
+<pre>			string(x,...),stuff(w,x,y,z),substr(x,y,z),</pre>
+<pre>			trim(x),ucase(x),upper(x),date(x),</pre>
+<pre>			dateformat(x,y),datename(x,y),day(x),</pre>
+<pre>			dayname(x),days(x),dow(x),hour(x),hours(x),</pre>
+<pre>			minute(x),minutes(x),minutes(x,y),month(x),</pre>
+<pre>			monthname(x),months(x),months(x,y),now(*),</pre>
+<pre>			quarter(x),second(x),seconds(x),seconds(x,y),</pre>
+<pre>			today(*),weeks(x),weeks(x,y),year(x),years(x),</pre>
+<pre>			years(x,y),ymd(x,y,z),dateadd(x,y,z),</pre>
+<pre>			datediff(x,y,z),datename(x,y),datepart(x,y),</pre>
+<pre>			getdate(),cast(x as y),convert(x,y,z),</pre>
+<pre>			hextoint(x),inttohex(x),</pre>
+<pre>			connection_property(x,...),datalength(x),</pre>
+<pre>			db_id(x),db_name(x),db_property(x),</pre>
+<pre>			next_conection(x),next_database(x),</pre>
+<pre>			property(x),property_name(x),</pre>
+<pre>			property_number(x),property_description(x),</pre>
+<pre>			argn(x,y,...),coalesce(x,...),</pre>
+<pre>			estimate(x,y,z),estimate_source(x,y,z),</pre>
+<pre>			experience_estimate(x,y,z),ifnull(x,y,z),</pre>
+<pre>			index_estimate(x,y,z),isnull(x,...),</pre>
+<pre>			number(*),plan(x),traceback(*)</pre>
+<br><br></li>
+<li class=ds>
+To add a new function, type a comma followed by
+the function name at the end of the appropriate function list, as
+follows:<A NAME="TI1510"></A>
+<ul>
+<li class=fi><b>Aggregate
+functions</b>   Add aggregate functions to the end of the AggrFuncs list.</li>
+<li class=ds><b>All other functions</b>   Add all other functions to the end of the Functions list.
+</li>
+</ul>
+
+                      <br><br><p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Case sensitivity</span> <A NAME="TI1511"></A>If the backend DBMS you are using is case sensitive, be sure
+to use the required case when you add the function name.</p>
+
+The following example shows a new function for Adaptive Server Anywhere
+added at the end of the Functions list:<pre>;*********************************************</pre>
+<pre>;Functions</pre>
+<pre>;*********************************************</pre>
+<pre>[ASA_FUNCTIONS]</pre>
+<pre>AggrFuncs=avg(x),avg(distinct x),count(x),</pre>
+<pre>			count(distinct x),count(*),list(x),</pre>
+<pre>			list(distinct x),max(x),max(distinct x),</pre>
+<pre>			min(x),min(distinct x),sum(x),sum(distinct x)</pre>
+<pre>Functions=abs(x),acos(x),asin(x),atan(x),</pre>
+<pre>			atan2(x,y),ceiling(x),cos(x),cot(x),degrees(x),</pre>
+<pre>			exp(x),floor(x),log(x),log10(x),</pre>
+<pre>			mod(dividend,divisor),pi(*),power(x,y),</pre>
+<pre>			radians(x),rand(),rand(x),</pre>
+<pre>			...</pre>
+<pre>			number(*),plan(x),traceback(*),newfunction()</pre>
+<br><br></li>
+<li class=ds>
+Save your changes to the PBODB80 initialization
+file.<br><br></li></ol>
+<br><A NAME="TI1512"></A><h2>Adding functions to a new section in the file</h2>
+<A NAME="TI1513"></A><p>If entries for your backend DBMS <i>do not exist</i>
+ in
+the PBODB80 initialization file, use the following procedure to
+create the required sections and add the appropriate functions.</p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Before you start</span> <A NAME="TI1514"></A>For more about the settings you should supply
+for your backend DBMS in the PBODB80 initialization file, read the
+comments at the end of the file.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To add functions to a new section in the PBODB80
+initialization file:</p>
+<ol><li class=fi>
+Open the PBODB80 initialization file in
+one of the following ways:<A NAME="TI1515"></A>
+<ul>
+<li class=fi>Use
+the File Editor in InfoMaker. (For instructions, see the <i>InfoMaker User's
+Guide</i>
+.)</li>
+<li class=ds>Use any text editor outside InfoMaker.
+</li>
+</ul>
+
+                      <br><br></li>
+<li class=ds>
+Edit the DBMS Driver/DBMS Settings section
+of the PBODB80 initialization file to add an entry for your backend
+DBMS. <br><br><p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Finding the name</span> <A NAME="TI1516"></A>The name required to identify the entry for your backend DBMS
+in the DBMS Driver/DBMS Settings section is in the ODBC
+initialization file. </p>
+<A NAME="TI1517"></A>For information about the name and location
+of the ODBC initialization file on your platform, see <A HREF="connimp10.htm#CCJDJGGB">"How InfoMaker accesses
+the data source"</A>.</p>
+
+Make sure that you:<A NAME="TI1518"></A>
+<ul>
+<li class=fi>Follow
+the instructions in the comments at the end of the PBODB80 initialization
+file.</li>
+<li class=ds>Use the same syntax as existing entries in the DBMS
+Driver/DBMS Settings section of the PBODB80 initialization
+file.</li>
+<li class=ds>Include a section name for PBFunctions.
+</li>
+</ul>
+<br><br>
+For example, here is the relevant portion of an entry for
+a DB2/2 database:<pre>;***********************************************</pre>
+<pre>;DBMS Driver/DBMS Settings</pre>
+<pre>;***********************************************</pre>
+<pre>[DB2/2]</pre>
+<pre>...</pre>
+<pre>PBFunctions='DB22_FUNCTIONS'</pre>
+<pre>...</pre>
+<br><br></li>
+<li class=ds>
+Edit the Functions section of the PBODB80 initialization
+file to add an entry for your backend DBMS.<br><br>
+Make sure that you:<A NAME="TI1519"></A>
+<ul>
+<li class=fi>Follow
+the instructions in the comments at the end of the PBODB80 initialization
+file.</li>
+<li class=ds>Use the same syntax as existing entries in the Functions
+section of the PBODB80 initialization file.</li>
+<li class=ds>Give the Functions section the name that you specified
+for PBFunctions in the DBMS Driver/DBMS Settings entry.
+</li>
+</ul>
+<br><br>
+For example:<pre>;***********************************************</pre>
+<pre>;Functions</pre>
+<pre>;***********************************************</pre>
+<pre>[DB22_FUNCTIONS]</pre>
+<pre>AggrFuncs=avg(),count(),list(),max(),min(),sum()</pre>
+<pre>Functions=curdate(),curtime(),hour(), ...</pre>
+<br><br></li>
+<li class=ds>
+Type a comma followed by the function name at
+the end of the appropriate function list, as follows:<A NAME="TI1520"></A>
+<ul>
+<li class=fi><b>Aggregate functions</b>   Add aggregate functions to the end of the AggrFuncs list.</li>
+<li class=ds><b>All other functions</b>   Add all other functions to the end of the Functions list.
+</li>
+</ul>
+
+                      <br><br><p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Case sensitivity</span> <A NAME="TI1521"></A>If the backend DBMS you are using is case sensitive, be sure
+to use the required case when you add the function name.</p>
+
+The following example shows (in bold) a new DB2/2
+function named substr() added at the end of the Functions list:<pre>;***********************************************</pre>
+<pre>;Functions</pre>
+<pre>;***********************************************</pre>
+<pre>[DB22_FUNCTIONS]</pre>
+<pre>AggrFuncs=avg(),count(),list(),max(),min(),sum()</pre>
+<pre>Functions=curdate(),curtime(),hour(), <i>substr()</i> </pre>
+<br><br></li>
+<li class=ds>
+Save your changes to the PBODB80 initialization
+file.<br><br></li></ol>
+<br>

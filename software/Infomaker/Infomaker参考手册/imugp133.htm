@@ -1,0 +1,85 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+Starting an application from the command line</TITLE>
+</HEAD>
+<BODY>
+<A NAME="BFCBHECD"></A><h1>Starting an application from the command line</h1>
+<A NAME="TI5426"></A><p>You or your users
+can start an InfoMaker application from a command line (or the
+Windows Run dialog box) and pass parameters to perform actions on reports,
+forms, and pipelines. </p>
+<A NAME="TI5427"></A><p>To start an InfoMaker application, use the following syntax:<pre>{ win } <i>directory</i>\yourapplication.exe</pre>
+</p>
+<A NAME="TI5428"></A><p>The use of <i>win</i>
+ is required to start an InfoMaker application
+from the MS-DOS prompt.</p>
+<A NAME="TI5429"></A><h4>Opening an object or creating a new object</h4>
+<A NAME="TI5430"></A><p>You can also add one or more of the following optional parameters
+to the command line to perform a specific action: </p>
+<A NAME="TI5431"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI5432"></A>Parameter</th>
+<th align="left" valign=bottom><A NAME="TI5433"></A>Description</th>
+</tr>
+<tr><td valign=top><A NAME="TI5434"></A>/R <i>reportname</i>
+</td>
+<td valign=top><A NAME="TI5435"></A>Run the specified report</td>
+</tr>
+<tr><td valign=top><A NAME="TI5436"></A>/RP <i>reportname</i>
+</td>
+<td valign=top><A NAME="TI5437"></A>Run and print the specified report</td>
+</tr>
+<tr><td valign=top><A NAME="TI5438"></A>/RPC <i>reportname</i>
+</td>
+<td valign=top><A NAME="TI5439"></A>Run and print the specified report and
+close the application</td>
+</tr>
+<tr><td valign=top><A NAME="TI5440"></A>/A <i>arg1;arg2;argN</i>
+</td>
+<td valign=top><A NAME="TI5441"></A>Provides a list of retrieval arguments
+for a report specified by one of the /R parameters.
+The arguments must be in the correct order, separated by semi-colons.
+If a retrieval argument is an array, its argument values must be
+separated by commas. Decimal arrays are not supported</td>
+</tr>
+<tr><td valign=top><A NAME="TI5442"></A>/F <i>formname</i>
+</td>
+<td valign=top><A NAME="TI5443"></A>Run the specified form</td>
+</tr>
+<tr><td valign=top><A NAME="TI5444"></A>/FP <i>formname</i>
+</td>
+<td valign=top><A NAME="TI5445"></A>Run and print the specified form</td>
+</tr>
+<tr><td valign=top><A NAME="TI5446"></A>/FPC <i>formname</i>
+</td>
+<td valign=top><A NAME="TI5447"></A>Run and print the specified form and
+close the application</td>
+</tr>
+<tr><td valign=top><A NAME="TI5448"></A>/P <i>pipelinename</i>
+</td>
+<td valign=top><A NAME="TI5449"></A>Run the specified pipeline</td>
+</tr>
+<tr><td valign=top><A NAME="TI5450"></A>/PC <i>pipelinename</i>
+</td>
+<td valign=top><A NAME="TI5451"></A>Run the specified pipeline and close
+the application</td>
+</tr>
+</table>
+<A NAME="TI5452"></A><h4>Examples</h4>
+<A NAME="TI5453"></A><p>This command line at the MS-DOS prompt opens the Employee
+application and runs and prints the report called r_employee_list.
+The report requires two retrieval arguments: a department number
+and a date:</p>
+<A NAME="TI5454"></A><p><pre>win c:\myapp\emp.exe/RP r_employee_list/A 100;12/01/99</pre>
+</p>
+<A NAME="TI5455"></A><p>This command line in the Windows Run dialog box opens the
+Employee application, runs and prints the form called f_employees_in_department,
+and closes the application:</p>
+<A NAME="TI5456"></A><p><pre>c:\myapp\emp.exe/FPC f_employees_in_department</pre>
+</p>
+<A NAME="TI5457"></A><p>This command line in the Windows Run dialog box opens the
+Employee application, runs the p_dailypipe pipeline, and
+closes the application:</p>
+<A NAME="TI5458"></A><p><pre>c:\myapp\emp.exe/PC p_daily_pipe</pre>
+</p>
+

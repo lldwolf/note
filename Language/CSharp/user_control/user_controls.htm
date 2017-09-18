@@ -1,0 +1,38 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>自定义控件</title>
+<script type="text/javascript" src="../css.js"></script>
+</head>
+
+<body>
+<h1>第N章 自定义控件</h1>
+<hr />
+<p>自定义控件真是一件让人激动的事情，你可以想像，你几乎可以任意定义这个控件的外观及行为，做出很酷很华丽的软件。不过，这也是很艰难的，最重要的一点就是，你的控件不允许出错，因为你写的控件是给开发人员用的，你可以想像如果.net framework本身经常出bug会是一种什么样的情形。</p>
+<p>本章主要讲述Winform下的自定义控件</p>
+<p>自定义控件有如下几种情况</p>
+<ol>
+	<li>扩充一个现有的控件</li>
+    <li>将几个现有的控件组合为一个新控件</li>
+    <li>创建一个全新的控件</li>
+</ol>
+<p>对于控件开发人员而言，这三种情况的最大区别仅在于父类的不同，第一种情况自不待言，父类即是要扩充的控件类；对于第二种情况，一般将父类设为System.Windows.Forms.UserControl；而对于第三种情况，则选择从System.Windows.Forms.Control派生。</p>
+<p>一般来讲，三种情况的难度依次递增，灵活性也依次递增，第三种情况中使用的知识完成可以用于前两种情况，因此，本章主要讲述如何使用Control创建自定义控件。</p>
+<p>创建自定义控件有如下几个主要工作</p>
+<ul>
+  <li><a href="user_control_preference.htm">定义控件的外观</a></li>
+  <li>定义控件在设计期行为</li>
+  <li>定义控件的运行期行为</li>
+  <li>定义控件的事件</li>
+</ul>
+<p>技术要点及解决方案</p>
+<ul>
+	<li><a href="caret.htm">如何显示光标（插字标记 caret）</a></li>
+	<li>确定文字的大小及高度</li>
+	<li>如何实现滚动条</li>
+</ul>
+<p>&nbsp;</p>
+<div align="center"><a href="../index.htm">回目录</a></div>
+</body>
+</html>

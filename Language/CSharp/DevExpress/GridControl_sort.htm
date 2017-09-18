@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>DevExpress.XtraGrid.GridControl</title>
+<script type="text/javascript" src="../../../mylib/js/css.js"></script>
+
+<style type="text/css">
+.first_class {font-family:宋体; font-weight:bold; font-size:16px; text-align:center; layout-flow:vertical-ideographic}
+.second_class {font-weight: bold}
+</style>
+</head>
+
+<body>
+<p id="title">GridControl - Sort</p>
+<h1>自定义排序</h1>
+<h2>属性设置</h2>
+<p style="font-weight:bold">GridColumn </p>
+<ul>
+	<li>SortMode: DevExpress.XtraGrid.ColumnSortMode.Custom</li>
+</ul>
+<h2>事件</h2>
+<p style="font-weight:bold">GridView </p>
+	<p>CustomColumnSort: 关键在于 DevExpress.XtraGrid.Views.Base.CustomColumnSortEventArgs 型参数的设置，主要有如下两个:</p>
+	<ul>
+		<li>Handled: 设为 true 表示已被处理，取代默认排序规则</li>
+		<li>Result: 表示比较结果，大于零表示“大于”，小于零表示“小于”，等于零表示“等于”</li>
+	</ul>
+	还有如下属性值得注意
+	<ul>
+		<li>Column: 正在比较的列</li>
+		<li>ListSourceRowIndex1, ListSourceRowIndex2: 正在比较的两行</li>
+	</ul>
+<h2>示例</h2>
+<pre class="code" data-type="csharp">private void viewTranche_CustomColumnSort(object sender, DevExpress.XtraGrid.Views.Base.CustomColumnSortEventArgs e)
+{
+	DataView tb = e.Column.View.DataSource as DataView;
+	if (e.Column.FieldName == &quot;Tenor&quot;)
+	{
+		e.Handled = true;
+		int t1 = 0, t2 = 0;
+		if (tb[e.ListSourceRowIndex1][&quot;TenorInDays&quot;] != DBNull.Value)
+			t1 = (int)tb[e.ListSourceRowIndex1][&quot;TenorInDays&quot;];
+
+		if (tb[e.ListSourceRowIndex2][&quot;TenorInDays&quot;] != DBNull.Value)
+			t2 = (int)tb[e.ListSourceRowIndex2][&quot;TenorInDays&quot;];
+
+		e.Result = Comparer.Default.Compare(t1, t2);
+	}
+}</pre>
+<script type="text/javascript" src="grid_index.js"></script>
+</body>
+</html>

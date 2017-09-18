@@ -1,0 +1,149 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+Tips for defining crosstabs</TITLE>
+</HEAD>
+<BODY>
+<A NAME="CAICGAGE"></A><A NAME="TI6318"></A><h1>CrosstabAvg</h1>
+<A NAME="TI6319"></A><p>
+<FORM>
+<INPUT
+ TYPE = "BUTTON"
+ VALUE = "Examples"
+ onClick = "window.location = 'imugp161.htm#EX13';">
+<INPUT
+  TYPE = "BUTTON"
+ VALUE = "See also"
+ onClick = "window.location = 'imugp161.htm#SA13';">
+</FORM>
+</p>
+<h3>Description</h3><A NAME="TI6320"></A><p>Calculates the average of the values returned by an expression
+in the values list of the crosstab. When the crosstab definition
+has more than one column, CrosstabAvg can also calculate averages
+of the expression's values for groups of column values.</p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>For crosstabs only</span> <A NAME="TI6321"></A>You can use this function <i>only</i>
+ in a crosstab
+DataWindow object or report.</p>
+
+<h3>Syntax</h3><pre><b>CrosstabAvg</b> ( <i>n</i> {, <i>column</i>, <i>groupvalue </i>} )</pre>
+<A NAME="TI6322"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI6323"></A>Argument</th>
+<th align="left" valign=bottom><A NAME="TI6324"></A>Description</th>
+</tr>
+<tr><td valign=top><A NAME="TI6325"></A><i>n</i></td>
+<td valign=top><A NAME="TI6326"></A>The number of the crosstab-values expression
+for which you want the average of the returned values. The crosstab
+expression must be numeric</td>
+</tr>
+<tr><td valign=top><A NAME="TI6327"></A><i>column</i> (optional)</td>
+<td valign=top><A NAME="TI6328"></A>The number of the crosstab column as
+it is listed in the Columns box of the Crosstab Definition dialog
+box for which you want intermediate calculations</td>
+</tr>
+<tr><td valign=top><A NAME="TI6329"></A><i>groupvalue</i> (optional)</td>
+<td valign=top><A NAME="TI6330"></A>A string whose value controls the grouping
+for the calculation. <i>Groupvalue</i> is usually
+a value from another column in the crosstab. To specify the current
+column value in a dynamic crosstab, rather than a specific value,
+specify @ plus the column name as a quoted string</td>
+</tr>
+</table>
+
+<h3>Return Values</h3><A NAME="TI6331"></A><p>Double. Returns the average of the crosstab values returned
+by expression <i>n</i> for all the column values or,
+optionally, for a subset of column values.</p>
+
+<h3>Usage</h3><A NAME="TI6332"></A><p>This function is meaningful <i>only</i>
+ for
+the average of the values of the expression in a <i>row</i>
+ in
+the crosstab. This means you can use it only in the detail band,
+not in a header, trailer, or summary band.</p>
+<A NAME="TI6333"></A><p>NULL values are ignored and are not included in the average.</p>
+<A NAME="TI6334"></A><h4>How functions in a crosstab are used</h4>
+<A NAME="TI6335"></A><p>When a crosstab is generated from your definition, the appropriate
+computed fields are automatically created using the Crosstab functions.
+To understand the functions, consider a crosstab with two columns
+(year and quarter), a row (product), and the values expression Avg(amount
+for crosstab). The Crosstab Definition dialog box looks like this.</p>
+<br><img src="images/dwfct13.gif">
+<A NAME="TI6336"></A><p>When you define the crosstab described above, the painter
+automatically creates the appropriate computed fields. A computed
+field named avg_amount returns the average of the quarterly
+figures for each year. Its expression is:<pre><i>CrosstabAvg</i> (1, 2, "@year")</pre>
+</p>
+<A NAME="TI6337"></A><p>A second computed field named grand_avg_amount
+computes the average of all the amounts in the row. Its expression
+is:<pre><i>CrosstabAvg</i> (1)</pre>
+</p>
+<A NAME="TI6338"></A><p>Other computed fields in the summary band use the Avg function
+to display the average of the values in the amount column, the yearly
+averages, and the final average.</p>
+<A NAME="TI6339"></A><p>The crosstab in the Design view looks like this.</p>
+<br><img src="images/dwfct14.gif">
+<A NAME="TI6340"></A><p>Each row in the crosstab (after adjusting the column widths)
+has cells for the amounts in the quarters, a repeating cell for
+the yearly average, and a grand average. The crosstab also displays
+averages of the amounts for all the financial codes in the quarters
+in the summary band at the bottom.</p>
+<br><img src="images/dwfct15.gif">
+<br><img src="images/dwfct16.gif">
+<A NAME="TI6341"></A><h4>What the function arguments mean</h4>
+<A NAME="TI6342"></A><p>When the crosstab definition has more than one column, you
+can specify column qualifiers for any of the Crosstab functions,
+so that the crosstab displays calculations for groups of column values.
+As illustrated previously, when year and quarter are the columns
+in the crosstab, the expression for the computed field is:<pre><i>CrosstabAvg</i> (1, 2, "@year")</pre>
+</p>
+<A NAME="TI6343"></A><p>The value 2 refers to the quarter column (the second column
+in the Crosstab Definition dialog) and "@year" specifies
+grouping values from the year column (meaning the function will
+average values for the quarters within each year). The value 1 refers
+to the crosstab-values expression that will be averaged. In the
+resulting crosstab, the computed field repeats in each row after the
+cells for the quarters within each year.</p>
+<A NAME="TI6344"></A><h4>Tips for defining crosstabs</h4>
+<A NAME="TI6345"></A><p>When you define a crosstab with more than one column, the
+order of the columns in the Columns box of the Crosstab Definition
+dialog box governs the way the columns are grouped. To end up with
+the most effective expressions, make the column that contains the grouping
+values (for example, year or department) the first column in the Columns
+box and the column that contains the values to be grouped (for example,
+quarter or employee) second.</p>
+<A NAME="TI6346"></A><p>To display calculations for groups of rows, define groups
+as you would for other DataWindow objects or report presentation
+styles and define computed fields in the group header or footer
+using noncrosstab aggregation functions, such as Avg, Sum, or Max.</p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Reviewing the expressions</span> <A NAME="TI6347"></A>To review the expressions defined for the crosstab values,
+open the Crosstab Definition dialog box (select Design&gt;Crosstab
+from the menubar).</p>
+
+<A NAME="EX13"></A><h3>Examples</h3><A NAME="TI6348"></A><p>The first two examples use the crosstab expressions
+shown below:<pre>Count(emp_id for crosstab),Sum(salary for crosstab)</pre>
+</p>
+<A NAME="TI6349"></A><p>This expression for a computed field in the crosstab
+returns the average of the employee counts (the first expression):<pre><i>CrosstabAvg</i> (1)</pre>
+</p>
+<A NAME="TI6350"></A><p>This expression for a computed field in the crosstab
+returns the average of the salary totals (the second expression):<pre><i>CrosstabAvg</i> (2)</pre>
+</p>
+<A NAME="TI6351"></A><p>Consider a crosstab that has two columns (region
+and city) and the values expression Avg(sales for crosstab). This
+expression for a computed field in the detail band computes the
+average sales over all the cities in a region:<pre><i>CrosstabAvg</i> (1, 2, "@region")</pre>
+</p>
+<A NAME="TI6352"></A><p>This expression for another computed field in the
+same crosstab computes the grand average over all the cities:<pre><i>CrosstabAvg</i> (1)</pre>
+</p>
+
+<A NAME="SA13"></A><h3>See Also</h3><A NAME="TI6353"></A><p><A NAME="TI6354"></A>
+<ul>
+<li class=fi><A HREF="imugp162.htm#CAIBCHGE">CrosstabCount</A></li>
+<li class=ds><A HREF="imugp163.htm#CAIDGJBH">CrosstabMax</A></li>
+<li class=ds><A HREF="imugp164.htm#CAIBJFGH">CrosstabMin</A></li>
+<li class=ds><A HREF="imugp165.htm#CAIBIJHD">CrosstabSum</A>
+</li>
+</ul>
+</p>
+
+

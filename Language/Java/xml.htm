@@ -1,0 +1,100 @@
+<html>
+  <head>
+    <title>如何在Java中使用XML</title>
+    <meta http-equiv="Content-Type" content="text/html;charset=gb2312">
+	<script type="text/javascript" src="../../mylib/js/css.js"></script>
+  </head>
+  
+<body>
+  <p id="title">如何在Java中使用XML</p>
+  
+  <h1>XML用例</h1>
+  <pre>
+&lt;?xml version="1.0" encoding="gb2312"?&gt;
+
+&lt;person&gt;
+  &lt;name alias="风二中"&gt;今狐冲&lt;/name&gt;
+  &lt;sect&gt;华山派&lt;/sect&gt;
+  &lt;kungfu&gt;
+    &lt;low-level&gt;华山剑法&lt;/low-level&gt;
+    &lt;low-level&gt;紫霞神功&lt;/low-level&gt;
+    &lt;high-level&gt;独孤九剑&lt;/high-level&gt;
+    &lt;high-level&gt;易筋经&lt;/high-level&gt;
+  &lt;/kungfu&gt;
+&lt;/person&gt;
+
+  </pre>
+  <h1>DOM篇</h1>
+  <P>
+在java的标准库里有一个org.w2c.dom包, 里面包含了DOM标准的接口, 当然是只有接口了, 要想正式使用的话, 
+还要加入扩展包javax.xml.parsers. 我在jboss的lib目录下找到的对应的jar文件名为"xml-apis.jar". 
+所以, 在程序的一开始便应该是:
+  </P>
+  <pre>
+    import org.w3c.dom.*;
+    import javax.xml.parsers.*;
+  </pre>
+  <p>
+org.w3c.dom中的Document接口可用来表示一个XML文档, 也就是文档树的根. 使用以下方法来获取:
+  </p>
+  <pre>
+DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+Document doc = builder.parse("c:/a.xml");
+  </pre>
+  
+  <P>
+嗯, 接下来的工作就好办了, 说实话, 光看Document接口的方法名就能猜个89不离10, 比如, 你看那个getDocType(), 嗯, 调用一下试试, 
+虾米, 返回null! 还是看一下帮助先, 哦, XML里面没有这个声明, 得用那个什么DTD之类的搞一搞, 先算了吧. 下一个, 我们试一下
+getElementByTagName():
+  </P>
+  <pre>
+  NodeList list = doc.getElementsByTagName("name");
+  </pre>
+  <p>
+  如果用list.getLength()来看一下长度的话, 结果为1, 当然了, 一个人只有一个名嘛, 都有点迫不及待了, 打印出来看看先:
+  </p>
+  <pre>
+  Node elem = list.item(0);
+  System.out.println(elem.getNodeValue());
+  </pre>
+  
+  <p>
+你也在跟着我测试了吗, 打印出"令狐冲"来了吗? 什么, 没打印出来? 那就对了, 当时我也没打印出来哦^_^. 唉, 真是有点变态, 
+要打印出来得靠这一招:
+  </p>
+  
+  <pre>
+  Node elem = list.item(0);
+  Node node = elem.getChildNodes().item(0);
+  System.out.println(node.getNodeValue());
+  </pre>
+  
+  <p>
+还是研究一下原因的好. 分别查看一下elem和node的getNodeType(), 发现一个是ELEMENT_NODE, 
+一个是TEXT_NODE.  一个Element, 表面上看上去呢, 是一个Node, 实际上呢, 
+它是一个复合体, 凡是<name></name>之内的, 包括所有的属性, 子标签, 都算这个Element的, 所以吗, 里面的内容只是它的一个
+TEXT_NODE型的Node, 而假如要取它的属性的话呢, 得这么取:
+  </p>
+  
+  <pre>
+  NamedNodeMap attr = elem.getAttributes();
+  node = attr.getNamedItem("alias");
+  System.out.println(node.getNodeValue());
+  </pre>
+  
+  <p>
+  又OK了吧. 其实得到属性的方法很多，比如这样：
+  </p>
+  
+  <pre>
+  NodeList list = doc.getElementsByTagName("name");
+  Element elem = (Element)list.item(0);
+  System.out.println(elem.getAttribute("alias"));
+  </pre>
+  
+  <p>
+  其实基本也就这么点东西, 看看各方法的名字就能猜个差不多，当然，运用之妙, 存乎一心^_^.
+  </p>
+
+</body>
+</html>

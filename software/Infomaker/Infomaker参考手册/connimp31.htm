@@ -1,0 +1,92 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+About database connections</TITLE>
+</HEAD>
+<BODY>
+<A NAME="CCJDFFEG"></A><h1>About database connections</h1>
+<A NAME="TI1106"></A><p>This section gives an overview of when database connections
+occur in InfoMaker. It also tells why you should use database profiles
+to manage your database connections.</p>
+<A NAME="TI1107"></A><h2>When database connections occur</h2>
+<A NAME="TI1108"></A><h4>Connections in InfoMaker</h4>
+<A NAME="TI1109"></A><p>In the development environment, the setting of the Automatically
+Connect to Database system option controls whether InfoMaker connects
+to the database when you open a painter requiring a connection (the
+default) or automatically when you start InfoMaker.</p>
+<A NAME="TI1110"></A><p>The Automatically Connect to Database option has no effect
+in InfoMaker applications at execution time. Like PowerBuilder, InfoMaker connects
+to your database when you execute an application that accesses the
+database.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To set the Automatically Connect to Database option
+in InfoMaker:</p>
+<ol><li class=fi>
+Select Windows&gt;System Options
+from the PowerBar.<br><br>
+The System Options dialog box displays.<br><br><br><img src="images/cn6auto.gif"><br>
+</li>
+<li class=ds>
+On the General tab page, select or clear the Automatically
+Connect to Database checkbox as follows:<br><br></li>
+<li class=ds><b>Select the checkbox</b>   The next time you start InfoMaker, it automatically connects
+to the database at startup and stays connected throughout the session
+until you exit.</p>
+</li>
+<li class=ds><b>Clear the checkbox</b>   (Default) The next time you start InfoMaker, it connects
+to the database only when you open one of the following painters requiring
+a connection: Database, Report, Form, Query, or Data Pipeline. It
+does <i>not</i>
+ connect to the database automatically
+at startup.</p>
+</li>
+<li class=ds>
+Click OK or Apply.<br><br>
+InfoMaker saves your AutoConnect setting in the registry.<br><br></li></ol>
+<br><A NAME="TI1111"></A><h4>How InfoMaker determines the database to access</h4>
+<A NAME="TI1112"></A><p>InfoMaker <i>connects to the database you used last</i>
+ when
+you open a painter that accesses the database.</p>
+<A NAME="TI1113"></A><p>InfoMaker determines which database you used last by reading
+a setting in the registry. </p>
+<A NAME="TI1114"></A><p>For instructions on using a particular painter
+in InfoMaker, see the <i>InfoMaker User's Guide</i>
+.</p>
+<A NAME="TI1115"></A><h4>What's in this book</h4>
+<A NAME="TI1116"></A><p>This book describes how to connect to your database when you
+are working in the InfoMaker development environment.</p>
+<A NAME="CCJCJDFD"></A><h2>Using database profiles</h2>
+<A NAME="TI1117"></A><h4>What is a database profile?</h4>
+<A NAME="TI1118"></A><p>A <strong>database profile</strong> is a named set of
+parameters stored in the registry that defines a connection to a
+particular database in the InfoMaker development environment.</p>
+<A NAME="TI1119"></A><h4>Why use database profiles?</h4>
+<A NAME="TI1120"></A><p>Creating and using database profiles is the easiest way to
+manage your database connections in InfoMaker because you can:</p>
+<A NAME="TI1121"></A><p><A NAME="TI1122"></A>
+<ul>
+<li class=fi>Select a database
+profile to establish or change database connections. You can easily
+connect to another database anytime during an InfoMaker session.
+This is particularly useful if you often switch between different database
+connections.</li>
+<li class=ds>Edit a database profile to modify or supply additional
+connection parameters.</li>
+<li class=ds>Delete a database profile if you no longer need
+to access that data.</li>
+<li class=ds>Import and export profiles.
+</li>
+</ul>
+</p>
+<A NAME="TI1123"></A><p>Because database profiles are created when you define your
+data and are stored in the registry, they have the following benefits:</p>
+<A NAME="TI1124"></A><p><A NAME="TI1125"></A>
+<ul>
+<li class=fi>They are always available
+to you.</li>
+<li class=ds>Connection parameters supplied in a database profile
+are saved until you edit or delete the database profile.
+</li>
+</ul>
+</p>
+

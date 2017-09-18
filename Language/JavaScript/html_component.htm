@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<title>HTML控件</title>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+<p id="title">HTML组件
+</p>
+
+<p>HTML 组件（HTML COMPONENTS）是IE5。0的主要扩展之一，其也最具革命性，微软的意图是用HTML组件来取代ACTIVEX控件，和ACTIVE控件一样，HTML组件是自持续封闭对象，可以一次开发任意使用，使用HTML组件有很多好处，本文将给您揭示其中的一些！ </p>
+<p>不过很不幸的是，非IE系浏览器（例如FireFox）并不支持HTML组件，因此，如果您要使用HTML组件，要求客户端必须使用IE内核的浏览器。</p>
+<p>HTML组件带入了很多新的术语、思想、对象、方法和属性，我将通过一个日历应用给您接受这些，这个日历应用显示当前月的日期、星期并且高亮度显示当前日期。 </p>
+<h1>HTML行为和HTC行为</h1>
+<p>HTML组件封装了HTML内容，并可以插入到别的HTML文档中。在HTML组件出现以前，在HMTL文档中使用自定义控制唯一的办法就是使用微软ACTIVEX控件，ACTIVEX控件的一个缺点之一就是使用前必须客户机安装HTML控件，另一方面将主页面下载到客户机，对于DHTML的作者来说HTML控件更具吸引力，因为他们可以使用他们熟悉的语言开发自己的控件和组件，HTC提供了一个简单机制以在脚本中实现DHTML行为。一个HTC文件和HTML文件没有任何差别，并且以“.htc”为后缀，它包括脚本和一系列HTC自定义说明元素，这些元素定义了HTML组件的属性、方法、事件等，所有HTC元素通过对象的ID属性作为对象在脚本中使用，所有方法和属性均可在脚本中动态操作。 </p>
+<p> 您可以使用HTC实现以下行为： </p>
+<ul>
+  <li> 设定属性和方法。通过“PROPERTY”和“METHOD”元素定义</li>
+  <li>设置自定义事件。通过“EVENT”元素实现，用该元素的“fire()”方法释放事件，通过“createEventObject()”方法设置事件环境。 </li>
+  <li>访问所包含该HTC的的HTML页的DHTML对象模型，使用HTC的“element&quot;对象，返回一个附加行为的元素，使用该对象，HTC可以访问包含文挡及它的对象模型（属性、方法、事件）。 </li>
+  <li>收取通知，使用”ATTACH“元素实现，浏览器不但通知HTC标准的DHTML事件，而且通知HTC两种特殊事件：oncontentready事件和ondocumentready事件 。</li>
+</ul>
+<p> HTC封装了行为的定义 ，行为的概念第一次出现是在IE5。0中，HTC中的高级行为封装就是行为不能和元素标记分离，在IE5。0中，在脚本中行为可以从元素中分离出来，而在IE5.5中，元素不能和其原始行为分离。 </p>
+<h1>定义标记和命名空间</h1>
+<p>HTC的基础是自定义标记，自定义标记的第一次出现是在IE5。0中，它可以让WEB作者通过与结构关联的一系列样式来定义文挡结构，例如：您可以定义一个新标记&lt;RIGHT&gt;（段落右对其）</p>
+<pre>&lt;HTML XMLNS:DOCJS&gt; 
+&lt;HEAD&gt; 
+&lt;STYLE&gt; 
+@media all { 
+DOCJS\:RIGHT {text-align:right; width:100} 
+} 
+&lt;/STYLE&gt; 
+&lt;/HEAD&gt; 
+&lt;BODY&gt; 
+&lt;DOCJS:RIGHT&gt; 
+Read Doc JavaScript's columns, tips, tools, and tutorials 
+&lt;/DOCJS:RIGHT&gt; 
+&lt;/BODY&gt; 
+&lt;/HTML&gt;</pre>
+<p> 在Internet Explorer中您要为页面定义自定义标记，必须为该标记提供命名空间，自定义标记是基于XML符号的XML命名空间，正如以下所示。我们使用DOCJS命名空间：</p>
+<pre>&lt;HTML XMLNS:DOCJS&gt; </pre>
+<p> XMLNS是XML NameSpace的缩写，我定义了一个叫做RIGHT的自定义标记，要使用该标记必须在该标记前加上正确的XML命名空间前缀：DOCJS:RIGHT,如果命名空间未定义，则在文档解析时，自定义标记将作为未知标记处理尽管页面有未知标记，但不会导致错误，不影响别的标记，并且没有任何行为可以应用在其上，你可以在单个HTML标记中定义多个命名空间：</p>
+<pre>&lt;HTML XMLNS:DOCJS XMLNS:DOCJAVASCRIPT&gt; </pre>
+<h1>最顶级页面</h1>
+<p>现在我们将我们注视的焦点转向我们的日历应用例子，该应用包括4个不同页面，canlendar.html为最顶级HTML文档，该页包含了calendar.htc HTC，而canlendar.htc有反过来包含两个别的HTC：day.htc和today.htc,calendar.html，内容如下： </p>
+<pre>&lt;HTML XMLNS:MYCAL&gt; 
+&lt;HEAD&gt; 
+&lt;TITLE&gt;Calendar Example&lt;/TITLE&gt; 
+&lt;?IMPORT NAMESPACE=&quot;MYCAL&quot; IMPLEMENTATION=&quot;calendar.htc&quot;/&gt; 
+&lt;/HEAD&gt; 
+
+&lt;BODY&gt; 
+&lt;P&gt;Click a day in the calendar to add or modify your schedule.&lt;/P&gt; 
+
+&lt;MYCAL:CALENDAR&gt;&lt;/MYCAL:CALENDAR&gt; 
+
+&lt;/BODY&gt; 
+&lt;/HTML&gt;</pre>
+<p>有几个要点您必须重点注意：第一、命名空间定义在〈HTML〉标记中，我们需要使用在我们要调用的HTC中定义的命名空间，在canlendar.htc中的命名空间是:MYCAL，所以在&lt;HTML&gt;标记中必须出现XMLNS标识。 </p>
+<p>&lt;?IMPORT&gt;标记以问号开始以和别的正常标记区别开，该标记要求浏览器导入指定的HTC：calendar.htc,HTC可以有多个命名空间，故在导入时需要指明要使用的命名空间（MYCAL）： </p>
+<pre>&lt;?IMPORT NAMESPACE=&quot;MYCAL&quot; IMPLEMENTATION=&quot;calendar.htc&quot;/&gt; </pre>
+<p>HTC的主要优点之一就是：浏览器将一直挂起页面解析直到输入文件全部被导入为止。页面处理的异步机制将导致许多问题，浏览器并不等元素已经完全显示才开始解析页面，作为例子，你可以建立一个对象，并且在文挡的顶部访问一个在页面底部的方法，如果对象因为某些原因为准备好，你将会得到一个错误指示没有该对象不存在或该对象不支持你要访问的方法，相信您已经碰到过此类事情了吧！不管这样，?IMPORT 是同步的，并且浏览器会一直等待页面导入完毕并且内容准备好。 </p>
+<p>页面唯一而且重要的一行是调用自定义标记MYCAL:CALENDAR: </p>
+<pre>&lt;MYCAL:CALENDAR&gt;&lt;/MYCAL:CALENDAR&gt; </pre>
+<p>因为页面已经导入，故该调用将会象在calendar.htc所指定的那样建立一个日历。</p>
+<p>您可能已经注意到HTC可以包含别的HTC，calendar.htc包括两个别的HTML组件，每个月的所有日期:day.htc和与当前日期一致的today.htc,以下是canlendar.htc的顶部15行：</p>
+<pre>&lt;HTML XMLNS:MYCAL XMLNS:TODAY XMLNS:ANYDAY&gt; 
+&lt;HEAD&gt; 
+&lt;?IMPORT NAMESPACE=&quot;ANYDAY&quot; IMPLEMENTATION=&quot;day.htc&quot;/&gt; 
+&lt;?IMPORT NAMESPACE=&quot;TODAY&quot; IMPLEMENTATION=&quot;today.htc&quot;/&gt; 
+
+&lt;PUBLIC:COMPONENT tagName=&quot;CALENDAR&quot;&gt; 
+&lt;ATTACH EVENT=&quot;oncontentready&quot; ONEVENT=&quot;fnInit()&quot;/&gt; 
+&lt;/PUBLIC:COMPONENT&gt; 
+&lt;SCRIPT LANGUAGE=&quot;JavaScript&quot;&gt; 
+&lt;!-- 
+function fnInit() 
+{ 
+defaults.viewLink = document; 
+} 
+// --&gt; 
+&lt;/SCRIPT&gt;</pre>
+<p>第一行在这些HTC会用到的XML命名空间。这些命名空间即包括本页自己要用到的，也包括页面需调用的命名空间（ANYDAY 和 TODAY ），注意命名空间并不一定要和HTC文件文件名一致。接着，我们导入这些HTC： </p>
+<pre>&lt;?IMPORT NAMESPACE=&quot;ANYDAY&quot; IMPLEMENTATION=&quot;day.htc&quot;/&gt; 
+&lt;?IMPORT NAMESPACE=&quot;TODAY&quot; IMPLEMENTATION=&quot;today.htc&quot;/&gt;</pre>
+<p>当我们解析到这些行，浏览器将一直等到要导入的文件被导入才继续页面解析（同步导入）。</p>
+<p>然后我们定义CALENDAR自定义标记： </p>
+<pre>&lt;PUBLIC:COMPONENT tagName=&quot;CALENDAR&quot;&gt; 
+&lt;ATTACH EVENT=&quot;oncontentready&quot; ONEVENT=&quot;fnInit()&quot;/&gt; 
+&lt;/PUBLIC:COMPONENT&gt;</pre>
+<p>PUBLIC:COMPONENT用来描述CALENDAR标记，在开始和结束标记之间，您可以将事件附加到CALENDAR标记上，事件oncontentready将在calendar.htc文件全部被导入，并被解析时，指定处理时间的是定义在JAVASCRIPT的函数：fnInit()：</p>
+<pre>&lt;SCRIPT LANGUAGE=&quot;JavaScript&quot;&gt; 
+&lt;!-- 
+function fnInit() 
+{ 
+defaults.viewLink = document; 
+} 
+// --&gt; 
+&lt;/SCRIPT&gt;</pre>
+<p>viewLink指定的值非常重要，它是HTML组件的基础，它连接了HTML组件和调用该HTML组件的页面，defaults对象有别的属性并且会在别的地方被覆盖，我们给viewLink属性赋的是HTML文档对象，正因为该连接，我们才可以建立HTC组件和包含页面互访。 </p>
+<p> 我们将在后面解释日历的层。注意，尽管在日历中当月的当天框和其他天框、空框的样式不一样，但是我们通过优先级法则来实现在包含页中，HTML组件忽略任何相互冲突的样式定义。calendar.htc的样式定义如下： </p>
+<pre>&lt;STYLE&gt; 
+TD { 
+background-color:tan; 
+width:50; 
+height:50; 
+} 
+&lt;/STYLE&gt;</pre>
+<p>现在将该定义和日历比较，只有空框是的颜色是黄褐色的，我们调用的HTC忽略了这些定义，被调用的页面都嵌入了页面定制。以下调用TODAY:DAY HTML组件：</p>
+<pre>&lt;TODAY:DAY value=' + dayOfMonth + '&gt;&lt;/TODAY:DAY&gt; </pre>
+<p>我们只是简单的传入了当月中的第几天，同样的调用ANYDAY:DAY 也是简单的传入当月中的第几天： </p>
+<pre>&lt;ANYDAY:DAY value=' + dayOfMonth + '&gt;&lt;/ANYDAY:DAY&gt;</pre>
+<h1>编写日历</h1>
+<p>当calendar.html调用 MYCAL:CALENDAR,当月的日历将会显示在页面中，函数setCal()是主要程序段，它初始化一些变量并调用drawCal()函数。我们也使用了三个别的函数：getMonthName()、 getDays() 和 leapYear()。让我们从最后一个函数开始：</p>
+<p>getDays()函数接收哪月值和哪年值，并且建立一个有12个元素的数组，用来存放每月的天数，哪一年用来决定是不是闰年，在闰年中二月是29天，而不是闰年是28天。该函数返回指定月份的天数。</p>
+<p>如果指定的年数可以被4整除，那么leapYear()函数将返回“true”，否则返回”false“： </p>
+<p>setCal()函数是主模块，我们在脚本的第一行调用它。该函数为当天（now）、和每月的第一天（firstDayInstance）建立一个Date对象。用这些对象，setCal()函数解析出关于一个月的第一天、当日，和最后一天的所有信息。 </p>
+<p>具体的代码请参看附录节。</p>
+<h1>ANYDAY 和 TODAY HTC</h1>
+<p>ANYDAY组件定义在day,htc中，该组件是日历单元的一个封装。组件的名字是由定义在第一行的XML命名空间决定的。 </p>
+<pre>&lt;HTML XMLNS:ANYDAY&gt; </pre>
+<p>正如canlenar.htc一样，你只有一个命名空间定义，原因是在该页不用调用其他的HTC，也就是说该HCT是叶子HTC，在这里我们定义的自定义标签是DAY，同样我们也定义它的行为，实际上，HTML组件的定义就是自定义标签行为的定义，该行为包括一个属性和一个事件： </p>
+<pre>&lt;PUBLIC:COMPONENT tagName=&quot;DAY&quot;&gt; 
+&lt;PROPERTY NAME=&quot;value&quot;&gt;&lt;/PROPERTY&gt; 
+&lt;ATTACH EVENT=&quot;oncontentready&quot; ONEVENT=&quot;fnInit()&quot;&lt;&gt;/ATTACH&gt; 
+&lt;/PUBLIC:COMPONENT&gt;</pre>
+<p>注意事件 oncontentready ，当它的调用者calendar.htc要求导入day.htc并且被完全导入，该事件就会产生，事件的处理者是fnInit().我们来看看它： </p>
+<pre>function fnInit() 
+{ 
+	document.body.innerHTML = element.value; 
+	document.body.className = &quot;clsDay&quot;; 
+	defaults.viewLink = document; 
+	element.appointments = &quot;&quot;; 
+	element.date = element.value; 
+}</pre>
+<p>fnInit()演示了很多重要的HTC章节。第一行把 element.value 指定给调用页的 innerHTML 属性。HTML组件总是封装在element对象里。value属性一般定义在PROPERTY标签中，作为提醒，实际的值从调用页面传入，canlendar.htc: </p>
+<pre>text += '&lt;TD&gt;&lt;ANYDAY:DAY value=' + dayOfMonth + '&gt;&lt;/ANYDAY:DAY&gt;&lt;/TD&gt;' </pre>
+<p> 单元样式在第二行指定： </p>
+<pre>document.body.className = &quot;clsDay&quot;; </pre>
+<p>样式类 clsDay 定义在该页的别处： </p>
+<pre>&lt;STYLE&gt; 
+.clsDay { 
+width:50; 
+height:50; 
+background-color:lightyellow; 
+align:center; 
+text-align:right; 
+} 
+&lt;/STYLE&gt;</pre>
+<p>注意在日历中日期的被填色为亮黄色，这证明HTC的格式的指定模式被它的调用者所支配，即：calendar.htc. </p>
+<p> fninit()的第三行设置default对象的viewlink属性，viewLink属性是HTML组件的基础，它可以使得一个HTC文档(day.htc)对另一个HTML组件(calendar.htc)来说可见.这儿就是viewLink的设置：</p>
+<pre>defaults.viewLink = document; </pre>
+<p>注意您需要联接的是整个document对象。fnInit()的最后两行初始化我们将在以后解释的两个内部属性： </p>
+<pre>element.appointments = &quot;&quot;; 
+element.date = element.value;</pre>
+<p>用于它本身的显示，DAY HTML组件和鼠标点击相关： </p>
+<pre>&lt;BODY onclick=&quot;fnShowAppts()&quot;&gt; </pre>
+<p>当该天被点击，用户被提醒在该天加上他或她的约会，或者修改已经存在的约会：</p>
+<pre>function fnShowAppts() 
+{ 
+	newAppointments = prompt(&quot;Add your appointment:&quot;, element.appointments); 
+	if (newAppointments != null) element.appointments = newAppointments; 
+	document.body.innerHTML = '&lt;FONT COLOR=&quot;red&quot;&gt;' + element.date + '&lt;/FONT&gt;' + &quot;&lt;BR&gt;&quot; + '&lt;FONT SIZE=&quot;1&quot;&gt;' + element.appointments + '&lt;/FONT&gt;'; 
+}</pre>
+<p>这里的输入机制非常原始，用户在约会指定中加入新行标签(&lt;BR&gt;)，否则他们将都显示在一行。最后innerHTML是日期数据(element.date)和约会指定(element.appointments) 的连接纽带。 </p>
+<p> TODAY HTML组件(today.htc)和ANYDAY组件(day.htc)非常类似。唯一的不同是样式快中的background-color是pink而不是lightyellow,并且字体颜色是blue 而不是red. </p>
+<p> 注意在日历中当前日期是粉红色(pink)背景蓝色的字。 </p>
+<p>下节将列出我们所讲的日历的完整代码和一个不用HTC组件方法实现的日历代码<br>
+</p>
+<h1>完整代码</h1>
+<h2>日历主页面</h2>
+<pre>&lt;head&gt; 
+&lt;title&gt;Calendar Example&lt;/title&gt; 
+&lt;?IMPORT NAMESPACE=&quot;MYCAL&quot; IMPLEMENTATION=&quot;calendar.htc&quot;/&gt; 
+&lt;/HEAD&gt; 
+
+&lt;BODY&gt; 
+&lt;P&gt;Click a day in the calendar to add or modify your schedule.&lt;/P&gt; 
+
+&lt;MYCAL:CALENDAR&gt;&lt;/MYCAL:CALENDAR&gt; 
+
+&lt;/BODY&gt; 
+&lt;/HTML&gt;</pre>
+<h2>calendar.htc</h2>
+<pre>&lt;HEAD&gt; 
+&lt;?IMPORT NAMESPACE=&quot;ANYDAY&quot; IMPLEMENTATION=&quot;day.htc&quot;/&gt; 
+&lt;?IMPORT NAMESPACE=&quot;TODAY&quot; IMPLEMENTATION=&quot;today.htc&quot;/&gt; 
+
+&lt;PUBLIC:COMPONENT tagName=&quot;CALENDAR&quot;&gt; 
+&lt;ATTACH EVENT=&quot;oncontentready&quot; ONEVENT=&quot;fnInit()&quot;/&gt; 
+&lt;/PUBLIC:COMPONENT&gt; 
+
+&lt;SCRIPT LANGUAGE=&quot;JavaScript&quot;&gt; 
+&lt;!-- 
+function fnInit() { 
+defaults.viewLink = document; 
+} 
+// --&gt; 
+&lt;/SCRIPT&gt; 
+
+&lt;STYLE&gt; 
+TD { 
+background-color:tan; 
+width:50; 
+height:50; 
+} 
+&lt;/STYLE&gt; 
+&lt;/HEAD&gt; 
+
+&lt;BODY&gt; 
+&lt;SCRIPT LANGUAGE=&quot;JavaScript&quot;&gt; 
+&lt;!-- 
+
+// Copyright 1997 -- Tomer Shiran 
+
+setCal(); 
+
+function leapYear(year) { 
+if (year % 4 == 0) {// basic rule 
+return true; // is leap year 
+} 
+/* else */ // else not needed when statement is &quot;return&quot; 
+return false; // is not leap year 
+} 
+
+function getDays(month, year) { 
+// create array to hold number of days in each month 
+var ar = new Array(12); 
+ar[0] = 31; // January 
+ar[1] = (leapYear(year)) ? 29 : 28; // February 
+ar[2] = 31; // March 
+ar[3] = 30; // April 
+ar[4] = 31; // May 
+ar[5] = 30; // June 
+ar[6] = 31; // July 
+ar[7] = 31; // August 
+ar[8] = 30; // September 
+ar[9] = 31; // October 
+ar[10] = 30; // November 
+ar[11] = 31; // December 
+
+// return number of days in the specified month (parameter) 
+return ar[month]; 
+} 
+
+function getMonthName(month) { 
+// create array to hold name of each month 
+var ar = new Array(12); 
+ar[0] = &quot;January&quot;; 
+ar[1] = &quot;February&quot;; 
+ar[2] = &quot;March&quot;; 
+ar[3] = &quot;April&quot;; 
+ar[4] = &quot;May&quot;; 
+ar[5] = &quot;June&quot;; 
+ar[6] = &quot;July&quot;; 
+ar[7] = &quot;August&quot;; 
+ar[8] = &quot;September&quot;; 
+ar[9] = &quot;October&quot;; 
+ar[10] = &quot;November&quot;; 
+ar[11] = &quot;December&quot;; 
+
+// return name of specified month (parameter) 
+return ar[month]; 
+} 
+
+function setCal() { 
+// standard time attributes 
+var now = new Date(); 
+var year = now.getFullYear(); 
+var month = now.getMonth(); 
+var monthName = getMonthName(month); 
+var date = now.getDate(); 
+now = null; 
+
+// create instance of first day of month, and extract the day on which it occurs 
+var firstDayInstance = new Date(year, month, 1); 
+var firstDay = firstDayInstance.getDay(); 
+firstDayInstance = null; 
+
+// number of days in current month 
+var days = getDays(month, year); 
+
+// call function to draw calendar 
+drawCal(firstDay + 1, days, date, monthName, year); 
+} 
+
+function drawCal(firstDay, lastDate, date, monthName, year) { 
+// constant table settings 
+//var headerHeight = 50 // height of the table's header cell 
+var border = 2; // 3D height of table's border 
+var cellspacing = 4; // width of table's border 
+var headerColor = &quot;midnightblue&quot;; // color of table's header 
+var headerSize = &quot;+3&quot;; // size of tables header font 
+var colWidth = 60; // width of columns in table 
+var dayCellHeight = 25; // height of cells containing days of the week 
+var dayColor = &quot;darkblue&quot;; // color of font representing week days 
+var cellHeight = 40; // height of cells representing dates in the calendar 
+var todayColor = &quot;red&quot;; // color specifying today's date in the calendar 
+var timeColor = &quot;purple&quot;; // color of font representing current time 
+
+// create basic table structure 
+var text = &quot;&quot;; // initialize accumulative variable to empty string 
+text += '&lt;TABLE BORDER=' + border + ' CELLSPACING=' + cellspacing + '&gt;'; // table settings 
+text += '&lt;TH COLSPAN=7 HEIGHT=' + 10 + '&gt;'; // create table header cell 
+text += '&lt;FONT COLOR=&quot;' + headerColor + '&quot; SIZE=' + headerSize + '&gt;'; // set font for table header 
+text += monthName + ' ' + year; 
+text += '&lt;/FONT&gt;'; // close table header's font settings 
+text += '&lt;/TH&gt;'; // close header cell 
+
+// variables to hold constant settings 
+var openCol = '&lt;TD WIDTH=' + colWidth + ' HEIGHT=' + dayCellHeight + '&gt;'; 
+openCol += '&lt;FONT COLOR=&quot;' + dayColor + '&quot;&gt;'; 
+var closeCol = '&lt;/FONT&gt;&lt;/TD&gt;'; 
+
+// create array of abbreviated day names 
+var weekDay = new Array(7); 
+weekDay[0] = &quot;Sun&quot;; 
+weekDay[1] = &quot;Mon&quot;; 
+weekDay[2] = &quot;Tues&quot;; 
+weekDay[3] = &quot;Wed&quot;; 
+weekDay[4] = &quot;Thu&quot;; 
+weekDay[5] = &quot;Fri&quot;; 
+weekDay[6] = &quot;Sat&quot;; 
+
+// create first row of table to set column width and specify week day 
+text += '&lt;TR ALIGN=&quot;center&quot; VALIGN=&quot;center&quot;&gt;'; 
+for (var dayNum = 0; dayNum &lt; 7; ++dayNum) { 
+text += openCol + weekDay[dayNum] + closeCol; 
+} 
+text += '&lt;/TR&gt;'; 
+
+// declaration and initialization of two variables to help with tables 
+var dayOfMonth = 1; 
+var curCell = 1; 
+
+for (var row = 1; row &lt;= Math.ceil((lastDate + firstDay - 1) / 7); ++row) { 
+text += '&lt;TR ALIGN=&quot;right&quot; VALIGN=&quot;top&quot;&gt;'; 
+for (var col = 1; col &lt;= 7; ++col) { 
+if ((curCell &lt; firstDay) || (dayOfMonth &gt; lastDate)) { 
+text += '&lt;TD&gt;&lt;/TD&gt;'; 
+curCell++ 
+} else { 
+if (dayOfMonth == date) { // current cell represents today's date 
+text += '&lt;TD&gt;&lt;TODAY:DAY value=' + dayOfMonth + '&gt;&lt;/TODAY:DAY&gt;&lt;/TD&gt;'; 
+} else { 
+text += '&lt;TD&gt;&lt;ANYDAY:DAY value=' + dayOfMonth + '&gt;&lt;/ANYDAY:DAY&gt;&lt;/TD&gt;'; 
+} 
+dayOfMonth++; 
+} 
+} 
+text += '&lt;/TR&gt;'; 
+} 
+
+// close all basic table tags 
+text += '&lt;/TABLE&gt;'; 
+text += '&lt;/CENTER&gt;'; 
+
+// print accumulative HTML string 
+document.write(text); 
+} 
+
+// --&gt; 
+&lt;/SCRIPT&gt; 
+&lt;/BODY&gt; 
+&lt;/HTML&gt;</pre>
+<h1>today.htc</h1>
+<pre>&lt;HEAD&gt; 
+&lt;PUBLIC:COMPONENT tagName=&quot;DAY&quot;&gt; 
+&lt;PROPERTY NAME=&quot;value&quot;&gt;&lt;/PROPERTY&gt; 
+&lt;ATTACH EVENT=&quot;oncontentready&quot; ONEVENT=&quot;fnInit()&quot;&gt;&lt;/ATTACH&gt; 
+&lt;/PUBLIC:COMPONENT&gt; 
+
+&lt;STYLE&gt; 
+.clsDay { 
+width:50; 
+height:50; 
+background-color: pink; 
+align:center; 
+text-align:right; 
+} 
+&lt;/STYLE&gt; 
+
+&lt;SCRIPT LANGUAGE=&quot;JavaScript&quot;&gt; 
+&lt;!-- 
+function fnInit() 
+{ 
+document.body.innerHTML = '&lt;FONT COLOR=&quot;blue&quot;&gt;' + element.value + '&lt;/FONT&gt;'; 
+document.body.className = &quot;clsDay&quot;; 
+defaults.viewLink = document; 
+element.appointments = &quot;&quot;; 
+element.date = element.value; 
+} 
+
+function fnShowAppts() 
+{ 
+newAppointments = prompt(&quot;Add your appointment:&quot;, element.appointments); 
+if (newAppointments != null) element.appointments = newAppointments; 
+document.body.innerHTML = '&lt;FONT COLOR=&quot;blue&quot;&gt;' + element.date + '&lt;/FONT&gt;' + &quot;&lt;BR&gt;&quot; + '&lt;FONT SIZE=&quot;1&quot;&gt;' + element.appointments + '&lt;/FONT&gt;'; 
+} 
+// --&gt; 
+&lt;/SCRIPT&gt; 
+&lt;/HEAD&gt;</pre>
+<h1>N.100 示例1：文字效果</h1>
+<h2>N.100.1 font_effect.htc</h2>
+<pre>&lt;PUBLIC:ATTACH EVENT=&quot;onmouseover&quot; ONEVENT=&quot;glowit()&quot;/&gt;
+&lt;PUBLIC:ATTACH EVENT=&quot;onmouseout&quot; ONEVENT=&quot;noglow()&quot;/&gt;
+&lt;PUBLIC:ATTACH EVENT=&quot;onmousedown&quot; ONEVENT=&quot;font2yellow()&quot;/&gt;
+&lt;PUBLIC:ATTACH EVENT=&quot;onmouseup&quot; ONEVENT=&quot;font2blue()&quot;/&gt;
+//给“行为”定义二个方法
+&lt;PUBLIC:METHOD NAME=&quot;move_down&quot;/&gt;
+&lt;PUBLIC:METHOD NAME=&quot;move_right&quot;/&gt;
+&lt;SCRIPT LANGUAGE=&quot;JScript&quot;&gt;
+//定义一个保存字体颜色的变量
+var font_color;
+
+//定义向下移动文字的方法
+function move_down()
+{
+	element.style.posTop+=2;
+}
+//定义向右移动文字的方法
+function move_right()
+{
+	element.style.posLeft +=6;
+}
+//定义鼠标onmouseup事件的调用函数
+function font2blue()
+{
+	if (event.srcElement == element)
+	{
+		element.style.color='blue';
+	}
+}
+
+//定义鼠标onmousedown事件的调用函数
+function font2yellow()
+{
+	if (event.srcElement == element)
+	{
+		element.style.color='yellow';
+	}
+}
+
+//定义鼠标onmouseover事件的调用函数
+function glowit()
+{
+	if (event.srcElement == element)
+	{
+		font_color=style.color;
+		element.style.color='white';
+		element.style.filter=&quot;glow(color=red,strength=2)&quot;;
+	}
+}
+
+//定义鼠标onmouseout事件的调用函数
+function noglow()
+{
+	if (event.srcElement == element)
+	{
+		element.style.filter=&quot;&quot;;
+		element.style.color=font_color;
+	}
+}
+&lt;/SCRIPT&gt;</pre>
+<h2>N.100.2 font_effect_test.htm</h2>
+<pre>&lt;html&gt;
+&lt;HEAD&gt;
+&lt;TITLE&gt;行为效果演示&lt;/TITLE&gt;
+&lt;STYLE&gt;
+.myfilter{behavior:url(font_effect.htc);position:relative;font-weight:bold;width=180;left:0;}
+&lt;/STYLE&gt;
+&lt;/HEAD&gt;
+&lt;BODY&gt;
+&lt;span id=&quot;myspan&quot; class='myfilter'&gt;行为产生的文字效果&lt;/span&gt;&lt;br&gt;
+&lt;span class='myfilter'&gt;鼠标指向后产生辉光&lt;/span&gt;&lt;br&gt;
+&lt;span class='myfilter'&gt;同时文字变白&lt;/span&gt;&lt;br&gt;
+&lt;span class='myfilter'&gt;按下鼠标后文字变黄&lt;/span&gt;&lt;br&gt;
+&lt;span class='myfilter'&gt;抬起鼠标后文字变蓝&lt;/span&gt;&lt;br&gt;
+&lt;span class='myfilter'&gt;鼠标离开后文字恢复原状&lt;/span&gt;&lt;br&gt;
+&lt;button onclick=&quot;myspan.move_right();&quot;&gt;向右移动第一行文字&lt;/button&gt;&lt;br&gt;
+&lt;button onclick=&quot;myspan.move_down();&quot;&gt;向下移动第一行文字&lt;/button&gt;
+&lt;/BODY&gt;
+&lt;/html&gt;</pre>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+
+</body>
+</html>

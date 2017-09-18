@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<title>Prototype</title>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+<p id="title">Prototype</p>
+
+<h1>AJAX示例 </h1>
+<h2>使用C#编写的服务器端响应 </h2>
+<p>Default.aspx</p>
+<pre>protected void Page_Load(object sender, EventArgs e)
+{
+	string req = Request.Params[&quot;req&quot;];
+	if (req == &quot;1&quot;)
+	{
+		Response.Write(&quot;cde&quot;);
+		Response.End();
+	}
+}</pre>
+<h2>客户端脚本</h2>
+<pre>&lt;HTML&gt;
+&lt;HEAD&gt;
+&lt;TITLE&gt; Test Page &lt;/TITLE&gt;
+&lt;script type=&quot;text/javascript&quot; src=&quot;prototype.js&quot;&gt;&lt;/script&gt;
+&lt;/HEAD&gt;
+
+&lt;BODY&gt;
+
+&lt;form name=&quot;form1&quot;&gt;
+&lt;input type=&quot;button&quot; value=&quot;test&quot; onclick=&quot;test()&quot; /&gt;
+&lt;/form&gt;
+&lt;script type=&quot;text/javascript&quot;&gt; 
+
+function test()
+{
+  var url = 'http://localhost/test/Default.aspx';
+  var pars = 'req=1&amp;reqid=' + Math.random();
+  var myAjax = new Ajax.Request(
+        url,
+        {method: 'get', parameters: pars, onComplete: showResponse}
+        );
+	
+}
+
+function showResponse(originalRequest)
+{
+	alert(originalRequest.responseText);
+}
+
+&lt;/script&gt;
+&lt;/BODY&gt;
+&lt;/HTML&gt;</pre>
+<p>注意：在请求中加了一个随机参数reqid，保证每次都能取得真实结果，而不是缓存中的数据。</p>
+<p><a href="downloads/prototype.zip">下载: prototype 1.6</a> </p>
+<p><a href="appendix/prototype1.3.1.js.cn.html">中文版参考 1.3</a></p>
+<p><a href="appendix/prototype%201.4.htm">中文版参考 1.4</a></p>
+<p>&nbsp;</p>
+
+</body>
+</html>

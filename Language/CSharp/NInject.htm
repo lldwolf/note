@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+	<title>NInject</title>
+	<script type="text/javascript" src="../../mylib/js/css.js"></script>
+	<style>
+		.distinct
+		{
+			font-weight: bold;
+		}
+	</style>
+</head>
+
+<body>
+	<p id="title">IoC 组件 NInject</p>
+	<h1>Overview</h1>
+	<p>主页： <a href="http://www.ninject.org/">http://www.ninject.org/</a></p>
+	<p>Ninject是一个快如闪电、超轻量级的基于.Net平台的依赖注入框架。它能够帮助你把应用程序分离成一个个松耦合、高内聚的模块，然后用一种灵活的方式组装起来。通过使用Ninject配套你的软件架构，那么代码将会变得更加容易编写、重用性强、易于测试和修改。</p>
+	<h1>入门示例 </h1>
+	<p>首先编写一个日志记录的接口：</p>
+	<pre class="code" data-type="csharp">public interface ILogger
+{
+    void Write(string message);
+}</pre>
+	<p>定义两个实现</p>
+	<pre class="code" data-type="csharp">public class FlatFileLogger : ILogger
+{
+    public void Write(string message)
+    {
+        Console.WriteLine(String.Format("Message:{0}", message));
+        Console.WriteLine("Target:FlatFile");
+    }
+}
+
+public class DatabaseLogger : ILogger
+{
+    public void Write(string message)
+    {
+        Console.WriteLine(String.Format("Message:{0}", message));
+        Console.WriteLine("Target:Database");
+    }
+}</pre>
+	<p>Ninject通过NinjectModule来配置依赖注入（不知道有没有文件配置，在官方教程里没找到相关资料），这里自定义自己的Module：</p>
+	<pre class="code" data-type="csharp">internal class MyModule : Ninject.Modules.NinjectModule
+{
+    public override void Load()
+    {
+        Bind&lt;ILogger&gt;().To&lt;FlatFileLogger&gt;();
+        Bind&lt;ILogger&gt;().To&lt;DatabaseLogger&gt;();
+    }
+}</pre>
+	<p>具体调用方法：</p>
+	<pre class="code" data-type="csharp">private static IKernel kernel = new StandardKernel(new MyModule());
+static void Main(string[] args)
+{
+    ILogger logger = kernel.Get&lt;ILogger&gt;();
+    logger.Write(&quot;Bruce Say: Hello Ninject!&quot;);
+    Console.WriteLine(&quot;continues..&quot;);
+    Console.Read();
+}</pre>
+	<p>通过 kernel.Get&lt;ILogger&gt;() 来获取ILogger的实例，之前在MyModule里先后对ILogger 绑定了FlatFileLogger 和 DatabaseLogger，而kernel.Get&lt;ILogger&gt;() 这里返回第一个绑定的对象，即FlatFileLogger。</p>
+	<h1>构造函数注入</h1>
+	<p>这里新建一个ITester 和 IocTester， 而IocTester 依赖于ILogger：</p>
+	<pre class="code" data-type="csharp">interface ITester
+{
+    void Test();
+}
+
+class IocTester:ITester 
+{
+    private ILogger _logger;
+    public IocTester(ILogger logger)
+    {
+        _logger = logger;
+    }
+
+    public void Test()
+    {
+        _logger.Write("Bruce Say: Hello Ninject!");
+    }
+}</pre>
+	<p>下面看看Ninject是怎么配置的，很简单修改MyModule，绑定ITester：Bind&lt;ITester&gt;().To&lt;IocTester&gt;()：</p>
+	<pre class="code" data-type="csharp">internal class MyModule : Ninject.Modules.NinjectModule
+{
+    public override void Load()
+    {
+        Bind&lt;ILogger&gt;().To&lt;FlatFileLogger&gt;();
+        Bind&lt;ITester&gt;().To&lt;IocTester&gt;();
+    }
+}</pre>
+	<p>从以上配置中，我们是看不到IocTester 和ILogger 是有依赖关系的，这就是依赖注入的好处。只是简单告诉哪个接口对应哪个类，剩下的任务就可以交给Ninject来处理了。</p>
+	<pre class="code" data-type="csharp">private static IKernel kernel = new StandardKernel(new MyModule());
+static void Main(string[] args)
+{
+    ITester tester = kernel.Get&lt;ITester&gt;();
+    tester.Test();
+    Console.WriteLine(&quot;continues..&quot;);
+    Console.Read();
+}</pre>
+	<p>另外Ninject 也支持属性、方法等注入，具体可以参考用户向导。</p>
+</body>
+</html>

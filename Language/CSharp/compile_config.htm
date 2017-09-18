@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+    <title>C# 笔记</title>
+    <script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+    <p id="title">Visual Studio 编译设置</p>
+
+    <h1>编译事件</h1>
+    <p>在 Project 属性面 "Build Events" 中，可指定在编译时的动作，例如可以在编译结束后复制某些文件到目标目录，那如可在 "Post-build event command line" 中写入</p>
+    <pre class="code" data-type="sh">xcopy ..\..\..\Lib\lib_folder lib_folder\  /D/Y
+copy ..\..\..\Lib\my.exe .</pre>
+    <p>在此时使用的当前目录是指编译目标目录，在 Build 选项页中的 "Out path" 指定。</p>
+    <p>可使用如下的 VS 系统变量，如下所示</p>
+    <table style="width: 80%">
+        <tr>
+            <th>Macro</th>
+            <th>Description</th>
+        </tr>
+        <tr>
+            <td>$(ConfigurationName)</td>
+            <td>The name of the current project configuration, for example, "Debug".</td>
+        </tr>
+        <tr>
+            <td>$(OutDir)</td>
+            <td>Path to the output file directory, relative to the project directory. This resolves to the value for the Output Directory property. It includes the trailing backslash '\'.</td>
+        </tr>
+        <tr>
+            <td>$(DevEnvDir)</td>
+            <td>The installation directory of Visual Studio (defined with drive and path); includes the trailing backslash '\'.</td>
+        </tr>
+        <tr>
+            <td>$(PlatformName)</td>
+            <td>The name of the currently targeted platform. For example, "AnyCPU".</td>
+        </tr>
+        <tr>
+            <td>$(ProjectDir)</td>
+            <td>The directory of the project (defined with drive and path); includes the trailing backslash '\'.</td>
+        </tr>
+        <tr>
+            <td>$(ProjectPath)</td>
+            <td>The absolute path name of the project (defined with drive, path, base name, and file extension).</td>
+        </tr>
+        <tr>
+            <td>$(ProjectName)</td>
+            <td>The base name of the project.</td>
+        </tr>
+        <tr>
+            <td>$(ProjectFileName)</td>
+            <td>The file name of the project (defined with base name and file extension).</td>
+        </tr>
+        <tr>
+            <td>$(ProjectExt)</td>
+            <td>The file extension of the project. It includes the '.' before the file extension.</td>
+        </tr>
+        <tr>
+            <td>$(SolutionDir)</td>
+            <td>The directory of the solution (defined with drive and path); includes the trailing backslash '\'.</td>
+        </tr>
+        <tr>
+            <td>$(SolutionPath)</td>
+            <td>The absolute path name of the solution (defined with drive, path, base name, and file extension).</td>
+        </tr>
+        <tr>
+            <td>$(SolutionName)</td>
+            <td>The base name of the solution.</td>
+        </tr>
+        <tr>
+            <td>$(SolutionFileName)</td>
+            <td>The file name of the solution (defined with base name and file extension).</td>
+        </tr>
+        <tr>
+            <td>$(SolutionExt)</td>
+            <td>The file extension of the solution. It includes the '.' before the file extension.</td>
+        </tr>
+        <tr>
+            <td>$(TargetDir)</td>
+            <td>The directory of the primary output file for the build (defined with drive and path). It includes the trailing backslash '\'.</td>
+        </tr>
+        <tr>
+            <td>$(TargetPath)</td>
+            <td>The absolute path name of the primary output file for the build (defined with drive, path, base name, and file extension).</td>
+        </tr>
+        <tr>
+            <td>$(TargetName)</td>
+            <td>The base name of the primary output file for the build.</td>
+        </tr>
+        <tr>
+            <td>$(TargetFileName)</td>
+            <td>The file name of the primary output file for the build (defined as base name and file extension).</td>
+        </tr>
+        <tr>
+            <td>$(TargetExt)</td>
+            <td>The file extension of the primary output file for the build. It includes the '.' before the file extension.</td>
+        </tr>
+
+    </table>
+    <h1>常用编译参数</h1>
+    <p>也可以结合 msbuild 命令使用</p>
+    <table style="width: 80%">
+        <tr>
+            <th>参数</th>
+            <th>说明</th>
+        </tr>
+        <tr>
+            <td>/property:Configuration=Release
+                <br />
+                /property:Configuration=Debug
+            </td>
+            <td>以 Release/Debug 模式编译</td>
+        </tr>
+        <tr>
+            <td>/verbosity:minimal</td>
+            <td>最小化编译输出信息</td>
+        </tr>
+        <tr>
+            <td>/t:rebuild</td>
+            <td>进行完整的重新编译</td>
+        </tr>
+    </table>
+</body>
+</html>

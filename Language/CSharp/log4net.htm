@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+	<title>日志组件log4net</title>
+	<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+	<p id="title">日志组件log4net</p>
+
+	<h1>概述</h1>
+	<p>用于记录程序日志，如此而已。 </p>
+	<p>它的功能本身并不复杂，之所以要学习它，只是因为用NHibernate时，NHibernate默认使用它来生成日志。</p>
+	<h1>官方资料</h1>
+	<p><a href="downloads/incubating-log4net-1.2.10.zip">1.2.10版下载（包括文档、例程、类库）</a></p>
+	<h1>入门例程</h1>
+	<p><a href="demo/log4net_nhibernate_demo.zip">winform源码下载</a></p>
+	<p><a href="demo/log4net_nhibernate_aspnet_demo.zip">asp.net源码下载</a></p>
+	<h1>配置文件</h1>
+	<p>这种开源项目的配置文件是少不了的，一般情况下，我们在winform下使用app.config，在asp.net下使用web.config。下面是一个典型的配置：</p>
+	<pre class="code" data-type="xml">?xml version="1.0" encoding="utf-8" ?&gt;
+&lt;configuration&gt;
+   	 &lt;configSections&gt;
+	        &lt;section name="log4net" type="log4net.Config.Log4NetConfigurationSectionHandler,log4net" /&gt;
+	&lt;/configSections&gt;
+
+	&lt;!-- This section contains the log4net configuration settings --&gt;
+	&lt;log4net debug="false"&gt;
+
+		&lt;!-- Define some output appenders --&gt;
+		&lt;appender name="trace" type="log4net.Appender.TraceAppender, log4net"&gt;
+			&lt;layout type="log4net.Layout.PatternLayout,log4net"&gt;
+				&lt;param name="ConversionPattern" value="%d [%t] %-5p %c - %m%n" /&gt;
+			&lt;/layout&gt;
+		&lt;/appender&gt;
+
+		&lt;appender name="console" type="log4net.Appender.ConsoleAppender, log4net"&gt;
+			&lt;layout type="log4net.Layout.PatternLayout,log4net"&gt;
+				&lt;param name="ConversionPattern" value="%d [%t] %-5p %c - %m%n" /&gt;
+			&lt;/layout&gt;
+		&lt;/appender&gt;
+
+		&lt;appender name="rollingFile" type="log4net.Appender.RollingFileAppender,log4net" &gt;
+			
+			&lt;param name="File" value="log.txt" /&gt;
+			&lt;param name="AppendToFile" value="false" /&gt;
+			&lt;param name="RollingStyle" value="Date" /&gt;
+			&lt;param name="DatePattern" value="yyyy.MM.dd" /&gt;
+			&lt;param name="StaticLogFileName" value="true" /&gt;
+
+			&lt;layout type="log4net.Layout.PatternLayout,log4net"&gt;
+				&lt;param name="ConversionPattern" value="%d [%t] %-5p %c - %m%n" /&gt;
+			&lt;/layout&gt;
+		&lt;/appender&gt;
+
+		&lt;!-- Setup the root category, add the appenders and set the default priority --&gt;
+		
+		&lt;root&gt;
+			&lt;priority value="INFO" /&gt;
+			&lt;appender-ref ref="rollingFile" /&gt;
+		&lt;/root&gt;
+
+		&lt;!-- 可以为不同的 logger 设定不同的消息级别 --&gt;
+		&lt;logger name="NHibernate.Cache"&gt;
+			&lt;level value="DEBUG" /&gt;
+		&lt;/logger&gt;
+
+		&lt;logger name="NHibernate.Impl.BatcherImpl"&gt;
+			&lt;level value="WARN" /&gt;
+		&lt;/logger&gt;
+		
+		&lt;logger name="NHibernate.SQL"&gt;
+			&lt;level value="ALL" /&gt;
+		&lt;/logger&gt;
+	&lt;/log4net&gt;
+&lt;/configuration&gt;</pre>
+	<p>下面我逐个讲解一下。</p>
+	<p>&lt;log4net&gt;标签包含如下属性</p>
+	<table style="width: 80%" border="0" cellspacing="0" cellpadding="0">
+		<tr>
+			<th style="width: 33%">属性</th>
+			<th style="width: 67%">说明</th>
+		</tr>
+		<tr>
+			<td>debug</td>
+			<td>可选属性，值为 true 或 false，默认值为 false，设为true可启动log4net对该配置的内部调试（不懂）。</td>
+		</tr>
+		<tr>
+			<td>update</td>
+			<td>可选属性，值为 Merge 或 Overwrite，默认值为 Merge，设为Merge后会重设Repository的日志配置。</td>
+		</tr>
+		<tr>
+			<td>threshold</td>
+			<td>可选属性，值为日志记录的级别，默认为ALL，设置该属性可在全局范围限制记录的消息级别。</td>
+		</tr>
+	</table>
+	<p>&lt;log4net&gt;标签支持如下子标签</p>
+	<table style="width: 80%" border="0" cellspacing="0" cellpadding="0">
+		<tr>
+			<th style="width: 33%">属性</th>
+			<th style="width: 67%">说明</th>
+		</tr>
+		<tr>
+			<td><a href="#appender">appender</a></td>
+			<td>0或多个，定义appender，即输出日志的介质，例如控制台、文件、数据库等</td>
+		</tr>
+		<tr>
+			<td><a href="#logger">logger</a></td>
+			<td>0或多个，定义logger，即日志模式，定义日志的记录级别、所用appender等。</td>
+		</tr>
+		<tr>
+			<td><a href="#renderer">renderer</a></td>
+			<td>0或多个，不知干啥用</td>
+		</tr>
+		<tr>
+			<td><a href="#root">root</a></td>
+			<td>可选，最多有一个，定义根logger，即默认logger</td>
+		</tr>
+		<tr>
+			<td><a href="#log4net_parm">param</a></td>
+			<td>0或多个，设置Repository的一些特定属性</td>
+		</tr>
+	</table>
+	<h2>入口点 </h2>
+	<pre class="code" data-type="xml">&lt;configSections&gt;
+	        &lt;section name="log4net" type="log4net.Config.Log4NetConfigurationSectionHandler,log4net" /&gt;
+&lt;/configSections&gt;</pre>
+	<p>这是log4net的入口点，整个程序中使用一次就够了（有可能log4net的配置分为多个文件）。</p>
+	<h2>appender 标签</h2>
+	<p>log4net的一个卖点就是能够在多种输出介质上输出日志，这些日志包括Console(即dos窗口)、文件、数据库等。在这里我重点介绍一下介质为文件的配置。</p>
+	<pre class="code" data-type="xml">		&lt;appender name="rollingFile" type="log4net.Appender.RollingFileAppender,log4net" &gt;
+			
+			&lt;param name="File" value="log.txt" /&gt;
+			&lt;param name="AppendToFile" value="false" /&gt;
+			&lt;param name="RollingStyle" value="Date" /&gt;
+			&lt;param name="DatePattern" value="yyyy.MM.dd" /&gt;
+			&lt;param name="StaticLogFileName" value="true" /&gt;
+
+			&lt;layout type="log4net.Layout.PatternLayout,log4net"&gt;
+				&lt;param name="ConversionPattern" value="%d [%t] %-5p %c - %m%n" /&gt;
+			&lt;/layout&gt;
+		&lt;/appender&gt;</pre>
+	<p>其中的appender.name属性用于在别的标签中使用appender-ref属性来引用。type属性为apender类，有如下类可供选择：</p>
+	<table cellspacing="0">
+		<tr>
+			<th>Type</th>
+			<th>Description</th>
+		</tr>
+		<tr>
+			<td>log4net.Appender.AdoNetAppender</td>
+			<td>使用SQL语句或存储过程将日志记入数据库。</td>
+		</tr>
+		<tr>
+			<td>log4net.Appender.AnsiColorTerminalAppender</td>
+			<td>使用高亮度在命令窗口显示日志。</td>
+		</tr>
+		<tr>
+			<td>log4net.Appender.AspNetTraceAppender</td>
+			<td>将日志记入ASP trace context。</td>
+		</tr>
+		<tr>
+			<td>log4net.Appender.BufferingForwardingAppender</td>
+			<td>在将日志写入子appender前缓存日志事件（不懂）。</td>
+		</tr>
+		<tr>
+			<td>log4net.Appender.ColoredConsoleAppender</td>
+			<td>将日志写入Console窗口。可为不同级别的日志定义不同的颜色。</td>
+		</tr>
+		<tr>
+			<td>log4net.Appender.ConsoleAppender</td>
+			<td>将日志写入Console输出，可写入标准输出流(out stream)或错误流(error stream.</td>
+		</tr>
+		<tr>
+			<td>log4net.Appender.EventLogAppender</td>
+			<td>写入Windows日志（Windows Event Log）。</td>
+		</tr>
+		<tr>
+			<td>log4net.Appender.FileAppender</td>
+			<td>写入文件。</td>
+		</tr>
+		<tr>
+			<td>log4net.Appender.ForwardingAppender</td>
+			<td>写入子appender。</td>
+		</tr>
+		<tr>
+			<td>log4net.LocalSyslogAppender</td>
+			<td>Writes logging events to the local syslog service (UNIX only). </td>
+		</tr>
+		<tr>
+			<td>log4net.Appender.MemoryAppender</td>
+			<td>写入内存缓冲区。</td>
+		</tr>
+		<tr>
+			<td>log4net.Appender.NetSendAppender</td>
+			<td>写入 Windows Messenger service。这些消息会在用户终端以对话框形式显示。</td>
+		</tr>
+		<tr>
+			<td>log4net.Appender.OutputDebugStringAppender</td>
+			<td>写入调式器，如果应用程序未设调试器，则使用系统调试器，就是一旦程序出红叉后，你要一不小心点了“调试”或“取消”按钮后出现的那个东东。如果系统也没有调试器，那么日志将被忽略。</td>
+		</tr>
+		<tr>
+			<td>log4net.Appender.RemoteSyslogAppender</td>
+			<td>使用UDP协议写入 remote syslog service。</td>
+		</tr>
+		<tr>
+			<td>log4net.Appender.RemotingAppender</td>
+			<td>Writes logging events to a remoting sink using .NET remoting. </td>
+		</tr>
+		<tr>
+			<td>log4net.Appender.RollingFileAppender</td>
+			<td>写入文件，可配置为根据日期或文件大小写入多个日志文件。</td>
+		</tr>
+		<tr>
+			<td>log4net.Appender.SmtpAppender</td>
+			<td>写入邮件地址。</td>
+		</tr>
+		<tr>
+			<td>log4net.Appender.SmtpPickupDirAppender</td>
+			<td>Writes SMTP messages as files into a pickup directory. These files can then be read and sent by an SMTP agent such as the IIS SMTP agent. </td>
+		</tr>
+		<tr>
+			<td>log4net.Appender.TelnetAppender</td>
+			<td>客户端通过telnet接收日志。</td>
+		</tr>
+		<tr>
+			<td>log4net.Appender.TraceAppender</td>
+			<td>Writes logging events to the .NET trace system. </td>
+		</tr>
+		<tr>
+			<td>log4net.Appender.UdpAppender</td>
+			<td>Sends logging events as connectionless UDP datagrams to a remote host or a multicast group using a UdpClient. </td>
+		</tr>
+	</table>
+	<p>&lt;appender&gt;标签支持如下4个子标签：</p>
+	<table style="width: 80%" border="0" cellspacing="0" cellpadding="0">
+		<tr>
+			<th style="width:33%">标签</th>
+			<th style="width:67%">说明</th>
+		</tr>
+		<tr>
+			<td>appender-ref</td>
+			<td>0或多个，表示该appender引用别的appender</td>
+		</tr>
+		<tr>
+			<td><a href="#filter">filter</a></td>
+			<td>0或多个，指定日志信息的过滤规则，只有符合规则的才被记录</td>
+		</tr>
+		<tr>
+			<td><a href="#layout">layout</a></td>
+			<td>可选标签，最多只有一个，指定日志信息的输出格式</td>
+		</tr>
+		<tr>
+			<td><a href="#appender_param">param</a></td>
+			<td>0或多个，用于设置一些特定的参数</td>
+		</tr>
+	</table>
+	<p><strong>&lt;filter&gt;</strong></p>
+	<p>&lt;filter&gt;标签包含如下属性</p>
+	<table style="width: 80%" border="0" cellspacing="0" cellpadding="0">
+		<tr>
+			<th style="width: 33%">标签</th>
+			<th style="width: 67%">说明</th>
+		</tr>
+		<tr>
+			<td>type</td>
+			<td>必填属性，为过滤器的名字（类名），一般情况下，我们用log4net提供的就可以，不过这也允许用户使用自定义的过滤器</td>
+		</tr>
+	</table>
+	<p>log4net提供如下的内置filter类</p>
+	<table style="width: 80%" cellspacing="0">
+		<tr>
+			<th style="width: 34%">类 </th>
+			<th style="width: 66%">描述 </th>
+		</tr>
+		<tr>
+			<td>log4net.Filter.DenyAllFilter</td>
+			<td>拒绝所有消息 </td>
+		</tr>
+		<tr>
+			<td>log4net.Filter.LevelMatchFilter</td>
+			<td>根据消息级别过滤 </td>
+		</tr>
+		<tr>
+			<td>log4net.Filter.LevelRangeFilter</td>
+			<td>根据消息级别的范围过滤</td>
+		</tr>
+		<tr>
+			<td>log4net.Filter.LoggerMatchFilter</td>
+			<td>根据logger名过滤</td>
+		</tr>
+		<!-- MDC and NDC replaced by context properties
+							<tr>
+								<td><a href="../sdk/log4net.Filter.MdcFilter.html">log4net.Filter.MdcFilter</a></td>
+								<td>
+									Matches a substring from a specific <span class="code">MDC</span> value.
+								</td>
+							</tr>
+							<tr>
+								<td><a href="../sdk/log4net.Filter.NdcFilter.html">log4net.Filter.NdcFilter</a></td>
+								<td>
+									Matches a substring from the event's <span class="code">NDC</span>.
+								</td>
+							</tr> 
+							-->
+		<tr>
+			<td>log4net.Filter.PropertyFilter</td>
+			<td>根据指定属性所包含的子串过滤</td>
+		</tr>
+		<tr>
+			<td>log4net.Filter.StringMatchFilter</td>
+			<td>根据消息所包含的子串过滤 </td>
+		</tr>
+	</table>
+	<p>&lt;filter&gt;标签包含如下子标签</p>
+	<table style="width: 80%" border="0" cellspacing="0" cellpadding="0">
+		<tr>
+			<th style="width: 33%">标签</th>
+			<th style="width: 67%">说明</th>
+		</tr>
+		<tr>
+			<td>param</td>
+			<td>0或多个，用于设定一些特定的参数</td>
+		</tr>
+	</table>
+	<p>下面举几个filter的例子</p>
+	<p>1、只保留级别为INFO至FATAL的记录</p>
+	<pre class="code" data-type="xml">&lt;filter type="log4net.Filter.LevelRangeFilter"&gt;
+	&lt;levelMin value="INFO" /&gt;
+	&lt;levelMax value="FATAL" /&gt;
+&lt;/filter&gt;</pre>
+	<p>2、只保留记录中包含字符串'database'的信息</p>
+	<pre class="code" data-type="xml">&lt;filter type="log4net.Filter.StringMatchFilter"&gt;
+	&lt;stringToMatch value="database" /&gt;
+&lt;/filter&gt;
+&lt;filter type="log4net.Filter.DenyAllFilter" /&gt;</pre>
+	<p>因为日志记录在filter链中顺序过滤，链中的filter之间是逻辑或的关系，即只要日志记录符合其中一个filter，则跳出循环，保存记录，上例中最后一个filter即是拒绝所有不符合前面的filter的日志记录。</p>
+	<p>3、只显示运行过程中的NHibernate生成的SQL语句</p>
+	<pre class="code" data-type="xml">&lt;filter type="log4net.Filter.LoggerMatchFilter"&gt;
+	&lt;LoggerToMatch value="NHibernate.SQL" /&gt;
+&lt;/filter&gt;
+&lt;filter type="log4net.Filter.DenyAllFilter" /&gt;</pre>
+	<p>
+		<img src="images/note.jpg" style="width: 320" height="20" />注意，各filter间是逻辑或的关系，而filter内部的各选项则是逻辑与的关系，例如下面两个例子</p>
+	<p>保留记录中包含字符串'database'和'ldap'的信息</p>
+	<pre class="code" data-type="xml">&lt;filter type="log4net.Filter.StringMatchFilter"&gt;
+	&lt;stringToMatch value="database" /&gt;
+	&lt;stringToMatch value="ldap" /&gt;
+&lt;/filter&gt;
+&lt;filter type="log4net.Filter.DenyAllFilter" /&gt;</pre>
+	<p>保留记录中包含字符串'database'或'ldap'的信息</p>
+	<pre class="code" data-type="xml">&lt;filter type="log4net.Filter.StringMatchFilter"&gt;
+	&lt;stringToMatch value="database" /&gt;
+&lt;/filter&gt;
+&lt;filter type="log4net.Filter.StringMatchFilter"&gt;
+	&lt;stringToMatch value="ldap" /&gt;
+&lt;/filter&gt;
+&lt;filter type="log4net.Filter.DenyAllFilter" /&gt;</pre>
+	<p>有时我们的需求可能是反向的，例如，如果匹配则不打印 log</p>
+	<pre class="code" data-type="xml">&lt;filter type="log4net.Filter.LoggerMatchFilter"&gt;
+	&lt;loggerToMatch value="RQClient" /&gt;
+	&lt;acceptOnMatch value="false" /&gt;
+&lt;/filter&gt;</pre>
+	<p><strong>&lt;layout&gt;</strong></p>
+	<p>&lt;layout&gt;包含以下属性</p>
+	<table style="width: 80%" border="0" cellspacing="0" cellpadding="0">
+		<colgroup>
+			<col style="text-align: left; white-space: nowrap; width: 7em" />
+			<col style="text-align: left;" />
+		</colgroup>
+		<tr>
+			<th style="width: 33%">标签</th>
+			<th style="width: 67%">说明</th>
+		</tr>
+		<tr>
+			<td>type</td>
+			<td>必填属性，为输出格式类（类名），一般情况下，我们用log4net提供的就可以，不过这也允许用户使用自定义的输出类</td>
+		</tr>
+	</table>
+	<p>log4net提供如下的内置layout类</p>
+	<table style="width: 90%" cellspacing="0">
+		<tr>
+			<th style="width: 33%">Type</th>
+			<th style="width: 67%">Description</th>
+		</tr>
+		<tr>
+			<td>log4net.Layout.ExceptionLayout</td>
+			<td>记录异常信息。</td>
+		</tr>
+		<tr>
+			<td>log4net.Layout.PatternLayout</td>
+			<td>根据格式化字符串的标识记录日志</td>
+		</tr>
+		<tr>
+			<td>log4net.Layout.RawTimeStampLayout</td>
+			<td>记录时间戳</td>
+		</tr>
+		<tr>
+			<td>log4net.Layout.RawUtcTimeStampLayout</td>
+			<td>记录Universal Time格式的时间戳</td>
+		</tr>
+		<tr>
+			<td>log4net.Layout.SimpleLayout</td>
+			<td>以简单方式记录日志，格式为: <span class="code">[级别] - [消息]</span> </td>
+		</tr>
+		<tr>
+			<td>log4net.Layout.XmlLayout</td>
+			<td>将日志记录为XML节点</td>
+		</tr>
+		<tr>
+			<td>log4net.Layout.XmlLayoutSchemaLog4j</td>
+			<td>将日志记录为log4j event dtd标准的XML节点</td>
+		</tr>
+	</table>
+	<p>&lt;layout&gt;支持如下子标签</p>
+	<table style="width: 80%" border="0" cellspacing="0" cellpadding="0">
+		<tr>
+			<th style="width: 33%">标签</th>
+			<th style="width: 67%">说明</th>
+		</tr>
+		<tr>
+			<td>param</td>
+			<td>0或多个，用于设定一些特定的参数</td>
+		</tr>
+	</table>
+	<p>示例：</p>
+	<pre class="code" data-type="xml">layout type="log4net.Layout.PatternLayout"&gt;
+	&lt;conversionPattern value="%date [%thread] %-5level %logger [%ndc] - %message%newline" /&gt;
+&lt;/layout&gt;</pre>
+	<p><strong>&lt;param&gt;</strong></p>
+	<p>下表为param各属性的解释</p>
+	<table style="width: 80%" border="0" cellspacing="0" cellpadding="0">
+		<tr>
+			<th style="width: 33%">name</th>
+			<th style="width: 67%">说明</th>
+		</tr>
+		<tr>
+			<td>File</td>
+			<td>指明该介质为文件，value值为日志文件名</td>
+		</tr>
+		<tr>
+			<td>AppendToFile</td>
+			<td>每次启动程序时，是否重写日志文件，若为false，则每次程序启动时删除以前的日志。</td>
+		</tr>
+		<tr>
+			<td>RollingStyle</td>
+			<td>指示在何种情况下更换日志文件, 可为
+	<ul>
+		<li>Size：表示日志文件大到一定程度则使用新的日志文件，文件大小由maximumFileSize参数确定</li>
+		<li>Date：表示如果日期变化，则使用新的日志文件，日期格式由DatePattern参数确定</li>
+	</ul>
+			</td>
+		</tr>
+		<tr>
+			<td>DatePattern</td>
+			<td>有以下转义字符
+	<ul>
+		<li>yyyy: 年</li>
+		<li>MM: 月</li>
+		<li>dd: 日</li>
+	</ul>
+			</td>
+		</tr>
+		<tr>
+			<td>maxSizeRollBackups</td>
+			<td>最多保留的日志文件个数</td>
+		</tr>
+		<tr>
+			<td>maximumFileSize</td>
+			<td>日志文件的最大尺寸，可使用K或M作为单位</td>
+		</tr>
+		<tr>
+			<td>StaticLogFileName</td>
+			<td>&nbsp;</td>
+		</tr>
+	</table>
+	<h2>root 标签 </h2>
+	<p>它是所有logger的共同父类，例如如果&lt;root&gt;中指定了使用文件来记录日志，而&lt;logger&gt;中默认也是使用文件来记录日志。</p>
+	<p>&lt;root&gt;标签不包含属性，它支持以下子标签：</p>
+	<table style="width: 80%" border="0" cellspacing="0" cellpadding="0">
+		<tr>
+			<th style="width: 33%">标签</th>
+			<th style="width: 67%">说明</th>
+		</tr>
+		<tr>
+			<td>appender-ref</td>
+			<td>0或多个，指定记录日志的appender，其值为<a href="#appender">appender</a>标签中的name属性</td>
+		</tr>
+		<tr>
+			<td>level</td>
+			<td>要定义的消息的级别，<a href="#level">查看消息级别</a></td>
+		</tr>
+		<tr>
+			<td>param</td>
+			<td>0或多个，设置一些特定的参数值。</td>
+		</tr>
+	</table>
+	<p>可以设定多个appender-ref，然后分别在各appender中指定过滤级别，就可以实现分别映射不同级别的消息至各个日志文件。</p>
+	<h2>logger 标签</h2>
+	<p>其内容与&lt;root&gt;标签相同。</p>
+	<h2>renderer 标签 </h2>
+	<p>不知道它是做什么用。</p>
+	<p>示例：</p>
+	<pre class="code" data-type="xml">renderer renderingClass="MyClass.MyRenderer" renderedClass="MyClass.MyFunkyObject" /&gt;</pre>
+	<pre class="code" data-type="csharp">它包含以下属性：
+</pre>
+	<table style="width: 80%" border="0" cellspacing="0" cellpadding="0">
+		<tr>
+			<th style="width: 33%">属性</th>
+			<th style="width: 67%">说明</th>
+		</tr>
+		<tr>
+			<td>renderingClass</td>
+			<td>必填属性</td>
+		</tr>
+		<tr>
+			<td>renderedClass</td>
+			<td>必填属性</td>
+		</tr>
+	</table>
+	<h2>param 标签 </h2>
+	<p>很多标签都支持该子标签，它包含以下属性</p>
+	<table style="width: 80%" border="0" cellspacing="0" cellpadding="0">
+		<tr>
+			<th style="width: 33%">属性</th>
+			<th style="width: 67%">说明</th>
+		</tr>
+		<tr>
+			<td>name</td>
+			<td>必填属性，要设定的参数名</td>
+		</tr>
+		<tr>
+			<td>value</td>
+			<td>可选属性，为值或类名</td>
+		</tr>
+		<tr>
+			<td>type</td>
+			<td>可选属性，为类名</td>
+		</tr>
+	</table>
+	<p>它支持以下子标签</p>
+	<table style="width: 80%" border="0" cellspacing="0" cellpadding="0">
+		<tr>
+			<th style="width: 30%">标签</th>
+			<th style="width: 67%">说明</th>
+		</tr>
+		<tr>
+			<td>param</td>
+			<td>0或多个，设定特殊参数值</td>
+		</tr>
+	</table>
+	<p>即&lt;param&gt;标签可嵌套使用，例如：</p>
+	<pre class="code" data-type="xml">param name="evaluator" type="log4net.spi.LevelEvaluator"&gt;
+	&lt;param name="Threshold" value="WARN"/&gt;
+&lt;param&gt;</pre>
+	<p>同样的功能也可以这样写：</p>
+	<pre class="code" data-type="xml">evaluator type="log4net.spi.LevelEvaluator"&gt;
+	&lt;threshold value="WARN"/&gt;
+&lt;evaluator&gt;</pre>
+	<h2>消息级别</h2>
+	<table style="width: 95%" border="0" cellspacing="0" cellpadding="0">
+		<tr>
+			<th>级别</th>
+			<th>对应方法</th>
+			<th>&nbsp;Boolean属性</th>
+			<th>优级级别</th>
+		</tr>
+		<tr>
+			<td>OFF</td>
+			<td>Highest</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>FATAL</td>
+			<td>&nbsp;</td>
+			<td>void Fatal();</td>
+			<td>bool IsFatalEnabled </td>
+		</tr>
+		<tr>
+			<td>ERROR</td>
+			<td>&nbsp;</td>
+			<td>void Error(); </td>
+			<td>bool IsErrorEnabled</td>
+		</tr>
+		<tr>
+			<td>WARN</td>
+			<td>&nbsp;</td>
+			<td>void Warn(); </td>
+			<td>bool IsWarnEnabled</td>
+		</tr>
+		<tr>
+			<td>INFO</td>
+			<td>&nbsp;</td>
+			<td>void Info(); </td>
+			<td>bool IsInfoEnabled</td>
+		</tr>
+		<tr>
+			<td>DEBUG</td>
+			<td>&nbsp;</td>
+			<td>void Debug(); </td>
+			<td>bool IsDebugEnabled </td>
+		</tr>
+		<tr>
+			<td>ALL</td>
+			<td>Lowest</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+		</tr>
+	</table>
+	<p>输出不同级别消息的示例程序如下：</p>
+	<pre class="code" data-type="csharp">ILog log = LogManager.GetLogger(typeof(Form1));
+log.Warn("Warn info.");
+log.Info("Normal info.");
+log.Debug("Debug info.");</pre>
+	<h1>编程 </h1>
+	<p>需引用log4net.dll文件</p>
+	<h2>初始化log4net</h2>
+	<p>有两种方法，推荐在AssemblyInfo.cs中加入如下代码：</p>
+	<pre class="code" data-type="csharp">[assembly: log4net.Config.XmlConfigurator(Watch=true)]</pre>
+	<p>或者使用如下代码显示初始化：</p>
+	<pre class="code" data-type="csharp">log4net.Config.XmlConfigurator.Configure();</pre>
+	<h2>输出日志</h2>
+	<pre class="code" data-type="csharp">using log4net;
+using log4net.Config;
+...
+
+ILog log = LogManager.GetLogger(typeof(Form1));
+log.Warn("Warn info.");
+log.Info("Normal info.");
+log.Debug("Debug info.");</pre>
+	<p>在声明 ILog 实例时，可以使用更加 Common 的写法，如下所示</p>
+	<pre class="code" data-type="csharp">private static log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);</pre>
+	<h2>类库项目</h2>
+	<p>如果对类库项目，不需要配置log4net，只需在主程序中配置好后，它直接使用即可，例如：</p>
+	<pre class="code" data-type="csharp">ILog log = LogManager.GetLogger(typeof(Form1));
+log.Warn("Warn info.");</pre>
+	<h1>技巧</h1>
+    <h2>使用系统目录存放日志文件</h2>
+    <p>如下所示，将日志文件存放于 %TEMP% 系统目录下</p>
+    <pre class="code" data-type="xml">
+&lt;appender name="rollingFile" type="log4net.Appender.RollingFileAppender,log4net" &gt;
+    &lt;param name="File" value="${TEMP}\test_log.txt" /&gt;
+    ...
+&lt;/appender&gt;</pre>
+    <p class="note">注意：在此全部使用大写，大小写敏感</p>
+    <h2>缓存 log</h2>
+    <p>使用如下配置</p>
+    <pre class="code" data-type="xml">&lt;appender name="console" type="log4net.Appender.ConsoleAppender, log4net"&gt;
+    &lt;layout type="log4net.Layout.PatternLayout,log4net"&gt;
+        &lt;param name="ConversionPattern" value="%d [%t] %-5p %c - %m%n" /&gt;
+    &lt;/layout&gt;
+&lt;/appender&gt;
+&lt;appender name="BufferingForwardingAppender" type="log4net.Appender.BufferingForwardingAppender" &gt;
+    &lt;bufferSize value="100"/&gt;
+    &lt;evaluator type="log4net.Core.LevelEvaluator"&gt;
+        &lt;threshold value="WARN"/&gt;
+    &lt;/evaluator&gt;
+    &lt;appender-ref ref="console" /&gt;
+&lt;/appender&gt;
+&lt;root&gt;
+    &lt;priority value="INFO" /&gt;
+    &lt;appender-ref ref="BufferingForwardingAppender" /&gt;
+&lt;/root&gt;
+</pre>
+    <p>log 将在如下情况下打印</p>
+    <ul>
+        <li>缓存的 log 信息超过了 100 条</li>
+        <li>有级别为 Warn 以上的 log</li>
+        <li>系统退出</li>
+    </ul>
+    <h2>带颜色的 Log 输出</h2>
+    <p>示例配置如下</p>
+    <pre class="code" data-type="xml">&lt;appender name="consle_colored" type="log4net.Appender.ColoredConsoleAppender"&gt;
+    &lt;mapping&gt;
+        &lt;level value="ERROR" /&gt;
+        &lt;foreColor value="White" /&gt;
+        &lt;backColor value="Red, HighIntensity" /&gt;
+    &lt;/mapping&gt;
+    &lt;mapping&gt;
+        &lt;level value="WARN" /&gt;
+        &lt;foreColor value="Yellow, HighIntensity" /&gt;
+    &lt;/mapping&gt;
+    &lt;layout type="log4net.Layout.PatternLayout"&gt;
+        &lt;conversionPattern value="%d - %m%n" /&gt;
+    &lt;/layout&gt;
+&lt;/appender&gt;
+</pre>
+    <h2>更多示例</h2>
+    <p><a href="https://logging.apache.org/log4net/release/config-examples.html">官方示例</a></p>
+</body>
+</html>

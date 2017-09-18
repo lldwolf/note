@@ -1,0 +1,52 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+LookUpDisplay</TITLE>
+</HEAD>
+<BODY>
+<A NAME="CAIDFBIE"></A><A NAME="TI7064"></A><h1>LookUpDisplay</h1>
+<A NAME="TI7065"></A><p>
+<FORM>
+<INPUT
+ TYPE = "BUTTON"
+ VALUE = "Examples"
+ onClick = "window.location = 'imugp202.htm#EX54';">
+</FORM>
+</p>
+<h3>Description</h3><A NAME="TI7066"></A><p>Obtains the display value in the code table associated with
+the data value in the specified column.</p>
+
+<h3>Syntax</h3><pre><b>LookUpDisplay</b> ( <i>column</i> )</pre>
+<A NAME="TI7067"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI7068"></A>Argument</th>
+<th align="left" valign=bottom><A NAME="TI7069"></A>Description</th>
+</tr>
+<tr><td valign=top><A NAME="TI7070"></A><i>column</i></td>
+<td valign=top><A NAME="TI7071"></A>The column for which you want the code
+table display value</td>
+</tr>
+</table>
+
+<h3>Return Values</h3><A NAME="TI7072"></A><p>String. Returns the display value when it succeeds and the
+empty string ("") if an error occurs.</p>
+
+<h3>Usage</h3><A NAME="TI7073"></A><p>If a column has a code table, a buffer stores a value from
+the data column of the code table, but the user sees a value from
+the display column. Use LookUpDisplay to get the value the user
+sees.</p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Code tables and data values and graphs</span> <A NAME="TI7074"></A>When a column that is displayed in a graph has a code table,
+the graph displays the data values of the code table by default.
+To display the display values, call this function when you define
+the graph data.</p>
+
+<A NAME="EX54"></A><h3>Examples</h3><A NAME="TI7075"></A><p>This expression returns the display value for the
+column unit_measure:<pre><i>LookUpDisplay</i> (unit_measure)</pre>
+</p>
+<A NAME="TI7076"></A><p>Assume the column product_type has a code
+table and you want to use it as a category for a graph. To display
+the product type descriptions instead of the data values in the
+categories, enter this expression in the Category option on the
+Data page in the graph's property sheet:<pre><i>LookUpDisplay</i> (product_type)</pre>
+</p>
+
+

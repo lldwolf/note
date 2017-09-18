@@ -1,0 +1,30 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>FAQ</title>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+<h1>第4章 FAQ
+</h1>
+<hr />
+<p>1、路径或权限不足时将出现错误信息提示：</p>
+<p>http://localhost （路径不对）<br />
+  Error * PROPFIND request failed on '/' PROPFIND of '/': 200 OK (http://localhost)</p>
+<p>http://localhost/svn （权限不足） <br />
+  Error * PROPFIND request failed on '/svn' PROPFIND of '/svn': 403 Forbidden (http://localhost)</p>
+<p>http://localhost/svn/repos （正常显示）</p>
+<p>http://localhost/repos （权限不允许） <br />
+  Error * PROPFIND request failed on '/repos' PROPFIND of '/repos': 405 Method Not Allowed (http://localhost)</p>
+<p>2、不启动E:\subversion\bin\svnserve.exe ，但启动了ApacheSVN ，访问（tortoiseSVN –&gt; Repo – browser）或提交（SVN Commit）情形如下： </p>
+<p>现象：svn://localhost/svn/repos 不能访问或提交，提示：Error * Can't connect to host 'localhost': 由于目标机器积极拒绝，无法连接。但 file:///e:/svn/repos 和 http://localhost/svn/repos 可以访问或提交。 </p>
+<p>原因：svn:// 是独立服务器 svnserver 自己的协议。file:/// 是本地访问，即服务器端和客户端在一个机器上。</p>
+<p></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<script type="text/javascript" src="index.js"></script>
+</body>
+</html>

@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+	<title>常用函数</title>
+	<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+	<p id="title">常用函数列表</p>
+	<h1>DateTime 数字型 </h1>
+	<p>System.DateTime currentTime=new System.DateTime();</p>
+	<h2>取当前年月日时分秒</h2>
+	<p>currentTime=System.DateTime.Now;</p>
+	<h2>取当前年</h2>
+	<p>int 年=currentTime.Year;</p>
+	<h2>取当前月</h2>
+	<p>int 月=currentTime.Month;</p>
+	<h2>取当前日</h2>
+	<p>int 日=currentTime.Day;</p>
+	<h2>取当前时</h2>
+	<p>int 时=currentTime.Hour;</p>
+	<h2>取当前分</h2>
+	<p>int 分=currentTime.Minute;</p>
+	<h2>取当前秒</h2>
+	<p>int 秒=currentTime.Second;</p>
+	<h2>取当前毫秒</h2>
+	<p>int 毫秒=currentTime.Millisecond;</p>
+	<p>（变量可用中文） </p>
+	<h2>取中文日期显示——年月日时分 </h2>
+	<p>string strY=currentTime.ToString("f"); //不显示秒 </p>
+	<h2>取中文日期显示_年月 </h2>
+	<p>string strYM=currentTime.ToString("y"); </p>
+	<h2>取中文日期显示_月日 </h2>
+	<p>string strMD=currentTime.ToString("m"); </p>
+	<h2>取当前年月日</h2>
+	<p>格式为：2003-9-23 </p>
+	<p>string strYMD=currentTime.ToString("d"); </p>
+	<h2>取当前时分</h2>
+	<p>格式为：14：24 </p>
+	<p>string strT=currentTime.ToString("t"); </p>
+	<h1>数据类型转换 </h1>
+	<h2>转为整型</h2>
+	<p>Int32.Parse(变量) Int32.Parse("常量") </p>
+	<p>字符型转换 转为32位数字型 </p>
+	<h2>转为字符串 </h2>
+	<pre class="code" data-type="csharp">变量.ToString() </pre>
+	<p>字符型转换 转为字符串</p>
+	<pre class="code" data-type="csharp">12345.ToString(&quot;n&quot;); //生成 12,345.00 
+12345.ToString(&quot;C&quot;); //生成 ￥12,345.00 
+12345.ToString(&quot;e&quot;); //生成 1.234500e+004 
+12345.ToString(&quot;f4&quot;); //生成 12345.0000 
+12345.ToString(&quot;x&quot;); //生成 3039 (16进制) 
+12345.ToString(&quot;p&quot;); //生成 1,234,500.00% </pre>
+	<h1>字符串操作 </h1>
+	<h2>取字串长度</h2>
+	<p>变量.Length 数字型</p>
+	<pre class="code" data-type="csharp">string str=&quot;中国&quot;;
+int Len = str.Length ; //Len是自定义变量， str是求测的字串的变量名 </pre>
+	<h2>字码转换 转为比特码 </h2>
+	<pre class="code" data-type="csharp">System.Text.Encoding.Default.GetBytes(变量) </pre>
+	<p>如：</p>
+	<pre class="code" data-type="csharp">byte[] bytStr = System.Text.Encoding.Default.GetBytes(str); </pre>
+	<p>然后可得到比特长度： </p>
+	<pre class="code" data-type="csharp"> len = bytStr.Length; </pre>
+	<h2>字符串相加</h2>
+	<p>System.Text.StringBuilder("") </p>
+	<p>+号是不是也一样？</p>
+	<p>如：</p>
+	<pre class="code" data-type="csharp">System.Text.StringBuilder sb = new System.Text.StringBuilder(&quot;&quot;); 
+sb.Append(&quot;中华&quot;); 
+sb.Append(&quot;人民&quot;); 
+sb.Append(&quot;共和国&quot;); </pre>
+	<h2>截取字串的一部分</h2>
+	<p>变量.Substring(参数1,参数2);</p>
+	<p>参数1为左起始位数，参数2为截取几位。 </p>
+	<pre class="code" data-type="csharp">string s1 = str.Substring(0,2); </pre>
+	<h2>清除字串前后空格 </h2>
+	<p>字符串变量.Trim()</p>
+	<h2>字符串替换 </h2>
+	<p>字串变量.Replace("子字串","替换为")</p>
+	<pre class="code" data-type="csharp">string str = &quot;中国&quot;; 
+str = str.Replace(&quot;国&quot;,&quot;央&quot;); //将国字换为央字 
+Response.Write(str); //输出结果为“中央” </pre>
+	<h2>字符串比较</h2>
+	<p>字串对比一般都用: if(str1==str2){ } , 但还有别的方法: </p>
+	<p>(1)</p>
+	<p>string str1; str2
+		<br>
+		//语法: str1.EndsWith(str2); __检测字串str1是否以字串str2结尾,返回布尔值.如:
+		<br>
+		if(str1.EndsWith(str2)){ Response.Write("字串str1是以"+str2+"结束的"); } </p>
+	<p>(2)</p>
+	<p>//语法:str1.Equals(str2); __检测字串str1是否与字串str2相等,返回布尔值,用法同上. </p>
+	<p>(3)</p>
+	<p>//语法 Equals(str1,str2); __检测字串str1是否与字串str2相等,返回布尔值,用法同上. </p>
+	<h2>查找字串中指定字符或字串</h2>
+	<p>IndexOf(): 首次出现的位置,返回索引值</p>
+	<p>LastIndexOf(): 最后一次出现的位置,返回索引值</p>
+	<pre class="code" data-type="csharp">str1.IndexOf(&quot;字&quot;); //查找“字”在str1中的索引值（位置） 
+str1.IndexOf(&quot;字串&quot;);//查找“字串”的第一个字符在str1中的索引值（位置） 
+str1.IndexOf(&quot;字串&quot;,3,2);//从str1第4个字符起，查找2个字符，查找“字串”的第一个字符在str1中的索引值（位置） </pre>
+	<h2>在字串中指定索引位插入指定字符</h2>
+	<p>Insert()</p>
+	<p>str1.Insert(1,"字");在str1的第二个字符处插入“字”，如果str1="中国"，插入后为“中字国”; </p>
+	<h2>在字串左（或右）加空格或指定char字符，使字串达到指定长度</h2>
+	<p>PadLeft()、PadRight()</p>
+	<pre class="code" data-type="csharp">string str1=&quot;中国人&quot;; 
+str1=str1.PadLeft(10,'1'); //无第二参数为加空格 
+Response.Write(str1); //结果为“1111111中国人” ， 字串长为10 </pre>
+	<h2>从指定位置开始删除指定数的字符 </h2>
+	<p>Remove()
+	</p>
+	<h1>字符操作</h1>
+	<h2>查指定位置是否空字符</h2>
+	<p>char.IsWhiteSpce(字串变量，位数)——逻辑型, 如：</p>
+	<pre class="code" data-type="csharp">string str=&quot;中国 人民&quot;; 
+bool a = char.IsWhiteSpace(str,2)); //结果为：True, 第一个字符是0位，2是第三个字符。 </pre>
+	<h2>查字符是否是标点符号</h2>
+	<p>char.IsPunctuation('字符') --逻辑型
+		<br>
+		<br>
+		如：bool a = char.IsPunctuation('A')); //返回：False </p>
+	<h2>把字符转为内部数字码</h2>
+	<p>(int)'字符'</p>
+	<p>int a = ((int)'中'); //结果为中字的代码：20013 </p>
+	<h2>将内部数字码变为字符</h2>
+	<p>(char)代码 </p>
+	<p>char ch = ((char)22269); //返回“国”字。 </p>
+	<h1>网络部分</h1>
+	<h2>取远程用户IP地址 </h2>
+	<pre class="code" data-type="csharp">String user_IP=Request.ServerVariables["REMOTE_ADDR"].ToString();</pre>
+	<h2>穿过代理服务器取远程用户真实IP地址</h2>
+	<pre class="code" data-type="csharp">if(Request.ServerVariables[&quot;HTTP_VIA&quot;]!=null)
+{ 
+	string user_IP=Request.ServerVariables[&quot;HTTP_X_FORWARDED_FOR&quot;].ToString(); 
+}else
+{ 
+	string user_IP=Request.ServerVariables[&quot;REMOTE_ADDR&quot;].ToString(); 
+} </pre>
+	<h2>存取Session值</h2>
+	<p>Session["变量"]; </p>
+	<pre class="code" data-type="csharp">//赋值
+Session[&quot;username&quot;]=&quot;小布什&quot;; 
+
+取值
+Object objName=Session[&quot;username&quot;]; 
+string strName=objName.ToString(); 
+
+//清空
+Session.RemoveAll(); </pre>
+	<h2>用超链接传送变量</h2>
+	<pre class="code" data-type="csharp">String str=Request.QueryString["变量"]; </pre>
+	<p>如在任一页中建超链接: &lt;a href=Edit.aspx?fbid=23&gt;点击&lt;/a&gt; </p>
+	<p>在Edit.aspx页中取值：String str=Request.QueryString["fdid"]; </p>
+	<h2>向页面输出。 </h2>
+	<pre class="code" data-type="csharp">Response.Write(&quot;字串&quot;); 
+Response.Write(变量); </pre>
+	<h2>跳转到URL指定的页面</h2>
+	<p>Response.Redirect("URL地址"）;</p>
+	<h1>XML </h1>
+	<h2>创建XML文档新节点 </h2>
+	<p>DOC对象.CreateElement("新建节点名");  </p>
+	<h2>将新建的子节点加到XML文档父节点下</h2>
+	<p>父节点.AppendChild(子节点);</p>
+	<h2>删除节点</h2>
+	<p>父节点.RemoveChild(节点); </p>
+	<h1>数学函数</h1>
+	<h2>取最大值 </h2>
+	<p>Math.Max(i,j)</p>
+	<p>int x=Math.Max(5,10); // x将取值 10 </p>
+	<p>&nbsp;</p>
+
+</body>
+</html>

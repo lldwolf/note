@@ -1,0 +1,41 @@
+过程类型允许将过程及函数视为数值，然后可将其赋值给变量或传递给其它过程及函数。例如：定义了如下函数：
+  function Calc(X,Y: Integer): Integer;
+可以将Calc函数赋值给变量F
+var F: function(X,Y: Integer): Integer;
+F := Calc;
+如果将过程或函数头中的procedure或function之后的标识符删除，剩下就是过程类型名。可以在变量声明时直接使用这种类型名，或以此声明新类型。：
+type
+  TIntegerFunction = function: Integer;
+  TProcedure = procedure;
+  TStrProc = procedure (const S: string);
+var
+  F: TIntegerFunction;
+  Proc: TProcdure;
+  SP: TStrProc;
+  procedure FuncProc(P: TIntegerFunction);
+以上的变量都是过程指针，也就是指向过程或函数位置的指针。发果想要引用一个实例对象的方法，必须在过程类型名之后加上of object。例如：
+type
+  TMethod = procedure of object
+  TNotifyEvent = procedure (Sender: TObject) of object;
+这些类型代表方法指针。方法指针实际上是一对指针，第一个存储了方法的位置，而第二个储存了这个方法所属对象的引用。给定声明如下：
+type
+  TNotifyEvent = procedure (Sender: TObject) of object;
+  TMainForm = class(TForm)
+    procedure Button1Click(Sender: TObject);
+    ...
+  end; 
+var
+  MainForm: TMainForm;
+  OnClick: TNotifyEvent;
+依此可进行如下赋值：
+  OnClick := MainForm.Button1Click;
+如果满足以下条件，两个过程类型就是兼容的：
+·相同的调用约定
+·相同的返回值
+·相同的参数列表（参数名字没有关系，但个数和相应类型须相同） 
+过程指针类型和方法指针类型绝对不能兼容，但任何过程类型值都可以为nil。
+嵌套的过程或函数（在其它函数内声明的函数）不能用作值，默认的过程或函数也不能。如果想把象Length这样的默认函数当作过程值使用，可以把它封装起来：
+function FLength(S: string): Integer;
+begin
+  Result := Length(S);
+end;

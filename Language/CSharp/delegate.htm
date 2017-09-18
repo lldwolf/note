@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>委托</title>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+<p id="title">委托</p>
+
+<h1>前言</h1>
+<p>说来惭愧，我在使用C#一年之后，才知道C#的这个功能。虽然我很早就疑惑C#中有没有类似于C或C++中的函数指针，既然提到了函数指针，大家也自然知道了C#的委托与它的功能类似，即可以将函数作为一个参数来传递。C#中的事件即以委托作为基础，例如一个按钮，C#中定义了其鼠标点击事件，但点击后要做的动作，则由用户指派。</p>
+<h1>委托的声明及使用</h1>
+<h1>动态创建 delegate 示例</h1>
+<pre class="code" data-type="csharp">List&lt;int&gt; list = new List&lt;int&gt;() { 1, 2, 3, 4 };
+List&lt;int&gt; myList = list.FindAll(delegate(int item) { return item % 2 == 0; });</pre>
+<h1>.Net中提供的委托对象</h1>
+<p>.Net 提供了如下的委托对象</p>
+<ul>
+	<li>Action: 无返回值的delegate</li>
+	<li>Func：有返回值的delegate</li>
+	<li>Predicate: 返回值为 bool 的 delegate</li>
+</ul>
+<p>其中 Predicate 可以看作 Func 的一种特定类型，Func&lt;bool&gt;，在此不作单独讨论</p>
+<h2>Action</h2>
+<p>非泛型的Action可表示无参方法，泛型Action可表有参方法，可最多支持16个泛型参数</p>
+<pre class="code" data-type="csharp">Action a1 = () =&gt; Console.WriteLine();
+Action&lt;string&gt; a2 = s =&gt; Console.WriteLine(s);
+Action&lt;string, string&gt; a3 = (s1, s2) =&gt;
+{
+	Console.WriteLine(s1);
+	Console.WriteLine(s2);
+};</pre>
+<h2>Func</h2>
+<p>Func类只有泛型形式，因为它表示有返回值的函数调用，所以至少需要一个泛型参数表示返回值类型，最多支持17个泛型参数。</p>
+<pre class="code" data-type="csharp">Func&lt;bool&gt; f1 = () =&gt; true;
+Func&lt;string, int&gt; f2 = s =&gt; s.Length;
+Func&lt;string, string, string&gt; f3 = (s1, s2) =&gt;
+{
+	string s = s1 + s2;
+	return s;
+};</pre>
+<h1>委托与事件</h1>
+<h1>示例</h1>
+<h2>Control.Invoke</h2>
+<p>Invoke 方法要求传入一个Delegate对象，下例展示了不同的实现方式</p>
+<div id="accordion-invoke-sample">
+ <p><a href="#">查看代码</a></p>
+<pre class="code" data-type="csharp">
+private delegate void PopupMsgDelegate(string s);
+private void PopupMsg(string s)
+{
+	MessageBox.Show(s);
+}
+
+private void button1_Click(object sender, EventArgs e)
+{
+	//传统方式，声明 Delegate 并创建
+	this.Invoke(new PopupMsgDelegate(this.PopupMsg), this.textBox1.Text);
+
+	//动态创建 Delegate 并封装为 Action
+	this.Invoke((Action&lt;string&gt;)(delegate(string s) { this.PopupMsg(s); }), this.textBox1.Text);
+
+	//使用 lambda 表达式简化代码
+	this.Invoke((Action&lt;string&gt;)(s =&gt; this.PopupMsg(s)), this.textBox1.Text);
+}
+</pre></div>
+<h2>示例2</h2>
+<p>下面的示例阐释声明、实例化和使用委托。BookDB 类封装一个书店数据库，它维护一个书籍数据库。它公开 ProcessPaperbackBooks 方法，该方法在数据库中查找所有平装书，并为每本书调用一个委托。所使用的 delegate 类型称为 ProcessBookDelegate。Test 类使用该类输出平装书的书名和平均价格。</p>
+<p>委托的使用促进了书店数据库和客户代码之间功能的良好分隔。客户代码不知道书籍的存储方式和书店代码查找平装书的方式。书店代码也不知道找到平装书后将对平装书进行什么处理。<br />
+</p>
+<div id="accordion-sample-1">
+ <p><a href="#">查看代码</a></p>
+<pre class="code" data-type="csharp">// bookstore.cs
+using System;
+
+// A set of classes for handling a bookstore:
+namespace Bookstore 
+{
+   using System.Collections;
+
+   // Describes a book in the book list:
+   public struct Book
+   {
+      public string Title;        // Title of the book.
+      public string Author;       // Author of the book.
+      public decimal Price;       // Price of the book.
+      public bool Paperback;      // Is it paperback?
+
+      public Book(string title, string author, decimal price, bool paperBack)
+      {
+         Title = title;
+         Author = author;
+         Price = price;
+         Paperback = paperBack;
+      }
+   }
+
+   // 声明委托方法
+   public delegate void ProcessBookDelegate(Book book);
+
+   // Maintains a book database.
+   public class BookDB
+   {
+      // List of all books in the database:
+      ArrayList list = new ArrayList();   
+
+      // Add a book to the database:
+      public void AddBook(string title, string author, decimal price, bool paperBack)
+      {
+         list.Add(new Book(title, author, price, paperBack));
+      }
+
+      // Call a passed-in delegate on each paperback book to process it: 
+      public void ProcessPaperbackBooks(ProcessBookDelegate processBook)
+      {
+         foreach (Book b in list) 
+         {
+            if (b.Paperback)
+            // 调用委托方法
+               processBook(b);
+         }
+      }
+   }
+}
+
+// Using the Bookstore classes:
+namespace BookTestClient
+{
+   using Bookstore;
+
+   // Class to total and average prices of books:
+   class PriceTotaller
+   {
+      int countBooks = 0;
+      decimal priceBooks = 0.0m;
+
+      internal void AddBookToTotal(Book book)
+      {
+         countBooks += 1;
+         priceBooks += book.Price;
+      }
+
+      internal decimal AveragePrice()
+      {
+         return priceBooks / countBooks;
+      }
+   }
+
+   // Class to test the book database:
+   class Test
+   {
+      // Print the title of the book.
+      static void PrintTitle(Book b)
+      {
+         Console.WriteLine(&quot;   {0}&quot;, b.Title);
+      }
+
+      // Execution starts here.
+      static void Main()
+      {
+         BookDB bookDB = new BookDB();
+
+         // Initialize the database with some books:
+         AddBooks(bookDB);      
+
+         // 打印所有书名
+         Console.WriteLine(&quot;Paperback Book Titles:&quot;);
+
+         // 创建与静态方法 Test.PrintTitle 关联的委托对象
+         bookDB.ProcessPaperbackBooks(new ProcessBookDelegate(PrintTitle));
+
+         // 获取所有书的均价
+         PriceTotaller totaller = new PriceTotaller();
+
+         // 创建与非静态方法 AddBookToTotal 关联的委托对象
+         bookDB.ProcessPaperbackBooks(new ProcessBookDelegate(totaller.AddBookToTotal));
+         Console.WriteLine(&quot;Average Paperback Book Price: ${0:#.##}&quot;,
+            totaller.AveragePrice());
+      }
+
+      // Initialize the book database with some test books:
+      static void AddBooks(BookDB bookDB)
+      {
+         bookDB.AddBook(&quot;The C Programming Language&quot;, 
+            &quot;Brian W. Kernighan and Dennis M. Ritchie&quot;, 19.95m, true);
+         bookDB.AddBook(&quot;The Unicode Standard 2.0&quot;, 
+            &quot;The Unicode Consortium&quot;, 39.95m, true);
+         bookDB.AddBook(&quot;The MS-DOS Encyclopedia&quot;, 
+            &quot;Ray Duncan&quot;, 129.95m, false);
+         bookDB.AddBook(&quot;Dogbert's Clues for the Clueless&quot;, 
+            &quot;Scott Adams&quot;, 12.00m, true);
+      }
+   }
+}</pre></div>
+<p>输出如下：</p>
+<pre class="code" data-type="csharp">Paperback Book Titles:
+   The C Programming Language
+   The Unicode Standard 2.0
+   Dogbert's Clues for the Clueless
+Average Paperback Book Price: $23.97
+</pre>
+<ul type="disc">
+  <li><b>声明委托 </b>以下语句：
+      <pre class="code">public delegate void ProcessBookDelegate(Book book);</pre>
+      <p>声明一个新的委托类型。每个委托类型都描述参数的数目和类型，以及它可以封装的方法的返回值类型。每当需要一组新的参数类型或新的返回值类型时，都必须声明一个新的委托类型。 </p>
+  </li>
+  <li><b>实例化委托 </b>声明了委托类型后，必须创建委托对象并使之与特定方法关联。与所有其他对象类似，新的委托对象用 <b>new</b> 表达式创建。但是当创建委托时，传递给 <b>new</b> 表达式的参数很特殊：它的编写类似于方法调用，但没有方法的参数。
+      <p>下列语句：  </p>
+      <pre class="code">bookDB.ProcessPaperbackBooks(new ProcessBookDelegate(PrintTitle));</pre>
+      <p>创建与静态方法 <code class="ce">Test.PrintTitle</code> 关联的新的委托对象。下列语句： </p>
+      <pre class="code">bookDB.ProcessPaperbackBooks(new 
+   ProcessBookDelegate(totaller.AddBookToTotal));</pre>
+      <p>创建与对象 <code class="ce">totaller</code> 上的非静态方法 <code 
+class="ce">AddBookToTotal</code> 关联的新的委托对象。在两个例子中，新的委托对象都立即传递给 <code 
+class="ce">ProcessPaperbackBooks</code> 方法。 </p>
+      <p>请注意一旦创建了委托，它所关联到的方法便永不改变：委托对象不可改变。 </p>
+  </li>
+  <li><b>调用委托 </b>创建委托对象后，通常将委托对象传递给将调用该委托的其他代码。通过委托对象的名称（后面跟着要传递给委托的参数，括在括号内）调用委托对象。下面是委托调用的示例：
+      <pre class="code">processBook(b);</pre>
+      <p>在此示例中，可以通过使用 <MSHelp:link tabIndex=0 
+keywords="frlrfSystemWindowsFormsControlClassBeginInvokeTopic">BeginInvoke</MSHelp:link> 和 <MSHelp:link tabIndex=0 
+keywords="frlrfSystemWindowsFormsControlClassEndInvokeTopic">EndInvoke</MSHelp:link> 方法同步或异步调用委托。</p>
+  </li>
+</ul>
+<h2>示例3</h2>
+<p>本示例演示组合委托。委托对象的一个有用属性是，它们可以“+”运算符来组合。组合的委托可调用组成它的那两个委托。只有相同类型的委托才可以组合。 </p>
+<p>“-”运算符可用来从组合的委托移除组件委托。</p>
+<div id="accordion-sample-2">
+ <p><a href="#">查看代码</a></p>
+<pre class="code" data-type="csharp">// compose.cs
+using System;
+
+delegate void MyDelegate(string s);
+
+class MyClass
+{
+    public static void Hello(string s)
+    {
+        Console.WriteLine(&quot;  Hello, {0}!&quot;, s);
+    }
+
+    public static void Goodbye(string s)
+    {
+        Console.WriteLine(&quot;  Goodbye, {0}!&quot;, s);
+    }
+
+    public static void Main()
+    {
+        MyDelegate a, b, c, d;
+
+        // 创建 Hello 方法的委托对象
+        a = new MyDelegate(Hello);
+
+        // 创建 Goodbye 方法的委托对象
+        b = new MyDelegate(Goodbye);
+
+        // 组合两个委托对象
+        c = a + b;
+
+        // 从组合委托中删除一个对象，只余 Goodbye 方法
+        d = c - a;
+
+        Console.WriteLine(&quot;Invoking delegate a:&quot;);
+        a(&quot;A&quot;);
+        Console.WriteLine(&quot;Invoking delegate b:&quot;);
+        b(&quot;B&quot;);
+        Console.WriteLine(&quot;Invoking delegate c:&quot;);
+        c(&quot;C&quot;);
+        Console.WriteLine(&quot;Invoking delegate d:&quot;);
+        d(&quot;D&quot;);
+    }
+}</pre></div>
+<p>输出如下：</p>
+<pre class="code" data-type="csharp">Invoking delegate a:
+  Hello, A!
+Invoking delegate b:
+  Goodbye, B!
+Invoking delegate c:
+  Hello, C!
+  Goodbye, C!
+Invoking delegate d:
+  Goodbye, D!</pre>
+<p>&nbsp;</p>
+
+</body>
+</html>

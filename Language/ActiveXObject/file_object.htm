@@ -1,0 +1,685 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<title>文件系统</title>
+<script language="javascript" src="css.js"></script>
+</head>
+
+<body>
+<h1>第2章 文件系统</h1>
+<hr>
+<h2><a href="#preface">2.1 概述</a></h2>
+<h2><a href="#classes">2.2 各接口/对象说明</a></h2>
+<h3>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#Dictionary">2.2.1 Dictionary</a></h3>
+<h3>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#Drive">2.2.2 Drive</a></h3>
+<h3>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#File">2.2.3 File</a></h3>
+<h3>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#FileSystemObject">2.2.4 FileSystemObject</a></h3>
+<h3>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#Folder">2.2.5 Folder </a></h3>
+<h3>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#TextStream">2.2.6 TextStream </a></h3>
+<h2><a href="#text_file">2.3 文本文件操作</a></h2>
+<h2><a href="#example">2.100 示例</a></h2>
+<h3>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#get_files">2.100.1 取某目录下的所有文件</a></h3>
+<h3>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#file_exists">2.100.2 判断一个目录下是否存在某个文件</a></h3>
+<h2><a name="preface"></a>2.1 概述</h2>
+<p>对应文件：c:\winnt\system32\scrrun.dll</p>
+<p>使用CreateObject函数时的参数：Scripting.FileSystemObject</p>
+<p>VB中要引用的库：Microsoft Scripting Runtime</p>
+<p>在VS.NET中，要查看该控件的属性，可引用 COM 库 Microsoft Scripting Runtime。</p>
+<p>命名空间：</p>
+<p>该包中包含如下常用接口/对象</p>
+<table width="90%" >
+  <tr>
+    <th width="30%">接口/对象</th>
+    <th width="70%">说明</th>
+  </tr>
+  <tr>
+    <td><a href="#Dictionary">Dictionary</a></td>
+    <td>目录相关操作</td>
+  </tr>
+  <tr>
+    <td><a href="#Drive">Drive</a></td>
+    <td>驱动器相关操作</td>
+  </tr>
+  <tr>
+    <td><a href="#File">File</a></td>
+    <td>文件相关操作</td>
+  </tr>
+  <tr>
+    <td><a href="#FileSystemObject">FileSystemObject</a></td>
+    <td>文件系统相关操作</td>
+  </tr>
+  <tr>
+    <td><a href="#Folder">Folder</a></td>
+    <td>目录相关操作</td>
+  </tr>
+</table>
+<h2><a name="classes"></a>2.2 各接口/对象说明</h2>
+<h3><a name="Dictionary"></a>2.2.1 Dictionary</h3>
+<p>属性列表</p>
+<table width="90%" >
+  <tr>
+    <th width="30%">属性</th>
+    <th width="70%">说明</th>
+  </tr>
+  <tr>
+    <td>Attributes</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>DateCreated</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>DateLastAccessed</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>DateLastModified</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>Drive</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>Files</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>IsRootFolder</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>Name</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>ParentFolder</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>Path</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>ShortName</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>ShortPath</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>Size</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>SubFolders</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>Type</td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+<p>方法列表</p>
+<table width="90%" >
+  <tr>
+    <th width="30%">方法</th>
+    <th width="70%">&nbsp;</th>
+  </tr>
+  <tr>
+    <td>Copy(string, bool)</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>CreateTextFile(string, bool, bool)</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>Delete(bool)</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>Move(string)</td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+<h3><a name="Drive"></a>2.2.2 Drive</h3>
+<table width="90%" >
+  <tr>
+    <th width="30%">属性</th>
+    <th width="70%">说明</th>
+  </tr>
+  <tr>
+    <td>AvailableSpace</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>DriveLetter</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>DriveType</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>FileSystem</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>FreeSpace</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>IsReady</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>Path</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>RootFolder</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>SerialNumber</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>ShareName</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>TotalSize</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>VolumeName</td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+<h3><a name="File"></a>2.2.3 File</h3>
+<p>属性列表</p>
+<table width="90%" >
+  <tr>
+    <th width="30%">属性</th>
+    <th width="70%">说明</th>
+  </tr>
+  <tr>
+    <td>Attributes</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>DateCreated</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>DateLastAccessed</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>DateLastModified</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>Drive</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>Name</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>ParentFolder</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>Path</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>ShortName</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>ShortPath</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>Size</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>Type</td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+<p>方法列表</p>
+<table width="90%" >
+  <tr>
+    <th width="30%">方法</th>
+    <th width="70%">说明</th>
+  </tr>
+  <tr>
+    <td>Copy(string, bool)</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>Delete(bool)</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>Move(string)</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>OpenAsTextStream(Scripting.IOMode, Scripting.Tristate)</td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+<h3><a name="FileSystemObject"></a>2.2.4 FileSystemObject</h3>
+<p>属性列表</p>
+<table width="90%" >
+  <tr>
+    <th width="30%">属性</th>
+    <th width="70%">说明</th>
+  </tr>
+  <tr>
+    <td>Drives</td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+<p>方法列表</p>
+<table width="90%" >
+  <tr>
+    <th width="30%">方法</th>
+    <th width="70%">说明</th>
+  </tr>
+  <tr>
+    <td>BuildPath(string, string)</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td><a href="#FileSystemObject_CopyFile">CopyFile(string, string, bool)</a></td>
+    <td>复制文件</td>
+  </tr>
+  <tr>
+    <td>CopyFolder(string, string, bool)</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td><a href="#FileSystemObject_CreateFolder">CreateFolder(string)</a></td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td><a href="#FileSystemObject_CreateTextFile">CreateTextFile(string, bool, bool)</a></td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td><a href="#FileSystemObject_DeleteFile">DeleteFile(string, bool)</a></td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td><a href="#FileSystemObject_DeleteFolder">DeleteFolder(string, bool)</a></td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>DriveExists(string)</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>FileExists(string)</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>FolderExists(string)</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>GetAbsolutePathName(string)</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>GetBaseName(string)</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>GetDrive(string)</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>GetDriveName(string)</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>GetExtensionName(string)</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>GetFile(string)</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>GetFileName(string)</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>GetFileVersion(string)</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td><a href="#FileSystemObject_GetFolder">GetFolder(string)</a></td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>GetParentFolderName(string)</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>GetSpecialFolder(Scripting.SpecialFolderConst)</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>GetStandardStream(Scripting.StandardStreamTypes, bool)</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>GetTempName()</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>MoveFile(string, string)</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>MoveFolder(string, string)</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>OpenTextFile(string, Scripting.IOMode, bool, Scripting.Tristate)</td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+<h4><a name="FileSystemObject_CopyFile"></a>CopyFile</h4>
+<p>void CopyFile(string Source, string Destination, bool OverWriteFiles)</p>
+<h4><a name="FileSystemObject_CreateFolder"></a>CreateFolder</h4>
+<p>Folder CreateFolder(string Path)</p>
+<h4><a name="FileSystemObject_CreateTextFile"></a>CreateTextFile</h4>
+<p>Scripting.TextStream CreateTextFile(string FileName, bool Overwrite, bool Unicode)</p>
+<h4><a name="FileSystemObject_DeleteFile"></a>DeleteFile</h4>
+<p>void DeleteFile(string FileSpec, bool Force)</p>
+<h4><a name="FileSystemObject_DeleteFolder"></a>DeleteFolder</h4>
+<p>void DeleteFolder(string FolderSpec, bool Force)</p>
+<h4><a name="FileSystemObject_GetFolder"></a>GetFolder</h4>
+<p>Scripting.Folder GetFolder(string FolderPath)</p>
+<h3><a name="Folder"></a>2.2.5 Folder </h3>
+<p>属性列表</p>
+<table width="90%" >
+  <tr>
+    <th width="30%">属性</th>
+    <th width="70%">说明</th>
+  </tr>
+  <tr>
+    <td>Attributes</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>DateCreated</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>DateLastAccessed</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>DateLastModified</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>Drive</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>Files</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>IsRootFolder</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>Name</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>ParentFolder</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>Path</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>ShortName</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>ShortPath</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>Size</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>SubFolders</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>Type</td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+<p>方法列表</p>
+<table width="90%" >
+  <tr>
+    <th width="30%">方法</th>
+    <th width="70%">说明</th>
+  </tr>
+  <tr>
+    <td>Copy(string, bool)</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>CreateTextFile(string, bool, bool)</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>Delete(bool)</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>Move(string)</td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+<h3><a name="TextStream"></a>2.2.6 TextStream</h3>
+<p>属性列表</p>
+<table width="90%" >
+  <tr>
+    <th width="30%">属性</th>
+    <th width="70%">说明</th>
+  </tr>
+  <tr>
+    <td>AtEndOfLine</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>AtEndOfStream</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>Column</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>Line</td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+<p>方法列表</p>
+<table width="90%" >
+  <tr>
+    <th width="30%">方法</th>
+    <th width="70%">说明</th>
+  </tr>
+  <tr>
+    <td>Close</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>Read</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>ReadAll</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>ReadLine</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>Skip</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>SkipLine</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>Write</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>WriteBlankLine</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>WriteLine</td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+<h2><a name="text_file"></a>2.3 文本文件操作</h2>
+<p>在VB中引用相应类库后，示例代码如下所示：</p>
+<pre>Sub test()
+
+    Dim fso As Scripting.FileSystemObject, fs As Scripting.TextStream
+    
+    Set fso = New Scripting.FileSystemObject
+    Set fs = fso.OpenTextFile(&quot;c:\1.txt&quot;, ForWriting, True, TristateUseDefault)
+    Call fs.WriteLine(&quot;1234&quot;)
+    Call fs.WriteLine(&quot;abcd&quot;)
+    Call fs.Close
+
+End Sub</pre>
+<h2><a name="example"></a>2.100 示例</h2>
+<h3><a name="get_files"></a>2.100.1 取某目录下的所有dwg文件（VBA）</h3>
+<pre>'取目录内的所有文件
+Public Sub GetFilesInDir(ByVal DirName As String, ByRef Files() As String)
+
+    Dim fs, f1, fc
+    Dim oFolder As Variant
+    Dim I As Integer, J As Integer
+    Set fs = CreateObject(&quot;Scripting.FileSystemObject&quot;)
+    Set oFolder = fs.GetFolder(DirName)
+    Set fc = oFolder.Files
+    
+    Dim all_file() As String
+    Dim dwg_count As Integer
+    
+    Dim iOldUBound As Integer       '原先的上标
+    iOldUBound = 0
+        
+    dwg_count = 0
+    
+    If fc.Count &gt; 0 Then
+        ReDim all_file(fc.Count - 1)
+        
+        I = 0
+        For Each f1 In fc
+          If (UCase(Mid(f1, Len(f1) - 3, 4)) = &quot;.DWG&quot;) Then
+            all_file(I) = f1
+            dwg_count = dwg_count + 1
+          End If
+          I = I + 1
+        Next
+        
+        On Error Resume Next
+        
+        iOldUBound = UBound(Files)
+        
+        If Err.Number &lt;&gt; 0 Then
+            ReDim Preserve Files(dwg_count - 1)
+        Else
+            ReDim Preserve Files(UBound(Files) + dwg_count)
+        End If
+        
+        On Error GoTo 0
+        
+        J = iOldUBound
+        If J &lt;&gt; 0 Then J = J + 1
+        For I = 0 To UBound(all_file)
+          If all_file(I) &lt;&gt; &quot;&quot; Then
+            Files(J) = all_file(I)
+            J = J + 1
+          End If
+        Next I
+    End If
+    
+    '取子目录
+    Dim oSubFolders As Variant
+    Dim oSubFolder As Variant
+    Set oSubFolders = oFolder.SubFolders
+    If oSubFolders.Count &gt; 0 Then
+        For Each oSubFolder In oSubFolders
+            Call GetFilesInDir(oSubFolder, Files)
+        Next
+    End If
+    
+End Sub</pre>
+<h3><a name="file_exists"></a>2.100.2 判断一个目录下是否存在某个文件</h3>
+<pre>Public Function ExistsFile(ByVal dir_name As String, ByVal file_name As String) As Boolean
+
+    On Error Resume Next
+
+    Dim oFs As FileSystemObject
+    Dim oFolder As Folder
+    Dim oFile As File
+    
+    Set oFs = New FileSystemObject
+    Set oFolder = oFs.GetFolder(dir_name)
+    If Mid(file_name, 2, 1) &lt;&gt; &quot;:&quot; Then
+        Set oFile = oFs.GetFile(dir_name &amp; &quot;\&quot; &amp; file_name)
+    Else
+        Set oFile = oFs.GetFile(file_name)
+    End If
+    
+    
+    If oFile Is Nothing Then
+        ExistsFile = False
+    Else
+        ExistsFile = True
+    End If
+
+End Function</pre>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<script language="javascript" src="index.js"></script>
+</body>
+</html>

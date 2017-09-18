@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+	<title>界面布局设计</title>
+	<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+	<p id="title">界面布局设计</p>
+
+	<h1>Dock的使用</h1>
+	<p>使用Dock属性来停靠控件时，有时会出现这样的问题，例如，你先放一个Dock为Left的Panel，再放一个Dock为Top的Toolbar，你会发现Toolbar控件不能完全占据底部，而Panel控件完全占据了左部，出现如下图的效果：</p>
+	<p>
+		<img src="images/dock_01.jpg" width="480" height="352"></p>
+	<p>如果想改成正常的模式，可将原先自动生成的代码：</p>
+	<pre class="code" data-type="csharp">this.Controls.Add(this.toolBar1);
+this.Controls.Add(this.panel1);</pre>
+	<p>改为：</p>
+	<pre class="code" data-type="csharp">this.Controls.Add(this.panel1);
+this.Controls.Add(this.toolBar1);</pre>
+	<p>这样显示就正常了，因为C#会用后面控件的Dock优先前高于前面控件。</p>
+	<h1>Font的使用</h1>
+	<h2>修改字体的样式（斜体、粗体等） </h2>
+	<pre class="code" data-type="csharp">this.Font = new Font(this.Font, this.Font.FontStyle | FontStyle.Bold);		//设置粗体</pre>
+	<h2>修改字体的大小</h2>
+	<pre class="code" data-type="csharp">this.Font = new Font(this.Font.FontFamily, 9, GraphicsUnit.Point);			//设置字体大小为9</pre>
+	<p>&nbsp;</p>
+	<p>&nbsp;</p>
+
+</body>
+</html>

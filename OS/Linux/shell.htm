@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+	<script type="text/javascript" src="../../mylib/js/css.js"></script>
+	<title>Linux 笔记</title>
+</head>
+
+<body>
+	<p id="title">Shell 编程</p>
+	<h1>程序结构</h1>
+	<pre class="code" data-type="sh">#!/usr/bin/ksh
+...  # 程序区
+exit 0</pre>
+	<p>第一行表示脚本用的是 ksh 风格, 最后一句表示程序成功退出。如果中间异常退出, 则使用非0值, 如</p>
+	<pre class="code" data-type="sh">exit 1</pre>
+	<h1>注释</h1>
+	<p>使用 # 作为注释的开始，除了第一行的注释有特殊用途外，其它随意。</p>
+	<pre class="code" data-type="sh"># this is my sample</pre>
+	<p>第一行注释有一个专有的名词，shebang，可以理解为 sharp (#) 和 bang (!) 的合体。在如下的调用方式下，系统会知道使用哪种命令系统去解析</p>
+	<pre class="code" data-type="sh">./test.ksh</pre>
+	<p>但如果直接在命令中声明解析方式，如下所示，则 shebang 行不再起作用</p>
+	<pre class="code" data-type="sh">ksh test.ksh</pre>
+	<h1>变量</h1>
+	<h2>基本用法</h2>
+	<p>声明格式</p>
+	<pre class="code" data-type="sh">变量名=变量值</pre>
+	<p>声明后的变量使用 $ 进行引用</p>
+	<pre class="code" data-type="sh">a=hello, world
+echo $a    #output hello, world
+a="hello, world"
+echo $a    #output hello, world</pre>
+	<p>如果要声明空变量，语法为</p>
+	<pre class="code" data-type="sh">a=</pre>
+	<p>变量声明可以作为命令的别名使用的, 如下所示</p>
+	<pre class="code" data-type="sh">mycmd=cal
+${mycmd} 9 1978    #output the calendar of Sep 1978</pre>
+	<p class="note">
+		注意, 在 shell 中声明的变量都是 string, 不要指望像普通的编程语言做数值运算, 如下例所示
+	</p>
+	<pre class="code" data-type="sh">a1=1
+a2=2
+a3=$a1+$a2
+echo $a3    #output is 1+2</pre>
+	<pre class="code" data-type="sh">echo </pre>
+    <h3>特殊情况</h3>
+    <p>转义, 如果赋值特殊字符, 例如 $, 如下所示</p>
+    <pre class="code" data-type="sh">
+a=\$a
+echo $a
+<span style="font-style:italic">$a</span>
+a=\$a
+echo $a
+<span style="font-style:italic">$a</span></pre>
+	<h2>${}</h2>
+	<p>${}与 $ 功功能类似，但有如下情况必须使用 ${}</p>
+	<ul>
+		<li>
+			<p>用于明确区分变量, 如下例所示</p>
+			<pre class="code" data-type="sh">a="hello"
+echo ${a}b   # if using $ab, it will treat 'ab' as the variable</pre>
+		</li>
+		<li>
+			<p>变量中有空格, 并将作为命令执行, 如下例所示</p>
+			<pre class="code" data-type="sh">mycmd=cal 9 1978
+${mycmd}    #output the calendar of Sep 1978</pre>
+			<p>此时如果使用 $cmd 将会报错</p>
+		</li>
+	</ul>
+	<p>因此, 一般来讲, 我们鼓励使用 ${} 以增强程序的可读性</p>
+	<h2>$()</h2>
+	<p>$(cmd) 表示先执行 cmd 命令，将命令的结果返回，例如</p>
+	<pre class="code" data-type="sh">echo $(whoami)</pre>
+	<h2>$(())</h2>
+	<p>我们前面说明默认情况下变量都是按字符串处理，但我们既然用的是计算机，数学计算是必须的，使用 $(()) 操作符即可进行数学运算，如下所示：</p>
+	<pre class="code" data-type="sh">echo $((2+2))  # output is 4</pre>
+	<p>目前支持的操作符有 +, -, *, /, %(取余), **(乘方，MS有的系统不支持，如Solaris)</p>
+	<h1>I/O</h1>
+	<h2>输出</h2>
+	<p>输出即在屏幕上输出信息，一般用于提示、警告等</p>
+	<h3>echo</h3>
+	<p>echo 是最常用的输出方式，其方式为</p>
+	<pre class="code" data-type="sh">echo <span style="font-style:italic">content</span></pre>
+	<p>如果需要输出控制字符，例如换行符 \n，可使用 -e 参数</p>
+	<pre class="code" data-type="sh">echo -e "a\nb"</pre>
+	<p>默认情况下，echo 输出后将会换行，可以字符串后加入 \c 禁止换行。MS 有的系统使用 -n 参数禁止换行</p>
+	<h3>cat</h3>
+	<p>如果有多行输出，重复写大量的 echo 会让代码显得冗余，可以使用 cat, 如下所示</p>
+	<pre class="code" data-type="sh">cat &lt;&lt; _EOF_
+<span style="font-style:italic">content</span>
+_EOF_</pre>
+	<h3>printf</h3>
+	<p>printf命令模仿C程序库里的printf()库程序。它几乎复制了该函数的所有功能。由于printf的行为是由POSIX标准所定义，因此使用printf的脚本比使用echo移植性好。</p>
+	<p>可使用以下程序来打印一个表格</p>
+	<pre class="code" data-type="sh">printf "%10s%10s%10s\n" "ID" "Name" "Gender"
+printf "%10s%10s%10s\n" "1001" "Tom" "M"
+printf "%10s%10s%10s\n" "1002" "Jerry" "M"
+printf "%10s%10s%10s\n" "1002" "Mary" "F"</pre>
+	<h3>输出设备</h3>
+	<p>默认情况下，1 表示标准输出，2 表示错误输出，如下例所示，将会在执行 command1 后将标准输出和错误输出均重定向到 out.txt</p>
+	<pre class="code" data-type="sh">command1 1&gt;&gt;out.txt 2&gt;&amp;1  # for ex. ls a.txt 1&gt;&gt;out.txt 2&gt;&amp;1</pre>
+	<p>/dev/null 是一个特殊的设备，如果将输出重定向到 /dev/null 则表示不回显信息，像下面的命令表示无论执行成功还是失败，均不在屏幕上显示任何信息</p>
+	<pre class="code" data-type="sh">command1 1&gt;/dev/null 2&gt;&amp;1  # for ex. ls a.txt 1&gt;/dev/null 2&gt;&amp;1</pre>
+	<p>其中 1&gt;/dev/null 可以简写为 &gt;/dev/null</p>
+	<pre class="code" data-type="sh">command1 &gt;/dev/null 2&gt;&amp;1  # for ex. ls a.txt &gt;/dev/null 2&gt;&amp;1</pre>
+	<h3>同时输出到终端和文件</h3>
+	<p>有时我们在打印输出信息时，希望能够同时输出到终端和日志文件，可以使用下面的命令</p>
+	<pre class="code" data-type="sh">ls -lrth | tee -a my.log</pre>
+	<h3>控制字符</h3>
+	<table style="width: 500px">
+		<tr>
+			<th>控制字符</th>
+			<th>说明</th>
+		</tr>
+		<tr>
+			<td>\a</td>
+			<td>警告字符，通常为ASCII的BEL字符</td>
+		</tr>
+		<tr>
+			<td>\b</td>
+			<td>后退</td>
+		</tr>
+		<tr>
+			<td>\c</td>
+			<td>抑制（不显示）输出结果中任何结尾的换行字符（只在%b格式指示符控制下的参数字符串中有效），而且，任何留在参数里的字符、任何接下来的参数以及任何留在格式字符串中的字符，都被忽略。</td>
+		</tr>
+		<tr>
+			<td>\r</td>
+			<td>回车，光标移到行的开始</td>
+		</tr>
+		<tr>
+			<td>\t</td>
+			<td>制表符</td>
+		</tr>
+		<tr>
+			<td>\n</td>
+			<td>换行符</td>
+		</tr>
+		<tr>
+			<td>\v</td>
+			<td>垂直制表符</td>
+		</tr>
+		<tr>
+			<td>\0ddd</td>
+			<td>其中 ddd 为8进制的 ASCII 码值，如 '\0101' 表示字符 'A'</td>
+		</tr>
+	</table>
+	<p>结合使用控制字符和流程控制语句，可以作出进度条的效果，请参考后面的例子</p>
+	<h2>输入</h2>
+	<h3>命令行参数</h3>
+	<p>使用 $0 表示 command 命令本身， $1 表示第１个命令行参数, 以此类推。如下例所示：</p>
+	<pre class="code" data-type="sh">#!/bin/ksh
+
+if [ "$1" != "" ]; then
+    echo "Positional parameter 1 contains something"
+else
+    echo "Positional parameter 1 is empty"
+fi</pre>
+	<p>在 shell 中，使用系统变量 $# 表示参数的个数</p>
+	<pre class="code" data-type="sh">#!/bin/ksh
+
+if [ $# -gt 0 ]; then
+    echo "Your command line contains $# arguments"
+else
+    echo "Your command line contains no arguments"
+fi</pre>
+	<h3>用户输入</h3>
+	<h4>read</h4>
+	<pre class="code" data-type="sh">#!/bin/ksh
+
+echo -n "Enter some text > "
+read text
+echo "You entered: $text"</pre>
+	<h1>流程控制语句</h1>
+
+	<h2>if</h2>
+	<h3>if 语法</h3>
+	<pre class="code" data-type="sh"># First form
+
+if condition ; then
+    commands
+fi
+
+# Second form
+
+if condition ; then
+    commands
+else
+    commands
+fi
+
+# Third form
+
+if condition ; then
+    commands
+elif condition ; then
+    commands
+fi
+
+# single line
+
+if if condition ; then commands; fi
+	</pre>
+	<p class="note">经常使用 test 命令（参考下面的介绍）做为 condition，有时也使用其它命令，根据返回值来确定条件是否满足。如果命令执行成功，则返回值为 0，表示“真”，非零值则表示“假”，例如，下面的命令可以判断是否存在 a.txt 文件</p>
+	<pre class="code" data-type="sh">if ls a.txt ; then
+    echo 'Y'
+else
+    echo 'N'
+fi</pre>
+	<p>上面的程序有一个缺点，那就是无论存不存在 a.txt，ls 命令的执行结果或错误信息都会显示在屏幕上，可对代码进行如下修改来避免这一点</p>
+	<pre class="code" data-type="sh">if ls a.txt &gt;/dev/null 2&gt;&amp;1 ; then
+    echo 'Y'
+else
+    echo 'N'
+fi</pre>
+	<p>其中 &gt;/dev/null 是 1 &gt;/dev/null 的简写，表示不显示标准输出，2&gt;&amp;1 表示将标准错误输出重定向到标准输出，即与标准输出采用同样动作。 </p>
+	<h3>test 语法</h3>
+	<p>if 语句中的 condition 部分, 常使用 test 命令, test 的语法为</p>
+	<pre class="code" data-type="sh"># First form
+
+test expression
+
+# Second form
+
+[ expression ]
+
+# Anti
+! [ expression ]</pre>
+	<p class="note">注意，里面的这些空格不是随便设的，如果没有空格将会报错</p>
+	<p>test 命令可使用如下选项</p>
+	<table style="width: 800px">
+		<tr>
+			<th>Expression
+			</th>
+
+			<th>Description
+			</th>
+		</tr>
+
+		<tr>
+			<td>-d <i>file</i>
+			</td>
+
+			<td>True if <i>file</i> is a directory.
+			</td>
+		</tr>
+
+		<tr>
+			<td>-e <i>file</i>
+			</td>
+
+			<td>True if <i>file</i> exists.
+			</td>
+		</tr>
+
+		<tr>
+			<td>-f <i>file</i>
+			</td>
+
+			<td>True if <i>file</i> exists and is a
+		regular file.
+				
+			</td>
+		</tr>
+
+		<tr>
+			<td>-L <i>file</i>
+			</td>
+
+			<td>True if <i>file</i> is a symbolic
+		link.
+				
+			</td>
+		</tr>
+
+		<tr>
+			<td>-r <i>file</i>
+			</td>
+
+			<td>True if <i>file</i> is a file readable by
+		you.
+				
+			</td>
+		</tr>
+
+		<tr>
+			<td>-w <i>file</i>
+			</td>
+
+			<td>True if <i>file</i> is a file writable by
+		you.
+				
+			</td>
+		</tr>
+
+		<tr>
+			<td>-x <i>file</i>
+			</td>
+
+			<td>True if <i>file</i> is a file executable
+		by you.
+				
+			</td>
+		</tr>
+
+		<tr>
+			<td>
+				<i>file1</i> -nt <i>file2</i>
+			</td>
+
+			<td>True if <i>file1</i> is newer than
+		(according to modification time)
+		<i>file2</i>
+
+			</td>
+		</tr>
+
+		<tr>
+			<td>
+				<i>file1</i> -ot <i>file2</i>
+			</td>
+
+			<td>True if <i>file1</i> is older than
+		<i>file2</i>
+
+			</td>
+		</tr>
+
+		<tr>
+			<td>-z <i>string</i>
+			</td>
+
+			<td>True if <i>string</i> is empty.
+			</td>
+		</tr>
+
+		<tr>
+			<td>-n <i>string</i>
+			</td>
+
+			<td>True if <i>string</i> is not empty.
+			</td>
+		</tr>
+
+		<tr>
+			<td>
+
+				<i>string1</i>&nbsp;=&nbsp;<i>string2</i>
+
+			</td>
+
+			<td>True if <i>string1</i> equals
+		<i>string2.</i>
+
+			</td>
+		</tr>
+
+		<tr>
+			<td>
+
+				<i>string1</i>&nbsp;!=&nbsp;<i>string2</i>
+
+			</td>
+
+			<td>True if <i>string1</i> does not equal
+		<i>string2.</i>
+
+			</td>
+		</tr>
+	</table>
+	<p>对于字符串或数字的比较，有如下常用操作符</p>
+	<table style="width: 800px">
+		<tr>
+			<th>Expression
+			</th>
+
+			<th>Description
+			</th>
+		</tr>
+		<tr>
+			<td>-eq</td>
+			<td>等于 (equal)</td>
+		</tr>
+		<tr>
+			<td>-gt</td>
+			<td>大于 (greater than)</td>
+		</tr>
+		<tr>
+			<td>-lt</td>
+			<td>小于 (less than)</td>
+		</tr>
+		<tr>
+			<td>-ge</td>
+			<td>大于等于 (greater than or equal)</td>
+		</tr>
+		<tr>
+			<td>-le</td>
+			<td>小于等于 (less than or equal)</td>
+		</tr>
+	</table>
+	<h3>示例</h3>
+	<pre class="code" data-type="sh">if [ -f .bash_profile ]; then
+    echo "You have a .bash_profile. Things are fine."
+else
+    echo "Yikes! You have no .bash_profile!"
+fi
+
+#string comparison
+a="b"
+if [ "$a" = "b" ]; then
+  echo "Yes"
+else
+  echo "No"
+fi
+
+#or
+a="b"
+b="c"
+if [ "$a" = "c" -o "$b" = "c" ]; then
+  echo "Yes"
+else
+  echo "No"
+fi
+
+#and
+a="c"
+b="c"
+if [ "$a" = "c" ] &&  [ "$b" = "c" ]; then
+  echo "Yes"
+else
+  echo "No"
+fi</pre>
+    <p>对于常用的目录检测, 不存在则创建目录的操作, 可使用如下的简洁模式</p>
+    <pre class="code" data-type="sh">[ -d my_folder ] || mkdir my_folder</pre>
+	<h2>case</h2>
+	<p>case 的语法为</p>
+	<pre class="code" data-type="sh">case word in
+    patterns ) statements ;;
+esac</pre>
+	<p>示例如下：</p>
+	<pre class="code" data-type="sh">#!/bin/ksh
+
+echo -n "Type a digit or a letter > "
+read character
+case $character in
+            # Check for letters
+    [a-z] | [A-Z] ) echo "You typed the letter $character"
+            ;;
+
+            # Check for digits
+    [0-9] )     echo "You typed the digit $character"
+            ;;
+
+            # Check for anything else
+    * )         echo "You did not type a letter or a digit"
+esac</pre>
+	<p>最后的 * ) 表示其它的所有情况</p>
+	<h2>while</h2>
+	<p>下面是一个输出从 1 到 10 的例子</p>
+	<pre class="code" data-type="sh">#!/bin/ksh
+
+number=0
+while [ $number -lt 10 ]; do
+    echo "Number = $number"
+    number=$((number + 1))
+done</pre>
+	<p>结合控制字符，我们可以制作出进度条的效果，如下例所示</p>
+	<pre class="code" data-type="sh">#!/bin/ksh
+a=1
+b=10
+i=0
+while [ $a -le $b ]; do
+	i=0
+	while [ $i -lt $a ]; do
+		echo '#\c'
+		i=$(($i+1))
+	done
+	
+	i=0
+	while [ $i -lt $(($b-$a)) ]; do
+		echo ' \c'
+		i=$(($i+1))
+	done
+	
+	echo "${a}0%\r\c"
+	a=$(($a+1))
+	sleep 1
+done
+
+echo '\n'
+</pre>
+	<h2>until</h2>
+	<p>用法与 while 大同小异, 下面同样是一个输出从 1 到 10 的例子</p>
+	<pre class="code" data-type="sh">#!/bin/ksh
+
+number=0
+until [ $number -ge 10 ]; do
+    echo "Number = $number"
+    number=$((number + 1))
+done</pre>
+	<p>我们经常使用 while 或 until 来构建选择菜单，如下所示：</p>
+	<pre class="code" data-type="sh">#!/bin/ksh
+
+selection=
+until [ "$selection" = "0" ]; do
+    echo ""
+    echo "PROGRAM MENU"
+    echo "1 - display free disk space"
+    echo "2 - display free memory"
+    echo ""
+    echo "0 - exit program"
+    echo ""
+    echo -n "Enter selection: "
+    read selection
+    echo ""
+    case $selection in
+        1 ) df ;;
+        2 ) free ;;
+        0 ) exit ;;
+        * ) echo "Please enter 1, 2, or 0"
+    esac
+done</pre>
+	<h2>for</h2>
+	<p>对于包含 空格 或 换行符 的变量，可自动视为数组进行 for 循环</p>
+	<pre class="code" data-type="sh">s="a b c"
+#s=$(echo ${s} | tr " " "\n")
+echo ${s}
+for item in ${s}
+do
+        echo "get " ${item}
+done</pre>
+	<h1>字符串</h1>
+	<p>有如下常用的方式声明字符串</p>
+	<pre class="code" data-type="sh">msg=hello				# 没有空格
+msg='hello, world'		# 所见即所得
+msg='\\'				# 转义符
+msg="hello, `whoami`"	# 字符串中有命令返回结果
+msg="hello, ${who}"		# 字符串中有变量引用</pre>
+	<h2>判断读取字符串值</h2>
+	<table style="width:600px">
+		<tr>
+			<th>表达式</th>
+			<th>说明</th>
+		</tr>
+		<tr>
+			<td>${var-DEFAULT}</td>
+			<td>如果var没有被声明, 那么就以$DEFAULT作为其值</td>
+		</tr>
+		<tr>
+			<td>${var:-DEFAULT}</td>
+			<td>如果var没有被声明, 或者其值为空, 那么就以$DEFAULT作为其值</td>
+		</tr>
+		<tr>
+			<td>${var=DEFAULT}</td>
+			<td>如果var没有被声明, 那么就以$DEFAULT作为其值</td>
+		</tr>
+		<tr>
+			<td>${var:=DEFAULT}</td>
+			<td>如果var没有被声明, 或者其值为空, 那么就以$DEFAULT作为其值</td>
+		</tr>
+		<tr>
+			<td>${var+OTHER}</td>
+			<td>如果var声明了, 那么其值就是$OTHER, 否则就为null字符串</td>
+		</tr>
+		<tr>
+			<td>${var:+OTHER}</td>
+			<td>如果var被设置了, 那么其值就是$OTHER, 否则就为null字符串</td>
+		</tr>
+		<tr>
+			<td>${var?ERR_MSG}</td>
+			<td>如果var没被声明, 那么就打印$ERR_MSG</td>
+		</tr>
+		<tr>
+			<td>${var:?ERR_MSG}</td>
+			<td>如果var没被设置, 那么就打印$ERR_MSG</td>
+		</tr>
+	</table>
+	<p>上面的这些表达式，经常用于以下的操作</p>
+	<h3>默认值</h3>
+	<p>设想如下场景，需要用户选择某一项，如果用户不选直接按回车，则默认表示选择第一项</p>
+	<pre class="code" data-type="sh">item=
+
+echo "please select an item:
+        a) item A
+        b) item B
+Type (default a): \c"
+
+read item
+
+case ${item:="a"} in
+        a)
+			echo "item A is selected"
+			;;
+        b)
+			echo "item B is selected"
+			;;
+        *)
+			echo "Nothing is selected"
+			;;
+esac</pre>
+	<h2>字符串操作</h2>
+	<table style="width:800px">
+		<tr>
+			<th>表达式</th>
+			<th>说明</th>
+		</tr>
+		<tr>
+			<td>${#string}</td>
+			<td>$string的长度</td>
+		</tr>
+		<tr>
+			<td>${string:position}</td>
+			<td>在$string中, 从位置$position开始提取子串 </td>
+		</tr>
+		<tr>
+			<td>${string:position:length}</td>
+			<td>在$string中, 从位置$position开始提取长度为$length的子串</td>
+		</tr>
+		<tr>
+			<td>${string#substring}</td>
+			<td>从变量$string的开头, 删除最短匹配$substring的子串</td>
+		</tr>
+		<tr>
+			<td>${string##substring}</td>
+			<td>从变量$string的开头, 删除最长匹配$substring的子串 </td>
+		</tr>
+		<tr>
+			<td>${string%substring}</td>
+			<td>从变量$string的结尾, 删除最短匹配$substring的子串</td>
+		</tr>
+		<tr>
+			<td>${string%%substring}</td>
+			<td>从变量$string的结尾, 删除最长匹配$substring的子串</td>
+		</tr>
+		<tr>
+			<td>${string/substring/replacement}</td>
+			<td>使用$replacement, 来代替第一个匹配的$substring </td>
+		</tr>
+		<tr>
+			<td>${string//substring/replacement}</td>
+			<td>使用$replacement, 代替所有匹配的$substring </td>
+		</tr>
+		<tr>
+			<td>${string/#substring/replacement}</td>
+			<td>如果$string的前缀匹配$substring, 那么就用$replacement来代替匹配到的$substring </td>
+		</tr>
+		<tr>
+			<td>${string/%substring/replacement}</td>
+			<td>如果$string的后缀匹配$substring, 那么就用$replacement来代替匹配到的$substring</td>
+		</tr>
+	</table>
+	<h2>使用 sed 进行字符串替换</h2>
+	<h3>普通字符串</h3>
+	<p>主要使用 echo 与 sed 过滤器结合，例如，如要将字符串中的 'a' 换成 'b'</p>
+	<pre class="code" data-type="sh">echo 'aaaaaaa' | sed -e 's/a/b/g'
+
+# 使用变量需要使用双引号
+t1=a
+t2=b
+t3=`echo 'aaaaaaa' | sed "s/${t1}/${t2}/g"`</pre>
+	<p>前面的例子中要求字符串中不带特殊字符，如果包含特殊字字，则需使用转义字符 "\"，代码如下所示</p>
+	<pre class="code" data-type="sh"># replae '/' with '//'
+echo "/" | sed -e "s/\//\/\//g"
+
+# replae '/' with '\'
+echo "/" | sed -e "s/\//\\\\/g"
+
+# replae '/' with '\' and set the result to variable
+te=`echo "/" | sed -e "s/\//\\\\\\\\/g"`</pre>
+	<h3>替换文件中的字符串</h3>
+	<p>下例将文件 1.txt 中的 aa 换成 bb</p>
+	<pre class="code" data-type="sh">sed 's/aa/bb/g' 1.txt
+
+# 使用变量需要使用双引号
+t1=aa
+t2=bb
+sed "s/${t1}/${t2}/g" 1.txt</pre>
+	<h2>子串</h2>
+	<pre class="code" data-type="sh"># 去掉文件名的3位扩展名
+echo "test.txt" | awk 'END { print( substr($1, 0, length($1)-4)) }'
+
+# 指定起始位置取子串
+$ echo "abcdefg" | cut -c3-5
+cde
+
+# 按分割符将字符串分割并选取指定部分
+$ echo "1_2_3_4_5" | cut -d '_' -f 1
+1
+$ echo "1_2_3_4_5" | cut -d '_' -f 2
+2
+$ echo "1_2_3_4_5" | cut -d '_' -f 3
+3
+$ echo "1_2_3_4_5" | cut -d '_' -f 4
+4</pre>
+	<h2>字符串包含判断</h2>
+	<pre class="code" data-type="sh">string='My long string';
+
+if [[ $string == *"My long"* ]]; then
+  echo "It's there";
+fi</pre>
+	<h2>字符串长度</h2>
+	<pre class="code" data-type="sh">myvar="12345"
+size=${#myvar}
+echo $size
+5
+
+$ echo -n "123456" | wc -m
+6</pre>
+	<h1>命令</h1>
+	<p>所有的 linux 命令都可以直接在脚本中使用。一般来讲，我们习惯于每一行写一个命令，但结合操作符 () 和 ; 可以在一行执行多个命令，如下所示：</p>
+	<pre class="code" data-type="sh">(cmd1; cmd2)</pre>
+	<h2>运行字符串代表的命令</h2>
+	<p>使用双沉音符 (``) 运行字符串代表的命令，如下所示</p>
+	<pre class="code" data-type="sh">echo $(whoami)	# 显示 whoami 的运行结果
+echo `whoami`  # 老式等价用法</pre>
+	<h2>管道命令</h2>
+	<p>&gt;/&gt;&gt;</p>
+	<p>将运行结果导出至文件 a.txt, 其中 '&gt;' 会覆盖原有文件内容，而 '&gt;&gt;' 则会在原有文件内容后追加</p>
+	<pre class="code" data-type="sh">man ls &gt; a.txt
+man ls &gt;&gt; a.txt</pre>
+	<p>有一些特殊的重定向操作，列于下表</p>
+	<table style="width:90%">
+		<tr>
+			<th>重定向</th>
+			<th>说明</th>
+		</tr>
+		<tr>
+			<td>/dev/null</td>
+			<td>表示空设备，重定向后将不再回显原本要打印的信息，如下例代码，表示不打印所有的提示信息与错误信息
+				<pre class="code" data-type="sh">1&gt;/dev/null 2&gt;&amp;1</pre>
+			</td>
+		</tr>
+		<tr>
+			<td>重定向所有输出</td>
+			<td>将标准输出和错误输出同时重定向到某个文件
+				<pre class="code" data-type="sh">command1 >>1.log 2>>1.log</pre>
+			</td>
+		</tr>
+	</table>
+	<h2>后台运行</h2>
+	<p>在命令后添加 '&amp;' 表示该命令将在后台运行，运行命令后立刻返回, 不须等待命令完成</p>
+	<pre class="code" data-type="sh">man ls &gt; a.txt &amp;</pre>
+	<p>使用系统变量 $! 可获取后台运行的 PID。可设想如下场景，将一个命令转入后台执行，然后在前台不停的打印 '.' 提示用户等待</p>
+	<pre class="code" data-type="sh">#!/usr/bin/ksh
+
+wait_process() {
+    job_id=$!
+
+    while ps -p $job_id &gt;&amp;-; do
+        echo &quot;.\c&quot;
+        sleep 2
+    done
+}
+
+echo 'start process'
+sleep 10 &amp;
+wait_process
+echo '\nDone'</pre>
+	<p class="note">重定向到 &amp;- 是为了关闭 ps 命令的输出，重定向到&nbsp; /dev/null 可达到同样效果。如果后台进程结束了，ps 命令找不到对应的 pid，返回结果为 1 (可用系统变量 $! 确认)，否则为 0。在 shell 中，0 表示“真”值。</p>
+	<p>如果我们需要关心后台进程的执行结果，在上面的例子中就不能直接使用 $? 了，因为这时使用 $? 返回的实际上是 sleep 的执行结果，需要结合 wait 命令，修改后的代码如下所示</p>
+		<pre class="code" data-type="sh">#!/usr/bin/ksh
+
+wait_process() {
+    job_id=$!
+
+    while ps -p $job_id &gt;&amp;-; do
+        echo &quot;.\c&quot;
+        sleep 2
+    done
+}
+
+echo 'start process'
+(sleep 10; bad_command) &gt;/dev/null 2&gt;&amp;1 &amp;
+wait_process
+
+wait $job_id
+
+if [ $? != 0 ]; then
+	echo '\nFail'
+else
+	echo '\nSuccess'
+fi</pre>
+	<h1>函数</h1>
+	<p>我们在 shell 中可以声明函数, 语法为</p>
+	<pre class="code" data-type="sh">function_name() {
+		...
+}</pre>
+	<p>与常见的编程语言中的函数相比, shell 函数的功能要弱得多, 主要区别如下:</p>
+	<ol>
+		<li>函数在使用前必须先声明</li>
+		<li>不支持参数, 需使用全局变量来模拟该功能</li>
+		<li>不支持返回值, 需使用全局变量来模拟该功能</li>
+	</ol>
+	<p>调用方式如下：</p>
+	<pre class="code" data-type="sh">function_name</pre>
+    <h1>示例</h1>
+    <h2>文件系统循环操作</h2>
+    <p>列出指定的文件夹并进行 git pull 操作</p>
+    <pre class="code" data-type="sh">folders=$(ls)
+
+for f in ${folders}
+do
+	if [ -d ${f} ]; then
+		echo "processing " ${f}
+		cd  ${f}
+		git pull origin
+		cd ..
+	fi
+done</pre>
+    <h2>统计指定文件行数</h2>
+    <pre class="code" data-type="sh">#!/bin/sh
+
+if ! [ $# -eq 2 ]; then
+    echo "The arguments is wrong"
+	echo arg1 folder
+	echo arg2 file extenstion
+fi
+
+target_dir=$1
+file_ext=$2
+
+file_line=0
+
+find ${target_dir} -name "*.${file_ext}" ! -name "Reference.cs" ! -name "*.Designer.cs" -type f -print0 | while IFS= read -r -d '' file; do
+	file_line=$(wc -l < "${file}")
+    printf '%s|%s\n' "${file}" "${file_line}"
+done</pre>
+    <p>调用方式为 ./xx.sh [folder_path] [file_ext]，例如要列出 c:\temp\a 目录下所有 cs 文件的行数： ./xx.sh /c/temp/a cs</p>
+    <p class="note">在本例中没有使用上例的 for 循环，是因为如果文件路径中包括空格的话会出错</p>
+    <h2>批量替换文件内容</h2>
+    <pre class="code" data-type="sh">find . -type f -exec sed -i 's/old/new/g' {} +</pre>
+	<h1>附录</h1>
+	<h2>系统变量</h2>
+	<table style="width: 90%">
+		<tr>
+			<th>变量名</th>
+			<th>说明</th>
+		</tr>
+		<tr>
+			<td>~</td>
+			<td>用户的 home 目录，如 /home/ll52957</td>
+		</tr>
+		<tr>
+			<td>$@ / $*</td>
+			<td>命令行的所有参数集合</td>
+		</tr>
+		<tr>
+			<td>$#</td>
+			<td>命令行的参数个数</td>
+		</tr>
+		<tr>
+			<td>$?</td>
+			<td>上一条命令的结果，为 0 表示成功</td>
+		</tr>
+		<tr>
+			<td>$!</td>
+			<td>上一条命令的 pid</td>
+		</tr><tr>
+			<td>$$</td>
+			<td>父进程的 pid</td>
+		</tr>
+		<tr>
+			<td>&amp;-</td>
+			<td>关闭文件句柄，做为重定向的管道时，会关闭命令的输出
+				<pre class="code" data-type="sh">n&lt;&amp;-    #Close input file descriptor n.
+0&lt;&amp;-, &lt;&amp;-    #Close stdin.
+n&gt;&amp;-    #Close output file descriptor n.
+1&gt;&amp;-, &gt;&amp;-    #Close stdout.</pre>
+			</td>
+		</tr>
+	</table>
+</body>
+</html>

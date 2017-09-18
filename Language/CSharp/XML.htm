@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+<title>使用XML</title>
+</head>
+
+<body>
+<p id="title">使用XML
+</p>
+
+<h1>基本操作 </h1>
+<h2>XML文件样例</h2>
+<pre class="code" data-type="xml">?xml version=&quot;1.0&quot; encoding=&quot;utf-16&quot;?&gt;
+&lt;System_Parameters&gt;
+	&lt;Path&gt;
+		&lt;Product&gt;C:\Documents and Settings\Administrator\桌面&lt;/Product&gt;
+		&lt;Temp type=&quot;windows&quot;&gt;C:\Documents and Settings\Administrator\桌面&lt;/Temp&gt;
+	&lt;/Path&gt;
+
+	&lt;Others&gt;
+		&lt;Previous_Selection&gt;1,4003,4086,29514&lt;/Previous_Selection&gt;
+		&lt;show_excel_process&gt;0&lt;/show_excel_process&gt;
+		&lt;open_dwg_with_autocad&gt;0&lt;/open_dwg_with_autocad&gt;
+	&lt;/Others&gt;
+&lt;/System_Parameters&gt;</pre>
+<h2>打开XML文件</h2>
+<pre class="code" data-type="csharp">using System.Xml;
+...
+XmlDocument xDoc = new XmlDocument();
+xDoc.Load(FileName);</pre>
+<h2>读取及修改XML文件</h2>
+<pre class="code" data-type="csharp">XmlNode root_node = xDoc.SelectSingleNode("System_Parameters");
+XmlNode class_node = root_node.SelectSingleNode("Path");
+XmlNode val_node = class_node.SelectSingleNode("Temp");
+string value = val_node.innerText;			//读取里面的值
+string attribute = val_node.Attributes["type"].Value;		//读取属性值
+val_node.innerText = &quot;aaaaaaaaa&quot;;			//更改节点值
+val_node.Attributes[&quot;type&quot;].Value = &quot;bbbbb&quot;;		//更改属性值</pre>
+<p>以上读取的是基本节点，一般XML文档的第一行为&lt;?xml version=&quot;1.0&quot;?&gt;，里面还可能带有诸如字符集之类的信息，如果要读到这个结点，使用的代码如下：</p>
+<pre class="code" data-type="csharp">XmlDeclaration dec = (XmlDeclaration)xDoc.FirstChild;
+MessageBox.Show("version = " + dec.Version + "; encoding = " + dec.Encoding);</pre>
+<p>上面读取节点时是一级一级地往下找，可使用XPath直接定位到要找的节点：</p>
+<pre class="code" data-type="csharp">XmlNode val_node = xDoc.SelectSingleNode("/System_Parameters/Path/Temp");</pre>
+<h2>创建XML节点、属性</h2>
+<p>创建如下的XML文档</p>
+<pre class="code" data-type="xml">?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+&lt;root attr=&quot;attr_value&quot;&gt;
+	&lt;child&gt;child1&lt;/child&gt;
+&lt;/root&gt;</pre>
+<p>代码如下</p>
+<pre class="code" data-type="csharp">XmlDocument xDoc = new XmlDocument();
+
+//创建XML文档属性，使用UTF-8格式
+XmlDeclaration node_dec = xDoc.CreateXmlDeclaration(&quot;1.0&quot;, &quot;UTF-8&quot;, null);
+xDoc.AppendChild(node_dec);
+
+//创建根结点
+XmlNode node_root = xDoc.CreateElement(&quot;root&quot;);
+xDoc.AppendChild(node_root);
+
+//创建根结点属性
+XmlAttribute attr = xDoc.CreateAttribute(&quot;attr&quot;);
+attr.Value = &quot;attr_value&quot;;
+node_root.Attributes.Append(attr);
+
+//创建子结点
+XmlNode node_child = xDoc.CreateElement(&quot;child&quot;);
+node_child.InnerText = &quot;child1&quot;;
+node_root.AppendChild(node_child);
+
+//保存
+XmlTextWriter xw = new XmlTextWriter(@&quot;c:\1.xml&quot;, System.Text.Encoding.UTF8);
+xw.Formatting = Formatting.Indented;
+xw.IndentChar = '\t';	
+xw.Indentation = 1;	
+xDoc.Save(xw);
+xw.Close();</pre>
+<h2>保存XML文件</h2>
+<p>最基本的写入功能如下：</p>
+<pre class="code" data-type="csharp">XmlTextWriter xw = new XmlTextWriter(FileName, null);
+//修改节点的值...
+xDoc.Save(xw);
+xw.Close();
+</pre>
+<p>不过这样生成的文件难看至极，如果用记事本查看会发现是单行的，而且如果有中文的话还会有乱码。可使用如下代码进行修改：</p>
+<pre class="code" data-type="csharp">using System.Text;
+...
+Encoding encoding = Encoding.Unicode;		//Encoding.Default表示当前系统使用的字符集，中文系统下为gb2312
+XmlTextWriter xw = new XmlTextWriter(FileName, encoding);
+xw.Formatting = Formatting.Indented;		//表示写入节点时需要断行并在行首插入空白符
+xw.IndentChar = '\t';				//表示行首空白符为制表符，默认为2个空格符
+xw.Indentation = 1;				//表示XML每一级需要1个空白符
+...
+xDoc.Save(xw);
+xw.Close();</pre>
+	<p>基于上例，可以写一个更通用于格式化 XML 字符串的帮助函数</p>
+	<pre class="code" data-type="csharp">private string FormatXml(string xml)
+{
+	XmlDocument xDoc = new XmlDocument();
+	xDoc.LoadXml(xml);
+
+	MemoryStream ms = new MemoryStream();
+	Encoding encoding = Encoding.Unicode;
+	XmlTextWriter xw = new XmlTextWriter(ms, encoding);
+	xw.Formatting = Formatting.Indented;
+	xw.IndentChar = '\t';
+	xw.Indentation = 1;
+	xDoc.Save(xw);
+
+	byte[] buf = ms.ToArray();
+	string formattedXml = encoding.GetString(buf);
+
+	xw.Close();
+	ms.Close();
+
+	return formattedXml;
+}</pre>
+<h1>XPath简介</h1>
+<p>在XML树中进行检索时，可用XPath进行精确的定位，在XmlNode.SelectNodes或SelectSingleNode方法的第一个参数即为XPath的表达式</p>
+<p>示例Xml如下：</p>
+<pre class="code" data-type="xml">root&gt;
+	&lt;node no=&quot;1&quot;&gt;A&lt;/node&gt;
+	&lt;node no=&quot;2&quot;&gt;B&lt;/node&gt;
+&lt;/root&gt;</pre>
+<h2>指定检索路径</h2>
+<pre class="code" data-type="csharp">//从根路径开始，获取所有的node结点
+SelectNodes(&quot;/root/node&quot;);</pre>
+<p><img src="images/note.jpg" width="20" height="20"> 注意：第一个字符“/”表示从根路径开始检索。</p>
+<h2>根据属性值检索</h2>
+<p>单个属性值检索</p>
+<pre class="code" data-type="csharp">//检索no属性为2的结点
+SelectSingleNode(&quot;/root/node[@no=\&quot;2\&quot;]&quot;);</pre>
+<p>也可以同时指定多个属性进行检索，多个属性值间用“and”或“or”隔开，示例代码如下：</p>
+<pre class="code" data-type="csharp">XmlDocument xDoc = new XmlDocument();
+XmlElement root_node = xDoc.CreateElement(&quot;root&quot;);
+xDoc.AppendChild(root_node);
+
+XmlElement node;
+XmlAttribute attr;
+
+node = xDoc.CreateElement(&quot;item&quot;);
+root_node.AppendChild(node);
+
+attr = xDoc.CreateAttribute(&quot;attr1&quot;);
+attr.Value = &quot;1&quot;;
+node.Attributes.Append(attr);
+
+attr = xDoc.CreateAttribute(&quot;attr2&quot;);
+attr.Value = &quot;2&quot;;
+node.Attributes.Append(attr);
+
+XmlNodeList node_list = xDoc.SelectNodes(&quot;/root/item[@attr1=\&quot;1\&quot; and @attr2=\&quot;2\&quot;]&quot;);
+Console.WriteLine(node_list.Count);
+Console.Read();</pre>
+<h2>指定返回的结点索引 </h2>
+<pre class="code" data-type="csharp">//检索第2个node结点
+SelectSingleNode(&quot;/root/node[2]&quot;);</pre>
+<p>有关XPath的详细用法，请参考本人的另一著作《XML参考手册》。</p>
+<h1>对XML特殊部分的操作 </h1>
+<h2>处理指令（Process Instruction） </h2>
+<p>示例XML</p>
+<pre class="code" data-type="xml">?xml version=&quot;1.0&quot;?&gt;
+&lt;?xml-stylesheet href=&quot;classic.xsl&quot; type=&quot;text/xml&quot;?&gt;
+&lt;?xml-stylesheet href=&quot;funky.xsl&quot; type=&quot;text/xml&quot; alternate=&quot;yes&quot;?&gt;
+
+&lt;article&gt;
+&lt;articleinfo&gt;
+ &lt;title&gt;ananas.org&lt;/title&gt;
+&lt;!-- rest of the document goes here --&gt;</pre>
+<p>一般而言，处理指令对应用程序特定的数据进行编码。您已经熟悉了处理指令，因为大多数 XML 文档都是以 XML 声明开始， 该声明本身就是特殊的处理指令。一条处理指令包含一个目标（在上面示例中， xml-stylesheet ），后跟数据。 用 &lt;? 和 ?&gt; 定界符将处理指令包起来。目标确定应用程序， 而对应用程序不能识别的目标，其会忽略这些处理指令。</p>
+<p>数据格式完全是自由的。XML 不指定将什么东西放进去（当然，除了 XML 声明）。 事实上，由于历史原因，处理指令可以包含 PostScript 图像或脚本等……但决不包含标记。</p>
+<p>象声明一样， <code>xml-stylesheet</code> 有特殊地位，因为它是由 W3C 定义的。 它必须出现在文档的开始（即，在第一个元素之前），并且包含几个所谓的 <i>伪属性</i>。这个数据之所以称为伪属性， 是因为其语法与 XML 属性相似。</p>
+<p>最重要的伪属性是 <code>href</code> ，它包含指向样式表的 URI。其它有用的伪属性有 <code>type</code> 和 <code>alternate</code> 。 <code>type</code> 是样式表的 MIME 类型， 它用来区别 CSS 和 XSL。如果有多个 <code>xml-stylesheet</code> 指令， 则 <code>alternate</code> 表明哪一个替代主样式表。处理器应该用备用样式表列表提示用户。 然而，因为 XM 以批处理方式工作，所以它使用不同的策略，完全忽略备用样式表。</p>
+<p>具体的有关处理指令的用法，请参考本人编写的《XML指南》一书。</p>
+<p>使用XmlProcessInstruction类来读取，例如对于如下XML文档（这是用Excel 2003的将EXCEL另存为XML文档生成的）</p>
+<pre class="code" data-type="xml">?xml version=&quot;1.0&quot;?&gt;
+&lt;?mso-application progid=&quot;Excel.Sheet&quot;?&gt;</pre>
+<p>使用如下代码获取处理指令</p>
+<pre class="code" data-type="csharp">XmlProcessingInstruction excel_info = xDoc.FirstChild.NextSibling as XmlProcessingInstruction;</pre>
+<p>获得的XmlProcessingInstruction对象的属性值如下</p>
+<table style="width:80%">
+  <tr>
+    <th width="30%">属值</th>
+    <th width="70%">值</th>
+  </tr>
+  <tr>
+    <td>Name</td>
+    <td>mso-application</td>
+  </tr>
+  <tr>
+    <td>LocalName</td>
+    <td>mso-application</td>
+  </tr>
+  <tr>
+    <td>Value</td>
+    <td>progid=&quot;Excel.Sheet&quot;</td>
+  </tr>
+  <tr>
+    <td>Target</td>
+    <td>mso-application</td>
+  </tr>
+  <tr>
+    <td>Data</td>
+    <td>progid=&quot;Excel.Sheet&quot;</td>
+  </tr>
+  <tr>
+    <td>InnerText</td>
+    <td>progid=&quot;Excel.Sheet&quot;</td>
+  </tr>
+  <tr>
+    <td>NodeType</td>
+    <td>ProcessingInstruction</td>
+  </tr>
+  <tr>
+    <td>HasChildNodes</td>
+    <td>False</td>
+  </tr>
+  <tr>
+    <td>OuterXml</td>
+    <td>&lt;?mso-application progid=&quot;Excel.Sheet&quot;?&gt;</td>
+  </tr>
+  <tr>
+    <td>InnerXml</td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+<h1>名域操作</h1>
+<p>如果在XML文档中使用了名域，在读取元素时需要多做一些设置，例如对于如下的XML文档：</p>
+<pre class="code" data-type="xml">?xml version=&quot;1.0&quot; encoding=&quot;gb2312&quot;?&gt;
+&lt;root xmlns=&quot;http://lld.com/novel&quot;&gt;
+	&lt;book&gt;
+		&lt;title&gt;飞狐外传&lt;/title&gt;
+		&lt;author&gt;金庸&lt;/author&gt;
+	&lt;/book&gt;
+	&lt;book&gt;
+		&lt;title&gt;九阴九阳&lt;/title&gt;
+		&lt;author&gt;全庸&lt;/author&gt;
+	&lt;/book&gt;
+&lt;/root&gt;</pre>
+<p>如果要读取所有的&lt;book&gt;元素，使用如下代码：</p>
+<pre class="code" data-type="csharp">XmlDocument doc = new XmlDocument();
+doc.Load(@&quot;c:\test.xml&quot;);
+XmlNamespaceManager ns_manager = new XmlNamespaceManager(doc.NameTable);
+ns_manager.AddNamespace(&quot;lld&quot;, &quot;http://lld.com/novel&quot;);
+XmlNodeList node_list = doc.SelectNodes(&quot;//lld:root/lld:book&quot;, ns_manager);</pre>
+<p>如果使用多个名域，如下XML所示</p>
+<pre class="code" data-type="xml">?xml version=&quot;1.0&quot; encoding=&quot;gb2312&quot;?&gt;
+&lt;root 
+	xmlns:a=&quot;http://lld.com/novel1&quot;
+	xmlns:b=&quot;http://lld.com/novel2&quot;
+&gt;
+	&lt;a:book&gt;
+		&lt;b:title&gt;飞狐外传&lt;/b:title&gt;
+		&lt;b:author&gt;金庸&lt;/b:author&gt;
+	&lt;/a:book&gt;
+	&lt;a:book&gt;
+		&lt;b:title&gt;九阴九阳&lt;/b:title&gt;
+		&lt;b:author&gt;全庸&lt;/b:author&gt;
+	&lt;/a:book&gt;
+&lt;/root&gt;</pre>
+<p>如果要读取所有的book标签，使用如下代码：</p>
+<pre class="code" data-type="csharp">XmlDocument doc = new XmlDocument();
+doc.Load(@&quot;c:\test2.xml&quot;);
+XmlNamespaceManager ns_manager = new XmlNamespaceManager(doc.NameTable);
+ns_manager.AddNamespace(&quot;a&quot;, &quot;http://lld.com/novel1&quot;);
+ns_manager.AddNamespace(&quot;b&quot;, &quot;http://lld.com/novel2&quot;);
+XmlNodeList node_list = doc.SelectNodes(&quot;/root/a:book&quot;, ns_manager);
+this.textBox1.Text = node_list.Count.ToString();</pre>
+<p>为什么&lt;root&gt;反而不需要加上名域前缀了呢，这是因为在XML文档中，未定义默认的名域，默认的名域由xmlns属性定义，不带任何后缀。 </p>
+<h1>SAX 方式 </h1>
+<p>XML解析分为两种方式：DOM和SAX。其中DOM是将整个XML文档一次性装入，而SAX是只根据需要装入部分文档。</p>
+<p>前文均使用XmlDocument作为XML的处理方式，这实际上是DOM方式，适用于规格较小的XML文档，至于怎么算是规模小，这个得视具体情况而定，一般而言，如果XML文档的大小不超过1M，就可以认为是小规模XML文档。</p>
+<p>在处理较大的XML文档时（例如文件大小为数十M），使用DOM方式在处理速度上就会大打折扣，而且内存也吃不大消。.net提供了SAX方式的XML处理对象XmlReader和XmlWriter，分别用于XML文件的读写。</p>
+<h2>使用XmlReader读取XML </h2>
+<p>创建一个XmlReader对象的通用步骤如下所示：</p>
+<pre class="code" data-type="csharp">using System.Xml;
+...
+XmlReaderSettings reader_setting = new XmlReaderSettings();
+reader_setting.IgnoreComments = true;		//忽略注释
+reader_setting.IgnoreWhitespace = true;		//忽略空白
+XmlReader reader = XmlReader.Create(xml_file, reader_setting);</pre>
+<p>使用XmlReader读取XML数据时，要记住它的特点：顺序读取XML文档的每个节点（被节点包围的文本也算是一个节点）。所以，像是XmlDocument那种根据XPath直接定位到某个结点的操作在XmlReader中是做不到的。因此，SAX适用的处理模式为顺序处理大规模的XML文档，例如，将一个XML文档的数据写入到数据库中。</p>
+<p>XmlReader主要使用如下方法读取数据：</p>
+<ul>
+  <li>Read()：读入下一个XML结点，如果返回值为false，表示XML文档已结束。读取完成后，文件指针可以停留在文档中的任意位置，可根据XmlReader.NodeType属性判断读入元素的类型，常用类型如下所示，具体的请参考MSDN文档：
+    <ul>
+      <li>XmlNodeType.Element：元素，例如&lt;item&gt;</li>
+      <li>XmlNodeType.EndElement：元素结束标记，例如&lt;/item&gt;</li>
+      <li>XmlNodeType.Attribute：属性</li>
+      <li>Text：节点的文本内容，以Attribute或Element子结点的形式存在。</li>
+    </ul>
+  </li>
+  <li>GetAttribute()：如果当前节点类型为 XmlNodeType.Element，调用该方法可以读取元素的属性，而且，并不强制顺序读取，而是支持随机读取。如果指定属性值不存在，返回null。调用该方法并不会移动文件指针。</li>
+  <li>ReadString()：读取元素文本，即元素与元素结束标记之间的文本，例如&lt;item&gt;aa&lt;/item&gt;，读取值为aa，注意，调用该方法将会移动文件指针到下一个元素，相当于调用了一次Read()方法。</li>
+  <li>Name：如果当前节点类型为XmlNodeType.Element，则为元素名，如果为XmlNodeType.Attribute，则为属性名</li>
+</ul>
+<p>下例展示了如何使用XmlReader读取XML文档：</p>
+<h3>XML文档</h3>
+<pre class="code" data-type="xml">?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; ?&gt;
+&lt;root&gt;
+	&lt;item key=&quot;姓名&quot;&gt;令狐冲&lt;/item&gt;
+	&lt;item key=&quot;性别&quot;&gt;男&lt;/item&gt;
+&lt;/root&gt;</pre>
+<h3>程序</h3>
+<pre class="code" data-type="csharp">static void Main(string[] args)
+{
+	XmlReaderSettings setting = new XmlReaderSettings();
+	setting.IgnoreComments = true;
+	setting.IgnoreWhitespace = true;
+	XmlReader reader = XmlReader.Create(Environment.CurrentDirectory + @&quot;\sax_test.xml&quot;);
+	
+	while (true)
+	{
+		if (reader.NodeType == XmlNodeType.Element)
+		{
+			if(reader.Name == &quot;item&quot;)
+			{
+				string key = reader.GetAttribute(&quot;key&quot;);
+				string val = reader.ReadString();
+				Console.WriteLine(key + &quot;: &quot; + val);
+			}
+			else
+			{
+				if (!reader.Read())
+					break;
+			}
+		}
+		else
+		{
+			if (!reader.Read())
+				break;
+		}
+	}
+
+	Console.Read();
+}</pre>
+<h3>结果</h3>
+<p><img src="images/sax_reader1.jpg" width="348" height="159"> </p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+
+</body>
+</html>

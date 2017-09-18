@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+	<script type="text/javascript" src="../../mylib/js/css.js"></script>
+	<title>Java 练习题 - 遍历 Map</title>
+</head>
+
+<body>
+	<p id="title">Java 练习题 - 遍历 Map</p>
+	<h1>要求</h1>
+    <p>变历一个字符串中所有 ${xx.xx} 项, 这是 Linux 的变量格式</p>
+    <h1>示例代码</h1>
+    <pre class="code" data-type="java">
+String string = "243${s.s}sfsf${ab.cd.ef}sfsf";
+String patternStr = "\\$\\{[^\\}]+\\}";
+
+Pattern regex = Pattern.compile(patternStr);
+		
+Matcher matcher = regex.matcher(string);
+List&lt;String&gt; matches = new ArrayList&lt;String&gt;();
+		
+while (matcher.find()) {
+	matches.add(matcher.group(0));
+}
+		
+for (String matchItem : matches) {
+	System.err.println(matchItem);
+}</pre>
+	</body>
+</html>

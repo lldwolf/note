@@ -1,0 +1,43 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+WordCap</TITLE>
+</HEAD>
+<BODY>
+<A NAME="CAIBDJFB"></A><A NAME="TI8189"></A><h1>WordCap</h1>
+<A NAME="TI8190"></A><p>
+<FORM>
+<INPUT
+ TYPE = "BUTTON"
+ VALUE = "Examples"
+ onClick = "window.location = 'imugp254.htm#EX106';">
+</FORM>
+</p>
+<h3>Description</h3><A NAME="TI8191"></A><p>Sets the first letter of each word in a string to a capital
+letter and all other letters to lowercase (for example, ROBERT E.
+LEE would be Robert E. Lee).</p>
+
+<h3>Syntax</h3><pre><b>WordCap</b> ( <i>string</i> )</pre>
+<A NAME="TI8192"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI8193"></A>Argument</th>
+<th align="left" valign=bottom><A NAME="TI8194"></A>Description</th>
+</tr>
+<tr><td valign=top><A NAME="TI8195"></A><i>string</i></td>
+<td valign=top><A NAME="TI8196"></A>A string or expression that evaluates
+to a string that you want to display with initial capital letters
+(for example, Monday Morning)</td>
+</tr>
+</table>
+
+<h3>Return Values</h3><A NAME="TI8197"></A><p>String. Returns <i>string</i> with the first
+letter of each word set to uppercase and the remaining letters lowercase
+if it succeeds and NULL if an error occurs.</p>
+
+<A NAME="EX106"></A><h3>Examples</h3><A NAME="TI8198"></A><p>This expression returns Boston, Massachusetts:<pre><i>WordCap</i> ("boston, MASSACHUSETTS")</pre>
+</p>
+<A NAME="TI8199"></A><p>This expression concatenates the characters in the
+emp_fname and emp_lname columns and makes the
+first letter of each word uppercase:<pre><i>WordCap</i> (emp_fname + " " + emp_lname)</pre>
+</p>
+
+

@@ -1,0 +1,945 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>SQL*Plus简介</title>
+<script language="javascript" src="css.js"></script>
+</head>
+
+<body>
+<h1>第N章 SQL*Plus简介</h1>
+<hr />
+<h2>N.1 常用功能 </h2>
+<h3>进入SQLPLUS</h3>
+<p>在命令窗口下键入命令</p>
+<pre>sqlplus /nolog 
+sqlplus "/as sysdba"
+sqlplus system/password@intools6</pre>
+<p>进入sqlplus功能，在SQLPLUS窗口，可使用如下命令</p>
+<h3>connect</h3>
+<p>连接数据库</p>
+<pre>connect system/password@intools6
+connect sys/password@intools6 as sysdba </pre>
+<h3>desc</h3>
+<p>查看数据库对象(表、视图、过程等)</p>
+<pre>desc table_name</pre>
+<h3>help</h3>
+<p>获取命令的帮助，例如：</p>
+<pre>help desc</pre>
+<p>要获取所有的命令列表，使用如下命令</p>
+<pre>help index </pre>
+<h3>退出</h3>
+<pre>exit</pre>
+<h2>N.2 命令详解</h2>
+<p>在SQL*Plus中，可运行如下命令</p>
+<table width="95%">
+  <tr>
+    <th width="20%">类别</th>
+    <th width="20%">命令</th>
+    <th width="20%">简写</th>
+    <th width="40%">简介</th>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>@</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>@@</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>/</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>ACCEPT</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>APPEND</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>ARCHIEVE LOG </td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>ATTRIBUTE</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>BREAK</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>BTITLE</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>CHANGE</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>CLEAR</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>COLUMN</td>
+    <td>COL</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>COMPUTE</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>CONNECT</td>
+    <td>&nbsp;</td>
+    <td>连接到数据库</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>COPY</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>DEFINE</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>DEL</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>DESCRIBE</td>
+    <td>DESC</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>DISCONNECT</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>EDIT</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>EXECUTE</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>EXIT</td>
+    <td>&nbsp;</td>
+    <td>退出SQL*Plus</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>GET</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>HELP</td>
+    <td>&nbsp;</td>
+    <td>显示帮助</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>HOST</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>INPUT</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>LIST</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>PASSWORD</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>PAUSE</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>PRINT</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>PROMPT</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>QUIT</td>
+    <td>&nbsp;</td>
+    <td>退出SQL*Plus</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>RECOVER</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>REMARK</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>REPFOOTER</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>REPHEADER</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>RESERVED WORDS &lt;SQL&gt; </td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>RESERVED WORDS &lt;PL/SQL&gt;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>RUN</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>SAVE</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>SET</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>SHOW</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>SHUTDOWN</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>SPOOL</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>SQLPLUS</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>START</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>STARTUP</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>STORE</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>TIMING</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>TTITLE</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>UNDEFINE</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>VARIABLE</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>WHENEVER OSERROR </td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>WHENEVER SQLERROR </td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+<p>&nbsp;</p>
+<h3>N.2.1  执行一个SQL脚本文件 </h3>
+<pre>SQL&gt;start file_name   
+SQL&gt;@ file_name </pre>
+<p>我们可以将多条sql语句保存在一个文本文件中，这样当要执行这个文件中的所有的sql语句时，用上面的任一命令即可，这类似于dos中的批处理。 </p>
+<p><strong>@与@@的区别是什么？</strong></p>
+<p> @等于start命令，用来运行一个sql脚本文件。</p>
+<p> @命令调用当前目录下的，或指定全路径，或可以通过SQLPATH环境变量搜寻到的脚本文件。该命令使用是一般要指定要执行的文件的全路径，否则从缺省路径(可用SQLPATH变量指定)下读取指定的文件。</p>
+<p> @@用在sql脚本文件中，用来说明用@@执行的sql脚本文件与@@所在的文件在同一目录下，而不用指定要执行sql脚本文件的全路径，也不是从SQLPATH环境变量指定的路径中寻找sql脚本文件，该命令一般用在脚本文件中。</p>
+<p> 如：在c:\temp目录下有文件start.sql和nest_start.sql，start.sql脚本文件的内容为：</p>
+<pre>@@nest_start.sql -- 相当于@ c:\temp\nest_start.sql</pre>
+<p> 则我们在sql*plus中，这样执行：</p>
+<p> SQL&gt; @ c:\temp\start.sql</p>
+<h3>N.2.2 对当前的输入进行编辑 </h3>
+<pre>SQL&gt;edit</pre>
+<h3>  N.2.3 重新运行上一次运行的sql语句 </h3>
+<pre>SQL&gt;/</pre>
+<h3> N.2.4 将显示的内容输出到指定文件 </h3>
+<pre>SQL&gt; SPOOL file_name </pre>
+<p>在屏幕上的所有内容都包含在该文件中，包括你输入的sql语句。</p>
+<h3> N.2.5 关闭spool输出 </h3>
+<pre>SQL&gt; SPOOL OFF </pre>
+<p>只有关闭spool输出，才会在输出文件中看到输出的内容。</p>
+<h3> N.2.6 显示一个表的结构 </h3>
+<pre>SQL&gt; desc table_name</pre>
+<h3> N.2.7 COL命令： </h3>
+<p> 主要格式化列的显示形式。</p>
+<p> 该命令有许多选项，具体如下： </p>
+<pre>COL[UMN] [{ column|expr} [ option ...]] </pre>
+<p> Option选项可以是如下的子句: </p>
+<pre>ALI[AS] alias 
+CLE[AR] 
+FOLD_A[FTER] 
+FOLD_B[EFORE] 
+FOR[MAT] format 
+HEA[DING] text 
+JUS[TIFY] {L[EFT]|C[ENTER]|C[ENTRE]|R[IGHT]} 
+LIKE { expr|alias} 
+NEWL[INE] 
+NEW_V[ALUE] variable 
+NOPRI[NT]|PRI[NT] 
+NUL[L] text 
+OLD_V[ALUE] variable 
+ON|OFF 
+WRA[PPED]|WOR[D_WRAPPED]|TRU[NCATED] </pre>
+<p>1). 改变缺省的列标题 </p>
+<p> COLUMN column_name HEADING column_heading </p>
+<p> 示例： </p>
+<pre>Sql&gt;select * from dept; 
+DEPTNO DNAME LOC 
+---------- ---------------------------- --------- 
+10 ACCOUNTING NEW YORK 
+sql&gt;col LOC heading location 
+sql&gt;select * from dept; 
+DEPTNO DNAME location 
+--------- ---------------------------- ----------- 
+10 ACCOUNTING NEW YORK</pre>
+<p>2). 将列名ENAME改为新列名EMPLOYEE NAME并将新列名放在两行上： </p>
+<pre>Sql&gt;select * from emp <br />
+  Department ename Salary <br />
+  ---------- ---------- ---------- <br />
+  10 aaa 11 <br />
+  SQL&gt; COLUMN ENAME HEADING ’Employee|Name’ <br />
+  Sql&gt;select * from emp <br />
+             Employee <br />  Department Name      Salary <br />
+  ---------- ---------- ---------- <br />
+  10 aaa 11 </pre>
+<p>3). 改变列的显示长度： </p>
+<p> FOR[MAT] format </p>
+<pre>Sql>select empno,ename,job from emp; 
+EMPNO ENAME JOB 
+---------- ---------- --------- 
+7369 SMITH CLERK 
+7499 ALLEN SALESMAN 
+7521 WARD SALESMAN 
+Sql> col ename format a40 
+EMPNO ENAME JOB 
+---------- ---------------------------------------- --------- 
+7369 SMITH CLERK 
+7499 ALLEN SALESMAN 
+7521 WARD SALESMAN
+</pre>
+<p>4). 设置列标题的对齐方式 </p>
+<p> JUS[TIFY] {L[EFT]|C[ENTER]|C[ENTRE]|R[IGHT]} </p>
+<pre>SQL> col ename justify center 
+SQL> / 
+EMPNO ENAME JOB 
+---------- ---------------------------------------- --------- 
+7369 SMITH CLERK 
+7499 ALLEN SALESMAN 
+7521 WARD SALESMAN </pre>
+<p>对于NUMBER型的列，列标题缺省在右边，其它类型的列标题缺省在左边 </p>
+<p>5). 不让一个列显示在屏幕上 </p>
+<pre>NOPRI[NT]|PRI[NT] 
+SQL> col job noprint 
+SQL> / 
+EMPNO ENAME 
+---------- ---------------------------------------- 
+7369 SMITH 
+7499 ALLEN 
+7521 WARD</pre>
+<p> 6). 格式化NUMBER类型列的显示：</p>
+<pre>SQL> COLUMN SAL FORMAT $99,990 
+SQL> / 
+Employee 
+Department Name Salary Commission 
+---------- ---------- --------- ---------- 
+30 ALLEN $1,600 300</pre>
+<p> 7). 显示列值时，如果列值为NULL值，用text值代替NULL值 </p>
+<p> COMM NUL[L] text </p>
+<pre>SQL&gt;COL COMM NUL[L] text</pre>
+<p> 8). 设置一个列的回绕方式 </p>
+<p> WRA[PPED]|WOR[D_WRAPPED]|TRU[NCATED] </p>
+<pre>COL1 
+-------------------- 
+HOW ARE YOU? 
+
+SQL&gt;COL COL1 FORMAT A5 
+SQL&gt;COL COL1 WRAPPED 
+COL1 
+----- 
+HOW A 
+RE YO 
+U? 
+
+SQL&gt; COL COL1 WORD_WRAPPED 
+COL1 
+----- 
+HOW 
+ARE 
+YOU? 
+
+SQL&gt; COL COL1 WORD_WRAPPED 
+COL1 
+----- 
+HOW A</pre>
+<p> 9). 显示列的当前的显示属性值 </p>
+<p> SQL&gt; COLUMN column_name </p>
+<p> 10). 将所有列的显示属性设为缺省值 </p>
+<pre>SQL&gt; CLEAR COLUMNS</pre>
+<h3> N.2.8 屏蔽掉一个列中显示的相同的值 </h3>
+<p> BREAK ON break_column </p>
+<pre>SQL&gt; BREAK ON DEPTNO 
+SQL&gt; Select DEPTNO, ENAME, SAL 
+FROM EMP 
+Where SAL &lt; 2500 
+orDER BY DEPTNO; 
+
+DEPTNO ENAME SAL 
+---------- ----------- --------- 
+10 CLARK 2450 
+MILLER 1300 
+20 SMITH 800 
+ADAMS 1100</pre>
+<h3>N.2.9  在上面屏蔽掉一个列中显示的相同的值的显示中，每当列值变化时在值变化之前插入n个空行。 </h3>
+<p> BREAK ON break_column SKIP n</p>
+<p> SQL&gt; BREAK ON DEPTNO SKIP 1 <br />
+  SQL&gt; / <br />
+  DEPTNO ENAME SAL <br />
+  ---------- ----------- --------- <br />
+  10 CLARK 2450 <br />
+  MILLER 1300 <br />
+  <br />
+  20 SMITH 800 <br />
+  ADAMS 1100</p>
+<h3>N.2.10 显示对BREAK的设置 </h3>
+<pre>SQL&gt; BREAK</pre>
+<h3> N.2.11 删除6、7的设置 </h3>
+<pre>SQL&gt; CLEAR BREAKS </pre>
+<h3> N.2.12 Set 命令： </h3>
+<p> 该命令包含许多子命令： </p>
+<p> SET system_variable value </p>
+<p> system_variable value 可以是如下的子句之一： <br />
+  APPI[NFO]{ON|OFF|text} <br />
+  ARRAY[SIZE] {15|n} <br />
+  AUTO[COMMIT]{ON|OFF|IMM[EDIATE]|n} <br />
+  AUTOP[RINT] {ON|OFF} <br />
+  AUTORECOVERY [ON|OFF] <br />
+  AUTOT[RACE] {ON|OFF|TRACE[ONLY]} [EXP[LAIN]] [STAT[ISTICS]] <br />
+  BLO[CKTERMINATOR] {.|c} <br />
+  CMDS[EP] {;|c|ON|OFF} <br />
+  COLSEP {_|text} <br />
+  COM[PATIBILITY]{V7|V8|NATIVE} <br />
+  CON[CAT] {.|c|ON|OFF} <br />
+  COPYC[OMMIT] {0|n} <br />
+  COPYTYPECHECK {ON|OFF} <br />
+  DEF[INE] {&amp;|c|ON|OFF} <br />
+  DESCRIBE [DEPTH {1|n|ALL}][LINENUM {ON|OFF}][INDENT {ON|OFF}] <br />
+  ECHO {ON|OFF} <br />
+  EDITF[ILE] file_name[.ext] <br />
+  EMB[EDDED] {ON|OFF} <br />
+  ESC[APE] {\|c|ON|OFF} <br />
+  FEED[BACK] {6|n|ON|OFF} <br />
+  FLAGGER {OFF|ENTRY |INTERMED[IATE]|FULL} <br />
+  FLU[SH] {ON|OFF} <br />
+  HEA[DING] {ON|OFF} <br />
+  HEADS[EP] {||c|ON|OFF} <br />
+  INSTANCE [instance_path|LOCAL] <br />
+  LIN[ESIZE] {80|n} <br />
+  LOBOF[FSET] {n|1} <br />
+  LOGSOURCE [pathname] <br />
+  LONG {80|n} <br />
+  LONGC[HUNKSIZE] {80|n} <br />
+  MARK[UP] HTML [ON|OFF] [HEAD text] [BODY text] [ENTMAP {ON|OFF}] [SPOOL <br />
+  {ON|OFF}] [PRE[FORMAT] {ON|OFF}] <br />
+  NEWP[AGE] {1|n|NONE} <br />
+  NULL text <br />
+  NUMF[ORMAT] format <br />
+  NUM[WIDTH] {10|n} <br />
+  PAGES[IZE] {24|n} <br />
+  PAU[SE] {ON|OFF|text} <br />
+  RECSEP {WR[APPED]|EA[CH]|OFF} <br />
+  RECSEPCHAR {_|c} <br />
+  SERVEROUT[PUT] {ON|OFF} [SIZE n] [FOR[MAT] {WRA[PPED]|WOR[D_ <br />
+  WRAPPED]|TRU[NCATED]}] <br />
+  SHIFT[INOUT] {VIS[IBLE]|INV[ISIBLE]} <br />
+  SHOW[MODE] {ON|OFF} <br />
+  SQLBL[ANKLINES] {ON|OFF} <br />
+  SQLC[ASE] {MIX[ED]|LO[WER]|UP[PER]} <br />
+  SQLCO[NTINUE] {&gt; |text} <br />
+  SQLN[UMBER] {ON|OFF} <br />
+  SQLPRE[FIX] {#|c} <br />
+  SQLP[ROMPT] {SQL&gt;|text} <br />
+  SQLT[ERMINATOR] {;|c|ON|OFF} <br />
+  SUF[FIX] {SQL|text} <br />
+  TAB {ON|OFF} <br />
+  TERM[OUT] {ON|OFF} <br />
+  TI[ME] {ON|OFF} <br />
+  TIMI[NG] {ON|OFF} <br />
+  TRIM[OUT] {ON|OFF} <br />
+  TRIMS[POOL] {ON|OFF} <br />
+  UND[ERLINE] {-|c|ON|OFF} <br />
+  VER[IFY] {ON|OFF} <br />
+  WRA[P] {ON|OFF} <br />
+  <br />
+  1). 设置当前session是否对修改的数据进行自动提交 <br />
+  SQL&gt;SET AUTO[COMMIT] {ON|OFF|IMM[EDIATE]| n} <br />
+  <br />
+  2)．在用start命令执行一个sql脚本时，是否显示脚本中正在执行的SQL语句 <br />
+  SQL&gt; SET ECHO {ON|OFF} <br />
+  <br />
+  3).是否显示当前sql语句查询或修改的行数 <br />
+  SQL&gt; SET FEED[BACK] {6|n|ON|OFF} <br />
+  默认只有结果大于6行时才显示结果的行数。如果set feedback 1 ，则不管查询到多少行都返回。当为off 时，一律不显示查询的行数 <br />
+  <br />
+  4).是否显示列标题 <br />
+  SQL&gt; SET HEA[DING] {ON|OFF} <br />
+  当set heading off 时，在每页的上面不显示列标题，而是以空白行代替 <br />
+  <br />
+  5).设置一行可以容纳的字符数 <br />
+  SQL&gt; SET LIN[ESIZE] {80|n} <br />
+  如果一行的输出内容大于设置的一行可容纳的字符数，则折行显示。 <br />
+  <br />
+  6).设置页与页之间的分隔 <br />
+  SQL&gt; SET NEWP[AGE] {1|n|NONE} <br />
+  当set newpage 0 时，会在每页的开头有一个小的黑方框。 <br />
+  当set newpage n 时，会在页和页之间隔着n个空行。 <br />
+  当set newpage none 时，会在页和页之间没有任何间隔。 <br />
+  <br />
+  7).显示时，用text值代替NULL值 <br />
+  SQL&gt; SET NULL text <br />
+  <br />
+  8).设置一页有多少行数 <br />
+  SQL&gt; SET PAGES[IZE] {24|n} <br />
+  如果设为0，则所有的输出内容为一页并且不显示列标题 <br />
+  <br />
+  9).是否显示用DBMS_OUTPUT.PUT_LINE包进行输出的信息。 <br />
+  SQL&gt; SET SERVEROUT[PUT] {ON|OFF} <br />
+  在编写存储过程时，我们有时会用dbms_output.put_line将必要的信息输出，以便对存储过程进行调试，只有将serveroutput变量设为on后，信息才能显示在屏幕上。 <br />
+  <br />
+  10).当SQL语句的长度大于LINESIZE时，是否在显示时截取SQL语句。 <br />
+  SQL&gt; SET WRA[P] {ON|OFF} <br />
+  当输出的行的长度大于设置的行的长度时（用set linesize n命令设置），当set wrap on时，输出行的多于的字符会另起一行显示，否则，会将输出行的多于字符切除，不予显示。 <br />
+  <br />
+  11).是否在屏幕上显示输出的内容，主要用与SPOOL结合使用。 <br />
+  SQL&gt; SET TERM[OUT] {ON|OFF} <br />
+  在用spool命令将一个大表中的内容输出到一个文件中时，将内容输出在屏幕上会耗费大量的时间，设置set termspool off后，则输出的内容只会保存在输出文件中，不会显示在屏幕上，极大的提高了spool的速度。 <br />
+  <br />
+  12).将SPOOL输出中每行后面多余的空格去掉 <br />
+  SQL&gt; SET TRIMS[OUT] {ON|OFF} <br />
+  <br />
+  13)显示每个sql语句花费的执行时间 <br />
+  set TIMING {ON|OFF} </p>
+<p>14). 遇到空行时不认为语句已经结束，从后续行接着读入。<br />
+  SET SQLBLANKLINES ON<br />
+  Sql*plus中, 不允许sql语句中间有空行, 这在从其它地方拷贝脚本到sql*plus中执行时很麻烦. 比如下面的脚本:<br />
+  select deptno, empno, ename<br />
+  from emp</p>
+<p>where empno = '7788';<br />
+  如果拷贝到sql*plus中执行, 就会出现错误。这个命令可以解决该问题</p>
+<p>15).设置DBMS_OUTPUT的输出<br />
+  SET SERVEROUTPUT ON BUFFER 20000<br />
+  用dbms_output.put_line('strin_content');可以在存储过程中输出信息，对存储过程进行调试<br />
+  如果想让dbms_output.put_line(' abc');的输出显示为：<br />
+  SQL&gt; abc，而不是SQL&gt;abc，则在SET SERVEROUTPUT ON后加format wrapped参数。</p>
+<p>16). 输出的数据为html格式<br />
+  set markup html<br />
+  在8.1.7版本(也许是816? 不太确定)以后, sql*plus中有一个set markup html的命令, 可以将sql*plus的输出以html格式展现.<br />
+  注意其中的spool on, 当在屏幕上输出的时候, 我们看不出与不加spool on有什么区别, 但是当我们使用spool filename 输出到文件的时候, 会看到spool文件中出现了等tag.<br />
+</p>
+<p>14．修改sql buffer中的当前行中，第一个出现的字符串 <br />
+  C[HANGE] /old_value/new_value <br />
+  SQL&gt; l <br />
+  1* select * from dept <br />
+  SQL&gt; c/dept/emp <br />
+  1* select * from emp <br />
+  <br />
+  15．编辑sql buffer中的sql语句 <br />
+  EDI[T] <br />
+  <br />
+  16．显示sql buffer中的sql语句，list n显示sql buffer中的第n行，并使第n行成为当前行 <br />
+  L[IST] [n] <br />
+  <br />
+  17．在sql buffer的当前行下面加一行或多行 <br />
+  I[NPUT] <br />
+  <br />
+  18．将指定的文本加到sql buffer的当前行后面 <br />
+  A[PPEND] <br />
+  SQL&gt; select deptno, <br />
+  2 dname <br />
+  3 from dept; <br />
+  DEPTNO DNAME <br />
+  ---------- -------------- <br />
+  10 ACCOUNTING <br />
+  20 RESEARCH <br />
+  30 SALES <br />
+  40 OPERATIONS <br />
+  <br />
+  SQL&gt; L 2 <br />
+  2* dname <br />
+  SQL&gt; a ,loc <br />
+  2* dname,loc <br />
+  SQL&gt; L <br />
+  1 select deptno, <br />
+  2 dname,loc <br />
+  3* from dept <br />
+  SQL&gt; / <br />
+  <br />
+  DEPTNO DNAME LOC <br />
+  ---------- -------------- ------------- <br />
+  10 ACCOUNTING NEW YORK <br />
+  20 RESEARCH DALLAS <br />
+  30 SALES CHICAGO <br />
+  40 OPERATIONS BOSTON <br />
+  <br />
+  19．将sql buffer中的sql语句保存到一个文件中 <br />
+  SAVE file_name <br />
+  <br />
+  20．将一个文件中的sql语句导入到sql buffer中 <br />
+  GET file_name <br />
+  <br />
+  21．再次执行刚才已经执行的sql语句 <br />
+  RUN <br />
+  or <br />
+  / <br />
+  <br />
+  22．执行一个存储过程 <br />
+  EXECUTE procedure_name <br />
+  <br />
+  23．在sql*plus中连接到指定的数据库 <br />
+  CONNECT user_name/passwd@db_alias <br />
+  <br />
+  24．设置每个报表的顶部标题 <br />
+  TTITLE <br />
+  <br />
+  25．设置每个报表的尾部标题 <br />
+  BTITLE <br />
+  <br />
+  26．写一个注释 <br />
+  REMARK [text] <br />
+  <br />
+  27．将指定的信息或一个空行输出到屏幕上 <br />
+  PROMPT [text] <br />
+  <br />
+  28．将执行的过程暂停，等待用户响应后继续执行 <br />
+  PAUSE [text] <br />
+  <br />
+  Sql&gt;PAUSE Adjust paper and press RETURN to continue. <br />
+  <br />
+  29．将一个数据库中的一些数据拷贝到另外一个数据库（如将一个表的数据拷贝到另一个数据库） <br />
+  COPY {FROM database | TO database | FROM database TO database} <br />
+  {APPEND|Create|Insert|REPLACE} destination_table <br />
+  [(column, column, column, ...)] USING query <br />
+  <br />
+  sql&gt;COPY FROM SCOTT/TIGER@HQ TO JOHN/CHROME@WEST <br />
+  create emp_temp <br />
+  USING Select * FROM EMP <br />
+  <br />
+  30．不退出sql*plus，在sql*plus中执行一个操作系统命令： <br />
+  HOST <br />
+  <br />
+  Sql&gt; host hostname <br />
+  该命令在windows下可能被支持。 <br />
+  <br />
+  31．在sql*plus中，切换到操作系统命令提示符下，运行操作系统命令后，可以再次切换回sql*plus： <br />
+  ! <br />
+  <br />
+  sql&gt;! <br />
+  $hostname <br />
+  $exit <br />
+  sql&gt; <br />
+  <br />
+  该命令在windows下不被支持。 <br />
+  <br />
+  32．显示sql*plus命令的帮助 <br />
+  HELP <br />
+  如何安装帮助文件： <br />
+  Sql&gt;@ ?\sqlplus\admin\help\hlpbld.sql ?\sqlplus\admin\help\helpus.sql <br />
+  Sql&gt;help index <br />
+  <br />
+  33．显示sql*plus系统变量的值或sql*plus环境变量的值 <br />
+  Syntax <br />
+  SHO[W] option <br />
+  where option represents one of the following terms or clauses: <br />
+  system_variable <br />
+  ALL <br />
+  BTI[TLE] <br />
+  ERR[ORS] [{FUNCTION|PROCEDURE|PACKAGE|PACKAGE BODY| <br />
+  TRIGGER|VIEW|TYPE|TYPE BODY} [schema.]name] <br />
+  LNO <br />
+  PARAMETERS [parameter_name] <br />
+  PNO <br />
+  REL[EASE] <br />
+  REPF[OOTER] <br />
+  REPH[EADER] <br />
+  SGA <br />
+  SPOO[L] <br />
+  SQLCODE <br />
+  TTI[TLE] <br />
+  USER <br />
+  <br />
+  1) . 显示当前环境变量的值： <br />
+  Show all <br />
+  <br />
+  2) . 显示当前在创建函数、存储过程、触发器、包等对象的错误信息 <br />
+  Show error <br />
+  当创建一个函数、存储过程等出错时，变可以用该命令查看在那个地方出错及相应的出错信息，进行修改后再次进行编译。 <br />
+  <br />
+  3) . 显示初始化参数的值： <br />
+  show PARAMETERS [parameter_name] <br />
+  <br />
+  4) . 显示数据库的版本： <br />
+  show REL[EASE] <br />
+  <br />
+  5) . 显示SGA的大小 <br />
+  show SGA <br />
+  <br />
+  6). 显示当前的用户名 <br />
+  show user</p>
+<p>34.查询一个用户下的对象<br />
+  SQL&gt;select * from tab;<br />
+  SQL&gt;select * from user_objects;</p>
+<p>35.查询一个用户下的所有的表<br />
+  SQL&gt;select * from user_tables;</p>
+<p>36.查询一个用户下的所有的索引<br />
+  SQL&gt;select * from user_indexes;<br />
+</p>
+<p>37. 定义一个用户变量<br />
+  方法有两个：<br />
+  a. define<br />
+  b. COL[UMN] [{column|expr} NEW_V[ALUE] variable [NOPRI[NT]|PRI[NT]]<br />
+  OLD_V[ALUE] variable [NOPRI[NT]|PRI[NT]]</p>
+<p>下面对每种方式给予解释：<br />
+  a. Syntax<br />
+  DEF[INE] [variable]|[variable = text]<br />
+  定义一个用户变量并且可以分配给它一个CHAR值。</p>
+<p>assign the value MANAGER to the variable POS, type:<br />
+  SQL&gt; DEFINE POS = MANAGER</p>
+<p>assign the CHAR value 20 to the variable DEPTNO, type:<br />
+  SQL&gt; DEFINE DEPTNO = 20</p>
+<p>list the definition of DEPTNO, enter<br />
+  SQL&gt; DEFINE DEPTNO<br />
+  ―――――――――――――――<br />
+  DEFINE DEPTNO = ”20” (CHAR)</p>
+<p>定义了用户变量POS后，就可以在sql*plus中用&amp;POS或&amp;&amp;POS来引用该变量的值，sql*plus不会再提示你给变量输入值。</p>
+<p>b. COL[UMN] [{column|expr} NEW_V[ALUE] variable [NOPRI[NT]|PRI[NT]]<br />
+  NEW_V[ALUE] variable<br />
+  指定一个变量容纳查询出的列值。<br />
+  例:column col_name new_value var_name noprint<br />
+  select col_name from table_name where ……..<br />
+  将下面查询出的col_name列的值赋给var_name变量.</p>
+<p>一个综合的例子:<br />
+  得到一个列值的两次查询之差(此例为10秒之内共提交了多少事务):<br />
+  column redo_writes new_value commit_count</p>
+<p>select sum(stat.value) redo_writes<br />
+  from v$sesstat stat, v$statname sn<br />
+  where stat.statistic# = sn.statistic#<br />
+  and sn.name = 'user commits';</p>
+<p>-- 等待一会儿(此处为10秒);<br />
+  execute dbms_lock.sleep(10);</p>
+<p>set veri off<br />
+  select sum(stat.value) - &amp;commit_count commits_added<br />
+  from v$sesstat stat, v$statname sn<br />
+  where stat.statistic# = sn.statistic#<br />
+  and sn.name = 'user commits';<br />
+</p>
+<p>38. 定义一个绑定变量<br />
+  VAR[IABLE] [variable [NUMBER|CHAR|CHAR (n)|NCHAR|NCHAR (n) |VARCHAR2 (n)|NVARCHAR2 (n)|CLOB|NCLOB|REFCURSOR]]<br />
+  定义一个绑定变量，该变量可以在pl/sql中引用。<br />
+  可以用print命令显示该绑定变量的信息。<br />
+  如：<br />
+  column inst_num heading &quot;Inst Num&quot; new_value inst_num format 99999;<br />
+  column inst_name heading &quot;Instance&quot; new_value inst_name format a12;<br />
+  column db_name heading &quot;DB Name&quot; new_value db_name format a12;<br />
+  column dbid heading &quot;DB Id&quot; new_value dbid format 9999999999 just c;</p>
+<p>prompt<br />
+  prompt Current Instance<br />
+  prompt ~~~~~~~~~~~~~~~~</p>
+<p>select d.dbid dbid<br />
+  , d.name db_name<br />
+  , i.instance_number inst_num<br />
+  , i.instance_name inst_name<br />
+  from v$database d,<br />
+  v$instance i;</p>
+<p>variable dbid number;<br />
+  variable inst_num number;<br />
+  begin<br />
+  :dbid := &amp;dbid;<br />
+  :inst_num := &amp;inst_num;<br />
+  end;<br />
+  /<br />
+  说明：<br />
+  在sql*plus中，该绑定变量可以作为一个存储过程的参数，也可以在匿名PL/SQL块中直接引用。为了显示用VARIABLE命令创建的绑定变量的值，可以用print命令</p>
+<p>注意：<br />
+  绑定变量不同于变量：<br />
+  1． 定义方法不同<br />
+  2． 引用方法不同<br />
+  绑定变量：:variable_name<br />
+  变量：&amp;variable_name or &amp;&amp;variable_name<br />
+  3.在sql*plus中，可以定义同名的绑定变量与用户变量，但是引用的方法不同。</p>
+<p>39. &amp;与&amp;&amp;的区别<br />
+&amp;用来创建一个临时变量，每当遇到这个临时变量时，都会提示你输入一个值。<br />
+&amp;&amp;用来创建一个持久变量，就像用用define命令或带new_vlaue字句的column命令创建的持久变量一样。当用&amp;&amp;命令引用这个变量时，不会每次遇到该变量就提示用户键入值，而只是在第一次遇到时提示一次。</p>
+<p>如，将下面三行语句存为一个脚本文件，运行该脚本文件，会提示三次，让输入deptnoval的值：<br />
+  select count(*) from emp where deptno = &amp;deptnoval;<br />
+  select count(*) from emp where deptno = &amp;deptnoval;<br />
+  select count(*) from emp where deptno = &amp;deptnoval;</p>
+<p>将下面三行语句存为一个脚本文件，运行该脚本文件，则只会提示一次，让输入deptnoval的值：<br />
+  select count(*) from emp where deptno = &amp;&amp;deptnoval;<br />
+  select count(*) from emp where deptno = &amp;&amp;deptnoval;<br />
+  select count(*) from emp where deptno = &amp;&amp;deptnoval;</p>
+<p>40．在输入sql语句的过程中临时先运行一个sql*plus命令(摘自www.itpub.com)<br />
+  #<br />
+  有没有过这样的经历? 在sql*plus中敲了很长的命令后, 突然发现想不起某个列的名字了, 如果取消当前的命令,待查询后再重敲, 那太痛苦了. 当然你可以另开一个sql*plus窗口进行查询, 但这里提供的方法更简单.</p>
+<p>比如说, 你想查工资大于4000的员工的信息, 输入了下面的语句:</p>
+<p>SQL&gt; select deptno, empno, ename<br />
+  2 from emp<br />
+  3 where<br />
+  这时, 你发现你想不起来工资的列名是什么了.</p>
+<p>这种情况下, 只要在下一行以#开头, 就可以执行一条sql*plus命令, 执行完后, 刚才的语句可以继续输入</p>
+<p>SQL&gt;&gt; select deptno, empno, ename<br />
+  2 from emp<br />
+  3 where<br />
+  6 #desc emp<br />
+  Name Null? Type<br />
+  ----------------------------------------- -------- --------------<br />
+  EMPNO NOT NULL NUMBER(4)<br />
+  ENAME VARCHAR2(10)<br />
+  JOB VARCHAR2(9)<br />
+  MGR NUMBER(4)<br />
+  HIREDATE DATE<br />
+  SAL NUMBER(7,2)<br />
+  COMM NUMBER(7,2)<br />
+  DEPTNO NUMBER(2)</p>
+<p>6 sal &gt; 4000;</p>
+<p>DEPTNO EMPNO ENAME<br />
+  ---------- ---------- ----------<br />
+  10 7839 KING</p>
+<p>41. SQLPlus中的快速复制和粘贴技巧(摘自www.cnoug.org)<br />
+  1) 鼠标移至想要复制内容的开始 <br />
+  2) 用右手食指按下鼠标左键 <br />
+  3) 向想要复制内容的另一角拖动鼠标，与Word中选取内容的方法一样 <br />
+  4) 内容选取完毕后（所选内容全部反显），鼠标左键按住不动，用右手中指按鼠标右键 <br />
+  5) 这时，所选内容会自动复制到SQL*Plus环境的最后一行 </p>
+<p>&nbsp; </p>
+<p>&nbsp;</p>
+<script language="javascript" src="index.js"></script>
+</body>
+</html>

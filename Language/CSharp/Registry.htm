@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<title>使用Windows资源 </title>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+<p id="title">注册表</p>
+
+<h1> 所使用的类 </h1>
+<p>主要使用Microsoft.Win32命名空间下的两个类：Registry和RegistryKey</p>
+<h2>Registry</h2>
+<p>一般用到它附属的几个静态变量，表示不同的注册表基项</p>
+<table style="width:60%" >
+  <tr>
+    <th>变量名</th>
+    <th>对应基项</th>
+  </tr>
+  <tr>
+    <td>ClassRoot</td>
+    <td>HKEY_CLASSES_ROOT</td>
+  </tr>
+  <tr>
+    <td>CurrentConfig</td>
+    <td>HKEY_CURRENT_CONFIG</td>
+  </tr>
+  <tr>
+    <td>CurrentUser</td>
+    <td>HKEY_CURRENT_USER</td>
+  </tr>
+  <tr>
+    <td>DynData</td>
+    <td>HKEY_DYN_DATA</td>
+  </tr>
+  <tr>
+    <td>LocalMachine</td>
+    <td>HKEY_LOCAL_MACHINE</td>
+  </tr>
+  <tr>
+    <td>PerformanceData</td>
+    <td>HKEY_PERFORMANCE_DATA</td>
+  </tr>
+  <tr>
+    <td>Usres</td>
+    <td>HKEY_USERS</td>
+  </tr>
+</table>
+<h2>RegistryKey</h2>
+<p>对应注册表项，注册表的内容分为3部分：项、值、数据。使用命令regedit查看，如下图所示：</p>
+<p><img src="images/regedit.jpg" width="511" height="373"></p>
+<p>其中，出现在左侧树中的各节点即为注册表的项，而右键的列表，名称列表示值，数据列表示数据。</p>
+<h1>基本操作 </h1>
+<h2>读取注册表</h2>
+<pre class="code" data-type="csharp">using Microsoft.Win32
+
+//打开注册表节点HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Run
+RegistryKey rk = Registry.LocalMachine.OpenSubKey(@&quot;SOFTWARE\Microsoft\Windows\CurrentVersion\Run&quot;, true);
+
+//获取该节点下"popo2004"项的值
+string str = rk.GetValue("popo2004")</pre>
+<p>也可以用CreateSubKey打开一个现有子项，如果节点不存在，OpenSubKey返回null。</p>
+<p><img src="images/note.jpg" width="20" height="20">注意：对于所有项都有的值“(默认)”，取该值时GetValue()的参数为空字符串&quot;&quot;，而不是字符串&quot;(默认)&quot;。</p>
+<h2>写入注册表 </h2>
+<pre class="code" data-type="csharp">using Microsoft.Win32
+
+//打开注册表节点HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Run
+RegistryKey rk = Registry.LocalMachine.OpenSubKey(@&quot;SOFTWARE\Microsoft\Windows\CurrentVersion\Run&quot;, true);
+
+//设置该节点下"popo2004"项的值为"C:\popo\popo.exe"
+string str = rk.SetValue("popo2004", "C:\popo\popo.exe")</pre>
+<p>&nbsp; </p>
+
+</body>
+</html>

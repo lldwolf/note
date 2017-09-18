@@ -1,0 +1,179 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+Choosing a presentation style </TITLE>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312"></HEAD>
+<BODY>
+<A NAME="CFHBFAAA"></A>
+<h1>选择报表样式</h1>
+<A NAME="TI1245"></A>
+<p>The presentation style you select for a report determines
+the format InfoMaker uses to first display the report in the
+Design view. You can use the format as displayed or modify it to
+meet your needs:</p>
+<A NAME="TI1246"></A>
+<p>你可以在新建报表的对话框中选择以下样式：<A NAME="TI1247"></A>
+<ul>
+<li class=fi>Tabular</li>
+<li class=ds>Freeform</li>
+<li class=ds>Grid</li>
+<li class=ds>Label</li>
+<li class=ds>N-Up</li>
+<li class=ds>Group</li>
+<li class=ds>Composite</li>
+<li class=ds>Graph</li>
+<li class=ds>Crosstab</li>
+<li class=ds>OLE 2.0</li>
+<li class=ds>RichText
+</li>
+</ul>
+</p>
+<A NAME="TI1248"></A>
+<h2>使用 Tabular 样式 </h2>
+<A NAME="TI1249"></A>
+<p>Tabular样式示例如下，数据以行方式填冲整页，每列上显示其标题。显示时自动适应页面，在每页上显示固定行数。</p>
+<br><img src="images/defin18.gif">
+<A NAME="TI1250"></A>
+<h2>使用 Freeform 样式 </h2>
+<A NAME="TI1251"></A>
+<p>示例如下，一种类似于表单的显示方式（注：不知道和Access谁抄的谁）。</p>
+<br><img src="images/defin19i.gif">
+<A NAME="TI1252"></A>
+<h2>使用 Grid 样式 </h2>
+<A NAME="TI1253"></A>
+<p>以严格的行列方式显示数据，并带有表格线。</p>
+<A NAME="TI1254"></A>
+<p>用户可以在执行时调节其宽度。</p>
+<A NAME="TI1255"></A>
+<h4>基本 Grid 报表 </h4>
+<A NAME="TI1256"></A>
+<p>直接利用查询生成的Grid报表，显示员工信息（有的列有点宽）。</p>
+<br><img src="images/defin20.gif">
+<A NAME="TI1257"></A>
+<h4>修改完列宽后的Grid报表</h4>
+<A NAME="TI1258"></A><p>&nbsp;</p>
+<br><img src="images/defin21.gif">
+<A NAME="TI1259"></A>
+<h2> Label 样式 </h2>
+<A NAME="TI1260"></A>
+<p>像卡片一样显示数据，使用该样式你可以创建联系人、客户卡片等。</p>
+<A NAME="TI1261"></A>
+<h4>通讯录</h4>
+<br><img src="images/defin22.gif">
+<A NAME="TI1262"></A>
+<h4>客户卡片</h4>
+<br><img src="images/defin23.gif">
+<A NAME="TI1263"></A>
+<h4>头衔卡片</h4>
+<br><img src="images/defin24.gif">
+<A NAME="TI1264"></A>
+<h4>定义卡片属性</h4>
+<A NAME="TI1265"></A>
+<p>如果选择了该样式，定义完数据源后，InfoMaker会要求你指定卡片的一些属性，包括样式、大小等。</p>
+<A NAME="TI1266"></A>
+<h4>卡片的原始信息来源</h4>
+<A NAME="TI1267"></A>
+<p>InfoMaker从PBLAB80.INI中取得卡片样式的原始数据（大小、边框等）。</p>
+<A NAME="TI1268"></A>
+<h2> N-Up 样式 </h2>
+<A NAME="TI1269"></A>
+<p>真不知道该怎么形容这种样式，简单地讲，它可以把一个数据集平均分成多栏显示，例如如果一个数据集大家可以想象一个数据集只有1列，那么打印起来是比较浪费的，使用N-Up样式，我们可以将这些数据平均分布在6列上，也就是说，把这一列数据集平均分成了6列来显示。利用这种特性用户可以定制一些数据带有周期性的报表，例如值日表。</p>
+<A NAME="TI1270"></A>
+<p>选完数据源后，InfoMaker会要求你设置要分的栏数</p>
+<A NAME="TI1271"></A>
+<p>对数据源中的每列数据，InfoMaker根据你设定的栏数n生成n栏（column_1 至 column_n）。</p>
+<A NAME="TI1272"></A>
+<h4>示例</h4>
+<A NAME="TI1273"></A>
+<p>下面是一张每日股价表，把栏数设定为2：</p>
+<A NAME="TI1274"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI1275"></A>Day</th>
+<th align="left" valign=bottom><A NAME="TI1276"></A>Price</th>
+<th align="left" valign=bottom><A NAME="TI1277"></A>Day</th>
+<th align="left" valign=bottom><A NAME="TI1278"></A>Price</th>
+</tr>
+<tr><td valign=top><A NAME="TI1279"></A>5/4/01</td>
+<td valign=top><A NAME="TI1280"></A>62.00</td>
+<td valign=top><A NAME="TI1281"></A>5/14/01</td>
+<td valign=top><A NAME="TI1282"></A>68.00</td>
+</tr>
+<tr><td valign=top><A NAME="TI1283"></A>5/5/01</td>
+<td valign=top><A NAME="TI1284"></A>63.00</td>
+<td valign=top><A NAME="TI1285"></A>5/15/01</td>
+<td valign=top><A NAME="TI1286"></A>67.00</td>
+</tr>
+<tr><td valign=top><A NAME="TI1287"></A>5/6/01</td>
+<td valign=top><A NAME="TI1288"></A>66.00</td>
+<td valign=top><A NAME="TI1289"></A>5/18/01</td>
+<td valign=top><A NAME="TI1290"></A>67.00</td>
+</tr>
+<tr><td valign=top><A NAME="TI1291"></A>5/7/01</td>
+<td valign=top><A NAME="TI1292"></A>65.00</td>
+<td valign=top><A NAME="TI1293"></A>5/19/01</td>
+<td valign=top><A NAME="TI1294"></A>71.00</td>
+</tr>
+<tr><td valign=top><A NAME="TI1295"></A>5/8/01</td>
+<td valign=top><A NAME="TI1296"></A>62.00</td>
+<td valign=top><A NAME="TI1297"></A>5/20/01</td>
+<td valign=top><A NAME="TI1298"></A>70.00</td>
+</tr>
+<tr><td valign=top><A NAME="TI1299"></A>5/11/01</td>
+<td valign=top><A NAME="TI1300"></A>65.00</td>
+<td valign=top><A NAME="TI1301"></A>5/21/01</td>
+<td valign=top><A NAME="TI1302"></A>72.00</td>
+</tr>
+<tr><td valign=top><A NAME="TI1303"></A>5/12/01</td>
+<td valign=top><A NAME="TI1304"></A>69.00</td>
+<td valign=top><A NAME="TI1305"></A>5/22/01</td>
+<td valign=top><A NAME="TI1306"></A>75.00</td>
+</tr>
+<tr><td valign=top><A NAME="TI1307"></A>5/13/01</td>
+<td valign=top><A NAME="TI1308"></A>66.00</td>
+<td valign=top><A NAME="TI1309"></A></td>
+<td valign=top><A NAME="TI1310"></A></td>
+</tr>
+</table>
+<A NAME="TI1311"></A>
+<p>下面的报表中，栏数设为5，并且加入一个计算列计算每周的平均股价：</p>
+<br><img src="images/defin25.gif">
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>n-up计算列</span> <A NAME="TI1312"></A>可以使用脚本，例如price[0]表示每行的第几个数值。</p>
+<A NAME="TI1313"></A>详细使用方法, 参考 <A HREF="imugp51.htm#CAICGCGD">第5章 “报表进阶</A>。</p>
+<A NAME="TI1314"></A>
+<p>下面是预览结果：</p>
+<br><img src="images/defin26.gif">
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>另一个实现分栏报表的方法</span> <A NAME="TI1315"></A>在N-UP报表中，数据显示顺序为先行后列，如果想使用先列后行的方式显示（如果电话本），你应该使用tabular报表，然后指定栏目（newspaper columns）。</p>
+<A NAME="TI1316"></A>详细信息, 参考
+<A HREF="imugp51.htm#CAICGCGD">第5章, "报表进阶"</A>.</p>
+<A NAME="TI1317"></A>
+<h2> Group 样式 </h2>
+<A NAME="TI1318"></A>
+<p>就是分组式的报表了，等同于在SQL语句中包含GROUP BY子句。</p>
+<A NAME="TI1319"></A>
+<p>详细使用方法, 参考
+<A HREF="imugp68.htm#BFCBAIEB">第7章 “对数据过滤、排序和分组”</A>。</p>
+<A NAME="TI1320"></A>
+<h2> Composite 样式 </h2>
+<A NAME="TI1321"></A>
+<p>这是一种嵌套表，用于把几个报表合成一个报表</p>
+<A NAME="TI1322"></A>
+<p>详细使用方法, 参考 <A HREF="imugp81.htm#BFCEAGEF">第9章 “复合报表”</A>。</p>
+<A NAME="TI1323"></A>
+<h2> Graph 和 Crosstab 样式 </h2>
+<A NAME="TI1324"></A>
+<p>除了文本形式的报表外，InfoMaker提供的图形化的表达方式。</p>
+<A NAME="TI1325"></A>
+<p>详细使用方法, 参考 <A HREF="imugp86.htm#CCJCJJAE">第10章 “图表”</A>, 和
+<A HREF="imugp91.htm#CBBEBEEI">第11章 “交叉表” </A>.</p>
+<A NAME="TI1326"></A>
+<h2>OLE 2.0 样式 </h2>
+<A NAME="TI1327"></A>
+<p>链接OLE对象。</p>
+<A NAME="TI1328"></A>
+<p>详细使用方法, 参考 <A HREF="imugp102.htm#CCJBFGBD">第13章 “使用OLE对象” </A>.</p>
+<A NAME="TI1329"></A>
+<h2>RichText 样式 </h2>
+<A NAME="TI1330"></A>
+<p>将数据库字段列格式化为文本输出。</p>
+<A NAME="TI1331"></A>
+<p>详细使用方法, 参考 <A HREF="imugp98.htm#CIHBJDJF">第12章 “使用RichText”</A>。</p>
+

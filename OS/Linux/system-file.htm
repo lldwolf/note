@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+	<script type="text/javascript" src="../../mylib/js/css.js"></script>
+	<title>系统文件</title>
+</head>
+
+<body>
+	<p id="title">系统文件</p>
+	<h1>系统文件说明</h1>
+	<table style="width:95%">
+		<tr>
+			<th>文件</th>
+			<th>说明</th>
+			<th>示例</th>
+		</tr>
+		<tr>
+			<td>~/.profile</td>
+			<td>进入 shell 自动运行的脚本</td>
+			<td><pre class="code" data-type="sh">export JAVA_HOME=/xenv/java/X/1.7.0_85l64
+export ANT_HOME=/xenv/ant/X/1.9.0
+export PATH=.:~:${JAVA_HOME}/bin:/opt/pb/bin:/xenv/scripts/bin:/xenv/svn/X/1.4.5l/bin:${ANT_HOME}/bin:${PATH}
+export CLASSPATH=.:$JAVA_HOME:$JAVA_HOME/lib:$JAVA_HOME/jre/lib
+export CVSROOT=:pserver:ll52957:temp123@lnycrecmoap1d.nam.nsroot.net:40460/opt/ficm/CVSRepository
+HOSTNAME=`hostname` 
+PS1='\$$HOSTNAME:$PWD> ' 
+PS2='>'
+HISTFILE=~/.history
+set -o vi
+
+
+#alias ant='${ANT_HOME}/bin/ant'
+#alias myps='/usr/ucb/ps -auxwww'
+#alias java='$JAVA_HOME/bin/java'
+#alias javac='$JAVA_HOME/bin/javac'
+#alias pbrun=/opt/pb/bin/pbrun
+bash
+</pre></td>
+		</tr>
+		<tr>
+			<td>~/.bashrc</td>
+			<td>进入 bash 环境自动运行的脚本</td>
+			<td><pre class="code" data-type="sh">export JAVA_HOME=/xenv/java/X/1.7.0_85l64
+export ANT_HOME=/xenv/ant/X/1.9.0
+export PATH=.:~:${JAVA_HOME}/bin:/opt/pb/bin:/xenv/scripts/bin:/xenv/svn/X/1.4.5l/bin:${ANT_HOME}/bin:${PATH}
+export CLASSPATH=.:$JAVA_HOME:$JAVA_HOME/lib:$JAVA_HOME/jre/lib
+export CVSROOT=:pserver:ll52957:temp123@lnycrecmoap1d.nam.nsroot.net:40460/opt/ficm/CVSRepository
+HOSTNAME=`hostname` 
+PS1='\$$HOSTNAME:$PWD> ' 
+PS2='>'
+HISTFILE=~/.history
+set -o vi
+
+
+#alias ant='${ANT_HOME}/bin/ant'
+#alias myps='/usr/ucb/ps -auxwww'
+#alias java='$JAVA_HOME/bin/java'
+#alias javac='$JAVA_HOME/bin/javac'
+#alias pbrun=/opt/pb/bin/pbrun
+bash
+</pre></td>
+		</tr>
+		<tr>
+			<td>/proc/mounts</td>
+			<td>mount 信息</td>
+			<td></td>
+		</tr>
+	</table>
+
+</body>
+</html>

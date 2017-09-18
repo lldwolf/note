@@ -1,0 +1,63 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+Bitmap</TITLE>
+</HEAD>
+<BODY>
+<A NAME="DWFBitmap"></A><A NAME="TI6196"></A><h1>Bitmap</h1>
+<A NAME="TI6197"></A><p>
+<FORM>
+<INPUT
+ TYPE = "BUTTON"
+ VALUE = "Examples"
+ onClick = "window.location = 'imugp155.htm#EX7';">
+<INPUT
+  TYPE = "BUTTON"
+ VALUE = "See also"
+ onClick = "window.location = 'imugp155.htm#SA7';">
+</FORM>
+</p>
+<h3>Description</h3><A NAME="TI6198"></A><p>Displays the specified bitmap.</p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>For computed fields only</span> <A NAME="TI6199"></A>You can use the Bitmap function <i>only</i>
+ in
+a computed field.</p>
+
+<h3>Syntax</h3><pre><b>Bitmap</b> ( <i>string</i> )</pre>
+<A NAME="TI6200"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI6201"></A>Argument</th>
+<th align="left" valign=bottom><A NAME="TI6202"></A>Description</th>
+</tr>
+<tr><td valign=top><A NAME="TI6203"></A><i>string</i></td>
+<td valign=top><A NAME="TI6204"></A>A column containing bitmap files, a string
+containing the name of an image file (a BMP, GIF, JPEG, RLE, or
+WMF file), or an expression that evaluates to a string containing
+the name of an image file</td>
+</tr>
+</table>
+
+<h3>Return Values</h3><A NAME="TI6205"></A><p>The special data type bitmap, which <i>cannot</i>
+ be
+used in any other function.</p>
+
+<h3>Usage</h3><A NAME="TI6206"></A><p>Use Bitmap to dynamically display a bitmap in a computed field.
+When <i>string</i> is a column containing bitmap files,
+a different bitmap can display for each row.</p>
+
+<A NAME="EX7"></A><h3>Examples</h3><A NAME="TI6207"></A><p>These examples are all expressions for a computed
+field.</p>
+<A NAME="TI6208"></A><p>This expression dynamically displays the bitmap file contained
+in the column named employees:<pre><i>Bitmap</i> (employees)</pre>
+</p>
+<A NAME="TI6209"></A><p>If the employees column is column 3, this next expression
+gives the same result as the expression above:<pre><i>Bitmap</i> (#3)</pre>
+</p>
+<A NAME="TI6210"></A><p>This expression displays the bitmap TOOLS.BMP:<pre><i>Bitmap</i> ("TOOLS.BMP")</pre>
+</p>
+<A NAME="TI6211"></A><p>This expression tests the value in the column named
+password and then uses the value to determine which bitmap to display:<pre><i>Bitmap</i> (If(password = "y", "yes.bmp", "no.bmp"))</pre>
+</p>
+
+<A NAME="SA7"></A><h3>See Also</h3><A NAME="TI6212"></A><p><A HREF="imugp148.htm#X-ref350653848">"Example 3: creating
+a row indicator"</A></p>
+
+

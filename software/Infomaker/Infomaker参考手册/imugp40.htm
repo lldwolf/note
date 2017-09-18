@@ -1,0 +1,228 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+Manipulating data </TITLE>
+</HEAD>
+<BODY>
+<A NAME="CCJBGABA"></A><h1>Manipulating data </h1>
+<A NAME="TI1109"></A><p>As you work on the database, you will often want to look at
+existing data or create some data for testing purposes. You will
+also want to test display formats, validation rules, and edit styles
+on real data.</p>
+<A NAME="TI1110"></A><p>InfoMaker provides data manipulation for such purposes. With
+data manipulation, you can:<A NAME="TI1111"></A>
+<ul>
+<li class=fi>Retrieve
+and manipulate database information</li>
+<li class=ds>Save the contents of the database in a variety of
+formats (such as Excel, dBASE, or Lotus 1-2-3)
+</li>
+</ul>
+</p>
+<A NAME="TI1112"></A><h4>Retrieving data</h4>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To retrieve data:</p>
+<ol><li class=fi>
+In the Database painter, select the table
+or database view whose data you want to manipulate.<br><br></li>
+<li class=ds>
+Click one of the three Data Manipulation buttons
+(Grid, Tabular, or Freeform) in the PainterBar.<br><br>
+<i>or</i>
+<br><br>
+Select Data or Edit Data from the Object or popup menu
+and choose one of the edit options from the cascading menu that
+displays.<br><br>
+All rows are retrieved and display in the Results view. As
+the rows are being retrieved, the Retrieve button changes to a Cancel
+button. You can click the Cancel button to stop the retrieval.<br><br></li></ol>
+<br><A NAME="TI1113"></A><p>Exactly what you see in the Results view depends on the formatting
+style you picked. What you are seeing is similar to a form. In a
+grid display, you can drag the mouse on a column's border
+to resize the column.</p>
+<A NAME="TI1114"></A><p>This window is in the grid format:</p>
+<br><img src="images/dboutput.gif">
+<A NAME="TI1115"></A><p>Only a few rows of data display at a time. You can use the
+First, Prior, Next, and Last buttons to move from page to page.</p>
+<A NAME="TI1116"></A><h4>Modifying data</h4>
+<A NAME="TI1117"></A><p>You can add, modify, or delete rows. When you have finished
+manipulating the data, you can apply the changes to the database.</p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>If looking at data from a view</span> <A NAME="TI1118"></A>Some views are logically updatable and others are not. Some
+DBMSs don't allow any updating of views.</p>
+<A NAME="TI1119"></A>For the rules your DBMS follows regarding
+updating of views, see your DBMS documentation.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To modify data:</p>
+<ol><li class=fi>
+Do one of the following: <br><br><A NAME="TI1120"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI1121"></A>To do this</th>
+<th align="left" valign=bottom><A NAME="TI1122"></A>Take this action</th>
+</tr>
+<tr><td valign=top><A NAME="TI1123"></A>Modify existing data</td>
+<td valign=top><A NAME="TI1124"></A>Tab to a field and enter a new value</td>
+</tr>
+<tr><td valign=top><A NAME="TI1125"></A>Add a row</td>
+<td valign=top><A NAME="TI1126"></A>Click the Insert Row button and enter
+data in the new row</td>
+</tr>
+<tr><td valign=top><A NAME="TI1127"></A>Delete a row</td>
+<td valign=top><A NAME="TI1128"></A>Click the Delete Row button</td>
+</tr>
+</table>
+
+The data uses the validation rules, display formats, and edit
+styles that you or others have defined for the table in the Database
+painter when you add or modify data.<br><br></li>
+<li class=ds>
+Click the Save Changes button or select Rows&gt;Update
+to apply changes to the database.<br><br></li></ol>
+<br><A NAME="TI1129"></A><h4>Sorting rows</h4>
+<A NAME="TI1130"></A><p>You can sort the data, but any sort criteria you define are
+for testing only and are not saved with the table or passed to the Report painter.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To sort the rows:</p>
+<ol><li class=fi>
+Select Rows&gt;Sort from the menu
+bar.<br><br>
+The Specify Sort Columns dialog box displays.<br><br></li>
+<li class=ds>
+Drag the columns you want to sort on from the
+Source Data box to the Columns box:<br><br><br><img src="images/db0021.gif"><br>
+
+A checkbox with a checkmark in it displays under the Ascending
+heading to indicate that the values will be sorted in ascending
+order. To sort in descending order, clear the checkbox.<br><br><p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Precedence of sorting</span> <A NAME="TI1131"></A>The order in which the columns display in the Columns box
+determines the precedence of the sorting. For example, in the preceding
+dialog box, rows will be sorted by department ID. Within department
+ID, rows will be sorted by state.</p>
+<A NAME="TI1132"></A>To change the precedence order, drag the column names in the
+Column box to the order you want.</p>
+</li>
+<li class=ds>
+(Optional) Double-click an item in the Columns
+box to specify an expression to sort on.<br><br>
+The Modify Expression dialog box displays. <br><br></li>
+<li class=ds>
+Specify the expression.<br><br>
+For example, if you have two columns, Revenues and Expenses,
+you can sort on the expression <i>Revenues - Expenses</i>
+.<br><br></li>
+<li class=ds>
+Click OK.<br><br>
+You return to the Specify Sort Columns dialog with the expression displayed.<br><br><p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>If you change your mind</span> <A NAME="TI1133"></A>You can remove a column or expression from the sorting specification
+by simply dragging it and releasing it outside the Columns box.</p>
+</li>
+<li class=ds>
+When you have specified all the sort columns and
+expressions, click OK.<br><br></li></ol>
+<br><A NAME="TI1134"></A><h4>Filtering rows</h4>
+<A NAME="TI1135"></A><p>You can limit which rows are displayed by defining a filter.</p>
+<A NAME="TI1136"></A><p>The filters you define are for testing only and are not saved
+with the table or passed to the Report painter.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To filter the rows:</p>
+<ol><li class=fi>
+Select Rows&gt;Filter from the menu
+bar.<br><br>
+The Specify Filter dialog box displays.<br><br></li>
+<li class=ds>
+Enter a boolean expression that InfoMaker will
+test against each row:<br><br><br><img src="images/db0022.gif"><br>
+
+If the expression evaluates to TRUE, the row will be displayed.
+You can paste functions, columns, and operators in the expression.<br><br></li>
+<li class=ds>
+Click OK.<br><br>
+InfoMaker filters the data. Only rows meeting the filter
+criteria are displayed.<br><br></li></ol>
+<br><p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To remove the filter:</p>
+<ol><li class=fi>
+Select Rows&gt;Filter from the menu
+bar.<br><br>
+The Specify Filter dialog box displays showing the current
+filter.<br><br></li>
+<li class=ds>
+Delete the filter expression, then click OK.<br><br></li></ol>
+<br><p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Filtered rows and updates</span> <A NAME="TI1137"></A>Filtered rows are updated when you update the database.</p>
+<A NAME="TI1138"></A><h4>Viewing row information</h4>
+<A NAME="TI1139"></A><p>You can display information about the data you have retrieved.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To display row information:</p>
+<ol><li class=fi>
+Select Rows&gt;Described from the
+menu bar.<br><br>
+The Describe Rows dialog box displays showing the number of:<br><br>
+<A NAME="TI1140"></A>
+<ul>
+<li class=fi>Rows that have been
+deleted in the painter <i>but not yet deleted from the database</i>
+</li>
+<li class=ds>Rows displayed in Preview</li>
+<li class=ds>Rows that have been filtered</li>
+<li class=ds>Rows that have been modified in the painter <i>but
+not yet modified in the database</i>
+
+</li>
+</ul>
+<br><br></li></ol>
+<br><A NAME="TI1141"></A><p>All row counts are zero until you retrieve the data from the
+database or add a new row. The count changes when you modify the
+displayed data or test filter criteria.</p>
+<A NAME="TI1142"></A><h4>Importing data</h4>
+<A NAME="TI1143"></A><p>You can import data from an external source and then save
+the imported data in the database.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To import data:</p>
+<ol><li class=fi>
+Select Rows&gt;Import from the menu
+bar.<br><br>
+The Select Import File dialog box displays.<br><br></li>
+<li class=ds>
+Specify the file from which you want to import
+the data. <br><br>
+The types of files that you can import into the painter are
+shown in the Files of Type dropdown listbox.<br><br></li>
+<li class=ds>
+Click Open.<br><br>
+InfoMaker reads the data from the file. You can then click
+the Save Changes button or select Rows&gt;Update to add the
+new rows to the database.<br><br></li></ol>
+<br><A NAME="TI1144"></A><h4>Printing data</h4>
+<A NAME="TI1145"></A><p>You can print the data displayed by selecting File&gt;Print
+from the menu bar. Before printing, you can also preview the output
+on the screen.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To preview printed output before printing:</p>
+<ol><li class=fi>
+Select File&gt;Print Preview from
+the menu bar.<br><br>
+Preview displays the data as it will print. To display rulers
+around the page borders in Print Preview, select File&gt;Print
+Preview Rulers.<br><br></li>
+<li class=ds>
+To change the magnification used in Print Preview,
+select File&gt;Print Preview Zoom from the menu bar.<br><br>
+The Zoom dialog box displays.<br><br></li>
+<li class=ds>
+Select the magnification you want and click OK.<br><br>
+Preview zooms in or out as appropriate.<br><br></li>
+<li class=ds>
+When you have finished looking at the print layout,
+select File&gt;Print Preview from the menu bar again.<br><br></li></ol>
+<br><A NAME="TI1146"></A><h4>Saving data</h4>
+<A NAME="TI1147"></A><p>You can save the displayed data in an external file.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To save the data in an external file:</p>
+<ol><li class=fi>
+Select Rows&gt;Save Rows As from
+the menu bar.<br><br>
+The Save Rows As dialog box displays.<br><br></li>
+<li class=ds>
+Choose a format for the file. <br><br>
+You can select from several formats, including Powersoft report
+(PSR) or HTML. <br><br>
+If you want the column headers saved in the file, select a
+file format that includes headers, such as Excel With Headers. When
+you select a <i>with headers</i>
+ format, the names
+of the database columns (not the column labels) will also be saved
+in the file.<br><br>
+For more information, see <A HREF="imugp53.htm#CAIBAHHD">"Saving data in an external
+file"</A>. <br><br></li>
+<li class=ds>
+Name the file and save it.<br><br>
+InfoMaker saves all displayed rows in the file; all columns
+in the displayed rows are saved. Filtered rows are not saved.<br><br></li></ol>
+<br>

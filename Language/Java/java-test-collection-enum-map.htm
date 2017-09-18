@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+	<script type="text/javascript" src="../../mylib/js/css.js"></script>
+	<title>Java 练习题 - 遍历 Map</title>
+</head>
+
+<body>
+	<p id="title">Java 练习题 - 遍历 Map</p>
+	<h1>要求</h1>
+    <p>遍历 Map 的所有元素, 打印 key 及 Value</p>
+    <h1>示例代码</h1>
+    <pre class="code" data-type="java">Map&lt;Integer, String&gt; map = new HashMap&lt;Integer, String&gt;();
+
+for (int i = 1; i &lt; 10; i++) {
+	map.put(i, &quot;Val&quot; + i);
+}
+
+Iterator&lt;Entry&lt;Integer, String&gt;&gt; iterator = map.entrySet().iterator();
+
+while (iterator.hasNext()) {
+	Entry&lt;Integer, String&gt; currentEntry = iterator.next();
+	System.out.println(String.format(&quot;%d: %s&quot;, currentEntry.getKey(), currentEntry.getValue()));			
+}
+</pre>
+	</body>
+</html>

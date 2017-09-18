@@ -1,0 +1,66 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+Year</TITLE>
+</HEAD>
+<BODY>
+<A NAME="CAICAIAI"></A><A NAME="TI8200"></A><h1>Year</h1>
+<A NAME="TI8201"></A><p>
+<FORM>
+<INPUT
+ TYPE = "BUTTON"
+ VALUE = "Examples"
+ onClick = "window.location = 'imugp255.htm#EX107';">
+<INPUT
+  TYPE = "BUTTON"
+ VALUE = "See also"
+ onClick = "window.location = 'imugp255.htm#SA107';">
+</FORM>
+</p>
+<h3>Description</h3><A NAME="TI8202"></A><p>Gets the year of a date value.</p>
+
+<h3>Syntax</h3><pre><b>Year</b> ( <i>date</i> )</pre>
+<A NAME="TI8203"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI8204"></A>Argument</th>
+<th align="left" valign=bottom><A NAME="TI8205"></A>Description</th>
+</tr>
+<tr><td valign=top><A NAME="TI8206"></A><i>date</i></td>
+<td valign=top><A NAME="TI8207"></A>The date value from which you want the
+year</td>
+</tr>
+</table>
+
+<h3>Return Values</h3><A NAME="TI8208"></A><p>Integer. Returns an integer whose value is a 4-digit year
+adapted from the year portion of <i>date</i> if it
+succeeds and 1900 if an error occurs.</p>
+<A NAME="TI8209"></A><p>If the year is two digits, then the century is set as follows.
+If the year is between 00 to 49, the first two digits are 20; if
+the year is between 50 and 99, the first two digits are 19.</p>
+
+<h3>Usage</h3><A NAME="TI8210"></A><p>Obtains the year portion of <i>date</i>. Years
+from 1000 to 3000 inclusive are handled.</p>
+<A NAME="TI8211"></A><p>If your data includes dates before 1950, such as birth dates,
+always specify a 4-digit year so that Year (and other functions,
+such as Sort) interpret the date as intended.</p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Platform information for Windows</span> <A NAME="TI8212"></A>To make sure you get correct return values for the year, you
+must verify that yyyy is the Short Date Style for year in the Regional
+Settings of the user's Control Panel. Your program can
+check this with the RegistryGet function. </p>
+<A NAME="TI8213"></A>If the setting is not correct, you can ask the user to change
+it manually or to have the application change it (by calling the
+RegistrySet function). The user may need to reboot after the setting
+is changed.</p>
+
+<A NAME="EX107"></A><h3>Examples</h3><A NAME="TI8214"></A><p>This expression returns 1999:<pre><i>Year</i> (1999-01-31)</pre>
+</p>
+
+<A NAME="SA107"></A><h3>See Also</h3><A NAME="TI8215"></A><p><A NAME="TI8216"></A>
+<ul>
+<li class=fi><A HREF="imugp171.htm#CAICIECH">Day</A></li>
+<li class=ds><A HREF="imugp212.htm#CAIBDIIC">Month</A></li>
+<li class=ds> 
+</li>
+</ul>
+</p>
+
+<A NAME="TI8217"></A>

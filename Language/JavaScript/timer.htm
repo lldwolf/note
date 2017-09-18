@@ -1,0 +1,38 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>时钟</title>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+<p id="title">时钟</p>
+
+<p>一个简单的时钟例子</p>
+<pre>&lt;html&gt;
+&lt;head&gt;
+&lt;title&gt; test page &lt;/title&gt;
+&lt;script type=&quot;text/javascript&quot;&gt;
+function display_timer()
+{
+	var t = document.all[&quot;timer&quot;];
+	var d = new Date();
+	t.innerHTML = d.getYear() + &quot;-&quot; + (d.getMonth() + 1) + &quot;-&quot; + d.getDay() + &quot; &quot; + d.getHours() + &quot;:&quot; + d.getMinutes() + &quot;:&quot; + d.getSeconds();
+	setTimeout(&quot;display_timer()&quot;, 1000);
+}
+
+&lt;/script&gt;
+&lt;/head&gt;
+
+&lt;body onload=&quot;display_timer()&quot;&gt;
+&lt;form&gt;
+	&lt;p id=&quot;timer&quot;&gt;当前时间:&lt;/p&gt;
+&lt;/form&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</body>
+</html>

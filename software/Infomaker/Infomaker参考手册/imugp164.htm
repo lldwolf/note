@@ -1,0 +1,101 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+CrosstabMin</TITLE>
+</HEAD>
+<BODY>
+<A NAME="CAIBJFGH"></A><A NAME="TI6409"></A><h1>CrosstabMin</h1>
+<A NAME="TI6410"></A><p>
+<FORM>
+<INPUT
+ TYPE = "BUTTON"
+ VALUE = "Examples"
+ onClick = "window.location = 'imugp164.htm#EX16';">
+<INPUT
+  TYPE = "BUTTON"
+ VALUE = "See also"
+ onClick = "window.location = 'imugp164.htm#SA16';">
+</FORM>
+</p>
+<h3>Description</h3><A NAME="TI6411"></A><p>Calculates the minimum value returned by an expression in
+the values list of the crosstab. When the crosstab definition has
+more than one column, CrosstabMin can also calculate the minimum
+of the expression's values for groups of column values.</p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>For crosstabs only</span> <A NAME="TI6412"></A>You can use this function <i>only</i>
+ in a crosstab
+DataWindow object or report.</p>
+
+<h3>Syntax</h3><pre><b>CrosstabMin</b> ( <i>n</i> {, <i>column</i>, <i>groupvalue</i> } )</pre>
+<A NAME="TI6413"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI6414"></A>Argument</th>
+<th align="left" valign=bottom><A NAME="TI6415"></A>Description</th>
+</tr>
+<tr><td valign=top><A NAME="TI6416"></A><i>n</i></td>
+<td valign=top><A NAME="TI6417"></A>The number of the crosstab-values expression
+for which you want the minimum return value. The expression's
+data type must be numeric</td>
+</tr>
+<tr><td valign=top><A NAME="TI6418"></A><i>column</i> (optional)</td>
+<td valign=top><A NAME="TI6419"></A>The number of the crosstab column as
+it is listed in the Columns box of the Crosstab Definition dialog
+box for which you want intermediate calculations</td>
+</tr>
+<tr><td valign=top><A NAME="TI6420"></A><i>groupvalue</i> (optional)</td>
+<td valign=top><A NAME="TI6421"></A>A string whose value controls the grouping
+for the calculation. <i>Groupvalue</i> is usually
+a value from another column in the crosstab. To specify the current
+column value in a dynamic crosstab, rather than a specific value,
+specify @ plus the column name as a quoted string</td>
+</tr>
+</table>
+
+<h3>Return Values</h3><A NAME="TI6422"></A><p>Double. Returns the minimum value returned by expression <i>n</i> for
+all the column values or, optionally, for a subset of column values.</p>
+
+<h3>Usage</h3><A NAME="TI6423"></A><p>This function is meaningful <i>only</i>
+ for
+the minimum of the values of the expression in a <i>row</i>
+ in
+the crosstab. This means you can use it only in the detail band,
+not in a header, trailer, or summary band.</p>
+<A NAME="TI6424"></A><p>NULL values are ignored and are not included in the comparison.</p>
+<A NAME="TI6425"></A><p>For more information about restricting the
+calculation to groups of values when the crosstab definition has
+more than one column, see Usage for CrosstabAvg.</p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Reviewing the expressions</span> <A NAME="TI6426"></A>To review the expressions defined for the crosstab values,
+open the Crosstab Definition dialog box (select Design&gt;Crosstab
+from the menubar).</p>
+
+<A NAME="EX16"></A><h3>Examples</h3><A NAME="TI6427"></A><p>These examples all use the crosstab-values expressions
+shown below:<pre>Count(emp_id for crosstab),Sum(salary for crosstab)</pre>
+</p>
+<A NAME="TI6428"></A><p>This expression for a computed field in the crosstab
+returns the minimum of the employee counts (the first expression):<pre><i>CrosstabMin</i> (1)</pre>
+</p>
+<A NAME="TI6429"></A><p>This expression for a computed field in the crosstab
+returns the minimum of the salary totals (the second expression):<pre><i>CrosstabMin</i> (2)</pre>
+</p>
+<A NAME="TI6430"></A><p>The next two examples use a crosstab with two columns
+(year and quarter), a row (product), and the values expression Avg(sales
+for crosstab).</p>
+<A NAME="TI6431"></A><p>This expression for a computed field returns the smallest
+of the quarterly average sales for each year:<pre><i>CrosstabMin</i> (1, 2, "@year")</pre>
+</p>
+<A NAME="TI6432"></A><p>This expression for a computed field returns the
+minimum of all the average sales in the row:<pre><i>CrosstabMin</i> (1)</pre>
+</p>
+<A NAME="TI6433"></A><p>For an example illustrating how the painter automatically
+defines a crosstab by creating computed fields using the crosstab
+functions, see CrosstabAvg.</p>
+
+<A NAME="SA16"></A><h3>See Also</h3><A NAME="TI6434"></A><p><A NAME="TI6435"></A>
+<ul>
+<li class=fi><A HREF="imugp161.htm#CAICGAGE">CrosstabAvg</A></li>
+<li class=ds><A HREF="imugp162.htm#CAIBCHGE">CrosstabCount</A></li>
+<li class=ds><A HREF="imugp163.htm#CAIDGJBH">CrosstabMax</A></li>
+<li class=ds><A HREF="imugp165.htm#CAIBIJHD">CrosstabSum</A>
+</li>
+</ul>
+</p>
+
+

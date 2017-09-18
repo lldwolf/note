@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>DevExpress.XtraGrid.GridControl</title>
+<script type="text/javascript" src="../../../mylib/js/css.js"></script>
+
+<style type="text/css">
+.first_class {font-family:宋体; font-weight:bold; font-size:16px; text-align:center; layout-flow:vertical-ideographic}
+.second_class {font-weight: bold}
+</style>
+</head>
+
+<body>
+<p id="title">GridControl - Get Started</p>
+<h1>快速入门</h1>
+<h2>设定数剧源</h2>
+<p>GridControl控件实际上分为两个部分：GridControl和GridView。我们平时对其作的大部分操作，事实上都是对GridView的操作。GridControl最常用的操作只有两个：</p>
+<ol>
+	<li>设定数据源</li>
+	<li>设定导航按钮</li>
+</ol>
+<p>OK，下面我开始一个最简单的例子，关键代码如下所示：</p>
+<pre>DataTable tb = new DataTable();
+//生成数据...
+this.gridControl1.DataSource = tb;</pre>
+<p>Very easy，不是吗？至于如何对表格的样式做出复杂的控制，请关注以后的内容。</p>
+<script type="text/javascript" src="grid_index.js"></script>
+</body>
+</html>

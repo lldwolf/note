@@ -1,0 +1,130 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+First</TITLE>
+</HEAD>
+<BODY>
+<A NAME="CAIDEIJH"></A><A NAME="TI6684"></A><h1>First</h1>
+<A NAME="TI6685"></A><p>
+<FORM>
+<INPUT
+ TYPE = "BUTTON"
+ VALUE = "Examples"
+ onClick = "window.location = 'imugp179.htm#EX31';">
+<INPUT
+  TYPE = "BUTTON"
+ VALUE = "See also"
+ onClick = "window.location = 'imugp179.htm#SA31';">
+</FORM>
+</p>
+<h3>Description</h3><A NAME="TI6686"></A><p>Reports the value in the first row in the specified column.</p>
+
+<h3>Syntax</h3><pre><b>First</b> ( <i>column</i> { FOR <i>range </i> { DISTINCT { <i>expresn </i> {, <i>expres2</i> {, ... } } } } } )</pre>
+<A NAME="TI6687"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI6688"></A>Argument</th>
+<th align="left" valign=bottom><A NAME="TI6689"></A>Description</th>
+</tr>
+<tr><td valign=top><A NAME="TI6690"></A><i>column</i></td>
+<td valign=top><A NAME="TI6691"></A>The column for which you want the value
+of the first row. <i>Column</i> can be a column name
+or a column number preceded by a pound sign (#). <i>Column</i> can
+also be an expression that includes a reference to the column</td>
+</tr>
+<tr><td valign=top><A NAME="TI6692"></A>FOR <i>range</i>  (optional)</td>
+<td valign=top><A NAME="TI6693"></A>The data that will be included when the
+value in the first row is found. For most presentation styles, values
+for <i>range</i> are:<A NAME="TI6694"></A><A NAME="TI6695"></A>
+<ul>
+<li class=fi>ALL -- (Default)
+The value in the first of all rows in <i>column</i></li>
+<li class=ds>GROUP <i>n</i> -- The value
+in the first of rows in <i>column</i> in the specified
+group. Specify the keyword GROUP followed by the group number: for
+example, GROUP 1</li>
+<li class=ds>PAGE -- The value in the first of the rows
+in <i>column</i> on a page
+</li>
+</ul>
+<A NAME="TI6696"></A>For Crosstabs, specify CROSSTAB for <i>range</i>:<A NAME="TI6697"></A><A NAME="TI6698"></A>
+<ul>
+<li class=fi>CROSSTAB -- (Crosstabs
+only) The value in the first of all rows in <i>column</i> in
+the crosstab
+</li>
+</ul>
+<A NAME="TI6699"></A>For Graph and OLE objects, specify one of the following:<A NAME="TI6700"></A><A NAME="TI6701"></A>
+<ul>
+<li class=fi>GRAPH -- (Graphs
+only) The value in the first row in <i>column</i> in
+the range specified for the Rows option</li>
+<li class=ds>OBJECT -- (OLE objects only) The value in
+the first row in <i>column</i> in the range specified
+for the Rows option 
+</li>
+</ul>
+</td>
+</tr>
+<tr><td valign=top><A NAME="TI6702"></A>DISTINCT (optional)</td>
+<td valign=top><A NAME="TI6703"></A>Causes First to consider only the distinct
+values in <i>column</i> when determining the first
+value. For a value of <i>column</i>, the first row found
+with the value is used and other rows that have the same value are
+ignored</td>
+</tr>
+<tr><td valign=top><A NAME="TI6704"></A><i>expresn</i>  (optional)</td>
+<td valign=top><A NAME="TI6705"></A>One or more expressions that you want
+to evaluate to determine distinct rows. <i>Expresn</i> can
+be the name of a column, a function, or an expression</td>
+</tr>
+</table>
+
+<h3>Return Values</h3><A NAME="TI6706"></A><p>The data type of the column. Returns the value in the first
+row of <i>column</i>. If you specify <i>range</i>,
+First returns the value of the first row in <i>column</i> in <i>range</i>.</p>
+
+<h3>Usage</h3><A NAME="TI6707"></A><p>If you specify <i>range</i>, First determines
+the value of the first row in <i>column</i> in <i>range</i>.
+If you specify DISTINCT, First returns the first distinct value
+in <i>column</i>, or if you specify <i>expresn</i>,
+the first distinct value in <i>column</i> where the
+value of <i>expresn</i> is distinct.</p>
+<A NAME="TI6708"></A><p>For graphs and OLE objects, you do not select the range when
+you call the function. The range has already been determined by
+the Rows setting on the Data property page (the Range property),
+and the aggregation function uses that range. Settings for Rows
+include:</p>
+<A NAME="TI6709"></A><p><A NAME="TI6710"></A>
+<ul>
+<li class=fi>For the Graph or OLE
+presentation style, Rows is always All.</li>
+<li class=ds>For Graph controls, Rows can be All, Page, or Group.</li>
+<li class=ds>For OLE controls, Rows can be All, Current Row,
+Page, or Group. The available choices depend on the layer the control
+occupies.
+</li>
+</ul>
+</p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Not in validation rules or filter expressions</span> <A NAME="TI6711"></A>You cannot use this or other aggregate functions in validation
+rules or filter expressions.</p>
+<A NAME="TI6712"></A><p>Using an aggregate function cancels the effect of setting
+Retrieve Rows As Needed in the painter. To do the aggregation, a
+DataWindow object or a report always retrieves all rows.</p>
+
+<A NAME="EX31"></A><h3>Examples</h3><A NAME="TI6713"></A><p>This expression returns the first value in column
+3 on the page:<pre><i>First</i> (#3 for page)</pre>
+</p>
+<A NAME="TI6714"></A><p>This expression returns the first distinct value
+in the column named dept_id in group 2:<pre><i>First</i> (dept_id for group 2 DISTINCT)</pre>
+</p>
+<A NAME="TI6715"></A><p>This expression returns the first value in the column
+named dept_id in group 2:<pre><i>First</i> (dept_id for group 2)</pre>
+</p>
+
+<A NAME="SA31"></A><h3>See Also</h3><A NAME="TI6716"></A><p><A NAME="TI6717"></A>
+<ul>
+<li class=fi><A HREF="imugp194.htm#CAICJIGC">Last</A>
+</li>
+</ul>
+</p>
+
+

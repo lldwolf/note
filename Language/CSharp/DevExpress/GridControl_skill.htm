@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>DevExpress.XtraGrid.GridControl</title>
+<script type="text/javascript" src="../../../mylib/js/css.js"></script>
+
+<style type="text/css">
+.first_class {font-family:宋体; font-weight:bold; font-size:16px; text-align:center; layout-flow:vertical-ideographic}
+.second_class {font-weight: bold}
+</style>
+</head>
+
+<body>
+<p id="title">GridControl - Skill</p>
+
+<h1>Skill</h1>
+<h2>允许用户拖动列，但不能将列删除</h2>
+<pre>private void gridview1_DragObjectOver(object sender, DevExpress.XtraGrid.Views.Base.DragObjectOverEventArgs e)
+{
+    GridColumn column = e.DragObject as GridColumn;
+    if (column != null && e.DropInfo.Index < 0)
+    {
+        e.DropInfo.Valid = false;
+    }
+}</pre>
+<script type="text/javascript" src="grid_index.js"></script>
+</body>
+</html>

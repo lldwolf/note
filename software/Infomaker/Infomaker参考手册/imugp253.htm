@@ -1,0 +1,150 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+VarP</TITLE>
+</HEAD>
+<BODY>
+<A NAME="CAICBCBD"></A><A NAME="TI8152"></A><h1>VarP</h1>
+<A NAME="TI8153"></A><p>
+<FORM>
+<INPUT
+ TYPE = "BUTTON"
+ VALUE = "Examples"
+ onClick = "window.location = 'imugp253.htm#EX105';">
+<INPUT
+  TYPE = "BUTTON"
+ VALUE = "See also"
+ onClick = "window.location = 'imugp253.htm#SA105';">
+</FORM>
+</p>
+<h3>Description</h3><A NAME="TI8154"></A><p>Calculates the variance for the specified column. The variance
+is the square of the standard deviation.</p>
+
+<h3>Syntax</h3><pre><b>VarP</b> ( <i>column</i> { FOR <i>range</i> { DISTINCT { <i>expres1</i> {, <i>expres2</i> {, ... } } } } } )</pre>
+<A NAME="TI8155"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI8156"></A>Argument</th>
+<th align="left" valign=bottom><A NAME="TI8157"></A>Description</th>
+</tr>
+<tr><td valign=top><A NAME="TI8158"></A><i>column</i></td>
+<td valign=top><A NAME="TI8159"></A>The column for which you want the variance
+of the values in the rows. <i>Column</i> can be the
+column name or the column number preceded by a pound sign (#). <i>Column</i> can
+also be an expression that includes a reference to the column. The
+data type of <i>column</i> must be numeric</td>
+</tr>
+<tr><td valign=top><A NAME="TI8160"></A>FOR <i>range</i>  (optional)</td>
+<td valign=top><A NAME="TI8161"></A>The data that will be included in the
+variance. For most presentation styles, values for <i>range</i> are:<A NAME="TI8162"></A><A NAME="TI8163"></A>
+<ul>
+<li class=fi>ALL -- (Default)
+The variance for all rows in <i>column</i></li>
+<li class=ds>GROUP <i>n</i> -- The variance
+for rows in <i>column</i> in the specified group.
+Specify the keyword GROUP followed by the group number: for example,
+GROUP 1</li>
+<li class=ds>PAGE -- The variance for the rows in <i>column</i> on
+a page
+</li>
+</ul>
+<A NAME="TI8164"></A>For Crosstabs, specify CROSSTAB for <i>range</i>:<A NAME="TI8165"></A><A NAME="TI8166"></A>
+<ul>
+<li class=fi>CROSSTAB -- (Crosstabs
+only) The variance for all rows in <i>column</i> in
+the crosstab
+</li>
+</ul>
+<A NAME="TI8167"></A>For Graph and OLE objects, specify one of the following:<A NAME="TI8168"></A><A NAME="TI8169"></A>
+<ul>
+<li class=fi>GRAPH -- (Graphs
+only) The variance for rows in <i>column</i> in the
+range specified for the Rows option</li>
+<li class=ds>OBJECT -- (OLE objects only) The variance
+for rows in <i>column</i> in the range specified for
+the Rows option 
+</li>
+</ul>
+</td>
+</tr>
+<tr><td valign=top><A NAME="TI8170"></A>DISTINCT (optional)</td>
+<td valign=top><A NAME="TI8171"></A>Causes VarP to consider only the distinct
+values in <i>column</i> when determining the variance.
+For a value of <i>column</i>, the first row found with
+the value is used and other rows that have the same value are ignored</td>
+</tr>
+<tr><td valign=top><A NAME="TI8172"></A><i>expresn</i>  (optional)</td>
+<td valign=top><A NAME="TI8173"></A>One or more expressions that you want
+to evaluate to determine distinct rows. <i>Expresn</i> can
+be the name of a column, a function, or an expression</td>
+</tr>
+</table>
+
+<h3>Return Values</h3><A NAME="TI8174"></A><p>Double. Returns the variance for <i>column</i>.
+If you specify <i>group</i>, Var returns the variance
+for <i>column</i> within <i>range</i>.</p>
+
+<h3>Usage</h3><A NAME="TI8175"></A><p>If you specify <i>range</i>, VarP returns the
+variance for <i>column</i> within <i>range</i>.
+If you specify DISTINCT, VarP returns the variance for the distinct
+values in <i>column</i> or if you specify <i>expresn</i>,
+the variance of the rows in <i>column</i> where the
+value of <i>expresn</i> is distinct.</p>
+<A NAME="TI8176"></A><p>For graphs and OLE objects, you do not select the range when
+you call the function. The range has already been determined by
+the Rows setting on the Data property page (the Range property),
+and the aggregation function uses that range. Settings for Rows
+include:</p>
+<A NAME="TI8177"></A><p><A NAME="TI8178"></A>
+<ul>
+<li class=fi>For the Graph or OLE
+presentation style, Rows is always All.</li>
+<li class=ds>For Graph controls, Rows can be All, Page, or Group.</li>
+<li class=ds>For OLE controls, Rows can be All, Current Row,
+Page, or Group. The available choices depend on the layer the control
+occupies.
+</li>
+</ul>
+</p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <p><b>Estimating variance or calculating actual
+variance</b>   VarP assumes that the values in <i>column</i> are
+the values in all rows in the column in the database table. If you
+did not select all the rows in the column in the SELECT statement,
+use Var to compute an estimate of the variance of a sample.</p>
+<p><b>Not in validation rules or filter expressions</b>   You cannot use this or other aggregate functions in validation
+rules or filter expressions.</p>
+<A NAME="TI8179"></A><p>Using an aggregate function cancels the effect of setting
+Retrieve Rows As Needed in the painter. To do the aggregation, a
+DataWindow object or report always retrieves all rows.</p>
+
+<A NAME="EX105"></A><h3>Examples</h3><A NAME="TI8180"></A><p>These examples all assume that the SELECT statement
+retrieved all rows in the database table. VarP is intended to work
+with a full set of data, not a subset.</p>
+<A NAME="TI8181"></A><p>This expression returns the variance of the values in the
+column named salary:<pre><i>VarP</i> (salary)</pre>
+</p>
+<A NAME="TI8182"></A><p>This expression returns the variance of the values
+in group 1 in the column named salary:<pre><i>VarP</i> (salary for group 1)</pre>
+</p>
+<A NAME="TI8183"></A><p>This expression returns the variance of the values
+in column 4 on the page:<pre><i>VarP</i> (#4 for page)</pre>
+</p>
+<A NAME="TI8184"></A><p>This expression entered in the Value box on the Data
+property page in the graph's property sheet returns the
+variance of the values in quantity column in the graph:<pre><i>VarP</i> (quantity for graph)</pre>
+</p>
+<A NAME="TI8185"></A><p>This expression for a computed field in a crosstab
+returns the variance of the values in quantity column in the crosstab:<pre><i>VarP</i> (quantity for crosstab)</pre>
+</p>
+<A NAME="TI8186"></A><p>Assuming a DataWindow object displays the order number,
+amount, and line items for each order, this computed field returns
+the variance of the order amount for the distinct order numbers:<pre><i>VarP</i> (order_amt for all DISTINCT order_nbr)</pre>
+</p>
+
+<A NAME="SA105"></A><h3>See Also</h3><A NAME="TI8187"></A><p><A NAME="TI8188"></A>
+<ul>
+<li class=fi><A HREF="imugp243.htm#CAIBCFHF">StDevP</A></li>
+<li class=ds><A HREF="imugp252.htm#CAIDJBFB">Var</A>
+</li>
+</ul>
+</p>
+
+

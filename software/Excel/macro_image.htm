@@ -1,0 +1,78 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>操作图形</title>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+<h1>第N章 操作图形</h1>
+<hr />
+<h2>N.1 AddPicture方法</h2>
+<p>从原有文件中创建图片。返回一个 Shape 对象，该对象代表新图片。语法如下：</p>
+<pre>expression.AddPicture(FileName, LinkToFile, SaveWithDocument, Left, Top, Width, Height)</pre>
+<p>参数说明：</p>
+<table width="80%">
+	<tr>
+		<th width="20%">参数名</th>
+		<th width="80%">描述</th>
+	</tr>
+	<tr>
+		<td>FileName</td>
+		<td>String 类型，必需。要创建的 OLE 对象的源文件。</td>
+	</tr>
+	<tr>
+		<td>LinkToFile</td>
+		<td>MsoTriState 类型，必需。要链接至的文件。可为以下 MsoTriState 常量之一。 
+	<ul>
+			<li>msoCTrue</li>
+			<li>msoFalse  使图片成为其源文件的独立副本。 </li>
+			<li>msoTriStateMixed </li>
+			<li>msoTriStateToggle</li>
+			<li>msoTrue 建立图片与其源文件之间的链接。 </li>
+		</ul>
+		其实可以简单地用Boolean值代替</td>
+	</tr>
+	<tr>
+		<td>SaveWithDocument      </td>
+		<td>MsoTriState 类型，必需。将图片与文档一起保存。
+<ul>
+			<li>MsoTriState 可为以下 MsoTriState 常量之一。 </li>
+			<li>msoCTrue </li>
+			<li>msoFalse 在文档中只保存链接信息。 </li>
+			<li>msoTriStateMixed </li>
+			<li>msoTriStateToggle </li>
+			<li>msoTrue 将链接图片与该图片插入的文档一起保存。如果 LinkToFile 为 msoFalse，则该参数必须为 msoTrue。 </li>
+		</ul>其实可以简单地用Boolean值代替/td>
+	</tr>
+	<tr>
+		<td>Left</td>
+		<td>Single 类型，必需。相对于文档的左上角，以磅为单位给出图片左上角的位置。</td>
+	</tr>
+	<tr>
+		<td>Top</td>
+		<td>Single 类型，必需。相对于文档的顶部，以磅为单位给出图片左上角的位置。</td>
+	</tr>
+	<tr>
+		<td>Width</td>
+		<td>Single 类型，必需。以磅为单位给出图片的宽度。</td>
+	</tr>
+	<tr>
+		<td>Height</td>
+		<td>Single 类型，必需。以磅为单位给出图片的高度。</td>
+	</tr>
+</table>
+<p>下面是示例代码，在坐标(100, 100)处插入路径为“c:\1.jpg”的图片，宽和高均设为70：</p>
+<pre>Dim myDocument As Excel.Worksheet
+Dim oShape as Excel.Shape
+Set myDocument = Worksheets(1)
+Set oShape = myDocument.Shapes.AddPicture _
+    "c:\microsoft office\clipart\music.bmp", _
+    True, True, 100, 100, 70, 70</pre>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+
+</body>
+</html>

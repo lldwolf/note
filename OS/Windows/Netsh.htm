@@ -1,0 +1,113 @@
+<html><head>
+<title>网络天地 - 技术天地</title>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<link rel="stylesheet" type="text/css" href="Netsh_files/all.css">
+<script language="JavaScript" src="Netsh_files/all.js"></script>
+<script language="JavaScript" src="Netsh_files/TopAndBottom.js"></script>
+<script language="JavaScript" src="Netsh_files/Tech.js"></script>
+</head><body leftmargin="0" topmargin="0">
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tbody><tr> 
+    <td valign="top"><table align="center" border="0" cellpadding="0" cellspacing="0" width="95%">
+        <tbody><tr> 
+          <td align="right">&nbsp;             </td>
+        </tr>
+        <tr> 
+          <td height="22" valign="top">
+            <table border="0" cellpadding="0" cellspacing="0" width="100%">
+              <tbody><tr> 
+                <td class="TechTitle" valign="top" width="50%">配置网络，另僻蹊径——Netsh命令</td>
+              </tr>
+            </tbody></table>
+            </td>
+        </tr>
+        <tr> 
+          <td height="8" valign="top"><img src="Netsh_files/Blank.gif" height="5" width="1"></td>
+        </tr>
+        <tr> 
+          <td height="19" valign="top"> <table border="0" cellpadding="0" cellspacing="0" width="100%">
+              <tbody><tr> 
+                <td><font color="#999999">作者：帷 幄&nbsp;&nbsp;&nbsp;来源：个人电脑</font></td>
+                <td align="right"><font color="#999999">2004-12-27</font></td>
+              </tr>
+            </tbody></table></td>
+        </tr>
+        <tr> 
+          <td background="Netsh_files/Line_H_01.gif" height="1"><img src="Netsh_files/Line_H_01.gif" height="1" width="15"></td>
+        </tr>
+        <tr> 
+          <td>&nbsp;</td>
+        </tr>
+        <tr> 
+          <td valign="top">
+            <table border="0" cellpadding="0" cellspacing="0" width="100%">
+              <tbody><tr> 
+                <td class="TechContent" valign="top"><p>上
+网冲浪之前，必须正确配置好网络参数，而配置参数通常需要在TCP/IP属性窗口中进行；倘若你突然发现自己无法打开TCP/IP属性窗口时（例如系统染
+上病毒，或无意中删除了网络组件，都能引发这种现象），是不是就束手无策了呢？其实，Win2000以上版本的操作系统，都支持在DOS环境下配置网络参
+数的功能。只要利用Netsh命令，进入到DOS下的网络配置状态，就能实现各种网络配置。 </p>
+                <p><strong>进入IP设置模式</strong></p>
+                <p align="center">                  <img src="Netsh_files/T10426_1.jpg" height="152" width="400">                </p>
+                <p>
+在DOS环境中，设置网络参数之前，必须先进入IP设置模式才可以。先打开系统运行对话框，执行“CMD”命令，将主界面切换到DOS环境中，在命令行中
+输入“Netsh”命令，单击回车键后，DOS命令提示符将自动变为“netsh&gt;”，再依次执行“Interface”|“IP”命令后，DOS
+命令提示符就会变成“Interface
+ip&gt;”（如图1所示），此时你就进入了IP设置模式。在该模式下，你可以利用“set”命令设置网络IP地址、网络掩码、DNS服务器，也可以利
+用“show”命令，查看各种网络参数，包括与本机建立的各种TCP/IP连接等。 </p>
+                <p> <strong>设置IP地址 </strong></p>
+                <p align="center"><img src="Netsh_files/T10426_2.jpg" height="165" width="400"></p>
+                <p>
+在IP设置模式下，执行“set address name static [addr] [mask] [gateway]
+[gwmetric]”命令，就能给指定网络连接分配IP地址、掩码地址、网关地址。其中，“set
+address”是设置IP地址的专用命令，name表示指定的网络连接名称，Win2000下的name应设置为“Internet连接”，
+WinXP、Win2003下的name应设置为“本地连接”；static是表示设置静态地址，“[addr]”指的是具体IP地址，“[mask]”
+指的是具体掩码地址，“[gateway]”指的是具体网关地址，“[gwmetric]”指的是具体网关跃点数，一般情况下，该数值应设置为“1”。
+</p>
+                <p>
+例如，现在要为局域网中的某Win2000工作站，分配一固定IP地址为“10.192.168.10”，同时将该工作站的掩码地址设置为
+“255.255.255.0”，将网关地址设置为“10.192.168.1”。那么你就可以在IP设置模式下，执行字符串命令“set
+address Internet连接 static 10.192.168.10 255.255.255.0 10.192.168.1
+1”，要不了多久，系统将会返回“确定”的提示（如图2所示），这表明IP地址设置成功。 </p>
+                <p> 倘若你是一位拨号用户，需要为自己的计算机分配一个动态IP地址时，就必须在IP设置模式下，输入字符串命令“set address
+                  Internet连接 source=dhcp”，单击回车键后，倘若系统返回“确定”提示，就表示为该计算机成功启用了DHCP服务，以后计算机的IP地址将会自动获取。 </p>
+                <p> <strong>设置DNS服务器 </strong></p>
+                <p align="center">                  <img src="Netsh_files/T10426_3.jpg" height="180" width="400">                </p>
+                <p>  在IP设置模式下，你还能为指定的网络连接设置DNS服务器，只要执行“set dns name static [addr]”命令就可以了。其中“set
+    dns”是设置DNS服务器的专用命令，“static”表示设置静态DNS服务器，“[addr]”是具体的DNS服务器IP地址。 </p>
+                <p> 例如，现在要将当前计算机的DNS服务器，设置为“202.100.100.202”时，那么你可以在IP设置模式下，输入字符串命令“set
+                  dns Internet连接 static 202.100.100.202”，单击回车后，系统将返回“确定”提示，这表明配置静态DNS服务器已经成功。此时，你可以执行“show
+                  dns”命令，看看当前计算机的DNS服务器，是否已经被设置成指定的IP地址了，如图3所示。 </p>
+                <p> 倘若需要为计算机启动动态DNS服务器时，可以执行“set dns Internet连接 source=dhcp”命令。</p>
+                <p><strong>查询配置信息</strong></p>
+                <p align="center">                  <img src="Netsh_files/T10426_4.jpg" height="207" width="400">                </p>
+                <p>  大家知道在DOS环境中，利用“Ipcon-fig”命令，也能查看到当前计算机的网络配置信息，可是该命令查看到的信息很有限，只限于IP地址、掩码地址、网关地址等。而在IP设置模式下，你能查看到各种网络配置信息。例如，执行“show
+      config”命令后，你除了可以看到“Ipconfig”命令能查询的信息外，还能知道网关跃点数是多少，DNS服务器是什么，WINS服务器是什么等。 </p>
+                <p> 执行“show tcpconn”命令，你能查看到当前有哪些Internet主机，与本地机器建立了连接，也可以查看到本地端口的工作状态，是处于关闭状态还是监听状态（如图4所示）。 </p>
+                <p> 灵活运用该命令，你能及时发现系统是否受到了外来入侵，要是有陌生的主机与本地主机的陌生端口，建立了连接时，那系统十有八九受到了攻击，此时你必须尽快采取措施，确保系统安全。 </p>
+                <p> 当然，Netsh还为你提供了许多查询网络信息的命令，例如查询IP统计信息的命令，查询TCP统计信息的命令，查询UDP、ICMP统计信息的命令等，这些命令使用都比较简单，在这里就不一一详细介绍了。 </p>
+                <p> <strong>快速修改配置 </strong></p>
+                <p align="center"><img src="Netsh_files/T10426_5.jpg" height="218" width="400"></p>
+                <p>  倘若你的笔记本电脑，需要在不同的网络环境中工作，那么每次工作之前，总需要重新修改网络参数，这实在太麻烦了。现在，你可以在Netsh模式下，很轻松地实现快速修改网络配置的目的，具体步骤为： </p>
+                <p>
+在DOS命令行状态下，输入字符串命令“netsh -c interface
+dump&gt;c:\net1.txt”，单击回车键后，当前工作站的网络配置信息，就全部被保存到C盘net1.txt文件中了（该文件保存着网络1
+环境中的上网参数）；下面，打开net1.txt文件，你可以看到如图5所示的配置信息，包括工作站的IP地址、掩码IP地址、网关IP地址等。现在，你
+可以用笔记本电脑可能使用到的其他网络环境中的配置参数，替换这里的对应参数，其余内容保持不变，然后再将该文本文件另存为“net2.txt”（该文件
+保存着网络2环境中的上网参数）；同样地，你可以生成net3.txt、net4.txt……netn.txt，让这些文件保存着网络3、网络4……网络
+n环境中的上网参数。 </p>
+                <p> 以后，笔记本电脑无论接入到哪个网络环境中，只要在DOS命令行状态下，执行“netsh exec c:\netn.txt”命令，就能实现快速修改网络配置的目的了（这里的“netn.txt”文件，必须对应着指定的网络环境）。</p>
+                </td>
+              </tr>
+            </tbody></table>
+            </td>
+        </tr>
+        <tr> 
+          <td height="35">&nbsp;</td>
+        </tr>
+      </tbody></table></td>
+    <td bgcolor="#f1f1f1"><img src="Netsh_files/Blank.gif" height="1" width="1"></td>
+  </tr>
+</tbody></table>
+<script language="JavaScript">Bottom();</script>
+</body>
+</html>

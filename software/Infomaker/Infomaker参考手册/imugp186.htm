@@ -1,0 +1,42 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+IsDate</TITLE>
+</HEAD>
+<BODY>
+<A NAME="CAIDHDBB"></A><A NAME="TI6809"></A><h1>IsDate</h1>
+<A NAME="TI6810"></A><p>
+<FORM>
+<INPUT
+ TYPE = "BUTTON"
+ VALUE = "Examples"
+ onClick = "window.location = 'imugp186.htm#EX38';">
+</FORM>
+</p>
+<h3>Description</h3><A NAME="TI6811"></A><p>Tests whether a string value is a valid date.</p>
+
+<h3>Syntax</h3><pre><b>IsDate</b> ( <i>datevalue</i> )</pre>
+<A NAME="TI6812"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI6813"></A>Argument</th>
+<th align="left" valign=bottom><A NAME="TI6814"></A>Description</th>
+</tr>
+<tr><td valign=top><A NAME="TI6815"></A><i>datevalue</i></td>
+<td valign=top><A NAME="TI6816"></A>A string whose value you want to test
+to determine whether it is a valid date</td>
+</tr>
+</table>
+
+<h3>Return Values</h3><A NAME="TI6817"></A><p>Boolean. Returns TRUE if <i>datevalue</i> is
+a valid date and FALSE if it is not.</p>
+
+<A NAME="EX38"></A><h3>Examples</h3><A NAME="TI6818"></A><p>This expression returns TRUE:<pre><i>IsDate</i> ("Jan 1, 99")</pre>
+</p>
+<A NAME="TI6819"></A><p>This expression returns FALSE:<pre><i>IsDate</i> ("Jan 32, 1999")</pre>
+</p>
+<A NAME="TI6820"></A><p>This expression for a computed field returns a day
+number or 0. If the date_received column contains a valid
+date, the expression returns the number of the day in date_received
+in the computed field , and otherwise returns 0:<pre>If(<i>IsDate</i> (String(date_received)),<br> DayNumber(date_received), 0)</pre>
+</p>
+
+

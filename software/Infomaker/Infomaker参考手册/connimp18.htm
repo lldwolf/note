@@ -1,0 +1,156 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+About the OLE DB interface</TITLE>
+</HEAD>
+<BODY>
+<A NAME="BCGBGBBJ"></A><h1>About the OLE DB interface</h1>
+<A NAME="TI400"></A><p>You can access a wide variety of data via OLE DB data providers
+in InfoMaker. This section describes what you need to know to use
+OLE DB connections to access your data in InfoMaker. </p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Supported OLE DB data providers</span> <A NAME="TI401"></A>For a complete list of the OLE DB data providers supplied
+with InfoMaker and the data they access, see "Supported Database
+Interfaces" in online Help.</p>
+<A NAME="TI402"></A><h2>What is OLE DB?</h2>
+<A NAME="TI403"></A><h4>The OLE DB API</h4>
+<A NAME="TI404"></A><p>OLE DB is a standard application programming interface (API)
+developed by Microsoft. It is a component of Microsoft's
+Data Access Components software. OLE DB allows an application to
+access a variety of data for which OLE DB data providers exist.
+It provides an application with uniform access to data stored in
+diverse formats, such as indexed-sequential files like Btrieve, personal
+databases like Corel Paradox, productivity tools such as spreadsheets and
+electronic mail, as well as SQL-based DBMSs. </p>
+<A NAME="TI405"></A><p>The OLE DB interface supports direct connections to SQL-based
+databases.</p>
+<A NAME="TI406"></A><h4>Accessing data via OLE DB</h4>
+<A NAME="TI407"></A><p>Applications that provide an OLE DB interface (like InfoMaker)
+can access data for which an OLE DB data provider exists. An <strong>OLE
+DB data provider </strong>is a dynamic link library (DLL) that
+implements OLE DB function calls. The application invokes the OLE
+DB data provider to access a particular data source.</p>
+<A NAME="TI408"></A><p>The InfoMaker OLE DB interface can connect to any OLE DB
+data provider that supports the following OLE DB object interfaces.
+An OLE DB data provider must support these interfaces in order to
+adhere to the Microsoft OLE DB 2.0 specification. </p>
+<A NAME="TI409"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><td valign=top><A NAME="TI410"></A>IAccessor</td>
+<td valign=top><A NAME="TI411"></A>IDBInitialize</td>
+</tr>
+<tr><td valign=top><A NAME="TI412"></A>IColumnsInfo</td>
+<td valign=top><A NAME="TI413"></A>IDBProperties</td>
+</tr>
+<tr><td valign=top><A NAME="TI414"></A>ICommand</td>
+<td valign=top><A NAME="TI415"></A>IOpenRowset</td>
+</tr>
+<tr><td valign=top><A NAME="TI416"></A>ICommandProperties</td>
+<td valign=top><A NAME="TI417"></A>IRowset</td>
+</tr>
+<tr><td valign=top><A NAME="TI418"></A>ICommandText</td>
+<td valign=top><A NAME="TI419"></A>IRowsetInfo</td>
+</tr>
+<tr><td valign=top><A NAME="TI420"></A>IDBCreateCommand</td>
+<td valign=top><A NAME="TI421"></A>IDBSchemaRowset</td>
+</tr>
+<tr><td valign=top><A NAME="TI422"></A>IDBCreateSession</td>
+<td valign=top><A NAME="TI423"></A>ISourcesRowset</td>
+</tr>
+</table>
+<A NAME="TI424"></A><p>In addition to the required OLE DB interfaces, InfoMaker also
+uses the following OLE DB interfaces to provide further functionality: </p>
+<A NAME="TI425"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI426"></A>OLE DB interface</th>
+<th align="left" valign=bottom><A NAME="TI427"></A>Use in InfoMaker</th>
+</tr>
+<tr><td valign=top><A NAME="TI428"></A>ICommandPrepare</td>
+<td valign=top><A NAME="TI429"></A>Preparing commands and retrieving column information</td>
+</tr>
+<tr><td valign=top><A NAME="TI430"></A>IDBInfo</td>
+<td valign=top><A NAME="TI431"></A>Querying the data provider for its properties.
+If this interface is not supported, database connections may fail </td>
+</tr>
+<tr><td valign=top><A NAME="TI432"></A>IDBCommandWithParameters</td>
+<td valign=top><A NAME="TI433"></A>Querying the data provider for parameters</td>
+</tr>
+<tr><td valign=top><A NAME="TI434"></A>IErrorInfo</td>
+<td valign=top><A NAME="TI435"></A>Providing error information</td>
+</tr>
+<tr><td valign=top><A NAME="TI436"></A>IErrorRecords</td>
+<td valign=top><A NAME="TI437"></A>Providing error information</td>
+</tr>
+<tr><td valign=top><A NAME="TI438"></A>IIndexDefinition</td>
+<td valign=top><A NAME="TI439"></A>Creating indexes for the extended attribute
+system tables. Also creating indexes in the Database painter. If
+this interface is not supported, InfoMaker looks for index definition
+syntax in the pbodb80.ini file</td>
+</tr>
+<tr><td valign=top><A NAME="TI440"></A>IMultipleResults</td>
+<td valign=top><A NAME="TI441"></A>Providing information</td>
+</tr>
+<tr><td valign=top><A NAME="TI442"></A>IRowsetChange</td>
+<td valign=top><A NAME="TI443"></A>Populating the extended attribute system
+tables when they are created. Also updating blobs</td>
+</tr>
+<tr><td valign=top><A NAME="TI444"></A>IRowsetUpdate</td>
+<td valign=top><A NAME="TI445"></A>Creating the extended attribute system
+tables </td>
+</tr>
+<tr><td valign=top><A NAME="TI446"></A>ISQLErrorInfo</td>
+<td valign=top><A NAME="TI447"></A>Providing error information</td>
+</tr>
+<tr><td valign=top><A NAME="TI448"></A>ISupportErrorInfo</td>
+<td valign=top><A NAME="TI449"></A>Providing error information</td>
+</tr>
+<tr><td valign=top><A NAME="TI450"></A>ITableDefinition</td>
+<td valign=top><A NAME="TI451"></A>Creating the extended attribute system
+tables. Also creating tables in the Database painter. If this interface
+is not supported, InfoMaker looks for table definition syntax in
+the pbodb80.ini file </td>
+</tr>
+<tr><td valign=top><A NAME="TI452"></A>ITransactionLocal</td>
+<td valign=top><A NAME="TI453"></A>Supporting transactions. If this interface
+is not supported, InfoMaker defaults to AutoCommit mode</td>
+</tr>
+</table>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>For up-to-date information</span> <A NAME="TI454"></A>As connectivity to data via additional OLE DB data providers
+is supported in future releases of InfoMaker, updated information
+will be available on the Sybase Web site. You should also check
+the Release Notes for the latest information about supported OLE
+DB data providers for your version of InfoMaker.</p>
+<A NAME="TI455"></A><h2>Components of an OLE DB connection</h2>
+<A NAME="TI456"></A><p>When you access an OLE DB data provider in InfoMaker, your
+connection goes through several layers before reaching the data
+provider. It is important to understand that each layer represents
+a separate component of the connection, and that each component
+may come from a different vendor. </p>
+<A NAME="TI457"></A><p>Because OLE DB is a standard API, InfoMaker uses the same
+interface to access every OLE DB data provider. As long as an OLE
+DB data provider supports the object interfaces required by InfoMaker, InfoMaker can
+access it through the OLE DB interface. </p>
+<A NAME="TI458"></A><p>The following diagram shows the general components of a OLE
+DB connection.</p>
+<br><img src="images/Cnw4ole.gif">
+<A NAME="TI459"></A><h2>Obtaining OLE DB data providers </h2>
+<A NAME="TI460"></A><p>There are two ways you can obtain OLE DB data providers for
+use with InfoMaker: <A NAME="TI461"></A>
+<ul>
+<li class=fi><b>From Sybase (recommended)</b>   Install one or more of the OLE DB data providers shipped with InfoMaker.
+You can do this either when you first install InfoMaker or later.</li>
+<li class=ds><b>From another vendor</b>   InfoMaker lets you access data with <i>any</i>
+ OLE DB
+data provider obtained from a vendor other than Sybase if that data provider
+supports the OLE DB object interfaces required by InfoMaker. In
+most cases, these drivers work with InfoMaker. However, Sybase may
+not have tested the drivers to verify this.
+</li>
+</ul>
+</p>
+<A NAME="TI462"></A><h2>Supported versions for OLE DB</h2>
+<A NAME="TI463"></A><p>The OLE DB interface uses a DLL named PBOLE80.DLL to access
+a database via an OLE DB data provider. </p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <p><b>Required OLE DB version</b>   To use the OLE DB interface to access an OLE DB database,
+you must connect via an OLE DB data provider that supports OLE DB
+Version 2.0 or higher.</p>
+<A NAME="TI464"></A>For information on OLE DB specifications,
+see <A HREF="www.microsoft.com/data">Microsoft's Universal Data Access Web site</A>
+.</p>
+

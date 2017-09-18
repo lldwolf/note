@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+    <script type="text/javascript" src="../../mylib/js/css.js"></script>
+    <title>ODP.NET</title>
+</head>
+
+<body>
+    <p id="title">ODP.NET使用</p>
+    <h1>Overview</h1>
+    <p>新版的 .net framework 已将 System.Data.OracleClient 移除，建议使用 ODP.Net</p>
+    <p>ODP.NET是ORACLE提供的对ORACLE数据库的.net组件，其类名及成员函数与微软的System.Data.OracleClient基本相同，可以从ORACLE网站上直接下载，安装后在visual studio .net的集成开发环境中选择引用即可看到在.net面板中有了“Oracle.DataAccess.dll”。</p>
+    <p>也可以使用 NuGet 直接搜索 ODP.NET 安装.</p>
+    <p>主要功能是多了以SYSDBA身份连接数据库的功能，只要在连接字符串中添加“DBA Privilege=SYSDBA”即可。</p>
+    <h1>示例</h1>
+    <h2>连接数据库</h2>
+    <pre class="code" data-type="csharp">string hostName = "hostname";
+string port = "port";
+string instanceName = "instance";
+string userId= "user";
+string password = "password";
+
+// simple format
+//string connectionString = "Data Source=TNS_Server;User ID=user;Password=password";
+
+// full format
+string connectionString = string.Format("Data Source=(DESCRIPTION=(ADDRESS_LIST=(ADDRESS=(PROTOCOL=TCP)(HOST={0})(PORT={1})))"
+        + "(CONNECT_DATA=(SERVER=DEDICATED)(SERVICE_NAME={2})));User Id={3};Password={4};", hostName, port, instanceName, userId, password);
+string queryString = "SELECT COL1, COL2 FROM TEST_TABLE WHERE ROWNUM &lt;= 10";
+OracleDataAdapter adapter = new OracleDataAdapter(queryString, connectionString);
+DataTable table = new DataTable();
+adapter.Fill(table);
+
+Console.WriteLine(string.Format("{0, 10}\t\t{1, -20}", "COL1", "COL2"));
+Console.WriteLine("".PadRight(60, '-'));
+
+foreach (DataRow row in table.Rows)
+{
+    Console.WriteLine(string.Format("{0, 10}\t\t{1, -20}", row["COL1"], row["COL2"]));
+}
+</pre>
+    <h2>OracelCommand</h2>
+    <h3>示例，执行一个带返回值的存储过程</h3>
+    <p>首先，在Oralce中创建存储过程如下：</p>
+    <pre class="code" data-type="csharp">create or replace procedure GetRecords(name_out out varchar2, age_in in varchar2) as
+begin
+  select NAME into name_out from test where AGE = age_in;
+end;</pre>
+    <p>然后，在C#项目中作如下调用：</p>
+    <pre class="code" data-type="csharp">string connectionString = "Data Source=YXZHANG;User ID=YXZHANG;Password=YXZHANG";      
+string queryString = "getrecords";                                                     
+OracleConnection cn = new OracleConnection(connectionString);                          
+OracleCommand cmd = new OracleCommand(queryString,cn);                                 
+cmd.CommandType = CommandType.StoredProcedure;                                         
+cmd.Parameters.Add("name_out",OracleType.VarChar,20);                                  
+cmd.Parameters["name_out"].Direction = ParameterDirection.Output;                      
+cmd.Parameters.Add("age_in",21);                                                       
+                                                                                       
+try                                                                                    
+{                                                                                      
+    cn.Open();                                                                         
+    cmd.ExecuteNonQuery();                                                             
+    Console.WriteLine("Name is:{0}",cmd.Parameters["name_out"].Value.ToString());      
+    cn.Close();                                                                        
+}                                                                                      
+catch( OracleException ex )                                                            
+{                                                                                      
+    Console.WriteLine("Exception occurred!");                                          
+    Console.WriteLine("The exception message is:{0}",ex.Message.ToString());           
+}                                                                                      
+finally                                                                                
+{                                                                                      
+    Console.WriteLine("------------------End-------------------");
+}</pre>
+
+</body>
+</html>

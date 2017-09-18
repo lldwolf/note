@@ -1,0 +1,390 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+Operators used in InfoMaker expressions</TITLE>
+</HEAD>
+<BODY>
+<A NAME="CAIBGIBI"></A><h1>Operators used in InfoMaker expressions</h1>
+<A NAME="TI5676"></A><p>An operator is a symbol or word in an expression that performs
+an arithmetic calculation or logical operation; compares numbers,
+text, or values; or manipulates text strings. </p>
+<A NAME="TI5677"></A><p>Four types of operators are available:<A NAME="TI5678"></A>
+<ul>
+<li class=fi><b>Arithmetic</b>   for numeric data types. See <A HREF="imugp145.htm#CHDBGFEG">"Arithmetic operators in InfoMaker expressions"</A>.</li>
+<li class=ds><b>Relational</b>   for all data types. See <A HREF="imugp145.htm#CHDDBJGB">"Relational operators in InfoMaker expressions"</A>.</li>
+<li class=ds><b>Logical</b>   for all data types. See <A HREF="imugp145.htm#CHDDFDEC">"Logical operators in InfoMaker expressions"</A>.</li>
+<li class=ds><b>Concatenation</b>   for string data types. See <A HREF="imugp145.htm#CHDBFEBE">"Concatenation operator in InfoMaker expressions"</A>.
+</li>
+</ul>
+</p>
+<A NAME="CHDBGFEG"></A><h2>Arithmetic operators in InfoMaker expressions</h2>
+<A NAME="TI5679"></A><p>When you write an expression, you can use the following arithmetic
+operators: </p>
+<A NAME="TI5680"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI5681"></A>Operator</th>
+<th align="left" valign=bottom><A NAME="TI5682"></A>Meaning</th>
+<th align="left" valign=bottom><A NAME="TI5683"></A>Example</th>
+</tr>
+<tr><td valign=top><A NAME="TI5684"></A>+</td>
+<td valign=top><A NAME="TI5685"></A>Addition</td>
+<td valign=top><A NAME="TI5686"></A>SubTotal + Tax</td>
+</tr>
+<tr><td valign=top><A NAME="TI5687"></A>-</td>
+<td valign=top><A NAME="TI5688"></A>Subtraction</td>
+<td valign=top><A NAME="TI5689"></A>Price - Discount</td>
+</tr>
+<tr><td valign=top><A NAME="TI5690"></A>*</td>
+<td valign=top><A NAME="TI5691"></A>Multiplication</td>
+<td valign=top><A NAME="TI5692"></A>Quantity * Price</td>
+</tr>
+<tr><td valign=top><A NAME="TI5693"></A>/</td>
+<td valign=top><A NAME="TI5694"></A>Division</td>
+<td valign=top><A NAME="TI5695"></A>Discount / Price</td>
+</tr>
+<tr><td valign=top><A NAME="TI5696"></A>^</td>
+<td valign=top><A NAME="TI5697"></A>Exponentiation</td>
+<td valign=top><A NAME="TI5698"></A>Rating ^ 2.5</td>
+</tr>
+</table>
+<A NAME="TI5699"></A><h4>Multiplication and division</h4>
+<A NAME="TI5700"></A><p>Multiplication and division are carried out to full precision
+(16-18 digits). Values are rounded: </p>
+<A NAME="TI5701"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI5702"></A>Expression</th>
+<th align="left" valign=bottom><A NAME="TI5703"></A>Value</th>
+</tr>
+<tr><td valign=top><A NAME="TI5704"></A>20.0/3</td>
+<td valign=top><A NAME="TI5705"></A>6.666666666666667</td>
+</tr>
+<tr><td valign=top><A NAME="TI5706"></A>3*(20.0/3)</td>
+<td valign=top><A NAME="TI5707"></A>20</td>
+</tr>
+<tr><td valign=top><A NAME="TI5708"></A>Truncate(20.0/3,4)</td>
+<td valign=top><A NAME="TI5709"></A>6.6666</td>
+</tr>
+</table>
+<A NAME="TI5710"></A><h4>Calculations with NULL</h4>
+<A NAME="TI5711"></A><p>When you form an arithmetic expression that contains a NULL
+value, the expression becomes NULL. Thinking of NULL as <i>undefined</i>
+ makes
+this easier to understand. For example, when a NULL column is multiplied
+by 5, the entire expression also evaluates to NULL. Use the IsNull
+function to explicitly check for the NULL value.</p>
+<A NAME="TI5712"></A><p>Boolean expressions that contain a NULL value evaluate to
+FALSE rather than to NULL. For more information, see <A HREF="imugp145.htm#CHDDBJGB">Relational operators in InfoMaker expressions</A>.</p>
+<A NAME="CHDDBJGB"></A><h2>Relational operators in InfoMaker expressions</h2>
+<A NAME="TI5713"></A><p>You use relational operators to compare a value with other
+values. The result is a boolean expression whose value is always
+TRUE or FALSE.  </p>
+<A NAME="TI5714"></A><p>Since the result of a boolean expression is always TRUE or
+FALSE, a relational operator that compares a value to NULL, evaluates
+to FALSE. For example, the expression "column &gt; 5" evaluates
+to FALSE (and "NOT column &gt; 5" evaluates to TRUE) when
+the column value is NULL.</p>
+<A NAME="TI5715"></A><p>When you write an expression, you can use the following relational
+operators (more information about LIKE, IN, and BETWEEN follows
+the table):</p>
+<A NAME="TI5716"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI5717"></A>Operator</th>
+<th align="left" valign=bottom><A NAME="TI5718"></A>Meaning</th>
+<th align="left" valign=bottom><A NAME="TI5719"></A>Example</th>
+</tr>
+<tr><td valign=top><A NAME="TI5720"></A>=</td>
+<td valign=top><A NAME="TI5721"></A>Is equal to</td>
+<td valign=top><A NAME="TI5722"></A>Price = 100</td>
+</tr>
+<tr><td valign=top><A NAME="TI5723"></A>&gt;</td>
+<td valign=top><A NAME="TI5724"></A>Is greater than</td>
+<td valign=top><A NAME="TI5725"></A>Price &gt; 100</td>
+</tr>
+<tr><td valign=top><A NAME="TI5726"></A>&lt;</td>
+<td valign=top><A NAME="TI5727"></A>Is less than</td>
+<td valign=top><A NAME="TI5728"></A>Price &lt; 100</td>
+</tr>
+<tr><td valign=top><A NAME="TI5729"></A>&lt;&gt;</td>
+<td valign=top><A NAME="TI5730"></A>Is not equal to</td>
+<td valign=top><A NAME="TI5731"></A>Price &lt;&gt; 100</td>
+</tr>
+<tr><td valign=top><A NAME="TI5732"></A>&gt;=</td>
+<td valign=top><A NAME="TI5733"></A>Greater than or equal to</td>
+<td valign=top><A NAME="TI5734"></A>Price &gt;= 100</td>
+</tr>
+<tr><td valign=top><A NAME="TI5735"></A>&lt;=</td>
+<td valign=top><A NAME="TI5736"></A>Less than or equal to</td>
+<td valign=top><A NAME="TI5737"></A>Price &lt;= 100</td>
+</tr>
+<tr><td valign=top><A NAME="TI5738"></A>NOT =</td>
+<td valign=top><A NAME="TI5739"></A>Is not equal to</td>
+<td valign=top><A NAME="TI5740"></A>Price NOT= 100</td>
+</tr>
+<tr><td valign=top><A NAME="TI5741"></A>LIKE</td>
+<td valign=top><A NAME="TI5742"></A>Matches this specified pattern</td>
+<td valign=top><A NAME="TI5743"></A>Emp_lname LIKE <pre>'</pre>
+C%<pre>'</pre>
+ OR Emp_lname
+LIKE <pre>'</pre>
+G%<pre>'</pre>
+</td>
+</tr>
+<tr><td valign=top><A NAME="TI5744"></A>IN</td>
+<td valign=top><A NAME="TI5745"></A>Is in this set of values</td>
+<td valign=top><A NAME="TI5746"></A>Dept_id IN (100, 200, 500)</td>
+</tr>
+<tr><td valign=top><A NAME="TI5747"></A>BETWEEN</td>
+<td valign=top><A NAME="TI5748"></A>Is within this range of values. The range
+includes the first and last values</td>
+<td valign=top><A NAME="TI5749"></A>Price BETWEEN 1000 AND 3000</td>
+</tr>
+<tr><td valign=top><A NAME="TI5750"></A>NOT LIKE</td>
+<td valign=top><A NAME="TI5751"></A>Does not match this specified pattern</td>
+<td valign=top><A NAME="TI5752"></A>Emp_lname NOT LIKE <pre>'</pre>
+C%<pre>'</pre>
+ AND
+Emp_lname NOT LIKE <pre>'</pre>
+G%<pre>'</pre>
+</td>
+</tr>
+<tr><td valign=top><A NAME="TI5753"></A>NOT IN</td>
+<td valign=top><A NAME="TI5754"></A>Is not in this set of values</td>
+<td valign=top><A NAME="TI5755"></A>Dept_id NOT IN (100, 200, 500)</td>
+</tr>
+<tr><td valign=top><A NAME="TI5756"></A>NOT BETWEEN</td>
+<td valign=top><A NAME="TI5757"></A>Is outside this range of values. The
+range includes the first and last values</td>
+<td valign=top><A NAME="TI5758"></A>Price NOT BETWEEN 1000 AND 2000</td>
+</tr>
+</table>
+<A NAME="TI5759"></A><h4>Special characters for operations with strings</h4>
+<A NAME="TI5760"></A><p>You can use the following special characters with relational
+operators that take string values:</p>
+<A NAME="TI5761"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI5762"></A>Special character</th>
+<th align="left" valign=bottom><A NAME="TI5763"></A>Meaning</th>
+<th align="left" valign=bottom><A NAME="TI5764"></A>Example</th>
+</tr>
+<tr><td valign=top><A NAME="TI5765"></A>% (percent)</td>
+<td valign=top><A NAME="TI5766"></A>Matches any group of characters</td>
+<td valign=top><A NAME="TI5767"></A>Good% matches all names that begin
+with Good</td>
+</tr>
+<tr><td valign=top><A NAME="TI5768"></A>_ (underscore)</td>
+<td valign=top><A NAME="TI5769"></A>Matches any single character</td>
+<td valign=top><A NAME="TI5770"></A>Good _ _ _ matches
+all 7-letter names that begin with Good</td>
+</tr>
+</table>
+<A NAME="TI5771"></A><h4>LIKE and NOT LIKE operators</h4>
+<A NAME="TI5772"></A><p>Use LIKE to search for strings that match a predetermined
+pattern. Use NOT LIKE to search for strings that do not match a
+predetermined pattern. When you use LIKE or
+NOT LIKE, you can use the <i>%</i>
+ or <i>_</i>
+ characters
+to match unknown characters in a pattern.</p>
+<A NAME="TI5773"></A><p>For example, the following expression for the Background.Color
+property of the Salary column displays salaries in red for employees
+with last names beginning with F and displays all other salaries
+in white:<pre>If(emp_lname LIKE'F%',RGB(255,0,0),RGB(255,255,255))</pre>
+</p>
+<A NAME="TI5774"></A><h4>BETWEEN and NOT BETWEEN operators</h4>
+<A NAME="TI5775"></A><p>Use BETWEEN to check if a value is within a range of values.
+Use NOT BETWEEN to check if a value is <i>not </i>
+in
+a range of values. The range of values includes the boundary values
+that specify the range.</p>
+<A NAME="TI5776"></A><p>For example, the following expression for the Background.Color
+property of the Salary column displays salaries in red when an employee's
+salary is between $50,000 and $100,000 and displays
+all other salaries in white: <pre>If(salary BETWEEN 50000 AND 100000, RGB(255,0,0), RGB(255,255,255))</pre>
+</p>
+<A NAME="TI5777"></A><p>You can use the BETWEEN and NOT BETWEEN operators with string values.
+For example, if the following expression is used for the Visual
+property of a column, column values only display for departments
+listed alphabetically between Finance and Sales: <pre>If(dept_name BETWEEN 'Finance' AND 'Sales',1,0)</pre>
+</p>
+<A NAME="TI5778"></A><p>The <i>%</i>
+ or <i>_</i>
+ characters
+can be used when you are using string values with the BETWEEN and
+NOT BETWEEN operators. This example might include more department
+listings than the previous example:<pre>If(dept_name BETWEEN 'F%' AND 'S%',1,0)</pre>
+</p>
+<A NAME="TI5779"></A><p>You can also use the BETWEEN and NOT BETWEEN operators with methods.
+For example:<pre>GetRow( ) BETWEEN 5 AND 8</pre>
+</p>
+<A NAME="TI5780"></A><h4>IN and NOT IN operators</h4>
+<A NAME="TI5781"></A><p>Use IN to check if a value is in a set of values. Use NOT
+IN to check if a value is <i>not </i>
+in a set of values.</p>
+<A NAME="TI5782"></A><p>For example, the following expression for the Background.Color
+property of the Salary column displays salaries in red for employees
+in department 300 or 400 having a salary between $50,000
+and $100,000, and displays all other salaries in white: <pre>If(dept_id IN (300,400) and salary BETWEEN 50000 AND 100000, RGB(255,0,0), RGB(255,255,255))</pre>
+</p>
+<A NAME="BABHJBHH"></A><h3>Comparing strings in InfoMaker expressions</h3>
+<A NAME="TI5783"></A><p>When you compare strings, the comparison is case sensitive.
+Trailing blanks are significant. </p>
+<A NAME="TI5784"></A><h4>Case-sensitivity examples</h4>
+<A NAME="TI5785"></A><p>Assume City1 is "Austin" and City2 is "AUSTIN". Then:<pre>City1=City2</pre>
+returns
+FALSE.</p>
+<A NAME="TI5786"></A><p>To compare strings regardless of case, use the Upper or Lower
+function. For example:<pre>Upper(City1)=Upper(City2)</pre>
+returns
+TRUE.</p>
+<A NAME="TI5787"></A><p>For information about these functions, see <A HREF="imugp148.htm#BFCDFAJD">"Using DataWindow
+expression and InfoMaker functions"</A>.</p>
+<A NAME="TI5788"></A><h4>Trailing blanks examples</h4>
+<A NAME="TI5789"></A><p>Assume City1 is "Austin" and City2 is "Austin ". Then the
+expression:<pre>City1=City2</pre>
+returns FALSE.</p>
+<A NAME="TI5790"></A><p>To prevent blanks from affecting a comparison, remove them
+with one of the Trim functions: Trim, LeftTrim, or RightTrim.</p>
+<A NAME="TI5791"></A><p>For example:<pre>Trim(City1)=Trim(City2)</pre>
+returns
+TRUE.</p>
+<A NAME="TI5792"></A><p>For information about these functions, see <A HREF="imugp148.htm#BFCDFAJD">"Using DataWindow
+expression and InfoMaker functions"</A>.</p>
+<A NAME="CHDDFDEC"></A><h2>Logical operators in InfoMaker expressions</h2>
+<A NAME="TI5793"></A><p>You use logical operators to combine boolean expressions into
+a larger boolean expression. The result is always TRUE or FALSE: </p>
+<A NAME="TI5794"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI5795"></A>Operator</th>
+<th align="left" valign=bottom><A NAME="TI5796"></A>Meaning</th>
+<th align="left" valign=bottom><A NAME="TI5797"></A>Example</th>
+</tr>
+<tr><td valign=top><A NAME="TI5798"></A>NOT </td>
+<td valign=top><A NAME="TI5799"></A>Logical negation<A NAME="TI5800"></A>If A is true, NOT A is false<A NAME="TI5801"></A>If A is false, NOT A is true</td>
+<td valign=top><A NAME="TI5802"></A>NOT Price = 100</td>
+</tr>
+<tr><td valign=top><A NAME="TI5803"></A>AND </td>
+<td valign=top><A NAME="TI5804"></A>Logical and<A NAME="TI5805"></A>A AND B is true if both are true<A NAME="TI5806"></A>A AND B is false if either is false</td>
+<td valign=top><A NAME="TI5807"></A>Tax &gt; 3 AND Ship &lt; 5</td>
+</tr>
+<tr><td valign=top><A NAME="TI5808"></A>OR </td>
+<td valign=top><A NAME="TI5809"></A>Logical or<A NAME="TI5810"></A>A OR B is true if either is true or both are true<A NAME="TI5811"></A>A OR B is false only if both are false</td>
+<td valign=top><A NAME="TI5812"></A>Tax &gt; 3 OR Ship &lt; 5</td>
+</tr>
+</table>
+<A NAME="TI5813"></A><p>When you combine two or more boolean expressions to form a
+new expression, the new expression is either true or false. The
+following truth table shows how TRUE and FALSE expressions are evaluated
+to form an expression that is either TRUE or FALSE. </p>
+<A NAME="TI5814"></A><p>For example, if "My dog has fleas" is true and "My hair is
+brown" is false, then "My dog has fleas OR my hair is brown" is
+true, and "My dog has fleas AND my hair is brown" is false:</p>
+<A NAME="TI5815"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI5816"></A>If one expression has this value</th>
+<th align="left" valign=bottom><A NAME="TI5817"></A>And the logical operator is</th>
+<th align="left" valign=bottom><A NAME="TI5818"></A>And if another expression has this value</th>
+<th align="left" valign=bottom><A NAME="TI5819"></A>The resulting expression has this value</th>
+</tr>
+<tr><td valign=top><A NAME="TI5820"></A>TRUE</td>
+<td valign=top><A NAME="TI5821"></A>AND</td>
+<td valign=top><A NAME="TI5822"></A>TRUE</td>
+<td valign=top><A NAME="TI5823"></A>TRUE</td>
+</tr>
+<tr><td valign=top><A NAME="TI5824"></A>TRUE</td>
+<td valign=top><A NAME="TI5825"></A>AND</td>
+<td valign=top><A NAME="TI5826"></A>FALSE</td>
+<td valign=top><A NAME="TI5827"></A>FALSE</td>
+</tr>
+<tr><td valign=top><A NAME="TI5828"></A>FALSE</td>
+<td valign=top><A NAME="TI5829"></A>AND</td>
+<td valign=top><A NAME="TI5830"></A>TRUE</td>
+<td valign=top><A NAME="TI5831"></A>FALSE</td>
+</tr>
+<tr><td valign=top><A NAME="TI5832"></A>FALSE</td>
+<td valign=top><A NAME="TI5833"></A>AND</td>
+<td valign=top><A NAME="TI5834"></A>FALSE</td>
+<td valign=top><A NAME="TI5835"></A>FALSE</td>
+</tr>
+<tr><td valign=top><A NAME="TI5836"></A>TRUE</td>
+<td valign=top><A NAME="TI5837"></A>OR</td>
+<td valign=top><A NAME="TI5838"></A>TRUE</td>
+<td valign=top><A NAME="TI5839"></A>TRUE</td>
+</tr>
+<tr><td valign=top><A NAME="TI5840"></A>TRUE</td>
+<td valign=top><A NAME="TI5841"></A>OR</td>
+<td valign=top><A NAME="TI5842"></A>FALSE</td>
+<td valign=top><A NAME="TI5843"></A>TRUE</td>
+</tr>
+<tr><td valign=top><A NAME="TI5844"></A>FALSE</td>
+<td valign=top><A NAME="TI5845"></A>OR</td>
+<td valign=top><A NAME="TI5846"></A>TRUE</td>
+<td valign=top><A NAME="TI5847"></A>TRUE</td>
+</tr>
+<tr><td valign=top><A NAME="TI5848"></A>FALSE</td>
+<td valign=top><A NAME="TI5849"></A>OR</td>
+<td valign=top><A NAME="TI5850"></A>FALSE</td>
+<td valign=top><A NAME="TI5851"></A>FALSE</td>
+</tr>
+<tr><td valign=top><A NAME="TI5852"></A>NOT TRUE</td>
+<td valign=top><A NAME="TI5853"></A>AND</td>
+<td valign=top><A NAME="TI5854"></A>TRUE</td>
+<td valign=top><A NAME="TI5855"></A>FALSE</td>
+</tr>
+<tr><td valign=top><A NAME="TI5856"></A>NOT TRUE</td>
+<td valign=top><A NAME="TI5857"></A>AND</td>
+<td valign=top><A NAME="TI5858"></A>FALSE</td>
+<td valign=top><A NAME="TI5859"></A>FALSE</td>
+</tr>
+<tr><td valign=top><A NAME="TI5860"></A>NOT FALSE</td>
+<td valign=top><A NAME="TI5861"></A>AND</td>
+<td valign=top><A NAME="TI5862"></A>TRUE</td>
+<td valign=top><A NAME="TI5863"></A>TRUE</td>
+</tr>
+<tr><td valign=top><A NAME="TI5864"></A>NOT FALSE</td>
+<td valign=top><A NAME="TI5865"></A>AND</td>
+<td valign=top><A NAME="TI5866"></A>FALSE</td>
+<td valign=top><A NAME="TI5867"></A>FALSE</td>
+</tr>
+<tr><td valign=top><A NAME="TI5868"></A>NOT TRUE</td>
+<td valign=top><A NAME="TI5869"></A>OR</td>
+<td valign=top><A NAME="TI5870"></A>TRUE</td>
+<td valign=top><A NAME="TI5871"></A>TRUE</td>
+</tr>
+<tr><td valign=top><A NAME="TI5872"></A>NOT TRUE</td>
+<td valign=top><A NAME="TI5873"></A>OR</td>
+<td valign=top><A NAME="TI5874"></A>FALSE</td>
+<td valign=top><A NAME="TI5875"></A>FALSE</td>
+</tr>
+<tr><td valign=top><A NAME="TI5876"></A>NOT FALSE</td>
+<td valign=top><A NAME="TI5877"></A>OR</td>
+<td valign=top><A NAME="TI5878"></A>TRUE</td>
+<td valign=top><A NAME="TI5879"></A>TRUE</td>
+</tr>
+<tr><td valign=top><A NAME="TI5880"></A>NOT FALSE</td>
+<td valign=top><A NAME="TI5881"></A>OR</td>
+<td valign=top><A NAME="TI5882"></A>FALSE</td>
+<td valign=top><A NAME="TI5883"></A>TRUE</td>
+</tr>
+</table>
+<A NAME="TI5884"></A><p>If you use a logical operator with a boolean function that
+returns NULL, the term with the NULL return value is evaluated as
+FALSE. If you use the NOT logical operator with a boolean function
+that returns NULL, the complete term evaluates to TRUE. For example,
+"NOT gf_boolean ()" evaluates to TRUE when gf_boolean
+() returns NULL.</p>
+<A NAME="CHDBFEBE"></A><h2>Concatenation operator in InfoMaker expressions</h2>
+<A NAME="TI5885"></A><p>The concatenation operator joins the contents of two variables
+of the same type to form a longer value. You can concatenate strings
+and blobs. </p>
+<A NAME="TI5886"></A><p>To concatenate values, you use the plus sign (+)
+operator.</p>
+<A NAME="TI5887"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI5888"></A>String expression</th>
+<th align="left" valign=bottom><A NAME="TI5889"></A>Value</th>
+</tr>
+<tr><td valign=top><A NAME="TI5890"></A>"over" + "stock"</td>
+<td valign=top><A NAME="TI5891"></A>overstock</td>
+</tr>
+<tr><td valign=top><A NAME="TI5892"></A>Lname + <pre>'</pre>
+,<pre> </pre>
+' + Fname</td>
+<td valign=top><A NAME="TI5893"></A>If Lname is Hill and Fname is Craig,
+then "Hill, Craig"</td>
+</tr>
+</table>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Using quotes</span> <A NAME="TI5894"></A>You can use either single or double quotes in string expressions.
+For example, the expression "over" + "stock" is equivalent
+to the expression<pre> '</pre>
+over<pre>'</pre>
+ + <pre>'</pre>
+stock<pre>'</pre>
+.</p>
+

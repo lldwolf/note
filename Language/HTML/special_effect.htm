@@ -1,0 +1,154 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>特效</title>
+<script language="javascript" src="css.js"></script>
+</head>
+
+<body>
+<h1>第N章 特效</h1>
+<hr />
+<h2><a href="#enter_effect">N.1 页面的进入/退出特效 </a></h2>
+<h2><a href="#custom_icon">N.2 在地址栏及收藏夹中显示自定义图标</a></h2>
+<h2><a name="enter_effect" id="enter_effect"></a>N.1 页面的进入/退出特效</h2>
+<p>IE使用如下方式支持页面的进入及退出特效。</p>
+<pre>&lt;meta HTTP-EQUIV=&quot;Page-Enter&quot; CONTENT=&quot;revealtrans(duration=0.8, transition=23)&quot;&gt;
+&lt;meta HTTP-EQUIV=&quot;Page-Exit&quot; CONTENT=&quot;revealtrans(duration=0.8, transition=23)&quot;&gt;</pre>
+<p>其中第一个是页页的进入时显示特效，第二个是页面的退出时显示特效，使用了函数revealtrans，第一个参数表示特效的运行间隔时间，设置得最大则特效显示越慢，第二个表示使用何种特效，其值说明如下表所示：</p>
+<table width="80%" >
+  <tr>
+    <th width="30%">值</th>
+    <th width="70%">效果</th>
+  </tr>
+  <tr>
+    <td>0</td>
+    <td>由外至内圆形</td>
+  </tr>
+  <tr>
+    <td>1</td>
+    <td>由内至外矩形</td>
+  </tr>
+  <tr>
+    <td>2</td>
+    <td>由外至内圆形</td>
+  </tr>
+  <tr>
+    <td>3</td>
+    <td>由内至外圆形</td>
+  </tr>
+  <tr>
+    <td>4</td>
+    <td>由下至上</td>
+  </tr>
+  <tr>
+    <td>5</td>
+    <td>由上至下</td>
+  </tr>
+  <tr>
+    <td>6</td>
+    <td>由左至右</td>
+  </tr>
+  <tr>
+    <td>7</td>
+    <td>由右至左</td>
+  </tr>
+  <tr>
+    <td>8</td>
+    <td>由左到右，百页窗</td>
+  </tr>
+  <tr>
+    <td>9</td>
+    <td>由上至下，百页窗</td>
+  </tr>
+  <tr>
+    <td>10</td>
+    <td>由左到右，交错百页窗</td>
+  </tr>
+  <tr>
+    <td>11</td>
+    <td>由上至下，交错百页窗</td>
+  </tr>
+  <tr>
+    <td>12</td>
+    <td>雾状</td>
+  </tr>
+  <tr>
+    <td>13</td>
+    <td>左右至中间</td>
+  </tr>
+  <tr>
+    <td>14</td>
+    <td>中间至左右</td>
+  </tr>
+  <tr>
+    <td>15</td>
+    <td>上下至中间</td>
+  </tr>
+  <tr>
+    <td>16</td>
+    <td>中间至上下</td>
+  </tr>
+  <tr>
+    <td>17</td>
+    <td>右上至左下</td>
+  </tr>
+  <tr>
+    <td>18</td>
+    <td>右下至左上</td>
+  </tr>
+  <tr>
+    <td>19</td>
+    <td>左上至右下</td>
+  </tr>
+  <tr>
+    <td height="20">20</td>
+    <td>左下至右上</td>
+  </tr>
+  <tr>
+    <td>21</td>
+    <td>水平线</td>
+  </tr>
+  <tr>
+    <td>22</td>
+    <td>竖直线</td>
+  </tr>
+  <tr>
+    <td>其它</td>
+    <td>随机</td>
+  </tr>
+</table>
+<p>使用如下两个网页，可以看一下这两个网页在切换时的效果。</p>
+<h3>1.htm</h3>
+<pre>&lt;html&gt;
+&lt;head&gt;
+&lt;meta HTTP-EQUIV=&quot;Page-Enter&quot; CONTENT=&quot;revealtrans(duration=0.8, transition=23)&quot;&gt;
+&lt;meta HTTP-EQUIV=&quot;Page-Exit&quot; CONTENT=&quot;revealtrans(duration=0.8, transition=23)&quot;&gt; 
+&lt;title&gt;TEST&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;p&gt;&lt;a href=&quot;2.htm&quot;&gt;222222222222222&lt;/a&gt;&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+<h3>2.htm</h3>
+<pre>&lt;html&gt;
+&lt;head&gt;
+&lt;meta HTTP-EQUIV=&quot;Page-Enter&quot; CONTENT=&quot;revealtrans(duration=0.3, transition=23)&quot;&gt;
+&lt;meta HTTP-EQUIV=&quot;Page-Exit&quot; CONTENT=&quot;revealtrans(duration=0.3, transition=23)&quot;&gt; 
+	&lt;title&gt;TEST&lt;/title&gt;
+&lt;/head&gt;
+&lt;body bgcolor=&quot;blue&quot;&gt;
+&lt;p&gt;&lt;a href=&quot;1.htm&quot;&gt;1111111111111&lt;/a&gt;&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+<h2><a name="custom_icon" id="custom_icon"></a>N.2 在地址栏及收藏夹中显示自定义图标</h2>
+<p>我们需要预先制作一个图标文件，大小为16*16像素。文件扩展名为ico，然后上传到相应目录中。在HTML源文件“&lt;head&gt;&lt;/head&gt;”间添加如下代码：</p>
+<pre>&lt;Link Rel=&quot;SHORTCUT ICON&quot; href=&quot;http://图片的地址（注意与刚才的目录对应）&quot;&gt;</pre>
+<p>其中的“SHORTCUT ICON”即为该图标的名称。当然如果用户使用IE5或以上版本浏览时，就更简单了，只需将图片上传到网站根目录下，即可自动识别！ </p>
+<pre>&lt;link rel=&quot;Shortcut Icon&quot; href=&quot;favicon.ico&quot;&gt; IE地址栏前换成自己的图标
+&lt;link rel=&quot;Bookmark&quot; href=&quot;favicon.ico&quot;&gt; 可以在收藏夹中显示出你的图标</pre>
+<p>&nbsp; </p>
+<p>&nbsp; </p>
+<script language="javascript" src="index.js"></script>
+</body>
+</html>

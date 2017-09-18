@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>截屏</title>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+<p id="title">截屏</p>
+
+<p>c# 8条语句实现屏幕抓图</p>
+<pre class="code" data-type="csharp">Image myImage = new Bitmap(300, 200);
+Graphics g = Graphics.FromImage(myImage);
+g.CopyFromScreen(new Point(Cursor.Position.X - 150, Cursor.Position.Y - 25), new Point(0, 0), new Size(300, 200));
+IntPtr dc1 = g.GetHdc();
+g.ReleaseHdc(dc1);
+this.pictureBox1.Image = myImage;  
+myImage.Save(&quot;c:\\1.jpeg&quot;); </pre>
+<p>另外的方法</p>
+<pre class="code" data-type="csharp">//抓图 需要的DLL
+using System.Drawing;
+using System.Drawing.Imaging;
+
+//再经过8句将位图变换成整形数组矩阵。可以最大限度的提高图像处理速度。
+比 myBitmap.GetPixel(???)方法快100倍以上速度与C++指针操作不相上下。
+
+//获得图像
+Rectangle rec = new Rectangle(0, 0, myBitmap.Width, myBitmap.Height);
+BitmapData bmpData = myBitmap.LockBitsrec,ImageLockMode.ReadWrite,PixelFormat.Format32bppPArgb);         
+
+//将图像变换     
+IntPtr scan0 = bmpData.Scan0;
+int len = myBitmap.Width * myBitmap.Height;
+int[] pixels = new int[len];
+Marshal.Copy(scan0, pixels, 0, len);
+myBitmap.UnlockBits(bmpData);
+myBitmap.Dispose();
+
+DelegateShowLabelstr dc1 = new DelegateShowLabelstr(ShowLabelstr);
+DelegateShowLabelstrgz(&quot;处理完成&quot;, dc1); //回调其他线程</pre>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+
+</body>
+</html>

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+    <script type="text/javascript" src="../../mylib/js/css.js"></script>
+    <title>Java 练习题 - 读取系统属性</title>
+</head>
+
+<body>
+    <p id="title">Java 练习题 - 读取系统属性</p>
+    <h1>要求</h1>
+    <p>读取相关的系统变量, 例如当前路径, 根目录, 用户名等</p>
+    <h1>示例代码</h1>
+    <pre class="code" data-type="java">
+private static final String FILE_SEPERATOR = System.getProperty("file.separator");</pre>
+    <h1>系统变量列表</h1>
+    <table style="width: 90%">
+        <tr>
+            <th>变量名</th>
+            <th>说明</th>
+        </tr>
+        <tr>
+            <td>file.separator</td>
+            <td>文件夹分隔符, Windows 为 \, Linux 为 /</td>
+        </tr>
+        <tr>
+            <td>user.dir</td>
+            <td>当前项目的根目录</td>
+        </tr>
+        <tr>
+            <td>os.name</td>
+            <td>操作系统名称</td>
+        </tr>
+        <tr>
+            <td>user.language</td>
+            <td>当前操作系统语言</td>
+        </tr>
+        <tr>
+            <td>java.class.path</td>
+            <td>Class Path</td>
+        </tr>
+        <tr>
+            <td>line.separator</td>
+            <td>行分隔符, Windows 为 \r\n, Linux 为 \n</td>
+        </tr>
+    </table>
+</body>
+</html>

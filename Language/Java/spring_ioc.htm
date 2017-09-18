@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>Spring - IoC</title>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+<p id="title">IoC</p>
+
+<h1>需要的jar包</h1>
+<p>我使用Spring实现IoC，需要以下jar包</p>
+<ul>
+  <li>spring-core.jar</li>
+  <li>spring-beans.jar</li>
+  <li>common-logging-*.jar</li>
+</ul>
+<h1>第一个例子</h1>
+<h2>接口</h2>
+<pre class="code" data-type="java">package test.spring;
+
+public interface ITest
+{
+	public String GetString();
+
+}</pre>
+<h2>实现类</h2>
+<pre class="code" data-type="java">package test.spring;
+
+public class Test implements ITest
+{
+
+	@Override
+	public String GetString()
+	{
+		return "Hello";
+	}
+
+}</pre>
+<h2>映射文件</h2>
+<p>文件名为“spring-test.xml”，位于src根目录下</p>
+<pre class="code" data-type="xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt; 
+&lt;beans xmlns =&quot;http://www.springframework.org/schema/beans&quot; 
+    xmlns:xsi =&quot;http://www.w3.org/2001/XMLSchema-instance&quot; 
+    xsi:schemaLocation =&quot;http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd&quot;&gt; 
+    
+    &lt;bean id =&quot;test&quot; class=&quot;test.spring.Test&quot; /&gt;
+&lt;/beans&gt;</pre>
+<h2>使用方法 </h2>
+<pre class="code" data-type="java">package test.spring;
+
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.xml.XmlBeanFactory;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+
+public class IoCTest
+{
+	static public void main(String[] args)
+	{
+		Resource resource = new ClassPathResource("spring-test.xml");
+		BeanFactory beans = new XmlBeanFactory(resource);
+		ITest itest = (ITest)beans.getBean("test");
+		System.out.println(itest.GetString());
+	}
+}</pre>
+<h2>示例代码</h2>
+<p><a href="example/IoCTest.zip">示例代码(Eclipse项目) </a></p>
+<h1>IoC方式详解</h1>
+<h2>使用多个映射文件</h2>
+<p>使用&lt;import resource=&quot;*.xml&quot; /&gt;指令，例如在上例中，新建一个spring-config.xml如下所示：</p>
+<pre class="code" data-type="xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt; 
+&lt;beans xmlns =&quot;http://www.springframework.org/schema/beans&quot; 
+    xmlns:xsi =&quot;http://www.w3.org/2001/XMLSchema-instance&quot; 
+    xsi:schemaLocation =&quot;http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd&quot;&gt; 
+    
+    &lt;import resource=&quot;spring-test.xml&quot; /&gt;
+&lt;/beans&gt;</pre>
+<p>在装载时调用</p>
+<pre class="code" data-type="java">Resource resource = new ClassPathResource("spring-config.xml");</pre>
+<h2>构造器注入与设置器注入 </h2>
+<p>类似于带参数的构造函数，但仅限于构造时使用默认的参数，如下所示</p>
+<p>带参数的构造函数</p>
+<pre class="code" data-type="java">public Test(String name)
+{
+	this.name = name;
+}</pre>
+<p>相应的映射配置文件</p>
+<pre class="code" data-type="xml"">&lt;bean id =&quot;test&quot; class=&quot;test.spring.Test&quot;&gt;
+	&lt;constructor-arg type=&quot;java.lang.String&quot; value=&quot;Peter&quot; /&gt;
+&lt;/bean&gt;</pre>
+<p>这样使用getBean()调用后，自动为其name属性赋上“Peter”，如果使用设置器(setter)注入的话，就不需要构造函数了，但需要创建“name”属性的setter方法，然后映射配置文件如下所示：</p>
+<pre class="code" data-type="xml">&lt;bean id =&quot;test&quot; class=&quot;test.spring.Test&quot;&gt;
+	&lt;property name=&quot;name&quot; value=&quot;London&quot;&gt;&lt;/property&gt;
+&lt;/bean&gt;</pre>
+<p>下面是一个更加完整的例子</p>
+<pre class="code" data-type="xml">setter 注入
+&lt;bean id=&quot;exampleBean&quot; class=&quot;examples.ExampleBean&quot;&gt;
+	&lt;!-- setter injection using the nested &lt;ref/&gt; element --&gt;
+	&lt;property name=&quot;beanOne&quot;&gt;&lt;ref bean=&quot;anotherExampleBean&quot;/&gt;&lt;/property&gt;
+	&lt;!-- setter injection using the neater 'ref' attribute --&gt;
+	&lt;property name=&quot;beanTwo&quot; ref=&quot;yetAnotherBean&quot;/&gt;
+	&lt;property name=&quot;integerProperty&quot; value=&quot;1&quot;/&gt;
+&lt;/bean&gt;
+&lt;bean id=&quot;anotherExampleBean&quot; class=&quot;examples.AnotherBean&quot;/&gt;
+&lt;bean id=&quot;yetAnotherBean&quot; class=&quot;examples.YetAnotherBean&quot;/&gt;
+
+Constructor注入
+&lt;bean id=&quot;exampleBean&quot; class=&quot;examples.ExampleBean&quot;&gt;
+	&lt;!-- constructor injection using the nested &lt;ref/&gt; element --&gt;
+	&lt;constructor-arg&gt;&lt;ref bean=&quot;anotherExampleBean&quot;/&gt;&lt;/constructor-arg&gt;
+	&lt;!-- constructor injection using the neater 'ref' attribute --&gt;
+	&lt;constructor-arg ref=&quot;yetAnotherBean&quot;/&gt;
+	&lt;constructor-arg type=&quot;int&quot; value=&quot;1&quot;/&gt;
+&lt;/bean&gt;
+&lt;bean id=&quot;anotherExampleBean&quot; class=&quot;examples.AnotherBean&quot;/&gt;
+&lt;bean id=&quot;yetAnotherBean&quot; class=&quot;examples.YetAnotherBean&quot;/&gt;
+    </pre>
+    <pre class="code" data-type="java">
+//类声明
+public class ExampleBean {
+	private AnotherBean beanOne;
+	private YetAnotherBean beanTwo;
+	private int i;
+	
+	public void setBeanOne(AnotherBean beanOne) {
+		this.beanOne = beanOne;
+	}
+	
+	public void setBeanTwo(YetAnotherBean beanTwo) {
+		this.beanTwo = beanTwo;
+	}
+	
+	public void setIntegerProperty(int i) {
+		this.i = i;
+	}
+}</pre>
+<h2>使用别名</h2>
+<p>可以使用多个名称来访问同一个接口，也就是通过别名来访问了，例如使用映射文件如下：</p>
+<pre class="code" data-type="xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt; 
+&lt;beans xmlns =&quot;http://www.springframework.org/schema/beans&quot; 
+    xmlns:xsi =&quot;http://www.w3.org/2001/XMLSchema-instance&quot; 
+    xsi:schemaLocation =&quot;http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd&quot;&gt; 
+    
+    &lt;bean id =&quot;test&quot; class=&quot;test.spring.Test&quot; /&gt;
+    &lt;alias name=&quot;test&quot; alias=&quot;ITest&quot; /&gt;
+&lt;/beans&gt;</pre>
+<p>那么你可以用“test”和“ITest”两个名称来将“test.spring.Test”类注入相应接口。</p>
+<h2>使用工厂方法创建</h2>
+<p>使用如下的配置文件和工厂方法：</p>
+<pre class="code" data-type="java">&lt;bean id=&quot;test_factory&quot; class=&quot;test.spring.TestFactory&quot; factory-method=&quot;createInstance&quot; /&gt;</pre>
+<p>工厂类</p>
+<pre class="code" data-type="java">public class TestFactory
+{
+	public static Test createInstance()
+	{
+		return new Test();
+	}
+}</pre>
+<h1>ApplicationContext</h1>
+<p>前面我们使用BeanFactory来获取对象，实际上更高一层是使用ApplicationContext，在Spring官方教程也在相关章节中强调了这一点，让人疑惑的是它说了一大堆，却没有说明如何获取该对象。下面是一个示例：</p>
+<h2>applicationContext.xml</h2>
+<p>默认的spring配置文件，里面包含了bean配置信息，在此不再赘述。</p>
+<h2>web.xml</h2>
+<p>添加如下项，使得J2EE服务器知道如何获取ApplicationContext对象</p>
+<pre class="code" data-type="xml">&lt;context-param&gt;
+		&lt;param-name&gt;contextConfigLocation&lt;/param-name&gt;
+		&lt;param-value&gt;
+			/WEB-INF/applicationContext.xml
+		&lt;/param-value&gt;
+	&lt;/context-param&gt;
+
+	&lt;listener&gt;
+		&lt;listener-class&gt;
+			org.springframework.web.context.ContextLoaderListener
+		&lt;/listener-class&gt;
+	&lt;/listener&gt;
+
+	&lt;!-- or use the ContextLoaderServlet instead of the above listener
+		&lt;servlet&gt;
+		&lt;servlet-name&gt;context&lt;/servlet-name&gt;
+		&lt;servlet-class&gt;org.springframework.web.context.ContextLoaderServlet&lt;/servlet-class&gt;
+		&lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
+		&lt;/servlet&gt;
+	--&gt;</pre>
+<p>加载器目前有两种选择：ContextLoaderListener和ContextLoaderServlet。这两者在功能上完全等同，只是一个是基于Servlet2.3版本中新引入的Listener接口实现，而另一个基于Servlet接口实现。开发中可根据目标Web容器的实际情况进行选择。</p>
+<h2>在Servlet中获取</h2>
+<pre class="code" data-type="java">package lld.test.spring.ioc;
+
+import java.io.IOException;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
+
+public class IoCTestServlet extends HttpServlet
+{
+	private static final long serialVersionUID = 505539914986233594L;
+
+	@Override
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+			throws ServletException, IOException
+	{
+		this.doPost(req, resp);
+	}
+
+	@Override
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
+			throws ServletException, IOException
+	{
+		ApplicationContext ctx = WebApplicationContextUtils.getWebApplicationContext(this.getServletContext());
+		IIocTest o = (IIocTest)ctx.getBean(&quot;test&quot;);
+		req.setAttribute(&quot;uname&quot;, o.getName());
+		this.getServletContext()
+			.getRequestDispatcher(&quot;/ioc_test.jsp&quot;)
+			.forward(req, resp);
+	}
+
+}</pre>
+<p>获取ApplicationContext的代码为：</p>
+<pre class="code" data-type="java">ApplicationContext ctx = WebApplicationContextUtils.getWebApplicationContext(this.getServletContext());</pre>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+
+</body>
+</html>

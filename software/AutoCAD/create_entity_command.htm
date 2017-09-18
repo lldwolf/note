@@ -1,0 +1,88 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>创建常见对象</title>
+<script language="javascript" src="css.js"></script>
+</head>
+
+<body> 
+<h1>第N章 创建常见对象</h1>
+<hr />
+<h2>N.1 概述 </h2>
+<table width="90%"  >
+  <tr>
+    <th width="50%">对象</th>
+    <th width="50%">命令</th>
+  </tr>
+  <tr>
+    <td>直线</td>
+    <td>line</td>
+  </tr>
+  <tr>
+    <td>多段线</td>
+    <td>pline</td>
+  </tr>
+  <tr>
+    <td>单行文本</td>
+    <td>text</td>
+  </tr>
+  <tr>
+    <td>多行文本</td>
+    <td>mtext</td>
+  </tr>
+  <tr>
+    <td>圆</td>
+    <td>circle</td>
+  </tr>
+  <tr>
+    <td>块属性</td>
+    <td>attdef</td>
+  </tr>
+  <tr>
+    <td>块参照</td>
+    <td>insert</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+<h2>N.2 直线 </h2>
+<h3>N.2.1 创建直线</h3>
+<p>下例创建一条从(0, 0)到(300, 300)的直线</p>
+<pre>Dim oLine As AcadLine
+Dim Pt1(0 To 2) As Double, Pt2(0 To 2) As Double
+
+Pt1(0) = 0: Pt1(1) = 0: Pt1(2) = 0
+Pt2(0) = 200: Pt2(1) = 200: Pt2(2) = 0
+Set oLine = ThisDrawing.ModelSpace.AddLine(Pt1, Pt2)</pre>
+<h3>N.2.2 线型 </h3>
+<h4>N.2.2.1 在AutoCAD中加载</h4>
+<p>命令: linetype</p>
+<p>在弹出窗口中按“加载”按钮，即加加载所需的线型</p>
+<h4>N.2.2.2 使用VBA加载</h4>
+<p>例如，要加载DASHED2线型，VBA代码如下：</p>
+<pre>Dim entry As AcadLineType
+Dim found As Boolean
+found = False
+For Each entry In ThisDrawing.Linetypes
+    If StrComp(entry.Name, &quot;DASHED2&quot;, 1) = 0 Then
+        found = True
+        Exit For
+    End If
+Next
+If Not (found) Then ThisDrawing.Linetypes.Load &quot;DASHED2&quot;, &quot;acadiso.lin&quot;
+
+Set oLine = ThisDrawing.ModelSpace.AddLine(Pt1, Pt2)
+oLine.Linetype = &quot;DASHED2&quot;</pre>
+<h3>N.2.3 线宽</h3>
+<p>在图纸上显示线宽的命令: LWeight </p>
+<p>VBA：AcadLine.Lineweight</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<script language="javascript" src="index.js"></script>
+</body>
+</html>

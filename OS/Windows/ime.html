@@ -1,0 +1,64 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>输入法</title>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+<h1>第N章 输入法</h1>
+<hr />
+<p><a href="#ime">枪毙ctfmon.exe，恢复你的默认输入法</a></p>
+<p><a href="#del_msime">删除微软拼音输入法</a></p>
+<h2><a name="ime" id="ime"></a>枪毙ctfmon.exe，恢复你的默认输入法 </h2>
+<p>如果你的win2000系统装了officeXP或以上版本，它会在你和系统里留下一个可误的ctfmon.exe，这真的是一个恶魔，曾经困扰了无数的网友<br />
+</p>
+<p>。今天我决意执起正义之剑，斩妖除魔，还网友一个纯洁的中英文输入空间！</p>
+<p>在对它行刑之前，我先来宣读一下他的罪状：<br />
+  1. 无论你打开什么窗口，总会弹出一个输入法工具体，并且默认是中文输入，非常讨厌。<br />
+  2. 它替换了原来的区域和输入法设置，并以一个文字服务的设置取而代之，而且不能设置默认的输入法。<br />
+  3. 结束掉原来的输入法工具进程internat.exe，并令他不能在开机时起动。<br />
+  4. 将自己放在开机时启动的程序列表中，除非修改注册表，否则无法去除。<br />
+  5. 像病毒一样有重生能力，当你把ctfmon.exe删了以后，他又会随着Office的启动而重新生成。<br />
+  6. 当你结束了ctfmon.exe后，经常会出现输入法切换快捷键乱掉的情况。</p>
+<p>好，经最高程序员审判庭批准，现对ctfmon.exe执行死行，立即执行！ </p>
+<p>第一步：右击任务栏空白处，点“任务管理器”。<br />
+  第二步：找到ctfmon.exe，并终止它。<br />
+  第三步：在系统目录下的system32目录下找到ctfmon.exe，删除掉。<br />
+  第四步：写一个最简单的api程序（代码见附录），编译后放到ctfmon.exe所在目录，并更名为ctfmon.exe。</p>
+<p>第五步：点击“开始”菜单，点击“运行”，输入internat.exe后点击确定。<br />
+  第六步：重起计算机。</p>
+<p>执行完毕！<br />
+</p>
+<p>附：<br />
+  1. 程序代码如下：<br />
+  #include &lt;windows.h&gt;<br />
+  int APIENTRY WinMain( HINSTANCE, HINSTANCE, LPTSTR, int )<br />
+  {<br />
+  HANDLE m_hMutex = CreateMutex( NULL, TRUE, &quot;ctfmon.exe&quot; ); <br />
+  if( GetLastError() != ERROR_ALREADY_EXISTS )<br />
+  while ( 1 ) Sleep( INFINITE );<br />
+  return 0;<br />
+  }</p>
+<p>2. 如果执行后发现word的输入法无法正确使用，解决办法如下：<br />
+  第一步：打开word（废话）<br />
+  第二步：点击“工具”菜单中的“选项”子菜单。点击“编辑”选项卡。<br />
+  第三步：清除“输入法控制处于活动状态”的复选。点击“确定”<br />
+  第四步：点击“工具”菜单中“语言”子菜单中的“设置语言”项。<br />
+  第五步：在列表中选择“英语 美国”，点击确定。<br />
+  第六步：关闭Word，重起计算机。<br />
+  解决。</p>
+<h2><a name="del_msime" id="del_msime"></a>删除微软拼音输入法</h2>
+<p> 本人是非常讨厌那自作聪明的“微软拼音输入法”，用普通的输入法属性删除法是不能够删除的，下次开机又自动添加回来。下面这个方法可以很干净彻底的使微软拼音输入法不再审之疲劳了：</p>
+<p>运行以下命令：<br />
+  Regsvr32 /U Msimtf.dll<br />
+  Regsvr32 /U Msctf.dll<br />
+  把注册表中HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\MSSCIPY这一主键删除，<br />
+</p>
+<p>完成。<br />
+</p>
+<p>&nbsp;</p>
+<script language="javascript" src="index.js"></script>
+</body>
+</html>

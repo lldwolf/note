@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>DevExpress.XtraGrid.GridControl</title>
+<script type="text/javascript" src="../../../mylib/js/css.js"></script>
+
+<style type="text/css">
+.first_class {font-family:宋体; font-weight:bold; font-size:16px; text-align:center; layout-flow:vertical-ideographic}
+.second_class {font-weight: bold}
+</style>
+</head>
+
+<body>
+<p id="title">GridControl - Sample</p>
+
+<h2>h.100.1 同步单元格数据</h2>
+<p><b>Description: Grid 中有两列，当第一列发生改变时,同步改变第二列的显示。</b></p>
+<p><b>点评：</b>从直观上看很容易，但比较 tricky 的是对于新增行的处理，需要利用 GridView.InitNewRow 实践对新增行进行特别处理，示例代码如下所示：</p>
+<pre>
+private void Form1_Load(object sender, EventArgs e)
+{
+	DataTable tb = new DataTable();
+	tb.Columns.Add(&quot;col1&quot;, typeof(int));
+	tb.Columns.Add(&quot;col2&quot;, typeof(int));
+
+	DataTable tb1 = new DataTable();
+	tb1.Columns.Add(&quot;id&quot;, typeof(int));
+	tb1.Columns.Add(&quot;name&quot;, typeof(string));
+	tb1.Rows.Add(new object[] { 1, &quot;abc&quot; });
+	tb1.Rows.Add(new object[] { 2, &quot;bbb&quot; });
+
+	this.gridControl1.DataSource = tb;
+	this.repositoryItemLookUpEdit1.DataSource = tb1;
+	this.repositoryItemLookUpEdit2.DataSource = tb1;
+}
+
+private object NewValue;
+private void gridView1_CellValueChanging(object sender, DevExpress.XtraGrid.Views.Base.CellValueChangedEventArgs e)
+{
+	object a = this.gridView1.GetRow(e.RowHandle);
+	if (a == null)
+	{
+		NewValue = e.Value;
+		return;
+	}
+	if (e.Column == this.gridColumn1)
+	{
+		this.gridView1.SetRowCellValue(e.RowHandle, this.gridColumn2, e.Value);
+	}
+}
+
+private void gridView1_InitNewRow(object sender, DevExpress.XtraGrid.Views.Grid.InitNewRowEventArgs e)
+{
+	object value = NewValue;
+	this.gridView1.SetRowCellValue(e.RowHandle, this.gridColumn2, value);
+}</pre>
+<p>&nbsp;</p>
+<script type="text/javascript" src="grid_index.js"></script>
+</body>
+</html>

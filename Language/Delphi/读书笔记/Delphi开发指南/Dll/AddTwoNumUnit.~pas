@@ -1,0 +1,14 @@
+unit AddTwoNumUnit;
+
+interface
+
+function AddTwoNum(const Num1, Num2: Word): Word; stdcall;
+
+implementation
+
+function AddTwoNum(const Num1, Num2: Word): Word;
+begin
+  Result := Num1 + Num2;
+end;
+
+end.

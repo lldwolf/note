@@ -1,0 +1,43 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>CSS技巧</title>
+<script type="text/javascript" src="css.js"></script>
+</head>
+
+<body>
+<h1>第N章 CSS技巧</h1>
+<hr />
+<h2>N.1 </h2>
+<p>在CSS中使用JS函数的方式如下所示:</p>
+<pre>&lt;head&gt;  
+&lt;style&gt;  
+	table{nolonely:expression(s(this))}  
+&lt;/style&gt;  
+&lt;script language=&quot;JavaScript&quot;&gt;  
+&lt;!--  
+function s(o)
+{  
+	with(o)
+	{  
+		borderColorDark = &quot;#FFFFFF&quot;;
+		cellPadding = 3;  
+		cellSpacing = 0;  
+	}  
+}  
+//--&gt;  
+&lt;/script&gt;  
+&lt;/head&gt;  
+&lt;body&gt;  
+&lt;table border=&quot;1&quot; bordercolor=&quot;#888888&quot;&gt;
+	&lt;tr&gt;&lt;td&gt;hehe&lt;/td&gt;&lt;/tr&gt;  
+&lt;/table&gt;  
+&lt;/body&gt;</pre>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<script type="text/javascript" src="index.js"></script>
+</body>
+</html>

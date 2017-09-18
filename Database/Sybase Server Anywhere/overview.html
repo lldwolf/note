@@ -1,0 +1,108 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>概述</title>
+<script language="javascript" src="css.js"></script>
+</head>
+
+<body>
+<h1>第一章 概述</h1>
+<hr />
+<h2>N.1 启动 </h2>
+<p>我使用的版本为7.0，假如有一个数据库文件c:\demo.db，创建该文件的数据库服务的命令如下：</p>
+<pre>dbsrv7 -n demo -c 8m -x tcpip "c:/demo.db"</pre>
+<p>其中dbsrv7.exe存在于Adaptive Server Anywhere的安装目录下，例如，我本机的安装位置为 D:\Program Files\Sybase\SQL Anywhere 7\win32</p>
+<p>上述命令中，其中 -n 参数指定启动后的服务名，-c 参数指定初始的内存大小，-x 参数指定使用的通信协议，最后是要打开的数据库文件路径。</p>
+<p>标准帮助文件如下所示：</p>
+<pre>
+Usage: dbsrv7 [server switches] {database [switches]}*
+       @data expands "data" from environment variable "data" or file "data"
+
+Server Switches(apply to server and all databases):
+
+<table width="90%">
+	<tr>
+		<th>Switch</th>
+		<th>Description</th>
+	</tr>
+	<tr>
+		<td>-b</td>
+		<td>run in bulk operation mode</td>
+	</tr>
+	<tr>
+		<td>-c &lt;size&gt;</td>
+		<td>make initial cache a maximum of &lt;size&gt; bytes, &lt;size&gt; may be specified as nnnK, nnnM, nnnP</td>
+	</tr>
+	<tr>
+		<td>-ca 0</td>
+		<td>disable automatic cache resizing</td>
+	</tr>
+	<tr>
+		<td>-ch &lt;size&gt;</td>
+		<td>set maximum cache size of &lt;size&gt; bytes, &lt;size&gt; may be specified as nnnK, nnnM, nnnP</td>
+	</tr>
+	<tr>
+		<td>-cl &lt;size&gt;</td>
+		<td>set minimum cache size of &lt;size&gt; bytes, &lt;size&gt; may be specified as nnnK, nnnM, nnnP</td>
+	</tr>
+	<tr>
+		<td>-cs</td>
+		<td>display cache sizing statistics</td>
+	</tr>
+	<tr>
+		<td>-ct</td>
+		<td>perform client-server character translation</td>
+	</tr>
+	<tr>
+		<td>-d</td>
+		<td>display asynchronous I/O</td>
+	</tr>
+	<tr>
+		<td>-e</td>
+		<td>encrypt communication message</td>
+	</tr>
+	<tr>
+		<td>-ga</td>
+		<td>automatically shut down after last database closed</td>
+	</tr>
+	<tr>
+		<td>-gb &lt;level&gt;</td>
+		<td>set database process priority class to &lt;level&gt;, &lt;level&gt; may be one of &quot;idle&quot;, &quot;normal&quot;, &quot;high&quot; or &quot;maximum&quot;</td>
+	</tr>
+	<tr>
+		<td>-gc &lt;num&gt;</td>
+		<td>set checkpoint timeout period to &lt;num&gt; minutes</td>
+	</tr>
+	<tr>
+		<td>-gd &lt;level&gt;</td>
+		<td>set starting database permission to &lt;level&gt;, &lt;level&gt; may be one of &quot;dba&quot;, &quot;all&quot; or &quot;none&quot;</td>
+	</tr>
+	<tr>
+		<td>-ge &lt;size&gt;</td>
+		<td>set external dll thread stack size to &lt;size&gt;</td>
+	</tr>
+	<tr>
+		<td>-gf</td>
+		<td>disable firing of triggers</td>
+	</tr>
+	<tr>
+		<td>-gk &lt;level&gt;</td>
+		<td>set &quot;stopping database server&quot; permission to &lt;level&gt;;, &lt;;level&gt;; may be one of &quot;dba&quot;, &quot;all&quot; or &quot;none&quot;</td>
+	</tr>
+	<tr>
+		<td>-gl &lt;level&gt;</td>
+		<td>set LOAD/UNLOAD permission to &lt;level&gt;, &lt;;level&gt;; may be one of &quot;dba&quot;, &quot;all&quot; or &quot;none&quot;</td>
+	</tr>
+</table>
+</pre>
+<h2>N.2 建立ODBC连接</h2>
+<p>关键在于在Database选项卡中的Start line中设为</p>
+<pre>C:\Program Files\Sybase\SQL Anywhere 7\win32\dbeng7.exe -c 8m</pre>
+<p>&nbsp; </p>
+<p>&nbsp; </p>
+<p>&nbsp; </p>
+<p>&nbsp; </p>
+<script type="text/javascript" src="index.js"></script>
+</body>
+</html>

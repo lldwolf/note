@@ -1,0 +1,538 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title>序列化与反序列化</title>
+	<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+<body>
+	<p id="title">序列化与反序列化</p>
+
+	<h1>概述</h1>
+	<h2>何为序列化</h2>
+	<p>简言之，序列化就是将一个对象实例按某种格式转换为一个流对象，而反序列化则是将一个流对象转换为其对应的对象实例。</p>
+	<h2>默认的序列化方式</h2>
+	<p>用户可以手工实现 ISerialize 接口，将对象序列化为自己想要的格式。但通常情况下，.net framework 提供的序列化方式即可满中我们的需求。默认的序列化方式有3种：</p>
+	<ul>
+		<li>二进制格式：将对象转化为一个二进制流，仅用于.net程序使用</li>
+		<li>Soap格式：将对象转化为一个Soap消息</li>
+		<li>XML格式：将对象转化为一个XML字符串</li>
+	</ul>
+	<p>其中，二进制和 Soap 格式仅有效率上的不同，实际效果类似，它们会将对象内的所有字段序列化，不管是公用的还是私用的。因此反序列化后可得到完整的对象，常用于对象的克隆操作。</p>
+	<p>甚至通过代理/事件被引用到的对象也会被序列化，这在某些情况下会引发一些问题，因此，对于可序列化对象的定义要小心，尽量避免在其中定义事件，因为你无法得知通过事件引用到的对象是否为可序列化的。如果必需要定义事件，可在事件前加入 NonSerialized 特性避免序列化该事件。</p>
+	<pre class="code" data-type="csharp">[field: NonSerialized]
+public event PropertyChangedEventHandler PropertyChanged;</pre>
+	<p>对于XML序列化方式，则仅仅序列化对象可读写的公用字段和属性。因此对于某些对象/结构，如 System.Drawing.Color 和 System.Drawing.Font, 仅用私有成员存储信息，公用成员仅用于暴露信息，这样的对象做XML序列化后信息将会全部丢失。</p>
+	<h2>简单的序列化/反序列化示例</h2>
+	<div id="accordion-test-class">
+		<p><a href="#">测试类</a></p>
+		<pre class="code" data-type="csharp">using System;
+using System.Text;
+
+namespace SerializeDemo
+{
+	public delegate void MyEventHandler();
+
+	[Serializable]
+	public class TestClass
+	{
+		public TestClass()
+		{
+			this.StringValue = &quot;String&quot;;
+			this.Child = new ChildClass();
+		}
+
+		public string StringValue { get; set; }
+
+		public ChildClass Child { get; set; }
+
+		public event MyEventHandler MyEvent;
+
+		public override string ToString()
+		{
+			StringBuilder sb = new StringBuilder();
+			sb.AppendLine(&quot;StringValue: &quot; + this.StringValue);
+			sb.AppendLine(&quot;Child: &quot; + this.Child.ToString());
+			return sb.ToString();
+		}
+
+		public void InitEvent()
+		{
+			EventHandlerClass handler = new EventHandlerClass();
+			this.MyEvent += new MyEventHandler(handler.Process);
+			this.MyEvent();
+		}
+	}
+
+	[Serializable]
+	public class ChildClass
+	{
+		public ChildClass()
+		{
+			this.ChildStringValue = &quot;Child String&quot;;
+		}
+
+		public string ChildStringValue { get; set; }
+
+		public override string ToString()
+		{
+			return this.GetType().FullName + &quot; - ChildStringValue: &quot; + this.ChildStringValue;
+		}
+	}
+
+	public class EventHandlerClass
+	{
+		public void Process()
+		{
+			Console.WriteLine(&quot;Event is triggered.&quot;);
+		}
+	}
+
+}</pre>
+	</div>
+	<div id="accordion-test-program">
+		<p><a href="#">测试程序</a></p>
+		<pre class="code" data-type="csharp">using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.Runtime.Serialization.Formatters.Soap;
+using System.Text;
+using System.Xml.Serialization;
+
+namespace SerializeDemo
+{
+	class Program
+	{
+		static void Main(string[] args)
+		{
+			TestClass obj = new TestClass();
+			//obj.InitEvent();		//Add event will cause Binary/Soap serialize failed
+
+			Stream stream;
+			TestClass result;
+
+			string cmdStr;
+			while ((cmdStr = GetCmd()) != &quot;0&quot;)
+			{
+				switch (cmdStr)
+				{
+					case &quot;1&quot;:
+						stream = SerializeToBinary(obj);
+						PrintBinaryStream(&quot;Serialize to Binary&quot;, stream);
+						result = (TestClass)DeserializeFromBinary(stream);
+						PrintObject(&quot;Deserialize from Binary&quot;, result);
+						break;
+					case &quot;2&quot;:
+						stream = SerializeToSoap(obj);
+						PrintTextStream(&quot;Serialize to Soap&quot;, stream);
+						result = (TestClass)DeserializeFromSoap(stream);
+						PrintObject(&quot;Deserialize from Soap&quot;, result);
+						break;
+					case &quot;3&quot;:
+						stream = SerializeToXml(obj);
+						PrintTextStream(&quot;Serialize to XML&quot;, stream);
+						result = DeserializeFromXml&lt;TestClass&gt;(stream);
+						PrintObject(&quot;Deserialize from XML&quot;, result);
+						break;
+					default:
+						break;
+				}
+			}
+		}
+
+		#region Serialize
+
+		private static Stream SerializeToBinary(object obj)
+		{
+			BinaryFormatter formatter = new BinaryFormatter();
+			Stream stream = new MemoryStream();
+			formatter.Serialize(stream, obj);
+			return stream;
+		}
+
+		private static Stream SerializeToSoap(object obj)
+		{
+			SoapFormatter formatter = new SoapFormatter();
+			Stream stream = new MemoryStream();
+			formatter.Serialize(stream, obj);
+			return stream;
+		}
+
+		private static Stream SerializeToXml(object obj)
+		{
+			XmlSerializer formatter = new XmlSerializer(obj.GetType());
+			Stream stream = new MemoryStream();
+			formatter.Serialize(stream, obj);
+			return stream;
+		}
+
+		#endregion Serialize
+
+		#region Deserialize
+
+		private static object DeserializeFromBinary(Stream stream)
+		{
+			BinaryFormatter formatter = new BinaryFormatter();
+			stream.Seek(0, SeekOrigin.Begin);
+			TestClass obj = (TestClass)formatter.Deserialize(stream);
+			return obj;
+		}
+
+		private static object DeserializeFromSoap(Stream stream)
+		{
+			SoapFormatter formatter = new SoapFormatter();
+			stream.Seek(0, SeekOrigin.Begin);
+			TestClass obj = (TestClass)formatter.Deserialize(stream);
+			return obj;
+		}
+
+		private static T DeserializeFromXml&lt;T&gt;(Stream stream)
+		{
+			XmlSerializer formatter = new XmlSerializer(typeof(T));
+			stream.Seek(0, SeekOrigin.Begin);
+			T obj = (T)formatter.Deserialize(stream);
+			return obj;
+		}
+
+		#endregion Deserialize
+
+		#region Helper Methods
+
+		private static void PrintBinaryStream(string prefix, Stream stream)
+		{
+			Console.WriteLine(&quot;*********************** &quot; + prefix + &quot; ***********************&quot;);
+			stream.Seek(0, SeekOrigin.Begin);
+			BinaryReader reader = new BinaryReader(stream);
+
+			List&lt;byte&gt; buf = new List&lt;byte&gt;();
+			int readScale = 1024;
+
+			byte[] readBuf = reader.ReadBytes(readScale);
+
+			while (readBuf != null &amp;&amp; readBuf.Length &gt; 0)
+			{
+				buf.AddRange(readBuf);
+				readBuf = reader.ReadBytes(readScale);
+			}
+
+			PrintBytes(buf.ToArray());
+		}
+
+		private static void PrintTextStream(string prefix, Stream stream)
+		{
+			Console.WriteLine(&quot;*********************** &quot; + prefix + &quot; ***********************&quot;);
+			stream.Seek(0, SeekOrigin.Begin);
+			StreamReader reader = new StreamReader(stream);
+			Console.WriteLine(reader.ReadToEnd());
+		}
+
+		private static void PrintObject(string prefix, object obj)
+		{
+			Console.WriteLine(&quot;*********************** &quot; + prefix + &quot; ***********************&quot;);
+			Console.WriteLine(obj.ToString());
+		}
+
+		private static string GetCmd()
+		{
+			StringBuilder buf = new StringBuilder();
+			buf.AppendLine(&quot;0.\tQuit&quot;);
+			buf.AppendLine(&quot;1.\tBinary Format&quot;);
+			buf.AppendLine(&quot;2.\tSoap Format&quot;);
+			buf.AppendLine(&quot;3.\tXML Format&quot;);
+			buf.Append(&quot;Input the command No:&quot;);
+			Console.WriteLine(buf.ToString());
+			return Console.ReadLine();
+		}
+
+		private static void PrintBytes(byte[] bytes)
+		{
+			StringBuilder buf = new StringBuilder();
+			int counter = 0;
+			foreach (byte val in bytes)
+			{
+				if (counter % 16 == 0)
+				{
+					if (counter != 0)
+					{
+						buf.AppendLine();
+					}
+
+					buf.Append(Convert.ToString(counter, 16).PadLeft(8, '0') + &quot;: &quot;);
+				}
+
+				buf.Append(Convert.ToString(val, 16).PadLeft(2, '0') + &quot; &quot;);
+
+				counter++;
+			}
+
+			Console.WriteLine(buf.ToString());
+		}
+
+		#endregion Helper Methods
+
+	}
+}</pre>
+	</div>
+	<h2>Dictionary 的序列化</h2>
+	<p>Dictionary 默认只支持二进制格式的序列化，且不能被反序列化，如使用XML序列化会抛出如下异常：</p>
+	<pre class="code" data-type="csharp">The type [Your class name] is not supported because it implements IDictionary.</pre>
+	<p>而试图反序列化时则抛出如下错误：</p>
+	<pre class="code" data-type="csharp">The constructor to deserialize an object of type '[Your class name]' was not found.</pre>
+	<p>可声明如下构造函数即可支持反序列化（二进制）</p>
+	<pre class="code" data-type="csharp">protected MapTest(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext ctx)
+	: base(info, ctx)
+{
+
+}</pre>
+	<h1>自定义序列化</h1>
+	<h2>使用 Attribute 实现自定义序列化</h2>
+	<p>可使用如下的内置 Attribute 来控制序列化结果</p>
+	<ul>
+		<li>NonSerialized: 当使用二进制（BinaryFormatter）或Soap（SoapFormatter）方式进行序列化时，可使用该特性阻止对某些成员进行序列化。该特性仅可应用于类的 filed 成员。
+			<pre class="code" data-type="csharp">[field: NonSerialized]
+public event EventHandler MyEvent;</pre>
+		</li>
+		<li>XmlIgnore: 当使用XML（XmlSerializer ）方式进行序列化，使用该属性阻止对某些成序进行序列化</li>
+		<li>OnSerializing: 序列化过程中调用，在该方法中改变的值将会序列化到目标文件中</li>
+		<li>OnSerialized: 序列化完成后调用，改变的值不会序列化到目标文件中，可用于恢复 OnSerializing 中改变的值</li>
+		<li>OnDeserializing: 反序列化时调用，功能与 OnDeserialized 特性类似，设置的值将会存入最终结果对象中。</li>
+		<li>OnDeserialized: 反序列化后调用，可用于实现某些值的初始化，如用于某些未序列化属性的初始化
+	<pre class="code" data-type="csharp">[OnDeserialized()]
+internal void OnDeserializedMethod(StreamingContext context)
+{
+    member4 = "This value was set after deserialization.";
+}</pre>
+		</li>
+	</ul>
+	<p>有关这些特性例子可参考<a href="http://msdn.microsoft.com/en-us/library/system.runtime.serialization.ondeserializingattribute.aspx">http://msdn.microsoft.com/en-us/library/system.runtime.serialization.ondeserializingattribute.aspx</a></p>
+	<h2>手工实现 ISerialize 接口</h2>
+	<h1>示例</h1>
+	<h2>本章示例</h2>
+	<div id="accordion-completed-sample">
+		<p><a href="#">完整示例</a></p>
+		<pre class="code" data-type="csharp">public partial class FrmSerialize : DevExpress.XtraEditors.XtraForm
+{
+	[Serializable]
+	[XmlRoot(Namespace = &quot;http://www.lld_root.com&quot;)]
+	[XmlTypeAttribute(Namespace = &quot;http://www.lld.com&quot;)]
+	public class Person
+	{
+		public int ID = 1;
+		public string Name = &quot;xxx&quot;;
+		public DateTime BirthDay = DateTime.Now;
+		public PersonOptions Option = new PersonOptions();
+
+		public override string ToString()
+		{
+			return &quot;ID = &quot; + ID + &quot;, Name = &quot; + Name + &quot;, BirthDay = &quot; + BirthDay + &quot;, &quot; + Option.ToString();
+		}
+	}
+
+	[Serializable]
+	[XmlRoot(Namespace = &quot;http://www.lld_root.com&quot;)]
+	[XmlTypeAttribute(Namespace = &quot;http://www.lld.com&quot;)]
+	public class Employee : Person
+	{
+		public string Profession = &quot;IT&quot;;
+	}
+
+	[Serializable]
+	[XmlTypeAttribute(Namespace = &quot;http://www.xml.com&quot;)]
+	public class PersonOptions
+	{
+		public bool Married = true;
+		public string Country = &quot;Chinese&quot;;
+
+		public override string ToString()
+		{
+			return &quot;Married = &quot; + Married + &quot;, Country = &quot; + Country;
+		}
+	}
+
+
+	public FrmSerialize()
+	{
+		InitializeComponent();
+	}
+
+	private string SoapFile = @&quot;c:\serializable.soap&quot;;
+	private string XmlFile = @&quot;c:\serializable.xml&quot;;
+
+	private void simpleButton1_Click(object sender, EventArgs e)
+	{
+		Person o = new Person();
+		o.Name = &quot;刘林东&quot;;
+		o.BirthDay = new DateTime(1978, 9, 21);
+
+		BinaryFormatter formatter = new BinaryFormatter();
+		Stream stream = new FileStream(@&quot;c:\serializable.dat&quot;, FileMode.Create, FileAccess.Write, FileShare.None, 1024 * 10);
+		formatter.Serialize(stream, o);
+		stream.Close();
+		MessageBox.Show(&quot;Operation is successful!&quot;);
+
+	}
+
+
+	private void simpleButton2_Click(object sender, EventArgs e)
+	{
+		FileStream sr = File.OpenRead(@&quot;c:\serializable.dat&quot;);
+		BinaryFormatter formatter = new BinaryFormatter();
+		Person o = (Person)formatter.Deserialize(sr);
+		sr.Close();
+		MessageBox.Show(Convert.ToString(o));
+	}
+
+	private void simpleButton4_Click(object sender, EventArgs e)
+	{
+		Employee o = new Employee();
+		o.Name = &quot;刘林&quot;;
+		o.BirthDay = new DateTime(1978, 9, 21);
+		o.Profession = &quot;aaaaaa&quot;;
+		
+		SoapFormatter formatter = new SoapFormatter();
+		Stream stream = new FileStream(this.SoapFile, FileMode.Create, FileAccess.Write, FileShare.None, 1024 * 10);
+		formatter.Serialize(stream, o);
+		stream.Close();
+		MessageBox.Show(&quot;Operation is successful!&quot;);
+
+	}
+
+	private void simpleButton3_Click(object sender, EventArgs e)
+	{
+		FileStream sr = File.OpenRead(this.SoapFile);
+		SoapFormatter formatter = new SoapFormatter();
+		Employee o = (Employee)formatter.Deserialize(sr);
+		sr.Close();
+		MessageBox.Show(Convert.ToString(o));
+	}
+
+	private void simpleButton6_Click(object sender, EventArgs e)
+	{
+		Person o = new Person();
+		o.Name = &quot;JACK&quot;;
+		o.BirthDay = new DateTime(1978, 9, 21);
+		o.Option.Married = false;
+		o.Option.Country = &quot;USA&quot;;
+
+		XmlSerializer formatter = new XmlSerializer(typeof(Person), new Type[] { typeof(PersonOptions) });
+		Stream stream = new FileStream(this.XmlFile, FileMode.Create, FileAccess.Write, FileShare.None, 1024 * 10);
+		formatter.Serialize(stream, o);
+		stream.Close();
+		MessageBox.Show(&quot;Operation is successful!&quot;);
+	}
+
+	private void simpleButton5_Click(object sender, EventArgs e)
+	{
+		FileStream sr = File.OpenRead(this.XmlFile);
+		XmlSerializer formatter = new XmlSerializer(typeof(Person), new Type[] { typeof(PersonOptions) });
+		Person o = (Person)formatter.Deserialize(sr);
+		sr.Close();
+		MessageBox.Show(Convert.ToString(o));
+	}
+
+	private void simpleButton8_Click(object sender, EventArgs e)
+	{
+		Person o = new Person();
+		o.Name = &quot;刘林东&quot;;
+		o.BirthDay = new DateTime(1978, 9, 21);
+
+		BinaryFormatter formatter = new BinaryFormatter();
+		MemoryStream stream = new MemoryStream();
+		//Stream stream = new FileStream(@&quot;c:\serializable.dat&quot;, FileMode.Create, FileAccess.Write, FileShare.None, 1024 * 10);
+		formatter.Serialize(stream, o);
+		//stream.Close();
+
+		//FileStream sr = File.OpenRead(@&quot;c:\serializable.dat&quot;);
+		//BinaryFormatter formatter = new BinaryFormatter();
+		stream.Seek(0, SeekOrigin.Begin);
+		Person o2 = (Person)formatter.Deserialize(stream);
+		o2.Name = &quot;刘林栋&quot;;
+		stream.Close();
+
+		MessageBox.Show(&quot;Operation is successful!&quot;);
+		MessageBox.Show(&quot;o.Name = &quot; + o.Name + &quot;\t\to2.Name = &quot; + o2.Name);
+
+
+	}
+
+	
+}</pre>
+	</div>
+	<a id="cross-assembly"></a><h2>跨程序集处理</h2>
+	<p>如果需要处理跨程序集，特别是程序集不在同一目录下时，经常会遇到程序集无法加载的异常，异常信息通常如下所示：</p>
+	<pre>Cannot load assembly xxxxxxxxxx</pre>
+	<p>在这种情况下需要使用 AppDomain.AssemblyResolve 事件来解决，该事件会在 Assembly 加载失败时触发。并在解析时使用定制的 SerializationBinder。代码如下所示</p>
+	<pre class="code" data-type="csharp" data-collapsed="true" title="Binder">using System;
+using System.Reflection;
+using System.Runtime.Serialization;
+using System.Windows.Forms;
+
+public sealed class DeserializationBinder : SerializationBinder
+{
+	private static log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
+	public override Type BindToType(string assemblyName, string typeName)
+	{
+		ResolveEventHandler handler = new ResolveEventHandler(CurrentDomain_AssemblyResolve);
+		AppDomain.CurrentDomain.AssemblyResolve += handler;
+
+		Type returnedType;
+		try
+		{
+			AssemblyName asmName = new AssemblyName(assemblyName);
+			var assembly = Assembly.Load(asmName);
+			returnedType = assembly.GetType(typeName);
+		}
+		catch (Exception ex)
+		{
+			log.Error(ex);
+			returnedType = null;
+		}
+		finally
+		{
+			AppDomain.CurrentDomain.AssemblyResolve -= handler;
+		}
+
+		return returnedType;
+	}
+
+	<span class="emphasis">Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
+	{
+		try
+		{
+			string shotAssemblyName = args.Name.Split(',')[0];
+			string assemblyPath = System.IO.Path.Combine(Application.StartupPath, "相对根目录的程序集路径");
+			Assembly assembly = Assembly.LoadFrom(assemblyPath);
+			return assembly;
+		}
+		catch (Exception ex)
+		{
+			log.Error(ex);
+			return null;
+		}
+	}</span>
+}</pre>
+	<p></p>
+	<pre class="code" data-type="csharp" data-collapsed="true" title="Clone Function">public static T Clone&lt;T&gt;(T source)
+{
+	if (!typeof(T).IsSerializable)
+	{
+		throw new ArgumentException(&quot;The type must be serializable.&quot;, &quot;source&quot;);
+	}
+
+	if (Object.ReferenceEquals(source, null))
+	{
+		return default(T);
+	}
+
+	IFormatter formatter = new BinaryFormatter();
+	using (Stream stream = new MemoryStream();)
+	{
+		<span class="emphasis">formatter.Binder = new DeserializationBinder();</span>
+		formatter.Serialize(stream, source);
+		stream.Seek(0, SeekOrigin.Begin);
+		return (T)formatter.Deserialize(stream);
+	}
+}</pre>
+</body>
+</html>

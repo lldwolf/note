@@ -1,0 +1,118 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+CumulativeSum</TITLE>
+</HEAD>
+<BODY>
+<A NAME="CAIDHFDA"></A><A NAME="TI6495"></A><h1>CumulativeSum</h1>
+<A NAME="TI6496"></A><p>
+<FORM>
+<INPUT
+ TYPE = "BUTTON"
+ VALUE = "Examples"
+ onClick = "window.location = 'imugp167.htm#EX19';">
+<INPUT
+  TYPE = "BUTTON"
+ VALUE = "See also"
+ onClick = "window.location = 'imugp167.htm#SA19';">
+</FORM>
+</p>
+<h3>Description</h3><A NAME="TI6497"></A><p>Calculates the total value of the rows up to and including
+the current row in the specified column (a running total).</p>
+
+<h3>Syntax</h3><pre><b>CumulativeSum</b> ( <i>column</i> { FOR <i>range</i> } )</pre>
+<A NAME="TI6498"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI6499"></A>Argument</th>
+<th align="left" valign=bottom><A NAME="TI6500"></A>Description</th>
+</tr>
+<tr><td valign=top><A NAME="TI6501"></A><i>column</i></td>
+<td valign=top><A NAME="TI6502"></A>The column for which you want the cumulative
+total value of the rows up to and including the current row for
+group. <i>Column</i> can be the column name or the
+column number preceded by a pound sign (#). <i>Column</i> can
+also be an expression that includes a reference to the column. The
+data type of <i>column</i> must be numeric</td>
+</tr>
+<tr><td valign=top><A NAME="TI6503"></A>FOR <i>range</i>  (optional)</td>
+<td valign=top><A NAME="TI6504"></A>The data that will be included in the
+cumulative sum. For most presentation styles, values for <i>range</i> are:<A NAME="TI6505"></A><A NAME="TI6506"></A>
+<ul>
+<li class=fi>ALL -- (Default)
+The cumulative sum of all values in <i>column</i></li>
+<li class=ds>GROUP <i>n</i> -- The cumulative
+sum of values in <i>column</i> in the specified group.
+Specify the keyword GROUP followed by the group number: for example,
+GROUP 1</li>
+<li class=ds>PAGE -- The cumulative sum of the values
+in <i>column</i> on a page
+</li>
+</ul>
+<A NAME="TI6507"></A>For Crosstabs, specify CROSSTAB for <i>range</i>:<A NAME="TI6508"></A><A NAME="TI6509"></A>
+<ul>
+<li class=fi>CROSSTAB -- (Crosstabs
+only) The cumulative sum of all values in <i>column</i> in
+the crosstab
+</li>
+</ul>
+<A NAME="TI6510"></A>For Graph and OLE objects, specify one of the following:<A NAME="TI6511"></A><A NAME="TI6512"></A>
+<ul>
+<li class=fi>GRAPH -- (Graphs
+only) The cumulative sum of values in <i>column</i> in
+the range specified for the Rows option</li>
+<li class=ds>OBJECT -- (OLE objects only) The cumulative
+sum of values in <i>column</i> in the range specified
+for the Rows option
+</li>
+</ul>
+</td>
+</tr>
+</table>
+
+<h3>Return Values</h3><A NAME="TI6513"></A><p>Long. Returns the cumulative total value of the rows.</p>
+
+<h3>Usage</h3><A NAME="TI6514"></A><p>If you specify <i>range</i>, CumulativeSum restarts
+the accumulation at the start of the range.</p>
+<A NAME="TI6515"></A><p>For graphs and OLE objects, you do not select the range when
+you call the function. The range has already been determined by
+the Rows setting on the Data property page (the Range property),
+and the aggregation function uses that range. Settings for Rows
+include:</p>
+<A NAME="TI6516"></A><p><A NAME="TI6517"></A>
+<ul>
+<li class=fi>For the Graph or OLE
+presentation style, Rows is always All.</li>
+<li class=ds>For Graph controls, Rows can be All, Page, or Group.</li>
+<li class=ds>For OLE controls, Rows can be All, Current Row,
+Page, or Group. The available choices depend on the layer the control
+occupies.
+</li>
+</ul>
+</p>
+<A NAME="TI6518"></A><p>In calculating the sum, NULL values are ignored.</p>
+
+<A NAME="EX19"></A><h3>Examples</h3><A NAME="TI6519"></A><p>This expression returns the running total for the
+values that are not NULL in the column named salary:<pre><i>CumulativeSum</i> (salary)</pre>
+</p>
+<A NAME="TI6520"></A><p>This expression returns the running total for the
+values that are not NULL in the column named salary in group 1:<pre><i>CumulativeSum</i> (salary for group 1)</pre>
+</p>
+<A NAME="TI6521"></A><p>This expression returns the running total for the
+values that are not NULL in the column named salary in group 1:<pre><i>CumulativeSum</i> (salary for group 1)</pre>
+</p>
+<A NAME="TI6522"></A><p>This expression entered in the Value box on the Data
+property page for a graph returns the running total for the salary
+column for the values in the graph that are not NULL:<pre><i>CumulativeSum</i> (salary for graph)</pre>
+</p>
+<A NAME="TI6523"></A><p>This expression in a crosstab computed field returns
+the running total for the salary column for the values in the crosstab
+that are not NULL:<pre><i>CumulativeSum</i> (salary for crosstab)</pre>
+</p>
+
+<A NAME="SA19"></A><h3>See Also</h3><A NAME="TI6524"></A><p><A NAME="TI6525"></A>
+<ul>
+<li class=fi><A HREF="imugp166.htm#CAICHGHI">CumulativePercent</A> 
+</li>
+</ul>
+</p>
+
+

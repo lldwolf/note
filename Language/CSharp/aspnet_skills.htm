@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>技巧集</title>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+<p id="title">技巧集</p>
+
+<h1>showModalDialog技巧</h1>
+<h2>使showModalDialog打开的页面自动刷新</h2>
+<p>通过ShowModalDialog打开的页面会自动从IE的缓存中获得内容并显示。如果想每次通过ShowModalDialog打开的页面都自动刷新的话，只需要在脚本中设定一个参数，例如：</p>
+<pre class="code" data-type="csharp">ShowModalDialog("xxx.aspx?id=1&amp;tempid=223");</pre>
+<p> 其中tempid是一个xxx.aspx中并不需要使用到的参数，只要这个参数每次不同，通过ShowModalDialog打开的页面就都会自动刷新。</p>
+<h1>自动更新技巧</h1>
+<h2>自动更新页面缓存 </h2>
+<pre class="code" data-type="csharp">Response.Buffer=true;
+Response.ExpiresAbsolute=System.DateTime.Now.AddSeconds(-1);
+Response.Expires=0;
+Response.CacheControl=&quot;no-cache&quot;;</pre>
+<h2>图片自动更新</h2>
+<p>例如，页面有有个图片 &lt;img src=&quot;a.jpg&quot; /&gt; ，但图片 a.jpg 是随时更新的，但使用IE时，IE总是取缓存中的图片，并不同步显示最新的图片，需按F5刷新才会显示已更改过的图片，在C#中可使用如下技巧使IE自动刷新图片。</p>
+<pre class="code" data-type="xml">img src=&quot;a.jpg?&lt;%=(new Random()).NextDouble()%&gt;&quot; /&gt;</pre>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+
+</body>
+</html>

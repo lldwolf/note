@@ -1,0 +1,493 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+Using graphs in reports </TITLE>
+</HEAD>
+<BODY>
+<A NAME="X-ref352146481"></A><h1>Using graphs in reports </h1>
+<A NAME="TI3516"></A><h4>Graphs in reports are dynamic</h4>
+<A NAME="TI3517"></A><p>Graphs in reports are tied directly to the data that is
+in the report. As the data changes, the graph is automatically
+updated to reflect the new values.</p>
+<A NAME="TI3518"></A><h4>Two techniques</h4>
+<A NAME="TI3519"></A><p>You can use graphs in reports in two ways:<A NAME="TI3520"></A>
+<ul>
+<li class=fi>By including a graph as a
+control in a report<br>
+Here you use a graph to enhance the display of information
+in a report, such as a tabular or freeform report. This
+technique is described next.<br></li>
+<li class=ds>By using the Graph presentation style<br>
+Here the entire report is a graph. The underlying data
+isn't visible. This technique is described in <A HREF="imugp89.htm#X-ref352385627">"Using the Graph presentation
+style"</A>.<br>
+</li>
+</ul>
+</p>
+<A NAME="TI3521"></A><h2>Placing a graph in a report</h2>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To place a graph in a report:</p>
+<ol><li class=fi>
+Open or create the report that will
+contain the graph.<br><br></li>
+<li class=ds>
+Select Insert&gt;Control&gt;Graph
+from the menu bar.<br><br></li>
+<li class=ds>
+Click where you want the graph.<br><br>
+InfoMaker displays the Graph Data dialog box:<br><br><br><img src="images/Graph13.gif"><br>
+</li>
+<li class=ds>
+Specify which columns contain the data and the
+type of graph you want, and click OK.<br><br>
+For more information, see <A HREF="imugp88.htm#X-ref339707717">"Associating data with
+a graph"</A>.<br><br>
+The Design view now contains a representation of the graph:<br><br><br><img src="images/Graph14.gif"><br>
+</li>
+<li class=ds>
+Specify the graph's properties in the
+Properties view.<br><br></li></ol>
+<br><A NAME="X-ref352150508"></A><h2>Using the graph's Properties view</h2>
+<A NAME="TI3522"></A><p>A graph has a Properties view in which you can specify the
+data as well as the other properties of the graph.<i></i></p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To display the graph's Properties view:</p>
+<ol><li class=fi>
+Select Properties from the graph's
+popup menu.<br><br></li></ol>
+<br><A NAME="TI3523"></A><p>The Properties view for a graph has 6 property pages in which
+you specify information about the graph. The following table lists
+the property pages and describes what each property page specifies:</p>
+<A NAME="TI3524"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI3525"></A>Property page</th>
+<th align="left" valign=bottom><A NAME="TI3526"></A>What it specifies</th>
+</tr>
+<tr><td valign=top><A NAME="TI3527"></A>Axis</td>
+<td valign=top><A NAME="TI3528"></A>Labels, scale, information about major
+and minor divisions for the category axes</td>
+</tr>
+<tr><td valign=top><A NAME="TI3529"></A>Data</td>
+<td valign=top><A NAME="TI3530"></A>Where to get the graph's data</td>
+</tr>
+<tr><td valign=top><A NAME="TI3531"></A>General</td>
+<td valign=top><A NAME="TI3532"></A>Various general graph properties, including
+border, graph colors, whether to size the graph to the full screen
+display, suppression in newspaper columns<A NAME="TI3533"></A>Graph type, title, legend location<A NAME="TI3534"></A>For 3D graphs, perspective, rotation, and elevation<A NAME="TI3535"></A>For bar graphs, overlap, spacing and depth of bars</td>
+</tr>
+<tr><td valign=top><A NAME="TI3536"></A>Pointer</td>
+<td valign=top><A NAME="TI3537"></A>The pointer to use when the mouse is
+positioned over the graph</td>
+</tr>
+<tr><td valign=top><A NAME="TI3538"></A>Position</td>
+<td valign=top><A NAME="TI3539"></A>The x,y location of the upper left corner
+of the graph, its width and height, sliding options, the layer in
+which the graph is to be positioned<A NAME="TI3540"></A>Whether the graph can be resized and moved during execution</td>
+</tr>
+<tr><td valign=top><A NAME="TI3541"></A>Text</td>
+<td valign=top><A NAME="TI3542"></A>Text properties for text controls that
+display on the graph, including title, axis text, axis label, and
+legend<A NAME="TI3543"></A>Text properties include font, font style, font size, alignment, rotation,
+color, display expression, display format</td>
+</tr>
+</table>
+<A NAME="TI3544"></A><h2>Changing a graph's
+position and size</h2>
+<A NAME="TI3545"></A><p>When you initially place a graph in a report, it is in
+the foreground--it sits above the bands in the report.
+Unless you change this setting, the graph displays in front of any
+retrieved data.</p>
+<A NAME="TI3546"></A><p>The initial graph is also movable and resizable, so users have
+complete flexibility as to the size and location of a graph when
+you run the report.</p>
+<A NAME="TI3547"></A><p>You can change these properties if you want.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To specify a graph's position and size:</p>
+<ol><li class=fi>
+Select Properties from the graph's
+popup menu and then select the Position page or the General page
+in the Properties view.<br><br>
+The Position page contains most of the options:<br><br><br><img src="images/graph16.gif"><br>
+</li>
+<li class=ds>
+Select the settings for the following options
+on the Position property page:<br><br><A NAME="TI3548"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI3549"></A>Setting</th>
+<th align="left" valign=bottom><A NAME="TI3550"></A>Meaning</th>
+</tr>
+<tr><td valign=top><A NAME="TI3551"></A>Layer</td>
+<td valign=top><A NAME="TI3552"></A><i>Background</i> -- The
+graph displays behind other elements in the report<A NAME="TI3553"></A><i>Band</i> -- The graph displays in
+one particular band. If you choose this setting, you should resize
+the band to fit the graph. Often you will want to place a graph
+in the Footer band. As users scroll through rows in the report,
+the graph remains at the bottom of the screen as part of the footer<A NAME="TI3554"></A><i>Foreground</i> -- (Default) The graph
+displays above all other elements in the report. Typically,
+if you choose this setting, you also make the graph movable so it
+won't obscure data while users display the report</td>
+</tr>
+<tr><td valign=top><A NAME="TI3555"></A>Moveable</td>
+<td valign=top><A NAME="TI3556"></A>The graph can be moved in the Preview
+view and during execution</td>
+</tr>
+<tr><td valign=top><A NAME="TI3557"></A>Resizable</td>
+<td valign=top><A NAME="TI3558"></A>The graph can be resized in the Preview
+view and during execution</td>
+</tr>
+<tr><td valign=top><A NAME="TI3559"></A>Slide Left, Slide Up</td>
+<td valign=top><A NAME="TI3560"></A>The graph slides to the left or up to
+remove extra white space<A NAME="TI3561"></A>For more information, see <A HREF="imugp55.htm#BFCDCEHJ">"Sliding controls to remove
+blank space in a report"</A></td>
+</tr>
+<tr><td valign=top><A NAME="TI3562"></A>X, Y</td>
+<td valign=top><A NAME="TI3563"></A>The location of the upper-left corner
+of the graph</td>
+</tr>
+<tr><td valign=top><A NAME="TI3564"></A>Width, Height</td>
+<td valign=top><A NAME="TI3565"></A>The width and height of the graph</td>
+</tr>
+</table>
+</li>
+<li class=ds>
+Select the settings for the following options
+on the General property page:<br><br><A NAME="TI3566"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI3567"></A>Setting</th>
+<th align="left" valign=bottom><A NAME="TI3568"></A>Meaning</th>
+</tr>
+<tr><td valign=top><A NAME="TI3569"></A>Size To Display</td>
+<td valign=top><A NAME="TI3570"></A>The graph fills the report and resizes
+when users resize the report. This setting is used with
+the Graph presentation style</td>
+</tr>
+<tr><td valign=top><A NAME="TI3571"></A>HideSnaked</td>
+<td valign=top><A NAME="TI3572"></A>Don't repeat graph after the
+first column in a report using newspaper-style columns</td>
+</tr>
+</table>
+</li></ol>
+<br><A NAME="X-ref339707717"></A><h2>Associating data with a graph</h2>
+<A NAME="TI3573"></A><p>When using a graph in a report, you associate axes of
+the graph with columns in the report.</p>
+<A NAME="TI3574"></A><p>In fact, the only way to get data into a graph in a report is
+through columns in the report. You cannot add, modify, or delete
+data in the graph except by adding, modifying, or deleting data
+in the report.</p>
+<A NAME="TI3575"></A><p>You can graph data from any columns retrieved into the report.
+The columns don't have to be displayed.</p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>About the examples</span> <A NAME="TI3576"></A>The process of specifying data for a graph is illustrated
+below using the Printer table in the EAS Demo DB.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To specify data for a graph:</p>
+<ol><li class=fi>
+If you are creating a new graph, the Graph
+Data dialog box displays. Otherwise, select Properties from the
+graph's popup menu and select the Data tab in the Properties
+view. <br><br></li>
+<li class=ds>
+Fill in the boxes as described below.<br><br></li>
+<li class=ds>
+Click OK.<br><br></li></ol>
+<br><A NAME="TI3577"></A><h3>Specifying which rows to include
+in a graph</h3>
+<A NAME="TI3578"></A><p>The Rows dropdown listbox allows you to specify which rows
+of data are graphed at any one time:</p>
+<A NAME="TI3579"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI3580"></A>Setting</th>
+<th align="left" valign=bottom><A NAME="TI3581"></A>Meaning</th>
+</tr>
+<tr><td valign=top><A NAME="TI3582"></A>All</td>
+<td valign=top><A NAME="TI3583"></A>Graphs the data from all the rows that
+have been retrieved but not filtered or deleted (that is, the rows
+in the primary buffer of the report)</td>
+</tr>
+<tr><td valign=top><A NAME="TI3584"></A>Page</td>
+<td valign=top><A NAME="TI3585"></A>Graphs only the data from the rows that
+are currently displayed on the page</td>
+</tr>
+<tr><td valign=top><A NAME="TI3586"></A>Group n</td>
+<td valign=top><A NAME="TI3587"></A>Graphs only the data in the specified
+group (in a grouped report)</td>
+</tr>
+</table>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>If you select Group</span> <A NAME="TI3588"></A>If you are graphing data in the current group in a grouped report and
+may have several groups displayed at the same time, you should localize
+the graph in a group-related band in the Design view to ensure that
+it is clear which group the graph represents. Usually, the group
+header band is the most appropriate band.</p>
+<A NAME="TI3589"></A><h3>Specifying the categories</h3>
+<A NAME="TI3590"></A><p>Specify the column or expression whose values determine the
+categories. In the Graph Data dialog box in the Graph wizard and
+in the Data tab in the Properties view, you can select a column
+name from a dropdown listbox. In the Data tab, you can also type
+an expression:</p>
+<br><img src="images/graph18.gif">
+<A NAME="TI3591"></A><p>There will be an entry along the Category axis for each different
+value of the column or expression you specify.</p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Using display values of data</span> <A NAME="TI3592"></A>If you are graphing columns that use code tables--data
+is stored with a data value but displayed to users with more
+meaningful display values--by default the graph will use
+the column's data values. To have the graph use a column's display
+values, use the LookupDisplay function when specifying Category
+or Series. LookupDisplay returns a string that matches the display
+value for a column:<pre>LookupDisplay ( <i>column</i> )</pre>
+</p>
+<A NAME="TI3593"></A>For more about code tables, see <A HREF="imugp65.htm#BFCDHGFC">"Defining a code table"</A>. For more about
+LookupDisplay, see <i></i>
+<A HREF="imugp202.htm#CAIDFBIE">LookUpDisplay</A>.</p>
+<A NAME="TI3594"></A><h3>Specifying the values</h3>
+<A NAME="TI3595"></A><p>InfoMaker populates the Value dropdown listbox. The listbox
+includes the names of all the retrieved columns as well as the following
+aggregate functions:<A NAME="TI3596"></A>
+<ul>
+<li class=fi>Count for all non-numeric columns</li>
+<li class=ds>Sum for all numeric columns
+</li>
+</ul>
+</p>
+<br><img src="images/graph19.gif">
+<A NAME="TI3597"></A><p>Select an item from the dropdown listbox or type an expression
+(in the Properties view). For example, if you want to graph the
+sum of units sold, you can specify:<pre>sum(units for graph)</pre>
+</p>
+<A NAME="TI3598"></A><p>To graph 110 percent of the sum of units sold, you can specify:<pre>sum(units*1.1 for graph)</pre>
+</p>
+<A NAME="TI3599"></A><h3>Specifying the series</h3>
+<A NAME="TI3600"></A><p>Graphs can have one or more series.</p>
+<A NAME="TI3601"></A><h4>Single-series graphs</h4>
+<A NAME="TI3602"></A><p>If you want only one series (that is, if you want to graph
+all retrieved rows as one series of values), leave the Series box
+empty.</p>
+<A NAME="TI3603"></A><h4>Multiple-series graphs</h4>
+<A NAME="TI3604"></A><p>If you want to graph more than one series, select the Series
+checkbox and specify the column that will provide the series values.</p>
+<A NAME="TI3605"></A><p>You can select column names from the dropdown listbox:</p>
+<br><img src="images/graph20.gif">
+<A NAME="TI3606"></A><p>There will be a set of data points for each different value
+of the column you specify here. For example, if you specify in the
+Series box a column that has 10 values, then your graph will have
+10 series: one set of data points for each different value of the
+column.</p>
+<A NAME="TI3607"></A><h4>Using expressions</h4>
+<A NAME="TI3608"></A><p>You can also specify expressions for Series (in the Data tab
+of the Properties view). For example, you could specify the following
+for Series:<pre>Units / 1000</pre>
+</p>
+<A NAME="TI3609"></A><p>In this case, if a table had unit values of 10,000, 20,000,
+and 30,000, the graph would show series values of 10, 20, and 30.</p>
+<A NAME="TI3610"></A><h4>Specifying multiple entries</h4>
+<A NAME="TI3611"></A><p>You can specify more than one of the retrieved columns to
+serve as series. Separate multiple entries by commas.</p>
+<A NAME="TI3612"></A><p>You need to specify the same number of entries in the Value
+box as you do in the Series box. The first value in the Value box
+corresponds to the first series identified in the Series box, the
+second value corresponds to the second series, and so on. The example
+about graphing actual and projected sales in <A HREF="imugp88.htm#X-ref299438620">"Examples"</A> illustrates
+this technique.</p>
+<A NAME="X-ref299438620"></A><h3>Examples</h3>
+<A NAME="TI3613"></A><p>This section shows how to specify the data for several different
+graphs of the data in the Printer table in the EAS Demo DB. The table
+records quarterly unit sales of three printers by three sales representatives:</p>
+<A NAME="TI3614"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI3615"></A>Rep</th>
+<th align="left" valign=bottom><A NAME="TI3616"></A>Quarter</th>
+<th align="left" valign=bottom><A NAME="TI3617"></A>Product</th>
+<th align="left" valign=bottom><A NAME="TI3618"></A>Units</th>
+</tr>
+<tr><td valign=top><A NAME="TI3619"></A>Simpson</td>
+<td valign=top><A NAME="TI3620"></A>Q1</td>
+<td valign=top><A NAME="TI3621"></A>Stellar</td>
+<td valign=top><A NAME="TI3622"></A>12</td>
+</tr>
+<tr><td valign=top><A NAME="TI3623"></A>Jones</td>
+<td valign=top><A NAME="TI3624"></A>Q1</td>
+<td valign=top><A NAME="TI3625"></A>Stellar</td>
+<td valign=top><A NAME="TI3626"></A>18</td>
+</tr>
+<tr><td valign=top><A NAME="TI3627"></A>Perez</td>
+<td valign=top><A NAME="TI3628"></A>Q1</td>
+<td valign=top><A NAME="TI3629"></A>Stellar</td>
+<td valign=top><A NAME="TI3630"></A>15</td>
+</tr>
+<tr><td valign=top><A NAME="TI3631"></A>Simpson</td>
+<td valign=top><A NAME="TI3632"></A>Q1</td>
+<td valign=top><A NAME="TI3633"></A>Cosmic</td>
+<td valign=top><A NAME="TI3634"></A>33</td>
+</tr>
+<tr><td valign=top><A NAME="TI3635"></A>Jones</td>
+<td valign=top><A NAME="TI3636"></A>Q1</td>
+<td valign=top><A NAME="TI3637"></A>Cosmic</td>
+<td valign=top><A NAME="TI3638"></A>5</td>
+</tr>
+<tr><td valign=top><A NAME="TI3639"></A>Perez</td>
+<td valign=top><A NAME="TI3640"></A>Q1</td>
+<td valign=top><A NAME="TI3641"></A>Cosmic</td>
+<td valign=top><A NAME="TI3642"></A>26</td>
+</tr>
+<tr><td valign=top><A NAME="TI3643"></A>Simpson</td>
+<td valign=top><A NAME="TI3644"></A>Q1</td>
+<td valign=top><A NAME="TI3645"></A>Galactic</td>
+<td valign=top><A NAME="TI3646"></A>6</td>
+</tr>
+<tr><td valign=top><A NAME="TI3647"></A>Jones</td>
+<td valign=top><A NAME="TI3648"></A>Q1</td>
+<td valign=top><A NAME="TI3649"></A>Galactic</td>
+<td valign=top><A NAME="TI3650"></A>2</td>
+</tr>
+<tr><td valign=top><A NAME="TI3651"></A>Perez</td>
+<td valign=top><A NAME="TI3652"></A>Q1</td>
+<td valign=top><A NAME="TI3653"></A>Galactic</td>
+<td valign=top><A NAME="TI3654"></A>1</td>
+</tr>
+<tr><td valign=top><A NAME="TI3655"></A>...</td>
+<td valign=top><A NAME="TI3656"></A>...</td>
+<td valign=top><A NAME="TI3657"></A>...</td>
+<td valign=top><A NAME="TI3658"></A>...</td>
+</tr>
+<tr><td valign=top><A NAME="TI3659"></A>Simpson</td>
+<td valign=top><A NAME="TI3660"></A>Q4</td>
+<td valign=top><A NAME="TI3661"></A>Stellar</td>
+<td valign=top><A NAME="TI3662"></A>30</td>
+</tr>
+<tr><td valign=top><A NAME="TI3663"></A>Jones</td>
+<td valign=top><A NAME="TI3664"></A>Q4</td>
+<td valign=top><A NAME="TI3665"></A>Stellar</td>
+<td valign=top><A NAME="TI3666"></A>24</td>
+</tr>
+<tr><td valign=top><A NAME="TI3667"></A>Perez</td>
+<td valign=top><A NAME="TI3668"></A>Q4</td>
+<td valign=top><A NAME="TI3669"></A>Stellar</td>
+<td valign=top><A NAME="TI3670"></A>36</td>
+</tr>
+<tr><td valign=top><A NAME="TI3671"></A>Simpson</td>
+<td valign=top><A NAME="TI3672"></A>Q4</td>
+<td valign=top><A NAME="TI3673"></A>Cosmic</td>
+<td valign=top><A NAME="TI3674"></A>60</td>
+</tr>
+<tr><td valign=top><A NAME="TI3675"></A>Jones</td>
+<td valign=top><A NAME="TI3676"></A>Q4</td>
+<td valign=top><A NAME="TI3677"></A>Cosmic</td>
+<td valign=top><A NAME="TI3678"></A>52</td>
+</tr>
+<tr><td valign=top><A NAME="TI3679"></A>Perez</td>
+<td valign=top><A NAME="TI3680"></A>Q4</td>
+<td valign=top><A NAME="TI3681"></A>Cosmic</td>
+<td valign=top><A NAME="TI3682"></A>48</td>
+</tr>
+<tr><td valign=top><A NAME="TI3683"></A>Simpson</td>
+<td valign=top><A NAME="TI3684"></A>Q4</td>
+<td valign=top><A NAME="TI3685"></A>Galactic</td>
+<td valign=top><A NAME="TI3686"></A>3</td>
+</tr>
+<tr><td valign=top><A NAME="TI3687"></A>Jones</td>
+<td valign=top><A NAME="TI3688"></A>Q4</td>
+<td valign=top><A NAME="TI3689"></A>Galactic</td>
+<td valign=top><A NAME="TI3690"></A>3</td>
+</tr>
+<tr><td valign=top><A NAME="TI3691"></A>Perez</td>
+<td valign=top><A NAME="TI3692"></A>Q4</td>
+<td valign=top><A NAME="TI3693"></A>Galactic</td>
+<td valign=top><A NAME="TI3694"></A>6</td>
+</tr>
+</table>
+<p><b>Graphing total sales</b>   Say you want to graph total sales of printers in each quarter.
+Retrieve all the columns into a report and create a graph with
+the following data specification:</p>
+<br><img src="images/graph21.gif">
+<A NAME="TI3695"></A><p>You want to graph sales by quarter, so the Quarter column
+serves as the category. Because the Quarter column has four values
+(Q1, Q2, Q3, and Q4), there will be four categories along the Category
+axis. You want only one series (total sales in each quarter), so
+you can leave the Series box empty as done in the preceding dialog
+box, or type a string literal to identify the series in a legend.
+You want to graph total sales in each quarter, so the Value box
+is specified as sum(units for graph).</p>
+<A NAME="TI3696"></A><p>Here is the resulting column graph. InfoMaker automatically
+generates the category text based on the data in the table:</p>
+<br><img src="images/graph22.gif">
+<A NAME="TI3697"></A><p>In the preceding graph, there is one set of data points (one
+series) across four quarters (the category values).</p>
+<A NAME="TI3698"></A><p>The following is a pie graph, which has exactly the same properties
+as the column graph above except for the type, which is 3D Pie:</p>
+<br><img src="images/graph23.gif">
+<A NAME="TI3699"></A><p>In pie graphs, categories are shown in the legend.</p>
+<p><b>Graphing unit sales of each printer</b>   Say you want to graph total quarterly sales of each printer.
+Create a graph with the following data specification:</p>
+<br><img src="images/graph24.gif">
+<A NAME="TI3700"></A><p>You want a different series for each printer, so the column
+Product serves as the series. Because the Product column has three
+values (Cosmic, Galactic, and Stellar), there will be three series
+in the graph. As in the first example, you want a value for each
+quarter, so the Quarter column serves as the category. And you want
+to graph total sales in each quarter, so the Value box is specified
+as sum(units for graph).</p>
+<A NAME="TI3701"></A><p>Here is the resulting graph. InfoMaker automatically generates
+the category and series labels based on the data in the table. The
+series labels display in the graph's legend:</p>
+<br><img src="images/graph25.gif">
+<p><b>Graphing unit sales by representative</b>   Say you want to graph the quarterly sales made by each representative.
+Here you want a different series for each representative, so the
+column Rep serves as the series. Your category is still the Quarter
+column. And you still want to graph total sales in each quarter
+for each series, so the Value box is still sum(units for graph):</p>
+<br><img src="images/graph26.gif">
+<A NAME="TI3702"></A><p>Here is the resulting graph:</p>
+<br><img src="images/graph27.gif">
+<p><b>Graphing unit sales by representative and total
+sales</b>   Say you want to graph sales by representative, as shown above,
+plus total sales for each printer. Here is how to specify the data:</p>
+<br><img src="images/graph28.gif">
+<A NAME="TI3703"></A><p>Here you have two types of categories: the first is Quarter,
+which shows quarterly sales, as in the preceding graph. You also
+want a category for total sales. There is no corresponding column
+in the report, so you can simply type the literal "Total" to
+identify the category. The Category box looks like this:<pre>quarter, "Total"</pre>
+</p>
+<A NAME="TI3704"></A><p>You separate multiple entries with a comma.</p>
+<A NAME="TI3705"></A><p>For each of these category types you want to graph the sum
+of units sold for each representative. So the Value entry is:<pre>sum(units for graph), sum(units for graph)</pre>
+</p>
+<A NAME="TI3706"></A><p>And the Series entry is:<pre>rep, rep</pre>
+</p>
+<A NAME="TI3707"></A><p>Here is the resulting graph:</p>
+<br><img src="images/graph29.gif">
+<A NAME="TI3708"></A><p>Notice that InfoMaker uses the literal "Total" supplied in
+the Category box in the Graph Data window as a value in the Category
+axis.</p>
+<p><b>Graphing actual and projected
+sales</b>   Say you want to graph total quarterly sales of all printers
+and also want to graph projected sales for next year. You figure
+that next year you will sell about 10 percent more printers. Here
+is how to specify the data:</p>
+<br><img src="images/graph30.gif">
+<A NAME="TI3709"></A><p>You are using labels to identify two series, Actual and Projected.
+Note the single quotation marks around the literals. For Values,
+you enter the expressions that correspond to Actual and Projected
+sales. For Actual, you use the same expression as in the examples
+above, sum(units for graph). For Projected sales, you multiply each
+unit sale by 1.1 to get the 10 percent increase. Therefore, the
+second expression is sum(units*1.1 for graph).</p>
+<A NAME="TI3710"></A><p>Here is the resulting graph. InfoMaker uses the literals
+you typed for the series as the series labels in the legend:</p>
+<br><img src="images/graph31.gif">
+<A NAME="TI3711"></A><h2>Using overlays</h2>
+<A NAME="TI3712"></A><p>It is often useful to call special attention to one of the
+series in a graph, particularly in a bar or column graph. You can
+do that by defining the series as an <strong>overlay</strong>.
+An overlay series is graphed as a line on top of the other series
+in the graph. To define a series as an overlay, define the series
+as follows:<A NAME="TI3713"></A>
+<ul>
+<li class=fi>If specifying a column name to identify the series,
+specify this for the series:<pre>"@overlay~t" + <i>ColumnName</i></pre>
+</li>
+<li class=ds>If using a label to identify the series, specify
+this for the series:<pre>"@overlay~t<i>SeriesLabel</i> "</pre>
+
+</li>
+</ul>
+</p>
+<A NAME="CCJBDFCB"></A><h4>Examples</h4>
+<A NAME="TI3714"></A><p>Say you want to graph sales in each quarter and overlay the
+sales of each individual printer. Specify the graph's data
+like this:</p>
+<br><img src="images/graph32.gif">
+<A NAME="TI3715"></A><p>Here is the resulting graph:</p>
+<br><img src="images/graph33.gif">
+<A NAME="TI3716"></A><p>To graph unit sales of printers by quarter and overlay the
+largest sale made in each quarter, specify the graph's
+data like this:</p>
+<br><img src="images/graph34.gif">
+<A NAME="TI3717"></A><p>Here is the resulting graph:</p>
+<br><img src="images/graph35.gif">
+

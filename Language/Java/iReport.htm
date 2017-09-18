@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>使用iReport开发报表</title>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+<p id="title">使用iReport开发报表</p>
+
+<h1>N.1 简介</h1>
+<p>iReport是用于定义JasperReport报表的可视化工具，JasperReport使用XML来定义一个报表的结构，iReport可以让用户很方便地定义报表，而不需要手工去写这些XML文件。</p>
+<p>iReport的官方网址为 <a href="http://www.jasperforge.org/">http://www.jasperforge.org</a>，iReport是免费的，不过其教程却是收费的（好像是30美刀，贵了点，不过我相信即使是30人民币，在中国也没几个人去买，除非是做成纸质的），不过这一点还真难不到中国人，因为网上好心人比较多（例如我，脸皮比较厚，呵呵）。</p>
+<p>iReport提供所谓的中文版本，不过建议大家还是安装英文版，因为中文版的汉化是繁体版，而且不完整，中英混排，而且没有使用专门的中文字号，极其难看。如果不幸安装了中文版，那也不要紧，点击菜单中的“Options”-“Settings...”，将“General”面板中的“Language”项设为“English”即可。</p>
+<p>我平时使用iReport的步骤如下所示：</p>
+<ol>
+  <li>使用iReport定义报表格式</li>
+  <li>编程生成报表数据源</li>
+  <li>使用报表数据源和报表模板文件生成用户报表</li>
+</ol>
+<p>我平时只用JasperReport生成PDF报表，虽然它也提供其它格式的输出，但输出结果通常不太理想，例如，使用JasperReport生成Excel报表时，如果用户是想再拿来自己作数据处理的话，通常是没法用的，因此，如果用户对Excel报表有强烈要求的话，那么用JasperReport通常是费力不讨好，建议大家还是直接用POI的好。</p>
+<p>在使用JasperReport以前，我一直是用iText来生成PDF报表，实际上，JasperReport也是通过使用iText来生成PDF报表，但使用JasperReport，可在很大程度上提高程序的可读性及报表开发效率。因此，在使用JasperReport开发报表时，iText包也要加到项目中，如果要使用中文，还要加入iTextAsian包。</p>
+<p>iReport支持多种数据源格式，这个可以从新建数据源的对话框中看得出来，如下所示：</p>
+<p><img src="images/ireport_datasource.jpg" width="448" height="525" /></p>
+<p>是不是有点晕，实话实说，里面有好多东西我也不知道该怎么用，不过只要能够满足平时的应用就足够了，不是吗？我重点讲一下“JavaBeans set data source”，这个可以满足我的全部需求，附带也讲一下“Database JDBC connection”，因为我平时JDBC用的多一些。</p>
+<p>使用iReport编辑生成的文件为.jrxml文件，通常要编译生成.jasper文件，我们在项目中即使用.jasper文件，以加快生成速度（省略了编译时间），但如果需要动态编译报表，那么，还是需要直接使用.jrxml文件的。有关动态编译报表的使用环境，我会在相关章节中进行说明。</p>
+<p>按照惯例，我将先写出一个最基本的例子，能够生成一个报表，然后再对其中的代码进行详细解释。</p>
+<h1>iReport 设计界面</h1>
+<p>iReport的设计界面比较简单，大家看看也就基本能够琢磨明白怎么回儿事，这里只做最简单的讲述。</p>
+<p>工具栏按钮上的<img src="images/ireport_static_text.jpg" />表示静态文本，用作报表中的标题、列标题等标签，<img src="images/ireport_text_field.jpg" />表示要显示的动态文本。将控件放置到报表上后，可以通过右键菜单“Properties”修改其属性。</p>
+<p>其它的配合下面的例子，应该不是很难使用。</p>
+<h1>使用JavaBean集合作为数据源</h1>
+<p>使用JDBC作为报表数据源其实是有很多缺陷的，例如，它要求使用SQL查询作为数据来源，但有时报表的内容并不能由一条SQL语句完成。因此，使用JavaBean集合作为数据源才是终极的解决之道，用户只需要将数据整理到一个JavaBean集合之中就可以了。</p>
+<h2>N.3.1 定义Bean </h2>
+<p>定义一个最简单的Bean，只包含一个属性，如下所示：</p>
+<pre>package lld.test.ireport;
+
+public class ProductBean
+{
+	private String productName;
+
+	public String getProductName()
+	{
+		return productName;
+	}
+
+	public void setProductName(String productName)
+	{
+		this.productName = productName;
+	}
+}</pre>
+<h2>N.3.2 在iReport中设定数据源及创建报表</h2>
+<p>要在iReport中使用JavaBean作为数据源，首先要定义好Classpath，以使iReport能够找到我们定义的Bean，使用菜单“Options”-“Classpath”定义Classpath，定义的路径为编译后的.class文件所在路径，例如，我定义的Classpath为“D:\Work\Java\ireport_test\WebContent\WEB-INF\classes”。</p>
+<p>在菜单“Data”-“Connections/Datasources”菜单中，添加数据源，将数据源类型设为“JavaBeans set data source”，设定的数据源属性如下图所示：</p>
+<p><img src="images/ireport_javabean_ds.jpg" /></p>
+<p>按道理而言，上图中的“Factory class”和 “The static method to call to retrieve the array or the collection of javaBeans”中，应该填写相应的工厂类及方法，然后，我们就能够在iReport集成环境中测试输出结果，但就我测试结果而言，发现在我赋上实际的工厂类后，按下Test按钮后，总是提示“The method doen't return a valid array or java.util.Collection”。所以，我们就只把iReport作为一个报表编辑器好了，不要对它报太大奢望，毕竟不花钱，有点bug（或者是我猪头没找对方法）也就原谅一下了。</p>
+<p>将其设为当前数据源，然后到菜单“Data”-“Report Query”中定义需要用到的 Bean属性，在“Class name”中输入自定义Bean的名称，本例中为“lld.test.ireport.ProductBean”，然后点击“Read attributes”按钮，获取Bean属性，点击“Add Selected Field(s)”添加要用的属性，如下图所示：</p>
+<p><img src="images/ireport_javabean_fields.jpg" /></p>
+<p>秉承本人所作笔记的一贯风格，只作最主要的功能描述，用最简单的代码描述最核心的功能，因此定义的报表非常之简单，各位如果有兴趣的话，可以加上边框线之类的美化元素，如下图所示：</p>
+<p><img src="images/ireport_05.jpg" width="500" height="151" /></p>
+<p>该文件名为report_2.jrxml，编译即可获取report_2.jasper</p>
+<h2>N.3.3 编程导出PDF </h2>
+<p>对于Web应用，以PDF格式导出报表是最常见的应用，另外如果是使用C/S模式的话，还可以导出来JRViewer格式。至于其它格式，例如Excel、HTML、Java2D图形等，基本上是自找麻烦，因为导出来的格式很难看，用户会有意见，不如自己去手工生成的好。</p>
+<p>对于JavaBean集合，最终仍然要转化成为JRDataSource以供JasperReport使用，不过这个转换很简单，一行代码即足够，示例代码如下所示：</p>
+<pre>List&lt;?&gt; data = new ArrayList&lt;?&gt;();
+
+...(填充数据)
+
+//生成JRDataSource
+JRDataSource dataSource = new JRBeanCollectionDataSource(data);</pre>
+<p>下面的代码是一个生成PDF的完整示例（Servlet）：</p>
+<pre>package lld.test.ireport;
+
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import net.sf.jasperreports.engine.JRDataSource;
+import net.sf.jasperreports.engine.JRExporterParameter;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import net.sf.jasperreports.engine.export.JRPdfExporter;
+import net.sf.jasperreports.engine.util.JRLoader;
+import net.sf.jasperreports.j2ee.servlets.BaseHttpServlet;
+
+public class BeanReportServlet extends HttpServlet
+{
+	private static final long serialVersionUID = 348226870594216833L;
+
+	@Override
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+			throws ServletException, IOException
+	{
+		this.doPost(req, resp);
+	}
+
+	@Override
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
+			throws ServletException, IOException
+	{
+		try
+		{
+			//生成测试数据
+			ArrayList&lt;ProductBean&gt; data = new ArrayList&lt;ProductBean&gt;();
+			for(int i = 1; i &lt;= 100; i++)
+			{
+				ProductBean bean = new ProductBean();
+				bean.setProductName(&quot;Product &quot; + i);
+				data.add(bean);
+			}
+			JRDataSource dataSource = new JRBeanCollectionDataSource(data);
+			
+			//获取报表模板文件
+			String root_path = this.getServletContext().getRealPath(&quot;/&quot;);
+			root_path = root_path.replace('\\', '/');
+			String reportFilePath = root_path + &quot;WEB-INF/classes/lld/test/ireport/report_2.jasper&quot;;
+			System.out.println(&quot;jasper file is &quot; + reportFilePath);
+			
+			//生成JasperPrint
+			JasperReport report = (JasperReport)JRLoader.loadObject(reportFilePath);
+			JasperPrint jasperPrint = JasperFillManager.fillReport(report, null, dataSource);
+
+			//设定输出格式
+			OutputStream ouputStream = resp.getOutputStream();  
+			resp.setContentType(&quot;application/pdf&quot;);
+			resp.setCharacterEncoding(&quot;UTF-8&quot;);  
+			resp.setHeader(&quot;Content-Disposition&quot;, &quot;attachment; filename=\&quot;&quot;  
+			        + URLEncoder.encode(&quot;PDF报表&quot;, &quot;UTF-8&quot;) + &quot;.pdf\&quot;&quot;);  
+			    	
+			// 使用JRPdfExproter导出器导出pdf  
+			JRPdfExporter exporter = new JRPdfExporter();  
+			// 设置JasperPrintList  
+			exporter.setParameter(JRExporterParameter.JASPER_PRINT, jasperPrint);  
+			exporter.setParameter(JRExporterParameter.OUTPUT_STREAM, ouputStream);  
+			exporter.exportReport();
+			
+			ouputStream.close();  
+		} catch (Exception e)
+		{
+			e.printStackTrace();
+		}	
+	}
+
+}</pre>
+<p>在上例中，我生成数据源的方式很简单，只是顺序成生了100个ProductBean对象。</p>
+<p>JasperReport生成报表时使用的参数传递方式比较奇怪，它不是使用常规的函数参数传递方式，而是需要调用相应Exporter对象的setParameter方法，设定各个参数值，怎一个BT了得，莫非是为了配合它的文档收费计划？</p>
+<p>实话实说，上例中的好多代码也是从网上copy来的，在些感谢各位在网上无私奉献的同仁。</p>
+<h2>N.3.4 报表生成方式</h2>
+<p>目前我知道两种报表的生成方式，一种是使用JRPdfExporter对象，上面的例子即是使用的该方法，还有一种方法是使用JasperRunManager对象，示例代码如下所示：</p>
+<pre>byte[] bytes = JasperRunManager.runReportToPdf(reportFilePath, null, dataSource);
+outputStream.write(bytes, 0, bytes.length);
+outputStream.close();  </pre>
+<h1>JDBC数据源</h1>
+<h2>N.4.1 定义报表 </h2>
+<p>在本例中，我先使用JDBC数据库连接方式，使用数据库为MS SQL Server，打印示例数据库Northwind中的Products.ProductName列表。</p>
+<p>iReport默认提供了MySql和HSql的驱动，如果要使用其它的数据库，需要将相应的jar包复制到iReport安装目录的lib子目录中，例如，对于SQL Server，我使用微软提供的驱动，将msbase.jar、mssqlserver.jar、msutil.jar这3个文件复制到lib子目录中。</p>
+<p>启动iReport，点击菜单“Data”-“Connection/Data Sources”定义数据源，在此我使用“Database JDBC Connection”，中间有关的配置项不再多说，各输入框的具体含义请参考本人所写的《使用数据库》一章。本人配置画面如下所示：</p>
+<p><img src="images/ireport_01.jpg" width="448" height="525" /></p>
+<p>如果只定义了一个数据源，它即为默认的活动数据源，否则需要使用菜单“Data”-“Set Active Connection”设定活动数据源。</p>
+<p>新建一个报表，在菜单“Data”-“Report Query”中设定该报表用到的SQL，我设为</p>
+<pre>select productname from products</pre>
+<p>我最后的定义画面如下所示：</p>
+<p><img src="images/ireport_02.jpg" width="568" height="311" /></p>
+<h2>N.4.2 测试报表</h2>
+<p>定义完报表后，使用菜单“Build”-“Compile”进行编译，如果一切正常的话，则编译成功，编译后生成.jasper文件，可在项目中进行编程使用。选择测试方式为“Build”-“JRViewer Preview”，然后点击菜单“Execute (With active connection)”，即可查看测试结果，如下图所示：</p>
+<p><img src="images/ireport_04.jpg" width="801" height="434" /></p>
+<p>还可以使用其它的测试方式，会在当前目录下生成相应的文件，例如，我的报表文件为report1.jasper，选择PDF测试方式，则在当前目录下生成report1.pdf。常用的方式为PDF方式，其它方式结果一般不尽如人意。</p>
+<h2>N.4.3 编程 </h2>
+<p>将编译生成的.jasper文件置于程序包中下，例如lld.test.ireport，建立如下Servlet，即可根据.jasper文件创建PDF报表</p>
+<pre>package lld.test.ireport;
+
+import java.io.*;
+import java.sql.*;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import net.sf.jasperreports.engine.*;
+import net.sourceforge.jtds.jdbc.Driver;
+
+public class FirstRepServlet extends HttpServlet
+{
+	private static final long serialVersionUID = 685516851376141590L;
+
+	@Override
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+			throws ServletException, IOException
+	{
+		this.doPost(req, resp);
+	}
+
+	@Override
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
+			throws ServletException, IOException
+	{
+		try
+		{
+			Class.forName(&quot;net.sourceforge.jtds.jdbc.Driver&quot;);
+			DriverManager.registerDriver(new Driver());
+			Connection connection = DriverManager.getConnection(&quot;jdbc:jtds:sqlserver://localhost:1433/NorthWind&quot;, &quot;sa&quot;, &quot;sa&quot;);
+			
+			String root_path = this.getServletContext().getRealPath(&quot;/&quot;);
+			root_path = root_path.replace('\\', '/');
+			File reportFile = new File(root_path + &quot;/WEB-INF/classes/lld/test/ireport/report1.jasper&quot;);
+			System.out.println(&quot;find file &quot; + reportFile.getPath());
+			byte[] bytes = JasperRunManager.runReportToPdf(reportFile.getPath(), null, connection);
+			System.out.println(&quot;create pdf file stream&quot;);
+			resp.setContentType(&quot;application/pdf&quot;);
+//			resp.setContentType(&quot;unknown&quot;);
+//			resp.addHeader(&quot;Content-Disposition&quot;, &quot;attachment;filename=\&quot;1.pdf\&quot;&quot;);
+			resp.setContentLength(bytes.length);
+			OutputStream os = resp.getOutputStream();
+			os.write(bytes, 0, bytes.length);
+			os.flush();
+			os.close();
+			System.out.println(&quot;close output stream.&quot;);
+			
+		} catch (Exception e)
+		{
+			e.printStackTrace();
+		}	
+	}
+}</pre>
+<h1>中文设置 </h1>
+<p>如果要生成PDF，需要将PDF支持包itext置入lib目录中，如果需要生成中文，还需要支持包iTextAsian。</p>
+<p>值得注意的是，在iReport中需要对中文字体需要进行特别设置其PDF字体，将“PDF Font Name”项设成中文字体，如下所示：</p>
+<p><img src="images/ireport_03.jpg" width="370" height="380" /></p>
+<p>否则在生成PDF时，中文内容无法显示。</p>
+<h1>子报表</h1>
+<h2>N.6.1 使用JavaBean集合作为数据源</h2>
+<p>在本例中，我使用子报表将生成如下样式的报表</p>
+<p style="text-align:center "><img border="1" src="images/ireport_subreport_01.jpg" width="258" height="390" /></p>
+<h3>N.6.1.1 程序部分 </h3>
+<p>第一步，创建与之相关的Bean类，如下所示：</p>
+<p><strong>ProvinceBean.java</strong></p>
+<pre>package lld.test.ireport;
+
+import java.util.ArrayList;
+
+public class ProvinceBean
+{
+	private String provinceName;
+	private ArrayList&lt;CityBean&gt; cities;
+	public String getProvinceName()
+	{
+		return provinceName;
+	}
+	public void setProvinceName(String provinceName)
+	{
+		this.provinceName = provinceName;
+	}
+	public ArrayList&lt;CityBean&gt; getCities()
+	{
+		return cities;
+	}
+	public void setCities(ArrayList&lt;CityBean&gt; cities)
+	{
+		this.cities = cities;
+	}
+}</pre>
+<p><strong>CityBean.java</strong></p>
+<pre>package lld.test.ireport;
+
+public class CityBean
+{
+	private String cityName;
+
+	public String getCityName()
+	{
+		return cityName;
+	}
+
+	public void setCityName(String cityName)
+	{
+		this.cityName = cityName;
+	}
+}</pre>
+<p>第二步 创建Servlet类，如下所示</p>
+<pre>package lld.test.ireport;
+
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import net.sf.jasperreports.engine.JRDataSource;
+import net.sf.jasperreports.engine.JRExporterParameter;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import net.sf.jasperreports.engine.export.JRPdfExporter;
+import net.sf.jasperreports.engine.util.JRLoader;
+
+public class ChildReportServlet extends HttpServlet
+{
+
+	private static final long serialVersionUID = -1233414483047719876L;
+
+	@Override
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+			throws ServletException, IOException
+	{
+		this.doPost(req, resp);
+	}
+
+	@Override
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
+			throws ServletException, IOException
+	{
+		try
+		{
+			String root_path = this.getServletContext().getRealPath(&quot;/&quot;);
+			root_path = root_path.replace('\\', '/');
+			String reportFilePath = root_path + &quot;WEB-INF/classes/lld/test/ireport/child_report_jbs_parent.jasper&quot;;
+			JRDataSource dataSource = this.createDataSource();
+
+			Map&lt;String, String&gt; parameters = new HashMap&lt;String, String&gt;();
+			parameters.put(&quot;SUBREPORT_DIR&quot;, root_path + &quot;WEB-INF/classes/lld/test/ireport/&quot;);
+			JasperReport report = (JasperReport)JRLoader.loadObject(reportFilePath);
+			JasperPrint jasperPrint = JasperFillManager.fillReport(report, parameters, dataSource);
+
+	        OutputStream ouputStream = resp.getOutputStream();  
+	        resp.setContentType(&quot;application/pdf&quot;);
+	        resp.setCharacterEncoding(&quot;UTF-8&quot;);  
+	        resp.setHeader(&quot;Content-Disposition&quot;, &quot;attachment; filename=\&quot;&quot;  
+	                + URLEncoder.encode(&quot;PDF报表&quot;, &quot;UTF-8&quot;) + &quot;.pdf\&quot;&quot;);  
+	            	
+	        // 使用JRPdfExproter导出器导出pdf  
+	        JRPdfExporter exporter = new JRPdfExporter();  
+	        exporter.setParameter(JRExporterParameter.JASPER_PRINT, jasperPrint);
+	        exporter.setParameter(JRExporterParameter.OUTPUT_STREAM, ouputStream);  
+	        exporter.exportReport();
+	        
+	        
+	        ouputStream.close();  
+
+		}catch(Exception ex)
+		{
+			ex.printStackTrace();
+		}
+		
+		
+	}
+	
+	private JRDataSource createDataSource()
+	{
+		//生成测试数据
+		ArrayList&lt;ProvinceBean&gt; provinces = new ArrayList&lt;ProvinceBean&gt;();
+		
+		ProvinceBean province = new ProvinceBean();
+		province.setProvinceName(&quot;山东&quot;);
+		
+		ArrayList&lt;CityBean&gt; cities = new ArrayList&lt;CityBean&gt;();
+		CityBean city = new CityBean();
+		city.setCityName(&quot;济南&quot;);
+		cities.add(city);
+		city = new CityBean();
+		city.setCityName(&quot;青岛&quot;);
+		cities.add(city);
+		city = new CityBean();
+		city.setCityName(&quot;潍坊&quot;);
+		cities.add(city);
+		
+		province.setCities(cities);
+		provinces.add(province);
+
+		province = new ProvinceBean();
+		province.setProvinceName(&quot;江苏&quot;);
+		
+		cities = new ArrayList&lt;CityBean&gt;();
+		city = new CityBean();
+		city.setCityName(&quot;南京&quot;);
+		cities.add(city);
+		city = new CityBean();
+		city.setCityName(&quot;无锡&quot;);
+		cities.add(city);
+		city = new CityBean();
+		city.setCityName(&quot;苏州&quot;);
+		cities.add(city);
+		
+		province.setCities(cities);
+		provinces.add(province);
+
+		return new JRBeanCollectionDataSource(provinces);
+	}
+
+}</pre>
+<p>如果有了以前例子的基础，这个例子应该不难看懂，需要注意的是下面这4行代码，这是新出现的特性：</p>
+<pre>Map&lt;String, String&gt; parameters = new HashMap&lt;String, String&gt;();
+parameters.put(&quot;SUBREPORT_DIR&quot;, root_path + &quot;WEB-INF/classes/lld/test/ireport/&quot;);
+JasperReport report = (JasperReport)JRLoader.loadObject(reportFilePath);
+JasperPrint jasperPrint = JasperFillManager.fillReport(report, parameters, dataSource);</pre>
+<p>这是因为，在使用子报表时，需要一个SUBREPORT_DIR变量，指示子报表所在的路径，在下面创建子报表的相关部分会再次进行描述，请注意对比。我在以前的例子中，调用JasperFillManager.fillReport()方法时第二个参数均为null，实际上，这个参数可传递到jasper report中的Parameters项中。</p>
+<h3>N.6.1.2 创建报表</h3>
+<p>第一步，创建主报表，如下图所示</p>
+<p style="text-align:center "><img src="images/ireport_subreport_02.jpg" width="444" height="135" /></p>
+<p>其Connection设置如下图所示：</p>
+<p align="center"><img src="images/ireport_subreport_03.jpg" width="448" height="525" /></p>
+<p>其DataSource设置如下图所示</p>
+<p align="center"><img src="images/ireport_subreport_04.jpg" width="800" height="550" /></p>
+<p>第二步，创建子报表，可使用工具栏的“SubReport”图标直接创建，使用默认的名称，并确定好子报表的位置，利用系统的wizard一步一步设置，注意在第2步设置”Connection/Datasource ”时最好选择”no connection or datasource”)</p>
+<p>子报表我们使用CityBean做为数据源，设置方法参考上一步</p>
+<p>第三步，在父报表中设置子报表控件的属性，在SubReport面板中设置其“Connection/Data Source Expression”为“new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{cities})”，如下图所示：</p>
+<p><img src="images/ireport_subreport_05.jpg" width="370" height="380" /></p>
+<p>第四步，编译，将编译生成的.jasper文件放置到项目的相应目录中</p>
+<h2>N.6.2 为子报表添加统计信息</h2>
+<p>内容与上例基本相同，但在子报表中添加一些统计信息，最后结果如下图所示：</p>
+<p><img src="images/ireport_subreport_06.jpg" width="217" height="286" /></p>
+<h3>N.6.2.1 程序部分 </h3>
+<p>首先，我修改一下ProvinceBean的定义，添加一个只读属性cityCount，如下代码中的阴影部分所示：</p>
+<pre>package lld.test.ireport;
+
+import java.util.ArrayList;
+
+public class ProvinceBean
+{
+	private String provinceName;
+	private ArrayList&lt;CityBean&gt; cities;
+	<span style="background-color:#CCCCCC ">
+	public int getCityCount()
+	{
+		if(this.cities != null)
+			return this.cities.size();
+		else
+			return 0;		
+	}</span>
+	
+	public String getProvinceName()
+	{
+		return provinceName;
+	}
+	public void setProvinceName(String provinceName)
+	{
+		this.provinceName = provinceName;
+	}
+	public ArrayList&lt;CityBean&gt; getCities()
+	{
+		return cities;
+	}
+	public void setCities(ArrayList&lt;CityBean&gt; cities)
+	{
+		this.cities = cities;
+	}
+}</pre>
+<p>其余代码不作修改</p>
+<h3>N.6.2.2 报表部分</h3>
+<p>在主报表的“Java Bean Data Source”中，引入新添加的cityCount字段。</p>
+<p>在主报表的子报表控件上，打开其属性窗口，添加“CITY_COUNT”参数，如下图所示：</p>
+<p><img src="images/ireport_subreport_07.jpg" width="370" height="380" /></p>
+<p>打开子报表，添加参数“CITY_COUNT”（添加参数的方式为在左下角“Document structure”工具窗口的Parameters节点添加），如下图所示：</p>
+<p><img src="images/ireport_subreport_08.jpg" width="324" height="368" /></p>
+<p>然后，修改子报表设计，添加summay栏（可通过右右键），如下图所示：</p>
+<p><img src="images/ireport_subreport_09.jpg" width="537" height="81" /></p>
+<p>OK，本例至此完成。</p>
+<h1>iReport 公式</h1>
+<p>在iReport中，我们常用$P{}、$V{}、$F{}这三种表达式，它们表示如下含义</p>
+<ul>
+  <li>$P{}：参数，Parameters中的值</li>
+  <li>$V{}：变量，Variables中的值</li>
+  <li>$F{}：字段，Fields中的值</li>
+</ul>
+<p>对于$F{}，由数据源传入。</p>
+<p>对于$P{}，可通过JasperFillManager.fillReport的第二个参数传入</p>
+<p>对于$V{}，属于报表内部自定义变量</p>
+<h1>添加统计信息 </h1>
+<p>本节说明如何添加本页合计、累计合计、总合计三种类型的统计信息，说明如下：</p>
+<ul>
+  <li>本页合计：只统计本页的数据</li>
+  <li>累计合计：截至当前页为止的数据合计</li>
+  <li>总合计：所有数据的合计</li>
+</ul>
+<p>我在此仍然使用JavaBean集合作为数据源，JavaBean类很简单，只有一个整型成员，如下所示：</p>
+<pre>package lld.test.ireport;
+
+public class NumberBean
+{
+	private int number;
+
+	public int getNumber()
+	{
+		return this.number;
+	}
+
+	public void setNumber(int number)
+	{
+		this.number = number;
+	}
+}
+</pre>
+<p>报表将为这个整型成员number进行上述三种统计，制作的报表如下图所示：</p>
+<p><img src="images/ireport_sum_01.jpg" width="599" height="180" /></p>
+<p>其中sumValue是一个Parameter，表示累计合计，定义如下图所示：</p>
+<p><img src="images/ireport_sum_02.jpg" width="444" height="481" /></p>
+<p>其中Vaiable Expression的值为</p>
+<pre>new java.lang.Integer($V{sumValue}.intValue() + $F{number}.intValue())</pre>
+<p>PAGE_SUM 表示本页合计，也是一个Variable，定义如下图所示：</p>
+<p><img src="images/ireport_sum_03.jpg" width="444" height="481" /></p>
+<p>与sumReport的定义基本相同，只是“Reset Type”设为Page，而不是Report。</p>
+<p>SUM_VALUE 表示总合计，是一个Parameter，由外部传入，因为在打印前，总合计信息可提前获知，定义如下图所示：</p>
+<p><img src="images/ireport_sum_04.jpg" width="324" height="368" /></p>
+<p>用于生成报表的Servlet程序如下所示：</p>
+<pre>package lld.test.ireport;
+
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import net.sf.jasperreports.engine.JRDataSource;
+import net.sf.jasperreports.engine.JRExporterParameter;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import net.sf.jasperreports.engine.export.JRPdfExporter;
+import net.sf.jasperreports.engine.util.JRLoader;
+
+public class SummaryReportServlet extends HttpServlet
+{
+
+	private static final long serialVersionUID = 3226292331974282393L;
+
+	@Override
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+			throws ServletException, IOException
+	{
+		this.doPost(req, resp);
+	}
+
+	@Override
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
+			throws ServletException, IOException
+	{
+		try
+		{
+			String root_path = this.getServletContext().getRealPath(&quot;/&quot;);
+			root_path = root_path.replace('\\', '/');
+			String reportFilePath = root_path + &quot;WEB-INF/classes/lld/test/ireport/summary_rep.jasper&quot;;
+			JRDataSource dataSource = this.createDataSource();
+
+<span style="background-color:#CCCCCC ">			Map&lt;String,Object&gt; params = new HashMap&lt;String, Object&gt;();
+			params.put(&quot;SUM_VALUE&quot;, new Integer(19900));		//设定合计值</span>
+			JasperReport report = (JasperReport)JRLoader.loadObject(reportFilePath);
+			JasperPrint jasperPrint = JasperFillManager.fillReport(report, params, dataSource);
+
+	        OutputStream ouputStream = resp.getOutputStream();  
+	        resp.setContentType(&quot;application/pdf&quot;);
+	        resp.setCharacterEncoding(&quot;UTF-8&quot;);  
+	        resp.setHeader(&quot;Content-Disposition&quot;, &quot;attachment; filename=\&quot;&quot;  
+	                + URLEncoder.encode(&quot;PDF报表&quot;, &quot;UTF-8&quot;) + &quot;.pdf\&quot;&quot;);  
+	            	
+	        // 使用JRPdfExproter导出器导出pdf  
+	        JRPdfExporter exporter = new JRPdfExporter();  
+	        exporter.setParameter(JRExporterParameter.JASPER_PRINT, jasperPrint);
+	        exporter.setParameter(JRExporterParameter.OUTPUT_STREAM, ouputStream);
+	        
+	        exporter.exportReport();
+	        
+	        
+	        ouputStream.close();  
+
+		}catch(Exception ex)
+		{
+			ex.printStackTrace();
+		}
+		
+		
+	}
+	
+	private JRDataSource createDataSource()
+	{
+		//生成测试数据
+		ArrayList&lt;NumberBean&gt; beans = new ArrayList&lt;NumberBean&gt;();
+		for(int i = 0; i &lt; 200; i++)
+		{
+			NumberBean bean = new NumberBean();
+			bean.setNumber(i);
+			beans.add(bean);
+		}
+
+		return new JRBeanCollectionDataSource(beans);
+	}
+
+	public static void main(String[] args) throws Exception
+	{
+		
+	}
+}</pre>
+<p>代码与以前的代码相似度很高，阴影部分的代码是设定一个合计值，因为只是示例，我在此偷了个懒，直接把结果给传过去了。结果如下图所示：</p>
+<p><img src="images/ireport_sum_05.jpg" width="426" height="599" /></p>
+<h1>打印图形</h1>
+<p>打印如下样式的报表</p>
+<p><img src="images/ireport_image.jpg" width="289" height="241" /></p>
+<p>有了前面的例子，这个倒没什么特别的，使用图形控件，将其“Image Express”设为图形路径即可，如下图所示：</p>
+<p><img src="images/ireport_image02.jpg" width="370" height="380" /></p>
+<p>使用的数据源Bean类如下：</p>
+<pre>package lld.test.ireport;
+
+public class AnimalBean
+{
+	private String animalName;
+	private String imagePath;
+	public String getAnimalName()
+	{
+		return animalName;
+	}
+	public void setAnimalName(String animalName)
+	{
+		this.animalName = animalName;
+	}
+	public String getImagePath()
+	{
+		return imagePath;
+	}
+	public void setImagePath(String imagePath)
+	{
+		this.imagePath = imagePath;
+	}
+}</pre>
+<p>生成数据源的函数如下所示：</p>
+<pre>private JRDataSource createDataSource()
+{
+	//生成测试数据
+	ArrayList&lt;AnimalBean&gt; beans = new ArrayList&lt;AnimalBean&gt;();
+	
+	String root_path = this.getServletContext().getRealPath(&quot;/&quot;);
+	root_path = root_path.replace('\\', '/');
+	root_path = root_path + &quot;image/&quot;;
+	
+	AnimalBean dog_bean = new AnimalBean();
+	dog_bean.setAnimalName(&quot;doggy&quot;);
+	dog_bean.setImagePath(root_path + &quot;doggy.jpg&quot;);
+	beans.add(dog_bean);
+	
+	AnimalBean mouse_bean = new AnimalBean();
+	mouse_bean.setAnimalName(&quot;mouse&quot;);
+	mouse_bean.setImagePath(root_path + &quot;mouse.jpg&quot;);
+	beans.add(mouse_bean);
+	
+	return new JRBeanCollectionDataSource(beans);
+}</pre>
+<h1>统计图表 </h1>
+<p>iReport 集成了 jfreeChart 作为显示图表的引擎，因此，如果要使用图表功能，需在项目中加入 jfreechart.jar 和 jcomon.jar，可在iReport安装目录下的lib文件夹下找到。</p>
+<p>我在此制作一个如下的图表：</p>
+<p><img src="images/ireport_chart01.jpg" width="496" height="403" /></p>
+<p>使用如下的Bean类作为数据源</p>
+<pre>package lld.test.ireport;
+
+public class ChartBean
+{
+	private String language;
+	private Double percent;
+	public String getLanguage()
+	{
+		return language;
+	}
+	public void setLanguage(String language)
+	{
+		this.language = language;
+	}
+	public Double getPercent()
+	{
+		return percent;
+	}
+	public void setPercent(Double percent)
+	{
+		this.percent = percent;
+	}
+
+}</pre>
+<p>使用如下的数据源生成函数：</p>
+<pre>private JRDataSource createDataSource()
+{
+	//生成测试数据
+	ArrayList&lt;ChartBean&gt; beans = new ArrayList&lt;ChartBean&gt;();
+	
+	ChartBean java_bean = new ChartBean();
+	java_bean.setLanguage(&quot;Java&quot;);
+	java_bean.setPercent(0.35);
+	beans.add(java_bean);
+
+	ChartBean csharp = new ChartBean();
+	csharp.setLanguage(&quot;.net&quot;);
+	csharp.setPercent(0.35);
+	beans.add(csharp);
+	
+	ChartBean php_bean = new ChartBean();
+	php_bean.setLanguage(&quot;PHP&quot;);
+	php_bean.setPercent(0.15);
+	beans.add(php_bean);
+	
+	ChartBean other_bean = new ChartBean();
+	other_bean.setLanguage(&quot;Other&quot;);
+	other_bean.setPercent(0.15);
+	beans.add(other_bean);
+	
+	return new JRBeanCollectionDataSource(beans);
+}</pre>
+<p>图表的参数设置如下图所示：</p>
+<p><img src="images/ireport_chart02.jpg" width="458" height="556" /></p>
+<p>Label Expression 在此设置为 (new Double($F{percent}.doubleValue() * 100)).toString() + &quot;%&quot;，用于显示图表的百分数标签。</p>
+<p>有关生成图表的详细操作，建议阅读jfreeChart的帮助文件。</p>
+<h1>示例下载</h1>
+<p><a href="example/ireport_test.zip">iReport示例代码</a> </p>
+<p><a href="example/ireport_test_simple.zip">iReport示例代码精简版</a></p>
+<p>精简版需手工添加如下包:</p>
+<ul>
+  <li>commons-beanutils-1.7.jar</li>
+  <li>commons-collections-2.1.jar</li>
+  <li>itext-2.0.4.jar</li>
+  <li>iTextAsian.jar</li>
+  <li>jasperreports-2.0.5.jar</li>
+  <li>jtds-1.2.2.jar</li>
+  <li>jxl-2.6.jar</li>
+  <li>poi-3.0.1-FINAL-20070705.jar</li>
+  <li>jcommon-1.0.0.jar</li>
+  <li>jfreechart-1.0.0.jar</li>
+</ul>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+
+</body>
+</html>

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+
+    <script type="text/javascript" src="../../../mylib/js/css.js"></script>
+
+    <title>C#.net使用手册</title>
+</head>
+<body>
+    <p id="title">
+        初学者常遇到的布局问题</p>
+    
+<h1>菜单</h1>
+<h2>如何使菜单显示在窗体顶部</h2>
+<p>拖到左上角，再把长度拉到最右边吧</p>
+<h2>如何实现Enabled属性</h2>
+<p>IsEnabled属性</p>
+<h1>Status Bar</h1>
+<h2>如何将其放在最下面</h2>
+<p>使用DockPanel, 将其放在DockPanel的第一个元素。如果不是第一个，效果为Fill</p>
+<pre class="code" data-type="xml">&lt;DockPanel&gt;
+    &lt;StatusBar DockPanel.Dock=&quot;Bottom&quot;&gt;
+        &lt;StatusBarItem&gt;
+            &lt;TextBlock Name=&quot;sbProject&quot;&gt;Project:&lt;/TextBlock&gt;
+        &lt;/StatusBarItem&gt;
+    &lt;/StatusBar&gt;
+    ...
+&lt;/DockPanel&gt;</pre>
+<h1>Style</h1>
+<p>类似于默认的 CSS，可实现指定控件的默认外观属性</p>
+<pre class="code" data-type="xml">&lt;Window.Resources&gt;
+    &lt;Style TargetType=&quot;TextBlock&quot;&gt;
+        &lt;Setter Property=&quot;Margin&quot; Value=&quot;3&quot; /&gt;
+    &lt;/Style&gt;
+&lt;/Window.Resources&gt;</pre>
+<p>将此代码放到 Window 层，则将影响 Window 中所有的 textBlock，亦可将其放在任意控件层，例如放在 DockPanel 层，则将影响 DockPanel 内的所有 TextBlock.</p>
+<p>但如果在控件中重新设置 Margin，则该控件将会使用自定义属性覆盖 Style 的设置。</p>
+<p>亦可将该代码放到 App.xaml 中，则可应用于整个应用程序</p>
+
+</body>
+</html>

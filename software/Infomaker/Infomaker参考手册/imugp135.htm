@@ -1,0 +1,67 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+About deploying applications</TITLE>
+</HEAD>
+<BODY>
+<A NAME="CFHCDCJJ"></A><h1>About deploying applications</h1>
+<A NAME="TI5476"></A><p>Creating an executable version of an application means packaging
+an application that can run on its own, outside the InfoMaker environment.
+Users of your application do not need InfoMaker to run the application.</p>
+<A NAME="TI5477"></A><p>When you create an application, InfoMaker generates an executable
+file and an initialization file for your application. To deploy
+an application however, you must distribute other files in addition
+to the executable file and the initialization file. Exactly what
+you distribute depends on whether users have InfoMaker installed
+or not.</p>
+<br><img src="images/dplyw01.gif">
+<A NAME="TI5478"></A><p>To set up a user's machine to run your application,
+you need to copy all the deployment files and database interface
+files you need to the right places. If you are using an Adaptive Server Anywhere database,
+the Adaptive Server Anywhere files needed to run your application must also be
+installed.</p>
+<A NAME="TI5479"></A><p>When you deploy an InfoMaker application, what you install
+on a user's computer depends on whether the user has InfoMaker installed.</p>
+<A NAME="TI5480"></A><p>If the user does not have InfoMaker installed, you need to
+install the following files:</p>
+<A NAME="TI5481"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI5482"></A>What to install</th>
+<th align="left" valign=bottom><A NAME="TI5483"></A>Notes</th>
+</tr>
+<tr><td valign=top><A NAME="TI5484"></A>Deployment DLLs</td>
+<td valign=top><A NAME="TI5485"></A>You need install only the deployment
+files that your application uses</td>
+</tr>
+<tr><td valign=top><A NAME="TI5486"></A>ODBC drivers</td>
+<td valign=top><A NAME="TI5487"></A>If your database is an ODBC database,
+install the ODBC database driver</td>
+</tr>
+<tr><td valign=top><A NAME="TI5488"></A>Native database drivers</td>
+<td valign=top><A NAME="TI5489"></A>If your database is a native database,
+install the native database driver</td>
+</tr>
+<tr><td valign=top><A NAME="TI5490"></A>Additional files</td>
+<td valign=top><A NAME="TI5491"></A>Check with your database vendor for information
+about additional files you need to deploy and the licensing issues</td>
+</tr>
+</table>
+<A NAME="TI5492"></A><p>If the user has InfoMaker installed, you need to install
+only ODBC drivers (if your database is an ODBC database).</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To deploy an application, do the following:</p>
+<ol><li class=fi>
+Create a folder for the application on
+the user's computer.<br><br></li>
+<li class=ds>
+Copy the application executable and initialization
+files to the application folder.<br><br></li>
+<li class=ds>
+Install the deployment files required.<br><br></li>
+<li class=ds>
+Distribute your data source.<br><br></li>
+<li class=ds>
+Install the database runtime files on the user's
+computer.<br><br></li>
+<li class=ds>
+Configure your ODBC drivers, system path, and
+registry files.<br><br></li></ol>
+<br>

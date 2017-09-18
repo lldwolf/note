@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+    <script type="text/javascript" src="../../mylib/js/css.js"></script>
+    <title>Java Note</title>
+</head>
+
+<body>
+    <p id="title">Maven</p>
+    <h1>Maven 安装及配置</h1>
+    <p>从 Apache Maven 官网下载后，设置如下环境变量</p>
+    <ul>
+        <li>M2_HOME: Maven 安装目录</li>
+        <li>PATH: 将 %M2_HOME%\bin 加入 Path 环境变量</li>
+        <li>MAVEN_OPTS: -Xms128m -Xmx512m</li>
+    </ul>
+    <p>在 Eclipse 中安装 maven 插件，并进行如下配置：</p>
+    <p><img alt="" src="images/maven-01.png" /></p>
+    <p>默认 Maven 会从默认的 central repository 下载类库。但如果外网连接不通而有相应的自己的 central repository，可通过修改 Maven conf 目录下的 settings.xml 文件，如下所示：</p>
+    <pre class="code" data-type="xml">&lt;mirror&gt;
+  &lt;id&gt;my_maven_repository&lt;/id&gt;
+  &lt;mirrorOf&gt;central&lt;/mirrorOf&gt;
+  &lt;name&gt;my maven repository&lt;/name&gt;
+  &lt;url&gt;http://myhost:8081/public/&lt;/url&gt;
+&lt;/mirror&gt;</pre>
+    <p>或者更省心，你把 mirrorOf 换成 * 就好</p>
+    <pre class="code" data-type="xml">&lt;mirrorOf&gt;*&lt;/mirrorOf&gt;</pre>
+    <h1>Build</h1>
+    <h2>第一个项目</h2>
+    <p>在 Eclipse 随便建立一个 Hello World 项目，在根目录下添加 pom.xml，如下所示：</p>
+    <pre class="code" data-type="xml">&lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+  xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd&quot;&gt;
+  &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+  &lt;groupId&gt;com.lld&lt;/groupId&gt;
+  &lt;artifactId&gt;maven_test&lt;/artifactId&gt;
+  &lt;packaging&gt;jar&lt;/packaging&gt;
+  &lt;version&gt;1.0.0&lt;/version&gt;
+  &lt;name&gt;web Maven Webapp&lt;/name&gt;
+  &lt;url&gt;http://maven.apache.org&lt;/url&gt;
+  &lt;build&gt;
+  	&lt;sourceDirectory&gt;src&lt;/sourceDirectory&gt;
+  &lt;/build&gt;
+&lt;/project&gt;</pre>
+    <p>常用命令</p>
+    <pre class="code" data-type="sh">#编译
+        mvn clean compile
+
+        # 打包，默认为 jar 包
+        mvn clean package
+
+        # 生成默认的项目骨架 (pom.xml)
+        mvn archetype:generate
+    </pre>
+</body>
+</html>

@@ -1,0 +1,241 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>数据类型</title>
+<script type="text/javascript" src="css.js"></script>
+</head>
+
+<body>
+<h1>第N章 数据类型</h1>
+<hr />
+<p>本章涉及的数据类型均为PL/SQL编程时用到的数据类型，而不是ORACLE表的列类型，两者可能同名但有区别。</p>
+<h2><a href="#scalar_type">N.1 标量类型</a></h2>
+<h2><a href="#combined_type">N.2 复合类型 </a></h2>
+<h3>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#record_type">N.2.1 Record</a></h3>
+<h3>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#collection_type">N.2.2 Collection</a></h3>
+<hr />
+<h2><a name="scalar_type" id="scalar_type"></a>N.1 标量类型（Scalar Type） </h2>
+<h3>N.1.1 数字族</h3>
+<p>基本类型：number、pls_integer、binary_integer</p>
+<p>number有如下子类型</p>
+<table width="60%" >
+  <tr>
+    <th width="30%">子类型</th>
+    <th width="70%">说明</th>
+  </tr>
+  <tr>
+    <td>dec</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>decimal</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>dobule precision </td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>integer</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>int</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>numeric</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>real</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>smallint</td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+<p>其中pls_integer和binary_integer只能储存整数。</p>
+<p>binary_integer直接作为二进制补码格式来存取，提高了运算效率。number类型是以10进制来进行存储的，在运算时会自动转为binary_integer类型进行计算，计算完毕后再转为number类型。</p>
+<p>pls_integer与binary_integer基本相同，但它若在计算时发生溢出，会发生错误，而binary_integer的计算结果溢出时，会被自动指派给一个number变量（它会拥有更大的表示范围）而不会发生任何错误。</p>
+<p>binary_integer有如下子类型：</p>
+<table width="60%" >
+  <tr>
+    <th width="30%">子类型</th>
+    <th width="70%">限制范围</th>
+  </tr>
+  <tr>
+    <td>natural</td>
+    <td>0 ~ 2<sup>31</sup> - 1 </td>
+  </tr>
+  <tr>
+    <td>naturaln</td>
+    <td>0 ~ 2<sup>31</sup> - 1 NOT NULL </td>
+  </tr>
+  <tr>
+    <td>positive</td>
+    <td>0 ~ 2<sup>31</sup> - 1 </td>
+  </tr>
+  <tr>
+    <td>positiven</td>
+    <td>0 ~ 2<sup>31</sup> - 1 NOT NULL </td>
+  </tr>
+  <tr>
+    <td>signtype</td>
+    <td>-1, 0, 1 </td>
+  </tr>
+</table>
+<h3>N.1.2 字符族</h3>
+<p>基本类型：varchar2、char、long、nchar、nvarchar2，它们的存储长度见下表</p>
+<table width="60%" >
+  <tr>
+    <th width="50%">类型</th>
+    <th width="50%">存储长度</th>
+  </tr>
+  <tr>
+    <td>varchar2</td>
+    <td>32767</td>
+  </tr>
+  <tr>
+    <td>char</td>
+    <td>32767</td>
+  </tr>
+  <tr>
+    <td>long</td>
+    <td>32760</td>
+  </tr>
+</table>
+<p>nchar和char类似，在编程时的区别主要体现在长度的指定规则上，如果国家字符集是固定宽度的，则长度根据字符个数指定；如果国家字符集是可变宽度的，则长度根据字节个数确定。</p>
+<h3>N.1.3 原族</h3>
+<p>原族用来存储二进制数据，基本类型：raw、long raw。</p>
+<p>两者声明时均带一个长度参数，raw类型最大为32767，long raw类型最大为32760字节。</p>
+<h3>N.1.4 日期族 </h3>
+<p>基本类型：date</p>
+<p>date变量占用7字节，从世纪到秒每个部分是一个字节（世纪、年、月、日、时、分、秒）。</p>
+<h3>N.1.5 行标识族</h3>
+<p>基本类型：rowid</p>
+<h3>N.1.6 布尔族</h3>
+<p>基本类型：boolean</p>
+<p>取值范围：true、false、null</p>
+<h3>N.1.7 Trusted族</h3>
+<p>数据类型：mlslabel</p>
+<p>用在Trusted Oracle中保存可变长度的二进制标签，而在标准ORACLE中，只能存放NULL。</p>
+<h2><a name="combined_type" id="combined_type"></a>N.2 复合类型 </h2>
+<h3><a id="record_type"></a>N.2.1 记录</h3>
+<p>如同C语言中的结构类型（struct），如下例所示：</p>
+<pre>declare 
+  type t_student_record is record(
+       std_code varchar2(10),
+       std_name varchar2(20));
+  v_std t_student_record;
+begin
+  v_std.std_code := '00001';
+  v_std.std_name := '刘林栋';
+  
+  insert into student(std_code, std_name)
+  values(v_std.std_code, v_std.std_name);
+  
+  commit;
+end;</pre>
+<p>声明了一个记录类型t_student_record，v_std为该类型的变量。声明记录类型的语法如下：</p>
+<pre><strong>type</strong> record_type <strong>is record</strong>
+	field1 type1 [<strong>not null</strong>] [:=expr1],
+	field2 type2 [<strong>not null</strong>] [:=expr2],
+	...
+	fieldn typen [<strong>not null</strong>] [:=exprn]);</pre>
+<p>也就是说，还可以在声明类型时为记录字段设好默认值。</p>
+<p>两个相同类型的记录变量可以相互赋值，还可以通过SELECT语句为记录变量赋值，如下所示：</p>
+<pre>select std_code, std_name into v_std
+from student
+where std_code = '00001';</pre>
+<p>将一个记录声明为具有相同类型的数据库行的作法是很常见的，PL/SQL提供了%rowtype运算符使得这样的处理更为方便，%rowtype返回一个基于表定义的类型。例如，这面的代码将定义一个字段与student列对应的记录变量：</p>
+<pre>declare 
+	v_std student%rowtype;</pre>
+<p>表列中定义的字符串的长度和数字的精度都会包含在变量的字段定义中，不过，在表上定义的NOT NULL约束不会被包含进来。</p>
+<h3><a id="collection_type"></a>N.2.2 Collection </h3>
+<p>PL/SQL中的使用 Table 作为集合类型，类似于C语言中的数组，像下面的例子，声明了一个整数表类型及该类型变量：</p>
+<pre>declare 
+  type t_int_table is table of integer
+       index by binary_integer;
+  v_ints t_int_table;
+begin
+  v_ints(0) := 10;
+  v_ints(-5) := 10;
+  v_ints(10) := 20;
+end;</pre>
+<p>其中index by binary_integer表示用binary_integer作为索引，可根据需要使用任意类型作为索引。表中的值为一个个的KEY-VALUE对，index by用来设定KEY的类型，is table of用来设定VALUE的类型，PL/SQL也支持将表中值的类型设为记录类型。</p>
+<p>还有另外一种更加快捷的声明方式，可在初始化时将数组内容初始化，如下例所示:</p>
+<pre>declare
+  type simpleList is table of varchar2(100);
+  myList simpleList;
+  i number;
+begin
+  myList := simpleList('A', 'B', 'C', 'D');
+  DBMS_OUTPUT.PUT_LINE('COUNT = ' || myList.count);
+  
+  for i in myList.first .. myList.last loop
+    DBMS_OUTPUT.PUT_LINE('Item ' || i || ' = ' || myList(i));
+  end loop;
+end;</pre>
+<p>PL/SQL支持如下的表属性：</p>
+<table width="80%" >
+  <tr>
+    <th width="20%">属性</th>
+    <th width="20%">返回类型</th>
+    <th width="60%">说明</th>
+  </tr>
+  <tr>
+    <td>count</td>
+    <td>number</td>
+    <td>表中行的个数</td>
+  </tr>
+  <tr>
+    <td>delete </td>
+    <td>N/A</td>
+    <td>删除表中的行</td>
+  </tr>
+  <tr>
+    <td>exists</td>
+    <td>boolean</td>
+    <td>表项在表中是否存在</td>
+  </tr>
+  <tr>
+    <td>first</td>
+    <td>binary_integer</td>
+    <td>表中最小的索引值</td>
+  </tr>
+  <tr>
+    <td>last</td>
+    <td>binary_integer</td>
+    <td>表中最大的索引值</td>
+  </tr>
+  <tr>
+    <td>next</td>
+    <td>binary_integer</td>
+    <td>前一个索引值</td>
+  </tr>
+  <tr>
+    <td>prior</td>
+    <td>binary_integer</td>
+    <td>后一个索引值</td>
+  </tr>
+</table>
+<ol>
+  <li>delete
+    <ul>
+      <li>table.delete 删除该表中所有的行</li>
+	  <li>table.delete(i) 删除表中由索引i标记的行</li>    
+	  <li>table.delete(i, j) 删除表中位于索引i和j之间的行</li>
+    </ul>
+  </li>
+  <li>exists(i) 判断表中是否存在索引值i</li>
+  <li>first和last 返回表中的第一个索引和最后一个索引，注意，返回的是索引值，而不是行中包含的数值。</li>
+</ol>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<script type="text/javascript" src="index.js"></script>
+</body>
+</html>

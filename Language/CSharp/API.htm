@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+    <script type="text/javascript" src="../../mylib/js/css.js"></script>
+    <title>调用Windows API </title>
+</head>
+<body>
+    <p id="title">
+        调用Windows API</p>
+    
+    <h1>
+        Win32 API在C#中的映射</h1>
+    <p>
+        <a href="Win32_API_CSharp_Map.html">映射表</a></p>
+    <h1>
+        基本数据类型映射规则</h1>
+        <p><a href="api_type_map.htm">Full Version</a></p>
+    <table style="width:80%">
+        <tbody>
+            <tr>
+                <th>
+                    Win32 Type
+                </th>
+                <th>
+                    C# Type
+                </th>
+                <th>
+                    Sample
+                </th>
+            </tr>
+            <tr>
+                <td>
+                    DWORD (用作返回类型)
+                </td>
+                <td>
+                    IntPtr，返回类型通常用于作 Handle 用
+                </td>
+                <td>
+                    &nbsp;
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    DWORD
+                </td>
+                <td>
+                    uint
+                </td>
+                <td>
+                    &nbsp;
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    FAR*
+                </td>
+                <td>
+                    ref (用在参数传递中)
+                </td>
+                <td>
+                    SHFILEINFO FAR* psfi<br />
+                    <br />
+                    ref SHFILEINFO psfi
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    HICON
+                </td>
+                <td>
+                    IntPtr
+                </td>
+                <td>
+                    &nbsp;
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    LPCTSTR
+                </td>
+                <td>
+                    string
+                </td>
+                <td>
+                    &nbsp;
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    struct
+                </td>
+                <td>
+                    struct
+                </td>
+                <td>
+                    &nbsp;
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    UINT
+                </td>
+                <td>
+                    uint
+                </td>
+                <td>
+                    &nbsp;
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    TCHAR
+                </td>
+                <td>
+                    string, with MarshalAs attribute
+                </td>
+                <td>
+                    TCHAR szDisplayName[MAX_PATH];<br />
+                    <br />
+                    [MarshalAs(UnmanagedType.ByValTStr, SizeConst = MAX_PATH)]<br />
+                    public string szDisplayName;
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    
+</body>
+</html>

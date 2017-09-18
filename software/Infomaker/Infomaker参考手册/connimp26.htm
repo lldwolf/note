@@ -1,0 +1,506 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+Sybase Adaptive Server Enterprise</TITLE>
+</HEAD>
+<BODY>
+<A NAME="X-ref353247486"></A><h1>Sybase Adaptive Server Enterprise</h1>
+<A NAME="TI783"></A><p>This section describes how to use the Sybase Adaptive Server
+Enterprise database interface in InfoMaker.</p>
+<br><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Database product family name change</span> <A NAME="TI784"></A>The product family name for Sybase System 10 and System 11
+before Version 11.5 is Sybase SQL Server. The product family name
+for System 11 Version 11.5 and higher has been changed to Sybase
+Adaptive Server Enterprise. 
+<br>
+<br><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Client Library API</span> <A NAME="TI785"></A>The Adaptive Server Enterprise database interface uses the
+Open Client CT-Library (CT-Lib) application programming interface
+(API) to access the database.
+<br>
+<A NAME="TI786"></A>When you connect to an Adaptive Server Enterprise database, InfoMaker makes
+the required calls to the API. Therefore, you do not need to know anything
+about CT-Lib to use the database interface.
+<br>
+<A NAME="TI787"></A><h2>Supported versions for Adaptive Server Enterprise</h2>
+<A NAME="TI788"></A><p>You can access Sybase SQL Server Release 10.0.x and 11.0.x
+and Sybase Adaptive Server Enterprise Release 11.x and 12.x using
+the Adaptive Server Enterprise database interface.</p>
+<A NAME="TI789"></A><p>The Adaptive Server Enterprise database interface uses a DLL
+named PBSYC80.DLL to access the database through the Sybase Open
+Client CT-Lib API.</p>
+<A NAME="TI790"></A><h2>Supported Adaptive Server Enterprise data types</h2>
+<A NAME="TI791"></A><p>The Adaptive Server Enterprise interface supports the following
+Sybase data types in reports:</p>
+<A NAME="TI792"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><td valign=top><A NAME="TI793"></A>Binary</td>
+<td valign=top><A NAME="TI794"></A>Numeric</td>
+</tr>
+<tr><td valign=top><A NAME="TI795"></A>Bit</td>
+<td valign=top><A NAME="TI796"></A>Real</td>
+</tr>
+<tr><td valign=top><A NAME="TI797"></A>Char (fewer
+than 255 characters)</td>
+<td valign=top><A NAME="TI798"></A>SmallDateTime</td>
+</tr>
+<tr><td valign=top><A NAME="TI799"></A>DateTime</td>
+<td valign=top><A NAME="TI800"></A>SmallInt</td>
+</tr>
+<tr><td valign=top><A NAME="TI801"></A>Decimal</td>
+<td valign=top><A NAME="TI802"></A>SmallMoney</td>
+</tr>
+<tr><td valign=top><A NAME="TI803"></A>Double precision</td>
+<td valign=top><A NAME="TI804"></A>Text</td>
+</tr>
+<tr><td valign=top><A NAME="TI805"></A>Float</td>
+<td valign=top><A NAME="TI806"></A>Timestamp</td>
+</tr>
+<tr><td valign=top><A NAME="TI807"></A>Identity</td>
+<td valign=top><A NAME="TI808"></A>TinyInt</td>
+</tr>
+<tr><td valign=top><A NAME="TI809"></A>Image</td>
+<td valign=top><A NAME="TI810"></A>VarBinary</td>
+</tr>
+<tr><td valign=top><A NAME="TI811"></A>Int</td>
+<td valign=top><A NAME="TI812"></A>VarChar</td>
+</tr>
+<tr><td valign=top><A NAME="TI813"></A>Money</td>
+<td valign=top><A NAME="TI814"></A></td>
+</tr>
+</table>
+<A NAME="TI815"></A><h2>Basic software components for Adaptive Server Enterprise</h2>
+<A NAME="TI816"></A><p>You must install the following software components to access
+an Adaptive Server Enterprise database in InfoMaker.</p>
+<A NAME="X-ref307817801"></A><h2>Preparing to use the Adaptive Server Enterprise database</h2>
+<A NAME="TI817"></A><p>Before you define the interface and connect to an Adaptive
+Server Enterprise database in InfoMaker, follow these steps to
+prepare the database for use: <A NAME="TI818"></A>
+<ol>
+<br>
+Install and configure the required
+database server, network, and client software.<br></li>
+<li class=ds>Install the Adaptive Server Enterprise database
+interface.</li>
+<li class=ds>Verify that you can connect to Adaptive Server Enterprise
+outside InfoMaker.</li>
+<li class=ds>Install the required InfoMaker stored procedures
+in the sybsystemprocs database.
+</li>
+</ol>
+</p>
+<A NAME="TI819"></A><p>Preparing an Adaptive Server Enterprise database for use with InfoMaker involves
+these four basic tasks.</p>
+<A NAME="TI820"></A><h4>Step 1: install and configure the database server</h4>
+<A NAME="TI821"></A><p>You must install and configure the database server, network,
+and client software for Adaptive Server Enterprise.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To install and configure the database server,
+network, and client software:</p>
+<ol><li class=fi>
+Make sure the Adaptive Server Enterprise
+database software is installed on the server specified in your database
+profile.<br><br>
+You must obtain the database server software from Sybase.<br><br>
+For installation instructions, see your Adaptive
+Server Enterprise documentation.<br><br></li>
+<li class=ds>
+Make sure the supported network software (for
+example, TCP/IP) is installed and running on your computer
+and is properly configured so that you can connect to the database
+server at your site.<br><br>
+You must install the network communication driver that supports
+the network protocol and operating system platform you are using.
+The driver is installed as part of the Sybase Net-Library client
+software.<br><br>
+For installation and configuration instructions,
+see your network or database administrator.<br><br></li>
+<li class=ds>
+Install the required Sybase Open Client CT-Library
+(CT-Lib) software on each client computer on which InfoMaker is
+installed.<br><br>
+You must obtain the Open Client software from Sybase. Make
+sure the version of Open Client you install supports <i>all</i>
+ of
+the following:<A NAME="TI822"></A>
+<ul>
+<li class=fi>The operating
+system running on the client computer</li>
+<li class=ds>The version of Adaptive Server Enterprise that you
+want to access</li>
+<li class=ds>The version of InfoMaker that you are running
+</li>
+</ul>
+<br><br><p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Required client software versions</span> <A NAME="TI823"></A>To use the SYC Adaptive Server Enterprise interface, you must
+install Sybase Open Client Version 10.0.4, 11.1, or 11.1.1 or higher.</p>
+</li>
+<li class=ds>
+Make sure the Sybase Open Client software is properly
+configured so that you can connect to the database at your site.<br><br>
+Installing the Open Client software places the SQL.INI configuration
+file in the Adaptive Server Enterprise directory on your computer.<br><br>
+SQL.INI provides information that Adaptive Server Enterprise
+needs to find and connect to the database server at your site. You
+can enter and modify information in SQL.INI by using the configuration
+utility that comes with the Open Client software.<br><br>
+For information about setting up the SQL.INI
+or other required configuration file, see your Adaptive Server Enterprise
+documentation.<br><br></li>
+<li class=ds>
+If required by your operating system, make sure
+the directory containing the Open Client software is in your system
+path.<br><br></li>
+<li class=ds>
+Make sure only one copy of each of the following
+files is installed on your client computer:<A NAME="TI824"></A>
+<ul>
+<li class=fi>Adaptive Server Enterprise interface DLL</li>
+<li class=ds>Network communication DLL (for example, NLWNSCK.DLL
+for Windows Sockets-compliant TCP/IP)</li>
+<li class=ds>Database vendor DLL (for example, LIBCT.DLL - 32-bit)
+</li>
+</ul>
+
+                        <br><br></li></ol>
+<br><A NAME="TI825"></A><h4>Step 2: install the database interface</h4>
+<A NAME="TI826"></A><p>When prompted to do so by the InfoMaker Setup program, select
+the Adaptive Server Enterprise (CT-Lib) database interface.</p>
+<A NAME="TI827"></A><p>For installation instructions, see the <i>Installation
+Guide</i>
+.</p>
+<A NAME="TI828"></A><h4>Step 3: verify the connection</h4>
+<A NAME="TI829"></A><p>Make sure you can connect to the Adaptive Server Enterprise
+database server and log in to the database you want to access from
+outside InfoMaker.</p>
+<A NAME="TI830"></A><p>Some possible ways to verify the connection are by running
+the following tools:<A NAME="TI831"></A>
+<ul>
+<li class=fi><b>Accessing the database server</b>   Tools such as the Sybase Open Client/Open Server
+Configuration utility (or any Ping utility) check whether you can
+reach the database server from your computer.</li>
+<li class=ds><b>Accessing the database</b>   Tools such as ISQL (interactive SQL utility) check whether
+you can log in to the database and perform database operations.
+It is a good idea to specify the same connection parameters you plan
+to use in your InfoMaker database profile to access the database.
+</li>
+</ul>
+</p>
+<A NAME="TI832"></A><h4>Step 4: install the InfoMaker stored procedures</h4>
+<A NAME="TI833"></A><p>InfoMaker requires you to install certain stored procedures
+in the sybsystemprocs database <i>before</i>
+ you connect
+to an Adaptive Server Enterprise database for the first time. InfoMaker uses
+these stored procedures to get information about tables and columns
+from the DBMS system catalog.</p>
+<A NAME="TI834"></A><p>Run the SQL script or scripts required to install the InfoMaker stored procedures
+in the sybsystemprocs database.</p>
+<A NAME="TI835"></A><p>For instructions, see <A HREF="connimp27.htm#CCJDBEBA">"Installing InfoMaker stored
+procedures in Adaptive Server Enterprise databases"</A>.</p>
+<A NAME="TI836"></A><h3>What to do next</h3>
+<A NAME="TI837"></A><p>For instructions on defining the Adaptive
+Server Enterprise database interface in InfoMaker, see <A HREF="connimp26.htm#X-ref367621238">"Defining the Adaptive
+Server Enterprise database interface"</A>.</p>
+<A NAME="X-ref367621238"></A><h2>Defining the Adaptive Server Enterprise database interface</h2>
+<A NAME="TI838"></A><p>To define a connection through the Adaptive Server Enterprise
+interface, you must create a database profile by supplying values
+for at least the basic connection parameters in the Database Profile
+Setup - Adaptive Server Enterprise dialog box. You can then select
+this profile anytime to connect to your database in the development
+environment.</p>
+<A NAME="TI839"></A><p>For information on how to define a database profile, see <A HREF="connimp5.htm#X-ref289075262">"Using database profiles"</A>. </p>
+<A NAME="CCJCFJBD"></A><h2>Using Sybase Open Client security services</h2>
+<A NAME="TI840"></A><p>The Adaptive Server Enterprise interface provides several
+DBParm parameters that support Sybase Open Client 11.1.x or higher
+network-based security services in your application. If you are
+using the required database, security, and InfoMaker software,
+you can build applications that take advantage of Sybase Open Client
+security services.</p>
+<A NAME="TI841"></A><h3>What are Open Client security services?</h3>
+<A NAME="TI842"></A><p>Open Client 11.1.x or higher <strong>security services</strong> allow
+you to use a supported third-party security mechanism (such as CyberSafe
+Kerberos) to provide login authentication and per-packet security
+for your application. Login authentication establishes a secure
+connection, and per-packet security protects the data you transmit
+across the network.</p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Using third-party security mechanisms</span> <A NAME="TI843"></A>For information about the third-party security
+mechanisms and operating system platforms that Sybase has tested
+with Open Client 11.1.x security services, see the Sybase Open Client
+Release Notes.</p>
+<A NAME="CCJCGHGC"></A><h3>Requirements for using OpenClient security services</h3>
+<A NAME="TI844"></A><p>To use Open Client security services in your application, <i>all
+of the following must be true</i>
+:<A NAME="TI845"></A>
+<ul>
+<li class=fi>Accessing Adaptive Server Enterprise through Open
+Client 11.1.1x<br>
+You are accessing an Adaptive Server Enterprise database server
+using Sybase Open Client Client-Library (CT-Lib) 11.x or higher
+software<br></li>
+<li class=ds>Have network security mechanism and driver<br>
+You have the required Sybase-supported network security mechanism
+and Sybase-supplied security driver properly installed and configured
+for your environment. Depending on your operating system platform,
+examples of supported security mechanisms include: Distributed Computing Environment
+(DCE) security servers and clients, CyberSafe Kerberos, and Windows
+NT LAN Manager Security Services Provider Interface (SSPI).<br><br>
+For information about the third-party security
+mechanisms and operating system platforms that Sybase has tested
+with Open Client security services, see the Sybase Open Client Release
+Notes.<br></li>
+<li class=ds>Can access the secure server outside InfoMaker<br>
+You must be able to access a secure Adaptive Server Enterprise
+server using Sybase Open Client 11.1.x or higher software from outside InfoMaker.<br><br>
+To verify the connection, use a tool such as ISQL or SQL Advantage
+to make sure you can connect to the server and log in to the database
+with the same connection parameters and security options you plan
+to use in your InfoMaker application.<br></li>
+<li class=ds>Using InfoMaker database interface<br>
+You are using the SYC Adaptive Server Enterprise interface
+to access the database.<br></li>
+<li class=ds>Release DBParm parameter set to 11 <br>
+You have set the Release DBParm parameter to 11 to specify
+that your application should use Open Client CT-Lib 11.x behavior.<br><br>
+For instructions, see Release (Adaptive Server
+Enterprise) in the online Help.<br></li>
+<li class=ds>Security mechanism and driver support requested
+service<br>
+The security mechanism and driver you are using must support
+the service requested by the DBParm parameter.<br>
+</li>
+</ul>
+</p>
+<A NAME="TI846"></A><h3>Security services DBParm parameters</h3>
+<A NAME="TI847"></A><p>If you have met the requirements described in <A HREF="connimp26.htm#CCJCGHGC">"Requirements for using Open
+Client security services"</A>, you can set
+the security services DBParm parameters in the Database Profile
+Setup dialog box for your connection.</p>
+<A NAME="TI848"></A><p>There are two types of DBParm parameters that you can set
+to support Open Client security services: login authentication and
+per-packet security.</p>
+<A NAME="TI849"></A><h4>Login authentication DBParms</h4>
+<A NAME="TI850"></A><p>The following login authentication DBParm parameters correspond
+to Sybase Open Client 11.1.x or higher connection properties that
+allow an application to establish a secure connection.<A NAME="TI851"></A>
+<ul>
+<li class=fi>Sec_Channel_Bind</li>
+<li class=ds>Sec_Cred_Timeout</li>
+<li class=ds>Sec_Delegation</li>
+<li class=ds>Sec_Keytab_File</li>
+<li class=ds>Sec_Mechanism</li>
+<li class=ds>Sec_Mutual_Auth</li>
+<li class=ds>Sec_Network_Auth</li>
+<li class=ds>Sec_Server_Principal</li>
+<li class=ds>Sec_Sess_Timeout
+</li>
+</ul>
+</p>
+<A NAME="TI852"></A><p>For instructions on setting these DBParm parameters,
+see their descriptions in online Help. </p>
+<A NAME="TI853"></A><h4>Per-packet security DBParms</h4>
+<A NAME="TI854"></A><p>The following per-packet security DBParm parameters correspond
+to Sybase Open Client 11.1.x or higher connection properties that
+protect each packet of data transmitted across a network. Using
+per-packet security services may create extra overhead for communications
+between the client and server.<A NAME="TI855"></A>
+<ul>
+<li class=fi>Sec_Confidential</li>
+<li class=ds>Sec_Data_Integrity</li>
+<li class=ds>Sec_Data_Origin</li>
+<li class=ds>Sec_Replay_Detection</li>
+<li class=ds>Sec_Seq_Detection
+</li>
+</ul>
+</p>
+<A NAME="TI856"></A><p>For instructions on setting these DBParm parameters,
+see their descriptions in online Help. </p>
+<A NAME="CCJCHAIE"></A><h2>Using Sybase Open Client directory services</h2>
+<A NAME="TI857"></A><p>The Adaptive Server Enterprise interface provides several
+DBParm parameters that support Sybase Open Client 11.1.x or higher
+network-based directory services in your application. If you are
+using the required database, directory services, and InfoMaker software,
+you can build applications that take advantage of Sybase Open Client
+directory services. </p>
+<A NAME="TI858"></A><h3>What are Open Client directory services?</h3>
+<A NAME="TI859"></A><p>Open Client 11.1.x or higher <strong>directory services</strong> allow
+you to use a supported third-party directory services product (such
+as the Windows NT Registry) as your directory service provider.
+Directory services provide centralized control and administration
+of the network entities (such as users, servers, and printers) in
+your environment. </p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Using third-party directory service providers</span> <A NAME="TI860"></A>For information about the third-party directory
+service providers and operating system platforms that Sybase has
+tested with Open Client 11.1.x directory services, see the Sybase
+Open Client Release Notes.</p>
+<A NAME="CCJBDCEB"></A><h3>Requirements for using OpenClient directory services</h3>
+<A NAME="TI861"></A><p>To use Open Client directory services in your application, <i>all
+of the following must be true</i>
+:<A NAME="TI862"></A>
+<ul>
+<li class=fi>Accessing Adaptive Server Enterprise through Open
+Client 11.1.x<br>
+You are accessing an Adaptive Server Enterprise database server
+using Sybase Open Client Client-Library (CT-Lib) 11.x or higher
+software<br></li>
+<li class=ds>Have directory service provider and driver<br>
+You have the required Sybase-supported directory service provider software
+and Sybase-supplied directory driver properly installed and configured
+for your environment. Depending on your operating system platform,
+examples of supported security mechanisms include: the Windows NT
+Registry, Distributed Computing Environment Cell Directory Services
+(DCE/CDS), Banyan StreetTalk Directory Assistance (STDA),
+and Novell NetWare Directory Services (NDS).<br><br>
+For information about the directory service
+providers and operating system platforms that Sybase has tested
+with Open Client directory services, see the Release Notes.<br></li>
+<li class=ds>Can access the secure server outside InfoMaker<br>
+You must be able to access a secure Adaptive Server Enterprise
+server using Sybase Open Client 11.1.x or higher software from outside InfoMaker.<br><br>
+To verify the connection, use a tool such as ISQL or SQL Advantage
+to make sure you can connect to the server and log in to the database
+with the same connection parameters and directory service options
+you plan to use in your InfoMaker application.<br></li>
+<li class=ds>Using InfoMaker database interface<br>
+You are using the SYC Adaptive Server Enterprise interface
+to access the database.<br></li>
+<li class=ds>Using correct server name specification<br>
+You must use the correct syntax as required by your directory
+service provider when specifying the server name in a database profile.
+Different providers require different syntax based on their format
+for specifying directory entry names.<br><br>
+For information and examples for different
+directory service providers, see <A HREF="connimp26.htm#CCJDIFGI">"Specifying the server name
+with Open Client directory services"</A>.<br></li>
+<li class=ds>Release DBParm parameter set to 11<br>
+You have set the Release DBParm parameter to 11 to specify
+that your application should use Open Client CT-Lib 11.x behavior.<br><br>
+For instructions, see Release (Adaptive Server
+Enterprise) in the online Help. <br></li>
+<li class=ds>Directory service provider and driver support requested
+service<br>
+The directory service provider and driver you are using must
+support the service requested by the DBParm parameter.<br>
+</li>
+</ul>
+</p>
+<A NAME="CCJDIFGI"></A><h3>Specifying the server namewith Open Client directory services</h3>
+<A NAME="TI863"></A><p>When you are using Open Client directory services in a InfoMaker application, you
+must use the syntax required by your directory service provider
+when specifying the server name in a database profile to access
+the database.</p>
+<A NAME="TI864"></A><p>Different directory service providers require different syntax
+based on the format they use for specifying directory entry names.
+Directory entry names can be fully qualified or relative to the
+default (active) Directory Information Tree base (DIT base) specified
+in the Sybase Open Client/Server configuration utility.</p>
+<A NAME="TI865"></A><p>The <strong>DIT base</strong> is the starting node for
+directory searches. Specifying a DIT base is analogous to setting
+a current working directory for UNIX or MS-DOS file systems. (You
+can specify a nondefault DIT base with the DS_DitBase DBParm
+parameter. For information, see DS_BitBase in the online
+Help.)</p>
+<A NAME="TI866"></A><h4>Windows NT Registry server name example</h4>
+<A NAME="TI867"></A><p>This example shows typical server name syntax if your directory
+service provider is the Windows NT Registry.<A NAME="TI868"></A>
+<ul>
+<li class=fi>Node name: SALES:software\sybase\server\SYS11NT</li>
+<li class=ds>DIT base: SALES:software\sybase\server</li>
+<li class=ds>Server name: SYS11NT
+</li>
+</ul>
+</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To specify the server name in a database profile:</p>
+<ol><li class=fi>
+Type the following in the Server box on
+the Connection tab in the Database Profile Setup dialog box. Do <i>not</i>
+ start
+the server name with a backslash (\).<br><br>
+<b>SYS11NT</b><br><br></li></ol>
+<br><A NAME="TI869"></A><h4>DCE/DCS server name example</h4>
+<A NAME="TI870"></A><p>This example shows typical server name syntax if your directory
+service provider is Distributed Computing Environment Cell Directory
+Services (DCE/CDS).<A NAME="TI871"></A>
+<ul>
+<li class=fi>Node
+name: /.../boston.sales/dataservers/sybase/SYS11</li>
+<li class=ds>DIT base: /../boston.sales/dataservers</li>
+<li class=ds>Server name: sybase/SYS11
+</li>
+</ul>
+</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To specify the server name in a database profile:</p>
+<ol><li class=fi>
+Type the following in the Server box on
+the Connection tab in the Database Profile Setup dialog box. Do <i>not</i>
+ start
+the server name with a slash (/).<br><br>
+<b>sybase/SYS11</b><br><br></li></ol>
+<br><A NAME="TI872"></A><h4>Banyan STDA server name example</h4>
+<A NAME="TI873"></A><p>This example shows typical server name syntax if your directory
+service provider is Banyan StreetTalk Directory Assistance (STDA).<A NAME="TI874"></A>
+<ul>
+<li class=fi>Node name: SYS11@sales@chicago</li>
+<li class=ds>DIT base: chicago</li>
+<li class=ds>Server name: SYS11@sales
+</li>
+</ul>
+</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To specify the server name in a database profile:</p>
+<ol><li class=fi>
+Type the following in the Server box on
+the Connection tab in the Database Profile Setup dialog box. Do <i>not</i>
+ end
+the server name with @.<br><br>
+<b>SYS11@sales</b><br><br></li></ol>
+<br><A NAME="TI875"></A><h4>Novell NDS server name example</h4>
+<A NAME="TI876"></A><p>This example shows typical server name syntax if your directory
+service provider is Novell NetWare Directory Services (NDS).<A NAME="TI877"></A>
+<ul>
+<li class=fi>Node name: CN=SYS11.OU=miami.OU=sales.O=sybase</li>
+<li class=ds>DIT base: OU=miami.OU=sales.O=sybase</li>
+<li class=ds>Server name: SYS11
+</li>
+</ul>
+</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To specify the server name in a database profile:</p>
+<ol><li class=fi>
+Type the following in the Server box on
+the Connection tab in the Database Profile Setup dialog box. Do <i>not</i>
+ start
+the server name with CN=.<br><br>
+<b>SYS11</b><br><br></li></ol>
+<br><A NAME="TI878"></A><h3>Directory services DBParm parameters</h3>
+<A NAME="TI879"></A><p>If you have met the requirements described in <A HREF="connimp26.htm#CCJBDCEB">"Requirements for using Open
+Client directory services"</A>, you can set
+the directory services DBParm parameters in a database profile for
+your connection.</p>
+<A NAME="TI880"></A><p>The following DBParm parameters correspond to Sybase Open
+Client 11.1.x or higher directory services connection parameters:<A NAME="TI881"></A>
+<ul>
+<li class=fi>DS_Alias</li>
+<li class=ds>DS_Copy</li>
+<li class=ds>DS_DitBase</li>
+<li class=ds>DS_Failover</li>
+<li class=ds>DS_Principal</li>
+<li class=ds>DS_Provider</li>
+<li class=ds>DS_TimeLimit
+</li>
+</ul>
+</p>
+<A NAME="TI882"></A><p>For instructions on setting these DBParm parameters,
+see their descriptions in the online Help.</p>
+<A NAME="CCJDGBBF"></A><h2>Using PRINT statements in Adaptive Server Enterprise stored procedures</h2>
+<A NAME="TI883"></A><p>The SYC Adaptive Server Enterprise database interface allows
+you to use PRINT statements in your stored procedures for debugging
+purposes.</p>
+<A NAME="TI884"></A><p>This means, for example, that if you turn on Database Trace
+when accessing the database through the SYC interface, PRINT messages
+appear in the trace log but they do not return errors or cancel
+the rest of the stored procedure.</p>
+<A NAME="TI885"></A><h2>Creating a DataWindow based on a heterogeneous cross-database join</h2>
+<A NAME="TI886"></A><p>This functionality is available through the use of Adaptive
+Server Enterprise's Component Integration Services. Component
+Integration Services allows you to connect to multiple remote heterogeneous
+database servers and define multiple proxy tables that reference
+the tables residing on those servers.</p>
+<A NAME="TI887"></A><p>For information on how to create proxy tables,
+see the Adaptive Server Enterprise documentation. </p>
+<A NAME="TI888"></A><h2>What to do next</h2>
+<A NAME="TI889"></A><p>For instructions on connecting to the database,
+see <A HREF="connimp32.htm#CCJBAGDB">"Connecting to a database"</A>.</p>
+

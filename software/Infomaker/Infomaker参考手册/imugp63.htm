@@ -1,0 +1,89 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+About displaying and validating data </TITLE>
+</HEAD>
+<BODY>
+<A NAME="X-ref356196798"></A><h1>About displaying and validating data </h1>
+<A NAME="TI2234"></A><p>When InfoMaker generates a basic report or form, it uses
+the extended attributes defined for the data and stored in the extended
+attribute system tables. </p>
+<A NAME="TI2235"></A><p>For more information about the extended attribute
+system tables, see <A HREF="imugp256.htm#CCJEBFGB">Appendix A, "The Extended
+Attribute System Tables"</A>.</p>
+<A NAME="TI2236"></A><p>In the Database painter, you can create the extended attribute
+definitions that specify a column's display format, edit
+style, and validation rules.</p>
+<A NAME="TI2237"></A><p>In the Report painter or Form painter, you can override these
+extended attribute definitions for a column in a report or form.
+These overrides do not change the information stored with the column
+definition in the extended attribute system tables.</p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Database painter is required</span> <A NAME="TI2238"></A>You must have the Database painter installed to define display
+formats and edit styles in your database.</p>
+<A NAME="X-ref301085922"></A><h2>Presenting the data</h2>
+<A NAME="TI2239"></A><p>When you generate a new report or form, InfoMaker presents
+the data according to the properties already defined for a column,
+such as a column's display format and edit style. </p>
+<A NAME="TI2240"></A><h4>Display formats</h4>
+<A NAME="TI2241"></A><p>Display formats embellish data values while still displaying
+them as letters, numbers, and special characters. Using display
+formats, for example, you can:<A NAME="TI2242"></A>
+<ul>
+<li class=fi>Change
+the color of numbers to display a negative value</li>
+<li class=ds>Add parentheses and dashes to format a telephone
+number</li>
+<li class=ds>Add a dollar sign and period to indicate a currency
+format
+</li>
+</ul>
+</p>
+<A NAME="TI2243"></A><p>For information, see <A HREF="imugp64.htm#X-ref377802618">"Working with display
+formats "</A>.</p>
+<A NAME="TI2244"></A><h4>Edit styles</h4>
+<A NAME="TI2245"></A><p>Edit styles usually take precedence over display formats and
+specify how column data is presented. For example, using edit styles,
+you can:<A NAME="TI2246"></A>
+<ul>
+<li class=fi>Display valid values
+in a dropdown listbox</li>
+<li class=ds>Indicate that a single value is selected by a checkbox</li>
+<li class=ds>Indicate which of a group of values is selected
+with radio buttons
+</li>
+</ul>
+</p>
+<A NAME="TI2247"></A><p>In the Report painter, an edit style is simply a way of <i>presenting</i>
+ data.
+You can change data in a form; you cannot change data in a
+report.</p>
+<A NAME="TI2248"></A><p> In the Database painter and in the Form painter, an edit
+style enables users to <i>change</i>
+ data in
+the database by means of an edit mechanism, such as a checkbox or
+radio buttons. </p>
+<A NAME="TI2249"></A><p>For more information, see <A HREF="imugp65.htm#BFCBBIBJ">"Working with edit styles "</A>.</p>
+<A NAME="CHDBDABD"></A><h4>About display format masks
+and EditMask masks</h4>
+<A NAME="TI2250"></A><p>The differences between display format masks and EditMask
+masks can be confusing. A display format mask determines the appearance
+of the column when the focus is <i>off</i>
+ the column,
+or when the report is in print preview mode. When you apply
+an EditMask edit style, the mask you use determines the appearance
+of the column when focus is <i>on</i>
+ the column.</p>
+<A NAME="TI2251"></A><p>If you want data to display differently depending on whether
+the focus is on or off the column, specify an edit mask (on the
+Edit property page for the column) as well a display format (on
+the Format property page for the column), then check the Use Format
+checkbox on the Format property page.</p>
+<A NAME="TI2252"></A><h2>Validating data</h2>
+<A NAME="TI2253"></A><p>When data is entered in the Database painter or in a form, InfoMaker evaluates the
+data against validation rules defined for that column. If the data
+is valid, InfoMaker accepts the entry; otherwise, InfoMaker displays
+an error message and does not accept the entry.</p>
+<A NAME="TI2254"></A><p>For more information, see <A HREF="imugp66.htm#X-ref301085948">"Working with validation
+rules "</A>.</p>
+

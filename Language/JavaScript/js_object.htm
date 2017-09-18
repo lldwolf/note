@@ -1,0 +1,134 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>对象</title>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+<p id="title">对象</p>
+
+<h1>对象 </h1>
+<h2> 声明对象</h2>
+<h4>构造函数方式 </h4>
+<p>在js中声明一个对象的方式与通常的OO语言不同，看上去怪怪的，例如，下例声明了一个Rect对象，并声明了两个属性：width和height</p>
+<pre>function Rect()
+{
+	this.width = 10;
+	this.height = 10;
+}</pre>
+<p>如果要声明成员方法，可使用如下方式:</p>
+<pre>this.方法名 = 现有函数名 </pre>
+<p>不过这不是推荐的方式，因此不再多讲，要声明成员方法，推荐使用原型对象</p>
+<h4>直接方式</h4>
+<p>如下所示，声明和上例相同的对象</p>
+<p>var o = { width:1, heigth:10 }; </p>
+<p>甚至，也可以其中声明方法。</p>
+<h2>属性访问方式</h2>
+<p>在javascript中，访问对象的属性有两种方式，如下所示：</p>
+<pre>function Object1()
+{
+	this.F1 = "abc";
+}
+
+function test()
+{
+	var o = new Object1();
+	alert(o.F1);
+	alert(o["F1"]);
+}</pre>
+<h2>枚举所有属性</h2>
+<pre>function listProp(o)
+{
+	var s = "";
+	for(var name in o)
+	{
+		s = s + name + "\r\n"
+	}
+	return s;
+}</pre>
+<h1>对象原型 </h1>
+<h2>添加对象方法</h2>
+<p>从OO的观点看，原型对象可以简单地理解为对象所拥有的一个静态变量，你只能通过静态方式进行访问，对它做的所有改变，均影响该对象的所有实例。例如，如果为上述的Rect对象添加一个成员方法area，可使用如下代码：</p>
+<pre>function Rect()
+{
+	this.width = 10;
+	this.height = 10;
+}
+
+function get_area()
+{
+	return this.width * this.height;
+}
+
+Rect.prototype.area = get_area;</pre>
+<p>但在调用时不需这么麻烦，直接使用对象实例调用即可：</p>
+<pre>var r = new Rect();
+alert(r.area());</pre>
+<p>使用类似的方法，也可以给对象声明共享的属性。</p>
+<h2>扩展对象</h2>
+<p>使用原型对象的一个很大用处就是扩展现有对象的功能，例如，下面的代码定义了一个新方法，它适用于所有的String对象</p>
+<pre>String.prototype.endsWith = function(c)
+{
+	return (c == this.charAt(this.length - 1));
+}</pre>
+<p>在String的原型对象中定义了新方法endsWith后，可以用如下方式来使用：</p>
+<pre>var message = "hello world";
+message.endsWith('h');	//返回false
+message.endsWith('d');	//返回true</pre>
+<h1>面向对象的JavaScript</h1>
+<h2>类属性和类方法</h2>
+<p>这是指只能通过对象名，而不是实例名访问的属性和方法。例如：</p>
+<pre>Circle.PI = 3.14;</pre>
+<p>即是声明了一个类属性。</p>
+<h2>继承</h2>
+<p>虽然javascript不能显式地使用继承，但可以变通实现，关键仍然在于原型对象。例如，下面的代码演示了如何声明Object1的子类Object2：</p>
+<pre>function Object1()
+{
+	this.F1 = "abc";
+}
+
+function Object2()
+{
+	this.F2 = "abcd";
+}
+
+Object2.prototype = new Object1();</pre>
+<h1>对象的属性和方法</h1>
+<p>因为所有的对象都从Object继承而来，因此，所有的对象都支持Object的方法</p>
+<h2>constructor属性 </h2>
+<p>它引用初始化对象的构造函数，例如Object1对象的构造函数为Object1()，则其实例的contructor引用的就是Object1，可以使用这个特点来确定一个对象的类型，如下所示：</p>
+<pre>if(typeof o == &quot;object&quot; &amp;&amp; o.constructor == Date)
+	//使用Date对象作一些操作</pre>
+<p>一般情况下是这样，但也有可能一个类的创建者会用一个全新的对象来替换给定对象的原型对象，而新对象没有有效的constructor属性，那么上述方法就失效了。</p>
+<h2>toString()方法</h2>
+<p>实际上，自定义的对象返回的都是&quot;[object Object]&quot;，没什么实际意义，因此，一般情况下需要定义自己的toString()方法。对于javascript的内部对象，返回的字符串一般是[ojbect <em>class</em>]，例如，Date对象返回的是[object Date]</p>
+<h2>toLocalString()方法</h2>
+<p>表示返回本地化的字符串，默认的与toString()方法相同，但一些默认对象，例如Date、Array、Number都定义了自己的toLocaleString()方法，例如，在中文Windows环境下，Date对象的toString()返回“Tue Apr 29 16:43:04 UTC+0800 2008”，而toLocaleString()返回“2008年4月29日 16:43:04”</p>
+<h2>valueOf()方法</h2>
+<p>通常是返回这个对象代表的数字值，在作数字运算时，会自动调用这个方法。</p>
+<h2>hasOwnProperty()方法</h2>
+<p>表示对象是否拥有某个非继承属性，例如：</p>
+<pre>var o = new Object(); 
+o.hasOwnProperty(&quot;undef&quot;);	//false, 未定义该属性
+o.hasOwnProperty(&quot;toString&quot;);	//false, toString是继承的属性
+Math.hasOwnProperty(&quot;cos&quot;);	//true, Math对象有cos属性</pre>
+<h2>propertyIsEnumerable()方法</h2>
+<p>参数为一个字符串，表示属性名，返回该属性是否是可枚举的，即可以用for/in循环列出来。如下所示：</p>
+<pre>var o = {x:1};
+o.propertyIsEnumerable(&quot;x&quot;);	//true, 该属性存在，且可枚举
+o.propertyIsEnumerable(&quot;y&quot;);	//false, 该属性不存在 
+o.propertyIsEnumerable(&quot;valueOf&quot;);	//false, 该属性存在，但不可枚举</pre>
+<p>因该方法只考虑对象直接定义的属性，对于继承的属性则不作考虑</p>
+<h2>isPropertyOf()方法</h2>
+<p>如果调用对象是实际参数指定的原型对象，则返回true，该方法用途和constructor类似，如下所示：</p>
+<pre>var o = new Object();
+Object.prototype.isPropertyOf(o);	//true, o.constructor == Object
+Object.isPropertyOf(o);		//false
+o.isPropertyOf(Object.prototype);	//false
+Function.prototype.isPropertyOf(Object);	//true, Object.constructor == Function;</pre>
+<p>&nbsp;</p>
+
+</body>
+</html>

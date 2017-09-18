@@ -1,0 +1,77 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+If</TITLE>
+</HEAD>
+<BODY>
+<A NAME="CAIDFCIA"></A><A NAME="TI6761"></A><h1>If</h1>
+<A NAME="TI6762"></A><p>
+<FORM>
+<INPUT
+ TYPE = "BUTTON"
+ VALUE = "Examples"
+ onClick = "window.location = 'imugp183.htm#EX35';">
+<INPUT
+  TYPE = "BUTTON"
+ VALUE = "See also"
+ onClick = "window.location = 'imugp183.htm#SA35';">
+</FORM>
+</p>
+<h3>Description</h3><A NAME="TI6763"></A><p>Evaluates a condition and returns a value based on that condition.</p>
+
+<h3>Syntax</h3><pre><b>If</b> ( <i>boolean</i>, <i>truevalue</i>, <i>falsevalue</i> )</pre>
+<A NAME="TI6764"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI6765"></A>Argument</th>
+<th align="left" valign=bottom><A NAME="TI6766"></A>Description</th>
+</tr>
+<tr><td valign=top><A NAME="TI6767"></A><i>boolean</i></td>
+<td valign=top><A NAME="TI6768"></A>A boolean expression that evaluates to
+TRUE or FALSE</td>
+</tr>
+<tr><td valign=top><A NAME="TI6769"></A><i>truevalue</i></td>
+<td valign=top><A NAME="TI6770"></A>A string containing the value you want
+returned if the boolean expression is TRUE</td>
+</tr>
+<tr><td valign=top><A NAME="TI6771"></A><i>falsevalue</i></td>
+<td valign=top><A NAME="TI6772"></A>A string containing the value you want
+returned if the boolean expression is FALSE</td>
+</tr>
+</table>
+
+<h3>Return Values</h3><A NAME="TI6773"></A><p>The data type of <i>truevalue</i> or <i>falsevalue</i>.
+Returns <i>truevalue</i> if <i>boolean</i> is
+TRUE and <i>falsevalue</i> if it is FALSE. Returns
+NULL if an error occurs.</p>
+
+<A NAME="EX35"></A><h3>Examples</h3><A NAME="TI6774"></A><p>This expression returns Boss if salary is over $100,000
+and Employee if salary is less than or equal to $100,000:<pre><i>If</i> (salary &gt; 100000, "Boss", "Employee")</pre>
+</p>
+<A NAME="TI6775"></A><p>This expression returns Boss if salary is over $100,000,
+Supervisor if salary is between $12,000 and $100,000,
+and Clerk if salary is less than or equal to $12,000:<pre><i>If</i> (salary &gt; 100000, "Boss", <i>If</i> (salary &gt; 12000,<br> "Supervisor", "Clerk"))</pre>
+</p>
+<A NAME="TI6776"></A><p>In this example of a validation rule, the value the
+user should enter in the commission column depends on the price.
+If price is greater than or equal to 1000, then the commission is
+between .10 and .20. If price is less than 1000, then the commission
+must be between .04 and .09. The validation rule is:<pre>(Number(GetText()) &gt;= <i>If</i> (price &gt;=1000, .10, .04)) AND<br> (Number(GetText()) &lt;= <i>If</i> (price &gt;= 1000, .20, .09))</pre>
+</p>
+<A NAME="TI6777"></A><p>The accompanying error message expression might be:<pre>"Price is " +  <i>If</i> (price &gt;= 1000, "greater than or <br> equal to", "less than") + " 1000. Commission must be<br> between " +  <i>If</i> (price &gt;= 1000, ".10", ".04") + " and " +  <i>If</i> (price &gt;= 1000, ".20.", ".09.")</pre>
+</p>
+
+<A NAME="SA35"></A><h3>See Also</h3><A NAME="TI6778"></A><p><A NAME="TI6779"></A>
+<ul>
+<li class=fi><A HREF="imugp148.htm#X-ref350671311">"Example 1: counting
+NULL values in a column"</A></li>
+<li class=ds><A HREF="imugp148.htm#X-ref350653531">"Example 2: counting
+male and female employees"</A></li>
+<li class=ds><A HREF="imugp148.htm#X-ref350653848">"Example 3: creating
+a row indicator"</A></li>
+<li class=ds><A HREF="imugp148.htm#X-ref351281467">"Example 4: displaying
+all data when a column allows NULLs"</A></li>
+<li class=ds><A HREF="imugp156.htm#CAICHIAA">Case</A>
+</li>
+</ul>
+</p>
+
+

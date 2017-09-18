@@ -1,0 +1,50 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+Space</TITLE>
+</HEAD>
+<BODY>
+<A NAME="CAICCDHE"></A><A NAME="TI7870"></A><h1>Space</h1>
+<A NAME="TI7871"></A><p>
+<FORM>
+<INPUT
+ TYPE = "BUTTON"
+ VALUE = "Examples"
+ onClick = "window.location = 'imugp240.htm#EX92';">
+<INPUT
+  TYPE = "BUTTON"
+ VALUE = "See also"
+ onClick = "window.location = 'imugp240.htm#SA92';">
+</FORM>
+</p>
+<h3>Description</h3><A NAME="TI7872"></A><p>Builds a string of the specified length whose value consists
+of spaces.</p>
+
+<h3>Syntax</h3><pre><b>Space</b> ( <i>n</i> )</pre>
+<A NAME="TI7873"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI7874"></A>Argument</th>
+<th align="left" valign=bottom><A NAME="TI7875"></A>Description</th>
+</tr>
+<tr><td valign=top><A NAME="TI7876"></A><i>n</i></td>
+<td valign=top><A NAME="TI7877"></A>A long whose value is the length of the
+string you want filled with spaces</td>
+</tr>
+</table>
+
+<h3>Return Values</h3><A NAME="TI7878"></A><p>String. Returns a string filled with <i>n</i> spaces
+if it succeeds and the empty string ("") if an error occurs.</p>
+
+<A NAME="EX92"></A><h3>Examples</h3><A NAME="TI7879"></A><p>This expression for a computed field returns 10 spaces
+in the computed field if the value of the rating column is Top Secret;
+otherwise, it returns the value in rating:<pre>If(rating = "Top Secret", <i>Space</i> (10), rating)</pre>
+</p>
+
+<A NAME="SA92"></A><h3>See Also</h3><A NAME="TI7880"></A><p><A NAME="TI7881"></A>
+<ul>
+<li class=fi><A HREF="imugp178.htm#CAIDIECJ">Fill</A></li>
+<li class=ds> 
+</li>
+</ul>
+</p>
+
+

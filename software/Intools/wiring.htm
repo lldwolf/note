@@ -1,0 +1,36 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<title>接线</title>
+<script language="javascript" src="css.js"></script>
+</head>
+
+<body>
+<h1>第N章 接线</h1>
+<hr>
+<h2>N.1 生成接线设备</h2>
+<p>可在Index模块中根据仪表生成接线设备，前提是需要定义仪表所属仪表类型对应的默认接线设备类型。</p>
+<h2>N.2 建立接线设备的方法</h2>
+<h3>N.2.1 DCS</h3>
+<h4>N.2.1.1  建立DCS</h4>
+<h4>N.2.1.2 建立Rack</h4>
+<h4>N.2.1.3 建立Slot</h4>
+<h4>N.2.1.4 建立I/O卡</h4>
+<h4>N.2.1.5 建立端子排</h4>
+<h4>N.2.1.6 建立端子 </h4>
+<h2>N.5 DCS接线</h2>
+<h3>N.5.1 创建冗余I/O卡</h3>
+<h4>N.5.1.1 INtools 6</h4>
+<p>在I/O卡的Properties中，选中Control System选项卡，如下图所示，将IO卡作为B-SC01 DCS机柜下的Rack 1的1通道和2通道的冗余I/O卡</p>
+<p><img src="images/redundant_iocard_6.jpg" width="639" height="488"> </p>
+<h4>N.5.1.2 INtools 7 </h4>
+<p>第一步，在Slot中建立冗余I/O卡，建立方法和正常I/O卡一样，但下面不要创建任何端子排。</p>
+<p>第二步，在DCS根目录下建立I/O Termination，建立方法为在New菜单中选择“Wiring Equipment”,将其类型设为“I/O Termination”，创建好后在其Properties中，设置与Slot的冗余关系，如下图所示：</p>
+<p><img src="images/redundant_iocard_7.jpg" width="561" height="504"></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<script language="javascript" src="index.js"></script>
+</body>
+</html>

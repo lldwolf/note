@@ -1,0 +1,348 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>技巧集</title>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+<p id="title">技巧集</p>
+
+<h1>JavaScript语言技巧</h1>
+<h2>日期减去天数等于第二个日期</h2>
+<pre>&lt;script language=&quot;Javascript&quot;&gt;
+function cc(dd,dadd)
+{
+	//可以加上错误处理
+	var a = new Date(dd)
+	a = a.valueOf()
+	a = a - dadd * 24 * 60 * 60 * 1000
+	a = new Date(a)
+	alert(a.getFullYear() + &quot;年&quot; + (a.getMonth() + 1) + &quot;月&quot; + a.getDate() + &quot;日&quot;)
+}
+cc(&quot;12/23/2002&quot;,2)
+&lt;/script&gt;</pre>
+<p>&nbsp;</p>
+<h1>页面技巧</h1>
+
+<h2>窗口技巧</h2>
+<h4><strong>窗口中间弹出</strong></h4>
+<pre>&lt;script&gt;
+window.open(&quot;http://www.cctv.com&quot;,&quot;&quot;,&quot;width=400,height=240,top=&quot;+(screen.availHeight-240)/2+&quot;,left=&quot;+(screen.availWidth-400)/2);
+&lt;/script&gt;
+
+&lt;html&gt;
+&lt;head&gt;
+&lt;script language=&quot;JavaScript&quot;&gt;
+function WinOpen() 
+{
+	msg=open(&quot;&quot;,&quot;DisplayWindow&quot;,&quot;toolbar=no,directories=no,menubar=no&quot;);
+	msg.document.write(&quot;&lt;HEAD&gt;&lt;TITLE&gt;哈 罗!&lt;/TITLE&gt;&lt;/HEAD&gt;&quot;);
+	msg.document.write(&quot;&lt;CENTER&gt;&lt;H1&gt;酷 毙 了!&lt;/H1&gt;&lt;h2&gt;这是&lt;B&gt;JavaScript&lt;/B&gt;所 开 的 视 窗!&lt;/h2&gt;&lt;/CENTER&gt;&quot;);
+}
+&lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;form&gt;
+	&lt;input type=&quot;button&quot; name=&quot;Button1&quot; value=&quot;Push me&quot; onclick=&quot;WinOpen()&quot;&gt;
+&lt;/form&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+<p><strong>N.2.1.2关闭弹出窗口 </strong></p>
+<pre>&lt;html&gt;&lt;body&gt;
+&lt;SCRIPT language=&quot;JavaScript&quot;&gt;
+function openclk() 
+{
+	another = window.open(&quot;http://www.google.com&quot;, &quot;NewWindow&quot;, &quot;width=500, height=400&quot;);
+}
+
+function closeclk() 
+{
+	another.close();
+}
+&lt;/SCRIPT&gt;
+&lt;FORM&gt;
+&lt;INPUT TYPE=&quot;BUTTON&quot; NAME=&quot;open&quot; value=&quot;打开一个窗口&quot; onClick=&quot;openclk()&quot;&gt;
+&lt;BR&gt;
+&lt;INPUT TYPE=&quot;BUTTON&quot; NAME=&quot;close&quot; value=&quot;关闭这个窗口&quot; onClick=&quot;closeclk()&quot;&gt;
+&lt;/FORM&gt;
+&lt;/body&gt;&lt;/html&gt;</pre>
+<p><strong> 控制弹出窗口的样式</strong></p>
+<pre>&lt;html&gt;&lt;body&gt;
+&lt;SCRIPT LANGUAGE=&quot;JavaScript&quot;&gt;
+
+function popupPage(l,  t,  w,  h) 
+{
+	var windowprops = &quot;location=no, scrollbars=no, menubars=no, toolbars=no, resizable=yes&quot; 
+	                + &quot;, left=&quot; + l + &quot;, top=&quot; + t + &quot;, width=&quot; + w + &quot;, height=&quot; + h;
+	var URL = &quot;http://www.google.com&quot;;
+	popup = window.open(URL, &quot;MenuPopup&quot;, windowprops);
+}
+
+&lt;/script&gt;
+&lt;table&gt;
+&lt;tr&gt;
+&lt;td&gt;
+&lt;form name=&quot;popupform&quot;&gt;
+&lt;pre&gt;
+打开页面的参数&lt;br&gt;
+离开左边的距离: &lt;input type=text name=left size=2 maxlength=4&gt; pixels
+离开顶边的距离: &lt;input type=text name=top size=2 maxlength=4&gt; pixels
+窗口的宽度: &lt;input type=text name=width size=2 maxlength=4&gt; pixels
+窗口的高度: &lt;input type=text name=height size=2 maxlength=4&gt; pixels
+&lt;/pre&gt;
+&lt;center&gt;
+&lt;input type=button value=&quot;打开这个窗口！&quot; onClick=&quot;popupPage(this.form.left.value,  this.form.top.value,  this.form.width.value, this.form.height.value)&quot;&gt;
+&lt;/center&gt;
+&lt;/form&gt;
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/table&gt;你只要在相对应的对话框中输入一个数值即可, 将要打开的页面的窗口控制得很好。
+&lt;/body&gt;&lt;/html&gt;</pre>
+<h4>去掉 window.close() 关闭页面时的提示</h4>
+<pre>window.opener=null;
+window.close(); </pre>
+<h4>定时关闭页面</h4>
+<pre>&lt;script language=&quot;javascript&quot;&gt;
+&lt;!--
+setTimeout(&quot;window.opener=null; window.close();&quot;, 5000);	//设为5秒
+--&gt;
+&lt;/script&gt;</pre>
+<h4>移动窗口</h4>
+<p>使用window.moveBy方法和window.moveTo方法</p>
+<h2>显示网页的最后更改日期</h2>
+<pre>document.write(&quot;Last Updated:&quot; + document.lastModified); </pre>
+<h2>查看网页源代码</h2>
+<pre>&lt;input type=button value=&quot;查看网页源代码&quot; 
+	onclick=&quot;window.location = 'view-source:'+ 'http://www.pconline.com.cn'&quot;&gt;</pre>
+<h2>取得控件的绝对位置</h2>
+<pre>&lt;script language=&quot;Javascript&quot;&gt;
+function getIE(e)
+{
+	var t = e.offsetTop;
+	var l = e.offsetLeft;
+	while(e = e.offsetParent)
+	{
+		t +  = e.offsetTop;
+		l +  = e.offsetLeft;
+	}
+	alert(&quot;top = &quot; + t + &quot;/nleft = &quot; + l);
+}
+&lt;/script&gt;</pre>
+<h2>判断上一页的来源</h2>
+
+<pre>document.referrer</pre>
+<h2>让弹出窗口总是在最上面:</h2>
+<pre>&lt;body onblur=&quot;this.focus();&quot;&gt;</pre>
+<h2>不要滚动条</h2>
+<p><strong> 让竖条没有</strong></p>
+<pre>&lt;body style=&quot;overflow:scroll;overflow-y:hidden&quot;&gt;&lt;/body&gt;</pre>
+<p><strong> 让横条没有</strong></p>
+<pre>&lt;body style=&quot;overflow:scroll;overflow-x:hidden&quot;&gt;&lt;/body&gt;</pre>
+<p><strong> 两个都去掉</strong></p>
+<pre>&lt;body scroll=&quot;no&quot;&gt;&lt;/body&gt;
+</pre>
+<h2>去掉图片链接点击后，图片周围的虚线</h2>
+<pre>&lt;a href=&quot;#&quot; onFocus=&quot;this.blur()&quot;&gt;&lt;img src=&quot;/logo.jpg&quot; border=0&gt;&lt;/a&gt; </pre>
+<h2>如何设定打开页面的大小、位置</h2>
+<pre>&lt;body onload=&quot;top.resizeTo(300,200);&quot;&gt;
+&lt;body onload=&quot;top.moveBy(300,200);&quot;&gt;
+ </pre>
+<h2>在页面中加入不是满铺的背景图片,拉动页面时背景图不动</h2>
+<pre>&lt;STYLE&gt;
+body
+{background-image:url(/logo.gif); background-repeat:no-repeat; background-position:center;background-attachment: fixed}
+&lt;/STYLE&gt;</pre>
+<h2>获得一个窗口的大小</h2>
+<pre>document.body.clientWidth; 
+document.body.clientHeight;</pre>
+<h2>网页的最后更改时间</h2>
+<p>document.lastModified属性</p>
+<h1>表单控件技巧</h1>
+<h2>光标是停在文本框文字的最后</h2>
+<pre>&lt;script language=&quot;javascript&quot;&gt;
+function cc()
+{
+	var e = event.srcElement;
+	var r =e.createTextRange();
+	r.moveStart(&quot;character&quot;,e.value.length);
+	r.collapse(true);
+	r.select();
+}
+&lt;/script&gt;
+&lt;input type=text name=text1 value=&quot;123&quot; onfocus=&quot;cc()&quot;</pre>
+<h2>TEXTAREA自适应文字行数的多少</h2>
+<p>&lt;textarea rows=1 name=s1 cols=27 onpropertychange=&quot;this.style.posHeight=this.scrollHeight&quot;&gt;<br />
+&lt;/textarea&gt;</p>
+<h2> 选择了哪一个Radio</h2>
+<pre>&lt;html&gt;
+&lt;form name=&quot;form1&quot; id=&quot;form1&quot;&gt;
+	&lt;input type=&quot;radio&quot; name=&quot;rb&quot; id=&quot;rb&quot; value=&quot;0&quot; checked /&gt;Option 1
+	&lt;input type=&quot;radio&quot; name=&quot;rb&quot; id=&quot;rb&quot; value=&quot;1&quot; /&gt;Option 2
+	&lt;br /&gt;
+	&lt;br /&gt;
+	&lt;input type=&quot;button&quot; value=&quot;test&quot; onclick=&quot;display_selected_value()&quot; /&gt;
+&lt;/form&gt;
+&lt;script type=&quot;text/javascript&quot;&gt;
+function display_selected_value()
+{
+	var frm = document.form1;
+	var i;
+	for(i = 0; i &lt; frm.rb.length; i++)
+	{
+		if(frm.rb[i].checked)
+		{
+			alert(frm.rb[i].value);
+			break;
+		}
+	}
+}
+&lt;/script&gt;
+&lt;/html&gt;</pre>
+<h2>ENTER键可以让光标移到下一个输入框</h2>
+<pre>&lt;input onkeydown=&quot;if(event.keyCode==13) event.keyCode=9&quot;&gt;</pre>
+<h2>确认后提交</h2>
+<p> &lt;form onsubmit=&quot;return CheckInput()&quot;&gt; </p>
+<p>如果CheckInput()函数返回false，则不进行提交</p>
+<h1>浏览器控制 </h1>
+<h2>隐藏浏览器中状态栏的URL地址信息</h2>
+<pre>&lt;a href=http://tech.163.com/school onMouseOver="window.status='none';return true;"&gt;网易学院&lt;/a&gt;</pre>
+<h2>屏蔽鼠标右键</h2>
+<pre>oncontextmenu=&quot;window.event.returnValue=false;&quot;</pre>
+<p>或 </p>
+<pre>oncontextmenu=&quot;return false;&quot;</pre>
+<h2>取消选取、防止复制、不准粘贴、屏蔽功能键</h2>
+<p><strong>取消选取</strong></p>
+<pre>onselectstart=&quot;return false&quot;</pre>
+<p><strong>不准粘贴</strong></p>
+<pre>onpaste=&quot;return false&quot;</pre>
+<p><strong>防止复制</strong></p>
+<pre>oncopy=&quot;return false;&quot; oncut=&quot;return false;&quot;</pre>
+<p><strong>屏蔽功能键Shift,Alt,Ctrl</strong></p>
+<pre>&lt;script type=&quot;text/javascript&quot;&gt;
+function look()
+{
+	if(event.shiftKey)
+		alert(&quot;禁止按Shift键!&quot;); //可以换成ALT　CTRL
+}
+document.onkeydown=look;
+&lt;/script&gt;</pre>
+<h2>更改IE地址栏和收藏夹中的图标 </h2>
+<p><strong>IE地址栏前换成自己的图标</strong></p>
+<pre>&lt;link rel=&quot;Shortcut Icon&quot; href=&quot;favicon.ico&quot;&gt; </pre>
+<p><strong>可以在收藏夹中显示出你的图标</strong></p>
+<pre>&lt;link rel=&quot;Bookmark&quot; href=&quot;favicon.ico&quot;&gt; </pre>
+<h2>关闭输入法</h2>
+<pre>&lt;input style=&quot;ime-mode:disabled&quot;&gt;</pre>
+<h2>最小化、最大化、关闭窗口</h2>
+<pre>&lt;object id=hh1 classid=&quot;clsid:ADB880A6-D8FF-11CF-9377-00AA003B7A11&quot;&gt;
+&lt;param name=&quot;Command&quot; value=&quot;Minimize&quot;&gt;&lt;/object&gt;
+&lt;object id=hh2 classid=&quot;clsid:ADB880A6-D8FF-11CF-9377-00AA003B7A11&quot;&gt;
+&lt;param name=&quot;Command&quot; value=&quot;Maximize&quot;&gt;&lt;/object&gt;
+&lt;OBJECT id=hh3 classid=&quot;clsid:adb880a6-d8ff-11cf-9377-00aa003b7a11&quot;&gt;
+&lt;PARAM NAME=&quot;Command&quot; value=&quot;/Close&quot;&gt;&lt;/OBJECT&gt;
+&lt;input type=button value=&quot;/最小化 onclick=hh1.Click()&gt;
+&lt;input type=button value=&quot;/blog/最大化 onclick=hh2.Click()&gt;
+&lt;input type=button value=关闭 onclick=hh3.Click()&gt;</pre>
+<p>本例适用于IE</p>
+<h2>在规定时间内跳转</h2>
+<pre>&lt;META http-equiv=V=&quot;REFRESH&quot; content=&quot;5;URL=http://www.51js.com&quot;&gt;</pre>
+<h1>安全</h1>
+<h2>永远都会带着框架</h2>
+<pre>&lt;script language=&quot;JavaScript&quot;&gt;&lt;!--
+if (window == top)top.location.href = &quot;frames.htm&quot;; //frames.htm为框架网页
+// --&gt;&lt;/script&gt;</pre>
+<h2>防止被人frame</h2>
+<pre>&lt;SCRIPT LANGUAGE=JAVASCRIPT&gt;&lt;!--
+if (top.location != self.location)top.location=self.location;
+// --&gt;&lt;/SCRIPT&gt;</pre>
+<h2>网页不会被缓存</h2>
+<pre>&lt;META HTTP-EQUIV=&quot;pragma&quot; CONTENT=&quot;no-cache&quot;&gt;
+&lt;META HTTP-EQUIV=&quot;Cache-Control&quot; CONTENT=&quot;no-cache, must-revalidate&quot;&gt;
+&lt;META HTTP-EQUIV=&quot;expires&quot; CONTENT=&quot;Wed, 26 Feb 1997 08:21:57 GMT&quot;&gt;
+或者
+&lt;META HTTP-EQUIV=&quot;expires&quot; CONTENT=&quot;0&quot;&gt;</pre>
+<h1>N.100 其它</h1>
+<h2>N.100.1 电子邮件处理提交表单</h2>
+<pre>&lt;form name=&quot;form1&quot; method=&quot;post&quot; action=&quot;mailto:****@***.com&quot; enctype=&quot;text/plain&quot;&gt;
+  &lt;input type=submit&gt;
+&lt;/form&gt;</pre>
+<h2>N.100.2 在打开的子窗口刷新父窗口</h2>
+<pre>window.opener.location.reload();</pre>
+<h2>N.100.3 屏蔽脚本错误</h2>
+<pre>&lt;SCRIPT LANGUAGE=&quot;JavaScript&quot;&gt;
+function killErrors() 
+{
+	return true;
+}
+window.onerror = killErrors;
+&lt;/SCRIPT&gt;</pre>
+<h2>N.100.4 检测某个网站的链接速度</h2>
+<pre>&lt;body&gt;
+&lt;script language=&quot;Javascript&quot;&gt;
+tim=1;
+setInterval(&quot;tim++&quot;,100);
+b=1;
+var autourl=new Array();
+autourl[1]=&quot;www.njcatv.net&quot;;
+autourl[2]=&quot;javacool.3322.net&quot;;
+autourl[3]=&quot;www.sina.com.cn&quot;;
+autourl[4]=&quot;www.nuaa.edu.cn&quot;;
+autourl[5]=&quot;www.cctv.com&quot;;
+
+function butt()
+{
+	document.write(&quot;&lt;form name='autof'&gt;&quot;);
+	var info;
+	for(var i=1; i&lt;autourl.length; i++)
+	{
+		info = &quot;&lt;input type='text' name='txt&quot; + i + &quot;' size='10' value='测试中……' /&gt; =》&quot;
+			 + &quot;&lt;input type='text' name='url&quot; + i + &quot;' size='40' /&gt; =》&quot;
+			 + &quot;&lt;input type='button' value='GO' onclick='window.open(this.form.url&quot; + i + &quot;.value)' /&gt; &quot;
+			 + &quot;&lt;br /&gt;&quot;;
+		document.write(info);
+	}
+	document.write(&quot;&lt;input type='submit' value='刷新' /&gt;&lt;/form&gt;&quot;);
+}
+
+butt();
+
+function auto(url)
+{
+	document.forms[0][&quot;url&quot;+b].value=url;
+	if(tim&gt;200)
+		document.forms[0][&quot;txt&quot;+b].value=&quot;链接超时&quot;;
+	else
+		document.forms[0][&quot;txt&quot;+b].value=&quot;时间&quot;+tim/10+&quot;秒&quot;;
+	b++;
+}
+
+function run()
+{
+	var info;
+	for(var i=1;i&lt;autourl.length;i++)
+	{
+		info = &quot;&lt;img src='http://&quot; + autourl[i] + &quot;/&quot; + Math.random() 
+			 + &quot;' width='1' height='1' onerror=\&quot;auto('http://&quot; + autourl[i] + &quot;')\&quot; /&gt;&quot;
+		
+		document.write(info);
+	}
+}
+
+run();
+&lt;/script&gt;
+&lt;/body&gt;</pre>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>10. 网页将不能被另存为<br />
+&lt;noscript&gt;&lt;*** src=&quot;/*.html&gt;&quot;;&lt;/***&gt;&lt;/noscript&gt;<br />
+</p>
+<p>&nbsp;</p>
+<p><br />
+</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<script language="javascript" src="index.js"></script>
+</body>
+</html>

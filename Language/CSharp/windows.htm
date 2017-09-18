@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+	<script type="text/javascript" src="../../mylib/js/css.js"></script>
+	<title>调用操作系统功能</title>
+</head>
+
+<body>
+	<p id="title">调用操作系统功能</p>
+
+	<h1>调用windows打开文件</h1>
+	<pre class="code" data-type="csharp">//由Windows打开文件
+public static void OpenFile(string fileName)
+{
+	Process process = new Process();
+	process.StartInfo.FileName = fileName;
+	process.StartInfo.Verb = "Open";
+	process.StartInfo.CreateNoWindow = false;
+	process.Start();
+}</pre>
+	<p>还可以用如下方法：</p>
+	<pre class="code" data-type="csharp">System.Diagnostics.Process.Start(@&quot;C:\Program Files\Microsoft Office\Office10\WINWORD&quot;, @ &quot;D:\myfile\aa\xxx.doc&quot;);</pre>
+	<h1>运行DOS命令 </h1>
+	<p>下面的代码将ORACLE数据库中的一个表备份出来</p>
+	<pre class="code" data-type="csharp">System.Diagnostics.Process.Start(&quot;exp.exe&quot;, &quot;report_sys/report_sys@oemrep_ipds002 file=c:/table_link.dmp tables=(table_link)&quot;);</pre>
+	<p>上述方法是有限制的，因为你得知道用哪个可执行文件，但实际上，有时这一点很难做到，例如，我想取机器上有哪些共享目录，那么我需要使用如下的DOS命令：</p>
+	<pre class="code" data-type="csharp">net share &gt; c:\1.txt</pre>
+	<p>然后我再分析生成的文件即可，但who能告我net share是属于哪个可执行文件，所以，我们需要用更加直接的模拟方法，示例代码如下：</p>
+	<pre class="code" data-type="csharp">Process p = new Process();
+p.StartInfo.FileName = &quot;cmd.exe&quot;;
+
+//关闭Shell的使用
+p.StartInfo.UseShellExecute = false;
+
+//重定向标准输入
+p.StartInfo.RedirectStandardInput = true;
+
+//重定向标准输出
+p.StartInfo.RedirectStandardOutput = true;
+
+//重定向错误输出
+p.StartInfo.RedirectStandardError = true;
+
+//设置不显示窗口
+p.StartInfo.CreateNoWindow = true;
+p.Start();
+
+//输入要执行的命令
+p.StandardInput.WriteLine(&quot;net share &gt; c:\\1.txt&quot;);
+p.StandardInput.WriteLine(&quot;exit&quot;);
+
+//从输出流获取命令执行结果，该句很重要，如果不加该句，则不执行上述输入
+p.StandardOutput.ReadToEnd();</pre>
+	<h1>创建快捷方式</h1>
+	<h2>引用库 </h2>
+	<p>右击你的项目并选择添加引用，选择 COM 选项卡并选择 Windows Script Host Object Model</p>
+	<h2>创建快捷方式  </h2>
+	<pre class="code" data-type="csharp">using IWshRuntimeLibrary;
+...
+WshShe shell = new WshShell();
+//快捷方式生成至桌面上的AutoPCRS.lnk
+IWshShortcut shortcut = (IWshShortcut)shell.CreateShortcut(
+	Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) +	@"\AutoPCRS.lnk");
+//shortcut.TargetPath = System.Reflection.Assembly.GetExecutingAssembly().Location;	//快捷方式的目标为当前可执行程序
+shortcut.TargetPath = @"C:\winnt\Notepad.exe";			//快捷方式的目标为记事本程序
+shortcut.WorkingDirectory = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);	//默认工作目录
+shortcut.WindowStyle = 1;			//启动时的窗口类型，正常、最大还是最小化
+shortcut.Description = "傲途过程控制报表系统（AutoPCRS）";	//快捷方式的描述，鼠标悬停时显示该内容
+shortcut.IconLocation = shortcut.TargetPath;			//显示的图标，在此设为可执行文件的显示图标
+shortcut.Save();			//生成快捷方式
+</pre>
+	<p>下面我们对代码作一些详细注释：</p>
+	<p>其WorkingDirectory属性指定应用程序的工作目录，当用户没有指定一个具体的目录时，快捷方式的目标应用程序将使用该属性所指定的目录来装载或保存文件。</p>
+	<p>其WindowStyle属性的值如下：1 - 正常、3 - 最大化、 7 - 最小化</p>
+	<p>其IconLocation属性指定快捷方式的显示图标，也可以指定DLL文件及图标索引来指定图标，它的值包含一个完整的路径和一个索引值。下面代码中，快捷方式的图标被设定为系统文件夹中的 Shell32.dll 文件所包含的第165个图标。例如：</p>
+	<pre class="code" data-type="csharp">shortcut.IconLocation = System.Environment.SystemDirectory + &quot;\\&quot; + &quot;shell32.dll, 165&quot;;</pre>
+	<h2>使用快捷键启动快捷方式</h2>
+	<p>想象一下你的应用程序支持命令行参数组合运行，例如：</p>
+	<pre class="code" data-type="csharp">App /out:output.txt /sortby:date /desc</pre>
+	<p>而你又希望只需要轻轻按下 CTRL+ALT+F11 就可以直接启动这项功能，这时你就需要用到 IWshShortcut 的 Arguments 和 Hotkey 两个属性了：</p>
+	<pre class="code" data-type="csharp">shortcut.Arguments = "/out:output.txt /sortby:date /desc";
+shortcut.Hotkey = "CTRL+ALT+F11";</pre>
+	<p>注意：Hotkey 属性的值里面不能包含空格。</p>
+	<p>你可以在应用程序里面像平常那样处理命令行参数：</p>
+	<pre class="code" data-type="csharp">class Program
+{
+　static void Main(string[] args)
+　{
+　　foreach (string arg in args)
+　　{
+　　　Console.WriteLine(arg);
+　　}
+　}
+}</pre>
+	<h1>取文件类型信息（图标，描述等）</h1>
+	<p>根据扩展名取文件的图标及描述信息</p>
+	<div id="accordion-file-info-by-ext">
+		<p><a href="#">查看代码</a></p>
+		<pre class="code" data-type="csharp">/// &lt;summary&gt; 
+/// 通过扩展名得到图标和描述 
+/// &lt;/summary&gt; 
+/// &lt;param name=&quot;ext&quot;&gt;扩展名&lt;/param&gt; 
+/// &lt;param name=&quot;LargeIcon&quot;&gt;得到大图标&lt;/param&gt; 
+/// &lt;param name=&quot;smallIcon&quot;&gt;得到小图标&lt;/param&gt; 
+public static void GetExtsIconAndDescription(string ext, out Icon largeIcon, out Icon smallIcon, out string description)
+{
+	largeIcon = smallIcon = null;
+	description = &quot;&quot;;
+	var extsubkey = Registry.ClassesRoot.OpenSubKey(ext); //从注册表中读取扩展名相应的子键 
+	if (extsubkey != null)
+	{
+		var extdefaultvalue = (string)extsubkey.GetValue(null); //取出扩展名对应的文件类型名称 
+
+		//未取到值，返回预设图标 
+		if (extdefaultvalue == null)
+		{
+			GetDefaultIcon(out largeIcon, out smallIcon);
+			return;
+		}
+
+		var typesubkey = Registry.ClassesRoot.OpenSubKey(extdefaultvalue); //从注册表中读取文件类型名称的相应子键 
+		if (typesubkey != null)
+		{
+			description = (string)typesubkey.GetValue(null); //得到类型描述字符串 
+			var defaulticonsubkey = typesubkey.OpenSubKey(&quot;DefaultIcon&quot;); //取默认图标子键 
+			if (defaulticonsubkey != null)
+			{
+				//得到图标来源字符串 
+				var defaulticon = (string)defaulticonsubkey.GetValue(null); //取出默认图标来源字符串 
+				var iconstringArray = defaulticon.Split(',');
+				int nIconIndex = 0;
+				if (iconstringArray.Length &gt; 1) int.TryParse(iconstringArray[1], out nIconIndex);
+				//得到图标 
+				System.IntPtr phiconLarge = new IntPtr();
+				System.IntPtr phiconSmall = new IntPtr();
+				ExtractIconExW(iconstringArray[0].Trim('&quot;'), nIconIndex, ref phiconLarge, ref phiconSmall, 1);
+				if (phiconLarge.ToInt32() &gt; 0) largeIcon = Icon.FromHandle(phiconLarge);
+				if (phiconSmall.ToInt32() &gt; 0) smallIcon = Icon.FromHandle(phiconSmall);
+			}
+		}
+	}
+}
+
+/// &lt;summary&gt; 
+/// 获取缺省图标 
+/// &lt;/summary&gt; 
+/// &lt;param name=&quot;largeIcon&quot;&gt;&lt;/param&gt; 
+/// &lt;param name=&quot;smallIcon&quot;&gt;&lt;/param&gt; 
+public static void GetDefaultIcon(out Icon largeIcon, out Icon smallIcon)
+{
+	largeIcon = smallIcon = null;
+	System.IntPtr phiconLarge = new IntPtr();
+	System.IntPtr phiconSmall = new IntPtr();
+	ExtractIconExW(Path.Combine(Environment.SystemDirectory, &quot;shell32.dll&quot;), 0, ref phiconLarge, ref phiconSmall, 1);
+	if (phiconLarge.ToInt32() &gt; 0) largeIcon = Icon.FromHandle(phiconLarge);
+	if (phiconSmall.ToInt32() &gt; 0) smallIcon = Icon.FromHandle(phiconSmall);
+}
+
+
+/// Return Type: UINT-&gt;unsigned int 
+///lpszFile: LPCWSTR-&gt;WCHAR* 
+///nIconIndex: int 
+///phiconLarge: HICON* 
+///phiconSmall: HICON* 
+///nIcons: UINT-&gt;unsigned int 
+[DllImportAttribute(&quot;shell32.dll&quot;, EntryPoint = &quot;ExtractIconExW&quot;, CallingConvention = System.Runtime.InteropServices.CallingConvention.StdCall)]
+public static extern uint ExtractIconExW([System.Runtime.InteropServices.InAttribute()] [System.Runtime.InteropServices.MarshalAsAttribute(UnmanagedType.LPWStr)] string lpszFile, int nIconIndex, ref IntPtr phiconLarge, ref IntPtr phiconSmall, uint nIcons);
+
+public static void CreateFileIcon(string fileType, out Icon large, out Icon small)
+{
+	string des;
+
+	if (fileType.Trim() == &quot;&quot;) //预设图标
+	{
+		AttachTool.GetDefaultIcon(out large, out small);
+	}
+	else if (fileType.ToUpper() == &quot;.EXE&quot;) //应用程序图标单独获取
+	{
+		IntPtr l = IntPtr.Zero;
+		IntPtr s = IntPtr.Zero;
+
+		AttachTool.ExtractIconExW(Path.Combine(Environment.SystemDirectory, &quot;shell32.dll&quot;), 2, ref l, ref s, 1);
+
+		large = Icon.FromHandle(l);
+		small = Icon.FromHandle(s);
+	}
+	else //其它类型的图标
+	{
+		AttachTool.GetExtsIconAndDescription(fileType, out large, out small, out des);
+	}
+
+	if ((large == null) || (small == null)) //无法获取图标,预设图标
+		AttachTool.GetDefaultIcon(out large, out small);
+}
+
+public static byte[] ImageToByte(Image image)
+{
+	MemoryStream ms = new MemoryStream();
+	image.Save(ms, ImageFormat.Bmp);
+	byte[] bs = ms.ToArray();
+	ms.Close();
+	return bs;
+}
+
+public static Image ByteToImage(byte[] bs)
+{
+	MemoryStream ms = new MemoryStream(bs);
+	Bitmap bmp = new Bitmap(ms);
+	ms.Close();
+	return bmp;
+}
+
+[StructLayoutAttribute(System.Runtime.InteropServices.LayoutKind.Sequential)]
+public struct HICON__
+{
+	public int unused;
+}</pre>
+	</div>
+	<p>&nbsp;</p>
+
+</body>
+</html>

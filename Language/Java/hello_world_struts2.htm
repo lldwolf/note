@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>Hello World - Struts2</title>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+<p id="title">Hello World - Struts2</p>
+
+<p>使用struts2框架实现如下功能：JSP1传递一个name参数给Servlet，如果name为Peter，Servlet再将其传递给JSP2，显示 “Hello Peter!”，否则Servlet将其传递给JSP3，显示“Sorry, I don’t know [name]!</p>
+<p>要使用struts2，需引用如下jar包（可能版本号有些微差别）：</p>
+<ul><li>commons-logging-1.0.4.jar</li>
+	<li>freemarker-2.3.8.jar</li>
+	<li>ognl-2.6.11.jar</li>
+	<li>struts2-core-2.0.9.jar</li>
+	<li>xwork-2.0.4.jar</li>
+</ul>
+<p>要完成该题，需实现以下三部分内容：</p>
+<ol>
+  <li>JSP</li>
+  <li>Servlet</li>
+  <li>配置文件</li>
+</ol>
+<h1>N.1 JSP文件</h1>
+<h2>N.1.1 struts2_jsp1.jsp </h2>
+<p>用于发送请求的页面，关键代码如下所示：</p>
+<pre>&lt;form name=&quot;form1&quot; method=&quot;post&quot; action=&quot;/jsp_test/hello/Hello.action&quot; target=&quot;_blank&quot;&gt;
+	&lt;input type=&quot;text&quot; name=&quot;name&quot; value=&quot;Peter&quot; /&gt;
+	&lt;br /&gt;
+	&lt;input type=&quot;submit&quot; value=&quot;Submit&quot; /&gt;
+&lt;/form&gt;</pre>
+<h2>N.1.2 struts2_jsp2_success.jsp</h2>
+<p>用于接收成功请求，关键代码如下所示：</p>
+<pre>&lt;%@ taglib prefix=&quot;s&quot; uri=&quot;/struts-tags&quot; %&gt;
+...
+&lt;p style=&quot;color:blue;&quot;&gt;Hello &lt;s:property value=&quot;#request.name&quot; /&gt;&lt;/p&gt;</pre>
+<h2>N.1.3 struts2_jsp2_failed.jsp</h2>
+<p>用于接收失败请求，关键代码如下所示：</p>
+<pre>&lt;%@ taglib prefix=&quot;s&quot; uri=&quot;/struts-tags&quot; %&gt;
+...
+&lt;p style=&quot;color:red;&quot;&gt;Sorry, I don't know &lt;s:property value=&quot;#request.name&quot; /&gt;&lt;/p&gt;</pre>
+<h1>N.2 Servlet</h1>
+<pre>package lld.test.helloworld;
+
+import com.opensymphony.xwork2.ActionSupport;
+
+public class HelloStruts2Action extends ActionSupport
+{
+	private String name;
+
+	public String getName()
+	{
+		return name;
+	}
+
+	public void setName(String name)
+	{
+		this.name = name;
+	}
+	
+	public String execute() throws Exception
+	{
+		if(this.name.equals(&quot;Peter&quot;))
+			return &quot;success&quot;;
+		else
+			return &quot;failed&quot;;
+	}
+}</pre>
+<h1>N.3 配置文件 </h1>
+<h2>N.3.1 struts.xml</h2>
+<p>既使使用的是Struts2， struts.xml也就是必不可少的，置于src目录下，内容如下所示：</p>
+<pre>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; ?&gt;
+&lt;!DOCTYPE struts PUBLIC
+	&quot;-//Apache Software Foundation//DTD Struts Configuration 2.0//EN&quot;
+	&quot;http://struts.apache.org/dtds/struts-2.0.dtd&quot;&gt;
+
+&lt;struts&gt;
+
+	&lt;constant name=&quot;struts.enable.DynamicMethodInvocation&quot; value=&quot;false&quot; /&gt;
+	&lt;constant name=&quot;struts.devMode&quot; value=&quot;false&quot; /&gt;
+
+	&lt;include file=&quot;struts-hello.xml&quot; /&gt;
+
+&lt;/struts&gt;</pre>
+<h2>N.3.2 struts-hello.xml</h2>
+<p>用于配置MVC映射关系，置于src目录下</p>
+<pre>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;!DOCTYPE struts PUBLIC
+        &quot;-//Apache Software Foundation//DTD Struts Configuration 2.0//EN&quot;
+        &quot;http://struts.apache.org/dtds/struts-2.0.dtd&quot;&gt;
+
+&lt;struts&gt;
+
+	&lt;package name=&quot;hello&quot; namespace=&quot;/hello&quot; extends=&quot;struts-default&quot;&gt;
+
+		&lt;action name=&quot;Hello&quot; class=&quot;lld.test.helloworld.HelloStruts2Action&quot;&gt;
+			&lt;result name=&quot;success&quot;&gt;/hello/struts2_jsp2_success.jsp&lt;/result&gt;
+			&lt;result name=&quot;failed&quot;&gt;/hello/struts2_jsp2_failed.jsp&lt;/result&gt;
+		&lt;/action&gt;
+
+	&lt;/package&gt;
+&lt;/struts&gt;</pre>
+<h2>N.3.2 web.xml</h2>
+<p>加入对struts2的支持 </p>
+<pre>&lt;filter&gt;
+	&lt;filter-name&gt;struts2&lt;/filter-name&gt;
+	&lt;filter-class&gt;org.apache.struts2.dispatcher.FilterDispatcher&lt;/filter-class&gt;
+&lt;/filter&gt;
+
+&lt;filter-mapping&gt;
+	&lt;filter-name&gt;struts2&lt;/filter-name&gt;
+	&lt;url-pattern&gt;/*&lt;/url-pattern&gt;
+&lt;/filter-mapping&gt;</pre>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</body>
+</html>

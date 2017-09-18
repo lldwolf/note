@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+	<script type="text/javascript" src="../../mylib/js/css.js"></script>
+	<title>Java 练习题 - 调用 DOS 命令</title>
+</head>
+
+<body>
+	<p id="title">Java 练习题 - 调用 DOS 命令</p>
+	<h1>要求</h1>
+    <p>调用 DOS 命令</p>
+    <h1>示例代码</h1>
+    <pre class="code" data-type="java">public class StreamGobbler extends Thread {
+	InputStream is;
+	String type;
+
+	StreamGobbler(InputStream is, String type) {
+		this.is = is;
+		this.type = type;
+	}
+
+	public void run() {
+		try {
+			InputStreamReader isr = new InputStreamReader(is);
+			BufferedReader br = new BufferedReader(isr);
+			String line = null;
+			while ((line = br.readLine()) != null)
+				System.out.println(type + ">" + line);
+		} catch (IOException ioe) {
+			ioe.printStackTrace();
+		}
+	}
+}
+
+public class ProcessTest {
+
+	public static void main(String[] args) throws IOException, InterruptedException {
+		System.out.println("dir c:\\temp");
+		String[] cmds = { "cmd", "/c", "dir", "c:\\temp" };
+		Process proc = Runtime.getRuntime().exec(cmds);
+
+		// any error message?
+		StreamGobbler errorGobbler = new StreamGobbler(proc.getErrorStream(), "ERROR");
+
+		// any output?
+		StreamGobbler outputGobbler = new StreamGobbler(proc.getInputStream(), "OUTPUT");
+
+		// kick them off
+		errorGobbler.start();
+		outputGobbler.start();
+
+		// any error???
+		int exitVal = proc.waitFor();
+		System.out.println("ExitValue: " + exitVal);
+	}
+
+}</pre>
+    <p class="note">在此使用了 StreamGobbler 是因为如果使用同步方式获取输出时, proc.waitFor 会被阻塞. 似乎调用 Windows 系统命令时会有这问题，自己写的 console 程序不需要这么复杂。</p>
+    <p><a href="http://www.javaworld.com/article/2071275/core-java/when-runtime-exec---won-t.html">这里有更详细的用法</a></p>
+	</body>
+</html>

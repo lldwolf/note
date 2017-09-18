@@ -1,0 +1,230 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>手记</title>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+<p id="title">手记</p>
+<hr>
+<h1>鼠标</h1>
+<p>安装系统时，系统自动检测出的鼠标为PS/2，我觉得应该是USB，于是就手动改成了USB，结果安装完成后鼠标没反应，于是到命令窗口下，运行命令</p>
+<pre>mouseconfig</pre>
+<p>将接口设为PS/2，重启后，正常加载鼠标。</p>
+<h1>IP地址和机器名</h1>
+<p>查看机器名</p>
+<pre>hostname</pre>
+<p>查看IP地址</p>
+<pre>ifconfig</pre>
+<p>设置IP地址</p>
+<pre>ifconfig eth0 192.168.1.195 netmask 255.255.255.0 broadcast 192.168.1.1</pre>
+<p>这样修改IP地址不能保存，仅限当前会话，如果要永久性修改的话，需修改/etc/sysconfig/network-scripts/ifcfg-eth0</p>
+<pre>DEVICE = eth0
+
+IPADDR = xxx.xxx.xxx.xxx #你的IP地址
+
+NETMASK = xxx.xxx.xxx.xxx #你的子网掩码
+
+NETWORK = xxx.xxx.xxx.xxx #你的工作网络
+
+BROADCAST = xxx.xxx.xxx.xxx #你的广播址
+
+ONBOOT = yes</pre>
+<p>运行 service network restart 重启服务 </p>
+<p>修改机器名</p>
+<p>用vi编辑 /etc/sysconfig/network</p>
+<pre>NETWORKING = yes
+FORWARD_IPV4 = yes
+HOSTNAME = xxxx.com #你的主机名
+GATEWAY = 123.123.123.123 #网关
+GATEWAYDEV = eth0</pre>
+<p>还要改一下/etc/hosts</p>
+<p>或运行 service network restart 重启服务 </p>
+<h1>Samba</h1>
+<p><FONT size=2>如果用户在安装Linux 时已经安装了Samba ，就无需再安装了可以通过下列命令确定是否已经安装了Samba 。</FONT></p>
+<pre>rpm  –qa | grep  samba 
+
+samba-commom -2.2.7a-7.9.0 
+samba-2.2.7a-7.9.0 
+samba-client-2.2.7a-7.9.0 
+redhat-config-samba-1.0.4-1 
+samba-swat-2.2.7a-7.9.0 </pre>
+<p>若出现这5个软件包，则表示已经安装了Samba ，否则必须安装Samba 。因为我用的是虚拟机，将光驱设为ISO文件模式并选定文件为安装盘的第一张后重启，然后运行安装命令</p>
+<pre>mount  /dev/cdrom  /mnt/cdrom   	#将光盘挂载到 /mnt/cdrom目录
+cd  /mnt/cdrom/RedHat/RPMS  		#切换到放置rpm文件的目录 
+rpm  -ivh samba-commom -2.2.7a-7.9.0i386.rpm 	#这是Samba 必备的程序，必须安装
+rpm  -ivh samba-2.2.7a-7.9.0.i386.rpm 			#安装Samba 服务器程序
+rpm  -ivh samba-client-2.2.7a-7.9.0.i386.rpm 	#Samba 客户端程序, 可访问Windows</pre>
+<p>对RedHat Linux 8.0，samba的安装程序在第二张盘上。</p>
+<p>在安装 samba服务器程序前，需先安装Perl，在同一目录下使用</p>
+<pre>rpm -ivh perl-CGI-2.81-55.i386.rm</pre>
+<p>有的Linux系统默认已安装Perl CGI，如果没安装，在安装Samba服务器程序时会提示。</p>
+<p>smb.conf 文件中有“smb password file =/ect/samba/smbpassword”一行设置项，现在就要创建该设置项所指定的/ect/samba/smbpassword密码文件（若是用Windows NT/2000Server 来验证密码，则可以跳过此段内容）。以root帐号登录，然后按下列步骤进行： </p>
+<pre>cat /etc/passwd | mksmbpasswd.sh  &gt;  /etc/samba/smbpasswd 
+chmod  500  /etc/samba 
+chmod  600  /etc/samba/smbpasswd </pre>
+<p>此步骤是将未加密的/etc/passwd文件转换成加密的smbpasswd文件。基于保密的原则，将/etc/samba目录的权限设为500，该文件的权限设为600，以避免他人取得密码文件。 </p>
+<p>完成之后再利用smbpasswd命令，设置/ect/samba/smbpassword文件中每个帐号所使用的密码。（下面以fred为例。注意：此处设置的密码是fred要访问Samba服务器的密码，并非登录Linux 主机的密码,默认设置”UNIX password sync=YES”, 则登录Linux 主机的密码将改变,与Samba服务器的密码一致,如果希望这两个密码不一致,则设置”UNIX password sync=NO”） </p>
+<pre>smbpasswd fred 
+New SMB password: 此处输入密码 
+Retype SMB password: 重新输入密码 </pre>
+<p>启动samba服务器：</p>
+<pre>service smb start </pre>
+<p>如果要暂停或重新启动Samba服务器，只要将上面命令中的start 改为stop或restat就可以了。 </p>
+<p>也可以让系统在每次开机时就启动Samba服务器。执行ntsysv命令，进入Service设置画面，选择smb选项，单击确定即可。</p>
+<p>使用<SPAN lang=EN-US><FONT size=2>testparm</FONT></SPAN>命令（不带参数）测试smb.conf是否正确，<FONT size=2><SPAN style="FONT-FAMILY: 宋体">检查正常后，一定要记得执行</SPAN></FONT></p>
+<pre>service smb restart </pre>
+<p>重新启动Samba服务。</p>
+<p>使用如下命令可查看Samba的版本号及共享的目录信息</p>
+<pre>smbclient - L localhost -N</pre>
+<p>&nbsp;</p>
+<h2>附录：</h2>
+<p>smb.conf说明</p>
+<p>Samba 最主要的配置文件是 /etc/samba/smb.conf，其中有很多选项可以设置，但作为初学者，只需要掌握其中一小部分选项的设置就可以配置所需要的Samba服务器了。在了解基本配置的基础上，就能很快架设一个基本的Samba服务器。在基本配置文件中，也只用到其中一小部分命令选项。 </p>
+<p>全局参数的配置在[global]字段中，没有出现（或被注释）的参数，Samba 采用的是默认配置。</p>
+<pre># This is the main Samba configuration file. You should read the 
+
+# smb.conf(5) manual page in order to understand the options listed 
+
+# here. Samba has a huge number of configurable options (perhaps too 
+
+# many!) most of which are not shown in this example 
+
+#================== Global Settings ============================ 
+
+[global] 
+
+#这是配置文件中关于全局参数的设置部分。 
+
+………… 
+
+   workgroup = SMBGROUP 
+
+#这是设置服务器所要加入的工作组的名称，会在Windows 的“网上邻居”中能看到MYGROUP工作组，可以在此设置所需要的工作组的名称。 
+
+netbios name=smb-server 
+
+#设置出现在“网上邻居”中的主机名。默认情况下，则使用真正的主机名。 
+
+   server string = Samba Server 
+
+#这是设置服务器主机的说明信息，当在Windows 的“网上邻居”中打开Samba 上设置的工作组时，在Windows 的资源管理器窗口，会列出“名称”和“备注”栏，其中“名称”栏会显示出Samba服务器的NetBios名称，而“备注”栏则显示出此处设置的“Samba Server”。当然，可以修改默认的“Sambe Server”，使用自己的描述信息。 
+
+ hosts allow = 192.168.1. 127 
+
+#这里是设置允许什么样的IP地址的主机访问Samba服务器。默认的情况下，hosts allow选项被注释，表示允许所有IP地址的主机访问。 
+
+  guest account = pcguest 
+
+#设置当访问那些被设置了“guest ok=yes”参数的资源时所要使用的帐号名。默认的帐号为”nobody”，如果不想用默认的值，则应该去掉注释用的分号，用你想要的帐号（如pcguest、 zhangsan等 ），然后，你必需将这一新帐号加入到/etc/passwd文件中去。 
+
+client  code  page=950 
+
+设置客户端访问Samba 服务器时所使用的字符编码表（code page），默认值为850，如果Samba 服务器要使用年中文名称来来命名共享的资源，要将此值改为950 
+
+  log file = /var/log/samba/%m.log 
+
+#这一选项要求Samba服务器为每一个连接的机器使用一个单独的日志文件，指定文件的位置，名称。Samba会自动将%m转换成连接主机的NetBios名。 
+
+   max log size = 0 
+
+指定日志文件的最大容量(以KB为单位)，设置为0，表示没有限制。默认值为5000。 
+
+max disk size =1000
+
+#设置能够共享的最大磁盘空间，单位为MB，默认值为0，表示不作任何限制。 
+
+max open file =100 
+
+#设置同一客户端最多能打开文件的数目，默认值为10000个。 
+
+   security = user 
+
+#设置Samba服务器的安全等级。默认情况下，使用user等级。 
+
+#Samba服务器一共有四种安全等级。 
+
+share: 使用此等级，用户不需要帐号及密码可以登陆Samba服务器。 
+
+user:  使用此等级，由提供服务的Samba服务器检查用户帐号及密码。 
+
+server: 使用此等级，检查帐号及密码的工作可指定另一台Samba服务器负责。
+
+domain: 使用此等级，需要指定一台Windows NT/2000/XP服务器（通常为域控制器），以验证用户输入的帐号及密码。 
+
+;   password server = &lt;NT-Server-Name&gt; 
+
+#如果安全等级为“server”或“domain”，则使用此选项指定要验证密码的主机名。 
+
+  password level = 8 
+
+  username level = 8 
+
+#设置当验证用户口令和帐号时最多允许几个大小写字不同。默认值为0。 
+
+   encrypt passwords = yes 
+
+#设置当Samba客户端将帐号及密码传送到服务器端时，是否采取密码加密的方式。客户的操作系统如果是Windows 95 OSR2 及NT SP3以后的版本，应该将此选项的值设为yes,默认值为no。 
+
+   smb passwd file = /etc/samba/smbpasswd 
+
+#设置在Samba服务器上存放加密的密码文件的位置（注意：Samba服务器与Linux采用不同的密码文件）。</pre>
+<h1>U盘</h1>
+<p>linux会将U盘认为SCSI设备，使用fdisk -l命令查看，看到sd*设备就是U盘了，也可以用dmesg | more命令找到对应的设备，我的为sdb1，使用如下命令挂载U盘</p>
+<pre>mkdir /mnt/usb	#如果已经有了就不用再建了
+mount -t vfat /dev/sdb1 /mnt/usb
+cd /mnt/usb
+ls</pre>
+<p>一开始我的U盘是无论如何也挂载不上去啊，后来干脆重新格式化了一遍才行啊。我的U盘曾经使用U盘工具将其变成了启动型U盘，想起来可能就是这原因吧。</p>
+<h1>网卡</h1>
+<p>我的网卡是金浪网卡，用的芯片是MYSON MTD803F，linux没有识别出来，到网上去下驱动，居然还编译失败。FT啊，检查了一下readme文件，发现驱动是针对内核2.2.x版本的，而我的内核版本是2.4.x，我靠。查看内核版本的命令为uname -r。 </p>
+<h1>移动硬盘</h1>
+<p>插入移动硬盘后直接挂不上，用fdisk -l命令查看不到任何跟移动硬盘有关的分区。</p>
+<pre>cd /lib/modules/2.4.x-x/kernel/drivers
+insmod ./scsi/scsi/scsi_mod.o
+insmod ./scsi/sd_mod.o		#其实到这一步就已经能显示出移动硬盘分区了
+insmod ./scsi/ide_scsi.o
+insmod ./usb/usbcore.o
+insmod ./usb/usb_uhci.o
+insmod ./usb/usb_ohci.o</pre>
+<p>命令运行完后用fdisk -l查看，多了3个分区，实际上我的移动硬盘只有两个分区，第1个不知是怎么弄出来的，第2个和第3个是实际的分区。但linux只能挂载其中的FAT32分区（挂载命令同U盘），识别不出NTFS分区。</p>
+<p>为了识别移动硬盘，我下载了linux 2.6 内核，编译安装的方法见对应章章</p>
+<h1>升级Linux内核</h1>
+<p>从www.kernel.org上下了个假的，然后从网上找了个真的，个头比较大，有30多M，名字是linux-2.6.10.tar.bz2，先用U盘拷到/usr/src目录下并解压</p>
+<pre>mount /dev/sdb1 /mnt/usb	#挂载U盘
+cp /mnt/usb/linux-2.6.10.tar.bz2 /usr/src
+cd /usr/src
+tar -jxf linux-2.6.10.tar.bz2
+rm -rf linux	#删除原选的内核代码
+ln -s linux-2.6.10 linux	#linux是源代码的默认目录
+cd /usr/src/linux
+make mrproper		#清除以前编译的内核
+make dep
+make bzImage		#编译内核, 如果编译小内核使用make zImage
+make modules		#编译模块
+make modules_install 	#安装模块
+make install</pre>
+<p>面的命令&quot;make install&quot;将: </p>
+<ol>
+  <li>把压缩内核映象拷贝到/boot目录下, 并创建相应的System.map符号链接; </li>
+  <li>修改bootloader的配置文件; </li>
+  <li>调用mkinitrd程序创建内核的initrd映象. 对于GRUB而言, 将在/boot/grub/grub.conf配置文件增加如下类似的配置行:</li>
+</ol>
+<p><font class="f14"><font color="#000000">面的命令"make install"将: (1)把压缩内核映象拷贝到/boot目录下, 并创建相应的System.map符号链接; (2)修改bootloader的配置文件; (3)调用mkinitrd程序创建内核的initrd映象. 对于GRUB而言, 将在/boot/grub/grub.conf配置文件增加如下类似的配置行:</font></font></p>
+<pre>title Red Hat Linux (2.6.4)
+root(hd0, 1)
+kernel /boot/vmlinuz-2.6.4 ro root=LABEL=/
+initrd /boot/initrd-2.6.4.img</pre>
+<p>结果升完级重启后报错了，使用linux启动盘启动，在启动画面中输入linux rescue命令进入救援模式，使用命令chroot /mnt/sysimage将根目录切换到硬盘系统的根目录中。最后连用两个exit命令重启</p>
+<h1>putty</h1>
+<pre>putty 192.168.1.100
+login as: root
+password:</pre>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+
+</body>
+</html>

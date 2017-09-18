@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+<title>Hiberante使用说明</title>
+</head>
+
+<body>
+<p id="title">Hiberante使用说明</p>
+
+<h1>基本使用方法</h1>
+<p>对Hibernate 3.2，要添加Hibernate支持，需加入以下jar包：</p>
+<ul>
+  <li>hibernate3.jar</li>
+  <li>dom4j.jar</li>
+  <li>common-logging-*.jar</li>
+  <li>common-collections-*.jar</li>
+  <li>cglib-*.jar</li>
+  <li>asm.jar</li>
+  <li>jta.jar</li>
+  <li>altlr-*.jar(如果缺少这个包则执行批量删除时失败)</li>
+</ul>
+<h2>N.1.1 数据库说明</h2>
+<p>我在此使用的是SQL Server，连接本地的test数据库。使用的示例表为“user_list”，其创建SQL如下所示：</p>
+<pre>create table user_list(usr_id int primary key, usr_name varchar(20))</pre>
+<h2>N.1.2 hibernate.cfg.xml</h2>
+<p>该文件为默认的Hibernate配置文件，放置在CLASS_PATH目录下，即src目录下。</p>
+<pre>&lt;?xml version='1.0' encoding='utf-8'?&gt;
+&lt;!DOCTYPE hibernate-configuration PUBLIC
+        &quot;-//Hibernate/Hibernate Configuration DTD 3.0//EN&quot;
+        &quot;http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd&quot;&gt;
+
+&lt;hibernate-configuration&gt;
+
+    &lt;session-factory&gt;
+
+        &lt;!-- Database connection settings --&gt;
+        &lt;property name=&quot;connection.driver_class&quot;&gt;com.microsoft.jdbc.sqlserver.SQLServerDriver&lt;/property&gt;
+        &lt;property name=&quot;connection.url&quot;&gt;jdbc:microsoft:sqlserver://localhost:1433;DatabaseName=test;SelectMethod=cursor&lt;/property&gt;
+        &lt;property name=&quot;connection.username&quot;&gt;sa&lt;/property&gt;
+        &lt;property name=&quot;connection.password&quot;&gt;sa&lt;/property&gt;
+
+        &lt;!-- JDBC connection pool (use the built-in) --&gt;
+        &lt;property name=&quot;connection.pool_size&quot;&gt;1&lt;/property&gt;
+
+        &lt;!-- SQL dialect --&gt;
+        &lt;property name=&quot;dialect&quot;&gt;org.hibernate.dialect.SQLServerDialect&lt;/property&gt;
+
+        &lt;!-- Enable Hibernate's automatic session context management --&gt;
+        &lt;property name=&quot;current_session_context_class&quot;&gt;thread&lt;/property&gt;
+
+        &lt;!-- Disable the second-level cache  --&gt;
+        &lt;property name=&quot;cache.provider_class&quot;&gt;org.hibernate.cache.NoCacheProvider&lt;/property&gt;
+
+        &lt;!-- Echo all executed SQL to stdout --&gt;
+        &lt;property name=&quot;show_sql&quot;&gt;true&lt;/property&gt;
+
+        &lt;!-- Drop and re-create the database schema on startup --&gt;
+        &lt;property name=&quot;hbm2ddl.auto&quot;&gt;validate&lt;/property&gt;
+
+        &lt;mapping resource=&quot;lld/test/hibernate/User.hbm.xml&quot;/&gt;
+
+    &lt;/session-factory&gt;
+
+&lt;/hibernate-configuration&gt;</pre>
+<h2>N.1.3 ORM映射文件（User.hbm.xml）</h2>
+<p>上例中，在最后的配置项</p>
+<pre>&lt;mapping resource=&quot;lld/test/hibernate/User.hbm.xml&quot;/&gt;</pre>
+<p>指明了ORM映射文件的位置，其内容如下所示：</p>
+<pre>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;!DOCTYPE hibernate-mapping PUBLIC
+	&quot;-//Hibernate/Hibernate Mapping DTD 3.0//EN&quot;
+	&quot;http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd&quot;&gt;
+&lt;hibernate-mapping&gt;
+	&lt;class name=&quot;lld.test.hibernate.User&quot; table=&quot;user_list&quot;&gt;
+		&lt;id name=&quot;userId&quot; column=&quot;usr_id&quot;&gt;
+			&lt;generator class=&quot;increment&quot;&gt;&lt;/generator&gt;
+		&lt;/id&gt;
+		&lt;property name=&quot;userName&quot; column=&quot;usr_name&quot;/&gt;
+	&lt;/class&gt;
+&lt;/hibernate-mapping&gt;</pre>
+<h2>N.1.4 Bean类（User.java） </h2>
+<p>在User.hbm.xml中的配置项</p>
+<pre>&lt;class name=&quot;lld.test.hibernate.User&quot; table=&quot;user_list&quot;&gt;</pre>
+<p>中指明了对应的持久类为lld.text.hibernate.User，其内容如下所示：</p>
+<pre>package lld.test.hibernate;
+
+public class User
+{
+	private int userId;
+	private String userName;
+	
+	@Override
+	public String toString()
+	{
+		return &quot;userId = &quot; + this.userId + &quot;\r\n&quot; 
+			+ &quot;userName = &quot; + this.userName + &quot;\r\n&quot;;
+	}
+
+	public int getUserId()
+	{
+		return userId;
+	}
+
+	public void setUserId(int userId)
+	{
+		this.userId = userId;
+	}
+
+	public String getUserName()
+	{
+		return userName;
+	}
+
+	public void setUserName(String userName)
+	{
+		this.userName = userName;
+	}
+}</pre>
+<h2>N.1.5 Insert示例</h2>
+<p>有了以上的配置项，就可以使用Hibernate进行数据库操作了，本例说明了如何插入数据到数据库：</p>
+<pre>package lld.test.hibernate;
+
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.cfg.Configuration;
+
+public class InsertTest
+{
+	public static void main(String[] args) throws Exception
+	{
+		Configuration conf = new Configuration().configure();
+		SessionFactory sessionFactory = conf.buildSessionFactory();
+		Session session = sessionFactory.openSession();
+		session.beginTransaction();
+		User usr = new User();
+		usr.setUserName(&quot;aaaa&quot;);
+		session.save(usr);
+		session.getTransaction().commit();
+		session.close();
+		System.out.println(&quot;insert id is &quot; + usr.getUserId());
+	
+	}
+
+}</pre>
+<h2>N.1.6 载入单个对象 </h2>
+<p>这里的操作是指根据ID载入对象，例如，针对上面的配置，我要载入ID为2的User对象，代码如下所示：</p>
+<pre>import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.cfg.Configuration;
+
+public class LoadTest
+{
+	public static void main(String[] args) throws Exception
+	{
+		Configuration conf = new Configuration().configure();
+		SessionFactory sessionFactory = conf.buildSessionFactory();
+		Session session = sessionFactory.openSession();
+		User usr = (User)session.get(User.class, 1);
+		System.out.println(usr.toString());
+	
+	}
+}</pre>
+<p>根据上例我们可以看出，使用Session.get()方法来载入对象。载入对象需要两个参数，一个是要载入的对象类型，一个是主键值，如果有多个主键，则需要传入一个数组。</p>
+<h2>N.1.7 Delete示例</h2>
+<p>学会了载入对象，删除对象就很容易了，直接使用Session.delete(obj)方法即可，示例代码如下所示：</p>
+<pre>import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.cfg.Configuration;
+
+public class DeleteTest
+{
+	public static void main(String[] args) throws Exception
+	{
+		Configuration conf = new Configuration().configure();
+		SessionFactory sessionFactory = conf.buildSessionFactory();
+		Session session = sessionFactory.openSession();
+		User usr = (User)session.get(User.class, 1);
+		if(usr != null)
+		{
+			session.beginTransaction();
+			session.delete(usr);
+			session.getTransaction().commit();
+			System.out.println(usr.getUserId() + " is deleted!");
+		}
+		else
+		{
+			System.out.println("no item to deleted!");
+		}
+	}
+}</pre>
+<h2>N.1.8 Update示例</h2>
+<p>update操作和delete操作一样简单，使用Session.save(obj)方法，示例代码如下：</p>
+<pre>import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.cfg.Configuration;
+
+public class UpdateTest
+{
+	public static void main(String[] args) throws Exception
+	{
+		Configuration conf = new Configuration().configure();
+		SessionFactory sessionFactory = conf.buildSessionFactory();
+		Session session = sessionFactory.openSession();
+		User usr = (User)session.get(User.class, 2);
+		if(usr != null)
+		{
+			session.beginTransaction();
+			usr.setUserName("abcde");
+			session.save(usr);
+			session.getTransaction().commit();
+			System.out.println(usr.getUserId() + " is updated!");
+		}
+		else
+		{
+			System.out.println("no item to update!");
+		}
+	}
+}</pre>
+<p>不过有一点Hibernate做得很智能，那就是如果某字段修改的值与现有值相同，则该字段不会出现在update语句的字段列表中。</p>
+<h2>N.1.9 使用原生SQL</h2>
+<h3>N.1.9.1 查询 </h3>
+<p>下例说明了如使直接使用SQL语句进行查询</p>
+<pre>package lld.test.hibernate;
+
+import java.util.List;
+
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.cfg.Configuration;
+
+
+public class ListTest
+{
+	public static void main(String[] args) throws Exception
+	{
+		Configuration conf = new Configuration().configure();
+		SessionFactory sessionFactory = conf.buildSessionFactory();
+		Session session = sessionFactory.openSession();
+		
+		List&lt;Object&gt; list = session.createSQLQuery(&quot;select usr_id, usr_name from user_list order by usr_name&quot;).list();
+		System.out.println(list.size() + &quot; rows.&quot;);
+		for(int i = 0; i &lt; list.size(); i++)
+		{
+			Object[] vs = (Object[])list.get(i);
+			System.out.println(&quot;usr_id = &quot; + vs[0] + &quot;; usr_name = &quot; + vs[1]);
+		}
+		session.close();
+	
+	}
+
+}</pre>
+<h3>N.1.9.2 使用JDBC</h3>
+<p>上例中还是在Hibernate的框架之内，但对于批量的删除或更新操作，Hibernate就显得有点力不从心了，因此，需要直接使用JDBC进行操作，示例代码如下所示：</p>
+<pre>import java.sql.Connection;
+import java.sql.Statement;
+
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.cfg.Configuration;
+
+public class DMLSqlTest
+{
+	public static void main(String[] args) throws Exception
+	{
+		Configuration conf = new Configuration().configure();
+		SessionFactory sessionFactory = conf.buildSessionFactory();
+		Session session = sessionFactory.openSession();
+
+		session.beginTransaction();
+		Connection conn = session.connection();
+		
+		Statement st = conn.createStatement();
+		String sql = "delete from user_list";
+		st.execute(sql);
+		session.getTransaction().commit();
+		System.out.println("OK");
+	}
+}</pre>
+<p>使用Session.connection()方法时，Eclipse还会给出警告信息：“The method connection() from the type Session is deprecated”，不过它又没有按惯例给出推荐的替代方法，Shit，怕是Hibernate开发组既不希望人们直接使用JDBC，不用它们的产品了吧，FAINT。</p>
+<h1>配置 </h1>
+<h2>连接数据库</h2>
+<p>利用Configuration.setProperties(Properties pro)方法载入配置参数文件,而不是采用Configuration.configuration()默认自动载入hibernate.hbm.xml配置文件.</p>
+<p>1、用户自己提供JDBC连接:</p>
+<pre>java.sql.Connection conn = datasource.getConnection();
+Session session = sessionFactory.openSession(conn);</pre>
+<p>这种方式允许用户程序自己来管理JDBC连接.不过同一个连接上不能打开两个并行的session.</p>
+<p>2、使用Hibernate默认的JDBC连接方式:</p>
+<p>通过一下四种方式设置JDBC连接参数:</p>
+<p>a、传递一个java.util.Properties到Configuration.setProperties();</p>
+<p>b、在classpath目录提供一个hibernate.properties配置文件;</p>
+<p>c、在hibernate.hbm.xml中包含JDBC配置参数;</p>
+<p>d、通过java -Dproperty=value指定系统属性.</p>
+<p>之后使用Session session = sessionFactory.openSession()获取JDBC连接.这个时候所有的hibernate属性和约束都保存在net.sf.hibernate.cfg.Environment中.</p>
+<h2>中文环境配置</h2>
+<p>hibernate也可能碰到中文乱码问题，只要在hibernate.cfg.xml配置中如下：</p>
+<pre>&lt;property name="hibernate.connection.url"&gt;
+   jdbc:microsoft:sqlserver://Localhost:1433;SelectMethod=cursor;characterEncoding=GBK;DatabaseName=myDatabase.
+&lt;/property&gt;</pre>
+<h1>HQL</h1>
+<p>终于到了我认为最垃圾的地方了。</p>
+<h2>N.3.1 查询</h2>
+<h2>N.3.2 新增</h2>
+<h2>N.3.3 删除</h2>
+<p>主要是要用于批量删除，示例代码如下所示：</p>
+<pre>session.createQuery(&quot;delete User&quot;).executeUpdate();</pre>
+<h2>N.3.4 修改 </h2>
+<h1>自动化工具</h1>
+<p>下例是一个根据表名自动生成.hbm.xml文件及.java文件的小程序</p>
+<pre>import java.io.FileWriter;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.Statement;
+import java.sql.Types;
+import java.util.Date;
+
+public class ConfigGenerator
+{
+
+	public static void main(String[] args) throws Exception
+	{
+		String table_name = &quot;user_list&quot;;
+		String root_path = &quot;C:/&quot;;
+		String pkgName = &quot;lld.test.hibernate&quot;;
+		Class.forName(&quot;com.microsoft.jdbc.sqlserver.SQLServerDriver&quot;);
+		DriverManager.registerDriver(new com.microsoft.jdbc.sqlserver.SQLServerDriver());
+		Connection conn = DriverManager.getConnection(&quot;jdbc:microsoft:sqlserver://localhost:1433;DatabaseName=test&quot;, &quot;sa&quot;, &quot;sa&quot;);
+		System.out.println(&quot;connected to database successfully.&quot;);
+		Statement st = conn.createStatement();
+		String sql = &quot;select * from &quot; + table_name + &quot; where 1 = 2&quot;;
+		ResultSet rs = st.executeQuery(sql);
+		ResultSetMetaData meta = rs.getMetaData();
+		String hbmFile = getHbmFile(root_path, table_name);
+		String beanFile = getBeanFile(root_path, table_name);
+		System.out.println(&quot;output hbm file: &quot; + hbmFile);
+		System.out.println(&quot;output bean file: &quot; + beanFile);
+		
+		String beanName = getBeanName(table_name);
+		FileWriter outHbm = new FileWriter(hbmFile);
+		FileWriter outBean = new FileWriter(beanFile);
+		outHbm.write(&quot;&lt;?xml version=\&quot;1.0\&quot; encoding=\&quot;UTF-8\&quot;?&gt;&quot;);
+		outHbm.write(&quot;\r\n&quot;);
+		outHbm.write(&quot;&lt;!DOCTYPE hibernate-mapping PUBLIC&quot;);
+		outHbm.write(&quot;\r\n&quot;);
+		outHbm.write(&quot;	\&quot;-//Hibernate/Hibernate Mapping DTD 3.0//EN\&quot;&quot;);
+		outHbm.write(&quot;\r\n&quot;);
+		outHbm.write(&quot;	\&quot;http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd\&quot;&gt;&quot;);
+		outHbm.write(&quot;\r\n&quot;);
+		outHbm.write(&quot;&lt;hibernate-mapping&gt;&quot;);
+		outHbm.write(&quot;\r\n&quot;);
+		outHbm.write(&quot;	&lt;class name=\&quot;&quot; + pkgName + &quot;.&quot; + beanName + &quot;\&quot; table=\&quot;&quot; + table_name + &quot;\&quot;&gt;&quot;);
+		outHbm.write(&quot;\r\n&quot;);
+		
+		outBean.write(&quot;package &quot; + pkgName + &quot;;&quot;);
+		outBean.write(&quot;\r\n&quot;);
+		outBean.write(&quot;\r\n&quot;);
+		outBean.write(&quot;public class &quot; + beanName);
+		outBean.write(&quot;\r\n&quot;);
+		outBean.write(&quot;{&quot;);
+		outBean.write(&quot;\r\n&quot;);
+		
+		StringBuffer toStr = new StringBuffer();
+		
+		for(int iCol = 1; iCol &lt;= meta.getColumnCount(); iCol++)
+		{
+			String colName = meta.getColumnName(iCol);
+			int colType = meta.getColumnType(iCol);
+			String propName = getPropertyName(colName);
+			String javaType = getJavaType(colType).getName();
+			outHbm.write(&quot;		&lt;property name=\&quot;&quot; + propName + &quot;\&quot; column=\&quot;&quot; + colName + &quot;\&quot;/&gt;&quot;);
+			outHbm.write(&quot;\r\n&quot;);
+			
+			outBean.write(&quot;	private &quot; + javaType + &quot; &quot; + propName + &quot;;&quot;);
+			outBean.write(&quot;\r\n&quot;);
+			outBean.write(&quot;\r\n&quot;);
+			outBean.write(&quot;	public &quot; + javaType + &quot; &quot; + getGetterMethod(propName) + &quot;()&quot;);
+			outBean.write(&quot;\r\n&quot;);
+			outBean.write(&quot;\t{&quot;);
+			outBean.write(&quot;\r\n&quot;);
+			outBean.write(&quot;		return this.&quot; + propName + &quot;;&quot;);
+			outBean.write(&quot;\r\n&quot;);
+			outBean.write(&quot;\t}&quot;);
+			outBean.write(&quot;\r\n&quot;);
+			outBean.write(&quot;\r\n&quot;);
+
+			outBean.write(&quot;	public void &quot; + getSetterMethod(propName) + &quot;(&quot; + javaType + &quot; &quot; + propName + &quot;)&quot;);
+			outBean.write(&quot;\r\n&quot;);
+			outBean.write(&quot;\t{&quot;);
+			outBean.write(&quot;\r\n&quot;);
+			outBean.write(&quot;		this.&quot; + propName + &quot; = &quot; + propName + &quot;;&quot;);
+			outBean.write(&quot;\r\n&quot;);
+			outBean.write(&quot;\t}&quot;);
+			outBean.write(&quot;\r\n&quot;);
+			outBean.write(&quot;\r\n&quot;);
+			
+			toStr.append(&quot;\&quot;&quot; + propName + &quot; = \&quot; + this.&quot; + propName + &quot; + \&quot;\\r\\n\&quot; &quot;);
+			if(iCol != meta.getColumnCount())
+			{
+				toStr.append(&quot;\r\n			 + &quot;);
+			}
+				
+		}
+
+		outHbm.write(&quot;	&lt;/class&gt;&quot;);
+		outHbm.write(&quot;\r\n&quot;);
+		outHbm.write(&quot;&lt;/hibernate-mapping&gt;&quot;);
+		outHbm.flush();
+		outHbm.close();
+		System.out.println(&quot;hbm file generated sucessfully!&quot;);
+
+		outBean.write(&quot;	@Override&quot;);
+		outBean.write(&quot;\r\n&quot;);
+		outBean.write(&quot;	public String toString()&quot;);
+		outBean.write(&quot;\r\n&quot;);
+		outBean.write(&quot;	{&quot;);
+		outBean.write(&quot;\r\n&quot;);
+		outBean.write(&quot;		return &quot; + toStr.toString() + &quot;;&quot;);
+		outBean.write(&quot;\r\n&quot;);
+		outBean.write(&quot;\t}&quot;);
+		outBean.write(&quot;\r\n&quot;);
+		outBean.write(&quot;}&quot;);
+		outBean.flush();
+		outBean.close();
+		System.out.println(&quot;bean file generated sucessfully!&quot;);
+	}
+	
+	private static String getHbmFile(String root_path, String table_name)
+	{
+		return root_path + table_name + &quot;.hbm.xml&quot;;
+	}
+	
+	private static String getBeanFile(String root_path, String table_name)
+	{
+		String beanName = getBeanName(table_name);
+		return root_path + beanName + &quot;.java&quot;;
+	}
+	
+	private static String getBeanName(String table_name)
+	{
+		String[] segs = table_name.split(&quot;_&quot;);
+		String beanName = &quot;&quot;;
+		for(int i = 0; i &lt; segs.length; i++)
+		{
+			beanName += segs[i].substring(0, 1).toUpperCase() + segs[i].substring(1, segs[i].length()).toLowerCase();
+		}
+		return beanName;
+	}
+
+	private static String getPropertyName(String col_name)
+	{
+		String[] segs = col_name.split(&quot;_&quot;);
+		String propName = &quot;&quot;;
+		for(int i = 0; i &lt; segs.length; i++)
+		{
+			if(i == 0)
+				propName += segs[i];
+			else
+				propName += segs[i].substring(0, 1).toUpperCase() + segs[i].substring(1, segs[i].length()).toLowerCase();
+		}
+		return propName;
+	}
+
+	private static String getGetterMethod(String prop_name)
+	{
+		return &quot;get&quot; + prop_name.substring(0, 1).toUpperCase() + prop_name.substring(1, prop_name.length());
+	}
+
+	private static String getSetterMethod(String prop_name)
+	{
+		return &quot;set&quot; + prop_name.substring(0, 1).toUpperCase() + prop_name.substring(1, prop_name.length());
+	}
+	
+	@SuppressWarnings(&quot;unchecked&quot;)
+	private static Class getJavaType(int colType)
+	{
+		switch(colType)
+		{
+			case Types.BIT:
+			case Types.TINYINT:
+			case Types.SMALLINT:
+				return Short.class;
+			case Types.INTEGER:
+				return Integer.class;
+			case Types.BIGINT:
+				return Long.class;
+			case Types.CHAR:
+			case Types.VARCHAR:
+			case Types.CLOB:
+			case Types.LONGNVARCHAR:
+				return String.class;
+			case Types.FLOAT:
+				return Float.class;
+			case Types.DOUBLE:
+				return Double.class;
+			case Types.DATE:
+			case Types.TIME:
+			case Types.TIMESTAMP:
+				return Date.class;
+			default:
+				return Object.class;
+		}
+	}
+}</pre>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp; </p>
+<script language="javascript" src="index.js"></script>
+</body>
+</html>

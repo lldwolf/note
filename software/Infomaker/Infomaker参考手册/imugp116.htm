@@ -1,0 +1,263 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+Creating and saving forms</TITLE>
+</HEAD>
+<BODY>
+<A NAME="X-ref386530518"></A><h1>Creating and saving forms</h1>
+<A NAME="TI4825"></A><p>The first step in designing a form is to create
+a basic form. The procedure is similar for most forms whether you
+are using a built-in style or a custom form style developed in your
+organization using PowerBuilder.</p>
+<A NAME="TI4826"></A><h2>Creating basic forms</h2>
+<A NAME="TI4827"></A><p>A basic form is like a draft that you refine until you have
+exactly what you want. After you create the basic form, you enhance
+the form to make data entry fast and to present the data usefully. </p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To create a basic form:</p>
+<ol><li class=fi>
+Click the New button in the PowerBar.<br><br>
+The New dialog box displays.<br><br></li>
+<li class=ds>
+Select the Object tab, the Form icon, and click
+OK.<br><br>
+The New Form dialog box displays. It shows the data sources
+and form styles you can choose. <br><br></li>
+<li class=ds>
+Choose the data source for the form:<br><br><A NAME="TI4828"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI4829"></A>Data source</th>
+<th align="left" valign=bottom><A NAME="TI4830"></A>Pick this data source when</th>
+</tr>
+<tr><td valign=top><A NAME="TI4831"></A>Quick Select</td>
+<td valign=top><A NAME="TI4832"></A>The data is from tables that are connected
+through a key, and you need only to sort and limit data</td>
+</tr>
+<tr><td valign=top><A NAME="TI4833"></A>SQL Select</td>
+<td valign=top><A NAME="TI4834"></A>Your data is from tables that are not
+connected through a key, or you want more control over the SQL SELECT statement
+generated for the data source</td>
+</tr>
+<tr><td valign=top><A NAME="TI4835"></A>Query</td>
+<td valign=top><A NAME="TI4836"></A>The data has been defined as a query</td>
+</tr>
+</table>
+
+For complete information about using each
+data source and defining the data for the form, see <A HREF="imugp47.htm#CFHDGEIA">"Defining the data source "</A>.<br><br></li>
+<li class=ds>
+Choose a form style, then click OK.<br><br>
+You can choose one of InfoMaker's built-in form
+styles or a custom form style developed in your organization using PowerBuilder.<br><br></li>
+<li class=ds>
+Define the data, then click OK.<br><br><p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>If you are told the form is not updatable</span> <A NAME="TI4837"></A>After defining the data for the form, you might see a message
+box telling you that the form is not updatable.</p>
+<A NAME="TI4838"></A>For information about these situations, see <A HREF="imugp116.htm#X-ref386528994">"Defining data so that
+a form can update a database"</A>.</p>
+
+InfoMaker generates the basic form and displays it in the
+Form painter Layout view. Here's the basic form for the
+freeform form using all columns in the Customer table:<br><br><br><img src="images/dfrm13.gif"><br>
+</li>
+<li class=ds>
+Save the form.<br><br>
+For information, see <A HREF="imugp116.htm#X-ref386528727">"Saving the form"</A>.<br><br></li>
+<li class=ds>
+Run the form.<br><br>
+For information, see <A HREF="imugp117.htm#X-ref299433000">"Running forms"</A>.<br><br></li></ol>
+<br><A NAME="TI4839"></A><p>At this point, you can enhance the form. For
+more information, see <A HREF="imugp119.htm#BFCEACJI">Chapter 16, "Enhancing Forms"</A>.</p>
+<A NAME="X-ref386530166"></A><h2>Creating a master/detail form</h2>
+<A NAME="TI4840"></A><p>The following steps and screens show how to create a master/detail
+one-to-many or master/detail many-to-one form.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To create a master/detail one-to-many
+or master/detail many-to-one form:</p>
+<ol><li class=fi>
+Click the New button in the PowerBar.<br><br>
+The New dialog box displays.<br><br></li>
+<li class=ds>
+Select the Object tab, the Form icon, and click
+OK.<br><br>
+The New Form dialog box displays.<br><br></li>
+<li class=ds>
+Select Quick Select and either of the master/detail
+styles, then click OK.<br><br><p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>You must use Quick Select</span> <A NAME="TI4841"></A>You must use Quick Select and you can select only one master
+table and one detail table when creating the form. After the master/detail
+form is created, if you want to add data from another table, you
+can modify the data source and add new columns.</p>
+<A NAME="TI4842"></A>For information about modifying the data source,
+see <A HREF="imugp119.htm#BFCEACJI">Chapter 16, "Enhancing Forms"</A>.</p>
+
+The Select Master Table dialog box displays. <br><br></li>
+<li class=ds>
+Select the master table.<br><br>
+For a master/detail one-to-many form, this is the
+table whose data displays one row at a time at the top of the form.
+For a master/detail many-to-one form, this is the table
+whose data displays in a list at the top of the form. In the example,
+it is the Department table.<br><br></li>
+<li class=ds>
+Select some or all of the columns in the master
+table, then click OK:<br><br><br><img src="images/dfrm14.gif"><br>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>If you are told the data is not updatable</span> <A NAME="TI4843"></A>After selecting the columns, you might see a message box telling
+you that the data is not updatable.</p>
+<A NAME="TI4844"></A>For information about these situations, see <A HREF="imugp116.htm#X-ref386528994">"Defining data so that
+a form can update a database"</A>.</p>
+
+The Select Detail Table dialog box displays. <br><br></li>
+<li class=ds>
+Select the detail table.<br><br>
+This is the table that is related to the master table and
+whose data displays at the bottom of the form. For a master/detail
+one-to-many form, the data displays many rows at a time. For a master/detail
+many-to-one form, the data displays one row at a time. In the example,
+it is the Employee table.<br><br></li>
+<li class=ds>
+Select some or all of the columns in the detail
+table, then click OK.<br><br>
+The Select Master/Detail Relationship dialog box
+displays. It lists primary/foreign key relationships between
+the master and detail tables: <br><br><br><img src="images/dfrm15.gif"><br>
+</li>
+<li class=ds>
+Specify the relationship between the master and
+detail tables.<br><br>
+To do this, you identify which column or columns in the detail
+table have the same values as the column or columns in the master
+table. <br><br>
+InfoMaker needs this information so that it knows which detail
+rows to display when you display a row in the master table.<br><br>
+<A NAME="TI4845"></A>
+<ul>
+<li class=fi>If there is a primary/foreign
+key relationship, select it and click OK.</li>
+<li class=ds>If there is no primary/foreign key relationship,
+click More to specify the relationship. Select one or more columns
+from the master table and the column or columns in the detail table
+that contain matching values, and click OK.
+</li>
+</ul>
+<br><br>
+When the master table and the detail table are the same table,
+the complete Select Master/Detail Relationship dialog box
+displays automatically and you specify the relationship:<br><br><br><img src="images/dfrm16.gif"><br>
+
+InfoMaker generates the basic form and displays it in the
+Form painter workspace. The following illustration shows a master/detail
+one-to-many form:<br><br><br><img src="images/dfrm17.gif"><br>
+</li>
+<li class=ds>
+Size the master area if necessary and click the
+Run button to run the form.<br><br>
+When you run the form, the form displays with data:<br><br><br><img src="images/dfrm18.gif"><br>
+</li></ol>
+<br><A NAME="TI4846"></A><p>At this point, you can enhance the form. To do so, you first
+click the Close button to return to the Form painter Layout view.</p>
+<A NAME="TI4847"></A><p>For information about how to enhance the form,
+see <A HREF="imugp119.htm#BFCEACJI">Chapter 16, "Enhancing Forms"</A>.</p>
+<A NAME="X-ref386528994"></A><h2>Defining data so that a form can update a database</h2>
+<A NAME="TI4848"></A><p>If you want to be able to use a form to update data in a database,
+you must include all columns that make up a table's unique
+key when you define the data for the form. This is how InfoMaker identifies
+rows in the database.</p>
+<A NAME="TI4849"></A><p>For example, if you are using Quick Select and have not selected
+all columns in a table's unique key, you see the following
+dialog box:</p>
+<br><img src="images/dfrm19.gif">
+<A NAME="TI4850"></A><p>You can have InfoMaker add the needed columns automatically
+by clicking Yes. If you click No and proceed with the ones you originally
+selected, you will not be able to update data in the database unless
+you modify the data source after you generate the form.</p>
+<A NAME="TI4851"></A><p>If you are using SQL Select and do not select all the key
+columns, you are warned, but you cannot add the columns automatically;
+you can edit the data source after the basic form has been generated.</p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>About the master/detail form styles</span> <A NAME="TI4852"></A>The master/detail one-to-many and master/detail
+many-to-one form styles each have two sources of data, one for the
+master area and one for the detail area. The data for both the master
+area and the detail area can be updatable.</p>
+<A NAME="TI4853"></A><p>If you want to be able to insert new rows in a form, you must
+include all columns that have been defined in the database as requiring
+values.</p>
+<A NAME="TI4854"></A><p>For example, if you are using Quick Select and have not selected
+all columns that allow null values, InfoMaker displays a message
+box:</p>
+<br><img src="images/dfrm20.gif">
+<A NAME="TI4855"></A><p>If you want to be able to insert new rows in the form, you
+can have InfoMaker add the required rows by clicking Yes. You receive
+this warning only when using the Quick Select data source.</p>
+<A NAME="TI4856"></A><p>For information about controlling updates,
+see <A HREF="imugp118.htm#CDECDGJE">"Controlling updates "</A>.</p>
+<A NAME="TI4857"></A><h2>Generating and saving forms</h2>
+<A NAME="TI4858"></A><p>When you finish supplying information about the form style
+and data source, InfoMaker generates the form and takes you to
+the Form painter Layout view.</p>
+<A NAME="TI4859"></A><p>Here is the Layout view for a freeform form that uses 12 columns
+of data from the Employee table:</p>
+<br><img src="images/dfrm21.gif">
+<A NAME="TI4860"></A><p>These 12 columns were selected because in the database these
+columns were defined as requiring values. By selecting these columns,
+you can use the form to insert new data in the Employee table.</p>
+<A NAME="TI4861"></A><p>For information about updating data in a form,
+see <A HREF="imugp116.htm#X-ref386528994">"Defining data so that
+a form can update a database"</A>.</p>
+<A NAME="TI4862"></A><p>When generating the basic form, InfoMaker uses the information
+from the extended attribute system tables.</p>
+<A NAME="TI4863"></A><h3>About the extended attribute system tables and forms</h3>
+<A NAME="TI4864"></A><p>The extended attribute system tables are a set of tables maintained
+by the Database painter in InfoMaker or PowerBuilder. The extended
+attribute system tables contain information about database tables
+and columns. Extended attribute information extends database definitions.</p>
+<A NAME="TI4865"></A><p>When creating a form, InfoMaker uses the following information
+from the extended attribute system tables:</p>
+<A NAME="TI4866"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI4867"></A>For</th>
+<th align="left" valign=bottom><A NAME="TI4868"></A>InfoMaker uses</th>
+</tr>
+<tr><td valign=top><A NAME="TI4869"></A>Tables</td>
+<td valign=top><A NAME="TI4870"></A>Fonts specified for labels, headings,
+and data</td>
+</tr>
+<tr><td valign=top><A NAME="TI4871"></A>Columns</td>
+<td valign=top><A NAME="TI4872"></A><A NAME="TI4873"></A>
+<ul>
+<li class=fi>Text
+specified for labels and headings</li>
+<li class=ds>Display formats</li>
+<li class=ds>Edit styles
+</li>
+</ul>
+</td>
+</tr>
+</table>
+<A NAME="TI4874"></A><p>For example, labels and headings you defined for columns in
+the Database painter are used in the generated form. Similarly,
+if you associated an edit style with a column in the Database painter,
+that edit style is automatically used for the column in the form.</p>
+<A NAME="TI4875"></A><p>For more information about the repository,
+see <A HREF="imugp31.htm#BFCDFDFD">Chapter 3, "Managing the Database"</A> and <A HREF="imugp256.htm#CCJEBFGB">Appendix A, "The Extended
+Attribute System Tables"</A>.</p>
+<A NAME="TI4876"></A><p>At this point, you have a functioning form. You should save
+it before making any changes.</p>
+<A NAME="X-ref386528727"></A><h3>Saving the form</h3>
+<A NAME="TI4877"></A><p>When you have generated a form, you should save it. The first
+time you save the form, you give it a name. As you work, you should
+save your form frequently so that you do not lose changes.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To save the form:</p>
+<ol><li class=fi>
+Click the Save button.<br><br>
+<i>or</i>
+<br><br>
+Select File&gt;Save from the menu bar.<br><br>
+If you have previously saved the form, InfoMaker saves the
+new version.<br><br>
+If you have not previously saved the form, InfoMaker displays
+the Save Form dialog box:<br><br><br><img src="images/dfrm22.gif"><br>
+</li>
+<li class=ds>
+Name the form in the Forms box.<br><br>
+The form name can be any valid identifier up to 40 characters. <br><br>
+For information about InfoMaker identifiers,
+see <A HREF="imugp140.htm#CAIBEHFJX">Chapter 19, "Identifiers"</A>.<br><br></li>
+<li class=ds>
+Enter comments to describe the form.<br><br></li>
+<li class=ds>
+Click OK.<br><br>
+InfoMaker saves the form in the current library.<br><br></li></ol>
+<br>

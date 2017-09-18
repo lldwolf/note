@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+	<title>C# 笔记</title>
+	<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+	<p id="title">Visual Studio 技巧</p>
+
+	<h1>常用设置</h1>
+    <ul>
+        <li>Text Editor -&gt; All Languages -&gt; General
+            <ul>
+                <li>设置值：Line Number</li>
+                <li>说明：显示行号</li>
+            </ul>
+        </li>
+        <li>Text Editor -&gt; All Languages -&gt; Tabs &gt; Keep tabs
+            <ul>
+                <li>设置值：Checked</li>
+                <li>说明：保留 Tab，否则将会被替换为空格</li>
+            </ul>
+        </li>
+        <li>Text Editor -&gt; HTML -&gt; Formatting &gt; Tag Specific Options &gt; Default Settings &gt; Client tag supports contents &gt; Line breaks
+            <ul>
+                <li>设置值：Before and after</li>
+                <li>说明：对于包含内容的 HTML 标签, 在之前和之后断行</li>
+            </ul>
+        </li>
+        <li>Text Editor -&gt; XAML -&gt; Formatting &gt; Spacing &gt; Position each attribute on a separate line &gt; Position first attribute on same line as start tag
+            <ul>
+                <li>设置值：Checked</li>
+                <li>说明：对于 XAML, 每个属性单独一行，第一个属性与标签同行</li>
+            </ul>
+        </li>
+        <li>Text Editor -&gt; XAML -&gt; Miscellaneous &gt; Default View &gt; Always open documents in full XAML view
+            <ul>
+                <li>设置值：Checked</li>
+                <li>说明：对于 XAML 文件，默认打开文本编辑器</li>
+            </ul>
+        </li>
+        <li>Project and Solutions -&gt; General &gt; Track Active Item in Solution Explorer
+            <ul>
+                <li>设置值：Checked</li>
+                <li>说明：自动在 Solution Explorer 中定位打开的文件</li>
+            </ul>
+        </li>
+    </ul>
+	<h1>常用快捷键</h1>
+	<h2>系统默认快捷键</h2>
+	<p>某些热键需将当前设置改为C#风格方可使用，设置方式如下：</p>
+	<ol>
+		<li>菜单 Tools -&gt; Import and Export Settings</li>
+		<li>选择 Import selected environment settings</li>
+		<li>可选择是否保存当前设置，默认选是</li>
+		<li>选择 Visual C# Development Settings 导入</li>
+	</ol>
+	<table style="width:90%" border="0">
+		<tr>
+			<th style="width:120px">快捷键</th>
+			<th>说明</th>
+			<th style="width:350px">备注</th>
+		</tr>
+		<tr>
+			<td>F2</td>
+			<td>重命名文件或变量</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>F3</td>
+			<td>查找下一个</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>F4</td>
+			<td>打开属性窗口</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>F5</td>
+			<td>编译并运行</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>F6</td>
+			<td>编译Solution</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>F7</td>
+			<td>显示代码窗口</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>F8 </td>
+			<td>转到下一错误/警告</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>F9</td>
+			<td>设置或取消断点</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>F10</td>
+			<td>调试时执行当前行</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>F11</td>
+			<td>调试时执行当前行，若有子程序则进入子程序</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>F12</td>
+			<td>转到变量的声明</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>Alt + F7 </td>
+			<td>切换 Explorer 视图</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>Shift + F6 </td>
+			<td>编译当前项目</td>
+			<td>VS2005</td>
+		</tr>
+		<tr>
+			<td>Shift + F7 </td>
+			<td>显示设计窗口</td>
+			<td><ul>
+				<li>在 WinForm 下可以切换代码窗口与设计窗口</li>
+				<li>在 WPF 下可以切换设计窗口与代码窗口，结合使用 Ctrl + - 可在设计窗口与XAML窗口中切换</li>
+				<li>在aspx文件中可以切换HTML代码窗口与设计窗口</li>
+			    </ul></td>
+		</tr>
+		<tr>
+			<td>Shift + F12 </td>
+			<td>查找对某变量的所有引用，相当于右键菜单的“Find All Reference”</td>
+			<td>&nbsp;</td>
+		</tr>
+        <tr>
+			<td>Ctrl + KT </td>
+			<td>Open Call Hierarchy window, 可用来查找某接口方法的调用及实现</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>Ctrl + Shift + 空格 </td>
+			<td>显示函数调用的参数</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>Ctrl + KK </td>
+			<td>设置或取消书签</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>Ctrl + KN </td>
+			<td>移到焦点到下一书签</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>Ctrl + KP </td>
+			<td>移到焦点到上一书签</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>Ctrl + KS </td>
+			<td>添加范围标签，例如 #region+#endregion, #if+#endif</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>Ctrl + }</td>
+			<td>移到配对的括号，包括{}，[]，()</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>Ctrl + , </td>
+			<td>快速定位文件，可按文件名，方法名，类名在Solution范围内搜索</td>
+			<td>VS2010</td>
+		</tr>
+		<tr>
+			<td>Ctrl + - </td>
+			<td>移到焦点到上一浏览位置（自动书签）</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>Ctrl + Shift + - </td>
+			<td>移到焦点到下一浏览位置（自动书签）</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>Ctrl + F </td>
+			<td>查找</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>Ctrl + Shift + F </td>
+			<td>全局查找</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>Ctrl + H </td>
+			<td>替换</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>Ctrl + Shift + H </td>
+			<td>全局替换</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>Ctrl + N </td>
+			<td>新建</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>Ctrl + RO </td>
+			<td>重定义参数顺序</td>
+			<td>VS2005</td>
+		</tr>
+		<tr>
+			<td>Ctrl + RR </td>
+			<td>重命名变量</td>
+			<td>VS2005</td>
+		</tr>
+		<tr>
+			<td>Ctrl + ED </td>
+			<td>格式化当前文档</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>Ctrl + EF </td>
+			<td>格式化选中文本</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>Ctrl + EW </td>
+			<td>文本自动换行</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>Ctrl + RW </td>
+			<td>切换空白字符是否显示</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>Ctrl + WO</td>
+			<td>切换到 Output 窗口</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>Ctrl + U </td>
+			<td>选中文本变为小写</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>Ctrl + WL </td>
+			<td>服务器资源管理器</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>Ctrl + WS </td>
+			<td>Solution Explorer</td>
+			<td>+, -可以展开/关闭树结点</td>
+		</tr>
+		<tr>
+			<td>Ctrl + WX </td>
+			<td>控件工具箱</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>Ctrl + Shift + A </td>
+			<td>添加新项</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>Ctrl + Shift + B </td>
+			<td>编译Solution</td>
+			<td>&nbsp;</td>
+		</tr>
+	</table>
+		<h2>自定义快捷键</h2>
+	<p>Tools -&gt; Options -&gt; Keyboard</p>
+	<table style="width:90%">
+		<tr>
+			<th>快捷键</th>
+			<th>对应功能</th>
+			<th>说明</th>
+		</tr>
+		<tr>
+			<td>Ctrl+Shift+C</td>
+			<td>File.CloseAllButThis</td>
+			<td>关闭所有其它窗口</td>
+		</tr>
+		<tr>
+			<td>Ctrl+Alt+O</td>
+			<td>File.OpenContainingFolder</td>
+			<td>在 Exlorer 中打开当前文件夹</td>
+		</tr>
+	</table>
+
+<h1>修复系统错误</h1>
+	<p>有时 Visual Studio 会因为安装某些其它软件给破坏掉，例如，无法建新项目，可以试图运行下面的命令修复</p>
+	<pre class="code" data-type="csharp">devenv /Resetsettings
+devenv /ResetSkipPkgs
+devenv /Safemode</pre>
+</body>
+</html>

@@ -1,0 +1,32 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+GetText</TITLE>
+</HEAD>
+<BODY>
+<A NAME="DWFGetText"></A><A NAME="TI6741"></A><h1>GetText</h1>
+<A NAME="TI6742"></A><p>
+<FORM>
+<INPUT
+ TYPE = "BUTTON"
+ VALUE = "Examples"
+ onClick = "window.location = 'imugp181.htm#EX33';">
+</FORM>
+</p>
+<h3>Description</h3><A NAME="TI6743"></A><p>Obtains the text that a user has entered in a column.</p>
+
+<h3>Syntax</h3><pre><b>GetText</b> ( )</pre>
+
+<h3>Return Values</h3><A NAME="TI6744"></A><p>String. Returns the text the user has entered in the current
+column.</p>
+
+<h3>Usage</h3><A NAME="TI6745"></A><p>Use GetText in validation rules to compare what the user has
+entered to application-defined criteria before it is accepted into
+the data buffer.</p>
+
+<A NAME="EX33"></A><h3>Examples</h3><A NAME="TI6746"></A><p>This validation rule checks that the value the user
+entered in the column is less than 100:<pre>Integer(<i>GetText</i> ()) &lt; 100</pre>
+</p>
+
+

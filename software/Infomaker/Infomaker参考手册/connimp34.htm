@@ -1,0 +1,168 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+Sharing database profiles</TITLE>
+</HEAD>
+<BODY>
+<A NAME="CCJCEIDC"></A><h1>Sharing database profiles</h1>
+<A NAME="TI1154"></A><p>When you work in InfoMaker, you can share database profiles
+among users.</p>
+<p><img src="images/note.gif" width=17 height=17 border=0 align="bottom" alt="Note"> <span class=shaded>Sharing database profiles between PowerBuilder and
+InfoMaker</span> <A NAME="TI1155"></A>Since the database profiles used by both PowerBuilder and
+InfoMaker are stored in a common registry location, database profiles
+you create in either product are automatically available for use
+by the other, if both products are running on the same computer.</p>
+<A NAME="TI1156"></A><p>This section describes what you need to know to set up, use,
+and maintain shared database profiles in InfoMaker.</p>
+<A NAME="TI1157"></A><h2>About shared database profiles</h2>
+<A NAME="TI1158"></A><h4>What you can do</h4>
+<A NAME="TI1159"></A><p>You can share database profiles in the InfoMaker development
+environment by specifying the location of a file containing the
+profiles you want to share. You specify this location in the Database
+Preferences property sheet in the Database painter.</p>
+<A NAME="TI1160"></A><h4>Where to store a shared profile file</h4>
+<A NAME="TI1161"></A><p>To share database profiles among all InfoMaker users at your
+site, store a profile file on a network file server accessible to
+all users.</p>
+<A NAME="TI1162"></A><h4>What happens</h4>
+<A NAME="TI1163"></A><p>When you share database profiles, InfoMaker displays shared
+database profiles from the file you specify as well as those from
+your registry. </p>
+<A NAME="TI1164"></A><p>Shared database profiles are read-only. You can select a shared
+profile to connect to a database--but you <i>cannot</i>
+ edit,
+save, or delete profiles that are shared. (You can, however, make
+changes to a shared profile and save it on your computer, as described
+in <A HREF="connimp34.htm#CCJCAGAI">"Making local changes to
+shared database profiles"</A>.)</p>
+<A NAME="TI1165"></A><h4>How to do it</h4>
+<A NAME="TI1166"></A><p>To set up shared database profiles in the InfoMaker development
+environment, you specify the location of the file containing shared
+profiles in the Database painter's Database Preferences
+property sheet.</p>
+<A NAME="TI1167"></A><p>For instructions, see <A HREF="connimp34.htm#CCJBICHJ">"Setting up shared database
+profiles"</A>.</p>
+<A NAME="CCJBICHJ"></A><h2>Setting up shared database profiles</h2>
+<A NAME="TI1168"></A><h4>What you do</h4>
+<A NAME="TI1169"></A><p>You set up shared database profiles in the Database Preferences
+property sheet. </p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To set up shared database profiles:</p>
+<ol><li class=fi>
+In the Database painter, select Design&gt;Options
+from the menu bar.<br><br>
+The Database Preferences property sheet displays. If necessary,
+click the General tab to display the General property page. (The
+Database Preferences dialog box in InfoMaker includes an additional
+option named Connect DB at Startup.)<br><br></li>
+<li class=ds>
+In the Shared Database Profiles box, specify the
+location of the file containing the database profiles you want to
+share. Do this in either of the following ways:<A NAME="TI1170"></A>
+<ul>
+<li class=fi>Type the location (pathname)
+in the Shared Database Profiles box.</li>
+<li class=ds>Click the Browse button to navigate to the file
+location and display it in the Shared Database Profiles box. 
+</li>
+</ul>
+
+                      <br><br>
+In the following example, I:\SHARE\PB.INI
+is the location of the file containing the database profiles to
+be shared:<br><br><br><img src="images/cn6share.gif"><br>
+</li>
+<li class=ds>
+Do one of the following:<A NAME="TI1171"></A>
+<ul>
+<li class=fi>Click
+Apply to apply the Shared Database Profiles setting to the current
+connection and all future connections without closing the Database
+Preferences property sheet.</li>
+<li class=ds>Click OK to apply the Shared Database Profiles setting
+to the current connection and all future connections and close the
+Database Preferences property sheet.
+</li>
+</ul>
+
+                      <br><br>
+InfoMaker saves your Shared Database Profiles setting in
+the registry.<br><br></li></ol>
+<br><A NAME="TI1172"></A><h2>Using shared database profiles to connect</h2>
+<A NAME="TI1173"></A><p>You select a shared database profile to connect to a database
+the same way you select a profile stored in your registry. You can
+select the shared profile in the Database Profiles dialog box or
+from the File&gt;Connect menu.</p>
+<A NAME="TI1174"></A><h4>Database Profiles dialog box</h4>
+<A NAME="TI1175"></A><p>You can select and connect to a shared database profile in
+the Database Profiles dialog box.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To select a shared database profile in the Database
+Profiles dialog box:</p>
+<ol><li class=fi>
+Click the Database Profile button in the
+PowerBar.<br><br>
+<i>or</i>
+<br><br>
+Select Tools&gt;Database Profile from the PowerBar.<br><br>
+The Database Profiles dialog box displays, listing both shared
+and local profiles. Shared profiles are denoted by a network icon
+and the word <i>(Shared)</i>
+.<br><br><br><img src="images/cnw6sdbp.gif"><br>
+</li>
+<li class=ds>
+Select the name of the shared profile you want
+to access and click Connect.<br><br>
+InfoMaker connects to the selected database and returns you
+to the painter workspace.<br><br></li></ol>
+<br><A NAME="CCJCAGAI"></A><h2>Making local changes to shared database profiles</h2>
+<A NAME="TI1176"></A><p>Because shared database profiles can be accessed by multiple
+users running InfoMaker, you should not make changes to these profiles.
+However, if you want to modify and save a copy of a shared database
+profile <i>for your own use</i>
+, you can edit the
+profile and save the modified copy in your computer's registry.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To save changes to a shared database profile in
+your registry:</p>
+<ol><li class=fi>
+In the Database Profiles dialog box, select
+the shared profile you want to edit and click the Edit button.<br><br>
+Shared profiles are denoted by a network icon and the word <i>(Shared)</i>
+.<br><br></li>
+<li class=ds>
+In the Database Profile Setup dialog box that
+displays, edit the profile values as needed and click OK.<br><br>
+A message box displays, asking if you want to save a copy
+of the modified profile to your computer.<br><br></li>
+<li class=ds>
+Click Yes.<br><br>
+InfoMaker saves the modified profile in your computer's
+registry: <br><br></li></ol>
+<br><A NAME="TI1177"></A><h2>Maintaining shared database profiles</h2>
+<A NAME="TI1178"></A><p>If you maintain the database profiles for InfoMaker at your
+site, you may need to update shared database profiles from time
+to time and make these changes available to your users.</p>
+<A NAME="TI1179"></A><p>Because shared database profiles can be accessed by multiple
+users running InfoMaker, it is <i>not</i>
+ a good
+idea to make changes to the profiles over a network. Instead, you
+should make any changes locally and then provide the updated profiles
+to your users.</p>
+<p><img src="images/proc.gif" width=17 height=17 border=0 align="bottom" alt="Steps"> To maintain shared database profiles at your site:</p>
+<ol><li class=fi>
+Make and save required changes to the shared
+profiles on your own computer. These changes are saved in your registry.<br><br>
+For instructions, see <A HREF="connimp34.htm#CCJCAGAI">"Making local changes to
+shared database profiles"</A>.<br><br></li>
+<li class=ds>
+Export the updated profile entries from your registry
+to the existing file containing shared profiles. <br><br>
+For instructions, see <A HREF="connimp35.htm#CADDEJBJ">"Importing and exporting
+database profiles"</A>.<br><br></li>
+<li class=ds>
+If they have not already done so, have each user
+specify the location of the new profiles file in the Database Preferences
+property sheet so that they can access the updated shared profiles
+on their computer.<br><br>
+For instructions, see <A HREF="connimp34.htm#CCJBICHJ">"Setting up shared database
+profiles"</A>.<br><br></li></ol>
+<br>

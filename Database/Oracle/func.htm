@@ -1,0 +1,70 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<script type="text/javascript" src="css.js"></script>
+<title>ORACLE 笔记</title>
+</head>
+
+<body>
+<h1>第N章 函数</h1>
+<hr />
+<h2>N.100 示例</h2>
+<h3>N.100.1 拼接字符串</h3>
+<p>我们可以创建如下的函数来将多行数据拼接为一个单一字符串</p>
+<pre>
+CREATE OR REPLACE TYPE VARCHAR2_TABTYP2 AS TABLE OF VARCHAR2(1000)
+
+FUNCTION TAB_TO_STRING (
+    tab_in         IN VARCHAR2_TABTYP2,
+    delimiter_in   IN VARCHAR2 DEFAULT '/'
+    ) RETURN VARCHAR2 IS
+v_idx PLS_INTEGER;
+v_str VARCHAR2(32767);
+v_dlm VARCHAR2(10);
+BEGIN
+
+    v_idx := tab_in.FIRST;
+    WHILE v_idx IS NOT NULL LOOP
+       v_str := v_str || v_dlm || tab_in(v_idx);
+       v_dlm := delimiter_in;
+       v_idx := tab_in.NEXT(v_idx);
+    END LOOP;
+
+    RETURN substrb(v_str,1,4000);
+
+END TAB_TO_STRING;</pre>
+<p>有了该工具函数，我们就可以进行如下方式的调用</p>
+<pre>SELECT TAB_TO_STRING(CAST(COLLECT("COLUMN NAME") AS VARCHAR2_TABTYP2), ', ') from ...</pre>
+<h3>N.100.2 将字符串拆分为table</h3>
+<p>下面的 to_list 函数将以 ',' 做为依据将字符串拆分为 table</p>
+<pre>CREATE OR REPLACE TYPE shortStringTable AS TABLE OF VARCHAR2(255)
+/
+
+
+-- This function converts comma seperated values to table of varchar
+CREATE OR REPLACE FUNCTION to_list( p_string IN VARCHAR2 ) RETURN shortStringTable
+AS
+    l_string        long default p_string || ',';
+    l_data          shortStringTable := shortStringTable();
+    n               number;
+BEGIN
+  LOOP
+      EXIT WHEN l_string IS NULL;
+      n := instr( l_string, ',' );
+      l_data.extend;
+      l_data(l_data.count) := ltrim( rtrim( substr( l_string, 1, n-1 ) ) );
+      l_string := substr( l_string, n+1 );
+  END LOOP;
+
+  return l_data;
+END;
+/
+</pre>
+<p>我们可以使用如下方式测试：</p>
+<pre>select * from table(to_list('a,b,c'));</pre>
+<p>&nbsp; </p>
+<script type="text/javascript" src="index.js"></script>
+</body>
+</html>

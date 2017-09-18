@@ -1,0 +1,51 @@
+unit MainFrm;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
+  Menus;
+
+type
+  TFrmMain = class(TForm)
+    MainMenu1: TMainMenu;
+    N1: TMenuItem;
+    N581: TMenuItem;
+    N2: TMenuItem;
+    N941: TMenuItem;
+    N94Form1: TMenuItem;
+    N95Form1: TMenuItem;
+    procedure N581Click(Sender: TObject);
+    procedure N941Click(Sender: TObject);
+    procedure N94Form1Click(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  FrmMain: TFrmMain;
+
+implementation
+
+uses MessageFrm, InterfaceUnit, AddTwoNumFrm;
+
+{$R *.DFM}
+
+procedure TFrmMain.N581Click(Sender: TObject);
+begin
+  FrmMessage.ShowModal;
+end;
+
+procedure TFrmMain.N941Click(Sender: TObject);
+begin
+  FrmAddTwoNum.ShowModal;  
+end;
+
+procedure TFrmMain.N94Form1Click(Sender: TObject);
+begin
+  ShowModuleForm(Handle);
+end;
+
+end.

@@ -1,0 +1,65 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+Truncate</TITLE>
+</HEAD>
+<BODY>
+<A NAME="CAIDGGEE"></A><A NAME="TI8085"></A><h1>Truncate</h1>
+<A NAME="TI8086"></A><p>
+<FORM>
+<INPUT
+ TYPE = "BUTTON"
+ VALUE = "Examples"
+ onClick = "window.location = 'imugp250.htm#EX102';">
+<INPUT
+  TYPE = "BUTTON"
+ VALUE = "See also"
+ onClick = "window.location = 'imugp250.htm#SA102';">
+</FORM>
+</p>
+<h3>Description</h3><A NAME="TI8087"></A><p>Truncates a number to the specified number of decimal places.</p>
+
+<h3>Syntax</h3><pre><b>Truncate</b> ( <i>x</i>,  <i>n</i> )</pre>
+<A NAME="TI8088"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI8089"></A>Argument</th>
+<th align="left" valign=bottom><A NAME="TI8090"></A>Description</th>
+</tr>
+<tr><td valign=top><A NAME="TI8091"></A><i>x</i></td>
+<td valign=top><A NAME="TI8092"></A>The number you want to truncate</td>
+</tr>
+<tr><td valign=top><A NAME="TI8093"></A><i>n</i></td>
+<td valign=top><A NAME="TI8094"></A>The number of decimal places to which
+you want to truncate <i>x</i></td>
+</tr>
+</table>
+
+<h3>Return Values</h3><A NAME="TI8095"></A><p>The data type of <i>x</i>. If <i>n</i> is
+positive, returns <i>x</i> truncated to the specified
+number of decimal places. If <i>n</i> is negative,
+returns <i>x</i> truncated to (- <i>n</i> +1)
+places before the decimal point. Returns -1 if it fails.</p>
+
+<A NAME="EX102"></A><h3>Examples</h3><A NAME="TI8096"></A><p>This expression returns 9.2:<pre><i>Truncate</i> (9.22, 1)</pre>
+</p>
+<A NAME="TI8097"></A><p>This expression returns 9.2:<pre><i>Truncate</i> (9.28, 1)</pre>
+</p>
+<A NAME="TI8098"></A><p>This expression returns 9:<pre><i>Truncate</i> (9.9, 0)</pre>
+</p>
+<A NAME="TI8099"></A><p>This expression returns -9.2:<pre><i>Truncate</i> (-9.29, 1)</pre>
+</p>
+<A NAME="TI8100"></A><p>This expression returns 0:<pre><i>Truncate</i> (9.2, -1)</pre>
+</p>
+<A NAME="TI8101"></A><p>This expression returns 50:<pre><i>Truncate</i> (54, -1)</pre>
+</p>
+
+<A NAME="SA102"></A><h3>See Also</h3><A NAME="TI8102"></A><p><A NAME="TI8103"></A>
+<ul>
+<li class=fi><A HREF="imugp157.htm#CAICEBIG">Ceiling</A></li>
+<li class=ds><A HREF="imugp184.htm#CAIDGFDE">Int</A></li>
+<li class=ds><A HREF="imugp232.htm#CAIDFBID">Round</A></li>
+<li class=ds> 
+</li>
+</ul>
+</p>
+
+

@@ -1,0 +1,72 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+GetRow</TITLE>
+</HEAD>
+<BODY>
+<A NAME="CAIBGHBE"></A><A NAME="TI6718"></A><h1>GetRow</h1>
+<A NAME="TI6719"></A><p>
+<FORM>
+<INPUT
+ TYPE = "BUTTON"
+ VALUE = "Examples"
+ onClick = "window.location = 'imugp180.htm#EX32';">
+<INPUT
+  TYPE = "BUTTON"
+ VALUE = "See also"
+ onClick = "window.location = 'imugp180.htm#SA32';">
+</FORM>
+</p>
+<h3>Description</h3><A NAME="TI6720"></A><p>Reports the number of a row associated with a band in a DataWindow
+object or a report.</p>
+
+<h3>Syntax</h3><pre><b>GetRow</b> ( )</pre>
+
+<h3>Return Values</h3><A NAME="TI6721"></A><p>Long. Returns the number of a row if it succeeds, 0 if no
+data has been retrieved or added, and -1 if an error occurs. Where
+you call GetRow determines what row it returns, as follows: </p>
+<A NAME="TI6722"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI6723"></A>If the control in the DataWindow object
+or report is in this band</th>
+<th align="left" valign=bottom><A NAME="TI6724"></A>GetRow returns</th>
+</tr>
+<tr><td valign=top><A NAME="TI6725"></A>Header</td>
+<td valign=top><A NAME="TI6726"></A>First row on the page</td>
+</tr>
+<tr><td valign=top><A NAME="TI6727"></A>Group header</td>
+<td valign=top><A NAME="TI6728"></A>First row in the group</td>
+</tr>
+<tr><td valign=top><A NAME="TI6729"></A>Detail</td>
+<td valign=top><A NAME="TI6730"></A>The row in which the expression occurs</td>
+</tr>
+<tr><td valign=top><A NAME="TI6731"></A>Group trailer</td>
+<td valign=top><A NAME="TI6732"></A>Last row in the group</td>
+</tr>
+<tr><td valign=top><A NAME="TI6733"></A>Summary</td>
+<td valign=top><A NAME="TI6734"></A>Last row in the report or DataWindow
+object</td>
+</tr>
+<tr><td valign=top><A NAME="TI6735"></A>Footer</td>
+<td valign=top><A NAME="TI6736"></A>Last row on the page</td>
+</tr>
+</table>
+
+<A NAME="EX32"></A><h3>Examples</h3><A NAME="TI6737"></A><p>This expression for a computed field in the detail
+band displays the number of each row:<pre><i>GetRow</i> ()</pre>
+</p>
+<A NAME="TI6738"></A><p>This expression for a computed field in the header
+band checks to see if there is data. It returns the number of the
+first row on the page if there is data, and otherwise returns No
+Data:<pre>If(<i>GetRow</i> ()= 0, "No Data", String(<i>GetRow</i> ()))</pre>
+</p>
+
+<A NAME="SA32"></A><h3>See Also</h3><A NAME="TI6739"></A><p><A NAME="TI6740"></A>
+<ul>
+<li class=fi><A HREF="imugp148.htm#X-ref350653848">"Example 3: creating
+a row indicator"</A></li>
+<li class=ds><A HREF="imugp168.htm#CAIDFJIE">CurrentRow</A>
+</li>
+</ul>
+</p>
+
+

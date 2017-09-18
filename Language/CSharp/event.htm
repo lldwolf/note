@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>事件</title>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+<p id="title">事件</p>
+<h1>基本用法</h1>
+<h2>使用默认的事件参数EventArgs</h2>
+<pre class="code" data-type="csharp">//声明
+event EventHandler MyEvent;
+
+//使用
+MyEvent += new EventHandler(MyEventHandler);
+
+void MyEventHandler(object sender, EventArgs e)
+{
+    ...
+}</pre>
+<h2>使用自定义的事件参数</h2>
+<pre class="code" data-type="csharp">//声明
+delegate void MyDelegate(object myArgs);   //注意，可以不使用EventArgs的继承类
+event MyDelegate MyEvent;
+
+//使用
+MyEvent += new MyDelegate(MyEventHandler);
+
+void MyEventHandler(object myArgs)
+{
+    ...
+}</pre>
+<h2>使用EventHadler&lt;TEventArgs&gt;</h2>
+<p>在.net framework 2.0以后可以使用该泛型类简化事件的声明.</p>
+<pre class="code" data-type="csharp">//声明参数类
+class MyEventArgs : EventArgs
+{
+    ...
+}
+
+//声明事件
+event EventHandler&lt;MyEventArgs&gt; MyEvent;
+
+//使用
+MyEvent += new EventHandler&lt;MyEventArgs&gt;(MyEventHandler);
+
+void MyEventHandler(object sender, MyEventArgs e)
+{
+    ...
+}</pre>
+<h1>事件的传递</h1>
+<p>情景：Form1中使用了一个控件，要求外部可以经由窗体设置所属控件的事件。</p>
+<p>方案一：将控件设为public</p>
+<p>方案二：在窗体中新增事件并将其指向控件所属的事件</p>
+<pre class="code" data-type="csharp">public event EventHandler FormEvent
+{
+	add
+	{
+		this.Control1.ControlEvent += value;
+	}
+
+	remove
+	{
+		this.Control1.ControlEvent -= value;
+	}
+}</pre>
+<h1>事件的继承</h1>
+<p>默认情况下，事件是可以被继承的。但对于UserControl而言有点特殊，那就是继承的事件不会出现在设计器中。所以如果需要在设计器中访问继承的事件，需要使用如下写法（仿Control的事件实现）：</p>
+<pre class="code" data-type="csharp">private static object myEventObj = new object();
+public event EventHandler MyEvent
+{
+    add
+    {
+        base.Events.AddHandler(myEventObj, value);
+    }
+    remove
+    {
+        base.Events.RemoveHandler(myEventObj, value);
+    }
+}</pre>
+<p>事件的调用</p>
+<pre class="code" data-type="csharp">EventHandler handler = (EventHandler)base.Events[exportReport];
+if (handler != null)
+{
+    handler(sender, args);
+}</pre>
+
+</body>
+</html>

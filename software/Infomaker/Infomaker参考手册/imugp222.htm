@@ -1,0 +1,82 @@
+
+<html><HEAD>
+<LINK REL=STYLESHEET HREF="default.css" TYPE="text/css">
+<TITLE>
+ProfileInt</TITLE>
+</HEAD>
+<BODY>
+<A NAME="CAIBBBJE"></A><A NAME="TI7515"></A><h1>ProfileInt</h1>
+<A NAME="TI7516"></A><p>
+<FORM>
+<INPUT
+ TYPE = "BUTTON"
+ VALUE = "Examples"
+ onClick = "window.location = 'imugp222.htm#EX74';">
+<INPUT
+  TYPE = "BUTTON"
+ VALUE = "See also"
+ onClick = "window.location = 'imugp222.htm#SA74';">
+</FORM>
+</p>
+<h3>Description</h3><A NAME="TI7517"></A><p>Obtains the integer value of a setting in the specified profile
+file.</p>
+
+<h3>Syntax</h3><pre><b>ProfileInt</b> ( <i>filename</i>, <i>section</i>, <i>key</i>, <i>default</i> )</pre>
+<A NAME="TI7518"></A><table cellspacing=0 cellpadding=6 border=1 frame="void" rules="all"><tr><th align="left" valign=bottom><A NAME="TI7519"></A>Argument</th>
+<th align="left" valign=bottom><A NAME="TI7520"></A>Description</th>
+</tr>
+<tr><td valign=top><A NAME="TI7521"></A><i>filename</i></td>
+<td valign=top><A NAME="TI7522"></A>A string whose value is the name of the
+profile file. If you do not specify a full path, ProfileInt uses
+the operating system's standard file search order to find
+the file</td>
+</tr>
+<tr><td valign=top><A NAME="TI7523"></A><i>section</i></td>
+<td valign=top><A NAME="TI7524"></A>A string whose value is the name of a
+group of related values in the profile file. In the file, section
+names are in square brackets. Do not include the brackets in <i>section</i>. <i>Section</i> is
+not case-sensitive</td>
+</tr>
+<tr><td valign=top><A NAME="TI7525"></A><i>key</i></td>
+<td valign=top><A NAME="TI7526"></A>A string specifying the setting name
+in <i>section</i> whose value you want. The setting
+name is followed by an equal sign in the file. Do not include the
+equal sign in <i>key</i>. <i>Key</i> is
+not case-sensitive</td>
+</tr>
+<tr><td valign=top><A NAME="TI7527"></A><i>default</i></td>
+<td valign=top><A NAME="TI7528"></A>An integer value that ProfileInt will
+return if <i>filename</i> is not found, if <i>section</i> or <i>key</i> does
+not exist in <i>filename</i>, or if the value of <i>key</i> cannot
+be converted to an integer</td>
+</tr>
+</table>
+
+<h3>Return Values</h3><A NAME="TI7529"></A><p>Integer. Returns <i>default</i> if <i>filename</i> is
+not found, <i>section</i> is not found in <i>filename</i>, <i>key</i> is
+not found in <i>section</i>, or the value of <i>key</i> is
+not an integer. Returns -1 if an error occurs.</p>
+
+<h3>Usage</h3><A NAME="TI7530"></A><p>Use ProfileInt and ProfileString to get configuration settings
+from a profile file you have designed for your application.</p>
+
+<A NAME="EX74"></A><h3>Examples</h3><A NAME="TI7531"></A><p>This example uses the following PROFILE.INI file:<pre>[MyApp]<br> Maximized=1</pre>
+</p>
+<A NAME="TI7532"></A><p><pre>[Security]<br> Class = 7</pre>
+</p>
+<A NAME="TI7533"></A><p>This expression tries to return the integer value
+of the keyword Minimized in section MyApp of file C:\PROFILE.INI.
+It returns 3 if there is no MyApp section or no Minimized keyword
+in the MyApp section. Based on the sample file above, it returns
+3:<pre><i>ProfileInt</i> ("C:\PROFILE.INI", "MyApp", "minimized", 3)</pre>
+</p>
+
+<A NAME="SA74"></A><h3>See Also</h3><A NAME="TI7534"></A><p><A NAME="TI7535"></A>
+<ul>
+<li class=fi><A HREF="imugp223.htm#CAIEBDBA">ProfileString</A></li>
+<li class=ds> 
+</li>
+</ul>
+</p>
+
+
