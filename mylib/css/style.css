@@ -1,0 +1,123 @@
+p
+{
+	font-family: "Arial";
+	font-size: 14px;
+	font-style: normal;
+	line-height: 20px;
+	font-weight: normal;
+	text-indent: 24px;
+}
+
+	p#title
+	{
+		font-size: 36px;
+		font-style: normal;
+		font-weight: bold;
+		text-decoration: underline;
+		color: #990000;
+		text-align: center;
+	}
+
+	p.index
+	{
+		font-size: 20px;
+		text-align: center;
+	}
+
+h1
+{
+	font-size: 28px;
+	font-style: normal;
+	font-weight: bold;
+	color: #990000;
+}
+
+h2
+{
+	font-size: 24px;
+	font-weight: bold;
+	color: #9900FF;
+}
+
+h3
+{
+	font-size: 20px;
+	font-weight: bold;
+	color: #000099;
+}
+
+a
+{
+	color: #660033;
+	text-decoration: none;
+}
+
+img
+{
+	vertical-align: middle;
+}
+
+ul
+{
+	font-family: "Arial";
+	font-size: 14px;
+	line-height: 20px;
+}
+
+pre
+{
+	font-size: 14px;
+	padding: 5px;
+	border-style: solid;
+	border-width: 1px;
+	border-color: #CCCCCC;
+	background-color: #F0F0F0;
+	tab-size: 4;
+}
+
+table
+{
+	font-size: 14px;
+	border-collapse: collapse;
+}
+
+tr
+{
+	background-color: inherit;
+	color: black;
+	padding: 5px;
+	text-align: left;
+	border: 1px solid #999999;
+}
+
+th
+{
+	text-align: center;
+	background-color: #cccccc;
+	color: black;
+	font-weight: bolder;
+	padding: 5px;
+	border: 1px solid #999999;
+}
+
+td
+{
+	border: 1px solid #999999;
+	padding: 5px;
+}
+
+ol
+{
+	font-family: "Arial";
+	font-size: 14px;
+	line-height: 20px;
+}
+
+h4
+{
+	font-size: 16px;
+}
+
+/*
+p.note { padding-top:10px; background:transparent url(../images/border-dotted-horizontal.gif) repeat-x 0 0 }
+	*/

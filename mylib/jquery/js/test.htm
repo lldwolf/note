@@ -1,0 +1,36 @@
+<html>
+	<head>
+		<script type='text/javascript' src='jquery-1.7.2.min.js'></script>
+	</head>
+		<script type='text/javascript'>
+			$(function() {
+				$("h2").each(function(i1, v1){
+					$(this).text((i1 + 1) + " " + $(v1).text());
+					$(this).nextAll("h3").each(function(i2, v2) {
+						$(v2).text((i1 + 1) + "." + (i2 + 1) + " " + getTitle($(v2).text()));
+						$(this).nextAll("h4").each(function(i3, v3) {
+							$(v3).text((i1 + 1) + "." + (i2 + 1) + "." + (i3 + 1) + " " + getTitle($(v3).text()));
+						});
+					});
+				});
+			});
+			
+			function getTitle(s) {
+				return s.substring(s.indexOf(" ") + 1);
+			}
+		</script>
+	<h2>AA</h2>
+	<h3>A1</h3>
+	<h3>A2</h3>
+	<h4>A21</h4>
+	<h3>A3</h3>
+	<h2>BB</h2>
+	<h3>B1</h3>
+	<h3>B2</h3>
+	<h3>B3</h3>
+	<h2>CC</h2>
+	<h3>C1</h3>
+	<h3>C2</h3>
+	<h4>C22</h4>
+	<h3>C3</h3>
+</html>
