@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+	<title>PL/SQL Developer</title>
+	<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+	<p id="title">PL/SQL Developer</p>
+	<h1>常见用法</h1>
+	<h2>代码片断运行</h2>
+	<p>打开 DBMS Output 窗口，View &rarr; Dbms Output，并使用按钮添加对应数据库窗口，如下图所示</p>
+	<img alt="" src="images/plsql_developer01.png" />
+	<p>输入代码</p>
+	<pre class="code" data-type="sql">declare 
+  m_count number(15);
+begin
+  select count(*) into m_count from test_table;
+  DBMS_OUTPUT.put_line(m_count);
+end;</pre>
+	<p>按 "Run Script" (F5) 键执行</p>
+	<h2>存储过程测试</h2>
+	<h3>有返回值</h3>
+	<!--
+	<p>创建存储过程如下：</p>
+	<pre class="code" data-type="sql">CREATE OR REPLACE PROCEDURE SP_TEST (
+  m_count OUT INT
+  , m_result OUT SYS_REFCURSOR
+)
+AS
+BEGIN
+  SELECT COUNT(*) INTO m_count from test_table;
+  OPEN m_result for select col1 from test_table;
+END SP_TEST;</pre>
+		-->
+	<p>例如，我想打印存储过程IRM_BAU_REPORT_PKG.GET_VALUATION_EXTENSION_REPORT的结果</p>
+	<pre class="code" data-type="sql">
+PROCEDURE GET_VALUATION_EXTENSION_REPORT(
+    regions                 IN      VARCHAR2 ,
+    beginDate               IN      DATE,
+    endDate                 IN      DATE,
+    valuationExtension      OUT     SYS_REFCURSOR
+)IS
+BEGIN
+OPEN valuationExtension FOR
+       SELECT 
+              ……
+       FROM 
+              ……
+       WHERE ……
+       ORDER BY  ……;
+END GET_VALUATION_EXTENSION_REPORT;</pre>
+<p>则在sql developer窗口中输入以下命令，并执行即可</p>
+
+<pre class="code" data-type="sql">set serveroutput on;
+var res refcursor;
+var msg VARCHAR2(100);
+execute GOLLF.IRM_BAU_REPORT_PKG.GET_VALUATION_EXTENSION_REPORT('*EMEA*',to_date('2016-03-01','yyyy-MM-dd'),to_date('2016-04-01','yyyy-MM-dd'),:res);
+print res;</pre>
+</body>
+</html>

@@ -1,16 +1,16 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-"http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html>
+
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=gb2312">
-<script language="javascript" src="css.js"></script>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
 <title>数据类型</title>
 </head>
 
 <body>
-<h1>第N章 数据类型</h1>
-<h2>N.1 基本数据类型</h2>
-<h3>N.1.1 uniqueidentifier</h3>
+<p id="title">数据类型</p>
+<h1>基本数据类型</h1>
+<h2>uniqueidentifier</h2>
 <p>全局唯一标识符（GUID），16位字节长，可使用如下两种方式初始化</p>
 <UL type=disc>
   <LI>使用 NEWID<B> </B>函数。<BR>
@@ -18,10 +18,10 @@
   <LI>将字符串常量转换为如下形式（xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx，其中每个 x 是 0-9 或 a-f 范围内的一个十六进制的数字）。例如，6F9619FF-8B86-D011-B42D-00C04FC964FF 即为有效的 <B>uniqueidentifier </B>值。 </LI>
 </UL>
 <P>比较运算符可与 <B>uniqueidentifier </B>值一起使用。然而，排列并非通过比较两个值的位模式来实现。允许对 <B>uniqueidentifier</B> 值执行的操作只有比较 (=, &lt;&gt;, &lt;, &gt;, &lt;=, &gt;=) 和检查 NULL（IS NULL 和 IS NOT NULL）。不允许使用其它算术运算符。所有的列约束及属性（IDENTITY 除外）均允许用于 <B>uniqueidentifier </B>数据类型。 </P>
-<h3>N.1.2 text, ntext, image </h3>
+<h2>text, ntext, image </h2>
 <p>这三种类型的最大长度可为4GB，要取其长度，不可用对varchar等的函数len，而要用函数datalength。</p>
 <p>在查询分析器中使用SELECT语句查看TEXT字段的值时，如果值太长一般会显示不完整，可以在菜单工具-&gt;选项-&gt;结果里可以修改每列最多的字符数,不过最大只能是8192,另外可以用DTS把表导出为文本文件或其他文件来查看。另外还有如下一种解决方式，不过我实验没成功</p>
-<pre>sp_tableoption N'表', 'text in row', '字节数'</pre>
+<pre class="code" data-type="sql">sp_tableoption N'表', 'text in row', '字节数'</pre>
 <p> 一般情况下,不应将字节数值设得过高,,特别是对那些大多数语句都不引用 text、ntext 和 image 列的表或者具有多个 text、ntext 和 image 列的表。如果设置了较大的 text in row 限制，且行本身存储了许多字符串，则可以显著减少存储在每页上的数据行数。如果大多数引用表的语句不访问 text、ntext 或 image 列，则减少页中的行数会增加处理查询时必须读取的页数。减少每页上的行数会增加索引及页的大小，优化器找不到可用的索引时可能需要扫描这些索引和页。text in row 限制的默认值 256 足以确保小型字符串和根文本指针存储在行中，同时不会使每页上的行减少得太多以至影响性能。</p>
 <p>对这三种类型有如下可用的函数</p>
 <table width="90%" >
@@ -67,7 +67,7 @@
   </tr>
 </table>
 <p>&nbsp;</p>
-<h2>N.2 系统类型</h2>
+<h1>系统类型</h1>
 <table width="100%" >
   <tr>
     <th width="20%">类型</th>
@@ -110,15 +110,15 @@
     <td>&nbsp;</td>
   </tr>
 </table>
-<h2>N.3 UNICODE字符 </h2>
+<h1>UNICODE字符 </h1>
 <p>以'n'打头的数据类型，如nchar, nvarchar, ntext等是专门用来存储unicode字符的，unicode字符的赋值前面要加上修饰符N，否则可能会出现?。</p>
-<pre>declare @ucode nvarchar(100)
+<pre class="code" data-type="sql">declare @ucode nvarchar(100)
 set @ucode = '°?°￠°￡°¤°￥°|°§°¨°?°a°?'
 select @ucode</pre>
 <p>&nbsp;</p>
 <p>&nbsp;</p>
 <p>&nbsp;</p>
 <p>&nbsp;</p>
-<script language="javascript" src="index.js"></script>
+
 </body>
 </html>

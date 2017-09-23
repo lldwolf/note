@@ -1,22 +1,22 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-"http://www.w3.org/TR/html4/loose.dtd">
+﻿<!DOCTYPE html>
+
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<script language="javascript" src="css.js"></script>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
 <title>数据类型</title>
 </head>
 
 <body>
-<h1>第N章 数据类型</h1>
-<hr>
-<h2><a href="#basic_type">N.1 基本数据类型</a></h2>
-<h2><a href="#system_type">N.2 系统类型</a></h2>
-<h2><a href="#unicode">N.3 UNICODE字符 </a></h2>
-<h2><a href="#identity">N.4 Identity </a></h2>
-<hr>
-<h2><a name="basic_type"></a>N.1 基本数据类型</h2>
-<h3>N.1.1 uniqueidentifier</h3>
+<p id="title">数据类型</p>
+
+
+
+
+
+
+<h1>基本数据类型</h1>
+<h2>uniqueidentifier</h2>
 <p>全局唯一标识符（GUID），16位字节长，对应的数据类型为varchar(36)，可使用如下两种方式初始化</p>
 <UL type=disc>
   <LI>使用 NEWID<B> </B>函数。<BR>
@@ -24,10 +24,10 @@
   <LI>将字符串常量转换为如下形式（xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx，其中每个 x 是 0-9 或 a-f 范围内的一个十六进制的数字）。例如，6F9619FF-8B86-D011-B42D-00C04FC964FF 即为有效的 <B>uniqueidentifier </B>值。 </LI>
 </UL>
 <P>比较运算符可与 <B>uniqueidentifier </B>值一起使用。然而，排列并非通过比较两个值的位模式来实现。允许对 <B>uniqueidentifier</B> 值执行的操作只有比较 (=, &lt;&gt;, &lt;, &gt;, &lt;=, &gt;=) 和检查 NULL（IS NULL 和 IS NOT NULL）。不允许使用其它算术运算符。所有的列约束及属性（IDENTITY 除外）均允许用于 <B>uniqueidentifier </B>数据类型。 </P>
-<h3>N.1.2 text, ntext, image </h3>
+<h2>text, ntext, image </h2>
 <p>这三种类型的最大长度可为4GB，要取其长度，不可用对varchar等的函数len，而要用函数datalength。</p>
 <p>在查询分析器中使用SELECT语句查看TEXT字段的值时，如果值太长一般会显示不完整，可以在菜单工具-&gt;选项-&gt;结果里可以修改每列最多的字符数,不过最大只能是8192,另外可以用DTS把表导出为文本文件或其他文件来查看。另外还有如下一种解决方式，不过我实验没成功</p>
-<pre>sp_tableoption N'表', 'text in row', '字节数'</pre>
+<pre class="code" data-type="sql">sp_tableoption N'表', 'text in row', '字节数'</pre>
 <p> 一般情况下,不应将字节数值设得过高,,特别是对那些大多数语句都不引用 text、ntext 和 image 列的表或者具有多个 text、ntext 和 image 列的表。如果设置了较大的 text in row 限制，且行本身存储了许多字符串，则可以显著减少存储在每页上的数据行数。如果大多数引用表的语句不访问 text、ntext 或 image 列，则减少页中的行数会增加处理查询时必须读取的页数。减少每页上的行数会增加索引及页的大小，优化器找不到可用的索引时可能需要扫描这些索引和页。text in row 限制的默认值 256 足以确保小型字符串和根文本指针存储在行中，同时不会使每页上的行减少得太多以至影响性能。</p>
 <p>对这三种类型有如下可用的函数</p>
 <table width="90%" >
@@ -73,19 +73,19 @@
   </tr>
 </table>
 <p>下例展示了textprt和readtext的用法</p>
-<pre>DECLARE @p_psr varbinary(16)
+<pre class="code" data-type="sql">DECLARE @p_psr varbinary(16)
 SELECT @p_psr = textptr(spec_form_psr) FROM spec_form_psr where spec_form_id = 8
 --从12位置取4个字符，位置从0开始计数
 READTEXT spec_form_psr.spec_form_psr @p_psr 14 4</pre>
-<h3>N.1.3 timestamp</h3>
+<h2>timestamp</h2>
 <p>时间标签，用于唯一地标识一个数据行，不能人工插入值，须让系统自动生成，系统保证插入的每一个值在当前数据库中唯一。例如：</p>
-<pre>create table test_table(a int, b timestamp)
+<pre class="code" data-type="sql">create table test_table(a int, b timestamp)
 insert into test_table(a) values(1)</pre>
 <p>执行完毕后，系统自动插入b列的值，例如：“0x000000000000019B
 ”</p>
 <p>对于系统最后生成的timestamp值，可使用系统变量@@DBTS查看，如下所示：</p>
-<pre>select @@dbts</pre>
-<h2><a name="system_type"></a>N.2 系统类型</h2>
+<pre class="code" data-type="sql">select @@dbts</pre>
+<h1>系统类型</h1>
 <table width="100%" >
   <tr>
     <th width="20%">类型</th>
@@ -128,18 +128,18 @@ insert into test_table(a) values(1)</pre>
     <td>&nbsp;</td>
   </tr>
 </table>
-<h2><a name="unicode"></a>N.3 UNICODE字符 </h2>
+<h1>UNICODE字符 </h1>
 <p>以'n'打头的数据类型，如nchar, nvarchar, ntext等是专门用来存储unicode字符的，unicode字符的赋值前面要加上修饰符N，否则可能会出现?。</p>
-<pre>declare @ucode nvarchar(100)
+<pre class="code" data-type="sql">declare @ucode nvarchar(100)
 set @ucode = N'°¡°¢°£°¤°¥°¦°§°¨°©°ª°«'
 select @ucode</pre>
-<h2><a name="identity"></a>N.4 Identity </h2>
-<h3>N.4.1 创建 </h3>
+<h1>Identity </h1>
+<h2>创建 </h2>
 <p>Identity类型为SQL Server针对整型提供的一种自增类型，通常用作主键。一个表中最多只有有一列为Identity型。</p>
 <p>创建Identity列可使用如下SQL语句</p>
-<pre>create table test_table(identity_col int identity(1, 1))</pre>
+<pre class="code" data-type="sql">create table test_table(identity_col int identity(1, 1))</pre>
 <p>identity的两个参数，第1个表示起始值，第2个表示自增量。</p>
-<h3>N.4.2 查询</h3>
+<h2>查询</h2>
 <p>可通过ident_current，ident_incr，ident_seed这3个函数来查询某个表的identity列的信息，这3个函数的参数都为一个字符串，表示表名。说明如下：</p>
 <ul>
   <li>ident_current：取最后一次插入的值，如果从未插入，返回初始值（seed）</li>
@@ -147,15 +147,15 @@ select @ucode</pre>
 <li>ident_seed：取初始值</li>
 </ul>
 <p>另外还可以使用scope_identtity函数（无参数）和系统变量@@identity获取在当前会话内最后插入的identity值，两者之间有细微的差别，但实际上，使用ident_current函数即可解决全部问题，scope_identity和@@identity属于鸡肋功能。</p>
-<h3>N.4.3 手工插入 </h3>
+<h2>手工插入 </h2>
 <p>identity型的字段默认情况下都是由SQL SERVER自动插入，如果要手工插入或更改值的话，需要运行如下命令</p>
-<pre>SET IDENTITY_INSERT [ <i>database</i><b>.</b>[ <i>owner</i><b>.</b>] ] { <i>table </i>} { ON | OFF }</pre>
+<pre class="code" data-type="sql">SET IDENTITY_INSERT [ <i>database</i><b>.</b>[ <i>owner</i><b>.</b>] ] { <i>table </i>} { ON | OFF }</pre>
 <p>任何时候，会话中只有一个表的 IDENTITY_INSERT 属性可以设置为 ON。如果某个表已将此属性设置为 ON，并且为另一个表发出了 SET IDENTITY_INSERT ON 语句，则 Microsoft SQL Server 返回一个错误信息，指出 SET IDENTITY_INSERT 已设置为 ON 并报告此属性已设置为 ON 的表。</p>
 <p>如果插入值大于表的当前标识值，则 SQL Server 自动将新插入值作为当前标识值使用。</p>
 <p>&nbsp;</p>
 <p>&nbsp;</p>
 <p>&nbsp;</p>
 <p>&nbsp;</p>
-<script language="javascript" src="index.js"></script>
+
 </body>
 </html>

@@ -1,26 +1,26 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-"http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html>
+
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=gb2312">
 <title>使用系统对象完成的功能</title>
-<script language="javascript" src="css.js"></script>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
 </head>
 
 <body>
-<h1>第N章 使用系统对象完成的功能</h1>
-<hr>
-<h2>N.1 数据库</h2>
-<h2>N.2 表</h2>
-<h3>N.2.1 获取列的默认值</h3>
-<pre>--获取表test_table的列test_column的默认值
+<p id="title">使用系统对象完成的功能</p>
+
+<h1>数据库</h1>
+<h1>表</h1>
+<h2>获取列的默认值</h2>
+<pre class="code" data-type="sql">--获取表test_table的列test_column的默认值
 select c.text as default_value
 from sysobjects a
   inner join syscolumns b on b.id = a.id
   left join syscomments c on c.id = b.cdefault
 where a.name = 'test_table' and  b.name = 'test_column'</pre>
-<h3>N.2.2 获取表的主键</h3>
-<pre>--获取dbo用户的test_table表的主键列表
+<h2>获取表的主键</h2>
+<pre class="code" data-type="sql">--获取dbo用户的test_table表的主键列表
 sp_pkeys 'test_table', 'dbo'</pre>
 <p>返回结果集的各列说明如下：</p>
 <table width="70%"  border="0" cellspacing="0" cellpadding="0">
@@ -57,6 +57,6 @@ sp_pkeys 'test_table', 'dbo'</pre>
 <p>&nbsp;</p>
 <p>&nbsp;</p>
 <p>&nbsp;</p>
-<script language="javascript" src="index.js"></script>
+
 </body>
 </html>

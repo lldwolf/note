@@ -1,19 +1,19 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-"http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html>
+
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=gb2312">
-<script language="javascript" src="css.js"></script>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
 <title>多服务器</title>
 </head>
 
 <body>
-<h1>第N章 多服务器</h1>
+<p id="title">多服务器</p>
 <p>本章主要讲述如何在SQL语句中访问多个服务器上的属于多个用户的表。</p>
-<h2>N.1 创建链接服务器</h2>
+<h1>创建链接服务器</h1>
 <p>链接服务器用于经常访问或数据量大的情况，其过程如下：</p>
-<h3>N.1.1 创建链接服务器</h3>
-<pre>--创建链接服务器
+<h2>创建链接服务器</h2>
+<pre class="code" data-type="sql">--创建链接服务器
 exec sp_addlinkedserver  'srv_lnk','','SQLOLEDB','远程服务器名或ip地址'
 exec sp_addlinkedsrvlogin 'srv_lnk','false',null,'用户名','密码'
 go</pre>
@@ -63,13 +63,13 @@ go</pre>
   </tr>
 </table>
 <p>示例如下：</p>
-<pre>--链接SQL SERVER
+<pre class="code" data-type="sql">--链接SQL SERVER
 select * from openrowset('SQLOLEDB','192.168.1.72'; 'iou'; 'iou', 'select * from basf.iou.hook_up')
 
 --链接ORACLE
 select * from openrowset('MSDAORA','OEMREP'; 'system'; 'password', 'select * from logmnrc_gsii')</pre>
 <p>访问不同电脑上的数据库(远程只要联好网就一样)，如果经常访问或数据量大,建议用链接服务器</p>
-<pre>--创建链接服务器
+<pre class="code" data-type="sql">--创建链接服务器
 exec sp_addlinkedserver 'srv_lnk','','SQLOLEDB','远程服务器名或ip地址'
 exec sp_addlinkedsrvlogin 'srv_lnk','false',null,'用户名','密码'
 go
@@ -95,6 +95,6 @@ select * into 表 from openrowset('SQLOLEDB', 'sql服务器名';'用户名'</pre>
 <p>&nbsp;</p>
 <p>&nbsp; </p>
 <p>&nbsp;</p>
-<script language="javascript" src="index.js"></script>
+
 </body>
 </html>

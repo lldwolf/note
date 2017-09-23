@@ -1,32 +1,32 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-"http://www.w3.org/TR/html4/loose.dtd">
+﻿<!DOCTYPE html>
+
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<script language="javascript" src="css.js"></script>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
 <title>排序规则（字符集）</title>
 </head>
 
 <body>
-<h1>第N章 排序规则（字符集）</h1>
-<hr>
-<h2><a href="#introduction">N.1 简介</a></h2>
-<h2><a href="#collation">N.2 数据库排序规则 </a></h2>
-<h3>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#set_collation">N.2.1 设定 </a></h3>
-<h3>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#update_collation">N.2.2 更改</a></h3>
-<h3>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#query_collation">N.2.3 查询</a></h3>
-<h2><a href="#table_collation">N.3 数据表列的字符集 </a></h2>
-<h3>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#set_table_collation">N.3.1 设定</a></h3>
-<h3>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#update_table_collation">N.3.2 更改</a> </h3>
-<h3>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#insert_collation_data">N.3.3 插入的允许情况 </a></h3>
-<h2> <a href="#select_collation">N.4 在查询中使用排序规则</a></h2>
-<h3> &nbsp;&nbsp;&nbsp;&nbsp;<a href="#use_collation_select">N.4.1 在查询中使用排序规则</a></h3>
-<h3> &nbsp;&nbsp;&nbsp;&nbsp;<a href="#collation_confict">N.4.2 关联查询时字符集冲突分析</a></h3>
-<h2><a name="introduction"></a>N.1 简介</h2>
+<p id="title">排序规则（字符集）</p>
+
+
+
+<h2>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#set_collation">设定 </a></h2>
+<h2>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#update_collation">更改</a></h2>
+<h2>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#query_collation">查询</a></h2>
+
+<h2>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#set_table_collation">设定</a></h2>
+<h2>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#update_table_collation">更改</a> </h2>
+<h2>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#insert_collation_data">插入的允许情况 </a></h2>
+<h1> <a href="#select_collation">在查询中使用排序规则</a></h1>
+<h2> &nbsp;&nbsp;&nbsp;&nbsp;<a href="#use_collation_select">在查询中使用排序规则</a></h2>
+<h2> &nbsp;&nbsp;&nbsp;&nbsp;<a href="#collation_confict">关联查询时字符集冲突分析</a></h2>
+<h1>简介</h1>
 <p>可在SQL SERVER的帮助中使用索引“Windows 排序规则名称”或“SQL 排序规则名称”。</p>
 <p>对于排序规格的名称，包括如下含义：</p>
 <p>Windows 排序规则名称在 COLLATE 子句中指定 Windows 排序规则名称。Windows 排序规则名称由排序规则指示器和比较风格构成语法</p>
-<pre>&lt;Windows_collation_name&gt; :: = CollationDesignator_&lt;ComparisonStyle&gt;
+<pre class="code" data-type="sql">&lt;Windows_collation_name&gt; :: = CollationDesignator_&lt;ComparisonStyle&gt;
 
 &lt;ComparisonStyle&gt; ::= CaseSensitivity_AccentSensitivity[_KanatypeSensitive [_WidthSensitive ] ] 
 | _BIN </pre>
@@ -47,33 +47,33 @@
 <p>BIN</p>
 <p>指定使用二进制排序次序。
 </p>
-<h2><a name="collation"></a>N.2 数据库排序规则 </h2>
-<h3><a name="set_collation"></a>N.2.1 设定 </h3>
+<h1>数据库排序规则 </h1>
+<h2>设定 </h2>
 <p>创建数据库时的界面如下：</p>
 <p><img src="images/009.jpg" width="506" height="476"></p>
 <p>其中在 “Collation name”选项中填写需要的排序规则，其中中文字符集为“Chinese_PRC_CS_AS”。如果使用中文SQL SERVER，则默认字符集即为“Chinese_PRC_CS_AS”，若为英文SQL SERVER，则默认字符集为“Latin1_General_CI_AS”。强烈建议在建立数据库是手工设定字符集，尤其是在使用中文的情况下，否则以后在数据库迁移或操作时经常会出现一些错误。例如在插入中文时，数据库中的中文字段显示为乱码“????”，则多半是数据库和字段的字符集的问题</p>
-<h3><a name="update_collation"></a>N.2.2 更改 </h3>
+<h2>更改 </h2>
 <p>如果建库时未考虑字符集，其后又想修改，可采用如下方法：</p>
 <p>1、</p>
-<pre>alter database database_name collate Chinese_PRC_CI_AS</pre>
+<pre class="code" data-type="sql">alter database database_name collate Chinese_PRC_CI_AS</pre>
 <p>注意：执行该语句时应关闭所有与该数据库的连接，包括Sql Analysis对该数据库的连接。 </p>
 <p>2、 如果要更改master库的字符集，可用SQL SERVER自带的工具 Rebuildm.exe 更改 Microsoft SQL Server2000 实例的字符集设置</p>
 <p>rebuildm.exe用于更改sql server的默认排序规则，方法为重建master数据库，其界面如下：</p>
 <p><img src="images/rebuildm.jpg" width="467" height="373"></p>
 <p>rebuildm.exe位于\SQL SERVER\80\Tools\Binn下，在使用时需先将系统自带的几个数据库文件拷出来，包括master、tempdb、pubs等，反正只要不是你自己建的库，把所以文件复制到一个目录中去好了，这个目录即为上界面中“包含数据文件的源目录”中的值；然后使用“设置”按钮设置要设定的默认数据库的字符集，然后按“重建”按钮即可，如果出现错误“文件传输错误”之类的，也不用理它，只要查看一下master数据库的排序规则是否已更改即可。</p>
-<h3><a name="query_collation"></a>N.2.3 查询</h3>
+<h2>查询</h2>
 <p>使用存储过程</p>
-<pre>sp_helpdb database_name</pre>
+<pre class="code" data-type="sql">sp_helpdb database_name</pre>
 <p>查询出的第一个结果集的status字段值中有“Collation=?”</p>
-<h2><a name="table_collation"></a>N.3 数据表列的字符集 </h2>
-<h3><a name="set_table_collation"></a>N.3.1 设定 </h3>
+<h1>数据表列的字符集 </h1>
+<h2>设定 </h2>
 <p>在使用SQL SERVER的图形界面创建数据表时，可以使用下面的属性栏来设定各列的字符集：</p>
 <p><img src="images/010.jpg" width="384" height="215"></p>
 <p>即最后的 Collation 属性。</p>
-<h3><a name="update_table_collation"></a>N.3.2 更改 </h3>
+<h2>更改 </h2>
 <p>如果在建表后想再修改某列的字符集，可使用以下语句：</p>
-<pre>alter table Table_Name  ALTER COLUMN Column_Name varchar(10)  COLLATE Chinese_prc_ci_as</pre>
-<h3><a name="insert_collation_data"></a>N.3.3 插入的允许情况</h3>
+<pre class="code" data-type="sql">alter table Table_Name  ALTER COLUMN Column_Name varchar(10)  COLLATE Chinese_prc_ci_as</pre>
+<h2>插入的允许情况</h2>
 <p>ASCII码的测试字符为“Š”</p>
 <p>若数据库字符集为中文，</p>
 <table width="80%"  border="0" cellspacing="0" cellpadding="0">
@@ -145,15 +145,15 @@
     <td><div align="center">Y</div></td>
   </tr>
 </table>
-<h2><a name="select_collation"></a>N.4 在查询中使用排序规则</h2>
-<h3><a name="use_collation_select"></a>N.4.1 在查询中使用排序规则</h3>
+<h1>在查询中使用排序规则</h1>
+<h2>在查询中使用排序规则</h2>
 <p>SQL SERVER默认不区分大小写，如果想在查询中对结果的大小写敏感，可以应用排序规则解决</p>
-<pre>select *
+<pre class="code" data-type="sql">select *
 from 表名
 where 列名 collate Chinese_PRC_CS_AS_WS = '查询内容'</pre>
-<h3><a name="collation_confict"></a>N.4.2 关联查询时字符集冲突分析</h3>
+<h2>关联查询时字符集冲突分析</h2>
 <p>我们使用以下两个建表语句创建两个表：</p>
-<pre>create table table1(
+<pre class="code" data-type="sql">create table table1(
 	[id] varchar(10), 
 	foreign_key varchar(10) collate Latin1_General_CI_AS, 
 	value varchar(10))
@@ -162,17 +162,17 @@ create table table2(
 	[id] varchar(10) collate chinese_prc_ci_as,
 	value varchar(10))</pre>
 <p>如果我们对这两个表使用如下SQL语句进行关联查询：</p>
-<pre>select a.*
+<pre class="code" data-type="sql">select a.*
 from table1 a, table2 b
 where a.foreign_key = b.id</pre>
 <p>则会出现错误：“Cannot resolve collation conflict for equal to operation”。可有如下两种解决方案：</p>
 <p>1、在查询时指定使用的字符集，这样无须对数据库进行任何修改</p>
-<pre>select a.*
+<pre class="code" data-type="sql">select a.*
 from table1 a, table2 b
 where a.foreign_key = b.id collate chinese_prc_ci_as</pre>
 <p>2、使用上节讲述的方案修改 table1.foreign_key 的字符集，然后再做查询</p>
-<pre>alter table table1 alter column foreign_key varchar(10) collate chinese_prc_ci_as</pre>
+<pre class="code" data-type="sql">alter table table1 alter column foreign_key varchar(10) collate chinese_prc_ci_as</pre>
 <p>&nbsp;</p>
-<script language="javascript" src="index.js"></script>
+
 </body>
 </html>

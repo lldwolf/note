@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+    <title>PL/SQL特色语句</title>
+    <script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+    <p id="title">PL/SQL特色语句</p>
+    <h1>rownum</h1>
+    <p>在ORACLE中，查询结果有一个不可见的列rownum，指示结果集中的行号。</p>
+    <p>虽然可以使用 rownum 来限制返回结果的行数，但是如果 SQL 中有 ORDER BY 子句时要特别注意，因为 ROWNUM 并不表示排序后的行号，所以对于有排序要求的子集返回，需要使用如下方式</p>
+    <pre class="code" data-type="sql">select *
+from (select * from table_name order by field_name) a
+where rownum < 100</pre>
+    <h1>update, delete</h1>
+    <p>这两个语句之所以在这里写出来，是因为它的多表关联更改的语法，与SQL Server不同，Oracle 是不支持如下的语法</p>
+    <pre class="code" data-type="sql">update ... from ... 
+delete ... from ...</pre>
+    <p>那么如何进行多表关联修改/删除呢，可参考如下的示例</p>
+    <pre class="code" data-type="sql">--update
+update test_table2 a
+set (a.name, a.desc) = (select b.name, b.desc from test_table1 b where b.id1 = a.id2)
+where a.status = 'active'
+
+--delete
+delete from test_table2 a
+where exists (select * from test_table1 b where b.id1 = a.id1 and b.id1 in (1,2))</pre>
+    <h1>Merge</h1>
+    <p>可以合并两个表的内容，完成如下操作：如果表1没有表2的数据则插入，否则更新</p>
+    <pre class="code" data-type="sql">create table test_table1(id1 number(10), value1 varchar2(10));
+
+create table test_table2(id2 number(10), value2 varchar2(10));
+
+insert into test_table1 values(1, 'aa');
+insert into test_table2 values(1, 'a');
+insert into test_table2 values(2, 'b');
+
+merge into test_table1 a
+using test_table2 b
+on (a.id1 = b.id2)
+when matched then
+  update set a.value1 = b.value2
+when not matched then
+  insert (id1, value1) values(b.id2, b.value2);</pre>
+    <h1>with</h1>
+    <ul>
+        <li>使用With子句，可以避免在Select 语句中重复书写相同的语句块</li>
+        <li>WITH 子句将该子句中的语句块执行一次 并存储到用户的临时表空间中</li>
+        <li>使用 WITH 子句可以提高查询效率</li>
+    </ul>
+    <pre class="code" data-type="sql">With alias_name  as (select ..), 
+alias_name2  as (select ..),
+...
+alias_namenN as (select ..)   
+Select ... from allias_name, allias_name2... </pre>
+    <h1>集合运算符 INTERSECT/MINUS</h1>
+    <p>与 UNION	使用方式相似</p>
+    <table style="width: 600px">
+        <tr>
+            <th>操作符</th>
+            <th>说明</th>
+            <th>图示</th>
+        </tr>
+        <tr>
+            <td>INTERSECT</td>
+            <td>交集</td>
+            <td>
+                <img alt="" src="images/intersect.jpg" /></td>
+        </tr>
+        <tr>
+            <td>MINUS</td>
+            <td>第一个集合减去第二个集合</td>
+            <td>
+                <img alt="" src="images/minus.jpg" /></td>
+        </tr>
+    </table>
+
+    <h1>row_number() 函数</h1>
+    <p>根据指定条件列出每条记录的行号</p>
+    <p>例如，我们建立一张职工考评表如下所示</p>
+    <pre class="code" data-type="sql">create table test_score(
+  employee_name varchar2(50),
+  department varchar2(50),
+  score number(10,2));
+  
+insert into test_score values('Tom', 'I', 50);
+insert into test_score values('Lindong', 'I', 80);
+insert into test_score values('Chet', 'II', 70);
+insert into test_score values('James', 'II', 40);</pre>
+    <p>可使用下面的 SQL 列出员工及其总体考评名次</p>
+    <pre class="code" data-type="sql">select employee_name, row_number() over (order by score desc) as rank from test_score;</pre>
+    <p>可使用下面的 SQL 列出员工及其部门内的考评名次</p>
+    <pre class="code" data-type="sql">select employee_name, row_number() over (partition by department order by score desc) as rank from test_score;</pre>
+    <p>当然也可以组合使用同时列出总名次及部门内名次</p>
+    <pre class="code" data-type="sql">select employee_name, row_number() over (order by score desc) as rank, 
+        row_number() over (partition by department order by score desc) as department_rank 
+from test_score;</pre>
+
+</body>
+</html>

@@ -3,16 +3,16 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
 <title>Insert</title>
-<script type="text/javascript" src="css.js"></script>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
 </head>
 
 <body>
-<h1>第N章 Insert</h1>
-<hr />
+<p id="title">Insert</p>
+
 <p>传统的Insert就不讲了，在这里只讲一下在SQL中的一些特殊用法。</p>
-<h2>N.1 插入Identity字段</h2>
+<h1>插入Identity字段</h1>
 <p>identity型的字段默认情况下都是由SQL SERVER自动插入，如果要手工插入或更改值的话，需要运行如下命令</p>
-<pre>SET IDENTITY_INSERT [ <i>database</i><b>.</b>[ <i>owner</i><b>.</b>] ] { <i>table </i>} { ON | OFF }</pre>
+<pre class="code" data-type="sql">SET IDENTITY_INSERT [ <i>database</i><b>.</b>[ <i>owner</i><b>.</b>] ] { <i>table </i>} { ON | OFF }</pre>
 <p>任何时候，会话中只有一个表的 IDENTITY_INSERT 属性可以设置为 ON。如果某个表已将此属性设置为 ON，并且为另一个表发出了 SET IDENTITY_INSERT ON 语句，则 Microsoft SQL Server 返回一个错误信息，指出 SET IDENTITY_INSERT 已设置为 ON 并报告此属性已设置为 ON 的表。</p>
 <p>如果插入值大于表的当前标识值，则 SQL Server 自动将新插入值作为当前标识值使用。</p>
 <p>&nbsp;</p>
@@ -20,6 +20,6 @@
 <p>&nbsp;</p>
 <p>&nbsp;</p>
 <p>&nbsp;</p>
-<script type="text/javascript" src="index.js"></script>
+
 </body>
 </html>

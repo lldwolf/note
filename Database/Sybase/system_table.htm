@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+	<script type="text/javascript" src="../../mylib/js/css.js"></script>
+	<title>Sybase Note</title>
+</head>
+
+<body>
+	<p id="title">系统信息</p>
+	<h1>Table 信息</h1>
+    <pre class="code" data-type="sql">
+-- 根据表名查找表
+select * from sysobjects where name like '%table_name%' and type = 'U'
+
+-- 根据列名查找表
+select a.name table_name
+from sysobjects a, syscolumns b
+where a.id = b.id and a.type = 'U' and b.name like 'column_name'
+
+-- 查看表信息
+sp_help [table_name]
+    </pre>
+    <h1>存储过程</h1>
+    <pre class="code" data-type="sql">
+-- 查看存储过程内容
+sp_helptext [sp_name]
+    </pre>
+	</body>
+</html>

@@ -1,18 +1,18 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-"http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html>
+
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=gb2312">
-<script language="javascript" src="css.js"></script>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
 <title>系统变量</title>
 </head>
 
 <body>
-<h1>第N章 系统变量</h1>
+<p id="title">系统变量</p>
 <p>取当前用户进程的进程ID，登录名和用户名</p>
-<pre>SELECT @@SPID AS 'ID', SYSTEM_USER AS 'Login Name', USER AS 'User Name'</pre>
-<h2>N.1 SQL SERVER 信息</h2>
-<h3>N.1.1 语言</h3>
+<pre class="code" data-type="sql">SELECT @@SPID AS 'ID', SYSTEM_USER AS 'Login Name', USER AS 'User Name'</pre>
+<h1>SQL SERVER 信息</h1>
+<h2>语言</h2>
 <p>@@langid 和 @@language</p>
 <p>@@langid的含义可使用不带参数的存储过程sp_helplanguage查询</p>
 <p>&nbsp;</p>
@@ -20,6 +20,6 @@
 <p>&nbsp;</p>
 <p>&nbsp;</p>
 <p>&nbsp;</p>
-<script language="javascript" src="index.js"></script>
+
 </body>
 </html>

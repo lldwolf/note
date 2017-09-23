@@ -1,14 +1,14 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-"http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html>
+
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=gb2312">
-<script language="javascript" src="css.js"></script>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
 <title>系统参数</title>
 </head>
 
 <body>
-<h1>第N章 系统参数</h1>
+<p id="title">系统参数</p>
 <table width="100%" >
   <tr>
     <th width="30%">系统参数</th>
@@ -55,17 +55,17 @@
     <td>&nbsp;</td>
   </tr>
 </table>
-<h2><a name="nocount"></a>nocount</h2>
+<h1>nocount</h1>
 <p>在执行SQL语句时，例如insert，系统会返回有多少行受到了影响，该参数即关闭该信息。</p>
-<h2><a name="identity_insert"></a>identity_insert</h2>
+<h1>identity_insert</h1>
 <p>该参数确定是能否手工插入identity列。</p>
 <p>语法：</p>
-<pre>set identity_insert 表名 on
+<pre class="code" data-type="sql">set identity_insert 表名 on
 --insert 语句
 set identity_insert 表名 off</pre>
 <p>&nbsp; </p>
 <p>&nbsp;</p>
-<script language="javascript" src="index.js"></script>
+
 
 </body>
 </html>

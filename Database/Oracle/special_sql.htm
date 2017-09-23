@@ -1,22 +1,26 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-"http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html>
+
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
-<script language="javascript" src="css.js"></script>
-<title>特殊情况处理</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+	<script type="text/javascript" src="../../mylib/js/css.js"></script>
+	<title>特殊情况处理</title>
 </head>
 
 <body>
-<h1>第N章 特殊情况处理</h1>
-<h2>N.1 特殊字符</h2>
-<h3>N.1.1 如何在查询条件中查询带'%'的字符串</h3>
-<pre>select * from test_table2 where val like '%\%%' escape '\'</pre>
-<h2>N.2 NULL</h2>
-<p>在ORACLE中，NULL值有很多独特的性质，在编程时要特别加以注意。</p>
-<h3>N.2.1 NULL值与空字符串''</h3>
-<p>在ORACLE中，空字符串会自动转换为NULL，在查询时，如果以空字符串为查询条件，将不会得到需要的结果，举例如下：</p>
-<pre>--创建测试表
+	<p id="title">特殊情况处理</p>
+	<h1>特殊字符</h1>
+	<h2>如何在查询条件中查询带'%'的字符串</h2>
+	<pre class="code" data-type="sql">select * from test_table2 where val like '%\%%' escape '\'</pre>
+	<h2>如何查询条件中带 '&amp;' 的字符串</h2>
+	<p>默认情况下，&amp; 符号被作为参数标识，可使用如下方式关闭</p>
+	<pre class="code" data-type="sql">SET DEFINE OFF
+select * from test_table where val like '&amp;';</pre>
+	<h1>NULL</h1>
+	<p>在ORACLE中，NULL值有很多独特的性质，在编程时要特别加以注意。</p>
+	<h2>NULL值与空字符串''</h2>
+	<p>在ORACLE中，空字符串会自动转换为NULL，在查询时，如果以空字符串为查询条件，将不会得到需要的结果，举例如下：</p>
+	<pre class="code" data-type="sql">--创建测试表
 create table test_table(f1 varchar2(10), f2 varchar2(10);
 
 --插入测试数据
@@ -27,15 +31,15 @@ select * from test_table where f2 = '';
 
 --应使用下面的查询语句
 select * from test_table where f2 is null</pre>
-<h3>N.2.2 NULL与串合并</h3>
-<p>NULL与其它字符串合并后结果与被合并的字符串值相同，等同于一个空字符串与另一个字符串合并，举例如下：</p>
-<pre>--结果为'abc'
+	<h2>NULL与串合并</h2>
+	<p>NULL与其它字符串合并后结果与被合并的字符串值相同，等同于一个空字符串与另一个字符串合并，举例如下：</p>
+	<pre class="code" data-type="sql">--结果为'abc'
 select null || 'abc' from dual</pre>
-<p>这个特性在编程时很有用，例如在存储过程中，需要使用传入的参数作为查询条件，但如果传入的是一个空字符串，ORACLE会任为是一个NULL值，使用操作符“= ”将不会返回任何结果，那么就可利用这个特性，例如：</p>
-<pre>where field_name || 'random value' = parameter || 'random value'</pre>
-<h3>N.2.3 NULL与LIKE</h3>
-<p>对于值为NULL的记录，LIKE会跳过，例如：</p>
-<pre>--创建测试表
+	<p>这个特性在编程时很有用，例如在存储过程中，需要使用传入的参数作为查询条件，但如果传入的是一个空字符串，ORACLE会任为是一个NULL值，使用操作符“= ”将不会返回任何结果，那么就可利用这个特性，例如：</p>
+	<pre class="code" data-type="sql">where field_name || 'random value' = parameter || 'random value'</pre>
+	<h2>NULL与LIKE</h2>
+	<p>对于值为NULL的记录，LIKE会跳过，例如：</p>
+	<pre class="code" data-type="sql">--创建测试表
 create table test_table(f1 varchar2(10), f2 varchar2(10);
 
 --插入测试数据
@@ -46,9 +50,9 @@ select * from test_table where f2 not like 'a%'
 
 --下面的语句同样不返回任何结果
 select * from test_table where f2 like 'a%'</pre>
-<p>因此在查询时如果用not like的话，一定要加上语句“or field_name is null”，以保证返回的结果集完整。</p>
-<p>&nbsp;</p>
-<p>&nbsp;</p>
-<script language="javascript" src="index.js"></script>
+	<p>因此在查询时如果用not like的话，一定要加上语句“or field_name is null”，以保证返回的结果集完整。</p>
+	<p>&nbsp;</p>
+	<p>&nbsp;</p>
+
 </body>
 </html>

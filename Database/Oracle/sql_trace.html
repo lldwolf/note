@@ -1,19 +1,16 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
 <title>跟踪SQL</title>
-<script language="javascript" src="css.js"></script>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
 </head>
 
 <body>
-<h1>第N章 跟踪SQL</h1>
-<hr />
-<h2><a href="#sql_trace">N.1 使用SQL_TRACE </a></h2>
-<h2><a href="#system_table">N.2 使用系统表</a></h2>
-<hr />
-<h2><a name="sql_trace" id="sql_trace"></a>N.1 使用SQL_TRACE </h2>
-<h3>N.1.1 快速指南 </h3>
+<p id="title">跟踪SQL</p>
+
+<h1>使用SQL_TRACE </h1>
+<h2>快速指南 </h2>
 <p>本章介绍使用SQL_TRACE跟踪SQL语句，要使用SQL_TRACE，必须使用SYS用户，使用SYSDBA身份登录，下列的命令使用SQL*PLUS或pl/sql developer的Command窗口。 </p>
 <p>以跟踪INTOOLS为例，首先使用如下SQL语句获取INTOOLS的SESSION信息</p>
 <pre>select sid, serial#, username from v$session;</pre>
@@ -91,7 +88,7 @@ userid  userid of user that parsed the cursor<br />
   </tr>
 </table>
 <p>其中比较有用的一个排序选项是fchela，即按照elapsed time fetching来对分析的结果排序（记住要设置初始化参数time_statistics=true），生成的.prf文件将把最消耗时间的sql放在最前面显示。另外一个有用的参数就是sys， 这个参数设置为no可以阻止所有以sys用户执行的sql被显示出来，这样可以减少分析出来的文件的复杂度，便于查看。</p>
-<h3>N.1.2 详细介绍</h3>
+<h2>详细介绍</h2>
 <p>SQL_TRACE可以作为初始化参数在全局启用，也可以通过命令行方式在具体session启用。</p>
 <p>若在全局启用，则在参数文件（pfile/spfile）中指定:</p>
 <pre>sql_trace=true</pre>
@@ -105,7 +102,7 @@ alter session set sql_trace=true;
 --停止
 alter session set sql_trace=false;</pre>
 <p>跟踪其它用户的进程已在N.1.1节中介绍。</p>
-<h3>N.1.3 10046事件说明</h3>
+<h2>10046事件说明</h2>
 <p>10046事件是Oracle提供的内部事件，是对SQL_TRACE的增强.
 10046事件可以设置以下四个级别:</p>
 <ul>
@@ -115,10 +112,10 @@ alter session set sql_trace=false;</pre>
   <li> 12 - Level 1 + Level 4 + Level 8</li>
 </ul>
 <p> 类似sql_trace，10046事件可以在全局设置，也可以在session级设置。</p>
-<h4>N.1.3.1 在全局中设置</h4>
+<h3>在全局中设置</h3>
 <p>在参数文件中增加：</p>
 <pre>event=&quot;10046 trace name context forever,level 12&quot;</pre>
-<h4>N.1.3.2 对当前session设置</h4>
+<h3>对当前session设置</h3>
 <p>通过alter session的方式修改，需要alter session的系统权限:</p>
 <pre>SQL> alter session set events '10046 trace name context forever';
 Session altered.
@@ -126,7 +123,7 @@ SQL> alter session set events '10046 trace name context forever, level 8';
 Session altered.
 SQL> alter session set events '10046 trace name context off';
 Session altered.</pre>
-<h4>N.1.3.3 对其它用户session的设置 </h4>
+<h3>对其它用户session的设置 </h3>
 <p>通过DBMS_SYSTEM.SET_EV系统包来实现，它有5个参数，依次为：</p>
 <ul>
   <li>SI: sid</li>
@@ -152,7 +149,7 @@ PL/SQL procedure successfully completed.
 SQL> exec dbms_system.set_ev(9,437,10046,0,'eygle');
 
 PL/SQL procedure successfully completed.</pre>
-<h3>N.1.4 读取当前session设置的参数</h3>
+<h2>读取当前session设置的参数</h2>
 <p>当我们通过alter session的方式设置了sql_trace,这个设置是不能通过show parameter的方式得到的,我们需要通过dbms_system.read_ev来获取：</p>
 <pre>SQL> set feedback off
 SQL> set serveroutput on 
@@ -173,7 +170,7 @@ SQL> declare
 15 end; 
 16 /
 Event 10046 is set at level 1</pre>
-<h3>N.1.5 tkprof介绍</h3>
+<h2>tkprof介绍</h2>
 <p>首先解释输出文件中列的含义：</p>
 <ul>
   <li>         CALL：每次SQL语句的处理都分成三个部分</li>
@@ -205,7 +202,7 @@ Event 10046 is set at level 1</pre>
 <li>列出这个语句的执行计划。</li></ul>
 </li>
 </ol>
-<h3>N.1.6 .trc文件分析</h3>
+<h2>.trc文件分析</h2>
 <p>文本总结了trace结果原始输出文件中的内容。</p>
 <p>----------------------------------------------------------------------------<br />
   APPNAME   mod='%s' mh=%lu act='%s'   ah=%lu<br />
@@ -340,8 +337,8 @@ Event 10046 is set at level 1</pre>
   WAIT #1: nam=&quot;db file sequential read&quot; ela= 4 p1=4   p2=1224 p3=1<br />
   在游标1上经历了&quot;db file sequential read&quot;等待事件，一共等了0.04秒，在读取file 4，block   1224，读取了这一个block</p>
 <p>对于每一个等待事件的含义和p1,p2,p3表示的意思，可以参考<a href="http://download-west.oracle.com/docs/cd/B10501_01/server.920/a96536/toc.htm">Oracle   Database Reference</a>文档的<a href="http://download-west.oracle.com/docs/cd/B10501_01/server.920/a96536/apa.htm#968373">Oracle   Wait Events</a>章节。</p>
-<h2><a name="system_table" id="system_table"></a>N.2 使用系统表</h2>
-<h3>N.2.1 V$SQL与V$SQLTEXT </h3>
+<h1>使用系统表</h1>
+<h2>V$SQL与V$SQLTEXT </h2>
 <p>ORACLE没有提供类似于SQL SERVER的事件探查器那样的工具来跟踪后台发生的SQL语句，如果想跟踪的话，需通过v$sql和v$sqltext这两个系统对象，这两个系统对象与dual系统对象一样，完全由ORACLE来控制，用户只能查询，无法进行插入、删除操作。</p>
 <p>v$sql可以查询发生的SQL语句，但如果语句过长的话，需通过v$sqltext查看完整的SQL语句，两者使用 address 和 hash_value 两个值进行关联。</p>
 <p>其中 address 是一个长度为4的byte数组，其值为该数组内容的的16进制表达式串联而成，例如[22, 39, 184, 164], 则对应的 address 值为 1627B8A4。</p>
@@ -385,382 +382,382 @@ Event 10046 is set at level 1</pre>
     <td>发出该SQL语句请求的用户ID</td>
   </tr>
 </table>
-<h3>N.2.2 V$SQL的完整说明</h3>
+<h2>V$SQL的完整说明</h2>
 <table summary="" class="InformalWide" border="1" frame="hsides" rules="groups" width="100%" cellpadding="3" cellspacing="0" dir="ltr" title="">
   <thead>
     <tr class="Informal">
-      <th width="10%" align="left" valign="bottom" class="Informal" scope="col"><a name="1124444" id="1124444"></a> <font face="Arial, Helvetica, sans-serif"><strong>Column</strong></font></th>
-      <th width="10%" align="left" valign="bottom" class="Informal" scope="col"><a name="1124446" id="1124446"></a> <font face="Arial, Helvetica, sans-serif"><strong>Datatype</strong></font></th>
-      <th width="80%" align="left" valign="bottom" class="Informal" scope="col"><a name="1124448" id="1124448"></a> <font face="Arial, Helvetica, sans-serif"><strong>Description</strong></font></th>
+      <th width="10%" align="left" valign="bottom" class="Informal" scope="col"> <font face="Arial, Helvetica, sans-serif"><strong>Column</strong></font></th>
+      <th width="10%" align="left" valign="bottom" class="Informal" scope="col"> <font face="Arial, Helvetica, sans-serif"><strong>Datatype</strong></font></th>
+      <th width="80%" align="left" valign="bottom" class="Informal" scope="col"> <font face="Arial, Helvetica, sans-serif"><strong>Description</strong></font></th>
     </tr>
   </thead>
   <tbody>
     <tr class="Informal" align="left" valign="top">
-      <td class="Informal"><a name="1124450" id="1124450"></a>
+      <td class="Informal">
           <p class="TB"><code>SQL_TEXT</code></p></td>
-      <td class="Informal"><a name="1124452" id="1124452"></a>
+      <td class="Informal">
           <p class="TB"><code>VARCHAR2(1000)</code></p></td>
-      <td class="Informal"><a name="1124454" id="1124454"></a>
+      <td class="Informal">
           <p class="TB">First thousand characters of the SQL text for the current cursor</p></td>
     </tr>
     <tr class="Informal" align="left" valign="top">
-      <td class="Informal"><a name="1124456" id="1124456"></a>
+      <td class="Informal">
           <p class="TB"><code>SHARABLE_MEM</code></p></td>
-      <td class="Informal"><a name="1124458" id="1124458"></a>
+      <td class="Informal">
           <p class="TB"><code>NUMBER</code></p></td>
-      <td class="Informal"><a name="1124460" id="1124460"></a>
+      <td class="Informal">
           <p class="TB">Amount of shared memory used by this child cursor (in bytes)</p></td>
     </tr>
     <tr class="Informal" align="left" valign="top">
-      <td class="Informal"><a name="1124462" id="1124462"></a>
+      <td class="Informal">
           <p class="TB"><code>PERSISTENT_MEM</code></p></td>
-      <td class="Informal"><a name="1124464" id="1124464"></a>
+      <td class="Informal">
           <p class="TB"><code>NUMBER</code></p></td>
-      <td class="Informal"><a name="1124466" id="1124466"></a>
+      <td class="Informal">
           <p class="TB">Fixed amount of memory used for the lifetime of this child cursor (in bytes)</p></td>
     </tr>
     <tr class="Informal" align="left" valign="top">
-      <td class="Informal"><a name="1124468" id="1124468"></a>
+      <td class="Informal">
           <p class="TB"><code>RUNTIME_MEM</code></p></td>
-      <td class="Informal"><a name="1124470" id="1124470"></a>
+      <td class="Informal">
           <p class="TB"><code>NUMBER</code></p></td>
-      <td class="Informal"><a name="1124472" id="1124472"></a>
+      <td class="Informal">
           <p class="TB">Fixed amount of memory required during the execution of this child cursor</p></td>
     </tr>
     <tr class="Informal" align="left" valign="top">
-      <td class="Informal"><a name="1124474" id="1124474"></a>
+      <td class="Informal">
           <p class="TB"><code>SORTS</code></p></td>
-      <td class="Informal"><a name="1124476" id="1124476"></a>
+      <td class="Informal">
           <p class="TB"><code>NUMBER</code></p></td>
-      <td class="Informal"><a name="1124478" id="1124478"></a>
+      <td class="Informal">
           <p class="TB">Number of sorts that were done for this child cursor</p></td>
     </tr>
     <tr class="Informal" align="left" valign="top">
-      <td class="Informal"><a name="1124480" id="1124480"></a>
+      <td class="Informal">
           <p class="TB"><code>LOADED_VERSIONS</code></p></td>
-      <td class="Informal"><a name="1124482" id="1124482"></a>
+      <td class="Informal">
           <p class="TB"><code>NUMBER</code></p></td>
-      <td class="Informal"><a name="1124484" id="1124484"></a>
+      <td class="Informal">
           <p class="TB">Indicates whether the context heap is loaded (<code>1</code>) or not (<code>0</code>)</p></td>
     </tr>
     <tr class="Informal" align="left" valign="top">
-      <td class="Informal"><a name="1124486" id="1124486"></a>
+      <td class="Informal">
           <p class="TB"><code>OPEN_VERSIONS</code></p></td>
-      <td class="Informal"><a name="1124488" id="1124488"></a>
+      <td class="Informal">
           <p class="TB"><code>NUMBER</code></p></td>
-      <td class="Informal"><a name="1124490" id="1124490"></a>
+      <td class="Informal">
           <p class="TB">Indicates whether the child cursor is locked (<code>1</code>) or not (<code>0</code>)</p></td>
     </tr>
     <tr class="Informal" align="left" valign="top">
-      <td class="Informal"><a name="1124492" id="1124492"></a>
+      <td class="Informal">
           <p class="TB"><code>USERS_OPENING</code></p></td>
-      <td class="Informal"><a name="1124494" id="1124494"></a>
+      <td class="Informal">
           <p class="TB"><code>NUMBER</code></p></td>
-      <td class="Informal"><a name="1124496" id="1124496"></a>
+      <td class="Informal">
           <p class="TB">Number of users executing the statement</p></td>
     </tr>
     <tr class="Informal" align="left" valign="top">
-      <td class="Informal"><a name="1124498" id="1124498"></a>
+      <td class="Informal">
           <p class="TB"><code>FETCHES</code></p></td>
-      <td class="Informal"><a name="1124500" id="1124500"></a>
+      <td class="Informal">
           <p class="TB"><code>NUMBER</code></p></td>
-      <td class="Informal"><a name="1124502" id="1124502"></a>
+      <td class="Informal">
           <p class="TB">Number of fetches associated with the SQL statement</p></td>
     </tr>
     <tr class="Informal" align="left" valign="top">
-      <td class="Informal"><a name="1124504" id="1124504"></a>
+      <td class="Informal">
           <p class="TB"><code>EXECUTIONS</code></p></td>
-      <td class="Informal"><a name="1124506" id="1124506"></a>
+      <td class="Informal">
           <p class="TB"><code>NUMBER</code></p></td>
-      <td class="Informal"><a name="1124508" id="1124508"></a>
+      <td class="Informal">
           <p class="TB">Number of executions that took place on this object since it was brought into the library cache</p></td>
     </tr>
     <tr class="Informal" align="left" valign="top">
-      <td class="Informal"><a name="1124510" id="1124510"></a>
+      <td class="Informal">
           <p class="TB"><code>USERS_EXECUTING</code></p></td>
-      <td class="Informal"><a name="1124512" id="1124512"></a>
+      <td class="Informal">
           <p class="TB"><code>NUMBER</code></p></td>
-      <td class="Informal"><a name="1124514" id="1124514"></a>
+      <td class="Informal">
           <p class="TB">Number of users executing the statement</p></td>
     </tr>
     <tr class="Informal" align="left" valign="top">
-      <td class="Informal"><a name="1124516" id="1124516"></a>
+      <td class="Informal">
           <p class="TB"><code>LOADS</code></p></td>
-      <td class="Informal"><a name="1124518" id="1124518"></a>
+      <td class="Informal">
           <p class="TB"><code>NUMBER</code></p></td>
-      <td class="Informal"><a name="1124520" id="1124520"></a>
+      <td class="Informal">
           <p class="TB">Number of times the object was either loaded or reloaded</p></td>
     </tr>
     <tr class="Informal" align="left" valign="top">
-      <td class="Informal"><a name="1124522" id="1124522"></a>
+      <td class="Informal">
           <p class="TB"><code>FIRST_LOAD_TIME</code></p></td>
-      <td class="Informal"><a name="1124524" id="1124524"></a>
+      <td class="Informal">
           <p class="TB"><code>VARCHAR2(19)</code></p></td>
-      <td class="Informal"><a name="1124526" id="1124526"></a>
+      <td class="Informal">
           <p class="TB">Timestamp of the parent creation time</p></td>
     </tr>
     <tr class="Informal" align="left" valign="top">
-      <td class="Informal"><a name="1124528" id="1124528"></a>
+      <td class="Informal">
           <p class="TB"><code>INVALIDATIONS</code></p></td>
-      <td class="Informal"><a name="1124530" id="1124530"></a>
+      <td class="Informal">
           <p class="TB"><code>NUMBER</code></p></td>
-      <td class="Informal"><a name="1124532" id="1124532"></a>
+      <td class="Informal">
           <p class="TB">Number of times this child cursor has been invalidated</p></td>
     </tr>
     <tr class="Informal" align="left" valign="top">
-      <td class="Informal"><a name="1124534" id="1124534"></a>
+      <td class="Informal">
           <p class="TB"><code>PARSE_CALLS</code></p></td>
-      <td class="Informal"><a name="1124536" id="1124536"></a>
+      <td class="Informal">
           <p class="TB"><code>NUMBER</code></p></td>
-      <td class="Informal"><a name="1124538" id="1124538"></a>
+      <td class="Informal">
           <p class="TB">Number of parse calls for this child cursor</p></td>
     </tr>
     <tr class="Informal" align="left" valign="top">
-      <td class="Informal"><a name="1124540" id="1124540"></a>
+      <td class="Informal">
           <p class="TB"><code>DISK_READS</code></p></td>
-      <td class="Informal"><a name="1124542" id="1124542"></a>
+      <td class="Informal">
           <p class="TB"><code>NUMBER</code></p></td>
-      <td class="Informal"><a name="1124544" id="1124544"></a>
+      <td class="Informal">
           <p class="TB">Number of disk reads for this child cursor</p></td>
     </tr>
     <tr class="Informal" align="left" valign="top">
-      <td class="Informal"><a name="1124546" id="1124546"></a>
+      <td class="Informal">
           <p class="TB"><code>BUFFER_GETS</code></p></td>
-      <td class="Informal"><a name="1124548" id="1124548"></a>
+      <td class="Informal">
           <p class="TB"><code>NUMBER</code></p></td>
-      <td class="Informal"><a name="1124550" id="1124550"></a>
+      <td class="Informal">
           <p class="TB">Number of buffer gets for this child cursor</p></td>
     </tr>
     <tr class="Informal" align="left" valign="top">
-      <td class="Informal"><a name="1124552" id="1124552"></a>
+      <td class="Informal">
           <p class="TB"><code>ROWS_PROCESSED</code></p></td>
-      <td class="Informal"><a name="1124554" id="1124554"></a>
+      <td class="Informal">
           <p class="TB"><code>NUMBER</code></p></td>
-      <td class="Informal"><a name="1124556" id="1124556"></a>
+      <td class="Informal">
           <p class="TB">Total number of rows the parsed SQL statement returns</p></td>
     </tr>
     <tr class="Informal" align="left" valign="top">
-      <td class="Informal"><a name="1124558" id="1124558"></a>
+      <td class="Informal">
           <p class="TB"><code>COMMAND_TYPE</code></p></td>
-      <td class="Informal"><a name="1124560" id="1124560"></a>
+      <td class="Informal">
           <p class="TB"><code>NUMBER</code></p></td>
-      <td class="Informal"><a name="1124562" id="1124562"></a>
+      <td class="Informal">
           <p class="TB">Oracle command type definition</p></td>
     </tr>
     <tr class="Informal" align="left" valign="top">
-      <td class="Informal"><a name="1124564" id="1124564"></a>
+      <td class="Informal">
           <p class="TB"><code>OPTIMIZER_MODE</code></p></td>
-      <td class="Informal"><a name="1124566" id="1124566"></a>
+      <td class="Informal">
           <p class="TB"><code>VARCHAR2(10)</code></p></td>
-      <td class="Informal"><a name="1124568" id="1124568"></a>
+      <td class="Informal">
           <p class="TB">Mode under which the SQL statement is executed</p></td>
     </tr>
     <tr class="Informal" align="left" valign="top">
-      <td class="Informal"><a name="1124570" id="1124570"></a>
+      <td class="Informal">
           <p class="TB"><code>OPTIMIZER_COST</code></p></td>
-      <td class="Informal"><a name="1124572" id="1124572"></a>
+      <td class="Informal">
           <p class="TB"><code>NUMBER</code></p></td>
-      <td class="Informal"><a name="1124574" id="1124574"></a>
+      <td class="Informal">
           <p class="TB">Cost of this query given by the optimizer</p></td>
     </tr>
     <tr class="Informal" align="left" valign="top">
-      <td class="Informal"><a name="1124576" id="1124576"></a>
+      <td class="Informal">
           <p class="TB"><code>PARSING_USER_ID</code></p></td>
-      <td class="Informal"><a name="1124578" id="1124578"></a>
+      <td class="Informal">
           <p class="TB"><code>NUMBER</code></p></td>
-      <td class="Informal"><a name="1124580" id="1124580"></a>
+      <td class="Informal">
           <p class="TB">User ID of the user who originally built this child cursor</p></td>
     </tr>
     <tr class="Informal" align="left" valign="top">
-      <td class="Informal"><a name="1124582" id="1124582"></a>
+      <td class="Informal">
           <p class="TB"><code>PARSING_SCHEMA_ID</code></p></td>
-      <td class="Informal"><a name="1124584" id="1124584"></a>
+      <td class="Informal">
           <p class="TB"><code>NUMBER</code></p></td>
-      <td class="Informal"><a name="1124586" id="1124586"></a>
+      <td class="Informal">
           <p class="TB">Schema ID that was used to originally build this child cursor</p></td>
     </tr>
     <tr class="Informal" align="left" valign="top">
-      <td class="Informal"><a name="1124588" id="1124588"></a>
+      <td class="Informal">
           <p class="TB"><code>KEPT_VERSIONS</code></p></td>
-      <td class="Informal"><a name="1124590" id="1124590"></a>
+      <td class="Informal">
           <p class="TB"><code>NUMBER</code></p></td>
-      <td class="Informal"><a name="1124592" id="1124592"></a>
+      <td class="Informal">
           <p class="TB">Indicates whether this child cursor has been marked to be kept pinned in the cache using the <code>DBMS_SHARED_POOL</code> package</p></td>
     </tr>
     <tr class="Informal" align="left" valign="top">
-      <td class="Informal"><a name="1124594" id="1124594"></a>
+      <td class="Informal">
           <p class="TB"><code>ADDRESS</code></p></td>
-      <td class="Informal"><a name="1124596" id="1124596"></a>
+      <td class="Informal">
           <p class="TB"><code>RAW(4 | 8)</code></p></td>
-      <td class="Informal"><a name="1124598" id="1124598"></a>
+      <td class="Informal">
           <p class="TB">Address of the handle to the parent for this cursor</p></td>
     </tr>
     <tr class="Informal" align="left" valign="top">
-      <td class="Informal"><a name="1124600" id="1124600"></a>
+      <td class="Informal">
           <p class="TB"><code>TYPE_CHK_HEAP</code></p></td>
-      <td class="Informal"><a name="1124602" id="1124602"></a>
+      <td class="Informal">
           <p class="TB"><code>RAW(4)</code></p></td>
-      <td class="Informal"><a name="1124604" id="1124604"></a>
+      <td class="Informal">
           <p class="TB">Descriptor of the type check heap for this child cursor</p></td>
     </tr>
     <tr class="Informal" align="left" valign="top">
-      <td class="Informal"><a name="1124606" id="1124606"></a>
+      <td class="Informal">
           <p class="TB"><code>HASH_VALUE</code></p></td>
-      <td class="Informal"><a name="1124608" id="1124608"></a>
+      <td class="Informal">
           <p class="TB"><code>NUMBER</code></p></td>
-      <td class="Informal"><a name="1124610" id="1124610"></a>
+      <td class="Informal">
           <p class="TB">Hash value of the parent statement in the library cache</p></td>
     </tr>
     <tr class="Informal" align="left" valign="top">
-      <td class="Informal"><a name="1124612" id="1124612"></a>
+      <td class="Informal">
           <p class="TB"><code>PLAN_HASH_VALUE</code></p></td>
-      <td class="Informal"><a name="1124614" id="1124614"></a>
+      <td class="Informal">
           <p class="TB"><code>NUMBER</code></p></td>
-      <td class="Informal"><a name="1124616" id="1124616"></a>
+      <td class="Informal">
           <p class="TB">Numerical representation of the SQL plan for this cursor. Comparing one <code>PLAN_HASH_VALUE</code> to another easily identifies whether or not two plans are the same (rather than comparing the two plans line by line).</p></td>
     </tr>
     <tr class="Informal" align="left" valign="top">
-      <td class="Informal"><a name="1124618" id="1124618"></a>
+      <td class="Informal">
           <p class="TB"><code>CHILD_NUMBER</code></p></td>
-      <td class="Informal"><a name="1124620" id="1124620"></a>
+      <td class="Informal">
           <p class="TB"><code>NUMBER</code></p></td>
-      <td class="Informal"><a name="1124622" id="1124622"></a>
+      <td class="Informal">
           <p class="TB">Number of this child cursor</p></td>
     </tr>
     <tr class="Informal" align="left" valign="top">
-      <td class="Informal"><a name="1124624" id="1124624"></a>
+      <td class="Informal">
           <p class="TB"><code>MODULE</code></p></td>
-      <td class="Informal"><a name="1124626" id="1124626"></a>
+      <td class="Informal">
           <p class="TB"><code>VARCHAR2(64)</code></p></td>
-      <td class="Informal"><a name="1124628" id="1124628"></a>
+      <td class="Informal">
           <p class="TB">Contains the name of the module that was executing at the time that the SQL statement was first parsed, which is set by calling <code>DBMS_APPLICATION_INFO</code>.<code>SET_MODULE</code></p></td>
     </tr>
     <tr class="Informal" align="left" valign="top">
-      <td class="Informal"><a name="1124630" id="1124630"></a>
+      <td class="Informal">
           <p class="TB"><code>MODULE_HASH</code></p></td>
-      <td class="Informal"><a name="1124632" id="1124632"></a>
+      <td class="Informal">
           <p class="TB"><code>NUMBER</code></p></td>
-      <td class="Informal"><a name="1124634" id="1124634"></a>
+      <td class="Informal">
           <p class="TB">Hash value of the module listed in the <code>MODULE</code> column</p></td>
     </tr>
     <tr class="Informal" align="left" valign="top">
-      <td class="Informal"><a name="1124636" id="1124636"></a>
+      <td class="Informal">
           <p class="TB"><code>ACTION</code></p></td>
-      <td class="Informal"><a name="1124638" id="1124638"></a>
+      <td class="Informal">
           <p class="TB"><code>VARCHAR2(64)</code></p></td>
-      <td class="Informal"><a name="1124640" id="1124640"></a>
+      <td class="Informal">
           <p class="TB">Contains the name of the action that was executing at the time that the SQL statement was first parsed, which is set by calling <code>DBMS_APPLICATION_INFO</code>.<code>SET_ACTION</code></p></td>
     </tr>
     <tr class="Informal" align="left" valign="top">
-      <td class="Informal"><a name="1124642" id="1124642"></a>
+      <td class="Informal">
           <p class="TB"><code>ACTION_HASH</code></p></td>
-      <td class="Informal"><a name="1124644" id="1124644"></a>
+      <td class="Informal">
           <p class="TB"><code>NUMBER</code></p></td>
-      <td class="Informal"><a name="1124646" id="1124646"></a>
+      <td class="Informal">
           <p class="TB">Hash value of the action listed in the <code>ACTION</code> column</p></td>
     </tr>
     <tr class="Informal" align="left" valign="top">
-      <td class="Informal"><a name="1124648" id="1124648"></a>
+      <td class="Informal">
           <p class="TB"><code>SERIALIZABLE_ABORTS</code></p></td>
-      <td class="Informal"><a name="1124650" id="1124650"></a>
+      <td class="Informal">
           <p class="TB"><code>NUMBER</code></p></td>
-      <td class="Informal"><a name="1124652" id="1124652"></a>
+      <td class="Informal">
           <p class="TB">Number of times the transaction fails to serialize, producing <code>ORA-08177</code> errors, per cursor</p></td>
     </tr>
     <tr class="Informal" align="left" valign="top">
-      <td class="Informal"><a name="1124654" id="1124654"></a>
+      <td class="Informal">
           <p class="TB"><code>OUTLINE_CATEGORY</code></p></td>
-      <td class="Informal"><a name="1124656" id="1124656"></a>
+      <td class="Informal">
           <p class="TB"><code>VARCHAR2(64)</code></p></td>
-      <td class="Informal"><a name="1124658" id="1124658"></a>
+      <td class="Informal">
           <p class="TB">If an outline was applied during construction of the cursor, then this column displays the category of that outline. Otherwise the column is left blank.</p></td>
     </tr>
     <tr class="Informal" align="left" valign="top">
-      <td class="Informal"><a name="1124660" id="1124660"></a>
+      <td class="Informal">
           <p class="TB"><code>CPU_TIME</code></p></td>
-      <td class="Informal"><a name="1124662" id="1124662"></a>
+      <td class="Informal">
           <p class="TB"><code>NUMBER</code></p></td>
-      <td class="Informal"><a name="1124664" id="1124664"></a>
+      <td class="Informal">
           <p class="TB">CPU time (in microseconds) used by this cursor for parsing/executing/fetching</p></td>
     </tr>
     <tr class="Informal" align="left" valign="top">
-      <td class="Informal"><a name="1124666" id="1124666"></a>
+      <td class="Informal">
           <p class="TB"><code>ELAPSED_TIME</code></p></td>
-      <td class="Informal"><a name="1124668" id="1124668"></a>
+      <td class="Informal">
           <p class="TB"><code>NUMBER</code></p></td>
-      <td class="Informal"><a name="1124670" id="1124670"></a>
+      <td class="Informal">
           <p class="TB">Elapsed time (in microseconds) used by this cursor for parsing/executing/fetching</p></td>
     </tr>
     <tr class="Informal" align="left" valign="top">
-      <td class="Informal"><a name="1124672" id="1124672"></a>
+      <td class="Informal">
           <p class="TB"><code>OUTLINE_SID</code></p></td>
-      <td class="Informal"><a name="1124674" id="1124674"></a>
+      <td class="Informal">
           <p class="TB"><code>NUMBER</code></p></td>
-      <td class="Informal"><a name="1124676" id="1124676"></a>
+      <td class="Informal">
           <p class="TB">Outline session identifier</p></td>
     </tr>
     <tr class="Informal" align="left" valign="top">
-      <td class="Informal"><a name="1124678" id="1124678"></a>
+      <td class="Informal">
           <p class="TB"><code>CHILD_ADDRESS</code></p></td>
-      <td class="Informal"><a name="1124680" id="1124680"></a>
+      <td class="Informal">
           <p class="TB"><code>RAW(4 | 8)</code></p></td>
-      <td class="Informal"><a name="1124682" id="1124682"></a>
+      <td class="Informal">
           <p class="TB">Address of the child cursor</p></td>
     </tr>
     <tr class="Informal" align="left" valign="top">
-      <td class="Informal"><a name="1124684" id="1124684"></a>
+      <td class="Informal">
           <p class="TB"><code>SQLTYPE</code></p></td>
-      <td class="Informal"><a name="1124686" id="1124686"></a>
+      <td class="Informal">
           <p class="TB"><code>NUMBER</code></p></td>
-      <td class="Informal"><a name="1124688" id="1124688"></a>
+      <td class="Informal">
           <p class="TB">Denotes the version of the SQL language used for this statement</p></td>
     </tr>
     <tr class="Informal" align="left" valign="top">
-      <td class="Informal"><a name="1124690" id="1124690"></a>
+      <td class="Informal">
           <p class="TB"><code>REMOTE</code></p></td>
-      <td class="Informal"><a name="1124692" id="1124692"></a>
+      <td class="Informal">
           <p class="TB"><code>VARCHAR2(1)</code></p></td>
-      <td class="Informal"><a name="1124694" id="1124694"></a>
+      <td class="Informal">
           <p class="TB">Indicates whether the cursor is remote mapped (<code>Y</code>) or not (<code>N</code>)</p></td>
     </tr>
     <tr class="Informal" align="left" valign="top">
-      <td class="Informal"><a name="1124696" id="1124696"></a>
+      <td class="Informal">
           <p class="TB"><code>OBJECT_STATUS</code></p></td>
-      <td class="Informal"><a name="1124698" id="1124698"></a>
+      <td class="Informal">
           <p class="TB"><code>VARCHAR2(19)</code></p></td>
-      <td class="Informal"><a name="1124700" id="1124700"></a>
+      <td class="Informal">
           <p class="TB">Status of the cursor (<code>VALID</code> or <code>INVALID</code>)</p></td>
     </tr>
     <tr class="Informal" align="left" valign="top">
-      <td class="Informal"><a name="1124702" id="1124702"></a>
+      <td class="Informal">
           <p class="TB"><code>LITERAL_HASH_VALUE</code></p></td>
-      <td class="Informal"><a name="1124704" id="1124704"></a>
+      <td class="Informal">
           <p class="TB"><code>NUMBER</code></p></td>
-      <td class="Informal"><a name="1124706" id="1124706"></a>
+      <td class="Informal">
           <p class="TB">Hash value of the literals which are replaced with system-generated bind variables and are to be matched, when <code>CURSOR_SHARING</code> is used. This is not the hash value for the SQL statement. If <code>CURSOR_SHARING</code> is not used, then the value is 0.</p></td>
     </tr>
     <tr class="Informal" align="left" valign="top">
-      <td class="Informal"><a name="1124708" id="1124708"></a>
+      <td class="Informal">
           <p class="TB"><code>LAST_LOAD_TIME</code></p></td>
-      <td class="Informal"><a name="1124710" id="1124710"></a>
+      <td class="Informal">
           <p class="TB"><code>VARCHAR2(19)</code></p></td>
-      <td class="Informal"><a name="1124712" id="1124712"></a>
+      <td class="Informal">
           <p class="TB">Time at which the query plan (heap 6) was loaded into the library cache</p></td>
     </tr>
     <tr class="Informal" align="left" valign="top">
-      <td class="Informal"><a name="1124714" id="1124714"></a>
+      <td class="Informal">
           <p class="TB"><code>IS_OBSOLETE</code></p></td>
-      <td class="Informal"><a name="1124716" id="1124716"></a>
+      <td class="Informal">
           <p class="TB"><code>VARCHAR2(1)</code></p></td>
-      <td class="Informal"><a name="1124718" id="1124718"></a>
+      <td class="Informal">
           <p class="TB">Indicates whether the cursor has become obsolete (<code>Y</code>) or not (<code>N</code>). This can happen if the number of child cursors is too large.</p></td>
     </tr>
     <tr class="Informal" align="left" valign="top">
-      <td class="Informal"><a name="1124720" id="1124720"></a>
+      <td class="Informal">
           <p class="TB"><code>CHILD_LATCH</code></p></td>
-      <td class="Informal"><a name="1124722" id="1124722"></a>
+      <td class="Informal">
           <p class="TB"><code>NUMBER</code></p></td>
-      <td class="Informal"><a name="1124724" id="1124724"></a>
+      <td class="Informal">
           <p class="TB">Child latch number that is protecting the cursor</p></td>
     </tr>
   </tbody>
@@ -776,6 +773,6 @@ Event 10046 is set at level 1</pre>
 <p>&nbsp;</p>
 <p>&nbsp;</p>
 <p>&nbsp;</p>
-  <script language="javascript" src="index.js"></script>
+  
 </body>
 </html>

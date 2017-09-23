@@ -1,70 +1,65 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-"http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html>
+
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=gb2312">
-<script language="javascript" src="css.js"></script>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
 <title>新建数据库</title>
 </head>
 
 <body>
 
-<h1>第二章 ORACLE的基本配置</h1>
-<hr>
-<h2><a href="#oem_config">2.1 资料档案库配置</a></h2>
-<h2><a href="#new_db">2.2 添加网络数据库</a></h2>
-<h2><a href="#http_config">2.3 HTTP服务器配置</a></h2>
-<h2><a href="#firewall">2.4 Windows防火墙配置</a></h2>
-<hr>
-<h2><a name="oem_config"></a>2.1 资料档案库配置</h2>
+<p id="title">第二章 ORACLE的基本配置</p>
+
+<h1>2.1 资料档案库配置</h1>
 <p>要想使用OEM的“登录到Oracle Management Server”选项，必须要建一个资料档案库。其建立步骤如下：</p>
-<h3>2.1.1 启动</h3>
+<h2>2.1.1 启动</h2>
 <p>“开始”-&gt;“Oracle - OraHome92”-&gt;“Enterprise Manager Configuration Assistant”</p>
-<p><img src="images/003.jpg" width="628" height="447"></p>
-<h3>2.1.2 创建新的资料库 </h3>
-<p><img src="images/004.jpg" width="627" height="447"></p>
-<p><img src="images/005.jpg" width="628" height="447"></p>
-<p><img src="images/006.jpg" width="628" height="446"></p>
+<p><img src="images/003.jpg" style="width:628" height="447"></p>
+<h2>2.1.2 创建新的资料库 </h2>
+<p><img src="images/004.jpg" style="width:627" height="447"></p>
+<p><img src="images/005.jpg" style="width:628" height="447"></p>
+<p><img src="images/006.jpg" style="width:628" height="446"></p>
 <p>一般情况下，我们会把资料档案库放在单独的数据库中。也可以与业务数据库放在一起，但不推荐这么做。按更改SID可以指定档案资料库的数据库名，在此我指定为TEST。</p>
-<p><img src="images/007.jpg" width="393" height="284"></p>
-<p><img src="images/008.jpg" width="630" height="447"></p>
-<p><img src="images/009.jpg" width="628" height="446"></p>
+<p><img src="images/007.jpg" style="width:393" height="284"></p>
+<p><img src="images/008.jpg" style="width:630" height="447"></p>
+<p><img src="images/009.jpg" style="width:628" height="446"></p>
 <p>这个用户名是用于访问存放档案资料库的TEST数据库的用户名和口令，而非登录OEM的用户。</p>
-<p><img src="images/010.jpg" width="628" height="446"></p>
+<p><img src="images/010.jpg" style="width:628" height="446"></p>
 <p>OK，按下完成后开始创建档案资料库。</p>
-<p><img src="images/011.jpg" width="299" height="298"></p>
-<h3>2.1.3 登录OEM </h3>
+<p><img src="images/011.jpg" style="width:299" height="298"></p>
+<h2>2.1.3 登录OEM </h2>
 <p>启动 “开始”-&gt;“Oracle - OraHome92”-&gt;“Enterprise Manager Console”，选择“登录到oracle Management Server”，用户名为“sysman”，默认的初始口令为“oem_temp”：</p>
-<p><img src="images/012.jpg" width="516" height="301"></p>
+<p><img src="images/012.jpg" style="width:516" height="301"></p>
 <p>首次登录时，ORACLE会提示你更改默认口令：</p>
-<p><img src="images/013.jpg" width="252" height="254"></p>
-<p><img src="images/014.jpg" width="789" height="586"></p>
-<h2><a name="new_db"></a>2.2 添加网络数据库</h2>
+<p><img src="images/013.jpg" style="width:252" height="254"></p>
+<p><img src="images/014.jpg" style="width:789" height="586"></p>
+<h1>2.2 添加网络数据库</h1>
 <p>本节讲述如何在OEM中添加其它服务器上的数据库服务。</p>
-<h3>2.2.1 启动 </h3>
+<h2>2.2.1 启动 </h2>
 <p>点击“开始 ”-&gt;“Configuration and Migration Tools”-&gt;“Net Manager”:</p>
-<p><img src="images/049.jpg" width="646" height="499"></p>
-<p>点击左侧工具栏上的<img src="images/050.jpg" width="23" height="22">按钮，添加新的Net服务。</p>
-<h3>2.2.2 配置Net服务</h3>
-<p><img src="images/051.jpg" width="600" height="360"></p>
+<p><img src="images/049.jpg" style="width:646" height="499"></p>
+<p>点击左侧工具栏上的<img src="images/050.jpg" style="width:23" height="22">按钮，添加新的Net服务。</p>
+<h2>2.2.2 配置Net服务</h2>
+<p><img src="images/051.jpg" style="width:600" height="360"></p>
 <p>输入你想给该服务起的名字（任意），点击下一步：</p>
-<p><img src="images/052.jpg" width="600" height="360"></p>
+<p><img src="images/052.jpg" style="width:600" height="360"></p>
 <p>选择TCP/IP协议，点击下一步：</p>
-<p><img src="images/053.jpg" width="600" height="360"></p>
+<p><img src="images/053.jpg" style="width:600" height="360"></p>
 <p>输入主机名，点下一步：</p>
-<p><img src="images/054.jpg" width="600" height="360"></p>
+<p><img src="images/054.jpg" style="width:600" height="360"></p>
 <p>输入ORACLE服务名，点下一步：</p>
-<p><img src="images/055.jpg" width="600" height="360"></p>
+<p><img src="images/055.jpg" style="width:600" height="360"></p>
 <p>这时按下测试按钮，系统自动使用一个用户 scott 进行登录，失败信息如下：</p>
-<p><img src="images/056.jpg" width="600" height="450"></p>
+<p><img src="images/056.jpg" style="width:600" height="450"></p>
 <p>这时按下“更改登录”按钮，输入正确的用户名和口令：</p>
-<p><img src="images/057.jpg" width="300" height="200"></p>
+<p><img src="images/057.jpg" style="width:300" height="200"></p>
 <p>然后再测试，后功后按“完成”按钮。左侧的服务列表里会出现新增的ORACLE服务。在菜单“文件”中选择“保存网络配置”保存。</p>
-<h3>2.2.3 加入OEM</h3>
+<h2>2.2.3 加入OEM</h2>
 <p>启动OEM， </p>
-<h2><a name="http_config"></a>2.3 HTTP服务器配置</h2>
+<h1>2.3 HTTP服务器配置</h1>
 <p>默认的HTTP服务器使用80端口，启动后IIS便启动不起来，要更改其端口要到Oracle的安装祝目录下找apache\apache\conf底下有一个httpd.conf文件，找到后改之，重启http服务器就可以了 </p>
-<h2><a name="firewall"></a>2.4 Windows 2003防火墙配置</h2>
+<h1>2.4 Windows 2003防火墙配置</h1>
 <p>在windows 2003下安装完ORACLE后，在其防火墙设置中开放1521端口（这是ORACLE默认的侦听端口，如果你使用了自定义端口号，则需要开放自定义端口号）。但这样客户端仍然无法访问，这是因为在windows平台下，windows在接收SQL*Net连接请求后，会随机打开一个端口进行通讯，而不是使用公用的Listener端口（不是微软疯掉了，就是ORACLE疯了），因此，仅仅打开1521端口是不行的。</p>
 <p>解决方案是在注册表【HKLM】- 【Software】- 【ORACLE】- 【HOME】下添加一个注册表项【USE_SHARED_SOCKET】，将其值设为TRUE，然后重启ORACLE服务及Listner服务，就可以了。</p>
 </body>

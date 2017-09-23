@@ -1,34 +1,34 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-"http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html>
+
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=gb2312">
-<script language="javascript" src="css.js"></script>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
 <title>存储管理</title>
 </head>
 
 <body>
-<h1>第N章 存储管理</h1>
-<hr>
-<h2>N.1 维护数据库的文件</h2>
-<h3>N.1.1 添加文件组</h3>
-<pre>alter database iou add filegroup TJDG_dev</pre>
-<h3>N.1.2 删除文件组</h3>
-<pre>alter database iou remove filegroup TJDG_dev </pre>
+<p id="title">存储管理</p>
+
+<h1>维护数据库的文件</h1>
+<h2>添加文件组</h2>
+<pre class="code" data-type="sql">alter database iou add filegroup TJDG_dev</pre>
+<h2>删除文件组</h2>
+<pre class="code" data-type="sql">alter database iou remove filegroup TJDG_dev </pre>
 <p><img src="images/note.jpg" width="20" height="20">注意：只有文件组中不包含文件时才可以删除。</p>
-<h3>N.1.3 添加文件</h3>
-<pre>alter database iou add file<br>	(name = TJDG_dev,<br>	filename = 'D:\Program Files\Microsoft SQL Server\MSSQL\data\_d.dbTJDG.DB',<br>	size = 20MB,<br>	maxsize = UNLIMITED,<br>	filegrowth = 10%) to filegroup TJDG_dev </pre>
-<h3>N.1.4 删除文件</h3>
-<pre>alter database iou remove file TJDG_dev </pre>
-<h3>N.1.5 在指定文件上创建表及索引</h3>
-<pre>--在指定文件上创建表
+<h2>添加文件</h2>
+<pre class="code" data-type="sql">alter database iou add file<br>	(name = TJDG_dev,<br>	filename = 'D:\Program Files\Microsoft SQL Server\MSSQL\data\_d.dbTJDG.DB',<br>	size = 20MB,<br>	maxsize = UNLIMITED,<br>	filegrowth = 10%) to filegroup TJDG_dev </pre>
+<h2>删除文件</h2>
+<pre class="code" data-type="sql">alter database iou remove file TJDG_dev </pre>
+<h2>在指定文件上创建表及索引</h2>
+<pre class="code" data-type="sql">--在指定文件上创建表
 create table test_table(a int not null) on tjdg_dev 
 
 --在指定文件上创建索引
 alter table test_table add primary key(a) on tjdg_ind</pre>
-<h2>N.4 收缩数据库大小 </h2>
+<h1>收缩数据库大小 </h1>
 <p>数据库在执行某些操作后（包括导库或一些变态的update语句），数据库存储文件大小会大增,主要是数据日志文件变大，可用如下方法给数据库减肥：</p>
-<pre>--压缩日志及数据库文件大小
+<pre class="code" data-type="sql">--压缩日志及数据库文件大小
 
 /*--特别注意
 	请按步骤进行,未进行前面的步骤,请不要做后面的步骤
@@ -92,6 +92,6 @@ alter table test_table add primary key(a) on tjdg_ind</pre>
 </pre>
 <p>&nbsp;</p>
 <p>&nbsp;</p>
-<script language="javascript" src="index.js"></script>
+
 </body>
 </html>

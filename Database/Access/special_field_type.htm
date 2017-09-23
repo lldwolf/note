@@ -1,21 +1,21 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-"http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html>
+
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=gb2312">
 <title>特殊字段类型</title>
-<script language="javascript" src="css.js"></script>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
 </head>
 
 <body>
-<h1>第N章 字段类型</h1>
-<hr>
-<h2>N.1 自动编号</h2>
+<p id="title">字段类型</p>
+
+<h1>N.1 自动编号</h1>
 <p>其SQL类型为counter或autoincrement，可带两个参数，分别为初始值和自增量。例如：</p>
 <pre>create table test1([id] autoincrement primary key)
 create table test2([id] autoincrement(200, 10) primary key)
 alter table test1 alter column [id] counter(100, 5)</pre>
-<h2>N.2 数字</h2>
+<h1>N.2 数字</h1>
 <table width="60%"  border="0">
   <tr>
     <th width="50%">类型</th>
@@ -42,17 +42,17 @@ alter table test1 alter column [id] counter(100, 5)</pre>
     <td>&nbsp;</td>
   </tr>
 </table>
-<h2>N.3 文本</h2>
+<h1>N.3 文本</h1>
 <p>char(n)或varchar(n)，表示相同含义</p>
-<h2>N.4 是/否</h2>
+<h1>N.4 是/否</h1>
 <p>bit 或 yesno </p>
-<h2>N.5 日期/时间</h2>
+<h1>N.5 日期/时间</h1>
 <p>date, time, datetime</p>
-<h2>N.6 OLE对象</h2>
+<h1>N.6 OLE对象</h1>
 <p>oleobject</p>
-<h2>N.7 备注</h2>
+<h1>N.7 备注</h1>
 <p>memo </p>
 <p>&nbsp;</p>
-<script language="javascript" src="index.js"></script>
+
 </body>
 </html>

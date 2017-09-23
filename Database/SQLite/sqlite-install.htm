@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+	<script type="text/javascript" src="../../mylib/js/css.js"></script>
+	<title>SQLite 安装及使用</title>
+</head>
+
+<body>
+	<p id="title">SQLite 安装及使用</p>
+	<h1>SQLite 安装</h1>
+    <p>SQLite 并不需要真正安装，可以简单理解为一个文件管理程序。官方提供 SQLite3 作为一个命令行工具进行管理。可从 <a href="https://www.sqlite.org/download.html">这里</a> 下载相应操作系统的命令行工作 sqlite-tools</p>
+    <h1>sqlite-tools</h1>
+    <p>可使用如下命令进行数据库管理</p>
+    <pre class="code" data-type="sh"># 打开一个默认的匿名数据库进行操作，结束后该数据库将被删除
+sqlite3
+
+# 打开一个指定数据库进行操作，如果该数据库文件不存在则创建
+sqlite3 [file_name]</pre>
+    <p>在 sqlite-tools 中可以使用两种命令，一种是 sqlite 提供的命令，以点号（.）开始，一种是 SQL 命令，以分号（;）结束。</p>
+    <h2>系统命令</h2>
+    <p>sqlite 常用系统命令如下所示</p>
+    <pre class="code" data-type="sh"># 列出所有命令
+.help
+
+# 退出
+.exit
+.quit
+
+# 保存数据库至新文件
+.save [file_name]
+
+# 显示当前的参数设置
+.show
+
+# 查询结果显示方式
+# 以列方式显示
+.mode column
+
+# 以按竖线（|）分隔的方式显示（默认）
+.mode list 
+
+# 以按逗号分隔的方式显示
+.mode quote
+
+# 显示查询结果的列名
+.header on
+
+# 显示所有的表
+.tables
+
+# 按表名通配符查找
+.tables t%
+
+# 将整个数据库导出为 SQL
+.dump
+
+# 导出某个表的 SQL （包括结构及数据）
+.dump table_name
+
+# 执行某个文件中的 SQL
+.read sql_file</pre>
+    <h2>SQL 命令</h2>
+    <p>常规的SQL均可执行，如下所示</p>
+    <pre class="code" data-type="sql">-- 创建新表
+create table test_table (id int primary key, value varchar(20));
+
+-- 插入
+insert into test_table values(1, 'value1');
+
+-- 查询
+select * from test_table;</pre>
+    <h1>其它</h1>
+    <h2>查看表结构</h2>
+    <p>可使用系统表完成</p>
+    <pre class="code" data-type="sql">select * from sqlite_master;</pre>
+    <p>输出如下</p>
+    <pre>type        name        tbl_name    rootpage    sql
+----------  ----------  ----------  ----------  --------------------------------------------------------------
+table       test_table  test_table  2           CREATE TABLE test_table(id int primary key, value varchar(50))</pre>
+</body>
+</html>

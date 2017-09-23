@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+	<script type="text/javascript" src="../../mylib/js/css.js"></script>
+	<title>SQL*LOADER</title>
+</head>
+
+<body>
+	<p id="title">SQL*LOADER</p>
+	<h1>第一个例子</h1>
+	<p>使用 Oralce 自带的命令 sqlldr 可将 txt 文件的内容导入数据库，导入时需要做好如下准备</p>
+	<ul>
+		<li>将表预先建好</li>
+		<li>建立 control 文件描述导入规则</li>
+	</ul>
+	<p>例如，我需要将一个如下的 txt 文件导入数据库</p>
+	<pre>col1|col2|col3
+a|b|c
+d|e|f</pre>
+	<p>其中第一列是表头，每列数据以 | 分隔，有2行数据需要导入, 假设我们需要为该数据创建如下的表</p>
+	<pre class="code" data-type="sql">create table test_table
+(
+  COL_A VARCHAR2(50),
+  COL_B VARCHAR2(50),
+  COL_C VARCHAR2(50)
+)</pre>
+	
+
+		<p>为此需要准备如下的控制文件, 名为 my.ctl</p>
+	<pre class="code">OPTIONS(skip=1,bindsize=1048576,rows=10240)
+load data
+CHARACTERSET WE8ISO8859P1
+truncate into table TEST_TABLE 
+fields terminated by "|"
+TRAILING NULLCOLS
+( 
+    COL_A	"trim(:col_a)"  
+    ,COL_B	"trim(:COL_B)"  
+    ,COL_C	"trim(:COL_C)"  
+ )</pre>
+	<p>有如下几点需要注意下</p>
+	<ul>
+		<li>其实表头是不需要的，需要用 skip=1 跳过，表示跳过1行</li>
+		<li>truncate 行表示在导入前先清除现有数据</li>
+		<li>下面的列名表示数据库中的列， : 表示对应该列的变量名，但需与列名一致，trim 函数将去除首尾空格</li>
+	</ul>
+	<p>最后在命令行下执行如下命令</p>
+	<pre>sqlldr USERID=用户名/密码@Oracle实例名 control=my.ctl log=imp.log data=my.txt bad=imp.bad</pre>
+	<p>其含义如下</p>
+	<ul>
+		<li>使用我们在前面定义的 my.ctl 作为导入控制文件</li>
+		<li>导入过程中的日志将生成到 imp.log</li>
+		<li>要导入的数据文件为 my.txt</li>
+		<li>若有记录导入失败（如长度太长，格式不匹配），失败的记录将生成到 imp.bad 文件中</li>
+	</ul>
+	<p>其实 USERID 可以省略，命令可简写为</p>
+	<pre>sqlldr 用户名/密码@Oracle实例名 control=my.ctl log=imp.log data=my.txt bad=imp.bad</pre>
+	<h1>sqlldr 命令详解</h1>
+	<h2>命令参数</h2>
+	<p>不带任何参数键入 sqlldr 即可显示所有的参数及其解释，部分参数可写到控制文件的 OPTIONS 子句中，详参看相关章节</p>
+	<p>除了使用控制文件减少参数个数，还可以使用 PARFILE 参数将所有的参数都放到参数文件中，如下所示</p>
+	<pre>sqlldr PARFILE=example.par</pre>
+	<p>参数文件 expample.par 示例如下</p>
+	<pre class="code" data-type="properties">USERID=scott/tiger
+CONTROL=example.ctl
+ERRORS=9999
+LOG=example.log</pre>
+	<h1>Control 文件详解</h1>
+	<p><a href="http://docs.oracle.com/cd/B19306_01/server.102/b14215/ldr_control_file.htm#i1006645">官方文档</a></p>
+	<p>Control 文件是一个 DDL 指令集，包含如下内容</p>
+	<ul>
+		<li>从哪加载数据</li>
+		<li>数据格式化</li>
+		<li>加载数据时的控制选项(内存、容错等)</li>
+		<li>如何处理加载的数据</li>
+	</ul>
+	<h2>OPTIONS 子句</h2>
+	<p>上例中，我们使用了 OPTIONS 子句，其实它是为了简化命令参数而设的，如下的命令行参数可以放在 OPTIONS 子句中</p>
+	<pre class="code" data-type="properties">BINDSIZE=n
+COLUMNARRAYROWS=n
+DIRECT={TRUE | FALSE} 
+ERRORS=n
+LOAD=n 
+MULTITHREADING={TRUE | FALSE}
+PARALLEL={TRUE | FALSE}
+READSIZE=n
+RESUMABLE={TRUE | FALSE}
+RESUMABLE_NAME='text string'
+RESUMABLE_TIMEOUT=n
+ROWS=n 
+SILENT={HEADER | FEEDBACK | ERRORS | DISCARDS | PARTITIONS | ALL} 
+SKIP=n   
+SKIP_INDEX_MAINTENANCE={TRUE | FALSE}
+SKIP_UNUSABLE_INDEXES={TRUE | FALSE}
+STREAMSIZE=n</pre>
+	<p>说明如下</p>
+	<table style="width:90%">
+		<tr>
+			<th>参数</th>
+			<th>说明</th>
+			<th>默认值</th>
+		</tr>
+		<tr>
+			<td>BINDSIZE</td>
+			<td>用于存储一次从数据文件读取的 rows 记录的最大空间，至少要能放入一条逻辑记录</td>
+			<td>25600</td>
+		</tr>
+		<tr>
+			<td>COLUMNARRAYROWS</td>
+			<td>直接路径列数组的行数</td>
+			<td>5000</td>
+		</tr>
+		<tr>
+			<td>DIRECT</td>
+			<td>是否使用直接路径。直接路径加载并不是通过insert语句的方式提交数据，直接路径的加载甚至不走db_buffer，因为不会存在缓冲区争用，直接路径加载直接向数据文件写数据，因此效率较高。</td>
+			<td>false</td>
+		</tr>
+		<tr>
+			<td>ERRORS</td>
+			<td>允许的错误的数目</td>
+			<td>50</td>
+		</tr>
+		<tr>
+			<td>LOAD</td>
+			<td>要加载的行数</td>
+			<td>all</td>
+		</tr>
+		<tr>
+			<td>MULTITHREADING</td>
+			<td>是否启用多线程。该参数仅仅在直接路径加载时有效。</td>
+			<td>多 CPU 系统默认为true，单 CPU 的系统默认则为false</td>
+		</tr>
+		<tr>
+			<td>PARALLEL</td>
+			<td>并行度。仅仅在直接路径加载时有效</td>
+			<td>false</td>
+		</tr>
+		<tr>
+			<td>READSIZE</td>
+			<td>缓冲区大小。最大不超过20M。该参数设置的值仅当从数据文件中读取数据时有效，如果数据包含在控制文件中则为64K，并不可修改。</td>
+			<td>1048576</td>
+		</tr>
+		<tr>
+			<td>RESUMABLE</td>
+			<td>启用或禁用当前的可恢复会话</td>
+			<td>false</td>
+		</tr>
+		<tr>
+			<td>RESUMABLE_NAME</td>
+			<td>有助于标识可恢复语句的文本字符串</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>RESUMABLE_TIMEOUT</td>
+			<td>RESUMABLE 的等待时间 (以秒计) </td>
+			<td>7200</td>
+		</tr>
+		<tr>
+			<td>ROWS</td>
+			<td>每次从数据文件中读取的最大行数，该参数同时受 bindsize 参数制约，如果超出 bindsize 的最大可用值，则自动与其适配</td>
+			<td>常规路径：64，直接路径：全部</td>
+		</tr>
+		<tr>
+			<td>SKIP</td>
+			<td>要跳过的行数</td>
+			<td>0</td>
+		</tr>
+		<tr>
+			<td>SKIP_INDEX_MAINTENANCE</td>
+			<td>是否跳过索引维护。该参数仅在直接路径加载时有效，如果设置为true，则数据加载过程中并不会维护索引，因此数据加载完后会导致索引无效。</td>
+			<td>false</td>
+		</tr>
+		<tr>
+			<td>SKIP_UNUSABLE_INDEXES</td>
+			<td>是否跳过不可用的索引。如果设置为true。在加载数据的时候，如果没加载的表中索引为unusable，则该索引数据不维护，数据加载完以后也不会改变索引的状态。在oracle中也有一个参数叫skip_unusable_indexes，但是sqlldr中的这个参数优先级比oracle数据库内部的这个参数优先级高。如果sqlldr中未设置这个参数，则以oracle中的skip_unusable_indexes参数为准。</td>
+			<td>false</td>
+		</tr>
+		<tr>
+			<td>STREAMSIZE</td>
+			<td>流缓冲区大小。指定直接路径加载时流缓冲区大小。</td>
+			<td>256000</td>
+		</tr>
+		<tr>
+			<td>SILENT</td>
+			<td>运行过程中隐藏消息 (标题,反馈,错误,废弃,分区)</td>
+			<td>&nbsp;</td>
+		</tr>
+	</table>
+</body>
+</html>

@@ -1,16 +1,16 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-"http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html>
+
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=gb2312">
-<script language="javascript" src="css.js"></script>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
 <title>系统函数</title>
 </head>
 
 <body>
-<h1>第N章 系统函数
+<p id="title">系统函数
 
-</h1>
+</p>
 <table width="100%" >
   <tr>
     <th width="20%">函数名</th>
@@ -174,13 +174,13 @@
     <td>&nbsp;</td>
   </tr>
 </table>
-<h2><a name="identity"></a>scope_identity、ident_current和@@identity的区别</h2>
+<h1>scope_identity、ident_current和@@identity的区别</h1>
 <p>ident_current返回某张表的最后插入的标识列的值，不受scope和session的限制</p>
 <p>scope_identity返回任意表的identity列最后插入的值，仅限于当前scope和session</p>
 <p>@@identity返回任意表的identity列最后插入的值，不受scope和session的限制</p>
 <p>例如有两张表T1和T2，T1上有一个插入触发器，插入时会同时插入T2表，这样在插入T1表时就会有两个scope：对T1的插入、触发器对T2的插入</p>
 <p>&nbsp;</p>
 <p>&nbsp; </p>
-<script language="javascript" src="index.js"></script>
+
 </body>
 </html>

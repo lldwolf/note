@@ -3,19 +3,19 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
 <title>触发器</title>
-<script language="javascript" src="css.js"></script>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
 </head>
 
 <body>
-<h1>第N章 触发器</h1>
-<hr />
-<h2><a href="#create_trigger">N.1 基础知识</a></h2>
-<h2><a href="#query_trigger">N.2 查询触发器内容</a></h2>
-<h2><a href="#status_control">N.3 禁用或启用</a></h2>
-<h2><a name="create_trigger" id="create_trigger"></a>N.1 基础知识</h2>
-<h3>N.1.1 创建触发器 </h3>
+<p id="title">触发器</p>
+
+
+
+
+<h1>基础知识</h1>
+<h2>创建触发器 </h2>
 <p>下面的示例创建一个名为 <b>sales_warn</b> 的触发器，当书的销售总量达到 10 时，就产生错误 50010。然后执行 <b>sp_helptrigger</b> 列出表 <b>sales </b>中触发器的相关信息。</p>
-<pre>USE pubs
+<pre class="code" data-type="sql">USE pubs
 CREATE TRIGGER sales_warn
 ON sales
 FOR after INSERT
@@ -32,21 +32,21 @@ EXEC sp_helptrigger sales
   <li>INSTEAD OF 触发器代替触发动作进行激发，并在处理约束之前激发。 </li>
 </ul>
 <p>对于每个触发操作（UPDATE、DELETE 和 INSERT），每个表或视图只能有一个 INSTEAD OF 触发器。而一个表对于每个触发操作可以有多个 AFTER 触发器。</p>
-<h3>N.1.2 内部表</h3>
+<h2>内部表</h2>
 <p>在触发器内部可使用如下两张内部表</p>
 <ul>
   <li>inserted: 要插入的记录</li>
   <li>deleted: 要删除的记录</li>
 </ul>
 <p>对于update触发器，同时可使用上面两张记录表</p>
-<h3>N.1.3 行式触发器</h3>
+<h2>行式触发器</h2>
 <p>曾经以为SQL SERVER的触发器只能触发单行，也就是说如果一个delete触发器，如果同时删除多行时，只会对第一条记录触发，后来发现了不是人家SQL SERVER不支持，而是偶脑子笨没发现。</p>
 <p>其实inserted和deleted两张内部表存放了所有要插入或要删除的记录，可以用cursor逐次访问里面的每条记录，下面是一个示例，该触发器将要删除的记录转移到另一张表中：</p>
 <p>第一步，创建这两张表</p>
-<pre>create table table1([id] int primary key, [value] varchar(100))
+<pre class="code" data-type="sql">create table table1([id] int primary key, [value] varchar(100))
 create table table2([id] int primary key, [value] varchar(100))</pre>
 <p>第二步，插入测试数据</p>
-<pre>declare @i int
+<pre class="code" data-type="sql">declare @i int
 set @i = 1
 while @i <= 100
 begin
@@ -56,7 +56,7 @@ begin
 	set @i = @i + 1
 end</pre>
 <p>创建table1的delete触发器</p>
-<pre>create trigger tr_d_table1 on table1 for delete
+<pre class="code" data-type="sql">create trigger tr_d_table1 on table1 for delete
 as
 begin
 	declare @id int, @value varchar(100)
@@ -79,10 +79,10 @@ begin
 	
 end</pre>
 <p>现在对table1执行delete语句，发现所有被删除的记录都记录在在table2中了</p>
-<pre>delete from table1</pre>
-<h2><a name="query_trigger" id="query_trigger"></a>N.2 查询触发器内容</h2>
-<h3><a name="query_trigger_name" id="query_trigger_name"></a>N.2.1 查询表所使用的触发器</h3>
-<h4>N.2.1.1 使用系统存储过程</h4>
+<pre class="code" data-type="sql">delete from table1</pre>
+<h1>查询触发器内容</h1>
+<h2>查询表所使用的触发器</h2>
+<h3>使用系统存储过程</h3>
 <p><b>sp_helptrigger</b> [ <b>@tabname = </b>] <b>'</b><i>table</i><b>'</b> [ <b>, </b>[ <b>@triggertype = </b>] <b>'</b><i>type</i><b>' </b>]</p>
 <p><strong>参数</strong></p>
 <p>[<b>@tabname =</b>] <b>'</b><i>table</i><b>'</b></p>
@@ -168,25 +168,25 @@ end</pre>
 0= 不是 INSTEAD OF 触发器</TD>
 </TR>
 </TABLE>
-<h4>N.2.1.2 使用系统表</h4>
-<pre>select a.name as trigger_name, c.name as trigger_owner
+<h3>使用系统表</h3>
+<pre class="code" data-type="sql">select a.name as trigger_name, c.name as trigger_owner
 from sysobjects a
   inner join sysobjects b on b.name = 'table name' and b.id = a.parent_obj
   inner join sysusers c on c.name = 'user name' and c.uid = b.uid
 where a.xtype = 'TR'</pre>
-<h3><a name="query_trigger_content" id="query_trigger_content"></a>N.2.2 查询触发器内容</h3>
-<h4>N.2.2.1 使用系统存储过程</h4>
-<pre>sp_helptext [trigger name] </pre>
-<h2><a name="status_control" id="status_control"></a>N.3 禁用或启用</h2>
-<h3><a name="query_status" id="query_status"></a>N.3.1 查询触发器状态</h3>
+<h2>查询触发器内容</h2>
+<h3>使用系统存储过程</h3>
+<pre class="code" data-type="sql">sp_helptext [trigger name] </pre>
+<h1>禁用或启用</h1>
+<h2>查询触发器状态</h2>
 <p>触发器的启用或禁用状态在系统表中没有体现，只是禁用的触发器，在触发器的文本内容最后有一行</p>
-<pre>alter table [user name].[table nam] disable trigger [trigger name]</pre>
-<h3><a name="disable_trigger" id="disable_trigger"></a>N.3.2 禁用触发器</h3>
-<pre>alter table [table nam] disable trigger [trigger name]</pre>
-<h3><a name="enable_trigger" id="enable_trigger"></a>N.3.3 启用触发器 </h3>
-<pre>alter table [table nam] enable trigger [trigger name]</pre>
-<h2>&nbsp;</h2>
+<pre class="code" data-type="sql">alter table [user name].[table nam] disable trigger [trigger name]</pre>
+<h2>禁用触发器</h2>
+<pre class="code" data-type="sql">alter table [table nam] disable trigger [trigger name]</pre>
+<h2>启用触发器 </h2>
+<pre class="code" data-type="sql">alter table [table nam] enable trigger [trigger name]</pre>
+<h1>&nbsp;</h1>
 <p>&nbsp; </p>
-<script language="javascript" src="index.js"></script>
+
 </body>
 </html>

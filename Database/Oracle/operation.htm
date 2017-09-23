@@ -1,34 +1,32 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-"http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html>
+
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=gb2312">
-<script language="javascript" src="css.js"></script>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
 <title>ORACLE的简单数据库操作</title>
 </head>
 
 <body>
-<h1 align="center">第四章 ORACLE的简单数据库操作</h1>
-<h2><a href="#4_1">4.1 创建数据库</a></h2>
-<h2><a href="#4_2">4.2 删除数据库</a></h2>
-<h2><a name="4_1"></a>4.1 创建数据库 </h2>
+<p id="title">第四章 ORACLE的简单数据库操作</p>
+<h1>4.1 创建数据库 </h1>
 <p>运行“开始”-&gt;“Oracle - OraHome92”-&gt;“Configuration and Migration Tools”-&gt;“Database Configuration Assistant”或直接在命令行下键入：</p>
 <pre>dbca</pre>
 <p>启动后画面如下：</p>
-<p><img src="images/032.jpg" width="754" height="533"></p>
-<p><img src="images/038.jpg" width="754" height="533"></p>
-<p><img src="images/039.jpg" width="754" height="533"></p>
-<p><img src="images/040.jpg" width="754" height="533"></p>
-<p><img src="images/041.jpg" width="754" height="533"></p>
-<p><img src="images/042.jpg" width="754" height="533"></p>
-<p><img src="images/043.jpg" width="754" height="533"></p>
-<p><img src="images/044.jpg" width="754" height="533"></p>
-<p><img src="images/045.jpg" width="754" height="533"></p>
-<p><img src="images/046.jpg" width="600" height="600"></p>
-<p><img src="images/047.jpg" width="525" height="375"></p>
+<p><img src="images/032.jpg" style="width:754" height="533"></p>
+<p><img src="images/038.jpg" style="width:754" height="533"></p>
+<p><img src="images/039.jpg" style="width:754" height="533"></p>
+<p><img src="images/040.jpg" style="width:754" height="533"></p>
+<p><img src="images/041.jpg" style="width:754" height="533"></p>
+<p><img src="images/042.jpg" style="width:754" height="533"></p>
+<p><img src="images/043.jpg" style="width:754" height="533"></p>
+<p><img src="images/044.jpg" style="width:754" height="533"></p>
+<p><img src="images/045.jpg" style="width:754" height="533"></p>
+<p><img src="images/046.jpg" style="width:600" height="600"></p>
+<p><img src="images/047.jpg" style="width:525" height="375"></p>
 <p>这个速度非常慢，要有耐心。我的机器配置为P4 2.4G，512M内存，该过程需耗时半小时左右。</p>
 <p>数据库创建完成后，需要为新数据库的SYS和SYSTEM用户指定口令：</p>
-<p><img src="images/048.jpg" width="550" height="470"></p>
+<p><img src="images/048.jpg" style="width:550" height="470"></p>
 <p>数据库至此创建完成。如果打开Windows服务列表，你会发现多了一个服务“OracleServiceTEST2”。</p>
 <p>对于新创建的数据库，在OEM的数据库列表中中并不显示出来，一般重启一下“OracleOraHome92Agent”，然后再刷新服务器节点即可，如果还不行的话使用如下方法：</p>
 <ol>
@@ -37,18 +35,18 @@
   <li>再启“OracleOraHome92ManagementServer”服务</li>
   <li>刷新结点</li>
 </ol>
-<h2><a name="4_2"></a>4.2 删除数据库</h2>
+<h1>4.2 删除数据库</h1>
 <p>运行“开始”-&gt;“Oracle - OraHome92”-&gt;“Configuration and Migration Tools”-&gt;“Database Configuration Assistant”或直接在命令行下键入：</p>
 <pre>dbca</pre>
 <p>启动后画面如下：</p>
-<p><img src="images/032.jpg" width="754" height="533"></p>
-<p><img src="images/033.jpg" width="754" height="533"></p>
-<p><img src="images/034.jpg" width="754" height="533"></p>
-<p><img src="images/035.jpg" width="300" height="200"></p>
-<p><img src="images/036.jpg" width="432" height="172"></p>
+<p><img src="images/032.jpg" style="width:754" height="533"></p>
+<p><img src="images/033.jpg" style="width:754" height="533"></p>
+<p><img src="images/034.jpg" style="width:754" height="533"></p>
+<p><img src="images/035.jpg" style="width:300" height="200"></p>
+<p><img src="images/036.jpg" style="width:432" height="172"></p>
 <p>这是最后一步确认了，现在点了“是”之后就没得后悔药吃了。</p>
-<p><img src="images/037.jpg" width="525" height="375"></p>
+<p><img src="images/037.jpg" style="width:525" height="375"></p>
 <p>数据库删除后，在OEM中仍然保留着该数据库节点，需手工删除该节点后，再重新刷新服务器节点。有时刷新前需重启一下“OracleOraHome92Agent”服务。</p>
-<h2>&nbsp;</h2>
+<h1>&nbsp;</h1>
 </body>
 </html>

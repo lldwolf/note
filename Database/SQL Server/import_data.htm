@@ -3,13 +3,13 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
 <title>导入外部数据</title>
-<script type="text/javascript" src="css.js"></script>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
 </head>
 
 <body>
-<h1>第N章 导入外部数据</h1>
-<hr />
-<h2>N.1 导入Excel</h2>
+<p id="title">导入外部数据</p>
+
+<h1>导入Excel</h1>
 <p>在导入Excel表格时，如果一列数据中既有字符串又有数字，如果两者的数量差别比较大，SQL Server会自动将列的类型设为字符串或数字，在导入时，不符合判定类型的不会导入，而是变成了NULL。这或许是MS一贯自作聪明的表现之一。</p>
 <p>例如Excel表的内容如下：</p>
 <table width="60%" >
@@ -32,9 +32,9 @@
 </table>
 <p>在导入后，你会发现值123没有导进去，变成了NULL。即使将单元格的类型设为“文本”也不起作用。</p>
 <p>要成功导入，需要将其彻底变为字符串，可以在文本前面加上单引号作为字符串标识“'”，或使用如下的宏代码</p>
-<pre>ActiveSheet.Range(&quot;A4&quot;).NumberFormatLocal = &quot;@&quot;
+<pre class="code" data-type="sql">ActiveSheet.Range(&quot;A4&quot;).NumberFormatLocal = &quot;@&quot;
 ActiveSheet.Range(&quot;A4&quot;).FormulaR1C1 = CStr(ActiveSheet.Range(&quot;A4&quot;).Value2)</pre>
 <p>&nbsp;</p>
 <p>&nbsp; </p>
-<script type="text/javascript" src="index.js"></script></body>
+</body>
 </html>

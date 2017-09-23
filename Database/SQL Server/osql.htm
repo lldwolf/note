@@ -3,13 +3,13 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
 <title>OSQL</title>
-<script type="text/javascript" src="css.js"></script>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
 </head>
 
 <body>
-<h1>第N章 OSQL/ISQL
-</h1>
-<hr />
+<p id="title">OSQL/ISQL
+</p>
+
 <p>我不知道先有的OSQL还是先有的SQL*PLUS，明摆着都是一路货色，今天不经意发现SQL SERVER还有这么个东东 </p>
 <p>用法: osql [-U login id] [-P password]<br />
 [-S server] [-H hostname] [-E trusted connection]<br />
@@ -29,9 +29,9 @@
 默认错误级别为 — 1 对 1<br />
 [-? show syntax summary]</p>
 <p>如下代码使用SA登录本机</p>
-<pre>osql /U sa /P password</pre>
+<pre class="code" data-type="sql">osql /U sa /P password</pre>
 <p>然出就出现提示符，然后你就敲SQL语句吧，只不过与sql*plus的以字符“;”结束命令不同，它是使用“go”作为SQL语句的结束</p>
 <p>ISQL和OSQL是一样的东东，对用户而言没有什么区别，只不是OSQL使用的是ODBC与服务器通讯，ISQL使用的是DB-Library。</p>
-<script type="text/javascript" src="index.js"></script>
+
 </body>
 </html>

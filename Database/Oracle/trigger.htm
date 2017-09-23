@@ -1,20 +1,32 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+    <script type="text/javascript" src="../../mylib/js/css.js"></script>
 <title>触发器</title>
 </head>
 
 <body>
-<h1>第N章 触发器</h1>
-<hr />
-<h2>N.1 创建与删除</h2>
-<h2>N.2 启用与停用</h2>
-<pre>--启用
+<p id="title">触发器</p>
+
+<h1>创建与删除</h1>
+<h1>启用与停用</h1>
+<pre class="code" data-type="sql">--基于 trigger name
+
+--启用
 alter trigger 用户名.触发器名 enable
 
 --停用
-alter trigger 用户名.触发器名 disable</pre>
+alter trigger 用户名.触发器名 disable
+
+--基于 table
+
+--启用
+ALTER TABLE 用户名.表名 ENABLE ALL TRIGGERS
+
+--停用
+ALTER TABLE 用户名.表名 DISABLE ALL TRIGGERS
+</pre>
 <p>&nbsp; </p>
 </body>
 </html>

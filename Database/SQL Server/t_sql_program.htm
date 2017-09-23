@@ -3,18 +3,18 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
 <title>T-SQL程序设计</title>
-<script language="javascript" src="css.js"></script>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
 </head>
 
 <body>
-<h1>第N章 T-SQL程序设计
-</h1>
-<hr />
-<h2>N.1 定义变量</h2>
+<p id="title">T-SQL程序设计
+</p>
+
+<h1>定义变量</h1>
 <p>变量的定义格式如下：</p>
-<pre>declare 变量名 变量类型 </pre>
+<pre class="code" data-type="sql">declare 变量名 变量类型 </pre>
 <p>变量名需以字符“@”开头，例如，下例声明一个整理变量：</p>
-<pre>declare @var1 int</pre>
+<pre class="code" data-type="sql">declare @var1 int</pre>
 <p>在T-SQL中，可用的变量类型如下：</p>
 <table width="95%"  border="0" cellspacing="0" cellpadding="0">
   <tr>
@@ -150,8 +150,8 @@
     <td>&nbsp;</td>
   </tr>
 </table>
-<h3>N.1.9 cursor </h3>
-<pre>DECLARE cursor_name CURSOR 
+<h2>cursor </h2>
+<pre class="code" data-type="sql">DECLARE cursor_name CURSOR 
 [ LOCAL | GLOBAL ] 
 [ FORWARD_ONLY | SCROLL ] 
 [ STATIC | KEYSET | DYNAMIC | FAST_FORWARD ] 
@@ -160,7 +160,7 @@
 FOR select_statement 
 [ FOR UPDATE [ OF column_name [ ,...n ] ] ]</pre>
 <p>示例程序:</p>
-<pre>declare @user_id varchar(20)
+<pre class="code" data-type="sql">declare @user_id varchar(20)
 
 set @user_id = 'stone'
 
@@ -188,15 +188,15 @@ end
 
 close cur_works
 deallocate cur_works</pre>
-<h3>N.1.10 table 型变量 </h3>
+<h2>table 型变量 </h2>
 <p>table型变量可做为临时表使用，如下例所示：</p>
-<pre>declare @temp_tb_lld table(a int, b int)
+<pre class="code" data-type="sql">declare @temp_tb_lld table(a int, b int)
 insert into @temp_tb_lld values(1, 1)
 insert into @temp_tb_lld values(2, 2)
 insert into @temp_tb_lld values(3, 3)
 select * from @temp_tb_lld</pre>
 <p>值得注意是字符集问题，如果在临时表中使用varchar、text等类型的字段，它们的collate并不是当前数据库的collate，而是tempdb库的collate，这在一些情况下会引表collate冲突，例如从代码页1252到936转换错误（代码页代号具体代表的编码可在控制面板的区域选项中查，1252为ANSI Windows 1252，936为Chinese Simple GBK）。例如下例：</p>
-<pre>--当前库的collate为Latin1_General_CI_AS，tempdb库为Chinese_PRC_CI_AS
+<pre class="code" data-type="sql">--当前库的collate为Latin1_General_CI_AS，tempdb库为Chinese_PRC_CI_AS
 create table test_table(a text)
 
 declare @tb table(a text)
@@ -206,7 +206,7 @@ insert into @tb values('1243')
 insert into test_table
 select * from @tb</pre>
 <p>如果执行时，则会出现异常：对 text 数据类型不支持代码页转换。从: 936 到: 1252。需更改如下：</p>
-<pre>create table test_table(a text)
+<pre class="code" data-type="sql">create table test_table(a text)
 
 declare @tb table(a text collate Latin1_General_CI_AS)
 
@@ -214,11 +214,11 @@ insert into @tb values('1243')
 
 insert into test_table
 select * from @tb</pre>
-<h2>N.2 控制语句 </h2>
-<h3>N.2.1 赋值语句</h3>
+<h1>控制语句 </h1>
+<h2>赋值语句</h2>
 <p>使用set和select，set只能给一个变量赋值，而select可同时给多个变量赋值，且可根据查询结果给变量赋值。</p>
-<h3>N.2.2 if...else...</h3>
-<pre>declare @a int, @b int
+<h2>if...else...</h2>
+<pre class="code" data-type="sql">declare @a int, @b int
 select @a = 1, @b = 2
 if @a = 2
 	select 'aaaa'
@@ -226,15 +226,15 @@ else if @a = 1
 	select 'bbbb'
 else 
 	select 'cccc'</pre>
-<h3>N.2.3 while</h3>
-<pre>WHILE Boolean_expression
+<h2>while</h2>
+<pre class="code" data-type="sql">WHILE Boolean_expression
     { sql_statement | statement_block }
     [ BREAK ]
     { sql_statement | statement_block }
     [ CONTINUE ]</pre>
-<h2>N.100 游标</h2>
-<h3>N.100.1 声明语法</h3>
-<pre>DECLARE cursor_name CURSOR 
+<h1>游标</h1>
+<h2>声明语法</h2>
+<pre class="code" data-type="sql">DECLARE cursor_name CURSOR 
 [ LOCAL | GLOBAL ] 
 [ FORWARD_ONLY | SCROLL ] 
 [ STATIC | KEYSET | DYNAMIC | FAST_FORWARD ] 
@@ -242,8 +242,8 @@ else
 [ TYPE_WARNING ] 
 FOR select_statement 
 [ FOR UPDATE [ OF column_name [ ,...n ] ] ]</pre>
-<h3>N.100.2 使用举例</h3>
-<pre>DECLARE @au_id varchar(11), @au_fname varchar(20), @au_lname varchar(40),
+<h2>使用举例</h2>
+<pre class="code" data-type="sql">DECLARE @au_id varchar(11), @au_fname varchar(20), @au_lname varchar(40),
    @message varchar(80), @title varchar(80)
 
 PRINT &quot;-------- Utah Authors report --------&quot;
@@ -303,6 +303,6 @@ CLOSE authors_cursor
 DEALLOCATE authors_cursor</pre>
 <p>&nbsp;</p>
 <p>&nbsp; </p>
-<script language="javascript" src="index.js"></script>
+
 </body>
 </html>

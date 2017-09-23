@@ -1,17 +1,17 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-"http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html>
+
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=gb2312">
-<script language="javascript" src="css.js"></script>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
 <title>系统存储过程</title>
 </head>
 
 <body>
-<h1>第N章 系统存储过程</h1>
-<hr>
-<h2>N.1 获取SQL Server安装目录</h2>
-<pre>--方法一，读取注册表
+<p id="title">系统存储过程</p>
+
+<h1>获取SQL Server安装目录</h1>
+<pre class="code" data-type="sql">--方法一，读取注册表
 declare  @path  varchar(200)  
 exec  master.dbo.xp_regread    
            'HKEY_LOCAL_MACHINE',  
@@ -26,15 +26,15 @@ select  @path  =  filename  from  master.dbo.sysfiles
 set  @path  =  ltrim(REVERSE(@path))  
 set  @path  =  REVERSE(substring(@path,CHARINDEX('\',@path),len(@path)))  
 print  @path  </pre>
-<h2>N.2 设置数据库的属性</h2>
+<h1>设置数据库的属性</h1>
 <p>sp_dboptions</p>
-<pre>sp_dboptions 'database_name', 'single user', 'true'		--将数据库设置为单用户模式</pre>
-<h2>N.3 运行SQL语句</h2>
-<pre>exec sp_executesql N'select * from table_name'</pre>
+<pre class="code" data-type="sql">sp_dboptions 'database_name', 'single user', 'true'		--将数据库设置为单用户模式</pre>
+<h1>运行SQL语句</h1>
+<pre class="code" data-type="sql">exec sp_executesql N'select * from table_name'</pre>
 <p>其参数必须为nvarchar或nchar型</p>
-<h2>N.4 打印输入</h2>
-<pre>print '信息' </pre>
-<h2>N.5 获取列的属性 </h2>
+<h1>打印输入</h1>
+<pre class="code" data-type="sql">print '信息' </pre>
+<h1>获取列的属性 </h1>
 <p><A name=_columnproperty></A>COLUMNPROPERTY</p>
 <P>返回有关列或存储过程参数的信息</P>
 <H5>语法</H5>
@@ -128,34 +128,34 @@ print  @path  </pre>
 <P>对于IDENTITY列，可用如下两个存储过程获取其种子和增量</P>
 <P>select IDENT_INCR('report_sys.table1')<br>
 select IDENT_SEED('report_sys.table1')</P>
-<h2>N.1 安全类</h2>
-<h3>N.1.1 sp_addlogin</h3>
-<h3>N.1.2 sp_adduser</h3>
-<h3> N.1.3 sp_addrolemember</h3>
+<h1>安全类</h1>
+<h2>sp_addlogin</h2>
+<h2>sp_adduser</h2>
+<h2> N.1.3 sp_addrolemember</h2>
 <p>将登录名与角色相联，示例：</p>
-<pre>sp_add_rolemember 'db_owner', 'liu'</pre>
+<pre class="code" data-type="sql">sp_add_rolemember 'db_owner', 'liu'</pre>
 <p> 将用户（不是登录名）“liu”赋予“db_onwer”权限
 </p>
-<h3>N.1. sp_defaultdb</h3>
+<h2>N.1. sp_defaultdb</h2>
 <p>更改登录的默认数据库，格式：</p>
-<pre>sp_defaultdb 'login_name', 'database_name'</pre>
-<h2>N.2 活动目录类</h2>
-<h3>N.2.1 sp_ActiveDirectory_Obj</h3>
-<h3>N.2.2 sp_ActiveDirectory_SCP</h3>
-<h2>N.3 目录类</h2>
-<h3>N.3.1 sp_column_privileges</h3>
-<h3>N.3.2 sp_columns</h3>
-<h3>N.3.3 sp_databases </h3>
-<h3>N.3.4 sp_fkeys </h3>
-<h3>N.3.5 sp_pkeys</h3>
-<h3>N.3.6 sp_server_info </h3>
-<h3>N.3.7 sp_special_columns </h3>
-<h3>N.3.8 sp_sproc_columns </h3>
-<h3>N.3.9 sp_statistics </h3>
-<h3>N.3.10 sp_stored_procedures </h3>
-<h3>N.3.11 sp_table_privileges </h3>
-<h3>N.3.12 sp_tables </h3>
-<h2>N.4 系统过程 </h2>
+<pre class="code" data-type="sql">sp_defaultdb 'login_name', 'database_name'</pre>
+<h1>活动目录类</h1>
+<h2>sp_ActiveDirectory_Obj</h2>
+<h2>sp_ActiveDirectory_SCP</h2>
+<h1>目录类</h1>
+<h2>sp_column_privileges</h2>
+<h2>sp_columns</h2>
+<h2>sp_databases </h2>
+<h2>sp_fkeys </h2>
+<h2>sp_pkeys</h2>
+<h2>sp_server_info </h2>
+<h2>sp_special_columns </h2>
+<h2>sp_sproc_columns </h2>
+<h2>sp_statistics </h2>
+<h2>sp_stored_procedures </h2>
+<h2>sp_table_privileges </h2>
+<h2>sp_tables </h2>
+<h1>系统过程 </h1>
 <table width="90%"  border="0" cellspacing="0" cellpadding="0">
   <tr>
     <th width="20%">存储过程名</th>
@@ -216,6 +216,6 @@ select IDENT_SEED('report_sys.table1')</P>
 </table>
 <p>&nbsp;</p>
 <p>&nbsp;</p>
-  <script language="javascript" src="index.js"></script>
+  
 </body>
 </html>

@@ -1,31 +1,21 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-"http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html>
+
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
-<script type="text/javascript" src="css.js"></script>
-<title>第N章 存储过程</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+    <script type="text/javascript" src="../../mylib/js/css.js"></script>
+    <title>存储过程</title>
 </head>
 
 <body>
-<h1>第N章 存储过程与函数</h1>
-<hr>
-<h2><a href="#create_proc">N.1 存储过程的创建及使用</a></h2>
-<h2><a href="#syntax">N.2 语法</a></h2>
-<h2><a href="#cursor">N.3 使用光标 </a></h2>
-<h2><a href="#exception">N.4 使用异常</a></h2>
-<h2><a href="#skills">N.5 一些在存储过程中使用的技巧</a></h2>
-<h2><a href="#function">N.6 函数</a></h2>
-<h2><a href="#debug">N.7 调试</a></h2>
-<h2><a href="#notice">N.8 注意点</a></h2>
-<h2><a href="#limitation">N.9 存储过程的功能限制 </a></h2>
-<hr />
-<h2><a name="create_proc"></a>N.1 存储过程的创建及使用</h2>
-<h3>N.1.1 创建样例 </h3>
-<p>我们先建一张测试用表“test_table”</p>
-<pre>create table test_table(a int, b int default 10) </pre>
-<p>建立存储过程“test_proc”，其功能为向测试表中插入一条记录：</p>
-<pre>CREATE OR REPLACE  PROCEDURE "TJDG"."TEST_PROC" (
+    <p id="title">存储过程与函数</p>
+
+    <h1>存储过程的创建及使用</h1>
+    <h2>创建样例 </h2>
+    <p>我们先建一张测试用表“test_table”</p>
+    <pre class="code" data-type="sql">create table test_table(a int, b int default 10) </pre>
+    <p>建立存储过程“test_proc”，其功能为向测试表中插入一条记录：</p>
+    <pre class="code" data-type="sql">CREATE OR REPLACE  PROCEDURE "TJDG"."TEST_PROC" (
  val in int default 10
 )
 as
@@ -33,22 +23,22 @@ begin
  insert into test_table(a) values(val);
  commit;
 end TEST_PROC;</pre>
-<h3>N.1.2 执行</h3>
+    <h2>执行</h2>
 
-<p>可以在PL/SQL的“Command Window”或ORACLE自带的SQL*Plus中执行如下命令：</p>
-<pre>exec test_proc(100)
+    <p>可以在PL/SQL的“Command Window”或ORACLE自带的SQL*Plus中执行如下命令：</p>
+    <pre class="code" data-type="sql">exec test_proc(100)
 或
 execute test_proc(100)</pre>
-<h3>N.1.3 查看SP的内容</h3>
-<p>除了使用数据库工具查看外，我们可以使用系统表来查看SP内容</p>
-<pre>SELECT TEXT FROM USER_SOURCE WHERE NAME='SP Name';</pre>
-<h2><a name="syntax"></a>N.2 语法</h2>
-<h3>N.2.1 参数</h3>
-<p>参数声明在过程名后的“()”中，多个参数间用“,”隔开。</p>
-<p>在参数声明中，不能使用括号，例如不能使用number(10, 0)这种声明方式，直接声明为number类型即可，同理，number类型直接声明为number即可。</p>
-<h3>N.2.2 变量</h3>
-<p>在参数声明完成的as之后，可加入变量声明语句，例如</p>
-<pre>CREATE OR REPLACE  PROCEDURE "TJDG"."TEST_PROC" (
+    <h2>查看SP的内容</h2>
+    <p>除了使用数据库工具查看外，我们可以使用系统表来查看SP内容</p>
+    <pre class="code" data-type="sql">SELECT TEXT FROM USER_SOURCE WHERE NAME='SP Name';</pre>
+    <h1>语法</h1>
+    <h2>参数</h2>
+    <p>参数声明在过程名后的“()”中，多个参数间用“,”隔开。</p>
+    <p>在参数声明中，不能使用括号，例如不能使用number(10, 0)这种声明方式，直接声明为number类型即可，同理，number类型直接声明为number即可。</p>
+    <h2>变量</h2>
+    <p>在参数声明完成的as之后，可加入变量声明语句，例如</p>
+    <pre class="code" data-type="sql">CREATE OR REPLACE  PROCEDURE "TJDG"."TEST_PROC" (
  val in int default 10
 )
 as
@@ -57,51 +47,77 @@ begin
  insert into test_table(a) values(val);
  commit;
 end TEST_PROC;</pre>
-<p>变量的赋值有两种方式，一种是直接赋值，例如：</p>
-<pre>var1 := 100;</pre>
-<p>另一种是通过SQL语句赋值，例如：</p>
-<pre> select max(a) into var1 from test_table;</pre>
-<h3>N.2.3 条件语句</h3>
-<pre> if var1 = 10 then
+    <p>变量的赋值有两种方式，一种是直接赋值，例如：</p>
+    <pre class="code" data-type="sql">var1 := 100;</pre>
+    <p>另一种是通过SQL语句赋值，例如：</p>
+    <pre class="code" data-type="sql"> select max(a) into var1 from test_table;</pre>
+    <h2>条件语句</h2>
+    <pre class="code" data-type="sql"> if var1 = 10 then
    var1 := 100;
  else
    var1 := 200;
  end if;</pre>
-<h3>N.2.4 循环语句</h3>
-<p>在ORACLE的循环语句中，循环体不能为空。</p>
-<h4>N.2.4.1 Loop循环 </h4>
-<pre> loop <br>   exit when var1 &gt; 100;<br>   var1 := var1 + 1;<br> end loop;</pre>
-<h4>N.2.4.2 for循环</h4>
-<pre>FOR i IN 1..10 LOOP
+    <h2>循环语句</h2>
+    <p>在ORACLE的循环语句中，循环体不能为空。</p>
+    <h3>Loop循环 </h3>
+    <pre class="code" data-type="sql"> loop <br>   exit when var1 &gt; 100;<br>   var1 := var1 + 1;<br> end loop;</pre>
+    <h3>for循环</h3>
+    <pre class="code" data-type="sql">FOR i IN 1..10 LOOP
 	……
 END LOOP;</pre>
-<h2><a name="cursor"></a>N.3 使用光标 </h2>
-<h3>N.3.1 声明</h3>
-<pre> cursor cur1 is<br> select a, b from test_table;</pre>
-<h3>N.3.2 使用 </h3>
-<pre> open cur1;
+    <h1>使用光标 </h1>
+    <h2>声明</h2>
+    <pre class="code" data-type="sql"> cursor cur1 is<br> select a, b from test_table;</pre>
+    <h2>使用</h2>
+    <pre class="code" data-type="sql"> open cur1;
  loop<br>   fetch cur1 into var1, var2;<br>   exit when cur1%notfound;<br> end loop;
  close cur1;</pre>
-<h3>N.3.3 使用参数</h3>
-<p>在代表cursor的SQL语句中，可以使用定义的定量，如下所示：</p>
-<pre>m_table_id int;
+    <p>也可以不在声明时指定 cursor 执行的SQL，而是在 open 语句时指定</p>
+    <pre class="code" data-type="sql">open cur_test for select test_id, test_value from test_table;</pre>
+    <p>可以使用 with 子句在使 curor SQL 变得更易读</p>
+    <pre class="code" data-type="sql">open cur_test for
+with A as (select test_id, test_value from test_table)
+select * from A;</pre>
+    <p>如果不想为 fetch cursor into 语句声明变量，可以直接使用更简单的方式，如下所示：</p>
+    <pre class="code" data-type="sql">declare
+  cursor cur_test2 is select test_id, test_value from test_table;
+begin
+  for item in cur_test2 loop
+    dbms_output.put_line('id = ' || item.test_id || ', value = ' || item.test_value);
+  end loop;
+end;</pre>
+    <p>在该方式中，不需要对 cursor 进行 open/close 操作</p>
+    <h2>使用参数</h2>
+    <p>在代表cursor的SQL语句中，可以使用定义的定量，如下所示：</p>
+    <pre class="code" data-type="sql">m_table_id int;
 cursor cur1 is
 select a, b from test_table where table_id = m_table_id ;</pre>
-<p>可读性更好的方法是使用参数，如下所示：</p>
-<pre>cursor cur1(p_table_id int) is
+    <p>可读性更好的方法是使用参数，如下所示：</p>
+    <pre class="code" data-type="sql">cursor cur1(p_table_id int) is
 select a, b from test_table where table_id = p_table_id ;
 ...
 open cursor(10);</pre>
-<h2><a name="exception"></a>N.4 使用异常</h2>
-<h3>N.4.1 基本语法</h3>
-<pre>begin
+    <h1>使用异常</h1>
+    <h2>基本语法</h2>
+    <pre class="code" data-type="sql">begin
 ...
 exception
   when others then
     handle_error(...);
 end;</pre>
-<h3>N.4.2 自定义异常</h3>
-<pre>declare 
+    <p>others 表示所有未被明确处理的异常。常见异常有如下类型</p>
+    <table style="width: 800px">
+        <tr>
+            <th>异常</th>
+            <th>说明</th>
+        </tr>
+        <tr>
+            <td>NO_DATA_FOUND</td>
+            <td>使用 SELECT 语名进行赋值时，如查找不到记录则触发该异常</td>
+        </tr>
+    </table>
+    <h2>自定义异常</h2>
+    <pre class="code" data-type="sql">declare 
 e_excption_1 exception;
 declare e_excption_2 exception;
 ...
@@ -124,9 +140,9 @@ exception
   when others then
     handl_other_error(...);
 end;</pre>
-<h2><a name="skills"></a>N.5 一些在存储过程中使用的技巧</h2>
-<h3>N.5.1 执行以参数形式传入的SQL语句</h3>
-<pre>--示例，传入表名，删除该表
+    <h1>一些在存储过程中使用的技巧</h1>
+    <h2>执行以参数形式传入的SQL语句</h2>
+    <pre class="code" data-type="sql">--示例，传入表名，删除该表
 CREATE OR REPLACE  PROCEDURE "REPORT_SYS"."DROP_TABLE" (
  table_name in varchar2 
 )
@@ -137,8 +153,8 @@ begin
   execute immediate str_sql;
   commit;
 end;</pre>
-<h3>N.5.2 使用DBMS_SQL执行传入SQL语句</h3>
-<pre>CREATE OR REPLACE  PROCEDURE "REPORT_SYS"."DROP_TABLE" (
+    <h2>使用DBMS_SQL执行传入SQL语句</h2>
+    <pre class="code" data-type="sql">CREATE OR REPLACE  PROCEDURE "REPORT_SYS"."DROP_TABLE" (
  table_name in varchar2 
 )
 as
@@ -152,17 +168,17 @@ EXCEPTION
   WHEN  OTHERS  THEN  
   DBMS_SQL.CLOSE_CURSOR  (cursor_id);  
 end;</pre>
-<h2><a name="function"></a>N.6 函数</h2>
-<p>函数与存储过程基本相同，主要是创建声明不同，其创建声明的方式为</p>
-<pre>create or replace function [schema.]function_name(参数列表)
+    <h1>函数</h1>
+    <p>函数与存储过程基本相同，主要是创建声明不同，其创建声明的方式为</p>
+    <pre class="code" data-type="sql">create or replace function [schema.]function_name(参数列表)
 return 返回值类型
 as
 begin
   函数体
 end;</pre>
-<p>另外就是在函数体中要使用return 语句返回一个值。</p>
-<p>下面是一个简单的示例，返回传入参数+1的值</p>
-<pre>REATE OR REPLACE  FUNCTION "TEST_FUNC" (
+    <p>另外就是在函数体中要使用return 语句返回一个值。</p>
+    <p>下面是一个简单的示例，返回传入参数+1的值</p>
+    <pre class="code" data-type="sql">REATE OR REPLACE  FUNCTION "TEST_FUNC" (
  parm1 in number
 )
 return number
@@ -173,20 +189,21 @@ begin
   return val;
 
 end test_func;</pre>
-<p>以如下方式调用：</p>
-<pre>select test_func(10) from dual;</pre>
-<h2><a id="debug"></a>N.7 调试</h2>
-<p>下面是一个存储过程的调试例子</p>
-<p>存储过程声明</p>
-<pre>PROCEDURE       SCORE_CARD_GENERATE_QUERY (
+    <p>以如下方式调用：</p>
+    <pre class="code" data-type="sql">select test_func(10) from dual;</pre>
+    <h1>调试</h1>
+    <h2>带返回值的存储过程示例</h2>
+    <p>下面是一个存储过程的调试例子</p>
+    <p>存储过程声明</p>
+    <pre class="code" data-type="sql">PROCEDURE       SCORE_CARD_GENERATE_QUERY (
     columnList        varchar2_tabtyp,
     criteriaFields    varchar2_tabtyp,
     criteria          varchar2,
     message     OUT   varchar2,
     query       OUT   clob
     )</pre>
-<p>测试程序</p>
-<pre>DECLARE
+    <p>测试程序</p>
+    <pre class="code" data-type="sql">DECLARE
   COLUMNLIST GOLLF.VARCHAR2_TABTYP;
   CRITERIAFIELDS GOLLF.VARCHAR2_TABTYP;
   CRITERIA VARCHAR2(200);
@@ -211,17 +228,76 @@ BEGIN
   DBMS_OUTPUT.PUT_LINE('MESSAGE = ' || MESSAGE);
   DBMS_OUTPUT.PUT_LINE('QUERY = ' || QUERY);
 END;</pre>
-<h2><a name="notice"></a>N.8 注意点</h2>
-<p>1、在存储过程中执行完更新操作后，一定要在最后加入“commit”命令提交</p>
-<h2><a name="limitation"></a>N.9 存储过程的功能限制 </h2>
-<p>1、默认情况下，不能在存储过程中执行创建表、视图、存储过程的语句</p>
-<p><img src="images/note.jpg" width="20" height="20">注意：在存储过程中的所有操作都必须直接显式授权，不能通过角色授权。必须把 CREATE TABLE 权限显式授予创建 plsql 的这个用户，授权方式如下：</p>
-<pre>grant create table to plsql</pre>
-<p>2、如果要在存储过程中访问别的用户所属的对象，需要将该对象的相应访问权限赋给当前用户</p>
-<p>3、不能在存储过程中使用纯粹的查询语句，也就是说，不能指望用存储过程返回一个结果集。</p>
-<p>&nbsp;</p>
-<p>&nbsp;</p>
-<p>&nbsp; </p>
-<script type="text/javascript" src="index.js"></script>
+    <h2>使用 cursor 返回结果集的函数示例</h2>
+    <p>创建测试表</p>
+    <pre class="code" data-type="sql">create table test_table (test_id number(10), test_value varchar2(10));
+insert into test_table values(1, 'test 1');
+insert into test_table values(2, 'test 2');</pre>
+    <p>创建测试函数</p>
+    <pre class="code" data-type="sql">CREATE OR replace FUNCTION test_func(startId int)
+RETURN SYS_REFCURSOR 
+IS 
+  cur_test SYS_REFCURSOR; 
+BEGIN
+  open cur_test for
+  with A as (select test_id, test_value from test_table where test_id >= startId)
+  select * from A;
+  
+  RETURN cur_test; 
+END;</pre>
+    <p>简单执行</p>
+    <pre class="code" data-type="sql">select test_func(0) from dual;</pre>
+    <p>逐条输出结果</p>
+    <pre class="code" data-type-="sql">declare
+  test_id int;
+  test_value varchar2(20);
+  cur_test SYS_REFCURSOR; 
+begin
+  cur_test := test_func(0);
+  
+  loop
+    fetch cur_test into test_id, test_value;
+    exit when cur_test%notfound;
+
+    dbms_output.put_line('id = ' || test_id || ', value = ' || test_value);
+  end loop;
+end;</pre>
+    <h2>使用 cursor 返回结果集的存储过程示例</h2>
+    <p>使用和上例函数中相同的测试表</p>
+    <p>创建测试存储过程如下：</p>
+    <pre class="code" data-type="sql">CREATE OR replace procedure test_proc(startId int, cur_test out SYS_REFCURSOR)
+AS
+BEGIN
+  open cur_test for
+  with A as (select test_id, test_value from test_table where test_id >= startId)
+  select * from A;
+END;</pre>
+    <p>使用 SQL 调用如下：</p>
+    <pre class="code" data-type="sql">declare
+  test_id int;
+  test_value varchar2(20);
+  cur_test SYS_REFCURSOR; 
+begin
+  test_proc(0, cur_test);
+  
+  loop
+    fetch cur_test into test_id, test_value;
+    exit when cur_test%notfound;
+    dbms_output.put_line('id = ' || test_id || ', value = ' || test_value);
+  end loop;
+end;</pre>
+    <h1>注意点</h1>
+    <p>1、在存储过程中执行完更新操作后，一定要在最后加入“commit”命令提交</p>
+    <h1>存储过程的功能限制 </h1>
+    <p>1、默认情况下，不能在存储过程中执行创建表、视图、存储过程的语句</p>
+    <p>
+        <img src="images/note.jpg" width="20" height="20">注意：在存储过程中的所有操作都必须直接显式授权，不能通过角色授权。必须把 CREATE TABLE 权限显式授予创建 plsql 的这个用户，授权方式如下：</p>
+    <pre class="code" data-type="sql">grant create table to plsql</pre>
+    <p>2、如果要在存储过程中访问别的用户所属的对象，需要将该对象的相应访问权限赋给当前用户</p>
+    <p>3、不能在存储过程中使用纯粹的查询语句，也就是说，不能指望用存储过程返回一个结果集。</p>
+    <p>&nbsp;</p>
+    <p>&nbsp;</p>
+    <p>&nbsp; </p>
+
 </body>
 </html>

@@ -1,18 +1,16 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-"http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html>
+
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=gb2312">
-<script language="javascript" src="css.js"></script>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
 <title>第五章 数据库维护</title>
 </head>
 
 <body>
-<h1 align="center">第五章 数据库维护</h1>
-<h2><a href="#5_1">5.1 数据库备份</a></h2>
-<h2><a href="#5_2">5.2 恢复数据库</a></h2>
-<h2><a name="5_1"></a>5.1 数据库备份</h2>
-<h3>5.1.1 命令行方式</h3>
+<p id="title">第五章 数据库维护</p>
+<h1>5.1 数据库备份</h1>
+<h2>5.1.1 命令行方式</h2>
 <p>Oracle提供exp.exe来对数据库进行备份，其所在目录为%ORACLE_HOME%\ora92\bin，其格式如下：</p>
 <p>exp 用户名/口令@服务名 参数表</p>
 <p>参数格式如下:</p>
@@ -20,12 +18,12 @@
 <p> 例程: EXP SCOTT/TIGER GRANTS=Y TABLES=(EMP,DEPT,MGR)
   或 TABLES=(T1: P1,T1: P2)，如果 T1 是分区表</p>
 <p>USERID 必须是命令行中的第一个参数。</p>
-<table width="100%" >
+<table style="width:100%" >
   <tr>
-    <th width="25%">关键字</th>
-    <th width="25%">说明（默认）</th>
-    <th width="25%">关键字</th>
-    <th width="25%">说明（默认）</th>
+    <th style="width:25%">关键字</th>
+    <th style="width:25%">说明（默认）</th>
+    <th style="width:25%">关键字</th>
+    <th style="width:25%">说明（默认）</th>
   </tr>
   <tr>
     <td>USERID</td>
@@ -146,9 +144,9 @@ exp system/password@oemrep file=c:/pp.dmp owner=(pp)
 
 --导出表table1, table2到c:\table.dmp
 exp system/password@oemrep file=c:/pp.dmp TABLES=(table1,table2)</pre>
-<h3>5.1.2 图形界面方式 </h3>
+<h2>5.1.2 图形界面方式 </h2>
 <p>第一步、使用管理员账号登录到OMS</p>
-<p><img src="images/015.jpg" width="516" height="301"></p>
+<p><img src="images/015.jpg" style="width:516" height="301"></p>
 <p>如果无法启动，可能有以下几个原因：</p>
 <ul>
   <li>用户名或口令错误</li>
@@ -157,44 +155,44 @@ exp system/password@oemrep file=c:/pp.dmp TABLES=(table1,table2)</pre>
 <p>第二步、配置首选身份证明</p>
 <p>打开OMS菜单上的“配置”-&gt;“首选项”-&gt;“首选身份证明”</p>
 <p>首先是配置TEST数据库的首选身份证明：</p>
-<p><img src="images/016.jpg" width="518" height="450"></p>
+<p><img src="images/016.jpg" style="width:518" height="450"></p>
 <p>然后是配置服务器auto80的首选身份证明，这里使用的是操作系统用户 Administrator：</p>
-<p><img src="images/017.jpg" width="518" height="450"> </p>
+<p><img src="images/017.jpg" style="width:518" height="450"> </p>
 <p>注意：此处的操作系统用户必须有“登录为批处理作业”的权限，不幸的是，默认情况下 Administrator 用户无该权限，授权方法为打开“开始”-&gt;“管理工具”-&gt;“本地安全策略”-&gt;“本地策略”-&gt;“用户权利指派”，找到“作为批处理作业登录”项，将 administrator 用户加入，如下图所示：</p>
-<p><img src="images/018.jpg" width="401" height="376"> </p>
+<p><img src="images/018.jpg" style="width:401" height="376"> </p>
 <p>如果操作系统用户没有该权限，在备份过程中ORACLE会报告错误：“目标节点的节点首选身份证明无效或具有的权限不足以完成该操作。在 Windows 平台上, 为 Windows 目标指定的节点身份证明应具有 &quot;登录为批处理作业&quot; 的权限。”</p>
 <p>第三步、备份数据库</p>
 <p>打开OMS菜单“工具”-&gt;“数据库工具”-&gt;“备份管理”-&gt;“备份”：</p>
-<p><img src="images/019.jpg" width="601" height="431"></p>
-<p><img src="images/020.jpg" width="601" height="431"></p>
-<p><img src="images/021.jpg" width="593" height="404"></p>
-<p><img src="images/022.jpg" width="601" height="431"></p>
-<p><img src="images/023.jpg" width="601" height="431"></p>
-<p><img src="images/024.jpg" width="601" height="431"></p>
-<p><img src="images/025.jpg" width="601" height="431"></p>
-<p><img src="images/026.jpg" width="601" height="431"></p>
-<p><img src="images/027.jpg" width="450" height="450"></p>
+<p><img src="images/019.jpg" style="width:601" height="431"></p>
+<p><img src="images/020.jpg" style="width:601" height="431"></p>
+<p><img src="images/021.jpg" style="width:593" height="404"></p>
+<p><img src="images/022.jpg" style="width:601" height="431"></p>
+<p><img src="images/023.jpg" style="width:601" height="431"></p>
+<p><img src="images/024.jpg" style="width:601" height="431"></p>
+<p><img src="images/025.jpg" style="width:601" height="431"></p>
+<p><img src="images/026.jpg" style="width:601" height="431"></p>
+<p><img src="images/027.jpg" style="width:450" height="450"></p>
 <p>确认后开始备份，弹出提示窗口：</p>
-<p><img src="images/028.jpg" width="388" height="159"></p>
+<p><img src="images/028.jpg" style="width:388" height="159"></p>
 <p>此时打开OMS的“作业”窗口，可看到如下的作业列表：</p>
-<p><img src="images/029.jpg" width="447" height="72"></p>
+<p><img src="images/029.jpg" style="width:447" height="72"></p>
 <p>双击可查看其详细资料：</p>
-<p><img src="images/030.jpg" width="660" height="420"></p>
+<p><img src="images/030.jpg" style="width:660" height="420"></p>
 <p>最后完成后的状态如下：</p>
-<p><img src="images/031.jpg" width="660" height="420"></p>
-<h2><a name="5_2"></a>5.2 导入数据库内容</h2>
-<h3>5.2.1 命令行导入</h3>
+<p><img src="images/031.jpg" style="width:660" height="420"></p>
+<h1>5.2 导入数据库内容</h1>
+<h2>5.2.1 命令行导入</h2>
 <p>Oracle提供imp.exe来对数据库进行备份，其所在目录为%ORACLE_HOME%\ora92\bin，其格式如下：</p>
 <p>imp 用户名/口令@服务名 参数表</p>
 <p>参数格式如下:</p>
 <p>格式: IMP KEYWORD=value 或 KEYWORD=(value1,value2,...,valueN)</p>
 <p>USERID 必须是命令行中的第一个参数。</p>
-<table width="100%" >
+<table style="width:100%" >
   <tr>
-    <th width="25%">关键字</th>
-    <th width="25%">说明（默认）</th>
-    <th width="25%">关键字</th>
-    <th width="25%">说明（默认）</th>
+    <th style="width:25%">关键字</th>
+    <th style="width:25%">说明（默认）</th>
+    <th style="width:25%">关键字</th>
+    <th style="width:25%">说明（默认）</th>
   </tr>
   <tr>
     <td>USERID </td>
@@ -313,6 +311,6 @@ TTS_OWNERS 拥有可传输表空间集中数据的用户</p>
 <p>&nbsp; </p>
 <p>&nbsp;</p>
 <p>&nbsp;</p>
-<script language="javascript" src="index.js"></script> 
+ 
 </body>
 </html>

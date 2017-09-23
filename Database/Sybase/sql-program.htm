@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+	<script type="text/javascript" src="../../mylib/js/css.js"></script>
+	<title>Sybase Note</title>
+</head>
+
+<body>
+	<p id="title">SQL 编程</p>
+	<h1>简单示例</h1>
+    <pre class="code" data-type="sql">declare @a datetime, @b varchar(20)
+set @a = getdate()
+
+if (@a is null or year(@a) = 2016)
+    print 'NULL'
+else
+begin
+    set @b = CONVERT(varchar, @a, 101)
+    print @b
+end</pre>
+    
+	</body>
+</html>

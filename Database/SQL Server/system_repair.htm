@@ -3,18 +3,18 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
 <title>系统修复</title>
-<script type="text/javascript" src="css.js"></script>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
 </head>
 
 <body>
- <h1>第N章 系统修复</h1>
- <hr />
- <h2><a href="#suspect_db">N.1 置疑数据库恢复</a></h2>
- <h2><a href="#m_sizerec">N.2 m_SizeRec &gt; 0 &amp;&amp; m_SizeRec &lt;= MAXDATAROW</a></h2>
- <hr />
- <h2><a name="suspect_db" id="suspect_db"></a>N.1 置疑数据库恢复</h2>
+ <p id="title">系统修复</p>
+ 
+ 
+ 
+ 
+ <h1>置疑数据库恢复</h1>
  <p>如果数据库文件还在的话，执行如下程序</p>
- <pre>USE MASTER
+ <pre class="code" data-type="sql">USE MASTER
 GO
 SP_CONFIGURE 'ALLOW UPDATES',1 RECONFIGURE WITH OVERRIDE
 GO
@@ -31,16 +31,16 @@ Go
 sp_dboption '置疑的数据库名', 'single user', 'false' 
 
 Go</pre>
- <h2><a name="m_sizerec" id="m_sizerec"></a>N.2 m_SizeRec &gt; 0 &amp;&amp; m_SizeRec &lt;= MAXDATAROW</h2>
+ <h1>m_SizeRec &gt; 0 &amp;&amp; m_SizeRec &lt;= MAXDATAROW</h1>
  <p>这个错误也够古怪，单表查询时看不到，多表一组合就出来闹事，而且，只有数据库在本机的时候才能出现这个错误，如果是在远程，错误更加的莫名其妙。</p>
  <p>使用如下命令检查表是否出错</p>
- <pre>DBCC CHECKTABLE('表名')</pre>
+ <pre class="code" data-type="sql">DBCC CHECKTABLE('表名')</pre>
  <p>根据输出信息判断出不出错，一般来讲，在查询分析器中看到结果中有红字就算是有错了。具体说如果结果只有3行（SQL Server 2000是这样），象下面这样：</p>
- <pre>DBCC results for '表名'.
+ <pre class="code" data-type="sql">DBCC results for '表名'.
 There are 89 rows in 2 pages for object '表名'.
 DBCC execution completed. If DBCC printed error messages, contact your system administrator.</pre>
  <p>就表示表没错，否则就需要修复了。修复方式如下：</p>
- <pre>--切换到单用户模式
+ <pre class="code" data-type="sql">--切换到单用户模式
 alter database secco_eu set single_user with rollback immediate
 
 --修复
@@ -51,6 +51,6 @@ alter database secco_eu set multi_user with rollback immediate</pre>
  <p>&nbsp;</p>
  <p>&nbsp;</p>
  <p>&nbsp;</p>
-<script type="text/javascript" src="index.js"></script>
+
 </body>
 </html>

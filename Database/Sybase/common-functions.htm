@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+    <script type="text/javascript" src="../../mylib/js/css.js"></script>
+    <title>Sybase Note</title>
+</head>
+
+<body>
+    <p id="title">常用函数</p>
+    <h1>日期类</h1>
+    <pre class="code" data-type="sql">--当前日期
+select getdate()
+
+-- 格式分日期 mm/dd/yyyy
+select CONVERT(varchar, getdate(), 101)
+
+--取日期的各个部分值
+select year(getdate())
+select month(getdate())
+select day(getdate())
+select datepart(year, getdate())
+select datepart(month, getdate())
+select datepart(day, getdate())
+select datepart(hour, getdate())</pre>
+    <p>datepart 支持的参数如下图所示</p>
+    <p>
+        <img alt="" src="img/date-part-arguments.png" /></p>
+    <p>convert 支持的参数如下所示</p>
+    <p>
+        <img alt="" src="img/date-convert.png" /></p>
+    <h1>信息显示类</h1>
+    <pre class="code" data-type="sql">
+-- 打印字符串
+print 'Hello, world.'
+    </pre>
+    <p class="note">print 后只可能用字符串常量和变量，不支持其它类型和返回值为字符串的函数，如下语句是非法的</p>
+    <pre class="code" data-type="sql">
+-- 不能使用非字符串类型
+declare @a datetime
+set @a = getdate()
+print @a
+
+-- 不能使用的函数返回值, 即使返回值类型为字符串
+print convert(varchar, getdate(), 101)
+</pre>
+</body>
+</html>

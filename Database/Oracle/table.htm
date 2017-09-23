@@ -1,19 +1,17 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-"http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html>
+
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=gb2312">
 <title>表</title>
-<script language="javascript" src="css.js"></script>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
 </head>
 
 <body>
-<h1>第N章 表</h1>
-<hr>
-<h2><a href="#pseudo_column">N.1 伪列</a></h2>
-<h2><a href="#data_type">N.2 列数据类型 </a></h2>
-<h2><a name="pseudo_column"></a>N.1 伪列 </h2>
-<h3>N.1.1 ROWID</h3>
+<p id="title">表</p>
+
+<h1>伪列 </h1>
+<h2>ROWID</h2>
 <p>用来定位行地址，它包括以下信息：</p>
 <ul>
   <li>对象号</li>
@@ -35,7 +33,7 @@
 <pre>SELECT ROWID, last_name  
 FROM employees
 WHERE department_id = 20;</pre>
-<h3>N.1.2 ROWNUM</h3>
+<h2>ROWNUM</h2>
 <p>这是执行查询语句后，为结果数据的行号，从1开始。你可以使用该伪列来限制返回的结果行数，如下：</p>
 <pre>SELECT * FROM employees WHERE ROWNUM &lt; 10;</pre>
 <p>如果查询语句中有统计函数，如COUNT、SUM等，ROWNUM伪列不能在SELECT子句中使用，最好也不要在WHERE子句中使用，因为那样统计范围只是ROWNUM限定的范围。如果想在SELECT子句或WHERE子句中使用的话，请将带有统计函数的查询变为子查询，如下所示：</p>
@@ -87,8 +85,8 @@ from (select loop_id, count(1) as co from component group by loop_id) a;</pre>
 <p>我使用如下语句进行查询：</p>
 <pre>select * from table1 where rownum &lt;= 10 order by col2 </pre>
 <p>你会发现返回的数据col2的最小值并不是1，而是91！这是因为它是先把排序前的数据取回前10行，再对这前10行进行排序，而不是先对结果集进行排序，再取回前10行。</p>
-<h2><a name="data_type"></a>N.2 列数据类型 </h2>
-<h3>N.2.1 NUMBER </h3>
+<h1>列数据类型 </h1>
+<h2>NUMBER </h2>
 <p>表示整数或定点小数，格式如下：</p>
 <pre>NUMBER(数字总位数，小数位数)</pre>
 <p>下面是几个常用的数值类型与number的对应关系</p>
@@ -102,11 +100,11 @@ from (select loop_id, count(1) as co from component group by loop_id) a;</pre>
     <td>NUMBER(38)</td>
   </tr>
 </table>
-<h3>N.2.2 FLOAT</h3>
+<h2>FLOAT</h2>
 <p>浮点型，格式如下：</p>
 <p>FLOAT(精度)</p>
 <p>默认为126，REAL表示FLOAT(63)</p>
-<h3>N.2.3 字符串</h3>
+<h2>字符串</h2>
 <p>包括类型：char、varchar2、long、nchar、nvarchar2，它们的存储长度如下表所示	</p>
 <table width="60%" >
   <tr>
@@ -126,7 +124,7 @@ from (select loop_id, count(1) as co from component group by loop_id) a;</pre>
     <td>2G</td>
   </tr>
 </table>
-<h4><a name="long"></a>LONG类型</h4>
+<h3>LONG类型</h3>
 <p>LONG类型用来存储变长的字符串，最大长度为2G，与varchar2类型相似，不过varchar2的最大长度为4000，因此可用来存储暴长的文本。</p>
 <p><img src="images/note.jpg" width="20" height="20">注意：最好不要再用LONG类型了，而改用CLOB类型，因为ORACLE正在计划放弃对该类型的支持。</p>
 <p>LONG类型的使用有如下限制</p>
@@ -177,18 +175,18 @@ insert into table2
 select to_lob(a) from table1;</pre>
 <P><img src="images/note.jpg" width="20" height="20">注意：虽然to_lob函数可以将long类型转换为clob类型，但却不能直接这样用：</P>
 <pre>select to_lob(a) from table1</pre>
-<h3>N.2.4 DATE </h3>
+<h2>DATE </h2>
 <p>日期型，与SQL Server不同，在操作DATE型时，不能以字符串来代替，而是需要使用<a href="functions.htm#to_date">to_date</a>函数来转换一下。</p>
-<h3>N.2.5 大数据类型</h3>
-<h4>N.2.5.1 BLOB</h4>
+<h2>大数据类型</h2>
+<h3>BLOB</h3>
 <p>大数据量二进制数据，可用来存放图片等数据。</p>
-<h4>N.2.5.2 CLOB</h4>
+<h3>CLOB</h3>
 <p>大数据量文本</p>
-<h4>&nbsp;</h4>
+<h3>&nbsp;</h3>
 
 <p>&nbsp;</p>
 <p>&nbsp;</p>
 <p>&nbsp;</p>
-<script language="javascript" src="index.js"></script>
+
 </body>
 </html>

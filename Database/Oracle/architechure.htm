@@ -1,14 +1,15 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-"http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html>
+
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
 <title>系统架构</title>
 </head>
 
 <body>
-<h1>第二章 ORACLE的系统架构</h1>
-<h2>2.1 OEM的体系结构</h2>
+<p id="title">第二章 ORACLE的系统架构</p>
+<h1>2.1 OEM的体系结构</h1>
 <p>现在使用的一般都是Oracle Enterprise Manager (EM) 2.2版，实现了3层结构，其组成如下:</p>
 <p> 第一层是客户端工具，如：EM Console, DBA Management Pack和其他集成的Oracle应用。这些工具是从Windows NT, Windows 95, Windows 98或Sun Solaris机器的本地启动的。这些工具也可以是通过浏览器下载下来的JAVA applet。</p>
 <p>第二层，也就是中间层由安装在Windows NT/2000或Sun Solaris server上的Oracle Management Server (OMS)构成。很多工具都要求先配置好OMS。OMS提供了:</p>
@@ -27,7 +28,7 @@
 </ul>
 <p>第三层是智能代理（Intelligent Agent），是在每个server上必须安装的，用来执行任务和监控发生在该服务器各被管理对象上的事件的软件。被管理对象包括网络节点（服务器）、数据库、侦听程序（listener）以及其他安装在这些结点上的Oracle服务。</p>
 <p>三层结构只是功能上的区分，具体安装设置时可以任意组合。</p>
-<h2>2.2 OEM组件介绍</h2>
+<h1>2.2 OEM组件介绍</h1>
 <p>OEM包换有一组工具：</p>
 <ul>
   <li> DataManager（数据管理器）：这工具使你能够象加载数据一样执行数据的export/import。</li>
@@ -39,7 +40,7 @@
   <li> BackupManager（备份管理器）：这工具允许你管理备份和恢复为Oracle7和Oracle8数据库。在Oracle7此工具支持EnterpriseBackupUtility(EBU)，在Oracle8此工具支持恢复管理器RecoveryManager。</li>
   <li> SoftwareManager（软件管理器）：这允许你将远程软件安装到支持这一特性的远程服务器。</li>
 </ul>
-<h2>2.3 OEM安装与设置</h2>
+<h1>2.3 OEM安装与设置</h1>
 <p>OEM 2.2需要单独安装，原来可以从ORACLE官方网站上下载，现在早已取消下载，所以SOURCE的取得只能是各显神通了。</p>
 <p>1、启动智能代理</p>
 <p>为了管理结点和结点上的oracle服务，必须在结点上配置并运行一个智能代理（Intelligent Agent）。智能代理可以从Oracle Server CD来安装。一般在数据库安装时都会选择安装的，如果你没有安装单独来安装。</p>

@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>字符集</title>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+<p id="title">字符集</p>
+
+字符集的基本知识</h1>
+<p>如果从头说起，字符集最早的编码方案来自于与ASCII.
+这也是我们最常见的编码方式。该方案起源于1960年代初期，最初是美国国会图书馆制定用来作为美国图书馆界书目交换的共同标准，最后完善成为美国的国家标准ASCII（American Standard Codefor Information Interchange），之后进一步演变成世界性的计算机字符编码标准ISO646（其全名为7-bit coded character set for information interchange）。成为计算机编码方案的基础。 </p>
+<p> Oracle数据库最早支持的编码方案也就是US7ASCII.
+  但是我们知道，英文字符一般是以一个字节来存储的，7位的编码方案最多只能代表128个字符；经过扩展的8位的编码方案也只能代表256个字符，这远远不能满足计算机发展的需要，对于亚洲国家复杂的字符存储需要更多的码位，于是各种编码方案随之而生。</p>
+<p>为了容纳全世界各种语言的所有字符和符号，解决不同编码之间的兼容和转换问题，1991年元月，10多家公司共同出资，组建Unicode协会,随后Unicode编码产生了。<br />
+  Unicode协会的口号是: 给每个字符提供了一个唯一的数字，不论是什么平台，不论是什么程序，不论什么语言。</p>
+<p> 最初Unicode编码使用2-Byte(16bit)来进行编码，但是最多只能容纳65536个字符，仍然不够使用，后来进行了扩充，也就是Unicode3.1标准，增加了额外的补充字符定义，现在Unicode4.0标准已经发布，具体可以参考Unicode官方站点:</p>
+<p><a href="http://www.unicode.org/">http://www.unicode.org/</a></p>
+<p>Unicode编码方案主要有三个实施标准:</p>
+<ul>
+  <li> UTF-8</li>
+  <li> USC-2</li>
+  <li> UTF-16</li>
+</ul>
+<p>  Oracle从7.2开始支持UTF-8编码，提供Unicode编码支持。</p>
+<p>按照各种标准的含义，Oracle推荐，如果你的数据库需要存放不同语言的不同符号和字符，建议使用Unicode编码方案。诚然，Unicode方案可以表示更多的字符，但是由于多位的存储，需要额外的存储空间和网络传输，所以选择最适合的数据库字符集仍然需要慎重考虑。</p>
+数据库的字符集 </h1>
+<p>字符集在创建数据库时指定，在创建后通常不能更改，所以在创建数据库时能否选择一个正确的字符集就显得尤为重要。 
+在创建数据库时，我们可以指定字符集(CHARACTER SET)和国家字符集(NATIONAL CHARACTER SET)。</p>
+<p> 字符集用来存储:</p>
+<ul>
+  <li> CHAR, VARCHAR2, CLOB, LONG等类型数据</li>
+  <li> 用来标示诸如表名、列名以及PL/SQL变量等</li>
+  <li>SQL和PL/SQL程序单元等</li>
+</ul>
+<p> 国家字符集用以存储:</p>
+<ul>
+  <li> NCHAR, NVARCHAR2, NCLOB等类型数据</li>
+</ul>
+<p>这些设置在数据库创建时指定，我们可以看一下数据库的创建脚本:</p>
+<pre>connect SYS/change_on_install as SYSDBA
+set echo on
+spool E:\oracle\ora92\assistants\dbca\logs\CreateDB.log
+startup nomount pfile=&quot;E:\oracle\admin\eygle\scripts\init.ora&quot;;
+CREATE DATABASE eygle
+MAXINSTANCES 1
+MAXLOGHISTORY 1
+MAXLOGFILES 5
+MAXLOGMEMBERS 3
+MAXDATAFILES 100
+DATAFILE 'E:\oracle\oradata\eygle\system01.dbf' SIZE 250M REUSE AUTOEXTEND ON NEXT 10240K MAXSIZE UNLIMITED
+EXTENT MANAGEMENT LOCAL
+DEFAULT TEMPORARY TABLESPACE TEMP TEMPFILE 'E:\oracle\oradata\eygle\temp01.dbf' SIZE 40M REUSE AUTOEXTEND 
+ON NEXT 640K MAXSIZE UNLIMITED
+UNDO TABLESPACE &quot;UNDOTBS1&quot; DATAFILE 'E:\oracle\oradata\eygle\undotbs01.dbf' SIZE 50M REUSE AUTOEXTEND 
+ON NEXT 5120K MAXSIZE UNLIMITED
+<strong>CHARACTER SET ZHS16GBK
+NATIONAL CHARACTER SET AL16UTF16</strong>
+LOGFILE GROUP 1 ('E:\oracle\oradata\eygle\redo01.log') SIZE 10M,
+GROUP 2 ('E:\oracle\oradata\eygle\redo02.log') SIZE 10M,
+GROUP 3 ('E:\oracle\oradata\eygle\redo03.log') SIZE 10M;
+spool off
+exit;</pre>
+<p>以上用粗体显示的就是对我们至关重要的字符集设置。</p>
+<p>在创建数据库的过程中，在以下界面选择你的字符集，对于简体中文平台，缺省的字符集是:ZHS16GBK </p>
+<p><img src="images/setup_charset.jpg" style="width:754" height="533" /></p>
+<p>一旦你的字符集选定了，数据库中能够存储的字符就受到了限制，所以你选择的字符集的应该可以容纳所有你将用到字符。</p>
+<p>常见的中文字符集有:</p>
+<ul>
+  <li>ZHS16CGB231280  </li>
+  <li>CGB2312-80  </li>
+  <li>16-bit Simplified Chinese MB,</li>
+  <li>ASCII</li>
+  <li>ZHS16GBK </li>
+  <li>GBK   </li>
+  <li>UDC<br />
+</li>
+</ul>
+<ul>
+  <li>GB2312码是中华人民共和国国家汉字信息交换用编码，全称《信息交换用汉字编码字符集--基本集》，由国家标准总局发布，1981年5月1日实施，通行于大陆。新加坡等地也使用此编码。</li>
+  <li>GBK编码是1995年12月颁布的指导性规范。GBK与国家标准 GB 2312-80 信息处理交换码所对应的、事实上的内码标准兼容；同时，在字汇一级支持 ISO/IEC 10646-1 和
+    GB 13000-1 的全部中日韩 (CJK) 汉字(20902字)。包含了更多的编码。</li>
+</ul>
+<p>但是我们说，ZHS16GBK 并非是ZHS16CGB231280的严格超集（虽然后者的汉字在前者中都存在，但是同样的编码在不同两个字符集中可能表达不同的汉字），所以在做数据库字符转换时仍然需要特别注意。<br />
+</p>
+<p>Oracle的字符集命名遵循以下命名规则:</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&lt;Language&gt;&lt;bit size&gt;&lt;encoding&gt;</p>
+<p>即:  &lt;语言&gt;&nbsp;&nbsp;&nbsp;&lt;比特位数&gt;&nbsp;&lt;编码&gt;</p>
+<p>比如: ZHS    · &nbsp;16     ·&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;GBK<br />
+</p>
+<p>需要说明的是，有些字符集命名违背了这个规范，Oracle8/Oralce8i中的UTF-8是第一个打破这个命名规范的字符集。我们可以看到一类字符集以 AL开头，如:<br />
+  AL16UTF16
+  其中 AL代表 ALL,指适用于所有语言(All Languages)，按照这个标准当年UTF-8本应被命名为AL24UTF8。</p>
+字符集的查看 </h1>
+查看数据库的字符集 </h2>
+<p>信息存放在sys.props$表中，也可以在视图sys.V$NLS_PARAMETERS中查询，与“NLS_CHARACTERSET”对应的值便为当前使用的字符集，中文字符集为“ZHS16GBK”。</p>
+<pre>select value from sys.v$nls_parameters where parameter = 'NLS_CHARACTERSET'
+
+select value$ from sys.props$ where name = 'NLS_CHARACTERSET'
+
+select userenv('language') from dual</pre>
+<p>有如下常用字符集</p>
+<table style="width:80%" >
+  <tr>
+    <th style="width:30%">名称</th>
+    <th style="width:70%">说明</th>
+  </tr>
+  <tr>
+    <td height="29">ZHS16GBK</td>
+    <td>简体中文</td>
+  </tr>
+  <tr>
+    <td>US7ASCII</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>WE8ISO8859P1</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>WE8DEC</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>WE8EBCDIC500</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>JA16EUC</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>UTF8</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>AL31UTF8</td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+查看导出.dmp文件的字符集</h2>
+<p>用oracle的exp工具导出的dmp文件也包含了字符集信息，dmp文件的第2和第3个字节记录了dmp文件的字符集。如果dmp文件不大，比如只有几M或几十M，可以用UltraEdit打开(16进制方式)，看第2第3个字节的内容，如0354，然后用以下SQL查出它对应的字符集:</p>
+<pre>SQL&gt; select nls_charset_name(to_number('0354','xxxx')) from dual;<br />ZHS16GBK</pre>
+<p>如果dmp文件很大，比如有2G以上(这也是最常见的情况)，用文本编辑器打开很慢或者完全打不开，可以用以下命令(在unix主机上): </p>
+<pre>cat exp.dmp |od -x|head -1|awk '{print $2 $3}'|cut -c 3-6</pre>
+字符集的更改 </h1>
+<p>oracle的字符集有互相的包容关系。如us7ascii就是zhs16gbk的子集,从us7ascii到zhs16gbk不会有数据解释上的问题,  不会有数据丢失。在所有的字符集中utf8应该是最大,因为它基于unicode,双字节保存字符(也因此在存储空间上占用更多)。</p>
+<p>一旦数据库创建后，数据库的字符集理论上讲是不能改变的。因此，在设计和安装之初考虑使用哪一种字符集十分重要。根据Oracle的官方说明，字符集的转  换是从子集到超集受支持,反之不行。如果两种字符集之间根本没有子集和超集的关系，那么字符集的转换是不受oracle支持的。对数据库server而  言，错误的修改字符集将会导致很多不可测的后果，可能会严重影响数据库的正常运行，所以在修改之前一定要确认两种字符集是否存在子集和超集的关系。一般来  说，除非万不得已，我们不建议修改oracle数据库server端的字符集。特别说明，我们最常用的两种字符集ZHS16GBK和  ZHS16CGB231280之间不存在子集和超集关系，因此理论上讲这两种字符集之间的相互转换不受支持。</p>
+<p>数据库创建以后，如果需要修改字符集，通常需要重建数据库，通过导入导出的方式来转换。
+  我们也可以通过以下方式更改</p>
+方法一</h2>
+<p>使用语句</p>
+<pre>ALTER DATABASE [<em><code>db_name</code></em><code>]</code> CHARACTER SET <em><code>new_character_set</code></em>;
+</pre>
+<p>注意:修改数据库字符集时必须谨慎，修改之前一定要为数据库备份。由于不能回退这项操作,因此可能会造成数据丢失或者损坏。</p>
+<p>这是最简单的转换字符集的方式，但并不总是有效。这个命令在Oracle8时被引入Oracle,这个操作在本质上并不转换任何数据库字符，只是简单的更新数据库中所有跟字符集相关的信息。</p>
+<p>这意味着，你只能在新字符集是旧字符集严格超集的情况下使用这种方式转换。所谓超集是指:
+  当前字符集中的每一个字符在新字符集中都可以表示，并使用同样的代码点，比如很多字符集都是US7ASCII的严格超集。</p>
+<p>如果不是超集，将获得以下错误:</p>
+<pre>SQL> ALTER DATABASE CHARACTER SET  ZHS16CGB231280;
+ALTER DATABASE CHARACTER SET  ZHS16CGB231280
+*
+ERROR at line 1:
+ORA-12712: new character set must be a superset of old character set</pre>
+<p>下面我们来看一个测试(以下测试在Oracle9.2.0下进行，Oracle9i较Oracle8i在编码方面有较大改变，在Oracle8i中，测试结果可能略有不同): </p>
+<pre>SQL&gt; select name,value$ from props$ where name like '%NLS%';
+
+NAME                           VALUE$
+------------------------------ ------------------------------
+NLS_LANGUAGE                   AMERICAN
+NLS_TERRITORY                  AMERICA
+NLS_CURRENCY                   $
+NLS_ISO_CURRENCY               AMERICA
+NLS_NUMERIC_CHARACTERS         .,
+NLS_CHARACTERSET               US7ASCII
+NLS_CALENDAR                   GREGORIAN
+NLS_DATE_FORMAT                DD-MON-RR
+NLS_DATE_LANGUAGE              AMERICAN
+……………….
+NLS_NCHAR_CHARACTERSET         AL16UTF16
+NLS_RDBMS_VERSION              9.2.0.4.0
+
+20 rows selected.
+SQL&gt; select name,dump(name) from eygle.test;
+
+NAME   DUMP(NAME)
+------------------------------------------------------
+测试     Typ=1 Len=4: 178,226,202,212
+Test      Typ=1 Len=4: 116,101,115,116
+
+
+2 rows selected.</pre>
+<p>转换字符集，数据库应该在RESTRICTED模式下进行.</p>
+<pre>c:\&gt;sqlplus &quot;/ as sysdba&quot;
+
+SQL*Plus: Release 9.2.0.4.0 - Production on Sat Nov 1 10:52:30 2003
+
+Copyright (c) 1982, 2002, Oracle Corporation.  All rights reserved.
+
+
+Connected to:
+Oracle9i Enterprise Edition Release 9.2.0.4.0 - Production
+With the Partitioning, Oracle Label Security, OLAP and Oracle Data Mining options
+JServer Release 9.2.0.4.0 - Production
+
+SQL&gt; shutdown immediate
+Database closed.
+Database dismounted.
+ORACLE instance shut down.
+SQL&gt; STARTUP MOUNT;
+ORACLE instance started.
+
+Total System Global Area   76619308 bytes
+Fixed Size                   454188 bytes
+Variable Size              58720256 bytes
+Database Buffers           16777216 bytes
+Redo Buffers                 667648 bytes
+Database mounted.
+SQL&gt; ALTER SESSION SET SQL_TRACE=TRUE;
+
+Session altered.
+
+SQL&gt; ALTER SYSTEM ENABLE RESTRICTED SESSION;
+
+System altered.
+
+SQL&gt; ALTER SYSTEM SET JOB_QUEUE_PROCESSES=0;
+
+System altered.
+
+SQL&gt; ALTER SYSTEM SET AQ_TM_PROCESSES=0;
+
+System altered.
+
+SQL&gt; ALTER DATABASE OPEN;
+
+Database altered.
+
+SQL&gt; set linesize 120
+SQL&gt; ALTER DATABASE CHARACTER SET ZHS16GBK;
+ALTER DATABASE CHARACTER SET ZHS16GBK
+*
+ERROR at line 1:
+ORA-12721: operation cannot execute when other sessions are active
+
+
+SQL&gt; ALTER DATABASE CHARACTER SET ZHS16GBK;
+ALTER DATABASE CHARACTER SET ZHS16GBK
+*
+ERROR at line 1:
+ORA-12716: Cannot ALTER DATABASE CHARACTER SET when CLOB data exists
+
+在Oracle9i中，如果数据库存在CLOB类型字段，那么就不允许对字符集进行转换
+
+SQL&gt;</pre>
+<p>这时候，我们可以去查看alert&lt;sid&gt;.log日志文件，看CLOB字段存在于哪些表上:</p>
+<pre>ALTER DATABASE CHARACTER SET ZHS16GBK
+ SYS.METASTYLESHEET (STYLESHEET) - CLOB populated
+ORA-12716 signalled during: ALTER DATABASE CHARACTER SET ZHS16GBK...</pre>
+<p>对于不同情况，Oracle提供不同的解决方案，如果是用户数据表，一般我们可以把包含CLOB字段的表导出，然后drop掉相关对象，转换后再导入数据库；对于系统表，可以按照以下方式处理:</p>
+<pre>SQL> truncate table Metastylesheet;
+Table truncated. </pre>
+<p>然后可以继续进行转换！</p>
+<pre>SQL> ALTER SESSION SET SQL_TRACE=TRUE;
+
+Session altered.
+
+SQL> ALTER DATABASE CHARACTER SET ZHS16GBK;
+
+Database altered.
+
+SQL> ALTER SESSION SET SQL_TRACE=FALSE;
+
+Session altered.</pre>
+<p>在9.2.0中，转换完成以后，可以通过运行catmet.sql脚本来重建Metastylesheet表:</p>
+<pre>SQL&gt; @?/rdbms/admin/catmet.sql</pre>
+<p>转换后的数据：</p>
+<pre>SQL&gt; select name,value$ from props$ where name like '%NLS%';
+
+NAME                           VALUE$
+------------------------------ ------------------------------
+NLS_LANGUAGE                   AMERICAN
+NLS_TERRITORY                  AMERICA
+NLS_CURRENCY                   $
+NLS_ISO_CURRENCY               AMERICA
+NLS_NUMERIC_CHARACTERS         .,
+NLS_CHARACTERSET               ZHS16GBK
+…..
+NLS_NCHAR_CHARACTERSET         AL16UTF16
+NLS_RDBMS_VERSION              9.2.0.4.0
+
+20 rows selected.
+
+SQL&gt; select * from eygle.test;
+
+NAME
+------------------------------
+测试
+test
+
+2 rows selected.</pre>
+<p><img src="images/note.jpg" style="width:20" height="20" />提示:
+通过设置sql_trace，我们可以跟踪很多数据库的后台操作，这个工具是DBA常用的“利器”之一。我们简单看一下数据库更改字符集时的后台处理，我提取了主要的更新部分。通过以下跟踪过程，我们看到数据库在更改字符集的时候，主要更新了12张数据字典表，修改了数据库的原数据，这也证实了我们以前的说法: <br />
+这个更改字符集的操作在本质上并不转换任何数据库字符，只是简单的更新数据库中所有跟字符集相关的信息。</p>
+<p>update col$ set charsetid = :1 <br />
+  where<br />
+charsetform = :2<br />
+</p>
+<p>update argument$ set charsetid = :1 <br />
+  where<br />
+  charsetform = :2<br />
+</p>
+<p>update collection$ set charsetid = :1 <br />
+  where<br />
+  charsetform = :2<br />
+</p>
+<p>update attribute$ set charsetid = :1 <br />
+  where<br />
+  charsetform = :2<br />
+</p>
+<p>update parameter$ set charsetid = :1 <br />
+  where<br />
+  charsetform = :2<br />
+</p>
+<p>update result$ set charsetid = :1 <br />
+  where<br />
+  charsetform = :2<br />
+</p>
+<p>update partcol$ set spare1 = :1 <br />
+  where<br />
+  charsetform = :2<br />
+</p>
+<p>update subpartcol$ set spare1 = :1 <br />
+  where<br />
+  charsetform = :2<br />
+</p>
+<p>update props$ set value$ = :1 <br />
+  where<br />
+  name = :2<br />
+</p>
+<p>update &quot;SYS&quot;.&quot;KOTAD$&quot; set SYS_NC_ROWINFO$ = :1 <br />
+  where<br />
+  SYS_NC_OID$ = :2</p>
+<p>update seq$ set increment$=:2,minvalue=:3,maxvalue=:4,cycle#=:5,order$=:6,<br />
+  cache=:7,highwater=:8,audit$=:9,flags=:10 <br />
+  where<br />
+  obj#=:1</p>
+<p>update kopm$ set metadata = :1, length  = :2 <br />
+  where<br />
+  name='DB_FDO'</p>
+方法二(不推荐) </h2>
+<p>更改字符集作如下操作：</p>
+<p>1、将注册表项“HKLM\Software\Oralce\NLS_LANG”改为需要的字符集名</p>
+<p>2、运行如下SQL语句，更改系统参数</p>
+<pre>update sys.props$ set value$ = 'ZHS16GBK' where name = 'NLS_CHARACTERSET'</pre>
+<p>3、重新启动数据库</p>
+<p><img src="images/note.jpg" style="width:20" height="20" />使用这种方式更改字符集，如果你的value$值输入了不正确的字符集，在8i中那么你的数据库可能会无法启动，这种情况是非常严重的,有时候你必须从备份中进行恢复；如果是在9i中，可以重新启动数据库后再修改回正确的字符集。但是我们仍然不建议使用这种方式进行任何数据库修改，这是一种极其危险的操作。</p>
+<p> 实际上当我们更新了字符集，数据库启动时会根据数据库的字符集自动的来修改控制文件的字符集，如果字符集可以识别，更新控制文件字符集等于数据库字符集；如果字符集不可识别，那么控制文件字符集更新为US7ASCII.</p>
+<p>通过更新props$表的方式修改字符集,在Oracle7之后就不应该被使用.</p>
+<p>理解了字符集调整的内部操作以后，我们可以轻易的指出，以上的方法是不正确的，通过前面 ” ALTER DATABASE   CHARACTER SET”   方式更改字符集时，Oracle至少需要更改12张数据字典表，而这种直接更新props$表的方式只完成了其中十二分之一的工作，潜在的完整性隐患是可想而知的。</p>
+<p><strong>所以，更改字符集尽量要使用正常的途径</strong>。</p>
+修改dmp文件的字符集</h2>
+<p>上文说过，dmp文件的第2第3字节记录了字符集信息，因此直接修改dmp文件的第2第3字节的内容就可以‘骗’过oracle的检查。这样做理论上也仅  是从子集到超集可以修改，但很多情况下在没有子集和超集关系的情况下也可以修改，我们常用的一些字符集，如US7ASCII，WE8ISO8859P1，  ZHS16CGB231280，ZHS16GBK基本都可以改。因为改的只是dmp文件，所以影响不大。</p>
+<p>具体的修改方法比较多，最简单的就是直接用UltraEdit修改dmp文件的第2和第3个字节。比如想将dmp文件的字符集改为ZHS16GBK，可以用以下SQL查出该种字符集对应的16进制代码:</p>
+<pre>SQL&gt; select to_char(nls_charset_id('ZHS16GBK'), 'xxxx') from dual;<br />0354</pre>
+<p>然后将dmp文件的2、3字节修改为0354即可。 <br />
+  <br />
+如果dmp  文件很大，用ue无法打开，就需要用程序的方法了。网上有人用java存储过程写了转换的程序(用java存储过程的好处是通用性教好，缺点是比较麻  烦)。我在windows下测试通过。但要求oracle数据库一定要安装JVM选项。有兴趣的朋友可以研究一下程序代码. </p>
+常用字符集</h1>
+中文</h2>
+<p>SIMPLIFIED CHINESE_CHINA.ZHS16GBK</p>
+英文</h2>
+<p>AMERICAN_AMERICA.WE8ISO8859P1</p>
+<p>AMERICAN_AMERICA.WE8MSWIN1252</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+
+</body>
+</html>

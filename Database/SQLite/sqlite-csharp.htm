@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+	<script type="text/javascript" src="../../mylib/js/css.js"></script>
+	<title>C# for SQLite</title>
+</head>
+
+<body>
+	<p id="title">C# for SQLite</p>
+    <h1>Overview</h1>
+    <p>首先，需要下载 <a href="https://system.data.sqlite.org/index.html/doc/trunk/www/index.wiki">System.Data.SQLite</a>。可通过 NuGet 安装。</p>
+    <p>下面的例子展示了连接数据库并查询数据</p>
+    <pre class="code" data-type="csharp">using System.Data.SQLite;
+...
+SQLiteConnection conn = new SQLiteConnection("Data Source=lld.db;Version=3;");
+conn.Open();
+
+string sql = "select * from test_table";
+SQLiteDataAdapter adapter = new SQLiteDataAdapter(sql, conn);
+DataTable tb = new DataTable();
+adapter.Fill(tb);</pre>
+    <h1>详细使用</h1>
+    <h2>创建数据库</h2>
+    <pre class="code" data-type="csharp">SQLiteConnection.CreateFile("MyDatabase.sqlite");</pre>
+    <h2>连接数据库</h2>
+    <pre class="code" data-type="csharp">m_dbConnection = new SQLiteConnection("Data Source=MyDatabase.sqlite;Version=3;");
+m_dbConnection.Open();</pre>
+    <h2>创建表</h2>
+    <pre class="code" data-type="csharp">string sql = "create table highscores (name varchar(20), score int)";
+SQLiteCommand command = new SQLiteCommand(sql, m_dbConnection);
+command.ExecuteNonQuery();</pre>
+    <h2>更改数据</h2>
+   <pre class="code" data-type="csharp">string sql = "insert into highscores (name, score) values ('Me', 3000)";
+SQLiteCommand command = new SQLiteCommand(sql, m_dbConnection);
+command.ExecuteNonQuery();
+sql = "insert into highscores (name, score) values ('Myself', 6000)";
+command = new SQLiteCommand(sql, m_dbConnection);
+command.ExecuteNonQuery();
+sql = "insert into highscores (name, score) values ('And I', 9001)";
+command = new SQLiteCommand(sql, m_dbConnection);
+command.ExecuteNonQuery();</pre>
+    <h2>查询数据</h2>
+    <pre class="code" data-type="csharp">string sql = "select * from highscores order by score desc";
+SQLiteCommand command = new SQLiteCommand(sql, m_dbConnection);
+SQLiteDataReader reader = command.ExecuteReader();
+while (reader.Read())
+       Console.WriteLine("Name: " + reader["name"] + "\tScore: " + reader["score"]);</pre>
+</body>
+</html>

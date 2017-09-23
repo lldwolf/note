@@ -1,18 +1,15 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
 <title>链接数据库</title>
-<script type="text/javascript" src="css.js"></script>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
 </head>
 
 <body>
-<h1>第N章 分布式数据库</h1>
-<hr />
-<h2><a href="#link_db">N.1 链接数据库</a></h2>
-<h2><a href="#snapshot">N.2 快照 </a></h2>
-<hr />
-<h2><a name="link_db" id="link_db"></a>N.1 链接数据库</h2>
+<p id="title">分布式数据库</p>
+
+<h1>链接数据库</h1>
 <p>通过链接数据库，用户可以在一个数据库Context中，访问另外一个数据库Context，创建的语法如下所示：</p>
 <pre>CREATE [PUBLIC] DATABASE LINK Linkname
 [CONNECT TO username IDENTIFIED By password]
@@ -33,7 +30,7 @@ using 'in7ch'</pre>
 <p>示例如下所示：</p>
 <pre>select * from component@mylink</pre>
 <p>某些情况下，为了提供访问的的透明性，可使用同义词来封装远程对象。</p>
-<h2><a name="snapshot" id="snapshot"></a>N.2 快照 </h2>
+<h1>快照 </h1>
 <p>在分布式环境中有一些公用的基表，这些基表存储在某个中央地址上，并建立了远程数据库的数据链接。但在访问远程对象时性能非常低。这时，可以使用快照，以提高使用远程数据库数据的应用程序的性能。快照为远程基表提供本地的复制，可以包含远程基表的全部和部分数据，并自动被刷新。创建快照需要ORACLE的分布式选件。</p>
 <p>快照可以基于多个基表的查询，可按照预先设置的时间间隔定期自动刷新。建立快照的语句如下：</p>
 <pre>CREATE SNAPSHOT snapshotname
@@ -65,6 +62,6 @@ select * from process_function@mylink</pre>
 <p>也可以在建立快照后修改其刷新方式及时间，如下所示：</p>
 <pre>alter snapshot myshot refresh fast start with sysdate + 1 / 1440 next sysdate + 1 / 144</pre>
 <p>&nbsp;</p>
-<script type="text/javascript" src="index.js"></script>
+
 </body>
 </html>
