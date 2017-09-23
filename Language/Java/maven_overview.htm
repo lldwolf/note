@@ -26,6 +26,18 @@
 &lt;/mirror&gt;</pre>
     <p>或者更省心，你把 mirrorOf 换成 * 就好</p>
     <pre class="code" data-type="xml">&lt;mirrorOf&gt;*&lt;/mirrorOf&gt;</pre>
+	<p>设置完成后，可以把这个 settings.xml 复制到 %USERPROFILE%\.m2 目录下，eclipse 默认会使用这个文件</p>
+	<h2>使用阿里的配置</h2>
+	<p>一般在国内可以使用阿里的仓库，设置如下：</p>
+	<p>settings.xml</p>
+	<pre class="code" data-type="xml">
+&lt;mirror&gt;
+    &lt;id&gt;nexus-aliyun&lt;/id&gt;
+    &lt;mirrorOf&gt;*&lt;/mirrorOf&gt;
+    &lt;name&gt;Nexus aliyun&lt;/name&gt;
+    &lt;url&gt;http://maven.aliyun.com/nexus/content/groups/public&lt;/url&gt;
+&lt;/mirror&gt; </pre>
+	<p>Sonatype Nexus URL：<a href="http://maven.aliyun.com/nexus/#welcome">http://maven.aliyun.com/nexus/#welcome</a></p>
     <h1>Build</h1>
     <h2>第一个项目</h2>
     <p>在 Eclipse 随便建立一个 Hello World 项目，在根目录下添加 pom.xml，如下所示：</p>
