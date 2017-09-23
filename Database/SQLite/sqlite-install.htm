@@ -69,9 +69,21 @@ create table test_table (id int primary key, value varchar(20));
 insert into test_table values(1, 'value1');
 
 -- 查询
-select * from test_table;</pre>
+select * from test_table;
+
+-- 返回前10行数据
+select * from test_table limit 10;
+
+-- 返回第 2 到 5 行数据 (从下面命令可以看出是从0开始计数)
+select * from test_table limit 1,4;
+
+-- 判断表是否存在
+select count(*) from sqlite_master where type = 'table' and name = 'test_table';
+</pre>
     <h1>其它</h1>
     <h2>查看表结构</h2>
+	<p>使用 pragma 程序如下所示</p>
+	<pre class="code" data-type="sql">pragma table_info(test_table);</pre>
     <p>可使用系统表完成</p>
     <pre class="code" data-type="sql">select * from sqlite_master;</pre>
     <p>输出如下</p>

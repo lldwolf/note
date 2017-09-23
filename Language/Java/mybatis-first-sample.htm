@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+    <script type="text/javascript" src="../../mylib/js/css.js"></script>
+    <title>Java Note</title>
+</head>
+
+<body>
+    <p id="title">MyBatis First Sample</p>
+	<h1>Main Steps</h1>
+	<p>主要有如下步骤:</p>
+	<ol>
+		<li>初始化环境</li>
+		<li>添加 MyBatis 配置文件</li>
+		<li>添加主程序</li>
+		<li>添加 Unit Test</li>
+	</ol>
+	<h1>初始化环境</h1>
+	<h2>Maven 项目初始化</h2>
+	<p>添加 Simple Maven 项目, 具体可参考 <a href="maven_overview.htm">这里</a></p>
+	<p>添加 src/main/java 和 src/test/java 目录</p>
+	<h2>在 pom.xml 添加依赖</h2>
+	<p>包括 log4j2, MyBatis, SQLite (本例使用轻量级数据库 SQLite), JUnit</p>
+	<pre class="code" data-type="xml" data-collapsed="false" title="pom.xml">&lt;project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd"&gt;
+    &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+    &lt;groupId&gt;lld&lt;/groupId&gt;
+    &lt;artifactId&gt;poemservice&lt;/artifactId&gt;
+    &lt;packaging&gt;war&lt;/packaging&gt;
+    &lt;version&gt;0.0.1-SNAPSHOT&lt;/version&gt;
+    &lt;name&gt;poemservice Maven Webapp&lt;/name&gt;
+    &lt;url&gt;http://maven.apache.org&lt;/url&gt;
+    &lt;dependencies&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.apache.logging.log4j&lt;/groupId&gt;
+            &lt;artifactId&gt;log4j-api&lt;/artifactId&gt;
+            &lt;version&gt;2.8.1&lt;/version&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.apache.logging.log4j&lt;/groupId&gt;
+            &lt;artifactId&gt;log4j-core&lt;/artifactId&gt;
+            &lt;version&gt;2.8.1&lt;/version&gt;
+        &lt;/dependency&gt;
+
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.xerial&lt;/groupId&gt;
+            &lt;artifactId&gt;sqlite-jdbc&lt;/artifactId&gt;
+            &lt;version&gt;3.20.0&lt;/version&gt;
+        &lt;/dependency&gt;
+
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.mybatis&lt;/groupId&gt;
+            &lt;artifactId&gt;mybatis&lt;/artifactId&gt;
+            &lt;version&gt;3.4.5&lt;/version&gt;
+        &lt;/dependency&gt;
+
+        &lt;dependency&gt;
+            &lt;groupId&gt;junit&lt;/groupId&gt;
+            &lt;artifactId&gt;junit&lt;/artifactId&gt;
+            &lt;version&gt;4.9&lt;/version&gt;
+            &lt;scope&gt;test&lt;/scope&gt;
+        &lt;/dependency&gt;
+
+    &lt;/dependencies&gt;
+    &lt;build&gt;
+        &lt;finalName&gt;poemservice&lt;/finalName&gt;
+        &lt;plugins&gt;
+            &lt;plugin&gt;
+                &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;
+                &lt;artifactId&gt;maven-compiler-plugin&lt;/artifactId&gt;
+                &lt;version&gt;3.6.2&lt;/version&gt;
+                &lt;configuration&gt;
+                    &lt;source&gt;1.8&lt;/source&gt;
+                    &lt;target&gt;1.8&lt;/target&gt;
+                &lt;/configuration&gt;
+            &lt;/plugin&gt;
+        &lt;/plugins&gt;
+    &lt;/build&gt;
+&lt;/project&gt;</pre>
+	<h2>log4j2.properties</h2>
+	<p>如下所示</p>
+	<pre class="code" data-type="properties" data-collapsed="false" title="log4j2.properties">status = error
+dest = err
+name = PropertiesConfig
+ 
+property.filename = /tmp/my.log
+ 
+filter.threshold.type = ThresholdFilter
+filter.threshold.level = debug
+ 
+appender.console.type = Console
+appender.console.name = STDOUT
+appender.console.layout.type = PatternLayout
+appender.console.layout.pattern = %d %p %C [%t] %m%n
+ 
+appender.rolling.type = RollingFile
+appender.rolling.name = RollingFile
+appender.rolling.fileName = poem
+appender.rolling.filePattern = /tmp/poem-%d{MM-dd-yy-HH-mm-ss}-%i.log.gz
+appender.rolling.layout.type = PatternLayout
+appender.rolling.layout.pattern = %d %p %C [%t] %m%n
+appender.rolling.policies.type = Policies
+appender.rolling.policies.size.type = SizeBasedTriggeringPolicy
+appender.rolling.policies.size.size=2MB
+appender.rolling.strategy.type = DefaultRolloverStrategy
+appender.rolling.strategy.max = 5
+ 
+logger.rolling.name = my.sample
+logger.rolling.level = debug
+logger.rolling.additivity = false
+logger.rolling.appenderRef.rolling.ref = RollingFile
+logger.rolling.appenderRef.stdout.ref = STDOUT
+
+rootLogger.level = info
+rootLogger.appenderRef.stdout.ref = STDOUT
+rootLogger.appenderRef.rolling.ref = RollingFile</pre>
+	<h2>SQLIite 数据库</h2>
+	<p>添加新数据库 poem.db, 并放在 src/main/resources 目录下。有关 SQLite 的使用看 <a href="../../Database/SQLite/index.htm">这里</a></p>
+	<p>建表语名如下：</p>
+	<pre class="code" data-type="sql">CREATE TABLE poem (id int primary key,
+	title varchar(200),
+	author varchar(20),
+	content varchar(6000),
+	album varchar(40),
+	type varchar(10),
+	url varchar(100),
+	public_degree int, dynasty varchar(10))7</pre>
+	<h1>MyBatis 配置文件</h1>
+	<h2>SqlMapConfig.xml</h2>
+	<p>这是 MyBatis 的主配置文件，用于配置 JDBC 及作为其它配置文件的总入口，也把它放在 src/main/resources 目录下</p>
+	<pre class="code" data-type="xml" data-collapsed="false" title="SqlMapConfig.xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;!DOCTYPE configuration
+PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-config.dtd"&gt;
+&lt;configuration&gt;
+    &lt;!-- 和spring整合后 environments配置将废除 --&gt;
+    &lt;environments default="development"&gt;
+        &lt;environment id="development"&gt;
+            &lt;!-- 使用jdbc事务管理,事务控制由mybatis管理 --&gt;
+            &lt;transactionManager type="JDBC" /&gt;
+            &lt;!-- 数据库连接池,由mybatis管理 --&gt;
+            &lt;dataSource type="POOLED"&gt;
+                &lt;property name="driver" value="org.sqlite.JDBC" /&gt;
+                &lt;property name="url"
+                    value="jdbc:sqlite:D:/workspace/poemservice/poemservice/target/classes/poem.db" /&gt;
+            &lt;/dataSource&gt;
+        &lt;/environment&gt;
+    &lt;/environments&gt;
+    &lt;!-- 加载映射文件 --&gt;
+    &lt;mappers&gt;
+        &lt;mapper resource="sqlmap/resultMapper.xml" /&gt;
+        &lt;mapper resource="sqlmap/poem.xml" /&gt;
+    &lt;/mappers&gt;
+&lt;/configuration&gt;</pre>
+	<p>resultMapper.xml 和 poem.xml 在后面介绍</p>
+	<h2>Model-Table 映射文件及 Model 类</h2>
+	<h3>Model 类</h3>
+	<p>用一个 Poem 类作为 Model 类，如下所示</p>
+	<pre class="code" data-type="java" data-collapsed="false" title="Poem.java">package com.poem.lld.model;
+
+import com.poem.lld.util.Constants;
+
+public class Poem {
+
+    private int id;
+    private String title;
+    private String author;
+    private String content;
+    private String album;
+    private String type;
+    private String url;
+    private int publicDegree;
+    private String dynasty;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public String getAlbum() {
+        return album;
+    }
+
+    public void setAlbum(String album) {
+        this.album = album;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public int getPublicDegree() {
+        return publicDegree;
+    }
+
+    public void setPublicDegree(int publicDegree) {
+        this.publicDegree = publicDegree;
+    }
+
+    public String getDynasty() {
+        return dynasty;
+    }
+
+    public void setDynasty(String dynasty) {
+        this.dynasty = dynasty;
+    }
+
+    @Override
+    public String toString() {
+        StringBuffer buffer = new StringBuffer();
+        buffer.append("id: " + this.id);
+        buffer.append(Constants.LINE_SEPARATOR);
+        buffer.append("title: " + this.title);
+        buffer.append(Constants.LINE_SEPARATOR);
+        buffer.append("content: " + this.content);
+        buffer.append(Constants.LINE_SEPARATOR);
+        buffer.append("type: " + this.getType());
+        buffer.append(Constants.LINE_SEPARATOR);
+        buffer.append("dynasty: " + this.getDynasty());
+        buffer.append(Constants.LINE_SEPARATOR);
+        buffer.append("public degree: " + this.getPublicDegree());
+        buffer.append(Constants.LINE_SEPARATOR);
+        buffer.append("author: " + this.getAuthor());
+        buffer.append(Constants.LINE_SEPARATOR);
+        buffer.append("albutm:" + this.getAlbum());
+        buffer.append(Constants.LINE_SEPARATOR);
+        return buffer.toString();
+    }
+
+}
+</pre>
+	<h3>映射文件</h3>
+	<p>根扰约定优于配置的原则，我们可以将 Model 类的属性名字起的和数据库列名一至，就不需要这个配置文件，但这个有时不太好做到，比如我们经常在列名中用下划线作为单词分隔符，但在 Java 类中我们更倾向于使用大小写分隔，所以自定义映射文件还是必要的。</p>
+	<p>resultMapper.xml 是用于指定 poem 表和 Poem 类的对应关系的</p>
+	<pre class="code" data-type="xml" data-collapsed="false" title="resultMapper.xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd"&gt;
+&lt;mapper namespace="poem"&gt;
+    &lt;resultMap type="com.poem.lld.model.Poem" id="poemMap"&gt;
+        &lt;id column="id" property="id" /&gt;
+        &lt;result column="title" property="title" /&gt;
+        &lt;result column="content" property="content" /&gt;
+        &lt;result column="album" property="album" /&gt;
+        &lt;result column="type" property="type" /&gt;
+        &lt;result column="url" property="url" /&gt;
+        &lt;result column="author" property="author" /&gt;
+        &lt;result column="dynasty" property="dynasty" /&gt;
+        &lt;result column="public_degree" property="publicDegree" /&gt;
+    &lt;/resultMap&gt;
+&lt;/mapper&gt;</pre>
+	<h3>SQL 文件</h3>
+	<p>用于存放要运行的 SQL 语句并实现将结果映射为 Java 对象，如下所示</p>
+	<pre class="code" data-type="xml" data-collapsed="false" title="poem.xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd"&gt;
+&lt;mapper namespace="poem"&gt;
+    &lt;select id="findPoemById" parameterType="int"
+        resultMap="poem.poemMap"&gt;
+        select * from poem where id=#{id}
+    &lt;/select&gt;
+&lt;/mapper&gt;</pre>
+	<h1>Java DAO</h1>
+	<p>添加如下的 DAO 类作为数据库的访问类</p>
+	<pre class="code" data-type="java" data-collapsed="false" title="BaseDao.java">package com.poem.lld.dao;
+
+import java.io.IOException;
+import java.io.InputStream;
+
+import org.apache.ibatis.io.Resources;
+import org.apache.ibatis.session.SqlSession;
+import org.apache.ibatis.session.SqlSessionFactory;
+import org.apache.ibatis.session.SqlSessionFactoryBuilder;
+
+public class BaseDao {
+
+    protected Object queryById(String sqlMapId, int id) throws IOException {
+        // mybatis的配置文件
+        String resource = "SqlMapConfig.xml";
+        InputStream inputStream = null;
+        SqlSession sqlSession = null;
+
+        inputStream = Resources.getResourceAsStream(resource);
+        // 1.创建会话工场,传入mybatis的配置文件信息
+        SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
+
+        // 2.通过工厂得到SqlSession
+        sqlSession = sqlSessionFactory.openSession();
+
+        // 3.通过sqlSession操作数据库
+        // 第一个参数：映射文件中的statement的Id,等于namespace + "." + statement的id;
+        // 第二个参数:指定和映射文件中所匹配的parameterType类型的参数;
+        // sqlSession.selectOne结果是与映射文件所匹配的resultType类型的对象;
+        // selectOne：查询一条结果
+        Object queryResult = sqlSession.selectOne(sqlMapId, id);
+        return queryResult;
+    }
+
+}
+</pre>
+	<pre class="code" data-type="java" data-collapsed="false" title="PoemDao.java">package com.poem.lld.dao;
+
+import java.io.IOException;
+
+import com.poem.lld.model.Poem;
+
+public class PoemDao extends BaseDao {
+    public Poem getPoemById(int id) throws IOException {
+        Poem poem = (Poem) queryById("poem.findPoemById", id);
+        return poem;
+    }
+}
+</pre>
+	<h1>JUnit Test</h1>
+	<p>使用如下的 JUnit Test 类测试</p>
+	<pre class="code" data-type="java" data-collapsed="false" title="PoemDao.java">package com.poem.lld.dao.test;
+
+import java.io.IOException;
+
+import org.junit.Test;
+
+import com.poem.lld.dao.PoemDao;
+import com.poem.lld.model.Poem;
+
+import junit.framework.Assert;
+
+public class PoemDaoTest {
+    @Test
+    public void testQueryById() throws IOException {
+        PoemDao dao = new PoemDao();
+        Poem poem = dao.getPoemById(1001);
+        Assert.assertNotNull(poem);
+        System.out.println(poem.toString());
+    }
+}
+</pre>
+</body>
+</html>
