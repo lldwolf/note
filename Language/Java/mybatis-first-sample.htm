@@ -375,5 +375,22 @@ public class PoemDaoTest {
     }
 }
 </pre>
+
+<h1>FAQ</h1>
+<h2>列名与 MyBatis 关键字冲突</h2>
+<p>例如：如果列名为 type，则在 MyBatis 中使用 insert 命令插入时会有如下异常</p>
+<pre class="code" data-type="log">org.apache.ibatis.exceptions.PersistenceException: 
+### Error updating database.  Cause: org.sqlite.SQLiteException: [SQLITE_ERROR] SQL error or missing database (unrecognized token: ":")
+### SQL: insert into poem (title, author, content, album, type, url, public_degree, dynasty)   values(?, ?, ?, ?, 诗, http://so.gushiwen.org/view_11543.aspx, 45, 唐代)
+### Cause: org.sqlite.SQLiteException: [SQLITE_ERROR] SQL error or missing database (unrecognized token: ":")
+</pre>
+<p>可以看到 type 及以前的列在 SQL 中未被替换为实际值，对于这种情况，需要使用反引号`将其括起来，如下所示：</p>
+<pre class="code" data-type="xml">&lt;insert id="insertPoem" parameterType="com.poem.lld.model.Poem"&gt;
+    &lt;selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer"&gt;
+        select last_insert_rowid() from poem limit 1
+    &lt;/selectKey&gt;
+    insert into poem (title, author, content, album, `type`, url, public_degree, dynasty)
+    values(#{title}, #{author}, #{content}, #{album}, #{type}, #{url}, #{publicDegree}, #{dynasty})
+&lt;/insert&gt;</pre>
 </body>
 </html>
