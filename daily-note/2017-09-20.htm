@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+	<script type="text/javascript" src="../mylib/js/css.js"></script>
+	<title>日记（2017-09-20）</title>
+</head>
+
+<body>
+	<p id="title">日记（2017-09-20）</p>
+	<h1>Program Language</h1>
+	<h2>Java</h2>
+	<h3>I/O &amp; Linux Shell</h3>
+	<p>今天使用 Java 动态生成一个 Linux Shell 脚本并执行，总是报 Permission Denied 错误。后来发现是生成的文件没有执行权限，那么生成文件后调用 java.io.File.setExecutable 就好了。</p>
+	<p>另外，可以使用 chmod +x file 来给文件赋执行权限。</p>
+	<h3>gson</h3>
+	<p>用于实现 Java 对象和 json 对象的互相转换。</p>
+	<h3>Maven</h3>
+	<p>一个典型的用于初始化 web site 的 pom.xml</p>
+	<pre class="code" data-type="xml" data-collapsed="false" title="pom.xml">&lt;project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd"&gt;
+    &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+    &lt;groupId&gt;lld&lt;/groupId&gt;
+    &lt;artifactId&gt;myproject&lt;/artifactId&gt;
+    &lt;packaging&gt;war&lt;/packaging&gt;
+    &lt;version&gt;0.0.1-SNAPSHOT&lt;/version&gt;
+    &lt;name&gt;myproject Maven Webapp&lt;/name&gt;
+    &lt;url&gt;http://maven.apache.org&lt;/url&gt;
+    &lt;dependencies&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.apache.logging.log4j&lt;/groupId&gt;
+            &lt;artifactId&gt;log4j-api&lt;/artifactId&gt;
+            &lt;version&gt;2.8.1&lt;/version&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.apache.logging.log4j&lt;/groupId&gt;
+            &lt;artifactId&gt;log4j-core&lt;/artifactId&gt;
+            &lt;version&gt;2.8.1&lt;/version&gt;
+        &lt;/dependency&gt;
+
+        &lt;dependency&gt;
+            &lt;groupId&gt;commons-io&lt;/groupId&gt;
+            &lt;artifactId&gt;commons-io&lt;/artifactId&gt;
+            &lt;version&gt;2.5&lt;/version&gt;
+        &lt;/dependency&gt;
+
+        &lt;dependency&gt;
+            &lt;groupId&gt;com.google.code.gson&lt;/groupId&gt;
+            &lt;artifactId&gt;gson&lt;/artifactId&gt;
+            &lt;version&gt;2.8.1&lt;/version&gt;
+        &lt;/dependency&gt;
+
+        &lt;!-- Servlet --&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.apache.tomcat&lt;/groupId&gt;
+            &lt;artifactId&gt;servlet-api&lt;/artifactId&gt;
+            &lt;version&gt;6.0.53&lt;/version&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.apache.tomcat&lt;/groupId&gt;
+            &lt;artifactId&gt;jsp-api&lt;/artifactId&gt;
+            &lt;version&gt;6.0.53&lt;/version&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;jstl&lt;/groupId&gt;
+            &lt;artifactId&gt;jstl&lt;/artifactId&gt;
+            &lt;version&gt;1.2&lt;/version&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;junit&lt;/groupId&gt;
+            &lt;artifactId&gt;junit&lt;/artifactId&gt;
+            &lt;version&gt;4.9&lt;/version&gt;
+            &lt;scope&gt;test&lt;/scope&gt;
+        &lt;/dependency&gt;
+
+    &lt;/dependencies&gt;
+    &lt;build&gt;
+        &lt;finalName&gt;myproject&lt;/finalName&gt;
+        &lt;plugins&gt;
+            &lt;plugin&gt;
+                &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;
+                &lt;artifactId&gt;maven-compiler-plugin&lt;/artifactId&gt;
+                &lt;version&gt;3.6.2&lt;/version&gt;
+                &lt;configuration&gt;
+                    &lt;source&gt;1.8&lt;/source&gt;
+                    &lt;target&gt;1.8&lt;/target&gt;
+                &lt;/configuration&gt;
+            &lt;/plugin&gt;
+        &lt;/plugins&gt;
+    &lt;/build&gt;
+&lt;/project&gt;
+</pre>
+	<h2>JavaScript</h2>
+	<h3>BootStrap</h3>
+	<ul>
+		<li>alert 没有单独使用成功，还是放在 modal 中实现了警告框。</li>
+		<li>CSS class btn-danger 应用于 button 显示警告按钮</li>
+	</ul>
+	<h3>jQuery</h3>
+	<ul>
+		<li>jQuery.parseJSON() 实现将字符串转换为 json 对象</li>
+	</ul>
+	<h1>Git</h1>
+	<p><a id="git_ssh"></a>在 Linux 上直接使用 git 命令时，需 export GIT_SSH=mygit.sh，并在 mygit.sh 中设定使用的公钥，该公钥需要 BitBucket 中注册。</p>
+	<h1>Citi</h1>
+	<h2>Atom</h2>
+	<p>现在可以在 monitor 中看到 LoansQT 的登录情况，但获取不到 LoansQT 本身的应用 log（与 Atom 相关的 log 都有），怀疑是 log 文件名的原因，如果文件名中包含  LoansQT 就可以了。</p>
+	<h1 class="pending">Pending Items</h1>
+	<ul>
+		<li>BootStrap modal 中的 Close 按钮位置，默认显示在左下角，想调整为显示在右侧</li>
+	</ul>
+</body>
+
+</html>

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+	<script type="text/javascript" src="../mylib/js/css.js"></script>
+	<title>日记（2017-09-19）</title>
+</head>
+
+<body>
+	<p id="title">日记（2017-09-19）</p>
+	<h1>Program Language</h1>
+	<h2>Java</h2>
+	<h3>Maven</h3>
+	<p>Apache commons-io 是 I/O 工具库</p>
+	<h2>JavaScript</h2>
+	<h3>jQuery</h3>
+	<p>在使用 jQuery 时犯了个错误，把访问 DOM 组件的代码写 DOM 组件前面了</p>
+	<pre class="code =" data-type="html">
+&lt;script&gt;
+	$('#btn').click(...);
+&lt;/script&gt;
+...
+&lt;button id="btn" ... /&gt;
+	</pre>
+	<p>在使用如下方式使用 jQuery ajax post 时，总是会提交 form，使用了如下方式避免</p>
+	<pre class="code =" data-type="html">
+&lt;script&gt;
+	$('#btn').click(function(e) {
+        e.preventDefault();
+		$.post(...);
+	});
+&lt;/script&gt;
+	</pre>
+	
+	<p>jQuery 的 ajax 使用语法及示例</p>
+	<pre class="code =" data-type="javascript">
+var url = 'my.do';	//要提示的目标地址
+var pars = { action: "refresh" }; //以 json 方式传递参数，后端可以使用 request.getParamer("action") 得到
+var callback = function(data) { alert data; }; //请求成功后的回调函数，data 可由后端的 response.getOutputStream().print() 写入
+$.post(url, pars, callback);
+	</pre>
+	<h1>操作系统</h1>
+	<h2>Windows</h2>
+	<ol>
+		<li>用 type  命令查看文件内容</li>
+		<li>用 set /p v=&lt;1.txt 的方式将文件内容赋给变量</li>
+		<li>timeout /t 5, 等待5秒或等待按键</li>
+		<li>pause &gt; null 不显示等持提示</li></li>
+	</ol>
+	<h1>Citi Service</h1>
+	<h2>Atom</h2>
+	<p>完成了读取 Property 的功能并基于此实现了 COB 测试支持。</p>
+	<p>通过检测 Atom 各个应用相关进程以确保应用相关的 Atom 服务在 Atom Task Manager 中显示完毕。</p>
+	<h1>Pending Items</h1>
+	<ul>
+		<li>Lucene 中文索引</li>
+		<li>虚拟机上 git pull 因权限问题更新失败 （<a href="2017-07-20.htm#git_ssh">已解决</a>）</li>
+	</ul>
+</body>
+</html>

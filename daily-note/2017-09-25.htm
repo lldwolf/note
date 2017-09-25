@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+	<script type="text/javascript" src="../mylib/js/css.js"></script>
+	<title>日记（2017-09-25）</title>
+</head>
+
+<body>
+	<p id="title">日记（2017-09-25）</p>
+	<h1>Program Language</h1>
+	<h2>C#</h2>
+	<h3>DevExpress WinForm GridControl</h3>
+	<p>通过 WindowHost 放在 WPF 中后，给 GridControl 赋 DataSource，GridView 的 DataSource 保持为 null。</p>
+	<p>这是因为 GridControl 要求放在 Form.Controls 中，通过如下语句可解决</p>
+	<pre class="code" data-type="csharp">this.gridControl1.BindingContext = this.BindingContext;</pre>
+	<h1>Citi Service</h1>
+	<p>研究使用 Atom Monitoring Service 获取 log，做了以下事情：</p>
+	<ul>
+		<li>必须使用 Desktop 程序作为驻留程序（WinForm 或 WPF 均可），不然在 Monitoring 的 LoansQT 模块下没有启动项，也没有 Log</li>
+		<li>如果把 Form Hide，则看不到 Main Form Id，而且 Atom 似乎会自动指定 log 文件而无视 .exe.config 的设置。可以试着将 size 设为0 或将坐标设到屏幕外</li>
+		<li>在 connect Atom 后如果 使用 Cconsole 程序再 connect Atom，然后在 Console 程序退出后 Atom LoansQT 在 Monitoring 窗口中也会显示为红色，表示未连接，为了解决这个问题，可以在 agent 程序启动一分钟内每隔一秒就 connect 一次 Atom</li>
+	</ul>
+</body>
+</html>
