@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+	<script type="text/javascript" src="../mylib/js/css.js"></script>
+	<title>日记（2017-09-26）</title>
+</head>
+
+<body>
+	<p id="title">日记（2017-09-26）</p>
+	<h1>Program Language</h1>
+	<h2>C#</h2>
+	<h3>I/O</h3>
+	<p>LoansQT 使用 &gt; 重定向屏幕输出至日志文件，这个文件使用 File.ReadAllLines() 读取时遇到了文件正被使用的错误。想想也怪异，只是读取文件内容，人家还能占着不让你读取不成。于是使用 FileStream 手工读取，打开文件的方式为 FileShare.ReadWrite，果然可以了。</p>
+	<h1>Citi Service</h1>
+	<h2>Atom</h2>
+	<p>基于昨天的工作继续完成了 Atom Monitoring Log 的研究：</p>
+	<ul>
+		<li>只要将主窗口的 ShowInTaskBar 设为 False 就不会在 Monitoring Service 中显示 Form ID 及 Title。但不景响 Log，昨天 log 没打印是忘了初始化 log4net 了……</li>
+		<li>Atom 会将最后一个 Connect Atom 的 .NET 应用作为主程序并读取它的日志，顺便将自己的日志也放进去。</li>
+		<li>没办法直接和 Java 程序共享日志，于是定时去读 Java 程序的 log 写在自己的 log 中，变通实现了 log 抓取。</li>	
+	</ul>
+</body>
+</html>
