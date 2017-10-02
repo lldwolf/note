@@ -7,21 +7,798 @@
 </head>
 
 <body>
-    <p id="title">MyBatis 配置语法说明</p>
-	<h1>Overview</h1>
-	<p>MyBatis 使用 OGNL 语法获取对象属性的值。</p>
-	<h2>参数类型和返回结果类型</h2>
-	<p>无论是参数和返回结果，均可使用简单类型、Map、Pojo</p>
-	<p>使用如下属性指定输入参数类型</p>
+    <p id="title">MyBatis 配置优化</p>
+	<a id="mapper-delegator"></a><h1>mapper 代理</h1>
+	<p>在以前的例子中，我们可以看到有如下特点</p>
 	<ul>
-		<li>parameterType: 指定参数类型的 Java 全类名</li>
-		<li>parameterMap：使用 MyBatis 中的配置项来实现参数 Pojo 到 SQL 中占位符的映射</li>
+		<li>DAO 类的代码重复度高</li>
+		<li>调用sqlSession方法时将statement的id硬编码了</li>
+		<li>调用sqlSession传入的变量，由于sqlSession方法使用泛型，即使变量类型传入错误，在编译阶段也不报错，不利于程序开发</li>
 	</ul>
-	<p>类似地使用 resultType 或 resultMap 来指定输出结果的类型。</p>
-	<h2>#{} 和 ${}</h2>
-	<p>#{} 表示占位符，${}是拼接符，都可以是简单类型、Map、Pojo。在接收 Pojo 时使用 OGNL 语法解析。</p>
-	<p>如果接收简单类型，${}中只能写成value; #{}中可以写成任意字符串。</p>
-	<p>因为 ${} 会被 SQL 注入攻击，所以不建议使用。一般只在接收输入参数为 String 的时候使用 ${value} 来表示输入值，因为 String 是对象，使用 #{value} 时会被试图调用 String.getValue() 而出错。</p>
-	
+	<p>根据约定优于配置的原则，mapper 代理方法可以觖决这些问题。mapper 代理方法可以做到以下几点：</p>
+	<ul>
+		<li>仅需声明 DAO 接口，无需自己实现，MyBatis 会自动创建接口的代理类实现</li>
+	</ul>
+	<h2>poemMapper.xml</h2>
+	<p>与前面的很相似，唯一的区别是它的 namespace 需要设为对应的 DAO 接口</p>
+	<pre class="code" data-type="xml" data-collapsed="false" title="poemMapper.xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd"&gt;
+<span class="emphasis">&lt;mapper namespace="com.poem.lld.mapper.PoemMapper"&gt;</span>
+    &lt;select id="getPoemById" parameterType="int" resultMap="poem.poemMap"&gt;
+        select * from poem where id=#{id}
+    &lt;/select&gt;
+
+    &lt;select id="findPoemByAuthor" parameterType="java.lang.String" resultMap="poem.poemMap"&gt;
+        select * from poem where author LIKE '%${value}%'
+    &lt;/select&gt;
+
+    &lt;insert id="insertPoem" parameterType="com.poem.lld.model.Poem"&gt;
+        &lt;selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer"&gt;
+            select last_insert_rowid() from poem limit 1
+        &lt;/selectKey&gt;
+        insert into poem (title, author, content, album, `type`, url, public_degree, dynasty)
+        values(#{title}, #{author}, #{content}, #{album}, #{type}, #{url}, #{publicDegree}, #{dynasty})
+    &lt;/insert&gt;
+
+    &lt;delete id="deletePoem" parameterType="java.lang.Integer"&gt;
+        delete from poem where id=#{id}
+    &lt;/delete&gt;
+
+    &lt;update id="updatePoem" parameterType="com.poem.lld.model.Poem"&gt;
+        update poem
+        set title = #{title}, author = #{author}, content = #{content}, album = #{album},
+            `type` = #{type}, url = #{url}, public_degree = #{publicDegree}, dynasty = #{dynasty} 
+        where id=#{id}
+    &lt;/update&gt;
+
+&lt;/mapper&gt;</pre>
+	<h2>Mapper 接口(DAO 接口)</h2>
+	<p>需要把接口方法定义得与 mapper.xml 中的 statement id 相同</p>
+	<pre class="code" data-type="java" data-collapsed="false" title="PoemMapper.java">package com.poem.lld.mapper;
+
+import java.util.List;
+
+import com.poem.lld.model.Poem;
+
+public interface PoemMapper {
+    Poem getPoemById(int id);
+
+    List<Poem> findPoemByAuthor(String author);
+
+    int insertPoem(Poem poem);
+
+    int updatePoem(Poem poem);
+
+    int deletePoem(int id);
+}
+</pre>
+	<h2>JUnit Test</h2>
+	<pre class="code" data-type="java" data-collapsed="false" title="PoemMapper.java">package com.poem.lld.dao.test;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.List;
+
+import org.apache.ibatis.io.Resources;
+import org.apache.ibatis.session.SqlSession;
+import org.apache.ibatis.session.SqlSessionFactory;
+import org.apache.ibatis.session.SqlSessionFactoryBuilder;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.junit.Before;
+import org.junit.Test;
+
+import com.poem.lld.mapper.PoemMapper;
+import com.poem.lld.model.Poem;
+
+import junit.framework.Assert;
+
+public class PoemMapperTest {
+    private static final Logger logger = LogManager.getLogger(PoemDaoTest.class);
+    private PoemMapper poemMapper;
+
+    @Before
+    public void setup() throws IOException {
+        logger.info("Start testing PoeMapper");
+        String resource = "SqlMapConfig.xml";
+        InputStream inputStream = Resources.getResourceAsStream(resource);
+        SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
+        SqlSession sqlSession = sqlSessionFactory.openSession();
+        poemMapper = sqlSession.getMapper(PoemMapper.class);
+    }
+
+    @Test
+    public void testQueryById() throws IOException {
+        Poem poem = poemMapper.getPoemById(1001);
+        Assert.assertNotNull(poem);
+        System.out.println(poem.toString());
+    }
+
+    @Test
+    public void testQueryByAuthor() throws IOException {
+        List&lt;Poem&gt; poemList = poemMapper.findPoemByAuthor("苏轼");
+        Assert.assertNotNull(poemList);
+
+        System.out.println("result count: " + poemList.size());
+        if (poemList.size() &gt; 0) {
+            poemList.forEach(poem -&gt; {
+                System.out.println(poem.getTitle());
+            });
+        }
+    }
+
+    @Test
+    public void testInsertPoem() throws IOException {
+        Poem poem = new Poem();
+        poem.setTitle("公安县怀古");
+        poem.setAlbum("a");
+        poem.setAuthor("杜甫");
+        poem.setContent("野旷吕蒙营，江深刘备城。寒天催日短，风浪与云平。洒落君臣契，飞腾战伐名。维舟倚前浦，长啸一含情。");
+        poem.setDynasty("唐代");
+        poem.setPublicDegree(45);
+        poem.setType("诗");
+        poem.setUrl("http://so.gushiwen.org/view_11543.aspx");
+        int updatedCount = poemMapper.insertPoem(poem);
+        Assert.assertEquals(updatedCount, 1);
+        System.out.println(poem.toString());
+
+        poem.setTitle(poem.getTitle() + "A");
+        poem.setAlbum(poem.getAlbum() + "A");
+        poem.setAuthor(poem.getAuthor() + "A");
+        poem.setContent(poem.getContent() + "A");
+        poem.setDynasty(poem.getDynasty() + "A");
+        poem.setPublicDegree(poem.getPublicDegree() + 100);
+        poem.setType(poem.getType() + "A");
+        poem.setUrl(poem.getUrl() + "A");
+        updatedCount = poemMapper.updatePoem(poem);
+        Assert.assertEquals(updatedCount, 1);
+        Poem newPoem = poemMapper.getPoemById(poem.getId());
+        System.out.println(newPoem.toString());
+
+        System.out.println("Delete inserted poem");
+        int deleteCount = poemMapper.deletePoem(poem.getId());
+        Assert.assertEquals(deleteCount, 1);
+        System.out.println(poem.getId() + " is deleted.");
+    }
+}</pre>
+	<h1>使用 properties 配置 JDBC 连接 </h1>
+	<p>添加 db.properties 文件如下所示</p>
+	<pre class="code" data-type="properties" data-collapsed="false" title="db.properties">jdbc.driver=org.sqlite.JDBC
+jdbc.url=jdbc:sqlite::resource:poem.db
+jdbc.username=
+jdbc.password=</pre>
+	<p>修改 SqlMapConfig.xml 如下所示</p>
+	<pre class="code" data-type="xml" data-collapsed="false" title="SqlMapConfig.xml">
+&lt;configuration&gt;
+    &lt;properties resource="db.properties"&gt;
+    &lt;/properties&gt;
+    &lt;environments default="development"&gt;
+        &lt;environment id="development"&gt;
+            &lt;transactionManager type="JDBC" /&gt;
+            &lt;dataSource type="POOLED"&gt;
+                &lt;property name="driver" value="${jdbc.driver}" /&gt;
+                &lt;property name="url" value="${jdbc.url}" /&gt;
+            &lt;/dataSource&gt;
+        &lt;/environment&gt;
+    &lt;/environments&gt;
+&lt;/configuration&gt;</pre>
+	<h1>settings全局参数配置</h1>
+	<p>这个很少用到，放在此处仅作为参考</p>
+	<table style="height: 887px; width: 938px; border: 0px solid #e4461a;" border="0" align="center">
+<tbody>
+<tr>
+<th>setting(设置)</th>
+<th>Description(描述)</th>
+<th>valid　Values(验证值组)</th>
+<th>Default(默认值)</th>
+</tr>
+<tr>
+<td>cacheEnabled</td>
+<td>在全局范围内启用或禁用缓存配置 任何映射器在此配置下。</td>
+<td>true | false</td>
+<td>TRUE</td>
+</tr>
+<tr>
+<td>lazyLoadingEnabled</td>
+<td>在全局范围内启用或禁用延迟加载。禁用时，所有相关联的将热加载。</td>
+<td>true | false</td>
+<td>TRUE</td>
+</tr>
+<tr>
+<td>aggressiveLazyLoading</td>
+<td>启用时，有延迟加载属性的对象将被完全加载后调用懒惰的任何属性。否则，每一个属性是按需加载。</td>
+<td>true | false</td>
+<td>TRUE</td>
+</tr>
+<tr>
+<td>multipleResultSetsEnabled</td>
+<td>允许或不允许从一个单独的语句（需要兼容的驱动程序）要返回多个结果集。</td>
+<td>true | false</td>
+<td>TRUE</td>
+</tr>
+<tr>
+<td>useColumnLabel</td>
+<td>使用列标签，而不是列名。在这方面，不同的驱动有不同的行为。参考驱动文档或测试两种方法来决定你的驱动程序的行为如何。</td>
+<td>true | false</td>
+<td>TRUE</td>
+</tr>
+<tr>
+<td>useGeneratedKeys</td>
+<td>允许JDBC支持生成的密钥。兼容的驱动程序是必需的。此设置强制生成的键被使用，如果设置为true，一些驱动会不兼容性，但仍然可以工作。</td>
+<td>true | false</td>
+<td>FALSE</td>
+</tr>
+<tr>
+<td>autoMappingBehavior</td>
+<td>指定MyBatis的应如何自动映射列到字段/属性。NONE自动映射。 PARTIAL只会自动映射结果没有嵌套结果映射定义里面。 FULL会自动映射的结果映射任何复杂的（包含嵌套或其他）。</td>
+<td>
+<p>NONE,PARTIAL,FULL</p>
+</td>
+<td>PARTIAL</td>
+</tr>
+<tr>
+<td>defaultExecutorType</td>
+<td>配置默认执行人。SIMPLE执行人确实没有什么特别的。 REUSE执行器重用准备好的语句。 BATCH执行器重用语句和批处理更新。</td>
+<td>
+<p>SIMPLE,REUSE,BATCH</p>
+</td>
+<td>SIMPLE</td>
+</tr>
+<tr>
+<td>safeRowBoundsEnabled</td>
+<td>允许使用嵌套的语句RowBounds。</td>
+<td>true | false</td>
+<td>FALSE</td>
+</tr>
+<tr>
+<td>mapUnderscoreToCamelCase</td>
+<td>从经典的数据库列名A_COLUMN启用自动映射到骆驼标识的经典的Java属性名aColumn。</td>
+<td>true | false</td>
+<td>FALSE</td>
+</tr>
+<tr>
+<td>localCacheScope</td>
+<td>MyBatis的使用本地缓存，以防止循环引用，并加快反复嵌套查询。默认情况下（SESSION）会话期间执行的所有查询缓存。如果localCacheScope=STATMENT本地会话将被用于语句的执行，只是没有将数据共享之间的两个不同的调用相同的SqlSession。</td>
+<td>
+<p>SESSION</p>
+<p>STATEMENT</p>
+</td>
+<td>SESSION</td>
+</tr>
+<tr>
+<td>dbcTypeForNull</td>
+<td>指定为空值时，没有特定的JDBC类型的参数的JDBC类型。有些驱动需要指定列的JDBC类型，但其他像NULL，VARCHAR或OTHER的工作与通用值。</td>
+<td>JdbcType enumeration. Most common are: NULL, VARCHAR and OTHER</td>
+<td>OTHER</td>
+</tr>
+<tr>
+<td>lazyLoadTriggerMethods</td>
+<td>指定触发延迟加载的对象的方法。</td>
+<td>A method name list separated by commas</td>
+<td>equals,clone,hashCode,toString</td>
+</tr>
+<tr>
+<td>defaultScriptingLanguage</td>
+<td>指定所使用的语言默认为动态SQL生成。</td>
+<td>A type alias or fully qualified class name.</td>
+<td>
+<p>org.apache.ibatis.scripting.xmltags</p>
+<p>.XMLDynamicLanguageDriver</p>
+</td>
+</tr>
+<tr>
+<td>callSettersOnNulls</td>
+<td>指定如果setter方法??或地图的put方法时，将调用检索到的值是null。它是有用的，当你依靠Map.keySet（）或null初始化。注意原语（如整型，布尔等）不会被设置为null。</td>
+<td>true | false</td>
+<td>FALSE</td>
+</tr>
+<tr>
+<td>logPrefix</td>
+<td>指定的前缀字串，MyBatis将会增加记录器的名称。</td>
+<td>Any String</td>
+<td>Not set</td>
+</tr>
+<tr>
+<td>logImpl</td>
+<td>指定MyBatis的日志实现使用。如果此设置是不存在的记录的实施将自动查找。</td>
+<td>SLF4J | LOG4J | LOG4J2 | JDK_LOGGING | COMMONS_LOGGING | STDOUT_LOGGING | NO_LOGGING</td>
+<td>Not set</td>
+</tr>
+<tr>
+<td>proxyFactory</td>
+<td>指定代理工具，MyBatis将会使用创建懒加载能力的对象。</td>
+<td>CGLIB | JAVASSIST</td>
+<td>&nbsp;CGLIB</td>
+</tr>
+</tbody>
+</table>
+	<p>官方文档settings的例子</p>
+	<pre class="code" data-type="xml" data-collapsed="true" title="settings">&lt;setting name="cacheEnabled" value="true"/&gt;
+    &lt;setting name="lazyLoadingEnabled" value="true"/&gt;
+    &lt;setting name="multipleResultSetsEnabled" value="true"/&gt;
+    &lt;setting name="useColumnLabel" value="true"/&gt;
+    &lt;setting name="useGeneratedKeys" value="false"/&gt;
+    &lt;setting name="autoMappingBehavior" value="PARTIAL"/&gt;
+    &lt;setting name="defaultExecutorType" value="SIMPLE"/&gt;
+    &lt;setting name="defaultStatementTimeout" value="25"/&gt;
+    &lt;setting name="safeRowBoundsEnabled" value="false"/&gt;
+    &lt;setting name="mapUnderscoreToCamelCase" value="false"/&gt;
+    &lt;setting name="localCacheScope" value="SESSION"/&gt;
+    &lt;setting name="jdbcTypeForNull" value="OTHER"/&gt;
+    &lt;setting name="lazyLoadTriggerMethods" value="equals,clone,hashCode,toString"/&gt;
+&lt;/settings&gt;</pre>
+	<h1>typeAiases(别名)</h1>
+	<p>在mapper.xml中，定义很多的statement，statement需要parameterType指定输入参数的类型、需要resultType指定输出结果的映射类型。</p>
+	<p>如果在指定类型时输入类型全路径，不方便进行开发，可以针对parameterType或resultType指定的类型定义一些别名，在mapper.xml中通过别名定义，方便开发。</p>
+	<h2>mybatis默认支持的别名</h2>
+	<table style="width: 265px;">
+<tbody>
+<tr>
+<th valign="top" width="128">
+<p>别名</p>
+</th>
+<th valign="top" width="128">
+<p>映射的类型</p>
+</th>
+</tr>
+<tr>
+<td valign="top" width="128">
+<p>_byte&nbsp;</p>
+</td>
+<td valign="top" width="128">
+<p>byte&nbsp;</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="128">
+<p>_long&nbsp;</p>
+</td>
+<td valign="top" width="128">
+<p>long&nbsp;</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="128">
+<p>_short&nbsp;</p>
+</td>
+<td valign="top" width="128">
+<p>short&nbsp;</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="128">
+<p>_int&nbsp;</p>
+</td>
+<td valign="top" width="128">
+<p>int&nbsp;</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="128">
+<p>_integer&nbsp;</p>
+</td>
+<td valign="top" width="128">
+<p>int&nbsp;</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="128">
+<p>_double&nbsp;</p>
+</td>
+<td valign="top" width="128">
+<p>double&nbsp;</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="128">
+<p>_float&nbsp;</p>
+</td>
+<td valign="top" width="128">
+<p>float&nbsp;</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="128">
+<p>_boolean&nbsp;</p>
+</td>
+<td valign="top" width="128">
+<p>boolean&nbsp;</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="128">
+<p>string&nbsp;</p>
+</td>
+<td valign="top" width="128">
+<p>String&nbsp;</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="128">
+<p>byte&nbsp;</p>
+</td>
+<td valign="top" width="128">
+<p>Byte&nbsp;</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="128">
+<p>long&nbsp;</p>
+</td>
+<td valign="top" width="128">
+<p>Long&nbsp;</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="128">
+<p>short&nbsp;</p>
+</td>
+<td valign="top" width="128">
+<p>Short&nbsp;</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="128">
+<p>int&nbsp;</p>
+</td>
+<td valign="top" width="128">
+<p>Integer&nbsp;</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="128">
+<p>integer&nbsp;</p>
+</td>
+<td valign="top" width="128">
+<p>Integer&nbsp;</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="128">
+<p>double&nbsp;</p>
+</td>
+<td valign="top" width="128">
+<p>Double&nbsp;</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="128">
+<p>float&nbsp;</p>
+</td>
+<td valign="top" width="128">
+<p>Float&nbsp;</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="128">
+<p>boolean&nbsp;</p>
+</td>
+<td valign="top" width="128">
+<p>Boolean&nbsp;</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="128">
+<p>date&nbsp;</p>
+</td>
+<td valign="top" width="128">
+<p>Date&nbsp;</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="128">
+<p>decimal&nbsp;</p>
+</td>
+<td valign="top" width="128">
+<p>BigDecimal&nbsp;</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="128">
+<p>bigdecimal&nbsp;</p>
+</td>
+<td valign="top" width="128">
+<p>BigDecimal&nbsp;</p>
+</td>
+</tr>
+</tbody>
+</table>
+	<h2>自定义别名</h2>
+	<h3>单个别名定义</h3>
+	<p>在 SqlMapConfig.xml 中</p>
+	<pre class="code" data-type="xml">&lt;typeAliases&gt;&lt;typeAlias type="com.mybatis.entity.User" alias="user"/&gt;&lt;/typeAliases&gt;</pre>
+	<p>在 UserMapper.xml 引用别名</p>
+	<pre class="code" data-type="xml">&lt;select id="findUserById" parameterType="int" resultType="user" &gt;
+    　　select * from t_user where id=#{id}
+&lt;/select&gt;</pre>
+	<h2>批量自动定义别名</h2>
+	<p>指定包名，mybatis会自动扫描包中的pojo类，自动定义别名，别名就是类名(首字母大写或小写都可以)</p>
+	<pre class="code" data-type="xml">&lt;typeAliases&gt;
+     &lt;package name="com.mybatis.entity"/&gt;
+     &lt;package name="其它包"/&gt;
+&lt;/typeAliases&gt;</pre>
+	<h1>typeHandlers</h1>
+	<p>mybatis中通过typeHandlers完成jdbc类型和java类型的转换。</p>
+	<p>通常情况下，mybatis提供的类型处理器满足日常需要，不需要自定义.</p>
+	<p>mybatis支持类型处理器：</p>
+	<table style="width: 800px">
+<tbody>
+<tr>
+<th valign="top" width="185">
+类型处理器
+</th>
+<th valign="top" width="185">
+Java类型
+</th>
+<th valign="top" width="185">
+JDBC类型
+</th>
+</tr>
+<tr>
+<td valign="top" width="185">
+BooleanTypeHandler&nbsp;
+</td>
+<td valign="top" width="185">
+Boolean，boolean&nbsp;
+</td>
+<td valign="top" width="185">
+任何兼容的布尔值
+</td>
+</tr>
+<tr>
+<td valign="top" width="185">
+ByteTypeHandler&nbsp;
+</td>
+<td valign="top" width="185">
+Byte，byte&nbsp;
+</td>
+<td valign="top" width="185">
+任何兼容的数字或字节类型
+</td>
+</tr>
+<tr>
+<td valign="top" width="185">
+ShortTypeHandler&nbsp;
+</td>
+<td valign="top" width="185">
+Short，short&nbsp;
+</td>
+<td valign="top" width="185">
+任何兼容的数字或短整型
+</td>
+</tr>
+<tr>
+<td valign="top" width="185">
+IntegerTypeHandler&nbsp;
+</td>
+<td valign="top" width="185">
+Integer，int&nbsp;
+</td>
+<td valign="top" width="185">
+任何兼容的数字和整型
+</td>
+</tr>
+<tr>
+<td valign="top" width="185">
+LongTypeHandler&nbsp;
+</td>
+<td valign="top" width="185">
+Long，long&nbsp;
+</td>
+<td valign="top" width="185">
+任何兼容的数字或长整型
+</td>
+</tr>
+<tr>
+<td valign="top" width="185">
+FloatTypeHandler&nbsp;
+</td>
+<td valign="top" width="185">
+Float，float&nbsp;
+</td>
+<td valign="top" width="185">
+任何兼容的数字或单精度浮点型
+</td>
+</tr>
+<tr>
+<td valign="top" width="185">
+DoubleTypeHandler&nbsp;
+</td>
+<td valign="top" width="185">
+Double，double&nbsp;
+</td>
+<td valign="top" width="185">
+任何兼容的数字或双精度浮点型
+</td>
+</tr>
+<tr>
+<td valign="top" width="185">
+BigDecimalTypeHandler&nbsp;
+</td>
+<td valign="top" width="185">
+BigDecimal&nbsp;
+</td>
+<td valign="top" width="185">
+任何兼容的数字或十进制小数类型
+</td>
+</tr>
+<tr>
+<td valign="top" width="185">
+StringTypeHandler&nbsp;
+</td>
+<td valign="top" width="185">
+String&nbsp;
+</td>
+<td valign="top" width="185">
+CHAR和VARCHAR类型
+</td>
+</tr>
+<tr>
+<td valign="top" width="185">
+ClobTypeHandler&nbsp;
+</td>
+<td valign="top" width="185">
+String&nbsp;
+</td>
+<td valign="top" width="185">
+CLOB和LONGVARCHAR类型
+</td>
+</tr>
+<tr>
+<td valign="top" width="185">
+NStringTypeHandler&nbsp;
+</td>
+<td valign="top" width="185">
+String&nbsp;
+</td>
+<td valign="top" width="185">
+NVARCHAR和NCHAR类型
+</td>
+</tr>
+<tr>
+<td valign="top" width="185">
+NClobTypeHandler&nbsp;
+</td>
+<td valign="top" width="185">
+String&nbsp;
+</td>
+<td valign="top" width="185">
+NCLOB类型
+</td>
+</tr>
+<tr>
+<td valign="top" width="185">
+ByteArrayTypeHandler&nbsp;
+</td>
+<td valign="top" width="185">
+byte[]&nbsp;
+</td>
+<td valign="top" width="185">
+任何兼容的字节流类型
+</td>
+</tr>
+<tr>
+<td valign="top" width="185">
+BlobTypeHandler&nbsp;
+</td>
+<td valign="top" width="185">
+byte[]&nbsp;
+</td>
+<td valign="top" width="185">
+BLOB和LONGVARBINARY类型
+</td>
+</tr>
+<tr>
+<td valign="top" width="185">
+DateTypeHandler&nbsp;
+</td>
+<td valign="top" width="185">
+Date（java.util）
+</td>
+<td valign="top" width="185">
+TIMESTAMP类型
+</td>
+</tr>
+<tr>
+<td valign="top" width="185">
+DateOnlyTypeHandler&nbsp;
+</td>
+<td valign="top" width="185">
+Date（java.util）
+</td>
+<td valign="top" width="185">
+DATE类型
+</td>
+</tr>
+<tr>
+<td valign="top" width="185">
+TimeOnlyTypeHandler&nbsp;
+</td>
+<td valign="top" width="185">
+Date（java.util）
+</td>
+<td valign="top" width="185">
+TIME类型
+</td>
+</tr>
+<tr>
+<td valign="top" width="185">
+SqlTimestampTypeHandler&nbsp;
+</td>
+<td valign="top" width="185">
+Timestamp（java.sql）
+</td>
+<td valign="top" width="185">
+TIMESTAMP类型
+</td>
+</tr>
+<tr>
+<td valign="top" width="185">
+SqlDateTypeHandler&nbsp;
+</td>
+<td valign="top" width="185">
+Date（java.sql）
+</td>
+<td valign="top" width="185">
+DATE类型
+</td>
+</tr>
+<tr>
+<td valign="top" width="185">
+SqlTimeTypeHandler&nbsp;
+</td>
+<td valign="top" width="185">
+Time（java.sql）
+</td>
+<td valign="top" width="185">
+TIME类型
+</td>
+</tr>
+<tr>
+<td valign="top" width="185">
+ObjectTypeHandler&nbsp;
+</td>
+<td valign="top" width="185">
+任意
+</td>
+<td valign="top" width="185">
+其他或未指定类型
+</td>
+</tr>
+<tr>
+<td valign="top" width="185">
+EnumTypeHandler&nbsp;
+</td>
+<td valign="top" width="185">
+Enumeration类型
+</td>
+<td valign="top" width="185">
+VARCHAR-任何兼容的字符串类型，作为代码存储（而不是索引）。
+</td>
+</tr>
+</tbody>
+</table>
+	<h1>mappers(映射配置)</h1>
+	<p>加载映射文件的几种方法</p>
+	<h2>通过resource加载单个映射文件</h2>
+	<p>这是我们在前面例子中最常使用的</p>
+	<pre class="code" data-type="xml">&lt;mappers&gt;
+    &lt;mapper resource="sqlmap/User.xml"/&gt;
+    &lt;mapper resource="mapper/UserMapper.xml"/&gt;
+&lt;/mappers&gt;</pre>
+	<h2>通过mapper接口加载单个映射文件</h2>
+	<p>通过mapper接口加载单个映射配置文件, 即指定 mapper 接口(interface path)，MyBatis 将自动加载 mapper XML 文件。是使用这个功能，需要遵循以下规范</p>
+	<ul>
+		<li>使用 <a href="#mapper-delegator">mapper 代理方法</a></li>
+		<li>将mapper接口类名和mapper.xml映射文件名称保持一致，且在一个目录中, 如下所示
+			<br />
+			<img alt="" src="images/mybatis-mpaaer-loading-sample.png" />
+		</li>
+	</ul>
+	<h2>批量加载mapper</h2>
+	<p>基于上例的通过 mapper 接口加载，可以根据包名批量加载，如下所示：</p>
+	<pre class="code" data-type="xml">&lt;package name="com.mybatis.mapper"/&gt; </pre>
 </body>
 </html>

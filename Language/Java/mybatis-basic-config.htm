@@ -8,6 +8,20 @@
 
 <body>
     <p id="title">MyBatis 基础配置</p>
+	<h1>Overview</h1>
+	<p>MyBatis 使用 OGNL 语法获取对象属性的值。</p>
+	<h2>参数类型和返回结果类型</h2>
+	<p>无论是参数和返回结果，均可使用简单类型、Map、Pojo</p>
+	<p>使用如下属性指定输入参数类型</p>
+	<ul>
+		<li>parameterType: 指定参数类型的 Java 全类名</li>
+		<li>parameterMap：使用 MyBatis 中的配置项来实现参数 Pojo 到 SQL 中占位符的映射</li>
+	</ul>
+	<p>类似地使用 resultType 或 resultMap 来指定输出结果的类型。</p>
+	<h2>#{} 和 ${}</h2>
+	<p>#{} 表示占位符，${}是拼接符，都可以是简单类型、Map、Pojo。在接收 Pojo 时使用 OGNL 语法解析。</p>
+	<p>如果接收简单类型，${}中只能写成value; #{}中可以写成任意字符串。</p>
+	<p>因为 ${} 会被 SQL 注入攻击，所以不建议使用。一般只在接收输入参数为 String 的时候使用 ${value} 来表示输入值，因为 String 是对象，使用 #{value} 时会被试图调用 String.getValue() 而出错。</p>
 	<h1>insert</h1>
 	<p>关键在于主键的生成及获取，如果是对于自增型的，需要在插入后才知道新生成的主键，一般数据库都提供最后生成的数值，以 SQLite 为例，如下所示：</p>
 	<pre class="code" data-type="xml">&lt;insert id="insertPoem" parameterType="com.poem.lld.model.Poem"&gt;
