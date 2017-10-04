@@ -79,6 +79,9 @@ select * from test_table limit 1,4;
 
 -- 判断表是否存在
 select count(*) from sqlite_master where type = 'table' and name = 'test_table';
+
+-- 多表关联更新
+update poem set author_id = (select b.id from author b where poem.author = b.name and poem.dynasty = b.dynasty);
 </pre>
     <h1>其它</h1>
     <h2>查看表结构</h2>

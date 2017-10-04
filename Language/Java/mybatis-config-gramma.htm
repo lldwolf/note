@@ -508,7 +508,9 @@ jdbc.password=</pre>
 	<h2>自定义别名</h2>
 	<h3>单个别名定义</h3>
 	<p>在 SqlMapConfig.xml 中</p>
-	<pre class="code" data-type="xml">&lt;typeAliases&gt;&lt;typeAlias type="com.mybatis.entity.User" alias="user"/&gt;&lt;/typeAliases&gt;</pre>
+	<pre class="code" data-type="xml">&lt;typeAliases&gt;
+	&lt;typeAlias type="com.mybatis.entity.User" alias="user"/&gt;
+&lt;/typeAliases&gt;</pre>
 	<p>在 UserMapper.xml 引用别名</p>
 	<pre class="code" data-type="xml">&lt;select id="findUserById" parameterType="int" resultType="user" &gt;
     　　select * from t_user where id=#{id}

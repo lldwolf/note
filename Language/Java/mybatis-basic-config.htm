@@ -9,8 +9,23 @@
 <body>
     <p id="title">MyBatis 基础配置</p>
 	<h1>Overview</h1>
-	<p>MyBatis 使用 OGNL 语法获取对象属性的值。</p>
+	<h2>SqlMapConfig.xml 配置顺序</h2>
+	<p>该配置文件的各配置项是有顺序的，如果顺序错误将会导致运行时失败，配置顺序如下所示：</p>
+	<ol>
+		<li>properties</li>
+		<li>settings</li>
+		<li>typeAliases</li>
+		<li>typeHandlers</li>
+		<li>objectFactory</li>
+		<li>objectWrapperFactory</li>
+		<li>reflectorFactory</li>
+		<li>plugins</li>
+		<li>environments</li>
+		<li>databaseIdProvider</li>
+		<li>mappers</li>
+	</ol>
 	<h2>参数类型和返回结果类型</h2>
+	<p>MyBatis 使用 OGNL 语法获取对象属性的值。</p>
 	<p>无论是参数和返回结果，均可使用简单类型、Map、Pojo</p>
 	<p>使用如下属性指定输入参数类型</p>
 	<ul>
@@ -18,10 +33,13 @@
 		<li>parameterMap：使用 MyBatis 中的配置项来实现参数 Pojo 到 SQL 中占位符的映射</li>
 	</ul>
 	<p>类似地使用 resultType 或 resultMap 来指定输出结果的类型。</p>
+	<p>例如：对于 #{userId}，可以表示传入 POJO 的 userId 字段，也可以表示 Map 中 key 为 "userId" 的值</p>
 	<h2>#{} 和 ${}</h2>
 	<p>#{} 表示占位符，${}是拼接符，都可以是简单类型、Map、Pojo。在接收 Pojo 时使用 OGNL 语法解析。</p>
 	<p>如果接收简单类型，${}中只能写成value; #{}中可以写成任意字符串。</p>
 	<p>因为 ${} 会被 SQL 注入攻击，所以不建议使用。一般只在接收输入参数为 String 的时候使用 ${value} 来表示输入值，因为 String 是对象，使用 #{value} 时会被试图调用 String.getValue() 而出错。</p>
+	<p>还有就是在使用模糊查询时，需要使用 ${} 来进行字符串拼接，如下所示：</p>
+	<pre class="code" data-type="sql">and author like '%${author}%'</pre>
 	<h1>insert</h1>
 	<p>关键在于主键的生成及获取，如果是对于自增型的，需要在插入后才知道新生成的主键，一般数据库都提供最后生成的数值，以 SQLite 为例，如下所示：</p>
 	<pre class="code" data-type="xml">&lt;insert id="insertPoem" parameterType="com.poem.lld.model.Poem"&gt;

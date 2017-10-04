@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+    <script type="text/javascript" src="../../mylib/js/css.js"></script>
+    <title>Java Note</title>
+</head>
+
+<body>
+    <p id="title">高级映射</p>
+	<h1>Overview</h1>
+	<p>本节示例如下情形：</p>
+	<ul>
+		<li>映射结果 POJO 中包含子 POJO</li>
+		<li>映射结果 POJO 中包含子 POJO 集合</li>
+	</ul>
+	<h1>一对一子 POJO 映射</h1>
+	<p>下例实现了诗人与作品的映射</p>
+	<p>首先是 POJO 定义</p>
+	<pre class="code" data-type="java" data-collapsed="false" title="Poem.java">
+public class Poem {
+
+    private int id;
+    private String title;
+    private String content;
+    private String album;
+    private String type;
+    private String url;
+    private Author authorEntity;
+
+	// 省略 getter / setter
+}
+</pre>
+	<pre class="code" data-type="java" data-collapsed="false" title="Author.java">
+package com.poem.lld.model;
+
+import java.util.List;
+
+public class Author {
+
+    private int id;
+    private String name;
+    private String dynasty;
+
+	// 省略 getter / setter
+}
+</pre>
+	<p>用于定义 statement 的配置文件</p>
+	<pre class="code" data-type="xml" data-collapsed="false" title="poemMapper.xml">
+&lt;select id="searchFullPoem" parameterType="poemCriteria" resultMap="poem.poemMap"&gt;
+    select a.id author_id, a.name, a.dynasty, b.*
+    from author a, poem b
+    &lt;where&gt;
+        a.id = b.author_id
+        &lt;if test="author != null and author != ''"&gt;
+            and a.name like '%${author}%'
+        &lt;/if&gt;
+        &lt;if test="content != null and content != ''"&gt;
+            and b.content like '%${content}%'
+        &lt;/if&gt;
+        &lt;if test="author != null and author != ''"&gt;
+            and b.title like '%${title}%'
+        &lt;/if&gt;
+        &lt;if test="types != null"&gt;
+            &lt;foreach collection="types" item="type" open="and b.type in (" close=")" separator=", "&gt;
+                #{type}
+            &lt;/foreach&gt;
+        &lt;/if&gt;
+    &lt;/where&gt;
+&lt;/select&gt;
+</pre>
+	<p>rsultMapper.xml, 即前面引用的别名 poem.poemMap</p>
+	<pre class="code" data-type="xml" data-collapsed="false" title="resultMapper.xml">
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd"&gt;
+&lt;mapper namespace="poem"&gt;
+    &lt;resultMap type="com.poem.lld.model.Poem" id="poemMap"&gt;
+        &lt;id column="id" property="id" /&gt;
+        &lt;result column="title" property="title" /&gt;
+        &lt;result column="content" property="content" /&gt;
+        &lt;result column="album" property="album" /&gt;
+        &lt;result column="type" property="type" /&gt;
+        &lt;result column="url" property="url" /&gt;
+        &lt;result column="dynasty" property="dynasty" /&gt;
+        &lt;result column="public_degree" property="publicDegree" /&gt;
+        
+        &lt;association property="authorEntity" javaType="com.poem.lld.model.Author"&gt;
+            &lt;id column="author_id" property="id" /&gt;
+            &lt;result column="name" property="name" /&gt;
+            &lt;result column="dynasty" property="dynasty" /&gt;
+        &lt;/association&gt;
+    &lt;/resultMap&gt;
+&lt;/mapper&gt;</pre>
+	<p>最后是测试代码，别忘了在 PoemMapper 添加上相应的接口方法 searchFullPoem</p>
+	<pre class="code" data-type="java" code-collapsed="false" title="PoemMapperTest.java">
+@Before
+public void setup() throws IOException {
+	logger.info("Start testing PoeMapper");
+	String resource = "SqlMapConfig.xml";
+	InputStream inputStream = Resources.getResourceAsStream(resource);
+	SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
+	SqlSession sqlSession = sqlSessionFactory.openSession();
+	poemMapper = sqlSession.getMapper(PoemMapper.class);
+}
+	
+@Test
+public void testSearchFullPoem() throws IOException {
+    PoemQueryCriteria filter = new PoemQueryCriteria();
+    filter.setAuthor("李");
+    filter.setContent("月");
+    filter.setTitle("月");
+    filter.setTypes(Arrays.asList(new String[] {"诗", "词"}));
+    List&lt;Poem&gt; poemList = poemMapper.searchFullPoem(filter);
+    Assert.assertNotNull(poemList);
+
+    System.out.println("result count: " + poemList.size());
+    if (poemList.size() &gt; 0) {
+        poemList.forEach(poem -&gt; {
+            System.out.println(poem);
+        });
+    }
+}
+</pre>
+</body>
+</html>

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+    <script type="text/javascript" src="../../mylib/js/css.js"></script>
+    <title>Java Note</title>
+</head>
+
+<body>
+    <p id="title">动态 SQL</p>
+	<h1>动态SQL</h1>
+	<p>用户信息综合查询列表这个statement的定义使用动态sql，对查询条件进行判断，如果输入参数不为空才进行查询拼接。</p>
+	<p>可通过如下方式对 SQL 进行拼接</p>
+
+	<pre class="code" data-type="xml">&lt;select id="findUserList" parameterType="com.mybatis.entity.UserQueryVo" 
+resultType="com.mybatis.entity.UserCustom"&gt;
+    select * from t_user 
+    &lt;!-- 动态sql查询：where可以自动去掉第一个and --&gt;
+    &lt;where&gt;
+        &lt;if test="userCustom!=null"&gt;
+            &lt;if test="userCustom.sex!=null and userCustom.sex!='' "&gt;
+                and sex=#{userCustom.sex}
+            &lt;/if&gt;
+            &lt;if test="userCustom.username!=null and userCustom.username!='' "&gt;
+                and username=#{userCustom.username}
+            &lt;/if&gt;
+        &lt;/if&gt;
+    &lt;/where&gt;
+&lt;/select&gt;</pre>
+	<p>测试代码如下所示（使用 mapper 代理方法）</p>
+	<pre class="code" data-type="java">@Test
+public void testFindUserList() {
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+    UserQueryVo userQueryVo = new UserQueryVo();
+    UserCustom userCustom = new UserCustom();
+    userCustom.setUsername("小");
+    userQueryVo.setUserCustom(userCustom);
+    // 创建Usermapper对象，mybatis自动生成mapper代理对象
+    UserMapper mapper = sqlSession.getMapper(UserMapper.class);
+    List&lt;UserCustom&gt;list=mapper.findUserList(userQueryVo);
+    //测试动态sql，属性的非空判断测试
+    System.out.println(list);
+    sqlSession.commit();
+    sqlSession.close();
+}</pre>
+	<h1>SQL片段</h1>
+	<p>可以将上边的动态sql判断代码抽取出来，组成一个sql片段，其它的statement中就可以引用sql片段，方便开发</p>
+	<pre class="code" data-type="xml">&lt;!-- 定义sql片段，Id是唯一标识
+     建议：是基于单表来定义sql片段，这样的话sql片段的可重用性才高，在sql片段中不要包含where
+ --&gt;
+&lt;sql id="query_user_where" &gt;
+    &lt;if test="userCustom!=null"&gt;
+            &lt;if test="userCustom.sex!=null and userCustom.sex!='' "&gt;
+                and sex=#{userCustom.sex}
+            &lt;/if&gt;
+           &lt;if test="userCustom.username!=null and userCustom.username!='' "&gt;
+                and username=#{userCustom.username}
+            &lt;/if&gt;
+        &lt;/if&gt;
+&lt;/sql&gt;</pre>
+	<p>在mapper.xml中定义的statement中引用sql片段</p>
+	<pre class="code" data-type="xml">&lt;select id="findUserList" parameterType="com.mybatis.entity.UserQueryVo" 
+resultType="com.mybatis.entity.UserCustom"&gt;
+    select * from t_user 
+    &lt;where&gt;
+    &lt;!-- 引用sql片段的id，如果refid指定的不在本mapper.xml中，需要前边加namespace --&gt;
+        &lt;include refid="query_user_where"&gt;&lt;/include&gt;
+        &lt;!-- 这里可以引用其它的sql片段 --&gt;
+    &lt;/where&gt;
+&lt;/select&gt;</pre>
+	<h1>foreach</h1>
+	<p>向sql传递数组或者list，mybatis使用foreach解析</p>
+	<p>例如，对于如下的SQL</p>
+	<pre class="code" data-type="sql">SELECT * FROM t_user WHERE id=1 OR id=10 OR id=16</pre>
+	<p>mapper.xml 如下所示</p>
+	<pre class="code" data-type="xml">&lt;select id="findUserByIds" parameterType="com.mybatis.entity.UserQueryVo" 
+resultType="com.mybatis.entity.User"&gt;
+        select * from t_user
+    &lt;where&gt;
+            &lt;if test="ids!=null"&gt;
+            &lt;!-- 使用foreach遍历ids
+                collection:指定输入对象的集合属性
+                item:每个遍历生成对象中
+                open：开始遍历时拼接的串
+                close:技术遍历时拼接的串
+                separator:遍历的两个对象中需要拼接的串
+             --&gt;
+            &lt;foreach collection="ids" item="user_id" open="AND (" close=")" separator="or"&gt;
+                id=#{user_id}
+            &lt;/foreach&gt;
+        &lt;/if&gt;
+    &lt;/where&gt;
+&lt;/select&gt;</pre>
+	<p>对于如下所示的使用 IN 操作符的 SQL</p>
+	<pre class="code" data-type="sql">SELECT * FROM t_user WHERE id IN(1,10,16)</pre>
+	<p>mapper.xml 如下所示</p>
+	<pre class="code" data-type="xml">&lt;select id="findUserByIds" parameterType="com.mybatis.entity.UserQueryVo" 
+    resultType="com.mybatis.entity.User"&gt;
+        select * from t_user
+    &lt;where&gt;
+            &lt;if test="ids!=null"&gt;
+            &lt;!-- 
+                使用foreach遍历ids
+                collection:指定输入对象的集合属性
+                item:每个遍历生成对象中
+                open：开始遍历时拼接的串
+                close:技术遍历时拼接的串
+                separator:遍历的两个对象中需要拼接的串
+             --&gt;
+            &lt;foreach collection="ids" item="user_id" open="AND id in ("  close=")" separator=","&gt;
+                #{user_id}
+            &lt;/foreach&gt;
+        &lt;/if&gt;
+    &lt;/where&gt;
+&lt;/select&gt;</pre>
+</body>
+</html>
