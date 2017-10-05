@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+    <script type="text/javascript" src="../../mylib/js/css.js"></script>
+    <title>Java Note</title>
+</head>
+
+<body>
+    <p id="title">MyBatis 缓存机制</p>
+	<h1>Overview</h1>
+	<p>mybaits提供一级缓存，和二级缓存。</p>
+	<p>一级缓存是sqlSession级别的缓存。在操作数据库时需要构造sqlSession对象，在对象中有一个数据结构(HashMap),用于存储缓存数据。不同的sqlSession之间的缓存区域(HashMap)是互不影响的。</p>
+	<p>二级缓存是mapper级别的缓存，多个sqlSession去操作同一个Mapper的sql语句，多个SqlSession可以公用二级缓存，二级缓存是跨sqlSession的</p>
+	<h1>一级缓存</h1>
+	<p>一级缓存默认开启，其操作示范如下所示：</p>
+	<ol>
+		<li>第一次发起查询用户id为1的用户信息，先去找缓存中是否有id为1的用户信息，如果没有，从数据库查询用户信息。得到用户信息，将用户信息存储到一级缓存中。</li>
+		<li>如果sqlSession去执行commit操作（执行插入、更新、删除），清空SqlSession中的一级缓存，这样做的目的为了让缓存中存储的是最新的信息，避免脏读。</li>
+		<li>第二次发起查询用户id为1的用户信息，先去找缓存中是否有id为1的用户信息，若缓存中有，则直接从缓存中获取用户信息。</li>
+		<li>sqlSession 关闭后，与该 session 相关的一级缓存将被删除</li>
+	</ol>
+	<p>一级缓存的测试很简单，使用相同参数连续两次调用 queryById 方法，你会看到在 log 中只会有一次数据库查询。</p>
+	<h1>二级缓存</h1>
+	<h2>使用二级缓存</h2>
+	<p>二级缓存与一级缓存类似，但范围更大，是 mapper 范围（namespace），多个 sqlSeesion 可共享。与一级缓存类似，mapper 范围内的任意 commit 行为将清空该 mapper 的二级缓存。</p>
+	<p>二级缓存的开关默认为开，可在 SqlMapConfig.xml 使用如下配置显示打开</p>
+	<pre class="code" data-type="xml">&lt;setting name="cacheEnabled" value="true" /&gt;</pre>
+	<p>在需要使用二级缓存的 mapper.xml 中加入 cache 标签，如下所示：</p>
+	<pre class="code" data-type="xml">&lt;cache /&gt;</pre>
+	<p>另外，POJO 类需要实现序列化接口，如下所示：</p>
+	<pre class="code" data-type="java">public class User implements Serializable</pre>
+	<p>可使用配置参数 useCache 在 statement 中禁用二级缓存，即每次都从数据库中查询</p>
+	<pre class="code" data-type="xml">&lt;select id="findOrderById" resultMap="ordersUserMap" useCache="false"&gt;</pre>
+	<p>默认情况下所有的 insert/update/delete 后会刷新缓存，若确实不需要，可加入 flushCache="false" 属性不刷新缓存，但这样有可能会引起脏读</p>
+	<pre class="code" data-type="xml">&lt;select id="findUsers" resultType="cn.elinzhou.mybatisTest.pojo.User" flushCache="false"&gt;</pre>
+	<p class="note">只有在 session 关闭后该 session 的数据才会写入二级缓存</p>
+	<p>下面是一个演示二级缓存的例子：</p>
+	<pre class="code" data-type="java">
+SqlSession session1 = this.sqlSessionFactory.openSession();
+PoemMapper mapper1 = session1.getMapper(PoemMapper.class);
+
+int poemId = 1001;
+Poem poem1 = mapper1.getPoemById(poemId);
+session1.close();
+
+System.out.println("session 2");
+SqlSession session2 = this.sqlSessionFactory.openSession();
+PoemMapper mapper2 = session2.getMapper(PoemMapper.class);
+Poem poem2 = mapper2.getPoemById(poemId);
+</pre>
+	<p>从 log 可以看出，只执行了一次查询。</p>
+	<h2>二级缓存配置</h2>
+	<p>在 cache 标签中，可以进行一些额外的配置, 例如：
+	<pre class="code" data-type="xml">&lt;cache  eviction="FIFO"  flushInterval="60000"  size="512"  readOnly="true" /&gt;</pre>
+	<p>具体说明如下表所示</p>
+	<table style="width: 800px">
+		<tr>
+			<th>配置参数</th>
+			<th>说明</th>
+		</tr>
+		<tr>
+			<td>flushInterval</td>
+			<td>（刷新间隔）可以被设置为任意的正整数，而且它们代表一个合理的毫秒形式的时间段。默认情况是不设置，也就是没有刷新间隔，缓存仅仅调用语句时刷新。</td>
+		</tr>
+		<tr>
+			<td>size</td>
+			<td>（引用数目）可以被设置为任意正整数，要记住你缓存的对象数目和你运行环境的可用内存资源数目。默认值是1024。</td>
+		</tr>
+		<tr>
+			<td>readOnly</td>
+			<td>（只读）属性可以被设置为true或false。只读的缓存会给所有调用者返回缓存对象的相同实例。因此这些对象不能被修改。这提供了很重要的性能优势。可读写的缓存会返回缓存对象的拷贝（通过序列化）。这会慢一些，但是安全，因此默认是false。 </td>
+		</tr>
+		<tr>
+			<td>eviction</td>
+			<td>如果缓存数超过 size 后的策略，可取如下值：
+				<ul>
+					<li>LRU – 最近最少使用的:移除最长时间不被使用的对象。</li>
+					<li>FIFO – 先进先出:按对象进入缓存的顺序来移除它们。</li>
+					<li>SOFT – 软引用:移除基于垃圾回收器状态和软引用规则的对象。</li>
+					<li>WEAK – 弱引用:更积极地移除基于垃圾收集器状态和弱引用规则的对象。</li>
+				</ul>
+			</td>
+		</tr>
+	</table>
+	<h1>缓存注意事项</h1>
+	<ul>
+		<li>
+			<p>当MyBatis与spring整合后，如果没有事务，一级缓存是失效的</p>
+		</li>
+		<li>
+			<p>只有关闭了sqlsession之后，才会把其中一级缓存数据写入二级缓存</p>
+		</li>
+		<li>
+			<p>多表操作不要使用缓存，因为表的更新操作可能会散落在多个 mapper 中</p>
+		</li>
+		<li>
+			<p>只能在【只有单表操作】的表上使用缓存</p>
+		</li>
+		<li>
+			<p>在可以保证查询远远大于insert,update,delete操作的情况下使用缓存</p>
+		</li>
+		<li>
+			<p>mybatis不支持存储过程的缓存</p>
+		</li>
+		<li>
+			<p>避免使用二级缓存，尤其是在多人项目占，若有人不熟悉二级缓存的限制，容易出现“脏读”的副作用</p>
+		</li>
+	</ul>
+</body>
+</html>

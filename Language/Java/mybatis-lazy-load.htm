@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+    <script type="text/javascript" src="../../mylib/js/css.js"></script>
+    <title>Java Note</title>
+</head>
+
+<body>
+    <p id="title">MyBatis 延迟加载</p>
+	<h1>Overview</h1>
+	<p>延迟加载一般应用于如下场景：先加载主对象，然后根据外键再加载子对象，用两次单表查询代替一次多表关联查询。</p>
+	<h1>示例</h1>
+	<p>首先，需要在 SqlMapConfig.xml 打开延迟加载开关</p>
+	<pre class="code" data-type="xml">
+&lt;settings&gt;
+    &lt;setting name="lazyLoadingEnabled" value="true"/&gt;
+    &lt;setting name="aggressiveLazyLoading" value="false"/&gt;
+&lt;/settings&gt;
+</pre>
+	<p>在 mapper.xml 中，使用 association 和子查询实现延时加载，如下所示：</p>
+	<pre class="code" data-type="xml">
+&lt;resultMap type="com.poem.lld.model.Poem" id="poemLazyMap"&gt;
+    &lt;id column="id" property="id" /&gt;
+    &lt;result column="title" property="title" /&gt;
+    &lt;result column="content" property="content" /&gt;
+    &lt;result column="album" property="album" /&gt;
+    &lt;result column="type" property="type" /&gt;
+    &lt;result column="url" property="url" /&gt;
+    &lt;result column="author" property="author" /&gt;
+    &lt;result column="dynasty" property="dynasty" /&gt;
+    &lt;result column="public_degree" property="publicDegree" /&gt;
+    &lt;result column="author_id" property="authorId" /&gt;
+
+    &lt;association property="authorEntity" javaType="com.poem.lld.model.Author" select="findAuthorById" column="author_id" /&gt;
+&lt;/resultMap&gt;
+
+&lt;select id="getPoemByIdLazy" parameterType="int" resultMap="poemLazyMap"&gt;
+    select * from poem where id=#{id}
+&lt;/select&gt;
+
+&lt;select id="findAuthorById" parameterType="int" resultType="com.poem.lld.model.Author"&gt;
+    select * from author where id = #{id}
+&lt;/select&gt;
+</pre>
+	<p>在 PoemMapper.java 中添加接口方法</p>
+	<pre class="code" data-type="java">
+Poem getPoemByIdLazy(int id);
+Author findAuthorById(int id);
+</pre>
+	<p>最后的测试代码如下：</p>
+	<pre class="code" data-type="java">
+    @Test
+    public void testGetPoemByIdLazy() {
+        Poem poem = poemMapper.getPoemByIdLazy(1001);
+        Assert.assertNotNull(poem);
+        System.out.println(poem.toString());
+        System.out.println(poem.getAuthorEntity().toString());
+    }
+</pre>
+</body>
+</html>

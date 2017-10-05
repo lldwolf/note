@@ -32,10 +32,6 @@ public class Poem {
 }
 </pre>
 	<pre class="code" data-type="java" data-collapsed="false" title="Author.java">
-package com.poem.lld.model;
-
-import java.util.List;
-
 public class Author {
 
     private int id;
@@ -120,6 +116,65 @@ public void testSearchFullPoem() throws IOException {
         poemList.forEach(poem -&gt; {
             System.out.println(poem);
         });
+    }
+}
+</pre>
+	<h1>一对多子 POJO 映射</h1>
+	<p>如果子 POJO 是一个集合，例如作者下的作品集，示例如下：</p>
+	<p>主 POJO 定义如下</p>
+	<pre class="code" data-type="java" data-collapsed="false" title="Author.java">
+public class Author {
+
+    private int id;
+    private String name;
+    private String dynasty;
+    private List&lt;Poem&gt; poems;
+
+	// 省略 getter / setter
+}
+</pre>
+	<p>用于定义 statement 的配置文件</p>
+	<pre class="code" data-type="xml" data-collapsed="false" title="poemMapper.xml">
+&lt;select id="searchAuthor" parameterType="string" resultMap="poem.authorMap"&gt;
+	select a.id author_id, a.name, a.dynasty, b.id, b.title, b.content
+	from author a, poem b
+	where a.name like '%${value}%' and a.id = b.author_id 
+&lt;/select&gt;</pre>
+	<p>rsultMapper.xml, 即前面引用的别名 poem.poemMap</p>
+	<pre class="code" data-type="xml" data-collapsed="false" title="resultMapper.xml">
+&lt;resultMap type="com.poem.lld.model.Author" id="authorMap"&gt;
+    &lt;id column="author_id" property="id" /&gt;
+    &lt;result column="name" property="name" /&gt;
+    &lt;result column="dynasty" property="dynasty" /&gt;
+
+    &lt;collection property="poems" ofType="com.poem.lld.model.Poem"&gt;
+        &lt;id column="id" property="id" /&gt;
+        &lt;result column="title" property="title" /&gt;
+        &lt;result column="content" property="content" /&gt;
+        &lt;result column="album" property="album" /&gt;
+        &lt;result column="type" property="type" /&gt;
+        &lt;result column="url" property="url" /&gt;
+        &lt;result column="author" property="author" /&gt;
+        &lt;result column="dynasty" property="dynasty" /&gt;
+        &lt;result column="public_degree" property="publicDegree" /&gt;
+        &lt;result column="author_id" property="authorId" /&gt;
+    &lt;/collection&gt;
+&lt;/resultMap&gt;</pre>
+	<p>最后是测试代码，别忘了在 PoemMapper 添加上相应的接口方法 searchFullPoem</p>
+	<pre class="code" data-type="java" code-collapsed="false" title="PoemMapperTest.java">
+@Test
+public void testSearchAuthor() {
+    List&lt;Author&gt; authors = poemMapper.searchAuthor("刘");
+    Assert.assertNotNull(authors);
+
+    for (Author author : authors) {
+        System.out.println(author.getName() + " (" + author.getDynasty() + ")");
+        
+        for (Poem poem : author.getPoems()) {
+            System.out.print(poem.getTitle() + ", ");
+        }
+        
+        System.out.println();
     }
 }
 </pre>
