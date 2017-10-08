@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+    <title>快速排序</title>
+    <script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+    <p id="title">快速排序算法</p>
+
+    <h1>C#实现</h1>
+    <pre class="code" data-type="csharp">public static void QuickSort(object[] objs)
+{
+	if(objs == null || objs.Length == 0)
+		return;
+
+	int i_stand = 0;
+	int i_high = objs.Length - 1;
+	int i_low = 0;
+	while(i_high > i_low)
+	{
+		for(; i_high > i_low; i_high--)
+		{
+			if(((IComparable)objs[i_high]).CompareTo(objs[i_stand]) < 0)
+			{
+				object temp = objs[i_stand];
+				objs[i_stand] = objs[i_high];
+				objs[i_high] = temp;
+				i_stand = i_high;
+				break;
+			}
+		}
+
+		for(; i_low < i_high; i_low++)
+		{
+			if(((IComparable)objs[i_low]).CompareTo(objs[i_stand]) > 0)
+			{
+				object temp = objs[i_stand];
+				objs[i_stand] = objs[i_low];
+				objs[i_low] = temp;
+				i_stand = i_low;
+				break;
+			}
+		}
+	}//while(i_high > i_low)
+	QuickSort2(objs, 0, i_stand - 1);
+	QuickSort2(objs, i_stand + 1, objs.Length - 1);
+}
+
+private static void QuickSort2(object[] objs, int i_low, int i_high)
+{
+	if(objs == null || objs.Length == 0 || i_low >= i_high)
+		return;
+
+	int low = i_low;
+	int high = i_high;
+
+	int i_stand = i_low;
+	while(i_high > i_low)
+	{
+		for(; i_high > i_low; i_high--)
+		{
+			if(((IComparable)objs[i_high]).CompareTo(objs[i_stand]) < 0)
+			{
+				object temp = objs[i_stand];
+				objs[i_stand] = objs[i_high];
+				objs[i_high] = temp;
+				i_stand = i_high;
+				break;
+			}
+		}
+
+		for(; i_low < i_high; i_low++)
+		{
+			if(((IComparable)objs[i_low]).CompareTo(objs[i_stand]) > 0)
+			{
+				object temp = objs[i_stand];
+				objs[i_stand] = objs[i_low];
+				objs[i_low] = temp;
+				i_stand = i_low;
+				break;
+			}
+		}
+	}//while(i_high > i_low)
+	QuickSort2(objs, low, i_stand - 1);
+	QuickSort2(objs, i_stand + 1, high);
+}</pre>
+    <p>&nbsp;</p>
+    <p>&nbsp;</p>
+    <p>&nbsp;</p>
+
+</body>
+</html>

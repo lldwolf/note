@@ -1,0 +1,85 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>汉字笔画数计算</title>
+<script language="javascript" src="css.js"></script>
+</head>
+
+<body>
+<h1>汉字笔画数计算</h1>
+<hr />
+<h2>原理说明</h2>
+<p>所有汉字其内码是按笔画数从高到低排列的，所以选定每个笔画数的汉字的第一个作为标记位，然后按内码进行查询。</p>
+<h2>语言：T-SQL</h2>
+<pre>create function fun_getbh(@str nvarchar(4000))  
+returns int  
+as  
+begin  
+	declare @word nchar(1),@n int  
+	set @n=0  
+	while len(@str)&gt;0  
+	begin  
+		set @word=left(@str,1)  
+		--如果非汉字，笔划当0计  
+		set @n = @n + (
+			case 
+				when unicode(@word) between 19968 and 19968+20901 then 
+					(select top 1 id from (  
+						select 1 as id,N'亅' as word  
+						union all select 2,N'阝'  
+						union all select 3,N'马'  
+						union all select 4,N'风'  
+						union all select 5,N'龙'  
+						union all select 6,N'齐'  
+						union all select 7,N'龟'  
+						union all select 8,N'齿'  
+						union all select 9,N'鸩'  
+						union all select 10,N'龀'  
+						union all select 11,N'龛'  
+						union all select 12,N'龂'  
+						union all select 13,N'龆'  
+						union all select 14,N'龈'  
+						union all select 15,N'龊'  
+						union all select 16,N'龍'  
+						union all select 17,N'龠'  
+						union all select 18,N'龎'  
+						union all select 19,N'龐'  
+						union all select 20,N'龑'  
+						union all select 21,N'龡'  
+						union all select 22,N'龢'  
+						union all select 23,N'龝'  
+						union all select 24,N'齹'  
+						union all select 25,N'龣'  
+						union all select 26,N'龥'  
+						union all select 27,N'齈'  
+						union all select 28,N'龞'  
+						union all select 29,N'麷'  
+						union all select 30,N'鸞'  
+						union all select 31,N'麣'  
+						union all select 32,N'龖'  
+						union all select 33,N'龗'  
+						union all select 35,N'齾'  
+						union all select 36,N'齉'  
+						union all select 39,N'靐'  
+						union all select 64,N'龘'  
+					) T  
+  					where word &gt;= @word collate Chinese_PRC_Stroke_CS_AS_KS_WS  
+					order by id ASC) 
+				else 0 
+			end)  
+		set @str=right(@str,len(@str)-1)  
+	end  
+	return @n  
+end  
+ 
+  --函数调用实例：  
+  select dbo.fun_getbh('中华人民共和国'),dbo.fun_getbh('中華人民共和國')</pre>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<script language="javascript" src="index.js"></script>
+</body>
+</html>

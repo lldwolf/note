@@ -1,0 +1,105 @@
+<html>
+<head>
+    <title>人民币大小写转换算法</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+    <script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+    <p id="title">人民币大小写转换算法</p>
+
+    <h1>Java版</h1>
+    <pre class="code" data-type="java">
+	public static String reverseString(String inStr)
+	{
+		String resStr = "";
+		for(int i = inStr.length(); i > 0; i--) resStr += inStr.substring(i-1, i);
+		return resStr;
+	}
+	
+	public static String convertChineseMoney(double Num)
+	{
+		String[] CUnit = {"元", "拾", "佰", "仟", "万", "拾", "佰", "仟", "亿", "拾", "佰", "仟"};
+		String[] CNum = {"零", "壹", "贰", "叁", "肆", "伍", "陆", "柒", "捌", "玖"};
+		String intPart = "", decPart = "";
+		boolean zFlag = false;
+		int wanFlag = 0;
+		String resultStr = "";
+		String money = (new java.text.DecimalFormat("#.00")).format(Num);
+		intPart = reverseString(money.substring(0, money.indexOf(".")));
+		decPart = money.substring(money.indexOf(".")+1, money.length());
+
+		for(int i = 0; i < intPart.length(); i++)
+		{
+			int val = Integer.parseInt(String.valueOf(intPart.charAt(i)));
+			if(i % 4 == 0)
+			{
+				zFlag = false;
+				wanFlag = i / 4;
+			} 
+			if(val != 0)
+			{
+				if(wanFlag != 0)
+				{ 
+					resultStr = CUnit[wanFlag*4] + resultStr; 
+					wanFlag = 0;
+				}
+
+				resultStr = CNum[val] + (i % 4 != 0 ? CUnit[i] : "") + resultStr;
+				wanFlag = 0;
+				if(i % 4 < 3) zFlag = true;
+			}else if(zFlag)
+			{
+				resultStr = "零" + resultStr;
+				zFlag = false;
+			}
+		}
+		if(!"".equals(resultStr)) resultStr += "元";
+		for(int i = 0; i < decPart.length(); i++)
+		{
+			int val = Integer.parseInt(String.valueOf(decPart.charAt(i)));
+			resultStr += CNum[val] + (i == 0 ? "角" : "分");
+		}
+		return resultStr; 
+	}
+</pre>
+    <h1>T-SQL 版</h1>
+    <pre class="code" data-type="sql">CREATE FUNCTION [dbo].[f_num_chn] (@num numeric(14,2))
+RETURNS varchar(100) WITH ENCRYPTION
+AS
+BEGIN
+--版权所有：pbsql
+  DECLARE @n_data VARCHAR(20),@c_data VARCHAR(100),@n_str VARCHAR(10),@i int
+
+  SET @n_data=RIGHT(SPACE(14)+CAST(CAST(ABS(@num*100) AS bigint) AS varchar(20)),14)
+  SET @c_data=''
+  SET @i=1
+  WHILE @i&lt;=14
+  BEGIN
+    SET @n_str=SUBSTRING(@n_data,@i,1)
+    IF @n_str&lt;&gt;' '
+    BEGIN
+      IF not ((SUBSTRING(@n_data,@i,2)='00') or
+        ((@n_str='0') and ((@i=4) or (@i=8) or (@i=12) or (@i=14))))
+        SET @c_data=@c_data+SUBSTRING('零壹贰叁肆伍陆柒捌玖',CAST(@n_str AS int)+1,1)
+      IF not ((@n_str='0') and (@i&lt;&gt;4) and (@i&lt;&gt;8) and (@i&lt;&gt;12))
+        SET @c_data=@c_data+SUBSTRING('仟佰拾亿仟佰拾万仟佰拾圆角分',@i,1)
+      IF SUBSTRING(@c_data,LEN(@c_data)-1,2)='亿万'
+        SET @c_data=SUBSTRING(@c_data,1,LEN(@c_data)-1)
+    END
+    SET @i=@i+1
+  END
+  IF @num&lt;0
+    SET @c_data='（负数）'+@c_data
+  IF @num=0
+    SET @c_data='零圆'
+  IF @n_str='0'
+    SET @c_data=@c_data+'整'
+  RETURN(@c_data)
+END</pre>
+    <p>使用方法</p>
+    <pre class="code" data-type="sql">declare @m varchar(100)
+exec @m=f_num_chn 102.22
+select @m</pre>
+</body>
+</html>

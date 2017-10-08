@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+    <script type="text/javascript" src="../../mylib/js/css.js"></script>
+    <title>算法 - 比赛得分可能数</title>
+</head>
+
+<body>
+    <p id="title">算法 - 比赛得分可能数</p>
+    <h1>介绍</h1>
+    <p>以排球比赛分例，默认情况下，A、B 两队比赛时，率先得到 25 分得将取胜。但若双方打成 24:24 时，则最高得分将变为 26 分。以后情况以此类推，例如，理论上可以打出诸如 40:42 这样的结局。</p>
+    <p>算法的要求是，在已知最终比分的情况下，算出能够达到该最终比分的所有可能得分顺序。</p>
+    <p>例1：如果最终比分是 0:25，那么只有一种顺序，那就是：</p>
+    <p>0:1 &rarr; 0:2 &rarr; 0:3 &rarr; ... 0:24 &rarr; 0:25</p>
+    <p>例2：如果最终比分是 1:25，那么可能有 25 种情况，例如：</p>
+    <p>1:0  &rarr; 0:1 &rarr; 0:2 &rarr; 0:3 &rarr; ... 0:24 &rarr; 0:25</p>
+    <p>0:1 &rarr; 1:1  &rarr; 1:2 &rarr; 1:3 &rarr; ... 1:24 &rarr; 1:25</p>
+    <p>0:1 &rarr; 0:2  &rarr; 1:2 &rarr; 1:3 &rarr; ... 1:24 &rarr; 1:25</p>
+    <p>......</p>
+    <p>例3：如果最终比分是 3:25，将有 2925 种情况</p>
+    <p>例4：如果最终比分是 3：12，结果为 0，因为不可能有这种情况的最终比分</p>
+    <p>要求编写程序实现该功能，可以支持的最大比分数为 40。</p>
+    <h1>实现</h1>
+    <h2>分析</h2>
+    <p>很容易想到，比赛的可能路径可以使用如下的二叉树来分析，红色节点表示为不可能的分支</p>
+    <!--
+digraph {
+	"0:0" -> "1:0";
+	"0:0" -> "0:1";
+
+	"1:0" -> "2:0";
+	"1:0" -> "1:1a";
+	"0:1" -> "1:1b";
+	"0:1" -> "0:2";
+
+	"2:0" -> "3:0";
+	"2:0" -> "2:1a";
+	"1:1a" -> "2:1b";
+	"1:1a" -> "1:2a";
+	"1:1b" -> "2:1c";
+	"1:1b" -> "1:2b"
+	"0:2" -> "1:2c";
+	"0:2" -> "0:3"
+	
+	"3:0" -> "4:0" [color=red, label="invalid"]
+	"3:0" -> "3:25a" [minlen=2, style=dashed];
+	"2:1a" -> "3:25b" [minlen=2, style=dashed];
+	"2:1b" -> "3:25c" [minlen=2, style=dashed];
+	"1:2a" -> "3:25d" [minlen=2, style=dashed];
+	"2:1c" -> "3:25e" [minlen=2, style=dashed];
+	"1:2b" -> "3:25f" [minlen=2, style=dashed];
+	"1:2c" -> "3:25g" [minlen=2, style=dashed];
+	"0:3" -> "3:25h" [minlen=2, style=dashed];
+
+	"1:1a" [label="1:1"];
+	"1:1b" [label="1:1"];
+	"2:1a" [label="2:1"];
+	"2:1b" [label="2:1"];
+	"2:1c" [label="2:1"];
+	"1:2a" [label="1:2"];
+	"1:2b" [label="1:2"];
+	"1:2c" [label="1:2"];
+	"3:25a" [label="3:25"];
+	"3:25b" [label="3:25"];
+	"3:25c" [label="3:25"];
+	"3:25d" [label="3:25"];
+	"3:25e" [label="3:25"];
+	"3:25f" [label="3:25"];
+	"3:25g" [label="3:25"];
+	"3:25h" [label="3:25"];
+	"4:0" [color=red, fontcolor=red];
+}
+    -->
+    <p><img alt="" src="img/score-tree.svg" /></p>
+    <p>本例中的算法使用 C# 实现</p>
+    <p>首先不管算法如何，先把一些公共的判断函数写在这里，以后其它例子都会用</p>
+    <pre class="code" data-type="csharp">// 是否有效最终比分
+const int MAX = 25;
+
+static bool IsValid(int A, int B)
+{
+    if (A < MAX && B < MAX)
+    {
+        return false;
+    }
+
+    if (Math.Abs(A - B) < 2)
+    {
+        return false;
+    }
+
+    if (Math.Max(A, B) > MAX && Math.Abs(A - B) != 2)
+    {
+        return false;
+    }
+
+    return true;
+}
+
+// 是否为有效中间比分，例如如果最终比分为 3:25，中间不可能出现 2:25（已经赢了不用再打了）
+static bool IsValidPath(int A, int B, int finalA, int finalB)
+{
+    if (A > finalA || B > finalB)
+    {
+        return false;
+    }
+
+    if (IsWinStatus(A, B))
+    {
+        return A == finalA && B == finalB;
+    }
+    else
+    {
+        return true;
+    }
+}
+
+// 是否获胜
+static bool IsWinStatus(int A, int B)
+{
+    if (Math.Max(A, B) == MAX && Math.Abs(A - B) >= 2)
+    {
+        return true;
+    }
+
+    if (Math.Max(A, B) > MAX && Math.Abs(A - B) == 2)
+    {
+        return true;
+    }
+
+    return false;
+}</pre>
+    <h2>算法一</h2>
+    <p>很容易想到第一种算法，就是试图生成上图中的二叉树，如果生成出一个最终叶子结点（例如 3:25）则将计数器加 1，如下所示</p>
+    <pre class="code" data-type="csharp">class Model1
+{
+    static void Main(string[] args)
+    {
+        int a = CalcScore1(7, 25);
+        Console.WriteLine("Result: " + a);
+        Console.Read();
+    }
+
+    // 计算可能得分的入口函数
+    static int CalcScore1(int A, int B)
+    {
+        if (!IsValid(A, B))
+        {
+            return 0;
+        }
+
+        Node rootNode = new Node(0, 0);
+        int counter = 0;
+        Constuct(rootNode, A, B, ref counter);
+        return counter;
+    }
+
+    private static void Constuct(Node node, int finalA, int finalB, ref int counter)
+    {
+        if (node.ValueA == finalA && node.ValueB == finalB)
+        {
+            counter++;
+        }
+        else
+        {
+            if (node.ValueA < finalA && IsValidPath(node.ValueA + 1, node.ValueB, finalA, finalB))
+            {
+                node.Left = new Node(node.ValueA + 1, node.ValueB);
+            }
+
+            if (node.ValueB < finalB && IsValidPath(node.ValueA, node.ValueB + 1, finalA, finalB))
+            {
+                node.Right = new Node(node.ValueA, node.ValueB + 1);
+            }
+        }
+
+        if (node.Left != null)
+        {
+            Constuct(node.Left, finalA, finalB, ref counter);
+        }
+
+        if (node.Right != null)
+        {
+            Constuct(node.Right, finalA, finalB, ref counter);
+        }
+    }
+
+    class Node
+    {
+        public Node(int A, int B)
+        {
+            this.ValueA = A;
+            this.ValueB = B;
+        }
+
+        public int ValueA { get; set; }
+        public int ValueB { get; set; }
+        public Node Left { get; set; }
+        public Node Right { get; set; }
+    }
+
+}</pre>
+    <p>但结果很残酷，计算 3:25 时尚可，但计算到 7:25 时内存就溢出了</p>
+    <h2>算法二</h2>
+    <p>为了改进空间使用，我试着放弃使用二叉树结构，因为我们并不需要存储整棵树，只需要存储所有的未到达最终比分的最后一层中间结点即可。例如，找到 (1:0) 和 (0:1) 后，(0:0) 结点即可抛弃。</p>
+    <p>改进后的算法如下，这次不需要递归：</p>
+    <pre class="code" data-type="csharp">
+static int CalcScore(int A, int B)
+{
+    if (!IsValid(A, B))
+    {
+        return 0;
+    }
+
+    long counter = 0;
+    List&lt;int[]&gt; list = new List&lt;int[]&gt;();
+    list.Add(new int[] { 0, 0 });
+
+    while (true)
+    {
+        // check final status
+        for (int i = list.Count - 1; i &gt;= 0; i--)
+        {
+            if (IsWinStatus(list[i][0], list[i][1]))
+            {
+                counter++;
+                list.RemoveAt(i);
+            }
+        }
+
+        // calc next level
+        List&lt;int[]&gt; list2 = new List&lt;int[]&gt;();
+        foreach (int[] score in list)
+        {
+            int[] newScore1 = new int[] { score[0] + 1, score[1] };
+            int[] newScore2 = new int[] { score[0], score[1] + 1 };
+
+            if (IsValidPath(newScore1[0], newScore1[1], A, B))
+            {
+                list2.Add(newScore1);
+            }
+
+            if (IsValidPath(newScore2[0], newScore2[1], A, B))
+            {
+                list2.Add(newScore2);
+            }
+        }
+
+        if (list2.Count == 0)
+        {
+            break;
+        }
+
+        list = list2;
+    }
+
+    return counter;
+}</pre>
+    <p>结果嘛稍好了一丢丢，可以算出 (8:25)，再往下也不行了。</p>
+    <h2>算法三</h2>
+        <p>仔细再分析一下上面的过程，我们可以列出如下的式子</p>
+    <pre>
+f(0:0) = f(1:0) + f(0:1)
+       = f(2:0) + f(1:1) + f(1:1) + f(0:2) # 相当于 f(2:0) + f(1:1) * 2 + f(0:2)
+       = f(3:0) + f(2:1) + f(2:1) + f(1:2) + f(2:1) + f(1:2) + f(1:2) + f(0:3) # 相当于 f(3:0) + f(2:1) * 3 + f(1:2) * 3 + f(0:3)
+       = ....</pre>
+    <p>我们不需要存储任何中点结点，只需要算数就行了，这样能节省些空间。更重要的是，很多条路径的结果是需要多次使用的，我们不需要每次都计算一遍。</p>
+    <p>本着该思路，我写出了如下的算法：</p>
+    <pre class="code" data-type="csharp">
+static ulong CalcScore3(int A, int B)
+{
+    if (!IsValid(A, B))
+    {
+        return 0;
+    }
+            
+    Dictionary&lt;Tuple&lt;int, int&gt;, ulong&gt; nodeDic = new Dictionary&lt;Tuple&lt;int, int&gt;, ulong&gt;();
+
+    ulong counter = CalcPathCount(0, 0, A, B, nodeDic);
+    return counter;
+}
+
+static ulong CalcPathCount(int A, int B, int finalA, int finalB, Dictionary&lt;Tuple&lt;int, int&gt;, ulong&gt; nodeDic)
+{
+    Tuple&lt;int, int&gt; key = new Tuple&lt;int, int&gt;(A, B);
+    if (nodeDic.ContainsKey(key))
+    {
+        return nodeDic[key];
+    }
+    else
+    {
+        if (!IsValidPath(A, B, finalA, finalB))
+        {
+            nodeDic.Add(key, 0);
+            return 0;
+        }
+
+        if (IsWinStatus(A, B))
+        {
+            nodeDic.Add(key, 1);
+            return 1;
+        }
+
+        Tuple&lt;int, int&gt; keyLeft = new Tuple&lt;int, int&gt;(A + 1, B);
+        Tuple&lt;int, int&gt; keyRight = new Tuple&lt;int, int&gt;(A, B + 1);
+        ulong pathCount = CalcPathCount(A + 1, B, finalA, finalB, nodeDic) + CalcPathCount(A, B + 1, finalA, finalB, nodeDic);
+        nodeDic.Add(key, pathCount);
+        return pathCount;
+    }
+}</pre>
+    <p>至此问题解决了， 结果如下所示:</p>
+    <pre> 0:25 - 1
+ 1:25 - 25
+ 2:25 - 325
+ 3:25 - 2925
+ 4:25 - 20475
+ 5:25 - 118755
+ 6:25 - 593775
+ 7:25 - 2629575
+ 8:25 - 10518300
+ 9:25 - 38567100
+10:25 - 131128140
+11:25 - 417225900
+12:25 - 1251677700
+13:25 - 3562467300
+14:25 - 9669554100
+15:25 - 25140840660
+16:25 - 62852101650
+17:25 - 151584480450
+18:25 - 353697121050
+19:25 - 800472431850
+20:25 - 1761039350070
+21:25 - 3773655750150
+22:25 - 7890371113950
+23:25 - 16123801841550
+24:26 - 32247603683100
+25:27 - 64495207366200
+26:28 - 128990414732400
+27:29 - 257980829464800
+28:30 - 515961658929600
+29:31 - 1031923317859200
+30:32 - 2063846635718400
+31:33 - 4127693271436800
+32:34 - 8255386542873600
+33:35 - 16510773085747200
+34:36 - 33021546171494400
+35:37 - 66043092342988800
+36:38 - 132086184685977600
+37:39 - 264172369371955200
+38:40 - 528344738743910400
+39:41 - 1056689477487820800
+40:42 - 2113378954975641600
+41:43 - 4226757909951283200
+42:44 - 8453515819902566400
+43:45 - 16907031639805132800</pre>
+</body>
+</html>

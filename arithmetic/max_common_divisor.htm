@@ -1,0 +1,46 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>最大公约数</title>
+<script type="text/javascript" src="css.js"></script>
+</head>
+
+<body>
+ <h1>第N章 最大公约数和最小公倍数</h1>
+ <hr />
+ <h2>N.1 欧几里德算法描述</h2>
+ <p>设两数为ab，a＞b：</p>
+ <ol>
+   <li> a除以b得余数c；</li>
+   <li>令a=c，b除以a得余数c；</li>
+   <li>如果a不等于b则跳回1)，否则结束，最后一次的余数就是两数的最大公约数。</li>
+ </ol>
+ <p>得出最大公约数m后，最小公倍数为 a * b / m </p>
+ <h2>N.2 算法实现</h2>
+ <h3>N.2.1 Java实现</h3>
+ <pre>private static int GetMaxCommonDivisor(int i1, int i2)
+{
+    int i3;
+    
+    if(i1 < i2)
+    {
+        i3 = i1;
+        i1 = i2;
+        i2 = i3;
+    }
+    
+    i3 = i1 % i2;
+    while(i3 != 0)
+    {
+        i1 = i2;
+        i2 = i3;
+        i3 = i1 % i2;
+    }
+    return i2;
+}</pre>
+ <p>&nbsp;</p>
+ <p>&nbsp; </p>
+<script type="text/javascript" src="index.js"></script>
+</body>
+</html>

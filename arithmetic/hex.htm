@@ -1,0 +1,30 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<script language="javascript" src="css.js"></script>
+<title>将数字转换为16进制字符串</title>
+</head>
+
+<body>
+<h1 align="center">将数字转换为16进制字符串</h1>
+<hr>
+<h2>C#版</h2>
+<pre>static public string IntToString(int val, int jz)
+{
+	char[] symbol = new char[]{'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
+	string ret_str = "";
+	int val2 = val;
+	do
+	{
+		ret_str = symbol[val2 % jz] + ret_str;
+		val2 /= jz;
+	}while(val2 != 0);
+
+	return ret_str;
+}</pre>
+<p>&nbsp;</p>
+<script language="javascript" src="index.js"></script>
+</body>
+</html>

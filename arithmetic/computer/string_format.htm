@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+    <title>检查字符串格式</title>
+    <script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+    <p id="title">检查字符串格式</p>
+
+    <h1>1. 检查字符串是否为数字串</h1>
+    <p>所用语言: javascript</p>
+    <p>检查是否为数字串</p>
+    <pre class="code" data-type="javascript">function CheckInteger(str){
+	var pat = new RegExp(&quot;^[0-9]+$&quot;);
+	if(str.match(pat) == null)
+		return false;
+	else
+		return true;
+}</pre>
+    <h1>2. 检查字符串是否为整数（包括正负）</h1>
+    <pre class="code" data-type="javascript">var pat = new RegExp(&quot;^[+|-]{0,1}[0-9]+$&quot;);</pre>
+    <h1>3. 检查字符串是否为浮点数（不包括前面的正负号）</h1>
+    <pre class="code" data-type="javascript">var pat = new RegExp(&quot;^[0-9]+([.]{0,1}[0-9]+)$&quot;);</pre>
+    <p>&nbsp;</p>
+
+</body>
+</html>

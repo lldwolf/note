@@ -1,0 +1,45 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>字符串全排列</title>
+<script langauge="javascript" src="css.js"></script>
+</head>
+
+<body>
+<h1>字符串全排列</h1>
+<hr />
+<p>要求给定一个字符串，生成这个字符串中所有字符的全排列。例如给定字符串"abc"，生成abc, acb, bac, bca, cab, cba</p>
+<p>如果不考虑字符串中字符的重复情况，使用C#的递归算法如下：</p>
+<pre>private static void ArrangeString(string prefix, string str)
+{
+	if(str.Length == 2)
+	{
+		Console.WriteLine(prefix + str);
+		Console.WriteLine(prefix + str[1] + str[0]);
+	}else
+	{
+		for(int i = 0; i &lt; str.Length; i++)
+		{
+			string suff = str.Substring(0, i) + str.Substring(i + 1, str.Length - i - 1);
+			ArrangeString(prefix + str[i], suff);
+		}
+	}
+}
+
+public static void Main()
+{
+	string s = &quot;abcd&quot;;
+	for(int i = 0; i &lt; s.Length; i++)
+	{
+		string header = s[i].ToString();
+		string suff = s.Substring(0, i) + s.Substring(i + 1, s.Length - i - 1);
+		ArrangeString(header, suff);
+	}
+	Console.Read();
+	
+}</pre>
+<p>&nbsp; </p>
+<script langauge="javascript" src="index.js"></script>
+</body>
+</html>

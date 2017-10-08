@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+    <script type="text/javascript" src="../../mylib/js/css.js"></script>
+    <title>将数字转换为16进制字符串</title>
+</head>
+
+<body>
+    <p id="title">将数字转换为16进制字符串</p>
+
+    <h1>C#版</h1>
+    <pre class="code" data-type="csharp">static public string IntToString(int val, int jz)
+{
+	char[] symbol = new char[]{'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
+	string ret_str = "";
+	int val2 = val;
+	do
+	{
+		ret_str = symbol[val2 % jz] + ret_str;
+		val2 /= jz;
+	}while(val2 != 0);
+
+	return ret_str;
+}</pre>
+    <p>&nbsp;</p>
+
+</body>
+</html>
