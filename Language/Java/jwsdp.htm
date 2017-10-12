@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+	<script type="text/javascript" src="../../mylib/js/css.js"></script>
+	<title>JDOM</title>
+</head>
+
+<body>
+	<p id="title">JDOM</p>
+    <h1>Overview</h1>
+    <p>Home page: <a href="http://www.jdom.org/">http://www.jdom.org/</a></p>
+    <p>用于 XML 解析的开源库，支持 DOM 模式和 SAX 模式</p>
+    <p>对于如下的 XML</p>
+    <pre class="code" data-type="xml">&lt;shop name="shop for geeks" location="Tokyo, Japan"&gt;
+  &lt;computer name="iBook" price="1200$" /&gt;
+  &lt;comic_book name="Dragon Ball vol 1" price="9$" /&gt;
+  &lt;geekyness_of_shop price="priceless" /&gt;
+&lt;/shop&gt;</pre>
+    <p>使用 JDOM 解析如下</p>
+    <pre class="code" data-type="java">SAXBuilder builder = new SAXBuilder();
+Document doc = builder.build(new FileInputStream("foo.xml"));
+Element root = doc.getRootElement();
+// root.getName() is "shop"
+// root.getAttributeValue("name") is "shop for geeks"
+// root.getAttributeValue("location") is "Tokyo, Japan"
+// root.getChildren() is a java.util.List object that contains 3 Element objects.</pre>
+    <p>也可以使用 JDOM 创建 XML 文档，如下所示：</p>
+    <pre class="code" data-type="java">Element root = new Element("shop");
+root.setAttribute("name", "shop for geeks");
+root.setAttribute("location", "Tokyo, Japan");
+Element item1 = new Element("computer");
+item1.setAttribute("name", "iBook");
+item1.setAttribute("price", "1200$");
+root.addContent(item1);
+// perform similar steps for other elements
+XMLOutputter outputter = new XMLOutputter();
+outputter.output(new Document(root), new FileOutputStream ("foo2.xml"));</pre>
+</body>
+</html>

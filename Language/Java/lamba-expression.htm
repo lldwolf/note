@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<title>Java 手册</title>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+<p id="title">Lamba 表达式 </p>
+<h1>示例</h1>
+<p>Lamba 表达式是对匿名类的一种改进。</p>
+<p>本节示例的常规方式和匿名类方式的实现请看<a href="anonymous-class.htm">这里</a></p>
+<h2>排序</h2>
+<p>使用如下代码对 List&lt;String&gt; 进行逆排序</p>
+<pre class="code" data-type="java">
+List&lt;String&gt; list = Arrays.asList(new String[] { "a", "E", "Z", "d" });
+Collections.sort(list, (s1, s2) -> {
+	return s1.compareToIgnoreCase(s2);
+});
+</pre>
+<h2>线程</h2>
+<pre class="code" data-type="java">
+Thread thread = new Thread(() -> {
+	while (true) {
+		try {
+			Thread.sleep(1000);
+			System.out.println(new Date().toString());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+});
+
+thread.start();
+</pre>
+</body>
+</html>

@@ -42,7 +42,6 @@
 		&lt;/appender&gt;
 
 		&lt;appender name="rollingFile" type="log4net.Appender.RollingFileAppender,log4net" &gt;
-			
 			&lt;param name="File" value="log.txt" /&gt;
 			&lt;param name="AppendToFile" value="false" /&gt;
 			&lt;param name="RollingStyle" value="Date" /&gt;
@@ -424,7 +423,7 @@
 		</tr>
 	</table>
 	<p>示例：</p>
-	<pre class="code" data-type="xml">layout type="log4net.Layout.PatternLayout"&gt;
+	<pre class="code" data-type="xml">&lt;layout type="log4net.Layout.PatternLayout"&gt;
 	&lt;conversionPattern value="%date [%thread] %-5level %logger [%ndc] - %message%newline" /&gt;
 &lt;/layout&gt;</pre>
 	<p><strong>&lt;param&gt;</strong></p>
@@ -474,6 +473,191 @@
 			<td>&nbsp;</td>
 		</tr>
 	</table>
+	<h2>日志输出格式</h2>
+	<p>前面例子中出现的 appender &rarr; layout &rarr; conversionPattern 标签的用途便是指定日志的输出格式。对于 log4net 内置的变量，log4net 支持简写和全写。例如如果想打印当前日志打印时间，可以使用 %date，也可以使用简写  %d。常用的内置变量如下表所示：</p>
+	<table style="width: 90%">
+		<tr>
+			<th>全名</th>
+			<th>简写</th>
+			<th>说明</th>
+		</tr>
+		<tr>
+			<td>%date</td>
+			<td>%d</td>
+			<td>日志打印时间，可使用 C# 的 DateTime.ToString() 兼容的格式字符串来指定输出日期格式，例如： %date{dd MMM yyyy HH:mm:ss,fff} </td>
+		</tr>
+		<tr>
+			<td>%message</td>
+			<td>%m</td>
+			<td>日志内容</td>
+		</tr>
+		<tr>
+			<td>%newline</td>
+			<td>%n</td>
+			<td>换行符</td>
+		</tr>
+		<tr>
+			<td>%thread</td>
+			<td>%t</td>
+			<td>打印日志的线程 ID
+			<br />
+			可使用 Thread.Name 来打印线程名字而不是 ID 以提高可读性
+			</td>
+		</tr>
+		<tr>
+			<td>%level</td>
+			<td>%p</td>
+			<td>日志级别，例如 DEBUG, INFO, ERROR</td>
+		</tr>
+		<tr>
+			<td>%logger</td>
+			<td>%c</td>
+			<td>logger 的名字，由 LogManager.GetLogger（"logger-name"） 指定
+			<br />
+			可使用如下代码将 logger 设为当前的类名
+			<br />
+			<pre class="code" data-type="csharp">ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);</pre>
+			</td>
+		</tr>
+		<tr>
+			<td>%ndc</td>
+			<td>%x</td>
+			<td>常用于多线程场景，多个线程打印类似的 log 很难区分，此时即可使用 %ndc 来打印指定的场景信息，如下所示：
+			<br />
+			<pre class="code" data-type="csharp">
+using (ThreadContext.Stacks["NDC"].Push("working thread context"))
+{
+	//此处打印的日志 %ndc 将会被替换为 "working thread context"
+	log.Info("message");
+}</pre>
+			</td>
+		</tr>
+		<tr>
+			<td>%appdomain</td>
+			<td>%a</td>
+			<td>App Domain Name</td>
+		</tr>
+		<tr>
+			<td>%file</td>
+			<td>%F</td>
+			<td>日志文件路径
+			<br />
+			<span style="color: red">非常慢，轻易不用</span>
+			</td>
+		</tr>
+		<tr>
+			<td>%exception</td>
+			<td></td>
+			<td>打印通过日志函数传递的异常，如果没有异常则忽略</td>
+		</tr>
+		<tr>
+			<td>%identity</td>
+			<td>%u</td>
+			<td>当前用户名(由 Principal.Identity.Name 获取)，默认情况下为空，在 Windows 下可使用如下方式设置：
+			<br />
+			<pre class="code" data-type="csharp">Thread.CurrentPrincipal = new WindowsPrincipal(WindowsIdentity.GetCurrent());</pre>
+			<span style="color: red">非常慢，轻易不用</span>
+			</td>
+		</tr>
+		<tr>
+			<td>%location</td>
+			<td>%l</td>
+			<td>打印日志的类名、文件名及代码所在行
+			<br />
+			<span style="color: red">非常慢，建议仅在开发环境下使用</span>
+			</td>
+		</tr>
+		<tr>
+			<td>%line</td>
+			<td>%L</td>
+			<td>打印日志的代码行号
+			<br />
+			<span style="color: red">非常慢，轻易不用</span>
+			</td>
+		</tr>
+		<tr>
+			<td>%method</td>
+			<td>%M</td>
+			<td>打印日志的方法名
+			<br />
+			<span style="color: red">非常慢，轻易不用</span>
+			</td>
+		</tr>
+		<tr>
+			<td><a id="layout-property"></a>%property, %properties</td>
+			<td>%p, %P</td>
+			<td>自定义属性，例如可以在酌置文件中使用 %property{user} 来定义 user 属性，然后使用如下 C# 代码设置值 
+			<br />
+			<pre class="code" data-type="csharp">log4net.GlobalContext.Properties["user"] = "lindong";</pre>
+			</td>
+		</tr>
+		<tr>
+			<td>%stacktrace{level}</td>
+			<td></td>
+			<td>方法调用栈，level 表示最多最示几层，默认为1，即只显示当前函数</td>
+		</tr>
+		<tr>
+			<td>%stacktracedetail{level}</td>
+			<td></td>
+			<td>方法调用栈，类似 %stacktrace，显示的信息更详细一些，例如调用参数类型也会被打印。</td>
+		</tr>
+		<tr>
+			<td>%timestamp</td>
+			<td>%r</td>
+			<td>自应用启动后经过的毫秒数</td>
+		</tr>
+		<tr>
+			<td>%username</td>
+			<td>%w</td>
+			<td>当前 Windows 用户名，与 %identity 类似但不需要使用程序来设置初始值，会自动读取当前的 Windows 登录用户
+			<br />
+			<span style="color: red">非常慢，轻易不用</span>
+			</td>
+		</tr>
+		<tr>
+			<td>%utcdate</td>
+			<td></td>
+			<td>使用 UTC 时间格式</td>
+		</tr>
+		<tr>
+			<td>%mdc</td>
+			<td>%X</td>
+			<td>已被 %property 取代， 用法也类似。仅出于兼容目的保留。除了使用 property 的 C# 语法外，还可以使用如下代码：
+			<pre class="code" data-type="csharp">log4net.MDC.Set("userId", "lindong");</pre>
+			</td>
+		</tr>
+		<tr>
+			<td>%type</td>
+			<td>%C</td>
+			<td>打印 log 的类名</td>
+		</tr>
+		<tr>
+			<td>%class</td>
+			<td>%C</td>
+			<td>与 %type 相同</td>
+		</tr>
+		<tr>
+			<td>%数字</td>
+			<td></td>
+			<td>这个是一个可应用于所有变量的修饰符，用于指定打印长度，其目的是使日志格式整齐以便于用其它程序处理。
+			<br />
+			例如： %5level 表示日志级别的打印宽度为5，不足的话在左边补空格，如果为 %-5level 则表示在右边补空格。
+			<br />
+			<ul>
+				<li>%20logger: 左边补空格到 20 位，无最大长度限制</li>
+				<li>%-20logger: 右边补空格到 20 位，无最大长度限制</li>
+				<li>%.20logger: 不补空格，但最大长度限制为 20</li>
+				<li>%20.30logger: 左边补空格到 20 位，最大长度限制为30</li>
+			</ul>
+			</td>
+		</tr>
+		<tr>
+			<td>%%</td>
+			<td></td>
+			<td>打印 %</td>
+		</tr>
+	</table>
+	<p>除此之外，还可以使用一些其它的修饰符，例</p>
 	<h2>root 标签 </h2>
 	<p>它是所有logger的共同父类，例如如果&lt;root&gt;中指定了使用文件来记录日志，而&lt;logger&gt;中默认也是使用文件来记录日志。</p>
 	<p>&lt;root&gt;标签不包含属性，它支持以下子标签：</p>
@@ -613,6 +797,19 @@
 log.Warn("Warn info.");
 log.Info("Normal info.");
 log.Debug("Debug info.");</pre>
+	<h2>使用参数</h2>
+	<h3>系统参数</h3>
+	<p>使用 ${} 来引用操作系统参数，这意味着例如在 Windows 下，凡是可以用 %XXXX% 打印出来的系统参数都可使用，例如可以使用 ${TEMP} 或 ${TMP} （大小写是否敏感取决于操作系统，此处对应 Windows 系统参数 %TEMP% 和 %TMP%） 来表示临时目录的路径。</p>
+	<p>下例即指定 log 文件位于系统临时目录下：</p>
+	<pre class="code" data-type="xml">
+&lt;appender name="rollingFile" type="log4net.Appender.RollingFileAppender,log4net" &gt;
+	&lt;param name="File" value="${TEMP}\log.txt" /&gt;
+	...
+&lt;/appender&gt;
+</pre>
+	<h3>自定义参数</h3>
+	<p>可使用如下方式设定自定义参数</p>
+	<p>可参考日志输出格式表中的 <a href="#layout-property">%property</a></p> 属性</p>
 	<h1>编程 </h1>
 	<p>需引用log4net.dll文件</p>
 	<h2>初始化log4net</h2>
@@ -686,6 +883,36 @@ log.Warn("Warn info.");</pre>
     &lt;/layout&gt;
 &lt;/appender&gt;
 </pre>
+	<h2>动态指定日志文件</h2>
+	<p>如果我们需要为不同的环境指定不同的日志文件，例如，在开发环境的日志文件为 app_dev.log，在生产环境为 app_prod.log。常规办法是为此准备不同的配置文件，但实际上可以通过以下方式来实现</p>
+	<pre class="code" data-type="csharp">
+using System.IO;
+using log4net;
+using log4net.Appender;
+
+ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+var logRepository = (log4net.Repository.Hierarchy.Hierarchy)LogManager.GetRepository();
+
+foreach (IAppender appender in logRepository.Root.Appenders)
+{
+	if (appender.Name == "rollingFile")
+	{
+		FileAppender fileAppender = (FileAppender)appender;
+		string logFileLocation = string.Format(@"{0}\app_{0}.log", Path.GetTempPath(), "dev");
+
+		fileAppender.File = logFileLocation;
+		fileAppender.ActivateOptions();
+		break;
+	}
+}
+
+log.info("printed in new log file");</pre>
+	<p>以下是几点说明：</p>
+	<ul>
+		<li>我曾尝试使用其 property 功能来实现这一点，但最终失败。</li>
+		<li>该代码可使用在任意想改变 log 文件的地方。只要应用了该代码，以后再打的 log 会自动定向到新的 log 文件。</li>
+		<li>该代码之前一定要初始化 log4net，因为它依赖于已读入的配置文件，所以一个小副作用就是一定会先把配置文件中的 log 文件路径生成出来。</li>
+	</ul>
     <h2>更多示例</h2>
     <p><a href="https://logging.apache.org/log4net/release/config-examples.html">官方示例</a></p>
 </body>

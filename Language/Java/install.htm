@@ -19,39 +19,46 @@
     <p>%JAVA_HOME%\bin目录要放到path路径中，常用的命令有下面几个</p>
     <h2>javac</h2>
     <p>编译命令，格式如下：</p>
-    <pre>javac java文件名</pre>
+    <pre class="code" data-type="sh">javac java文件名</pre>
     <p>例如：</p>
-    <pre>javac Test.java</pre>
+    <pre class="code" data-type="sh">javac Test.java</pre>
     <p>使用javac命令将java文件编译为.class文件。默认生成同名的.class文件，例如，上例即生成Test.class文件</p>
+    <p>但实际上我们通常会编译整个目录，并需要引用到大量的第三方类库，这样需使用的命令如下所示</p>
+    <pre class="code" data-type="sh"># Linux
+find -name "*.java" > sources.txt
+javac -classpath jar_path1:jar_path2 @sources.txt
+:: Windows
+dir /s /B *.java > sources.txt
+javac -classpath jar_path1;jar_path2 @sources.txt</pre>
     <h2>java</h2>
     <p>进入程序所在根目录，例如 Test 的 namespace 为 test.my.Test，编译生成的文件位于 c:\projects\bin\test\my\Test.class，则需进入 c:\projects\bin 目录，运行如下命令</p>
     <pre class="code" data-type="sh">java test.my.Test</pre>
     <p>可以在中间加各种参数，如下表所示</p>
     <table style="width:80%">
-        <tr>
-            <th>参数</th>
-            <th>说明</th>
-            <th>示例</th>
+    <tr>
+    <th>参数</th>
+    <th>说明</th>
+    <th>示例</th>
         </tr>
-        <tr>
-            <td>classpath</td>
-            <td>引用的 jar 包，以冒号(:)分隔</td>
-            <td><pre class="code" data-type="sh">java -classpath .:a.jar:b.jar test.my.Test</pre></td>
+    <tr>
+    <td>classpath</td>
+    <td>引用的 jar 包，以冒号(:)分隔</td>
+    <td><pre class="code" data-type="sh">java -classpath .:a.jar:b.jar test.my.Test</pre></td>
         </tr>
-        <tr>
-            <td>Xms</td>
-            <td>初始化内存</td>
-            <td><pre class="code" data-type="sh">java -Xms256m</pre></td>
+    <tr>
+    <td>Xms</td>
+    <td>初始化内存</td>
+    <td><pre class="code" data-type="sh">java -Xms256m</pre></td>
         </tr>
-        <tr>
-            <td>Xmx</td>
-            <td>能使用的最大内存</td>
-            <td><pre class="code" data-type="sh">java -Xmx2048m</pre></td>
+    <tr>
+    <td>Xmx</td>
+    <td>能使用的最大内存</td>
+    <td><pre class="code" data-type="sh">java -Xmx2048m</pre></td>
         </tr>
-        <tr>
-            <td>D</td>
-            <td>自定义参数</td>
-            <td><pre class="code" data-type="sh">#运行后 Java 程序可使用 System.getProperty("myparam") 获取到值 1
+    <tr>
+    <td>D</td>
+    <td>自定义参数</td>
+    <td><pre class="code" data-type="sh">#运行后 Java 程序可使用 System.getProperty("myparam") 获取到值 1
 java -Dmyparam=1</pre></td>
         </tr>
     </table>

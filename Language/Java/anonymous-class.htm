@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<title>Java 手册</title>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+<p id="title">匿名类 </p>
+<h1>Overview</h1>
+<p>常使用匿名类来简化代码，避免为一些单一的功能声明太多的类。如果使用 Java 8 以上的版本，可使用 Lamba 表达式使得代码更加简洁，示例请看<a href="lamba-expression.htm">这里</a></p>
+<h1>示例</h1>
+<h2>排序</h2>
+<p>如果想对一个 List&lt;String&gt; 进行逆排序，常规写法如下所示：</p>
+<pre class="code" data-type="java">private static class MyStringComparator implements Comparator&lt;String&gt; {
+    @Override
+    public int compare(String o1, String o2) {
+        return o1.compareToIgnoreCase(o2);
+    }
+}
+
+private static void testCustomSort() {
+    List&lt;String&gt; list = Arrays.asList(new String[] { "a", "E", "Z", "d" });
+    Collections.sort(list, new MyStringComparator());
+}</pre>
+<p>使用匿名类后，可简化为如下代码：</p>
+<pre class="code" data-type="java">Collections.sort(list, new Comparator&lt;String&gt;() {
+    @Override
+    public int compare(String s1, String s2) {
+        return s1.compareToIgnoreCase(s2);
+    }
+});</pre>
+<h2>多线程</h2>
+<p>可使用匿名类进行如下方式使用线程</p>
+<pre class="code" data-type="java">	public static void main(String[] args) {
+		Thread thread = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				while (true) {
+					try {
+						Thread.sleep(1000);
+						System.out.println(new Date().toString());
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		});
+
+		thread.start();
+	}
+</pre>
+</body>
+</html>

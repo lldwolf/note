@@ -9,6 +9,23 @@
 
 <body>
 	<p id="title">使用 jQuery 控制HTML</p>
+    <h1>jQuery 常用功能</h1>
+    <pre class="code" data-type="javascript">
+//获取HTML对象
+var divs = $('div');
+
+//将HTML对象封装为 jQuery 对象
+var divObj = $(divs[0]);
+
+//查看 jQuery 对象的内部HTML内容 (innerHTML)
+console.info(divObj.html());
+
+//查看 jQuery 对象的完整HTML内容 (outerHTML)
+console.info(($('&lt;div&gt;').append(divObj).clone()).html());
+
+//或使用浏览器的新特性
+console.info(divObj.prop('outerHTML'));
+</pre>
 	<h1>HTML 元素查找</h1>
 	<table style="width: 95%">
 		<tr>
@@ -37,18 +54,18 @@
 				<pre class="code" data-type="html">&lt;ul&gt;
   &lt;li&gt;list item 1&lt;/li&gt;
   &lt;li&gt;list item 2&lt;/li&gt;
-  &lt;li class=&quot;third-item&quot;&gt;list item 3&lt;/li&gt;
+  &lt;li class="third-item"&gt;list item 3&lt;/li&gt;
   &lt;li&gt;list item 4&lt;/li&gt;
   &lt;li&gt;list item 5&lt;/li&gt;
 &lt;/ul&gt;</pre>
 				JavaScript
-				<pre class="code" data-type="javascript">$( &quot;li.third-item&quot; ).prev().css( &quot;background-color&quot;, &quot;red&quot; );</pre>
+				<pre class="code" data-type="javascript">$( "li.third-item" ).prev().css( "background-color", "red" );</pre>
 			</td>
 			<td>结果为
 				<pre class="code" data-type="html">&lt;ul&gt;
   &lt;li&gt;list item 1&lt;/li&gt;
-  &lt;li style=&quot;background-color: red&quot;&gt;list item 2&lt;/li&gt;
-  &lt;li class=&quot;third-item&quot;&gt;list item 3&lt;/li&gt;
+  &lt;li style="background-color: red"&gt;list item 2&lt;/li&gt;
+  &lt;li class="third-item"&gt;list item 3&lt;/li&gt;
   &lt;li&gt;list item 4&lt;/li&gt;
   &lt;li&gt;list item 5&lt;/li&gt;
 &lt;/ul&gt;</pre>
@@ -60,19 +77,19 @@
 				<pre class="code" data-type="html">&lt;ul&gt;
   &lt;li&gt;list item 1&lt;/li&gt;
   &lt;li&gt;list item 2&lt;/li&gt;
-  &lt;li class=&quot;third-item&quot;&gt;list item 3&lt;/li&gt;
+  &lt;li class="third-item"&gt;list item 3&lt;/li&gt;
   &lt;li&gt;list item 4&lt;/li&gt;
   &lt;li&gt;list item 5&lt;/li&gt;
 &lt;/ul&gt;</pre>
 				JavaScript
-				<pre class="code" data-type="javascript">$( &quot;li.third-item&quot; ).next().css( &quot;background-color&quot;, &quot;red&quot; );</pre>
+				<pre class="code" data-type="javascript">$( "li.third-item" ).next().css( "background-color", "red" );</pre>
 			</td>
 			<td>结果为
 				<pre class="code" data-type="html">&lt;ul&gt;
   &lt;li&gt;list item 1&lt;/li&gt;
   &lt;li&gt;list item 2&lt;/li&gt;
-  &lt;li class=&quot;third-item&quot;&gt;list item 3&lt;/li&gt;
-  &lt;li style=&quot;background-color: red&quot;&gt;list item 4&lt;/li&gt;
+  &lt;li class="third-item"&gt;list item 3&lt;/li&gt;
+  &lt;li style="background-color: red"&gt;list item 4&lt;/li&gt;
   &lt;li&gt;list item 5&lt;/li&gt;
 &lt;/ul&gt;</pre>
 			</td>
@@ -96,38 +113,38 @@
 		<tr>
 			<td>子元素封装</td>
 			<td>HTML
-				<pre class="code" data-type="html">&lt;div class=&quot;inner&quot;&gt;Hello&lt;/div&gt;</pre>
+				<pre class="code" data-type="html">&lt;div class="inner"&gt;Hello&lt;/div&gt;</pre>
 				JavaScript
-				<pre class="code" data-type="javascript">$( &quot;.inner&quot; ).wrapInner( &quot;&lt;div class='new'&gt;&lt;/div&gt;&quot;);</pre>
+				<pre class="code" data-type="javascript">$( ".inner" ).wrapInner( "&lt;div class='new'&gt;&lt;/div&gt;");</pre>
 			</td>
 			<td>结果为
-				<pre class="code" data-type="html">&lt;div class=&quot;inner&quot;&gt;
-	&lt;div class=&quot;new&quot;&gt;Hello&lt;/div&gt;
+				<pre class="code" data-type="html">&lt;div class="inner"&gt;
+	&lt;div class="new"&gt;Hello&lt;/div&gt;
 &lt;/div&gt;</pre>
 			</td>
 		</tr>
 		<tr>
 			<td>父元素封装</td>
 			<td>HTML
-				<pre class="code" data-type="html">&lt;div class=&quot;inner&quot;&gt;Hello&lt;/div&gt;</pre>
+				<pre class="code" data-type="html">&lt;div class="inner"&gt;Hello&lt;/div&gt;</pre>
 				JavaScript
-				<pre class="code" data-type="javascript">$( &quot;.inner&quot; ).wrap( &quot;&lt;div class='new'&gt;&lt;/div&gt;&quot;);</pre>
+				<pre class="code" data-type="javascript">$( ".inner" ).wrap( "&lt;div class='new'&gt;&lt;/div&gt;");</pre>
 			</td>
 			<td>结果为
-				<pre class="code" data-type="html">&lt;div class=&quot;new&quot;&gt;
-	&lt;div class=&quot;inner&quot;&gt;Hello&lt;/div&gt;
+				<pre class="code" data-type="html">&lt;div class="new"&gt;
+	&lt;div class="inner"&gt;Hello&lt;/div&gt;
 &lt;/div&gt;</pre>
 			</td>
 		</tr>
 		<tr>
 			<td>在开始处添加子元素</td>
 			<td>HTML
-				<pre class="code" data-type="html">&lt;div class=&quot;inner&quot;&gt;Hello&lt;/div&gt;</pre>
+				<pre class="code" data-type="html">&lt;div class="inner"&gt;Hello&lt;/div&gt;</pre>
 				JavaScript
-				<pre class="code" data-type="javascript">$( &quot;.inner&quot; ).prepend( &quot;&lt;p&gt;Test&lt;/p&gt;&quot; );</pre>
+				<pre class="code" data-type="javascript">$( ".inner" ).prepend( "&lt;p&gt;Test&lt;/p&gt;" );</pre>
 			</td>
 			<td>结果为
-				<pre class="code" data-type="html">&lt;div class=&quot;inner&quot;&gt;
+				<pre class="code" data-type="html">&lt;div class="inner"&gt;
 	&lt;p&gt;Test&lt;/p&gt;
 	Hello
 &lt;/div&gt;</pre>
@@ -136,12 +153,12 @@
 		<tr>
 			<td>在结束处添加子元素</td>
 			<td>HTML
-				<pre class="code" data-type="html">&lt;div class=&quot;inner&quot;&gt;Hello&lt;/div&gt;</pre>
+				<pre class="code" data-type="html">&lt;div class="inner"&gt;Hello&lt;/div&gt;</pre>
 				JavaScript
-				<pre class="code" data-type="javascript">$( &quot;.inner&quot; ).append( &quot;&lt;p&gt;Test&lt;/p&gt;&quot; );</pre>
+				<pre class="code" data-type="javascript">$( ".inner" ).append( "&lt;p&gt;Test&lt;/p&gt;" );</pre>
 			</td>
 			<td>结果为
-				<pre class="code" data-type="html">&lt;div class=&quot;inner&quot;&gt;
+				<pre class="code" data-type="html">&lt;div class="inner"&gt;
 	Hello
 	&lt;p&gt;Test&lt;/p&gt;
 &lt;/div&gt;</pre>
@@ -150,38 +167,49 @@
 		<tr>
 			<td>元素前插入同级元素</td>
 			<td>HTML
-				<pre class="code" data-type="html">&lt;div class=&quot;inner&quot;&gt;Hello&lt;/div&gt;</pre>
+				<pre class="code" data-type="html">&lt;div class="inner"&gt;Hello&lt;/div&gt;</pre>
 				JavaScript
-				<pre class="code" data-type="javascript">$( &quot;.inner&quot; ).before( &quot;&lt;p&gt;Test&lt;/p&gt;&quot; );</pre>
+				<pre class="code" data-type="javascript">$( ".inner" ).before( "&lt;p&gt;Test&lt;/p&gt;" );</pre>
 			</td>
 			<td>结果为
 				<pre class="code" data-type="html">&lt;p&gt;Test&lt;/p&gt;
-&lt;div class=&quot;inner&quot;&gt;Hello&lt;/div&gt;</pre>
+&lt;div class="inner"&gt;Hello&lt;/div&gt;</pre>
 			</td>
 		</tr>
 		<tr>
 			<td>元素后插入同级元素</td>
 			<td>HTML
-				<pre class="code" data-type="html">&lt;div class=&quot;inner&quot;&gt;Hello&lt;/div&gt;</pre>
+				<pre class="code" data-type="html">&lt;div class="inner"&gt;Hello&lt;/div&gt;</pre>
 				JavaScript
-				<pre class="code" data-type="javascript">$( &quot;.inner&quot; ).after( &quot;&lt;p&gt;Test&lt;/p&gt;&quot; );</pre>
+				<pre class="code" data-type="javascript">$( ".inner" ).after( "&lt;p&gt;Test&lt;/p&gt;" );</pre>
 			</td>
 			<td>结果为
-				<pre class="code" data-type="html">&lt;div class=&quot;inner&quot;&gt;Hello&lt;/div&gt;
+				<pre class="code" data-type="html">&lt;div class="inner"&gt;Hello&lt;/div&gt;
 &lt;p&gt;Test&lt;/p&gt;</pre>
+			</td>
+		</tr>
+		<tr>
+			<td>更改 inner text</td>
+			<td>HTML
+				<pre class="code" data-type="html">&lt;div class="demo-container"&gt;Hello&lt;/div&gt;</pre>
+				JavaScript
+				<pre class="code" data-type="javascript">$( "div.demo-container" ).text( "Hello, Lindong" );</pre>
+			</td>
+			<td>结果为
+				<pre class="code" data-type="html">&lt;div class="demo-container"&gt;Hello, Lindong&lt;/div&gt;</pre>
 			</td>
 		</tr>
 		<tr>
 			<td>更改 inner HTML</td>
 			<td>HTML
-				<pre class="code" data-type="html">&lt;div class=&quot;demo-container&quot;&gt;
-	&lt;div class=&quot;demo-box&quot;&gt;Demonstration Box&lt;/div&gt;
+				<pre class="code" data-type="html">&lt;div class="demo-container"&gt;
+	&lt;div class="demo-box"&gt;Demonstration Box&lt;/div&gt;
 &lt;/div&gt;</pre>
 				JavaScript
-				<pre class="code" data-type="javascript">$( &quot;div.demo-container&quot; ).html( &quot;&lt;p&gt;All new content. &lt;em&gt;You bet!&lt;/em&gt;&lt;/p&gt;&quot; );</pre>
+				<pre class="code" data-type="javascript">$( "div.demo-container" ).html( "&lt;p&gt;All new content. &lt;em&gt;You bet!&lt;/em&gt;&lt;/p&gt;" );</pre>
 			</td>
 			<td>结果为
-				<pre class="code" data-type="html">&lt;div class=&quot;demo-container&quot;&gt;
+				<pre class="code" data-type="html">&lt;div class="demo-container"&gt;
 	&lt;p&gt;All new content. &lt;em&gt;You bet!&lt;/em&gt;&lt;/p&gt;
 &lt;/div&gt;</pre>
 			</td>
@@ -189,19 +217,19 @@
 		<tr>
 			<td>替换 HTML 元素</td>
 			<td>HTML
-				<pre class="code" data-type="html">&lt;div class=&quot;container&quot;&gt;
-  &lt;div class=&quot;inner first&quot;&gt;Hello&lt;/div&gt;
-  &lt;div class=&quot;inner second&quot;&gt;And&lt;/div&gt;
-  &lt;div class=&quot;inner third&quot;&gt;Goodbye&lt;/div&gt;
+				<pre class="code" data-type="html">&lt;div class="container"&gt;
+  &lt;div class="inner first"&gt;Hello&lt;/div&gt;
+  &lt;div class="inner second"&gt;And&lt;/div&gt;
+  &lt;div class="inner third"&gt;Goodbye&lt;/div&gt;
 &lt;/div&gt;</pre>
 				JavaScript
-				<pre class="code" data-type="javascript">$( &quot;div.second&quot; ).replaceWith( &quot;&lt;h2&gt;New heading&lt;/h2&gt;&quot; );</pre>
+				<pre class="code" data-type="javascript">$( "div.second" ).replaceWith( "&lt;h2&gt;New heading&lt;/h2&gt;" );</pre>
 			</td>
 			<td>结果为
-				<pre class="code" data-type="html">&lt;div class=&quot;container&quot;&gt;
-  &lt;div class=&quot;inner first&quot;&gt;Hello&lt;/div&gt;
+				<pre class="code" data-type="html">&lt;div class="container"&gt;
+  &lt;div class="inner first"&gt;Hello&lt;/div&gt;
   &lt;h2&gt;New heading&lt;/h2&gt;
-  &lt;div class=&quot;inner third&quot;&gt;Goodbye&lt;/div&gt;
+  &lt;div class="inner third"&gt;Goodbye&lt;/div&gt;
 &lt;/div&gt;</pre>
 			</td>
 		</tr>

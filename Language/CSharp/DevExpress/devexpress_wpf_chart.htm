@@ -46,6 +46,7 @@
 		&lt;/dxc:BarStackedSeries2D&gt;
 		&lt;dxc:BarStackedSeries2D BarWidth="0.5"
 								DisplayName="S2"&gt;
+								DisplayName="S2"&gt;
 			&lt;dxc:SeriesPoint Argument="1"
 							 Value="5" /&gt;
 			&lt;dxc:SeriesPoint Argument="3"
@@ -413,6 +414,16 @@ private void chartControl_MouseMove(object sender, MouseEventArgs e)
 	}
 }</pre>
 	<h2>日期坐标兼自定义坐标</h2>
+	<h3>日期坐标说明</h3>
+	<p>在 XYDiagram2D.AxisX.AxisX2D 中，有如下属性是专门用于日期类型X坐标的，说明如下：</p>
+	<ul>
+		<li>DateTimeGridAlignment 表示在X轴显示坐标时的对齐方式，例如如果设为 Month，则以月作为对齐单位。这意味着如果有两个数据的横坐标如果属于同一个月，即使其值不同，也会绘制在同一个X坐标上。</li>
+		<li>DateTimeMeasureUnit 表示度量单位，例如设为 Month 表示画柱状图时为每个月绘制一根柱子。这意味着如果有多个数据属于同一个月，则只有第一个数据会被绘制。</li>
+		<li>GridSpacing 表示在 X 轴的显示间隔（即每隔多少距离绘制一个X坐标值），默认为 1。与 DateTimeMeasureUnit 配合使用，例如 DateTimeMeasureUnit 设为 Day， GridSpacing 设为 7，则表示每隔 7 天绘制一个 X 坐标。</li>
+		<li>DateTimeOptions 用于指定X坐标日期显示的格式</li>
+	</ul>
+	<p>DevExpress 会根据日期范围自动设定 DateTimeMeasureUnit 及显示的 X 坐标值。例如，例如如果以星期为单位，则默认显示的 X 值为某个星期的第一天（星期一），如果以月为单位，则显示每个月的第一天。这样有时会带来一些有趣的现象，例如窗口尺寸很小时，它会自动使用月作为 X 轴绘制单位，虽着窗口尺寸拉宽，它会自动调整为以星期作为单位。这样你可能看到某个坐标值从 2017-8-1 变成了 2017-7-31 （星期一）。</p>
+    <h3>自定义日期坐标示例</h3>
 	<p>下例是一个定义以日期作为X坐标的例子</p>
 	<pre class="code" data-type="xml">&lt;dxc:ChartControl x:Name="chartControl1"
 				  DataSource="{Binding}"&gt;
@@ -434,14 +445,7 @@ private void chartControl_MouseMove(object sender, MouseEventArgs e)
 		&lt;/dxc:BarStackedSeries2D&gt;
 	&lt;/dxc:XYDiagram2D&gt;
 &lt;/dxc:ChartControl&gt;</pre>
-	<p>说明如下：</p>
-	<ul>
-		<li>DateTimeGridAlignment 表示在X轴显示坐标时以 Month 作为单位</li>
-		<li>DateTimeMeasureUnit 表示画柱子时每个星期画一根柱子</li>
-		<li>GridSpacing 表示在 X 轴每隔1个月显示一次坐标</li>
-		<li>DateTimeOptions 用于指定X坐标日期显示的格式</li>
-		<li>采用如上设置后，柱子的提示显示不出具体日期值，修正方案可参考本文中的 CustomDrawCrosshair 事件实现。</li>
-	</ul>
+	<p>采用如上设置后，柱子的提示显示不出具体日期值，修正方案可参考本文中的 CustomDrawCrosshair 事件实现。</p>
 	<p>使用如下代码绑定示例数据源</p>
 	<pre class="code" data-type="csharp">DataTable tb = new DataTable();
 tb.Columns.Add("Date", typeof(DateTime));
@@ -464,10 +468,81 @@ for (int m = 1; m &lt;= 12; m++)
 	((XYDiagram2D)this.chartControl1.Diagram).ActualAxisX.CustomLabels.Add(new CustomAxisLabel() { Content = month.ToString("MMM"), Value = month });
 }</pre>
 	<p>之所以要自定义 X 坐标值是因为默认情况下，会将月份显示在最后一根柱子上，导致第一根柱子显示的是 Dec。但我想让月份显示在第一根柱子上，于是就将原坐标清除并重新显示一遍</p>
-	<h1>配色效果</h1>
-	<h2>自定义配色</h2>
-	<p>默认情况下，会使用自动分配的颜色来显示各系列。可使用如下方式使用自定义颜色(假如我们有3个系列)</p>
-	<pre class="code" data-type="xml">&lt;dxc:ChartControl.Palette&gt;
+    <h3>日期坐标位置</h3>
+    <p>上例中我们自定义了坐标值。其根本原因是以日期为X坐标时，默认的坐标点是星期的第一天（而不是每月的第一天）。例如，在下面的例子中，我在 2017-8-2, 2017-8-9, 2017-8-16 显示三根柱子时，默认的显示的位置与坐标并不匹配，如下所示</p>
+    <pre class="code" data-type="xml" data-collapsed="false" title="XAML">&lt;dxc:ChartControl DataSource=&quot;{Binding}&quot;
+                  CrosshairEnabled=&quot;True&quot;&gt;
+    &lt;dxc:XYDiagram2D&gt;
+        &lt;dxc:XYDiagram2D.AxisX&gt;
+            &lt;dxc:AxisX2D TickmarksMinorVisible=&quot;False&quot;
+                         DateTimeGridAlignment=&quot;Day&quot;
+                         DateTimeMeasureUnit=&quot;Day&quot;
+                         GridSpacing=&quot;7&quot;&gt;
+            &lt;/dxc:AxisX2D&gt;
+        &lt;/dxc:XYDiagram2D.AxisX&gt;
+        &lt;dxc:BarSideBySideStackedSeries2D ArgumentDataMember=&quot;DateFrom&quot;
+                                          ValueDataMember=&quot;BuyAmount&quot;&gt;
+            &lt;dxc:BarSideBySideStackedSeries2D.Model&gt;
+                &lt;dxc:SimpleBar2DModel /&gt;
+            &lt;/dxc:BarSideBySideStackedSeries2D.Model&gt;
+        &lt;/dxc:BarSideBySideStackedSeries2D&gt;
+    &lt;/dxc:XYDiagram2D&gt;
+&lt;/dxc:ChartControl&gt;</pre>
+    <pre class="code" data-type="csharp" data-collapsed="false" title="C#">
+public partial class MainWindow : Window
+{
+    public MainWindow()
+    {
+        InitializeComponent();
+        DataTable tb = new DataTable();
+        tb.Columns.Add("DateFrom", typeof(DateTime));
+        tb.Columns.Add("BuyAmount", typeof(decimal));
+        tb.Rows.Add(new DateTime(2017, 8, 2), 300000M);
+        tb.Rows.Add(new DateTime(2017, 8, 9), 550000M);
+        tb.Rows.Add(new DateTime(2017, 8, 16), 410000M);
+        this.DataContext = tb;
+    }
+}</pre>
+    <p>在这种情况下结果如下图所示，可以看到坐标与柱子并不对齐，这就是因为默认坐标显示星期一的原因</p>
+    <p><img alt="" src="img/chart_axis_x_datetime_offset1.png" /></p>
+    <p>可通过如下方式将默认坐标后调两天，如下所示：</p>
+    <pre class="code" data-type="xml">&lt;dxc:AxisX2D TickmarksMinorVisible=&quot;False&quot;
+             DateTimeGridAlignment=&quot;Day&quot;
+             DateTimeMeasureUnit=&quot;Day&quot;
+             GridSpacing=&quot;7&quot;&gt;
+<span class="emphasis">    &lt;dxc:AxisX2D.DateTimeScaleOptions&gt;
+        &lt;dxc:ManualDateTimeScaleOptions GridOffset=&quot;2&quot; /&gt;
+    &lt;/dxc:AxisX2D.DateTimeScaleOptions&gt;</span>
+&lt;/dxc:AxisX2D&gt;
+</pre>
+    <p>这样结果就可以对齐了</p>
+    <p><img alt="" src="img/chart_axis_x_datetime_offset2.png" /></p>
+	<h3>自定义 X 坐标</h3>
+	<p>在上例中，我们使用了偏移坐标的方式。其实我们也可以使用自定义 X 坐标的方式来实现，从某种角度看起来可能更简单，因为不需要为 X 轴的度量单位是星期还是月而头疼该偏移几天。其原理是手工将 X 坐标设得和数据完成一致，如下所示：</p>
+	<pre class="code" data-type="csharp" data-collapsed="false" title="C#">
+DataTable tb = new DataTable();
+tb.Columns.Add("DateFrom", typeof(DateTime));
+tb.Columns.Add("BuyAmount", typeof(decimal));
+
+Random r = new Random();
+((XYDiagram2D)this.chartControl1.Diagram).ActualAxisX.CustomLabels.Clear();
+List<string> monthList = new List<string>();
+
+for (DateTime dt = new DateTime(2017, 6, 29); dt <= new DateTime(2017, 8, 31); dt = dt.AddDays(7))
+{
+	tb.Rows.Add(dt, r.Next(10000, 20000));
+
+	string month = dt.ToString("MMM");
+	if (!monthList.Contains(month))
+	{
+		((XYDiagram2D)this.chartControl1.Diagram).ActualAxisX.CustomLabels.Add(new CustomAxisLabel() { Content = month, Value = dt });
+		monthList.Add(month);
+	}
+}</pre>
+    <h1>配色效果</h1>
+    <h2>自定义配色</h2>
+    <p>默认情况下，会使用自动分配的颜色来显示各系列。可使用如下方式使用自定义颜色(假如我们有3个系列)</p>
+    <pre class="code" data-type="xml">&lt;dxc:ChartControl.Palette&gt;
 	&lt;dxc:CustomPalette&gt;
 		&lt;dxc:CustomPalette.Colors&gt;
 			&lt;Color&gt;#002d72&lt;/Color&gt;
@@ -476,22 +551,22 @@ for (int m = 1; m &lt;= 12; m++)
 		&lt;/dxc:CustomPalette.Colors&gt;
 	&lt;/dxc:CustomPalette&gt;
 &lt;/dxc:ChartControl.Palette&gt;</pre>
-	<h2>定义配色效果</h2>
-	<p>默认情况下使用由浓变淡的一种效果，可使用如下方式改为简单效果</p>
-	<pre class="code" data-type="xml">&lt;dxc:ChartControl&gt;
+    <h2>定义配色效果</h2>
+    <p>默认情况下使用由浓变淡的一种效果，可使用如下方式改为简单效果</p>
+    <pre class="code" data-type="xml">&lt;dxc:ChartControl&gt;
 	&lt;dxc:ChartControl.Diagram&gt;
 		&lt;dxc:XYDiagram2D&gt;
 			&lt;dxc:BarSideBySideSeries2D&gt;
-				<span class="emphasis">&lt;dxc:BarSideBySideSeries2D.Model&gt;
+    <span class="emphasis">&lt;dxc:BarSideBySideSeries2D.Model&gt;
 					&lt;dxc:SimpleBar2DModel /&gt;显示收支结余柱状图
 				&lt;/dxc:BarSideBySideSeries2D.Model&gt;</span>
 			&lt;/dxc:BarSideBySideSeries2D&gt;
 	&lt;/dxc:ChartControl.Diagram&gt;
 &lt;/dxc:ChartControl&gt;</pre>
-	<p>还有很多其它的效果可选，例如3D效果之类</p>
-	<h1>图表标题</h1>
-	<h2>显示标题</h2>
-	<pre class="code" data-type="xml">&lt;dxc:ChartControl.Titles&gt;
+    <p>还有很多其它的效果可选，例如3D效果之类</p>
+    <h1>图表标题</h1>
+    <h2>显示标题</h2>
+    <pre class="code" data-type="xml">&lt;dxc:ChartControl.Titles&gt;
 	&lt;dxc:Title Content="My Title"
 			   FontSize="12"
 			   Padding="0"

@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>DevExpress GridControl (WinForm)</title>
+<script type="text/javascript" src="../../../mylib/js/css.js"></script>
+</head>
+<body>
+<p id="title">DevExpress GridControl (WinForm) - Integrate with WPF</p>
+<h1>Overview</h1>
+<p>如果我们将 GridControl 通过 WindowsFormsHost 放在 WPF Window 中，会发现 GridView 的 DataSource 总为 null，不会与 GridControl 的 DataSource 保持一致。</p>
+<p>这是因为 GridControl 没有被加入 Form.Controls，因为这是它的期望上下文。可通过以下方式模拟实现：</p>
+<pre class="code" data-type="csharp">this.gridControl1.BindingContext = this.BindingContext;</pre>
+<p>更详细的可参考下面的 DevExpress 论坛链接</p>
+<p><a href="https://www.devexpress.com/Support/Center/Question/Details/Q309082/mainview-datasource-is-null-although-xtragrid-datasource-is-non-null">https://www.devexpress.com/Support/Center/Question/Details/Q309082/mainview-datasource-is-null-although-xtragrid-datasource-is-non-null</a></p>
+<p><a href="https://www.devexpress.com/Support/Center/Question/Details/B190539/xtragrid-does-not-show-rows-when-hosted-in-a-windowsformshost-and-in-an-xtralayout-control">https://www.devexpress.com/Support/Center/Question/Details/B190539/xtragrid-does-not-show-rows-when-hosted-in-a-windowsformshost-and-in-an-xtralayout-control</a></p>
+</body>
+</html>

@@ -10,8 +10,12 @@
 <body>
     <p id="title">Console 应用开发技巧</p>
     <h1>技巧</h1>
-    <h2>改变输出颜色</h2>
+    <h2>改变窗口大小</h2>
     <pre class="code" data-type="csharp">
+// 设置宽高单位均为字符宽度
+Console.SetWindowSize(150, 60);</pre>
+    <h2>改变输出颜色</h2>
+    <pre class="code" data-type="csharp" data-collapsed="false">
 public static void Error(string msg)
 {
 	ConsoleColor oldColor = Console.ForegroundColor;
@@ -22,7 +26,7 @@ public static void Error(string msg)
     <h2>设置错误代码</h2>
     <pre class="code" data-type="csharp">Environment.Exit(1);</pre>
     <h2>输入密码</h2>
-    <pre class="code" data-type="csharp">private static string ReadPassword()
+    <pre class="code" data-type="csharp" data-collapsed="false">private static string ReadPassword()
 {
 	string pass = string.Empty;
 	ConsoleKeyInfo key = Console.ReadKey(true);

@@ -15,8 +15,6 @@
 	<h2><a href="data_format.htm">数据类型转换</a></h2>
     <h2><a href="common_operation.htm">常用操作</a></h2>
 	<h2><a href="generic.htm">泛型</a></h2>
-	<h2><a href="anonymous-class.htm">匿名类</a></h2>
-	<h2><a href="lamba-expression.htm">Lamba 表达式</a></h2>
 	<h2><a href="term.htm">Java界的名词解释</a></h2>
 	<h2><a href="system_var.htm">系统变量 </a></h2>
 	<h2><a href="reflection.htm">Reflection</a> </h2>
@@ -46,9 +44,6 @@
 	<h2><a href="iReport.htm">使用iReport开发报表</a></h2>
 	<h2><a href="cxf.htm">CXF</a></h2>
     <h2><a href="lucene.htm">Lucene</a></h2>
-    <h2><a href="jdom.htm">JDOM - XML 开发工具</a></h2>
-    <h2><a href="jxl.htm">JXL - Excel 开发</a></h2>
-    <h2><a href="jwsdp.htm">Java Web Services Development Pack (JWSDP)</a></h2>
     <h1>Maven</h1>
     <h2><a href="maven_overview.htm">First Overview</a></h2>
     <h2><a href="maven_faq.htm">FAQ</a></h2>

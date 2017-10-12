@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+	<script type="text/javascript" src="../../mylib/js/css.js"></script>
+	<title>JXL</title>
+</head>
+
+<body>
+	<p id="title">JXL</p>
+    <h1>Overview</h1>
+    <p>Home page: <a href="http://jexcelapi.sourceforge.net/">http://jexcelapi.sourceforge.net/</a></p>
+    <p>JXL 是一个开源的 Excel 开发库，支持 Excel 95, 97, 2000, XP 和 2003</p>
+    <p>下面是一个示例</p>
+    <pre class="code" data-type="java">import java.io.File;
+import jxl.Workbook;
+import jxl.write.WritableSheet;
+import jxl.write.WritableWorkbook;
+import jxl.write.Label;
+import jxl.write.WriteException;
+public class DataSheet
+{
+    private Workbook wbook;
+    private WritableWorkbook wwbCopy;
+    private WritableSheet shSheet;
+    public void readExcel()
+    {
+        try
+        {
+            wbook = Workbook.getWorkbook(new File("path/testSampleData.xls"));
+            wwbCopy = Workbook.createWorkbook(new File("path/testSampleDataCopy.xls"), wbook);
+            shSheet = wwbCopy.getSheet(0);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+   
+    public void setValueIntoCell(String strSheetName, int iColumnNumber, int iRowNumber, String strData) throws WriteException
+    {
+        WritableSheet wshTemp = wwbCopy.getSheet(strSheetName);
+        Label labTemp = new Label(iColumnNumber, iRowNumber, strData);
+               
+        try 
+        {
+            wshTemp.addCell(labTemp);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+   
+    public void closeFile()
+    {
+        try 
+        {
+            // Closing the writable work book
+            wwbCopy.write();
+            wwbCopy.close();
+            // Closing the original work book
+            wbook.close();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+   
+    public static void main(String[] args) throws WriteException
+    {
+        DataSheet ds = new DataSheet();
+        ds.readExcel();
+        ds.setValueIntoCell("sheet1", 5, 1, "PASS");
+        ds.setValueIntoCell("sheet1", 5, 2, "FAIL");
+        ds.setValueIntoCell("sheet1", 5, 3, "PASS");
+        ds.closeFile();
+    }
+}</pre>
+
+</body>
+</html>

@@ -1,146 +1,272 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
-	<title>Ant</title>
-	<script type="text/javascript" src="../../mylib/js/css.js"></script>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+    <title>Ant</title>
+    <script type="text/javascript" src="../../mylib/js/css.js"></script>
 </head>
 
 <body>
-	<p id="title">Ant</p>
-	<h1>Overview</h1>
-	<p>首先我们需要知道，Ant 能做什么，下面是一个汇总</p>
-	<table style="width:90%">
-		<tr>
-			<th>功能</th>
-			<th>标签</th>
-		</tr>
-		<tr>
-			<td>打印消息</td>
-			<td>echo</td>
-		</tr>
-		<tr>
-			<td>文件/文件夹操作</td>
-			<td>copy, mkdir</td>
-		</tr>
-		<tr>
-			<td>编译 Java 代码</td>
-			<td>javac</td>
-		</tr>
-		<tr>
-			<td>执行 Java 程序</td>
-			<td>java</td>
-		</tr>
-	</table>
-	<h1>Ant 入门</h1>
-	<h2>要素</h2>
-	<ul>
-		<li>&lt;project&gt; 标签的 default 属性表示 ant 执行的第一个 target</li>
-		<li>&lt;target&gt; 标签的 depends 属性表示该 target 依赖的 target</li>
-	</ul>
+    <p id="title">Ant</p>
+    <h1>Overview</h1>
+    <p>首先我们需要知道，Ant 能做什么，下面是一个汇总</p>
+    <table style="width:90%">
+        <tr>
+            <th>功能</th>
+            <th>标签</th>
+        </tr>
+        <tr>
+            <td>打印消息</td>
+            <td>echo</td>
+        </tr>
+        <tr>
+            <td>文件/文件夹操作</td>
+            <td>copy, mkdir</td>
+        </tr>
+        <tr>
+            <td>编译 Java 代码</td>
+            <td>javac</td>
+        </tr>
+        <tr>
+            <td>执行 Java 程序</td>
+            <td>java</td>
+        </tr>
+    </table>
+    <h1>Ant 入门</h1>
+    <h2>要素</h2>
+    <ul>
+        <li>&lt;project&gt; 标签的 default 属性表示 ant 执行的第一个 target</li>
+        <li>&lt;target&gt; 标签的 depends 属性表示该 target 依赖的 target</li>
+    </ul>
+    <h2>Property 标签</h2>
+    <p>这是 property 标签支持的属性</p>
+    <table style="width:95%">
+        <tr>
+            <th><b>Attribute</b></th>
+            <th><b>Description</b></th>
+            <th><b>Required</b></th>
+        </tr>
+        <tr>
+            <td>name</td>
+            <td>the name of the property to set.</td>
+            <td>No</td>
+        </tr>
+        <tr>
+            <td>value</td>
+            <td>the value of the property.</td>
+            <td rowspan="3">
+                One of these or
+                nested text, when using the name attribute
+            </td>
+        </tr>
+        <tr>
+            <td>location</td>
+            <td>
+                Sets the property to the absolute filename of the
+                given file. If the value of this attribute is an absolute path, it
+                is left unchanged (with / and \ characters converted to the
+                current platforms conventions). Otherwise it is taken as a path
+                relative to the project's basedir and expanded.
+            </td>
+        </tr>
+        <tr>
+            <td>refid</td>
+            <td>
+                <a href="../using.html#references">Reference</a> to an object
+                defined elsewhere. Only yields reasonable results for references
+                to <a href="../using.html#path">PATH like structures</a> or properties.
+            </td>
+        </tr>
+        <tr>
+            <td>resource</td>
+            <td>
+                the name of the classpath resource containing
+                properties settings in properties file format.
+            </td>
+            <td rowspan="4">
+                One of these, when
+                <b>not</b> using the name attribute
+            </td>
+        </tr>
+        <tr>
+            <td>file</td>
+            <td>the location of the properties file to load.</td>
+        </tr>
+        <tr>
+            <td>url</td>
+            <td>a url containing properties-format settings.</td>
+        </tr>
+        <tr>
+            <td>environment</td>
+            <td>
+                the prefix to use when retrieving environment variables. Thus
+                if you specify environment="myenv" you will be able to access OS-specific
+                environment variables via property names "myenv.PATH" or
+                "myenv.TERM". Note that if you supply a property name with a final
+                "." it will not be doubled; i.e. environment="myenv." will still
+                allow access of environment variables through "myenv.PATH" and
+                "myenv.TERM". This functionality is currently only implemented
+                on <a href="#notes-env">select platforms</a>. Feel free to send patches to increase the
+                number of platforms on which this functionality is supported ;).<br>
+                Note also that properties are case-sensitive, even if the
+                environment variables on your operating system are not; e.g. Windows 2000's
+                system path variable is set to an Ant property named "env.Path"
+                rather than "env.PATH".
+            </td>
+        </tr>
+        <tr>
+            <td>classpath</td>
+            <td>the classpath to use when looking up a resource.</td>
+            <td>No</td>
+        </tr>
+        <tr>
+            <td>classpathref</td>
+            <td>
+                the classpath to use when looking up a resource,
+                given as <a href="../using.html#references">reference</a> to a <code>&lt;path&gt;</code> defined
+                elsewhere..
+            </td>
+            <td>No</td>
+        </tr>
+        <tr>
+            <td>prefix</td>
+            <td>
+                Prefix to apply to properties loaded using <code>file</code>,
+                <code>resource</code>, or <code>url</code>.
+                A "." is appended to the prefix if not specified.
+            </td>
+            <td>No</td>
+        </tr>
+        <tr>
+            <td>prefixValues</td>
+            <td>
+                Whether to apply the prefix when expanding the
+                right hand side of properties loaded using <code>file</code>,
+                <code>resource</code>, or <code>url</code>.
+                <em>Since Ant 1.8.2</em>
+            </td>
+            <td>No (default=<tt>false</tt>)</td>
+        </tr>
+        <tr>
+            <td>relative</td>
+            <td>
+                If set to <tt>true</tt> the relative path
+                to <tt>basedir</tt> is set.  <em>Since Ant 1.8.0</em>
+            </td>
+            <td>No (default=<tt>false</tt>)</td>
+        </tr>
+        <tr>
+            <td>basedir</td>
+            <td>
+                The basedir to calculate the relative path
+                from.  <em>Since Ant 1.8.0</em>
+            </td>
+            <td>No (default=<tt>${basedir}</tt>)</td>
+        </tr>
+    </table>
+    <p><a href="https://ant.apache.org/manual/Tasks/property.html">具体请参考这里</a></p>
+
+    <h2>示例</h2>
+    <p>说来惭愧，作为最著名的部署工具，我一直只是使用其中的copy功能，将改动过后的文件复复制到目标目录中，下面是一个示例：</p>
+    <pre class="code" data-type="xml">&lt;?xml version="1.0"?&gt;
+	&lt;project default="main" basedir="."&gt;
+	&lt;echo message="copy all class to target"/&gt;
+	&lt;property name="class_root" location="D:/Work/Java/spring_test/WebContent/WEB-INF/classes" /&gt;
+	&lt;property name="obj" location="D:/java/Tomcat 6.0/webapps/spring_test/WEB-INF/classes" /&gt;
 	
-
-	<h2>示例</h2>
-	<p>说来惭愧，作为最著名的部署工具，我一直只是使用其中的copy功能，将改动过后的文件复复制到目标目录中，下面是一个示例：</p>
-	<pre class="code" data-type="xml">&lt;?xml version=&quot;1.0&quot;?&gt;
-
-	&lt;project default=&quot;main&quot; basedir=&quot;.&quot;&gt;
-
-	&lt;echo message=&quot;copy all class to target&quot;/&gt;
-	&lt;property name=&quot;class_root&quot; location=&quot;D:/Work/Java/spring_test/WebContent/WEB-INF/classes&quot; /&gt;
-	&lt;property name=&quot;obj&quot; location=&quot;D:/java/Tomcat 6.0/webapps/spring_test/WEB-INF/classes&quot; /&gt;
-	
-	 &lt;target name=&quot;main&quot; &gt;
-	  	 &lt;copy todir=&quot;${obj}/lld/test/spring/ioc&quot;&gt;
-	  	 	&lt;fileset dir=&quot;${class_root}/lld/test/spring/ioc&quot;&gt;
-	  	 		&lt;include name=&quot;*.class&quot; /&gt;
+	 &lt;target name="main" &gt;
+	  	 &lt;copy todir="${obj}/lld/test/spring/ioc"&gt;
+	  	 	&lt;fileset dir="${class_root}/lld/test/spring/ioc"&gt;
+	  	 		&lt;include name="*.class" /&gt;
 	  	 	&lt;/fileset&gt;
   	 	&lt;/copy&gt;	
-	  	 &lt;copy todir=&quot;${obj}/lld/test/hibernate/bean&quot;&gt;
-	  	 	&lt;fileset dir=&quot;${class_root}/lld/test/hibernate/bean&quot;&gt;
-	  	 		&lt;include name=&quot;*.class&quot; /&gt;
+	  	 &lt;copy todir="${obj}/lld/test/hibernate/bean"&gt;
+	  	 	&lt;fileset dir="${class_root}/lld/test/hibernate/bean"&gt;
+	  	 		&lt;include name="*.class" /&gt;
 	  	 	&lt;/fileset&gt;
  	 	&lt;/copy&gt;	
 	 &lt;/target&gt;
   
 &lt;/project&gt;</pre>
-	<h1>常见用法</h1>
-	<h2>信息</h2>
-	<h3>打印信息</h3>
-	<pre class="code" data-type="xml">&lt;echo message="Create Hermes Source Directory"/&gt;
+    <h1>常见用法</h1>
+    <h2>信息</h2>
+    <h3>打印信息</h3>
+    <pre class="code" data-type="xml">&lt;echo message="Create Hermes Source Directory"/&gt;
 &lt;echo&gt; Hello, world.&lt;/echo&gt;&gt;</pre>
-	<h2>变量</h2>
-	<h3>声明常量</h3>
-	<pre class="code" data-type="xml">&lt;property name=&quot;var_name&quot; value=&quot;value&quot; /&gt;</pre>
-	<h3>引用变量</h3>
-	<p>将已有变量值赋给新变量</p>
-	<pre class="code" data-type="xml">&lt;property name=&quot;new_var_name&quot; value=&quot;${var_name}&quot; /&gt;</pre>
-	<h3>由命令行输入变量</h3>
-	<pre class="code" data-type="xml">&lt;input message=&quot;Please enter value:&quot; addproperty=&quot;var_name&quot; /&gt;</pre>
-	<p>如果需要输入密码，需使用如下格式，这样输入的字符将不会显示在屏幕上</p>
-	<pre class="code" data-type="xml">&lt;input message=&quot;Please enter svn-password:&quot; addproperty=&quot;svn.password&quot; &gt;
-	&lt;handler classname=&quot;org.apache.tools.ant.input.SecureInputHandler&quot; /&gt;
+    <h2>变量</h2>
+    <h3>声明常量</h3>
+    <pre class="code" data-type="xml">&lt;property name="var_name" value="value" /&gt;</pre>
+    <h3>引用变量</h3>
+    <p>将已有变量值赋给新变量</p>
+    <pre class="code" data-type="xml">&lt;property name="new_var_name" value="${var_name}" /&gt;</pre>
+    <h3>使用系统变量</h3>
+    <p>在 property 标签中定义 environment，例如：</p>
+    <pre class="code" data-type="xml">&lt;property environment="env" /&gt;
+&lt;!-- 引用操作系统的 Path 系统变量  --&gt;
+&lt;property name="path" value="${env.Path}" /&gt;
+</pre>
+    
+    <h3>由命令行输入变量</h3>
+    <pre class="code" data-type="xml">&lt;input message="Please enter value:" addproperty="var_name" /&gt;</pre>
+    <p>如果需要输入密码，需使用如下格式，这样输入的字符将不会显示在屏幕上</p>
+    <pre class="code" data-type="xml">&lt;input message="Please enter svn-password:" addproperty="svn.password" &gt;
+	&lt;handler classname="org.apache.tools.ant.input.SecureInputHandler" /&gt;
 &lt;/input&gt;</pre>
-	<h3>命令行参数</h3>
-	<p>在命令行中使用 -D 来传入参数</p>
-	<pre class="code" data-type="sh">ant -Dtest.module=MyClassUnderTest ...</pre>
-	<pre class="code" data-type="xml">&lt;target name=&quot;single_test&quot; depends=&quot;compile&quot; description=&quot;Run one unit test&quot;&gt;
+    <h3>命令行参数</h3>
+    <p>在命令行中使用 -D 来传入参数</p>
+    <pre class="code" data-type="sh">ant -Dtest.module=MyClassUnderTest ...</pre>
+    <pre class="code" data-type="xml">&lt;target name="single_test" depends="compile" description="Run one unit test"&gt;
     &lt;junit&gt;
         &lt;batchtest&gt;
-            &lt;fileset dir=&quot;${test.dir}&quot; includes=&quot;**/${test.module}.class&quot; /&gt;
+            &lt;fileset dir="${test.dir}" includes="**/${test.module}.class" /&gt;
         &lt;/batchtest&gt;
     &lt;/junit&gt;
 &lt;/target&gt;</pre>
-	<h2>文件集声明</h2>
-	<pre class="code" data-type="xml">&lt!-- 指定目录 --&gt;
-&lt;fileset dir=&quot;目录路径&quot;&gt;
-
+    <h2>文件集声明</h2>
+    <pre class="code" data-type="xml">&lt!-- 指定目录 --&gt;
+&lt;fileset dir="目录路径"&gt;
 &lt!-- 指定目录下的某些文件(不包括子目录) --&gt;
-&lt;fileset dir=&quot;目录路径&quot; includes=&quot;*.class&quot; /&gt;
-
+&lt;fileset dir="目录路径" includes="*.class" /&gt;
 &lt!-- 指定目录下的某些文件(包括子目录) --&gt;
-&lt;fileset dir=&quot;目录路径&quot; includes=&quot;**/*.class&quot; /&gt;
-
+&lt;fileset dir="目录路径" includes="**/*.class" /&gt;
 &lt!-- 指定目录下包含的文件和不包含的的文件 --&gt;
-&lt;fileset dir=&quot;源文件目录&quot;&gt;
+&lt;fileset dir="源文件目录"&gt;
 	&lt!-- 包含指定文件 --&gt;
-	&lt;include name=&quot;*.class&quot; /&gt;
+	&lt;include name="*.class" /&gt;
 	&lt!-- 排除指定目录 --&gt;
-	&lt;exclude name=&quot;serverOne/&quot; /&gt;
+	&lt;exclude name="serverOne/" /&gt;
 	&lt!-- 排除指定文件 --&gt;
-	&lt;exclude name=&quot;lib/*.gif&quot; /&gt;
+	&lt;exclude name="lib/*.gif" /&gt;
 &lt;/fileset&gt;
-
 &lt!-- 指定所有文件 --&gt;
-&lt;fileset dir=&quot;目录路径&quot; includes=&quot;**/*.*&quot; /&gt;</pre>
-	<h2>目录操作</h2>
-	<pre class="code" data-type="xml">&lt;!-- delete folder --&gt;
-&lt;delete dir=&quot;path&quot; /&gt;
-
+&lt;fileset dir="目录路径" includes="**/*.*" /&gt;</pre>
+    <h2>目录操作</h2>
+    <pre class="code" data-type="xml">&lt;!-- delete folder --&gt;
+&lt;delete dir="path" /&gt;
 &lt;!-- create folder --&gt;
-&lt;mkdir dir=&quot;path&quot; /&gt;</pre>
-	<pre class="code" data-type="xml"></pre>
-	<h2>文件操作</h2>
-	<h3>复制单个文件</h3>
-	<pre class="code" data-type="xml">&lt;copy file=&quot;源文件&quot; tofile=&quot;目标文件&quot;/&gt;</pre>
-	<h3>复制多个文件</h3>
-	<pre class="code" data-type="xml">&lt;copy todir=&quot;目标目录&quot;&gt;
-	&lt;fileset dir=&quot;源文件目录&quot;&gt;
+&lt;mkdir dir="path" /&gt;</pre>
+    <pre class="code" data-type="xml"></pre>
+    <h2>文件操作</h2>
+    <h3>复制单个文件</h3>
+    <pre class="code" data-type="xml">&lt;copy file="源文件" tofile="目标文件"/&gt;</pre>
+    <h3>复制多个文件</h3>
+    <pre class="code" data-type="xml">&lt;copy todir="目标目录"&gt;
+	&lt;fileset dir="源文件目录"&gt;
 		&lt!-- 不复制指定目录 --&gt;
-		&lt;exclude name=&quot;serverOne/&quot; /&gt;
+		&lt;exclude name="serverOne/" /&gt;
 		&lt!-- 不复制指定文件 --&gt;
-		&lt;exclude name=&quot;lib/*.gif&quot; /&gt;
+		&lt;exclude name="lib/*.gif" /&gt;
 	&lt;/fileset&gt;
 &lt;/copy&gt;
 </pre>
-	<h2>Dos/Unix 换行符变换</h2>
-	<pre class="code" data-type="xml">&lt;?xml version=&quot;1.0&quot;?&gt;
-&lt;project name=&quot;fix&quot; basedir=&quot;.&quot; default=&quot;all&quot;&gt;
-	&lt;target name=&quot;fixCRLF&quot;&gt;
-		&lt;echo message=&quot;+++Fixing CRLF+++&quot;/&gt;
-		&lt;fixcrlf srcdir=&quot;.&quot; includes=&quot;**/makefile,**/*&quot; excludes=&quot;**/*.gif,**/*.jpg,**/*.dat&quot; eol=&quot;lf&quot;/&gt;
+    <h2>Dos/Unix 换行符变换</h2>
+    <pre class="code" data-type="xml">&lt;?xml version="1.0"?&gt;
+&lt;project name="fix" basedir="." default="all"&gt;
+	&lt;target name="fixCRLF"&gt;
+		&lt;echo message="+++Fixing CRLF+++"/&gt;
+		&lt;fixcrlf srcdir="." includes="**/makefile,**/*" excludes="**/*.gif,**/*.jpg,**/*.dat" eol="lf"/&gt;
 	&lt;/target&gt;
-	&lt;target name=&quot;all&quot; depends=&quot;fixCRLF&quot;/&gt;
+	&lt;target name="all" depends="fixCRLF"/&gt;
 &lt;/project&gt;</pre>
 </body>
 </html>

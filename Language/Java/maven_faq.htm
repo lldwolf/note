@@ -26,6 +26,71 @@
 &lt;/build&gt;</pre>
     <h1>如何跳过 test 阶段</h1>
     <pre class="code" data-type="sh">mvn clean package -Dmaven.test.skip=true</pre>
-    
+    <h1>编译时如何指定不编译的文件</h1>
+    <p>使用如下方式跳过</p>
+    <pre class="code" data-type="xml">
+&lt;plugin&gt;
+	&lt;artifactId&gt;maven-compiler-plugin&lt;/artifactId&gt;
+	&lt;version&gt;3.5.1&lt;/version&gt;
+	&lt;configuration&gt;
+		&lt;source&gt;1.8&lt;/source&gt;
+		&lt;target&gt;1.8&lt;/target&gt;
+		&lt;excludes&gt;
+			&lt;exclude&gt;**/mytest/*.java&lt;/exclude&gt;
+			&lt;exclude&gt;com/my/NoUsed.java&lt;/exclude&gt;
+			&lt;exclude&gt;etc/*&lt;/exclude&gt;
+		&lt;/excludes&gt;
+	&lt;/configuration&gt;
+&lt;/plugin&gt;
+</pre>
+    <p>需要注意如下几点：</p>
+    <ul>
+        <li>在此使用的路径为对应源代码路径的相对路径</li>
+        <li>对于 exclude 的类，如果它被其它类引用了，exclude 将失效（maven 还是很聪明的）。所以需要将引用它的类一块儿放在 exclude 列表中才行。</li>
+    </ul>
+    <h1>如何手工指定 src/resource 路径</h1>
+    <p>resource 可指定多个路径，默认 src 路径只有一个</p>
+    <pre class="code" data-type="xml">
+&lt;sourceDirectory&gt;src&lt;/sourceDirectory&gt;
+&lt;resources&gt;
+	&lt;resource&gt;
+		&lt;directory&gt;etc&lt;/directory&gt;
+		&lt;excludes&gt;
+			&lt;exclude&gt;**/*.java&lt;/exclude&gt;
+		&lt;/excludes&gt;
+	&lt;/resource&gt;
+	&lt;resource&gt;
+		&lt;directory&gt;res&lt;/directory&gt;
+		&lt;excludes&gt;
+			&lt;exclude&gt;**/*.java&lt;/exclude&gt;
+		&lt;/excludes&gt;
+	&lt;/resource&gt;
+&lt;/resources&gt;
+</pre>
+    <h1>如何打包源文件</h1>
+    <p>配置如下</p>
+    <pre class="code" data-type="xml">&lt;build&gt;
+  &lt;plugins&gt;
+    &lt;plugin&gt;
+      &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;
+      &lt;artifactId&gt;maven-source-plugin&lt;/artifactId&gt;
+      &lt;version&gt;3.0.1&lt;/version&gt;
+      &lt;executions&gt;
+        &lt;execution&gt;
+          &lt;id&gt;attach-sources&lt;/id&gt;
+          &lt;phase&gt;verify&lt;/phase&gt;
+          &lt;goals&gt;
+            &lt;goal&gt;jar-no-fork&lt;/goal&gt;
+          &lt;/goals&gt;
+        &lt;/execution&gt;
+      &lt;/executions&gt;
+    &lt;/plugin&gt;
+  &lt;/plugins&gt;
+&lt;/build&gt;</pre>
+    <p>如果想单独为源码打 jar 包，需要将上述配置单独写一个 pom.xml 并运行</p>
+    <pre class="code" data-type="sh">mvn source:jar</pre>
+    <p>如果想将源码一块儿打包进本他仓库，将上述配置放在主 pom.xml 中</p>
+    <pre class="code" data-type="sh">mvn clean package</pre>
+    <p>更详细的可以看<a href="https://maven.apache.org/plugins/maven-source-plugin/usage.html">Apache Source Plugin Usage</a></p>
 </body>
 </html>

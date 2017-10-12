@@ -767,31 +767,7 @@ return fs.Length;</pre>
     string file_desc = Convert.ToString(rk2.GetValue(&quot;&quot;));
     return file_desc;
 }</pre>
-<h1>系统路径获取</h1>
-<h2>获取应用程序所在的当前路径</h2>
-<p>一般情况下，可简单地使用 Path.GetDirectoryName(AppDomain.CurrentDomain.BaseDirectory) 来获取。但对于一些复杂的应用，例如不同的 DLL 可能被放在不同的子目录中，可以使用如下的代码：</p>
-<pre class="code" data-type="csharp" data-collapsed="false"> 
-private static string currentDirectory = null;
-public static string CURRENT_DIRECTORY
-{
-	get
-	{
-		if (currentDirectory == null)
-		{
-			string path = Path.GetDirectoryName(AppDomain.CurrentDomain.BaseDirectory);
-
-			while (!File.Exists(Path.Combine(path, "my_program.exe")))
-			{
-				path = Directory.GetParent(path).FullName;
-			}
-
-			currentDirectory = path;
-		}
-
-		return currentDirectory;
-	}
-}
-</pre>
+<p>&nbsp;</p>
 <p>&nbsp;</p>
 
 </body>
