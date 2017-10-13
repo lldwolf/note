@@ -34,8 +34,122 @@ public class ThreadTest {
 
 		thread.start();
 	}
+}</pre>
+	<h1>synchronized 关键字</h1>
+	<p>让我们看一下下面这段代码，让多个线程对同一个计数器累加并打印</p>
+	<pre class="code" data-type="java">public class SimpleThreadTest {
 
+    private static Integer testKey = 0;
+
+    public static void main(String[] args) {
+        Thread[] threads = new Thread[4];
+
+        for (int i = 0; i < threads.length; i++) {
+            threads[i] = new Thread("Thread[" + i + "]") {
+                @Override
+                public void run() {
+                    while (testKey < 500) {
+                        System.out.println(super.getName() + " will set key as: " + (testKey + 1));
+                        testKey += 1;
+                        System.out.println(super.getName() + " set key as: " + testKey);
+                    }
+                };
+            };
+        }
+
+        for (Thread thread : threads) {
+            thread.start();
+        }
+    }
 }
 </pre>
+	<p>运行结果可能如下所示：</p>
+	<pre class="code" data-type="log">Thread[0] will set key as: 1
+Thread[1] will set key as: 1
+Thread[1] set key as: 1
+Thread[0] set key as: 1
+Thread[1] will set key as: 2
+<span class="emphasis">Thread[0] will set key as: 2</span>
+Thread[1] set key as: 2
+Thread[1] will set key as: 4
+Thread[1] set key as: 4
+Thread[1] will set key as: 5
+Thread[1] set key as: 5
+Thread[1] will set key as: 6
+Thread[1] set key as: 6
+Thread[1] will set key as: 7
+Thread[1] set key as: 7
+Thread[1] will set key as: 8
+Thread[1] set key as: 8
+Thread[1] will set key as: 9
+<span class="emphasis">Thread[0] set key as: 3</span>
+</pre>
+	<p>结果有点乱，注意一下 thread[0] 的打印记录，会看到不同线程并发访问时产生所潜在副作用。</p>
+	<p>在如下代码中使用 synchronized 调整</p>
+	<pre class="code" data-type="java">public class SimpleThreadTest {
+
+    private static Integer testKey = 0;
+
+    public static void main(String[] args) {
+        Thread[] threads = new Thread[4];
+
+        for (int i = 0; i < threads.length; i++) {
+            threads[i] = new Thread("Thread[" + i + "]") {
+                @Override
+                public void run() {
+                    <span class="emphasis">synchronized (testKey) {</span>
+                        while (testKey < 500) {
+                            System.out.println(super.getName() + " will set key as: " + (testKey + 1));
+                            testKey += 1;
+                            System.out.println(super.getName() + " set key as: " + testKey);
+                        }
+                    }
+                };
+            };
+        }
+
+        for (Thread thread : threads) {
+            thread.start();
+        }
+    }
+}
+</pre>
+	<p>我们可以看到结果就很整齐了。</p>
+	<h1>ThreadLocal</h1>
+	<p>把上例的代码用 ThreadLocal 进行一下修改，如下所示</p>
+	<pre class="code" data-type="java">public class ThreadLocalTest {
+
+    private final static ThreadLocal&lt;Integer&gt; testKey = new ThreadLocal&lt;Integer&gt;() {
+        @Override
+        protected Integer initialValue() {
+            return new Integer(0);
+        };
+    };
+
+    public static void main(String[] args) {
+        Thread[] threads = new Thread[4];
+
+        for (int i = 0; i < threads.length; i++) {
+            threads[i] = new Thread("Thread[" + i + "]") {
+                @Override
+                public void run() {
+                    while (testKey.get() < 500) {
+                        System.out.println(super.getName() + " will set key as: " + (testKey.get() + 1));
+                        testKey.set(testKey.get() + 1);
+                        System.out.println(super.getName() + " set key as: " + testKey.get());
+                    }
+                };
+            };
+        }
+
+        for (Thread thread : threads) {
+            thread.start();
+        }
+    }
+}
+</pre>
+	<p>我们可以看到不但线程间互相不受影响，而且每个线程独享一个计数器，其它线程的修改不影响当前线程的计数器。</p>
+	<p>ThreadLocal 个般声明为 final static 类型</p>
+	
 </body>
 </html>
