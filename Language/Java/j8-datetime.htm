@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+	<title>Java 8 日期时间类</title>
+	<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+	<p id="title">Java 8 日期时间类</p>
+	<h1>Overview</h1>
+	<p>原先的日期时间库一直是一个被吐槽的地方，例如 java.util.Date 和 java.sql.Date 傻傻分不清，再多个 Calendar 对象来添乱, 想要格式化一下还得去 java.text 包中找 SimpleDateFormat，而且这些还都不是线程安全的，等等等等。</p>
+	<p>在 Java 8 中，终于新引入了新的日期时间类，具有以下特点：</p>
+	<ul>
+		<li>均为不可变（immutable）对象，类似于 String，适用于多线程处理</li>
+		<li>命名可读性高，例如 now() 函数用于取当前</li>
+		<li>专类专用</li>
+		<li>丰富的工具函数，例如日期的加减</li>
+		<li>易扩展</li>
+	</ul>
+	<p>新引入的包列表如下：</p>
+	<ul>
+		<li>java.time：日期时间基本类 </li>
+		<li>java.time.chrono: 用于日历功能</li>
+		<li>java.time.format: 用于格式化</li>
+		<li>java.time.temporal: 用于不定的日期，例如某月的最后一天，第几个星期一之实的</li>
+		<li>java.time.zone: 用于处理时区</li>
+	</ul>
+	<p>下面将对常用类进行简介</p>
+	<h1>java.time</h1>
+	<h2>LocalDate</h2>
+	<p>只包含日期，默认输出格式为 yyyy-MM-dd，示例如下：</p>
+	<pre class="code" data-type="java" data-collapsed="false" title="LocalDate 示例">LocalDate today = LocalDate.now();
+System.out.println("Today: " + today);
+
+LocalDate firstDay = LocalDate.of(2017, Month.JANUARY, 1);
+System.out.println("First day: " + firstDay);
+
+// 现在月份终于不从该死的0开始了
+firstDay = LocalDate.of(2017, 1, 1);
+System.out.println("First day: " + firstDay);
+
+// 按时区
+LocalDate beijingDate = LocalDate.now(ZoneId.of("UTC+08:00"));
+System.out.println("Beijing Today: " + beijingDate);
+
+// 基于格林尼治时区
+LocalDate gmt2Date = LocalDate.now(ZoneId.of("GMT-2"));
+System.out.println("GMT -2 today: " + gmt2Date);
+
+// 按标志城市
+LocalDate shanghaiDate = LocalDate.now(ZoneId.of("Asia/Shanghai"));
+System.out.println("Shanghai Today: " + shanghaiDate);
+
+// 按时区缩写
+LocalDate syndeyDate = LocalDate.now(ZoneId.of(ZoneId.SHORT_IDS.get("EST")));
+System.out.println("EST Today: " + syndeyDate);
+
+// 从 1970-1-1 过后的天数
+LocalDate dateFromBase = LocalDate.ofEpochDay(365);
+System.out.println("365th day from base date: " + dateFromBase);
+
+// 取某年的第几天，例如程序猿节
+LocalDate hundredDay2014 = LocalDate.ofYearDay(2017, 256);
+System.out.println("Programmar day of 2017: " + hundredDay2014);
+</pre>
+	<p>ZoneId 的参数可查看 javadoc 得到, 如下所示</p>
+	<ul>
+       <li>EST - -05:00</li>
+       <li>HST - -10:00</li>
+       <li>MST - -07:00</li>
+       <li>ACT - Australia/Darwin</li>
+       <li>AET - Australia/Sydney</li>
+       <li>AGT - America/Argentina/Buenos_Aires</li>
+       <li>ART - Africa/Cairo</li>
+       <li>AST - America/Anchorage</li>
+       <li>BET - America/Sao_Paulo</li>
+       <li>BST - Asia/Dhaka</li>
+       <li>CAT - Africa/Harare</li>
+       <li>CNT - America/St_Johns</li>
+       <li>CST - America/Chicago</li>
+       <li>CTT - Asia/Shanghai</li>
+       <li>EAT - Africa/Addis_Ababa</li>
+       <li>ECT - Europe/Paris</li>
+       <li>IET - America/Indiana/Indianapolis</li>
+       <li>IST - Asia/Kolkata</li>
+       <li>JST - Asia/Tokyo</li>
+       <li>MIT - Pacific/Apia</li>
+       <li>NET - Asia/Yerevan</li>
+       <li>NST - Pacific/Auckland</li>
+       <li>PLT - Asia/Karachi</li>
+       <li>PNT - America/Phoenix</li>
+       <li>PRT - America/Puerto_Rico</li>
+       <li>PST - America/Los_Angeles</li>
+       <li>SST - Pacific/Guadalcanal</li>
+       <li>VST - Asia/Ho_Chi_Minh</li>
+	</ul>
+	<p>看了这张表，同情了北京一秒钟。</p>
+	<h2>LocalTime</h2>
+	<p>用于时间处理，默认的输出格式为24小时制的 hh:mm:ss.zzz下面是一个简单的示例</p>
+	<pre class="code" data-type="java" data-collapsed="false" title="LocalTime 示例">
+// Current Time
+LocalTime time = LocalTime.now();
+System.out.println("Current Time=" + time);
+
+// Creating LocalTime by providing input arguments
+LocalTime specificTime = LocalTime.of(12, 20, 25, 40);
+System.out.println("Specific Time of Day=" + specificTime);
+
+// Try creating time by providing invalid inputs
+// Current date in "Asia/Kolkata", you can get it from ZoneId javadoc
+LocalTime timeKolkata = LocalTime.now(ZoneId.of("Asia/Kolkata"));
+System.out.println("Current Time in IST=" + timeKolkata);
+
+// java.time.zone.ZoneRulesException: Unknown time-zone ID: IST
+// LocalTime todayIST = LocalTime.now(ZoneId.of("IST"));
+
+// Getting date from the base date i.e 01/01/1970
+LocalTime specificSecondTime = LocalTime.ofSecondOfDay(10000);
+System.out.println("10000th second time= " + specificSecondTime);
+</pre>
+	<h2>LocalDateTime</h2>
+	<p>同时包含日期和时间，默认输出格式为 yyyy-MM-ddTHH-mm-ss.zzz 示例如下：</p>
+	<pre class="code" data-type="java" data-collapsed="false" title="LocalDateTime 示例">
+// Current Date
+LocalDateTime today = LocalDateTime.now();
+System.out.println("Current DateTime=" + today);
+
+// Current Date using LocalDate and LocalTime
+today = LocalDateTime.of(LocalDate.now(), LocalTime.now());
+System.out.println("Current DateTime=" + today);
+
+// Creating LocalDateTime by providing input arguments
+LocalDateTime specificDate = LocalDateTime.of(2014, Month.JANUARY, 1, 10, 10, 30);
+System.out.println("Specific Date=" + specificDate);
+
+// Current date in "Asia/Kolkata", you can get it from ZoneId javadoc
+LocalDateTime todayKolkata = LocalDateTime.now(ZoneId.of("Australia/Sydney"));
+System.out.println("Current Date in Syndney=" + todayKolkata);
+
+// java.time.zone.ZoneRulesException: Unknown time-zone ID: IST
+// LocalDateTime todayIST = LocalDateTime.now(ZoneId.of("IST"));
+
+// Getting date from the base date i.e 01/01/1970
+LocalDateTime dateFromBase = LocalDateTime.ofEpochSecond(10000, 0, ZoneOffset.UTC);
+System.out.println("10000th second time from 01/01/1970= " + dateFromBase);
+</pre>
+	<h2>Instant</h2>
+	<p>用于处理机器格式的时间，使用 Unix timestamp 方式存取，示例如下</p>
+	<pre class="code" data-type="java" data-collapsed="false" title="Instant 示例">
+// Current timestamp
+Instant timestamp = Instant.now();
+System.out.println("Current Timestamp = " + timestamp);
+
+// Instant from timestamp
+Instant specificTime = Instant.ofEpochMilli(timestamp.toEpochMilli());
+System.out.println("Specific Time = " + specificTime);
+
+// Duration 显示小时数
+Duration thirtyDay = Duration.ofDays(30);
+System.out.println(thirtyDay);
+</pre>
+	<h2>日期时间工具类/函数</h2>
+	<p>例如：日期的运算，日期的比较之类，示例如下:</p>
+	<pre class="code" data-type="java" data-collapsed="false" title="日期处理示例">
+LocalDate today = LocalDate.now();
+
+// Get the Year, check if it's leap year
+System.out.println("Year " + today.getYear() + " is Leap Year? " + today.isLeapYear());
+
+// Compare two LocalDate for before and after
+System.out.println("Today is before 01/01/2015? " + today.isBefore(LocalDate.of(2015, 1, 1)));
+
+// Create LocalDateTime from LocalDate
+System.out.println("Current Time=" + today.atTime(LocalTime.now()));
+
+// plus and minus operations
+System.out.println("10 days after today will be " + today.plusDays(10));
+System.out.println("3 weeks after today will be " + today.plusWeeks(3));
+System.out.println("20 months after today will be " + today.plusMonths(20));
+
+System.out.println("10 days before today will be " + today.minusDays(10));
+System.out.println("3 weeks before today will be " + today.minusWeeks(3));
+System.out.println("20 months before today will be " + today.minusMonths(20));
+
+// Temporal adjusters for adjusting the dates
+System.out.println("First date of this month= " + today.with(TemporalAdjusters.firstDayOfMonth()));
+LocalDate lastDayOfYear = today.with(TemporalAdjusters.lastDayOfYear());
+System.out.println("Last date of this year= " + lastDayOfYear);
+
+Period period = today.until(lastDayOfYear);
+System.out.println("Period Format= " + period);
+System.out.println("Months remaining in the year= " + period.getMonths());
+</pre>
+	<h1>Parse and Format</h1>
+	<p>即如何实现日期类型和字符串（花式格式）的相互转换。</p>
+<pre class="code" data-type="java" data-collapsed="false" title="日期格式化示例">
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
+...
+
+// Format examples
+LocalDate date = LocalDate.now();
+// default format
+System.out.println("Default format of LocalDate=" + date);
+// specific format
+System.out.println(date.format(DateTimeFormatter.ofPattern("d::MMM::uuuu")));
+System.out.println(date.format(DateTimeFormatter.BASIC_ISO_DATE));
+
+LocalDateTime dateTime = LocalDateTime.now();
+// default format
+System.out.println("Default format of LocalDateTime=" + dateTime);
+// specific format
+System.out.println(dateTime.format(DateTimeFormatter.ofPattern("d::MMM::uuuu HH::mm::ss")));
+System.out.println(dateTime.format(DateTimeFormatter.BASIC_ISO_DATE));
+
+Instant timestamp = Instant.now();
+// default format
+System.out.println("Default format of Instant=" + timestamp);
+
+// Parse examples
+LocalDateTime dt = LocalDateTime.parse("27::Apr::2014 21::39::48",
+		DateTimeFormatter.ofPattern("d::MMM::uuuu HH::mm::ss"));
+System.out.println("Default format after parsing = " + dt);
+</pre>
+	<p>结果如下所示</p>
+	<pre class="code" data-type="log">Default format of LocalDate=2017-10-14
+14::Oct::2017
+20171014
+Default format of LocalDateTime=2017-10-14T16:48:16.573
+14::Oct::2017 16::48::16
+20171014
+Default format of Instant=2017-10-14T08:48:16.573Z
+Default format after parsing = 2014-04-27T21:39:48
+</pre>
+	<h1>对原日期时间类型的兼容</h1>
+	<p>下例展示了如何与原日期时间类型的相互转换</p>
+	<pre class="code" data-type="java" data-collapsed="false" title="日期兼容示例">
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.TimeZone;
+
+...
+
+// Date to Instant
+Instant timestamp = new Date().toInstant();
+// Now we can convert Instant to LocalDateTime or other similar classes
+LocalDateTime date = LocalDateTime.ofInstant(timestamp, ZoneId.of(ZoneId.SHORT_IDS.get("PST")));
+System.out.println("Date = " + date);
+
+// Calendar to Instant
+Instant time = Calendar.getInstance().toInstant();
+System.out.println(time);
+// TimeZone to ZoneId
+ZoneId defaultZone = TimeZone.getDefault().toZoneId();
+System.out.println(defaultZone);
+
+// ZonedDateTime from specific Calendar
+ZonedDateTime gregorianCalendarDateTime = new GregorianCalendar().toZonedDateTime();
+System.out.println(gregorianCalendarDateTime);
+
+// Date API to Legacy classes
+Date dt = Date.from(Instant.now());
+System.out.println(dt);
+
+TimeZone tz = TimeZone.getTimeZone(defaultZone);
+System.out.println(tz);
+
+GregorianCalendar gc = GregorianCalendar.from(gregorianCalendarDateTime);
+System.out.println(gc);
+</pre>
+</body>
+</html>
