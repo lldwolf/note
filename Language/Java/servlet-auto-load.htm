@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<title>自动加载</title>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+	<p id="title">自动加载 </p>
+	<h1>Overview</h1>
+	<p>本节讲述如何在 Servlet 容器（例如 Tomcat）启动时自动加载执行指定代码。</p>
+	<h1>HttpServlet</h1>
+	<p>步骤如下：</p>
+	<ol>
+		<li>
+			<p>创建 HttpServlet 如下所示：</p>
+			<pre class="code" data-type="java" data-collapsed="false" title="AutoLauncherServlet1.java">
+package lld.tomcat.startup.test;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+public class AutoLauncherServlet1 extends HttpServlet {
+
+    private static final long serialVersionUID = 4031121325445064440L;
+    private static final Logger logger = LogManager.getLogger(AutoLauncherServlet1.class);
+
+    public AutoLauncherServlet1() {
+    }
+
+    @Override
+    public void init() throws ServletException {
+        super.init();
+        logger.info("AutoLauncherServlet1 is loaded.");
+    }
+}
+</pre>
+		</li>
+		<li>
+			<p>在 web.xml 中添加如下配置</p>
+			<pre class="code" data-type="xml" data-collapsed="false" title="web.xml">
+&lt;servlet&gt;
+    &lt;servlet-name&gt;AutoLauncherServlet1&lt;/servlet-name&gt;
+    &lt;servlet-class&gt;lld.tomcat.startup.test.AutoLauncherServlet1&lt;/servlet-class&gt;
+    &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
+&lt;/servlet&gt;
+&lt;servlet-mapping&gt;
+    &lt;servlet-name&gt;AutoLauncherServlet1&lt;/servlet-name&gt;
+    &lt;url-pattern&gt;/&lt;/url-pattern&gt;
+&lt;/servlet-mapping&gt;
+</pre>
+		</li>
+	</ol>
+	<h1>ServletContextListener</h1>
+	<p>步骤如下：</p>
+	<ol>
+		<li>
+			<p>创建 ServletContextListener</p>
+			<pre class="code" data-type="java" data-collapsed="false" title="AutoLauncherListener1.java">
+package lld.tomcat.startup.test;
+import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletContextListener;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+public class AutoLauncherListener1 implements ServletContextListener {
+    private static final Logger logger = LogManager.getLogger(AutoLauncherListener1.class);
+
+    public AutoLauncherListener1() {
+    }
+
+    public void contextDestroyed(ServletContextEvent arg0) {
+    }
+
+    public void contextInitialized(ServletContextEvent arg0) {
+        logger.info("AutoLauncherListner1 is loaded.");
+    }
+}
+</pre>
+		</li>
+		<li>
+			<p>在 web.xml 中添加如下配置</p>
+			<pre class="code" data-type="xml" data-collapsed="false" title="web.xml">
+&lt;listener&gt;
+    &lt;listener-class&gt;lld.tomcat.startup.test.AutoLauncherListener1&lt;/listener-class&gt;
+&lt;/listener&gt;
+</pre>
+		</li>
+	</ol>
+	<h1>Srping ContextLoaderListener</h1>
+	<ol>
+		<li>在 pom.xml 中添加 spring-web 引用</li>
+		<li>
+			<p>ApplicationListener&lt;ContextRefreshedEvent&gt;</p>
+			<pre class="code" data-type="java" data-collapsed="false" title="AutoLauncherSpringListener3.java">
+package lld.tomcat.startup.test;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.context.ApplicationListener;
+import org.springframework.context.event.ContextRefreshedEvent;
+
+public class AutoLauncherSpringListener3 implements ApplicationListener&lt;ContextRefreshedEvent&gt; {
+    private static final Logger logger = LogManager.getLogger(AutoLauncherSpringListener3.class);
+
+    public void onApplicationEvent(ContextRefreshedEvent arg0) {
+        logger.info("AutoLauncherSpringListener3 is loaded.");
+    }
+
+}</pre>
+		</li>
+		<li>
+			<p>在 applicationContext.xml 中添加如下配置</p>
+			<pre class="code" data-type="xml" data-collapsed="false" title="applicationContext.xml">
+&lt;bean class="lld.tomcat.startup.test.AutoLauncherSpringListener3" /&gt;
+</pre>
+		</li>
+		<li>
+			<p>在 web.xml 中添加如下配置</p>
+			<pre class="code" data-type="xml" data-collapsed="false" title="web.xml">
+&lt;context-param&gt;
+    &lt;param-name&gt;contextConfigLocation&lt;/param-name&gt;
+    &lt;param-value&gt;
+        /WEB-INF/classes/applicationContext.xml
+    &lt;/param-value&gt;
+&lt;/context-param&gt;
+&lt;listener&gt;
+    &lt;listener-class&gt;org.springframework.web.context.ContextLoaderListener&lt;/listener-class&gt;
+&lt;/listener&gt;
+</pre>
+		</li>
+	</ol>
+	<h1>总结</h1>
+	<p>如果都使用，顺序为先 listener 后 servlet。listener 按 web.xml 中的声明顺序加载。</p>
+	<p><a href="example/tomcat.startup.test.zip">示例代码下载</a></p>
+</body>
+</html>
