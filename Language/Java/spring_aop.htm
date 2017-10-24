@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>Spring - AOP</title>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+	<p id="title">Spring - AOP</p>
+	<h1>步骤</h1>
+	<ol>
+		<li>
+			<p>新建  Maven quickstart 项目</p>
+		</li>
+		<li>
+			<p>在 pom.xml 中添加依赖</p>
+			<pre class="code" data-type="xml" data-collapsed="false" title="pom.xml">&lt;properties&gt;
+    &lt;spring.version&gt;4.3.9.RELEASE&lt;/spring.version&gt;
+&lt;/properties&gt;
+
+&lt;dependencies&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+        &lt;artifactId&gt;spring-context&lt;/artifactId&gt;
+        &lt;version&gt;${spring.version}&lt;/version&gt;
+    &lt;/dependency&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;org.aspectj&lt;/groupId&gt;
+        &lt;artifactId&gt;aspectjweaver&lt;/artifactId&gt;
+        &lt;version&gt;1.8.12&lt;/version&gt;
+    &lt;/dependency&gt;
+&lt;/dependencies&gt;</pre>
+		</li>
+		<li>
+			<p>建立接口</p>
+			<pre class="code" data-type="java" data-collapsed="false" title="Hello.java">package lld.spring_test.hello;
+
+public interface Hello {
+    void sayHi(String name);
+}
+</pre>
+		</li>
+		<li>
+			<p>建立实现类</p>
+			<pre class="code" data-type="java" data-collapsed="false" title="Hello.java">package lld.spring_test.hello;
+
+public class HelloImpl implements Hello {
+    @Override
+    public void sayHi(String name) {
+        System.out.println("Hello, " + name);
+    }
+
+}
+</pre>
+		</li>
+		<li>
+			<p>建立 AOP 执行类</p>
+			<pre class="code" data-type="java" data-collapsed="false" title="TimeHandler.java">package lld.spring_test.hello;
+
+public class TimeHandler {
+    public void printTime() {
+        System.out.println("CurrentTime = " + System.currentTimeMillis());
+    }
+}
+</pre>
+		</li>
+		<li>
+			<p>在 Spring 配置文件中配置</p>
+			<pre class="code" data-type="xml" data-collapsed="false" title="pom.xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+    xmlns:tx="http://www.springframework.org/schema/tx"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop-4.3.xsd"&gt;
+    &lt;bean id="hello" class="lld.spring_test.hello.HelloImpl" /&gt;
+    &lt;bean id="timeHandler" class="lld.spring_test.hello.TimeHandler" /&gt;
+
+    &lt;aop:config&gt;
+        &lt;aop:aspect id="time" ref="timeHandler"&gt;
+            &lt;aop:pointcut id="addAllMethod" expression="execution(* lld.spring_test.hello.Hello.*(..))" /&gt;
+            &lt;aop:before method="printTime" pointcut-ref="addAllMethod" /&gt;
+            &lt;aop:after method="printTime" pointcut-ref="addAllMethod" /&gt;
+        &lt;/aop:aspect&gt;
+    &lt;/aop:config&gt;
+&lt;/beans&gt;</pre>
+		</li>
+		<li>
+			<p>测试如下：</p>
+			<pre class="code" data-type="java" data-collapsed="false" title="AopTest.java">package lld.spring_test.hello;
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+public class AopTest {
+
+    public static void main(String[] args) {
+        ApplicationContext ctx = new ClassPathXmlApplicationContext("aop.xml");
+
+        Hello hello = (Hello) ctx.getBean("hello");
+        hello.sayHi("Lindong");
+        ((ConfigurableApplicationContext) ctx).close();
+    }
+
+}
+</pre>
+		</li>
+	</ol>
+	<p><a href="example/spring_aop_test.zip">示例代码</a></p>
+	<h1>分析</h1>
+	<p>对于代码</p>
+	<pre class="code" data-type="java">Hello hello = (Hello) ctx.getBean("hello");</pre>
+	<p>如果换成</p>
+	<pre class="code" data-type="java">Hello hello = (HelloImpl) ctx.getBean("hello");</pre>
+	<p>运行时将会报错，信息如下所示</p>
+	<pre class="code" data-type="log">Exception in thread "main" java.lang.ClassCastException: com.sun.proxy.$Proxy2 cannot be cast to lld.spring_test.hello.HelloImpl
+	at lld.spring_test.hello.AopTest.main(AopTest.java:12)
+</pre>
+	<p>这是因为 Spring AOP 是基于动态代理技术实现的，有关动态代理的知识可参考<a href="dynamic-proxy.htm">这里</a></p>
+	<p>如果设置了 AOP，则 Spring 将会返回 HelloImpl 的动态代理而不是 HelloImpl，所以类型转换失败。如果将配置文件中的 AOP 部分删掉，则将直接返回指定的 HelloImpl 实例，修改后的程序将会成功执行。</p>
+</body>
+</html>

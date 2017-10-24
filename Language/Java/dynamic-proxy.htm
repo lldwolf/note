@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<title>动态代理 </title>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+	<p id="title">动态代理 </p>
+	<h1>Overview</h1>
+	<p>从 Java 1.3 开始，JDK 在 java.lang.reflect 包中加入了 Proxy 类和 InvocationHandler 接口。Proxy 是一个功能强大的类，它可以用来动态地创建指定接口的代理实现，并把对接口方法调用发送至 InvocationHandler 的实现类执行。</p>
+	<p>Spring 的 AOP 框架即基于此技术实现。</p>
+	<h2>InvocationHandler</h2>
+	<pre>InvocationHandler is the interface implemented by the invocation handler of a proxy instance. 
+
+Each proxy instance has an associated invocation handler. When a method is invoked on a proxy instance, the method invocation is encoded and dispatched to the invoke method of its invocation handler.</pre>
+	<p>每一个动态代理类都必须要实现InvocationHandler这个接口，并且每个代理类的实例都关联到了一个handler，当我们通过代理对象调用一个方法的时候，这个方法的调用就会被转发为由InvocationHandler这个接口的 invoke 方法来进行调用。我们来看看InvocationHandler这个接口的唯一一个方法 invoke 方法：</p>
+	<pre class="code" data-type="java">Object invoke(Object proxy, Method method, Object[] args) throws Throwable</pre>
+	<p>我们看到这个方法一共接受三个参数，那么这三个参数分别代表什么呢？</p>
+	<ul>
+		<li>proxy: 指代我们所代理的那个真实对象</li>
+		<li>method: 指代的是我们所要调用真实对象的某个方法的Method对象</li>
+		<li>args: 指代的是调用真实对象某个方法时接受的参数</li>
+	</ul>
+	<h2>Proxy</h2>
+	<p>Proxy这个类的作用就是用来动态创建一个代理对象的类，它提供了许多的方法，但是我们用的最多的就是 newProxyInstance 这个方法：</p>
+	<pre class="code" data-type="java">public static Object newProxyInstance(ClassLoader loader, Class&lt;?&gt;[] interfaces,  InvocationHandler h) throws IllegalArgumentException</pre>
+	<p>JDK 中注释如下</p>
+	<pre>Returns an instance of a proxy class for the specified interfaces that dispatches method invocations to the specified invocation handler.</pre>
+	<p>这个方法的作用就是得到一个动态的代理对象，其接收三个参数，我们来看看这三个参数所代表的含义</p>
+	<ul>
+		<li>loader: 一个ClassLoader对象，定义了由哪个ClassLoader对象来对生成的代理对象进行加载</li>
+		<li>interfaces: 一个Interface对象的数组，表示的是我将要给我需要代理的对象提供一组什么接口，如果我提供了一组接口给它，那么这个代理对象就宣称实现了该接口(多态)，这样我就能调用这组接口中的方法了</li>
+		<li>h: 一个InvocationHandler对象，表示的是当我这个动态代理对象在调用方法的时候，会关联到哪一个InvocationHandler对象上</li>
+	</ul>
+	<h1>示例</h1>
+	<ol>
+		<li>
+			<p>创建接口</p>
+			<pre class="code" data-type="java" data-collapsed="false" title="Hello.java">
+package lld.test.reflect;
+
+public interface Hello {
+    void sayHi(String name);
+}
+</pre>
+		</li>
+		<li>
+			<p>创建实现类</p>
+			<pre class="code" data-type="java" data-collapsed="false" title="HelloImpl.java">
+package lld.test.reflect;
+
+public class HelloImpl implements Hello {
+
+    public void sayHi(String name) {
+        System.out.println("Hello, " + name);
+    }
+
+}</pre>
+		</li>
+		<li>
+			<p>定义动态代理类，这个可以做成通用类</p>
+			<pre class="code" data-type="java" data-collapsed="false" title="MyDynamicProxy.java">
+package lld.test.reflect;
+
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+
+public class MyDynamicProxy implements InvocationHandler {
+    
+    private Object realObj;
+    
+    public MyDynamicProxy(Object realObj) {
+        this.realObj = realObj;
+    }
+
+    @Override
+    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+        System.out.println("Before invoke");
+        System.out.println("Method: " + method);
+        method.invoke(realObj, args);
+        System.out.println("After invoke");
+        return null;
+    }
+
+}
+</pre>
+		</li>
+		<li>
+			<p>最后，完成最终应用场景</p>
+			<pre class="code" data-type="java" data-collapsed="false" title="ProxyClient.java">package lld.test.reflect;
+
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Proxy;
+
+public class ProxyClient {
+
+    public static void main(String[] args) {
+        Hello realObj = new HelloImpl();
+        InvocationHandler handler = new MyDynamicProxy(realObj);
+
+        Hello hello = (Hello) Proxy.newProxyInstance(handler.getClass().getClassLoader(),
+                realObj.getClass().getInterfaces(), handler);
+        System.out.println(hello.getClass().getName());
+        hello.sayHi("Lindong");
+
+    }
+
+}
+</pre>
+		</li>
+		<li>
+			<p>运行，输出结果如下所示：</p>
+			<pre class="code" data-type="log">com.sun.proxy.$Proxy0
+Before invoke
+Method: public abstract void lld.test.reflect.Hello.sayHi(java.lang.String)
+Hello, Lindong
+After invoke
+</pre>
+		</li>
+	</ol>
+	<p>首先，我们看到打印出来的类名是 $Proxy0，而不是 Hello 或 InvocationHandler 的实现类，但却又可以转化为 Hello 接口实现。原因就是在newProxyInstance这个方法的第二个参数上，我们给这个代理对象提供了一组什么接口，那么我这个代理对象就会实现了这组接口，这个时候我们当然可以将这个代理对象强制类型转化为这组接口中的任意一个，因为这里的接口是 Hello 类型，所以就可以将其转化为Subject类型了。</p>
+	<p>同时我们一定要记住，通过 Proxy.newProxyInstance 创建的代理对象是在jvm运行时动态生成的一个对象，它并不是我们的InvocationHandler类型，也不是我们定义的那组接口的类型，而是在运行是动态生成的一个对象，并且命名方式都是这样的形式，以$开头，proxy为中，最后一个数字表示对象的标号。</p>
+	<p>我们看到我们的这个 method 对象是这样的：</p>
+	<pre>Method: public abstract void lld.test.reflect.Hello.sayHi(java.lang.String)</pre>
+	<p>正好就是我们的 Hello 接口中的方法，这也就证明了当我通过代理对象来调用方法的时候，起实际就是委托由其关联到的 handler 对象的invoke方法中来调用，并不是自己来真实调用，而是通过代理的方式来调用的。</p>
+</body>
+</html>

@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+    <title>Java - CXF</title>
+    <script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+    <p id="title">CXF 与 Tomcat Spring 集成</p>
+    <h1>Overview</h1>
+    <p>本文将讲述如何将 Tomcat 和 Spring 与 CXF Web Service 集成</p>
+    <h1>步骤</h1>
+    <ol>
+        <li>
+            <p>使用 Maven 创建  webapp 项目</p>
+        </li>
+        <li>
+            <p>在 pom.xml 中引用 Spring </p>
+            <pre class="code" data-type="xml" data-collapsed="false" title="pom.xml">
+&lt;project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd"&gt;
+	&lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+	&lt;groupId&gt;lld&lt;/groupId&gt;
+	&lt;artifactId&gt;cxf_tomcat_test&lt;/artifactId&gt;
+	&lt;packaging&gt;war&lt;/packaging&gt;
+	&lt;version&gt;0.0.1-SNAPSHOT&lt;/version&gt;
+	&lt;name&gt;cxf_tomcat_test Maven Webapp&lt;/name&gt;
+	&lt;url&gt;http://maven.apache.org&lt;/url&gt;
+	&lt;properties&gt;
+		&lt;project.build.sourceEncoding&gt;UTF-8&lt;/project.build.sourceEncoding&gt;
+		&lt;spring.version&gt;4.3.9.RELEASE&lt;/spring.version&gt;
+		&lt;cxf.version&gt;3.1.0&lt;/cxf.version&gt;
+	&lt;/properties&gt;
+
+	&lt;dependencies&gt;
+		&lt;dependency&gt;
+			&lt;groupId&gt;org.springframework&lt;/groupId&gt;
+			&lt;artifactId&gt;spring-web&lt;/artifactId&gt;
+			&lt;version&gt;${spring.version}&lt;/version&gt;
+		&lt;/dependency&gt;
+		&lt;dependency&gt;
+			&lt;groupId&gt;org.apache.cxf&lt;/groupId&gt;
+			&lt;artifactId&gt;cxf-rt-frontend-jaxws&lt;/artifactId&gt;
+			&lt;version&gt;${cxf.version}&lt;/version&gt;
+		&lt;/dependency&gt;
+		&lt;dependency&gt;
+			&lt;groupId&gt;org.apache.cxf&lt;/groupId&gt;
+			&lt;artifactId&gt;cxf-rt-transports-http&lt;/artifactId&gt;
+			&lt;version&gt;${cxf.version}&lt;/version&gt;
+		&lt;/dependency&gt;
+	&lt;/dependencies&gt;
+	&lt;build&gt;
+		&lt;finalName&gt;HelloServer&lt;/finalName&gt;
+		&lt;plugins&gt;
+			&lt;plugin&gt;
+				&lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;
+				&lt;artifactId&gt;maven-compiler-plugin&lt;/artifactId&gt;
+				&lt;version&gt;3.6.2&lt;/version&gt;
+				&lt;configuration&gt;
+					&lt;source&gt;1.8&lt;/source&gt;
+					&lt;target&gt;1.8&lt;/target&gt;
+				&lt;/configuration&gt;
+			&lt;/plugin&gt;
+		&lt;/plugins&gt;
+	&lt;/build&gt;
+&lt;/project&gt;
+</pre>
+        </li>
+        <li>
+            <p>创建服务接口</p>
+            <pre class="code" data-type="java" data-collapsed="false" title="HelloService.java">package lld.cxf.service;
+import javax.jws.WebService;
+@WebService
+public interface HelloService {
+	String sayHi(String name);
+}
+</pre>
+        </li>
+        <li>
+            <p>创建服务实现，注意我使用了 @Component Anotation 让 Spring 自动匹配</p>
+            <pre class="code" data-type="java" data-collapsed="false" title="HelloService.java">
+package lld.cxf.service;
+
+import org.springframework.stereotype.Component;
+
+@Component("helloService")
+public class HelloServiceImpl implements HelloService {
+	public String sayHi(String name) {
+		return "Hello " + name;
+	}
+}
+</pre>
+        </li>
+        <li>
+            <p>在 Maven resources 目录下添加 Spring 配置文件 applicationContext.xml</p>
+            <pre class="code" data-type="xml" data-collapsed="false" title="applicationContext.xml">
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;   
+&lt;beans xmlns="http://www.springframework.org/schema/beans"   
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  
+    xmlns:p="http://www.springframework.org/schema/p" 
+    xmlns:aop="http://www.springframework.org/schema/aop"  
+    xmlns:context="http://www.springframework.org/schema/context" 
+    xmlns:jee="http://www.springframework.org/schema/jee" 
+    xmlns:tx="http://www.springframework.org/schema/tx" 
+    xmlns:jaxws="http://cxf.apache.org/jaxws"
+    xsi:schemaLocation="   
+        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd 
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd 
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd 
+        http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-4.3.xsd 
+        http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd"&gt;  
+
+	&lt;import resource="classpath:META-INF/cxf/cxf.xml" /&gt;
+	&lt;import resource="classpath:META-INF/cxf/cxf-servlet.xml" /&gt;
+	
+    &lt;-- 自动扫描 package 以获取 Web Service 服务 --&gt;
+	&lt;context:component-scan base-package="lld.cxf.service" /&gt;
+
+    &lt;-- 指定将 HelloService 映射到 helloService Component --&gt;
+	&lt;jaxws:endpoint implementor="#helloService" address="/HelloService"&gt;
+	&lt;/jaxws:endpoint&gt;
+
+&lt;/beans&gt;
+</pre>
+        </li>
+        <li>
+            <p>修改 web.xml 如下</p>
+            <pre class="code" data-type="xml" data-collapsed="false" title="web.xml">
+&lt;!DOCTYPE web-app PUBLIC
+ "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+ "http://java.sun.com/dtd/web-app_2_3.dtd" &gt;
+
+&lt;web-app&gt;
+	&lt;display-name&gt;Archetype Created Web Application&lt;/display-name&gt;
+	&lt;context-param&gt;
+		&lt;param-name&gt;contextConfigLocation&lt;/param-name&gt;
+		&lt;param-value&gt;WEB-INF/classes/applicationContext.xml&lt;/param-value&gt;
+	&lt;/context-param&gt;
+	&lt;listener&gt;
+		&lt;listener-class&gt;
+			org.springframework.web.context.ContextLoaderListener
+		&lt;/listener-class&gt;
+	&lt;/listener&gt;
+
+	&lt;servlet&gt;
+		&lt;servlet-name&gt;CXFServlet&lt;/servlet-name&gt;
+		&lt;servlet-class&gt;
+			org.apache.cxf.transport.servlet.CXFServlet
+		&lt;/servlet-class&gt;
+		&lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
+	&lt;/servlet&gt;
+
+	&lt;servlet-mapping&gt;
+		&lt;servlet-name&gt;CXFServlet&lt;/servlet-name&gt;
+		&lt;url-pattern&gt;/services/*&lt;/url-pattern&gt;
+	&lt;/servlet-mapping&gt;
+
+&lt;/web-app&gt;
+</pre>
+            <p>这里的配置解释如下：</p>
+            <ul>
+                <li>applicationContext.xml 和 ContextLoaderListener: 指定 Tomcat 启动时 Spring 加载配置文件。也可以使用 classpath 路径，如下所示：
+                    <pre class="code" data-type="xml">&lt;param-value&gt;classpath:applicationContext.xml&lt;/param-value&gt;</pre>
+                </li>
+                <li>CXFServlet: 指定 Tomcat 启动时自动加载 CXFServlet</li>
+                <li>/services/*: 指定所有以 services/ 开始的 URL 将会发送至 CXFServlet 处理</li>
+            </ul>
+        </li>
+        <li>
+            <p>打包应用</p>
+            <pre class="code" data-type="sh">mvn clean package</pre>
+        </li>
+        <li>
+            <p>将生成的 war 包复制到 Tomcat webapps 目录下，启动 Tomcat，然后使用地址 http://localhost:8080/HelloServer/services/HelloService?wsdl 验证</p>
+        </li>
+        <li>
+            <p>用前面所讲的 wsdl2java 方式生成 Stub 类，然后测试代码如下：</p>
+            <pre class="code" data-type="java" data-collapsed="false" title="TomcatClientTest.java">package lld.cxf.tomcat.client;
+
+import java.net.MalformedURLException;
+import java.net.URL;
+
+import javax.xml.namespace.QName;
+
+import lld.cxf.service.HelloService;
+import lld.cxf.service.HelloServiceImplService;
+
+public class TomcatClientTest {
+
+	private static final QName SERVICE_NAME = new QName("http://service.cxf.lld/", "HelloServiceImplService");
+
+	public static void main(String[] args) throws MalformedURLException {
+		String wsdlUrl = "http://localhost:8080/HelloServer/services/HelloService?wsdl";
+		URL wsdlURL = new URL(wsdlUrl);
+
+		HelloServiceImplService ss = new HelloServiceImplService(wsdlURL, SERVICE_NAME);
+		HelloService port = ss.getHelloServiceImplPort();
+
+		System.out.println("Invoking sayHi...");
+		String result = port.sayHi("Lindong");
+		System.out.println("sayHi.result=" + result);
+
+	}
+
+}
+</pre>
+        </li>
+    </ol>
+    <h1>示例代码下载</h1>
+    <ul>
+        <li>Server: <a href="cxf_tomcat_test.zip">下载</a></li>
+        <li>Client: <a href="cxf_tomcat_test_client.zip">下载</a></li>
+    </ul>
+</body>
+</html>

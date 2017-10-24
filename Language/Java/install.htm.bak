@@ -42,11 +42,8 @@ javac -classpath jar_path1;jar_path2 @sources.txt</pre>
         </tr>
     <tr>
     <td>classpath</td>
-    <td>
-        <p>引用的 jar 包，在 Linux 下以冒号(:)分隔，在 Windows 下以分号(;)分隔</p>
-        <p>可以支持通配符，但不支持 *.jar 这种写法，而是 ./lib/* 这种写法</p>
-     </td>
-    <td><pre class="code" data-type="sh">java -classpath .:a.jar:b.jar:./lib/* test.my.Test</pre></td>
+    <td>引用的 jar 包，以冒号(:)分隔</td>
+    <td><pre class="code" data-type="sh">java -classpath .:a.jar:b.jar test.my.Test</pre></td>
         </tr>
     <tr>
     <td>Xms</td>
@@ -68,7 +65,5 @@ java -Dmyparam=1</pre></td>
     <h2>jar</h2>
     <p>运行 jar 包</p>
     <pre class="code" data-type="sh">java -jar [jar_file]</pre>
-    <p>但如果想运行 jar 包中的某一个类，则使用如下语法</p>
-    <pre class="code" data-type="sh">java -cp [jar_file] [my.package.Class]</pre>
 </body>
 </html>

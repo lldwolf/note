@@ -1,17 +1,233 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
-	<title>Java - CXF</title>
-	<script type="text/javascript" src="../../mylib/js/css.js"></script>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+    <title>Java - CXF</title>
+    <script type="text/javascript" src="../../mylib/js/css.js"></script>
 </head>
 
 <body>
-	<p id="title">CXF</p>
-	<h1>使用CXF创建 Web Service</h1>
-	<h2>生成WSDL</h2>
-	<h2>将 Web Service 发布到 Tomcat</h2>
-	<h1>使用 CXF 创建  Web Service 客户端</h1>
-	<h2>根据WSDL生成JAVA</h2>
-	</body>
+    <p id="title">CXF Web Service 简单示例</p>
+    <h1>准备工作</h1>
+    <ul>
+        <li>从 <a href="http://cxf.apache.org">http://cxf.apache.org</a> 下载 CXF</li>
+        <li>在 Eclipse 中配置 Maven 插件</li>
+    </ul>
+    <h1>第一个例子</h1>
+    <h2>步骤</h2>
+    <ol>
+        <li>
+            <p>创建 Maven 项目,  使用 quickstart 模板</p>
+        </li>
+        <li>
+            <p>在 pom.xml 中引入依赖包，如下所示</p>
+<pre class="code" data-type="xml" data-collapsed="false" title="pom.xml">&lt;properties&gt;
+	&lt;cxf.version&gt;3.1.0&lt;/cxf.version&gt;
+	&lt;/properties&gt;
+	&lt;dependencies&gt;
+		&lt;dependency&gt;
+			&lt;groupId&gt;org.apache.cxf&lt;/groupId&gt;
+			&lt;artifactId&gt;cxf-rt-frontend-jaxws&lt;/artifactId&gt;
+			&lt;version&gt;${cxf.version}&lt;/version&gt;
+		&lt;/dependency&gt;
+		&lt;dependency&gt;
+			&lt;groupId&gt;org.apache.cxf&lt;/groupId&gt;
+			&lt;artifactId&gt;cxf-rt-transports-http&lt;/artifactId&gt;
+			&lt;version&gt;${cxf.version}&lt;/version&gt;
+		&lt;/dependency&gt;
+    		&lt;dependency&gt;
+			&lt;groupId&gt;org.apache.cxf&lt;/groupId&gt;
+			&lt;artifactId&gt;cxf-rt-transports-http-jetty&lt;/artifactId&gt;
+			&lt;version&gt;${cxf.version}&lt;/version&gt;
+		&lt;/dependency&gt;
+		&lt;dependency&gt;
+			&lt;groupId&gt;javax.xml&lt;/groupId&gt;
+			&lt;artifactId&gt;webservices-api&lt;/artifactId&gt;
+			&lt;version&gt;2.0.1&lt;/version&gt;
+		&lt;/dependency&gt;
+&lt;/project&gt;
+</pre>
+        </li>
+        <li>
+            <p>写一个简单的 Service 类，如下所示</p>
+            <pre class="code" data-type="java" data-collapsed="false" title="HelloService.java">
+package lld.cxf.service;
+import javax.jws.WebService;
+@WebService
+public interface HelloService {
+	String sayHi(String name);
+}
+</pre>            
+            <p></p>
+            <pre class="code" data-type="java" data-collapsed="false" title="HelloServiceImpl.java">
+package lld.cxf.service;
+public class HelloServiceImpl implements HelloService {
+	public String sayHi(String name) {
+		return "Hello " + name;
+	}
+}</pre>
+        </li>
+        <li>
+            <p>创建 Server 如下所示, 这就是为什么需引入 cxf-rt-transports-http-jetty 包的原因，CXF 内嵌了 Jetty server。</p>
+            <pre class="code" data-type="java" data-collapsed="false" title="HelloServer.java">package lld.cxf.service;
+import org.apache.cxf.frontend.ServerFactoryBean;
+public class HelloServer {
+	public static void main(String[] args) {
+		// Create our service implementation
+		HelloService helloWorldImpl = new HelloServiceImpl();
+		// Create our Server
+		ServerFactoryBean svrFactory = new ServerFactoryBean();
+		svrFactory.setServiceClass(HelloService.class);
+		svrFactory.setAddress("http://localhost:9000/Hello");
+		svrFactory.setServiceBean(helloWorldImpl);
+		svrFactory.create();
+	}
+}
+</pre>
+        </li>
+        <li>
+            <p>运行 Server 后可在浏览器中输入 http://localhost:9000/Hello?wsdl 验证</p>
+        </li>
+        <li>
+            <p>创建 Client 端如下所示</p>
+            <pre class="code" data-type="java" data-collapsed="false" title="HelloServer.java">package lld.cxf.client;
+import org.apache.cxf.frontend.ClientProxyFactoryBean;
+import lld.cxf.service.HelloService;
+public class HelloClient {
+	public static void main(String[] args) {
+		ClientProxyFactoryBean factory = new ClientProxyFactoryBean();
+		factory.setServiceClass(HelloService.class);
+		factory.setAddress("http://localhost:9000/Hello");
+		HelloService client = (HelloService) factory.create();
+		String result = client.sayHi("Lindong");
+		System.out.println(result);
+	}
+}
+</pre>
+        </li>
+    </ol>
+    <h2>示例下载</h2>
+    <p><a href="example/cxf_test.zip">下载</a></p>
+    <h1>客户端</h1>
+    <h2>步骤</h2>
+    <p>上例中我们直接把客户端和服务端放在了一个项目中，实际情况一般不会这样。通常是服务端发布 WSDL 的 URL，客户端使用 WSDL 来生成本地 Proxy 代码并访问 Web Service。</p>
+    <ol>
+        <li>
+            <p>首先我们得生成 WSDL 文件，最省事的办法是直接在浏览器中访问上例中的 WSDL 链接并把浏览器中的文本结果另存为本地文件并以 wsdl 作为扩展名</p>
+            <p>或者我们也可以根据编译结果生成 wsdl 文件。在下载的 CXF 中，在 bin 目录下找到 java2ws 命令，进入结果文件根目录（classes 目录），运行命令如下所示：</p>
+            <pre class="code" data-type="sh">java2ws -wsdl -o HelloService.wsdl lld.cxf.service.HelloService</pre>
+            <p>将会在当前目录生成 HelloService.wsdl</p>
+        </li>
+        <li>
+            <p>根据 wsdl 文件生成客户端 stub，同样是使用 CXF 下载包中的 wsdl2java 命令，如下所示</p>
+            <pre class="code" data-type="sh">wsdl2java -client -d ClientDir ../resources/HelloService.wsdl</pre>
+            <p>将把 Stub 生成在当前目录的 ClientDir 目录下</p>
+        </li>
+        <li>
+            <p>上一步生成的 Stub 中里面包含了很多文件，细节先不用管，把这些文件复制到当前源代码目录中，其中有一个文件 HelloServicePortType_HelloServicePort_Client.java 是一个客户端的调用示例文件，可参考里面的内容写出如下的客户端调用</p>
+            <p>我将生成的 HelloService.wsdl 文件放在了 resources 目录下，也就是会自动复制到 classes 根目录下。</p>
+            <pre class="code" data-type="java" data-collapsed="false" title="HelloService.java">package lld.cxf.client.test;
+
+import java.net.MalformedURLException;
+import java.net.URL;
+import javax.xml.namespace.QName;
+import lld.cxf.service.HelloService;
+import lld.cxf.service.HelloServicePortType;
+
+public class HelloClientTest {
+	private static final QName SERVICE_NAME = new QName("http://service.cxf.lld/", "HelloService");
+
+	public static void main(String[] args) throws MalformedURLException {
+		String wsdlFileName = "HelloService.wsdl";
+		URL wsdlURL = HelloClientTest.class.getClassLoader().getResource(wsdlFileName);
+		
+		HelloService ss = new HelloService(wsdlURL, SERVICE_NAME);
+		HelloServicePortType port = ss.getHelloServicePort();
+		System.out.println("Invoking sayHi...");
+		String result = port.sayHi("Lindong");
+		System.out.println("sayHi.result=" + result);
+	}
+}
+</pre>
+        </li>
+        <li>
+            <p>另外也可以不必将 wsdl 存放在本地而是直接从远端获取，将上面获取 URL 的代码进行如下替换即可：</p>
+            <pre class="code" data-type="java">
+String wsdlUrl = "http://localhost:9000/Hello?wsdl";
+URL wsdlURL = new URL(wsdlUrl);
+</pre>
+        </li>
+    </ol>
+    <p>通常情况下，如果公司不是按代码量算薪水，我们一般会将 Stub 类打成 jar 包放在引用路径里，以使代码更加清晰。如果使用 Eclipse，可直接使用 Export 功能将选中的 Stub package 导出为jar 包。</p>
+    <h2>示例下载</h2>
+    <p><a href="example/cxf.client.test.zip">下载</a></p>
+
+    <h1>RPC 风格</h1>
+    <p>将上面的 Service 类修改如下，将生成 RPC 风格的 Web Service</p>
+    <pre class="code" data-type="java" data-collapsed="false" title="HelloService.java">
+package lld.cxf.service;
+import javax.jws.WebService;
+import javax.jws.soap.SOAPBinding;
+import javax.jws.soap.SOAPBinding.Style;
+@WebService
+<span class="emphasis">@SOAPBinding(style = Style.RPC)</span>
+public class HelloService {
+	public String sayHi(String name) {
+		return "Hello " + name;
+	}
+}
+</pre>
+    <h1>相关命令介绍</h1>
+    <h2>Java to WS</h2>
+    <h3>Overview</h3>
+    <p>官方帮助：<a href="http://cxf.apache.org/docs/java-to-ws.html">Java to WS</a></p>
+    <p>在 2.1 以前的版本中命令为 java2wsdl，在新的版本中为 java2ws</p>
+    <p>java2ws 用于生成 Web service endpoint's implementation (SEI) 类并根据这些类生成 WSDL 文件, Bean 封装类, 用于启动服务的服务端代码和客户端方问代码。</p>
+    <h3>语法</h3>
+    <p>语法如下所示：</p>
+    <pre>
+java2ws -databinding <jaxb or aegis> -frontend <jaxws or simple> 
+        -wsdl -wrapperbean -client -server -ant -o <output-file>
+        -d <resource-directory> -classdir <compile-classes-directory> 
+        -cp <class-path> -soap12 -t <target-namespace> 
+        -beans <ppathname of the bean definition file>* 
+        -address <port-address> -servicename <service-name> 
+        -portname <port-name> -createxsdimports -h -v -verbose 
+        -quiet {classname}
+</pre>
+    <h3>参数说明</h3>
+    <p>各参数说明如下：</p>
+    <table class="confluenceTable"><tbody><tr><th colspan="1" rowspan="1" class="confluenceTh"><p> Option </p></th><th colspan="1" rowspan="1" class="confluenceTh"><p> Interpretation </p></th></tr><tr><td colspan="1" rowspan="1" class="confluenceTd"><p> <code>-?</code>,<code>-h</code>,<code>-help</code> </p></td><td colspan="1" rowspan="1" class="confluenceTd"><p> Displays the online help for this utility and exits. </p></td></tr><tr><td colspan="1" rowspan="1" class="confluenceTd"><p> -o </p></td><td colspan="1" rowspan="1" class="confluenceTd"><p> Specifies the name of the generated WSDL file. </p></td></tr><tr><td colspan="1" rowspan="1" class="confluenceTd"><p> --databinding</p></td><td colspan="1" rowspan="1" class="confluenceTd"><p>Specify the data binding (aegis or jaxb). Default is jaxb for jaxws frontend, and aegis for simple frontend.</p></td></tr><tr><td colspan="1" rowspan="1" class="confluenceTd"><p>-frontend</p></td><td colspan="1" rowspan="1" class="confluenceTd"><p> Specify the frontend to use.  jaxws and the simple frontend are supported.</p></td></tr><tr><td colspan="1" rowspan="1" class="confluenceTd"><p>-wsdl</p></td><td colspan="1" rowspan="1" class="confluenceTd"><p>Specify to generate the WSDL file.</p></td></tr><tr><td colspan="1" rowspan="1" class="confluenceTd"><p>-wrapperbean</p></td><td colspan="1" rowspan="1" class="confluenceTd"><p>Specify to generate the wrapper and fault bean</p></td></tr><tr><td colspan="1" rowspan="1" class="confluenceTd"><p>-client</p></td><td colspan="1" rowspan="1" class="confluenceTd"><p>Specify to generate client side code</p></td></tr><tr><td colspan="1" rowspan="1" class="confluenceTd"><p>-server</p></td><td colspan="1" rowspan="1" class="confluenceTd"><p>Specify to generate server side code</p></td></tr><tr><td colspan="1" rowspan="1" class="confluenceTd"><p>-ant</p></td><td colspan="1" rowspan="1" class="confluenceTd"><p>Specify to generate an Ant build.xml script</p></td></tr><tr><td colspan="1" rowspan="1" class="confluenceTd"><p> -cp </p></td><td colspan="1" rowspan="1" class="confluenceTd"><p> Specify the SEI and types class search path of directories and zip/jar files. </p></td></tr><tr><td colspan="1" rowspan="1" class="confluenceTd"><p> -soap12 </p></td><td colspan="1" rowspan="1" class="confluenceTd"><p> Specifies that the generated WSDL is to include a SOAP 1.2 binding. </p></td></tr><tr><td colspan="1" rowspan="1" class="confluenceTd"><p> -t </p></td><td colspan="1" rowspan="1" class="confluenceTd"><p> Specifies the target namespace to use in the generated WSDL file. </p></td></tr><tr><td colspan="1" rowspan="1" class="confluenceTd"><p> -servicename </p></td><td colspan="1" rowspan="1" class="confluenceTd"><p> Specifies the value of the generated service element's name attribute. </p></td></tr><tr><td colspan="1" rowspan="1" class="confluenceTd"><p> -v </p></td><td colspan="1" rowspan="1" class="confluenceTd"><p> Displays the version number for the tool. </p></td></tr><tr><td colspan="1" rowspan="1" class="confluenceTd"><p> -verbose </p></td><td colspan="1" rowspan="1" class="confluenceTd"><p> Displays comments during the code generation process. </p></td></tr><tr><td colspan="1" rowspan="1" class="confluenceTd"><p> -quiet </p></td><td colspan="1" rowspan="1" class="confluenceTd"><p> Suppresses comments during the code generation process. </p></td></tr><tr><td colspan="1" rowspan="1" class="confluenceTd"><p> -s </p></td><td colspan="1" rowspan="1" class="confluenceTd"><p> The directory in which the generated source files(wrapper bean ,fault bean ,client side or server side code) are placed.</p></td></tr><tr><td colspan="1" rowspan="1" class="confluenceTd"><p> -classdir </p></td><td colspan="1" rowspan="1" class="confluenceTd"><p> The directory in which the generated sources are compiled into.  If not specified, the files are not compiled. </p></td></tr><tr><td colspan="1" rowspan="1" class="confluenceTd"><p> -portname</p></td><td colspan="1" rowspan="1" class="confluenceTd"><p> Specify the port name to use in the generated wsdl. </p></td></tr><tr><td colspan="1" rowspan="1" class="confluenceTd"><p> -address</p></td><td colspan="1" rowspan="1" class="confluenceTd"><p> Specify the port address. </p></td></tr><tr><td colspan="1" rowspan="1" class="confluenceTd"><p> -beans</p></td><td colspan="1" rowspan="1" class="confluenceTd"><p>Specify the pathname of a file defining additional Spring beans to customize databinding configuration.</p></td></tr><tr><td colspan="1" rowspan="1" class="confluenceTd"><p> -createxsdimports</p></td><td colspan="1" rowspan="1" class="confluenceTd"><p>Output schemas to separate files and use imports to load them instead of inlining them into the wsdl. </p></td></tr><tr><td colspan="1" rowspan="1" class="confluenceTd"><p> -d </p></td><td colspan="1" rowspan="1" class="confluenceTd"><p> The directory in which the resource files are placed, wsdl file will be placed into this directory by default</p></td></tr><tr><td colspan="1" rowspan="1" class="confluenceTd"><p> classname </p></td><td colspan="1" rowspan="1" class="confluenceTd"><p> Specifies the name of the SEI class. </p></td></tr></tbody></table>
+    <h3>示例</h3>
+    <pre class="code" data-type="sh">
+java2ws -wsdl -d ./resources lld.cxf.service.HelloService
+java2wsdl -cp ./tmp org.apache.hello_world_soap_http.Greeter
+java2wsdl -o hello.wsdl org.apache.hello_world_soap_http.Greeter
+java2wsdl -o hello.wsdl -t http://cxf.apache.org org.apache.hello_world_soap_http.Greeter
+</pre>
+    <h3>与 Ant 集成</h3>
+    <pre class="code" data-type="xml">&lt;?xml version="1.0"?&gt;
+&lt;project name="cxf java2ws" basedir="."&gt;   
+   &lt;property name="cxf.home" location ="/usr/myapps/cxf-trunk"/&gt;
+   &lt;property name="build.classes.dir" location ="${basedir}/build/classes"/&gt;
+   &lt;path id="cxf.classpath"&gt;
+      &lt;pathelement location="${build.classes.dir}"/&gt;
+      &lt;fileset dir="${cxf.home}/lib"&gt;
+         &lt;include name="*.jar"/&gt;
+      &lt;/fileset&gt;
+   &lt;/path&gt;
+      
+   &lt;target name="cxfJavaToWS"&gt;
+      &lt;java classname="org.apache.cxf.tools.java2ws.JavaToWS" fork="true"&gt;
+         &lt;arg value="-wsdl"/&gt;
+         &lt;arg value="-o"/&gt;
+         &lt;arg value="hello.wsdl"/&gt;
+         &lt;arg value="service.Greeter"/&gt;
+         &lt;classpath&gt;
+            &lt;path refid="cxf.classpath"/&gt;
+         &lt;/classpath&gt;
+      &lt;/java&gt;
+   &lt;/target&gt;
+&lt;/project&gt;</pre>
+</body>
 </html>

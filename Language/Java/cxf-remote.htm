@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+    <title>Java - CXF</title>
+    <script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+    <p id="title">将 Service 布署在远端</p>
+    <h1>Overview</h1>
+    <p>上例中我们的 Server 和 Client 都是在本地。下面演示如果布署在远端需如何修改。</p>
+    <h1>Server</h1>
+    <p>因为在启动 Server 时指定了地址，所以需进行如下修改，启动 Server 时使用参数指定地址</p>
+    <pre class="code" data-type="java" data-collapsed="false" title="HelloServer.java">
+public class HelloServer {
+
+	public static void main(String[] args) {
+		// Create our service implementation
+		HelloService helloWorldImpl = new HelloServiceImpl();
+		String defaultUrl = "http://localhost:9000/Hello";
+		String url = defaultUrl;
+		
+        <span class="emphasis">if (args.length > 0) {
+			url = args[0];
+		}</span>
+
+		// Create our Server
+		ServerFactoryBean svrFactory = new ServerFactoryBean();
+		svrFactory.setServiceClass(HelloService.class);
+        <span class="emphasis">svrFactory.setAddress(url);</span>
+		svrFactory.setServiceBean(helloWorldImpl);
+		svrFactory.create();
+	}
+}
+</pre>
+    <p>值得注意的是，我在 server 上使用 localhost 或 127.0.0.1 后，在浏览器中并不能使用真实的 IP 地址进行访问！</p>
+    <p>小技巧：将测试程序复制到远程测试时，可以用如下命令导出所有依赖包。</p>
+    <pre class="code" data-type="sh">mvn clean package dependency:copy-dependencies -DoutputDirectory=target/lib </pre>
+    <h1>Client</h1>
+    <p>如果是象上例在代码中指定 URL 地址的话，只需要把 URL 改成实际 IP 地址即可</p>
+    <pre class="code" data-type="java">
+String wsdlUrl = "http://[ip_address]:[port]/Hello?wsdl";
+URL wsdlURL = new URL(wsdlUrl);
+</pre>
+    <p>但如果是使用的 WSDL，则需修改 WSDL 文件中的如下部分：</p>
+    <pre class="code" data-type="xml">
+&lt;wsdl:service name="HelloService"&gt;
+	&lt;wsdl:port binding="tns:HelloServiceSoapBinding" name="HelloServicePort"&gt;
+		&lt;soap:address location="http://[ip_address]:[port]/Hello" /&gt;
+	&lt;/wsdl:port&gt;
+&lt;/wsdl:service&gt;
+
+</pre>
+
+</body>
+</html>
