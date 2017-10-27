@@ -10,8 +10,7 @@
 	<p id="title">多线程</p>
 	<h1>First View</h1>
     <p>下例展示了一个最简单的线程使用示例，每隔一秒输出当前时间</p>
-    <pre class="code" data-type="java">package lld.test;
-
+    <pre class="code" data-type="java">
 import java.util.Date;
 
 public class ThreadTest {
@@ -35,6 +34,58 @@ public class ThreadTest {
 		thread.start();
 	}
 }</pre>
+    <h1>volatile</h1>
+    <p>volatie 关键字主要用于如下场景：</p>
+    <p>当多个线程访问同一个共享变量时，如果是多核 CPU，该共享变量可以会同时存放在多个内核的缓存中，因为 CPU 默认都是从缓存中读取数据，所以会存在数据更新不及时的问题。</p>
+    <p>例如，核1修改了变量值，但不会立刻写回内存，核2访问变量时将仍会从核2的缓存中取到旧值。</p>
+    <p>使用 volatile 关键字后，内核1修改变量值后，会立刻写回内存并通知其它内核的缓存失效。然后当核2取值时，会因缓存失效而重新从内存中读取该值。</p>
+    <p>一个常用场景是线程的结束标志位实现，如下所示：</p>
+    <pre class="code" data-type="java" data-collapsed="false" title="VolatileTest.java">
+import java.time.LocalTime;
+
+public class VolatileTest {
+	
+	private static class MyThread extends Thread {
+		static volatile boolean keepRunning = true;
+		
+		@Override
+		public void run() {
+			while (keepRunning) {
+				LocalTime time = LocalTime.now();
+				System.out.println(getName() + " - " + time.toString());
+				
+				try {
+					sleep(1000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}	
+		}
+		
+		public void stopMe() {
+			System.out.println("stop " + getName());
+			keepRunning = false;
+		}
+	};
+	
+	public static void main(String[] args) throws InterruptedException {
+		MyThread t1 = new MyThread();
+		t1.setName("t1");
+		MyThread t2 = new MyThread();
+		t2.setName("t2");
+		
+		t1.start();
+		t2.start();
+		
+		Thread.sleep(5000);
+		
+		//t2 is stopped too right
+		t1.stopMe(); 
+
+	}
+
+}
+</pre>
 	<h1>synchronized 关键字</h1>
 	<p>让我们看一下下面这段代码，让多个线程对同一个计数器累加并打印</p>
 	<pre class="code" data-type="java">public class SimpleThreadTest {
@@ -150,6 +201,48 @@ Thread[1] will set key as: 9
 </pre>
 	<p>我们可以看到不但线程间互相不受影响，而且每个线程独享一个计数器，其它线程的修改不影响当前线程的计数器。</p>
 	<p>ThreadLocal 个般声明为 final static 类型</p>
-	
+
+    <h1>Callable &amp; Future</h1>	
+    <p>Thread 和 Runnable 都不支持返回值，Java 5 引入了新的多线程接口 Callable 和 Future，可以获取线程执行后的返回结果。</p>
+    <pre class="code" data-type="java" data-collapsed="false" title="CallableTest.java">
+import java.util.Random;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+
+public class CallableTest {
+	final static Random random = new Random(System.currentTimeMillis());
+
+	public static void main(String[] args) throws InterruptedException, ExecutionException {
+		ExecutorService executor = Executors.newCachedThreadPool();
+
+		Task task1 = new Task();
+		Future&lt;Integer&gt; result1 = executor.submit(task1);
+		Task task2 = new Task();
+		Future&lt;Integer&gt; result2 = executor.submit(task2);
+
+		// Don't accept new tasks
+		executor.shutdown();
+
+		System.out.println(&quot;main thread is working...&quot;);
+		System.out.println(&quot;result 1: &quot; + result1.get());
+		System.out.println(&quot;result 2: &quot; + result2.get());
+		System.out.println(&quot;Done.&quot;);
+	}
+
+	private static class Task implements Callable&lt;Integer&gt; {
+		@Override
+		public Integer call() throws Exception {
+			int waitingTime = 1000 + random.nextInt(1000);
+			System.out.println(String.format(&quot;sub task will working %s ms.&quot;, waitingTime));
+			Thread.sleep(waitingTime);
+			return waitingTime;
+		}
+	}
+
+}
+</pre>
 </body>
 </html>

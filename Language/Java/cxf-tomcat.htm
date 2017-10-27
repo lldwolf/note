@@ -7,7 +7,7 @@
 </head>
 
 <body>
-    <p id="title">CXF 与 Tomcat Spring 集成</p>
+    <p id="title">CXF 与 Tomcat 和 Spring 集成</p>
     <h1>Overview</h1>
     <p>本文将讲述如何将 Tomcat 和 Spring 与 CXF Web Service 集成</p>
     <h1>步骤</h1>
@@ -212,5 +212,25 @@ public class TomcatClientTest {
         <li>Server: <a href="cxf_tomcat_test.zip">下载</a></li>
         <li>Client: <a href="cxf_tomcat_test_client.zip">下载</a></li>
     </ul>
+    <h1>其它</h1>
+    <h2>另一种配置</h2>
+    <p>上面我们使用了让 Spring 自动搜索 Service endpoint 的方式。也可以使用手工指定方式如下：</p>
+    <pre class="code" data-type="xml" data-collapsed="false" title="applicationContext.xml">
+&lt;beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:simple="http://cxf.apache.org/simple" xmlns:soap="http://cxf.apache.org/bindings/soap"
+	xsi:schemaLocation="
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
+http://cxf.apache.org/bindings/soap http://cxf.apache.org/schemas/configuration/soap.xsd
+http://cxf.apache.org/simple http://cxf.apache.org/schemas/simple.xsd"&gt;
+
+	&lt;simple:server id="pojoservice" serviceClass="lld.cxf.service.HelloServiceImpl" address="/helloService2"&gt;
+		&lt;simple:serviceBean&gt;
+			&lt;bean class="lld.cxf.service.HelloServiceImpl" /&gt;
+		&lt;/simple:serviceBean&gt;
+	&lt;/simple:server&gt;
+
+&lt;/beans&gt;
+</pre>
+    <p>布署后我们就可以使用 http://localhost:8080/HelloServer/services/helloService2?wsdl 来验证。同时，这样也不再需要 @Component annotation。</p>
 </body>
 </html>

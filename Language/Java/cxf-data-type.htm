@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+    <title>Java - CXF</title>
+    <script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+    <p id="title">CXF 数据类型增强</p>
+    <h1>Overview</h1>
+    <p>因为 Web Service 是跨平台使用的，所以一般情况下最好只在接口类型中只使用基本类型，例如 Integer, String 等。但也可以使用本文的方式进行扩展。</p>
+    <h1>类型扩展</h1>
+    <p>本例以 java.sql.Date 为例，说明如果在 POJO 中使用该类型</p>
+    <p>步骤如下</p>
+    <ol>
+        <li>
+            <p>计划以 String 方式将该类型暴露在 WSDSL 中，添加 String 与 java.sql.Date 的转换类如下所示，我们需要与使用者约定使用 yyyy-MM-dd 的格式</p>
+            <pre class="code" data-type="java" data-collapsed="false" title="User.java">
+package lld.cxf.pojo.xmlhelper;
+
+import java.sql.Date;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
+import javax.xml.bind.annotation.adapters.XmlAdapter;
+
+public class SqlDateAdapter extends XmlAdapter&lt;String, Date&gt; {
+	public java.sql.Date unmarshal(String val) throws Exception {
+		return java.sql.Date.valueOf(LocalDate.parse(val));
+	}
+
+	public String marshal(java.sql.Date val) throws Exception {
+		return val.toLocalDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+	}
+}
+</pre>
+        </li>
+        <li>
+            <p>在 User.java POJO 类中添加 java.sql.Date 字段，并在 POJO 的 get 或 set 方法上添加 @XmlJavaTypeAdapter 标识 (记住只需要在一个方法上添加，添加两次会报错)，如下所示</p>
+            <pre class="code" data-type="java" data-collapsed="false" title="User.java">
+private java.sql.Date certDate;
+
+@XmlJavaTypeAdapter(SqlDateAdapter.class)
+public java.sql.Date getCertDate() {
+	return certDate;
+}
+public void setCertDate(java.sql.Date certDate) {
+	this.certDate = certDate;
+}
+</pre>
+            <p>XmlJavaTypeAdapter 的完整写法为 @XmlJavaTypeAdapter(type = java.sql.Date.class, value = SqlDateAdapter.class)</p>
+        </li>
+        <li>
+            <p>在 POJO 的 get 或 set 方法上添加 @XmlJavaTypeAdapter 标识 (记住只需要在一个方法上添加，添加两次会报错)，如下所示</p>
+            <pre class="code" data-type="java" data-collapsed="false" title="User.java"></pre>
+        </li>
+        <li>
+            <p>打包在 Tomcat 中启动后显示 wsdl 如下所示</p>
+            <pre class="code" data-type="xml" data-collapsed="false" title="WSDL">
+&lt;xs:complexType name="user"&gt;
+	&lt;xs:sequence&gt;
+		&lt;xs:element minOccurs="0" name="birthday" type="xs:dateTime"/&gt;
+		<span class="emphasis">&lt;xs:element minOccurs="0" name="certDate" type="xs:string"/&gt;</span>
+		&lt;xs:element minOccurs="0" name="gender" type="xs:string"/&gt;
+		&lt;xs:element minOccurs="0" name="name" type="xs:string"/&gt;
+	&lt;/xs:sequence&gt;
+&lt;/xs:complexType&gt;
+</pre>
+        </li>
+    </ol>
+    <p>如果不使用 @XmlJavaTypeAdapter 标识，则需要在 POJO 的同一目录下添加 package-info.java 如下所示（如添加多个，在 Annotation 构造函数中以逗号隔在）</p>
+    <pre class="code" data-type="java" data-collapsed="false" title="User.java">
+@XmlJavaTypeAdapters({ @XmlJavaTypeAdapter(value = SqlDateAdapter.class, type = java.sql.Date.class) })
+package lld.cxf.pojo;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapters;
+import lld.cxf.pojo.xmlhelper.SqlDateAdapter;
+</pre>
+    </body>
+</html>
