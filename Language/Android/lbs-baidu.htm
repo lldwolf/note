@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+	<script type="text/javascript" src="../../mylib/js/css.js"></script>
+	<title>Android 学习笔记</title>
+</head>
+
+<body>
+	<p id="title">LBS 百度地图应用</p>
+    <h1>准备工作</h1>
+    <ol>
+        <li>
+            <p>申请百度账号</p>
+        </li>
+        <li>
+            <p>在 <a href="http://developer.baidu.com/user/info">http://developer.baidu.com/user/info</a> 中注册成为开发者</p>
+        </li>
+        <li>
+            <p>在 <a href="http://lbsyun.baidu.com/apiconsole/key">http://lbsyun.baidu.com/apiconsole/key</a> 创建应用</p>
+            <p><img alt="" src="img/lbs-baidu01.png" /></p>
+            <p>应用类型：Android SDK</p>
+        </li>
+        <li>
+            <p>两个 SHA1 在开发阶段可以设为相同值，从 Android Studio 右侧的 Gradle 工具栏获取。Gradle &rArr; 项目名 &rArr; :app &rArr; Tasks &rArr; android，双击 signingReport 运行, 然后从下面的 Gradle Console 面板中取到该值</p>
+            <p><img alt="" src="img/project-sha1.png" /></p>
+            <p><img alt="" src="img/project-sha1_2.png" /></p>
+        </li>
+        <li>
+            <p>提交后就创建成功了</p>
+        </li>
+        <li>
+            <p>到 <a href="http://lbsyun.baidu.com/sdk/download">http://lbsyun.baidu.com/sdk/download</a> 下载百度 LBS 开发包，选择“基础地图”和“基础定位”下载</p>
+            <p><img alt="" src="img/lbs-baidu02.png" /></p>
+        </li>
+        <li>
+            <p>下载后解压，将 BaiduLBS_Android.jar 复制到 app/libs 目录下，在 src/main 下建立 jniLibs 目录然后将所有的 so 文件放进去</p>
+            <p><img alt="" src="img/lbs-baidu03.png" /></p>
+        </li>
+        <li>
+            <p>点击顶部工具栏的 Sync 按钮同步，因为我们是直接把 jar 包拷进去的，不同步的话就无法引用 jar 包中的类。</p>
+        </li>
+    </ol>
+</body>
+</html>
