@@ -38,8 +38,415 @@
             <p><img alt="" src="img/lbs-baidu03.png" /></p>
         </li>
         <li>
-            <p>点击顶部工具栏的 Sync 按钮同步，因为我们是直接把 jar 包拷进去的，不同步的话就无法引用 jar 包中的类。</p>
+            <p>点击顶部工具栏的 Sync Project 按钮 <img alt="" src="img/adroid-studio-sync-project.png" /> 同步，因为我们是直接把 jar 包拷进去的，不同步的话就无法引用 jar 包中的类。</p>
         </li>
     </ol>
+	<h1>实战</h1>
+	<p>本例将示例如何通过百度地图 API 来进行定位</p>
+	<h2>AndroidManifest.xml</h2>
+	<p>完整代码如下所示：</p>
+	<p>修改 AndroidManifest.xml，需要注意如下几点：</p>
+	<ul>
+		<li>添加权限声明，这都是百度 LBS SDK 内部需要用到的</li>
+		<li>在 &lt;application&gt; 标签内部添加了 &lt;meta-data&gt; 标签，其 android:name 是固定的，必须填 com.baidu.lbsapi.API_KEY，android:value 就是我们一开始申请的 API Key</li>
+		<li>注册一个 LBS SDK 中的服务，不用对这个服务的名字感到疑惑，因为百度 LBS SDK 中的代码都是混淆过的。</li>
+	</ul>
+	<pre class="code" data-type="xml" data-collapsed="false" title="AndroidManifest.xml">&lt;?xml version="1.0" encoding="utf-8"?&gt;
+&lt;manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="lld.com.whereareyou"&gt;
+
+    &lt;uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /&gt;
+    &lt;uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" /&gt;
+    &lt;uses-permission android:name="android.permission.ACCESS_WIFI_STATE" /&gt;
+    &lt;uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /&gt;
+    &lt;uses-permission android:name="android.permission.CHANGE_WIFI_STATE" /&gt;
+    &lt;uses-permission android:name="android.permission.READ_PHONE_STATE" /&gt;
+    &lt;uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /&gt;
+    &lt;uses-permission android:name="android.permission.INTERNET" /&gt;
+    &lt;uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" /&gt;
+    &lt;uses-permission android:name="android.permission.WAKE_LOCK" /&gt;
+
+    &lt;application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme"&gt;
+        &lt;meta-data
+            android:name="com.baidu.lbsapi.API_KEY"
+            android:value="QbmSrFFcNqxs5kF4wYPmBBs9qRCP8mfx" /&gt;
+
+        &lt;activity
+            android:name=".MainActivity"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme.NoActionBar"&gt;
+            &lt;intent-filter&gt;
+                &lt;action android:name="android.intent.action.MAIN" /&gt;
+
+                &lt;category android:name="android.intent.category.LAUNCHER" /&gt;
+            &lt;/intent-filter&gt;
+        &lt;/activity&gt;
+
+        &lt;service
+            android:name="com.baidu.location.f"
+            android:enabled="true"
+            android:process=":remote" /&gt;
+
+        &lt;activity
+            android:name=".ShowMapActivity"
+            android:label="@string/title_activity_show_map"
+            android:theme="@style/AppTheme.NoActionBar"&gt;&lt;/activity&gt;
+    &lt;/application&gt;
+
+&lt;/manifest&gt;</pre>
+	<h2>用于显示定位的主界面</h2>
+	<p>本界面提供两个功能，以文本方式显示定位信息</p>
+	<h3>主界面布局</h3>
+	<p>如下所示</p>
+	<pre class="code" data-type="xml" data-collapsed="false" title="activity_main.xml">&lt;?xml version="1.0" encoding="utf-8"?&gt;
+&lt;android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="lld.com.whereareyou.MainActivity"&gt;
+
+    &lt;android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay"&gt;
+
+        &lt;android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/AppTheme.PopupOverlay" /&gt;
+
+    &lt;/android.support.design.widget.AppBarLayout&gt;
+
+    &lt;include layout="@layout/content_main" /&gt;
+
+    &lt;android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="@dimen/fab_margin"
+        app:srcCompat="@android:drawable/ic_dialog_email" /&gt;
+
+&lt;/android.support.design.widget.CoordinatorLayout&gt;
+</pre>
+	<p></p>
+	<pre class="code" data-type="xml" data-collapsed="false" title="content_main.xml">&lt;?xml version="1.0" encoding="utf-8"?&gt;
+&lt;LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="lld.com.whereareyou.MainActivity"
+    android:orientation="vertical"
+    tools:showIn="@layout/activity_main"&gt;
+
+    &lt;TextView
+        android:id="@+id/position_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" /&gt;
+
+&lt;/LinearLayout&gt;
+</pre>
+	<h3>MainActivity.java</h3>
+	<p>代码中包含了如下知识点：</p>
+	<ul>
+		<li>如何创建 LocationClient 实例并使用 registerLocationListener 来注册定位监听器，当获取到位置信息时，就会回调这个定位监听器。调用 LocationClient.start() 方法开始定位</li>
+		<li>运行时权限声明及判断</li>
+		<li>MyLocationListener 中如何获取位置信息。</li>
+		<li>在 initLocation 方法中，我们定义了每 10 秒钟刷新一次位置信息，High_Accurate 定位方式表示如果 GPS 可用则使用 GPS 定位，否则使用网络定位。setIsNeedAddress 方法用于返回用户友好的位置信息。</li>
+	</ul>
+	<pre class="code" data-type="java" data-collapsed="false" title="MainActivity.java">package lld.com.whereareyou;
+
+import android.Manifest;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.View;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.baidu.location.BDLocation;
+import com.baidu.location.BDLocationListener;
+import com.baidu.location.LocationClient;
+import com.baidu.location.LocationClientOption;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class MainActivity extends AppCompatActivity {
+
+    public LocationClient mLocationClient;
+    private TextView positionText;
+
+    private double latitude;
+    private double longitude;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent mapIntent = new Intent(MainActivity.this, ShowMapActivity.class);
+                mapIntent.putExtra("latitude", latitude);
+                mapIntent.putExtra("longitude", longitude);
+                startActivity(mapIntent);
+            }
+        });
+
+        mLocationClient = new LocationClient(getApplicationContext());
+        mLocationClient.registerLocationListener(new MyLocationListener());
+        positionText = (TextView) findViewById(R.id.position_text_view);
+        List&lt;String&gt; permissionList = new ArrayList&lt;&gt;();
+
+        if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            permissionList.add(Manifest.permission.ACCESS_FINE_LOCATION);
+        }
+
+        if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+            permissionList.add(Manifest.permission.READ_PHONE_STATE);
+        }
+
+        if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            permissionList.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        }
+
+        if (!permissionList.isEmpty()) {
+            String[] permissions = permissionList.toArray(new String[permissionList.size()]);
+            ActivityCompat.requestPermissions(MainActivity.this, permissions, 1);
+        } else {
+            requestLocation();
+        }
+    }
+
+    private void requestLocation() {
+        initLocation();
+        mLocationClient.start();
+    }
+
+    private void initLocation() {
+        LocationClientOption option = new LocationClientOption();
+        option.setScanSpan(1000 * 10);
+        option.setLocationMode(LocationClientOption.LocationMode.Hight_Accuracy);
+        option.setIsNeedAddress(true);
+        mLocationClient.setLocOption(option);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mLocationClient.stop();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+    }
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case 1:
+                if (grantResults.length &gt; 0) {
+                    for (int result : grantResults) {
+                        if (result != PackageManager.PERMISSION_GRANTED) {
+                            Toast.makeText(this, "必须同意所有权限才能使用本程序", Toast.LENGTH_SHORT).show();
+                            finish();
+                            return;
+                        }
+                    }
+                    requestLocation();
+                } else {
+                    Toast.makeText(this, "发生未知错误", Toast.LENGTH_SHORT).show();
+                    finish();
+                }
+
+                break;
+            default:
+                break;
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    private class MyLocationListener implements BDLocationListener {
+        @Override
+        public void onReceiveLocation(final BDLocation bdLocation) {
+            runOnUiThread(
+                    new Runnable() {
+                        @Override
+                        public void run() {
+                            latitude = bdLocation.getLatitude();
+                            longitude = bdLocation.getLongitude();
+                            StringBuilder currentPosition = new StringBuilder();
+                            currentPosition.append("纬度：")
+                                    .append(latitude)
+                                    .append("\n")
+                                    .append("经度：")
+                                    .append(longitude)
+                                    .append("\n")
+                                    .append("地址：")
+                                    .append(bdLocation.getAddrStr())
+                                    .append("\n")
+                                    .append("定位方式：");
+
+                            if (bdLocation.getLocType() == BDLocation.TypeGpsLocation) {
+                                currentPosition.append("GPS");
+                            } else if (bdLocation.getLocType() == BDLocation.TypeNetWorkLocation) {
+                                currentPosition.append("网络");
+                            }
+
+                            positionText.setText(currentPosition);
+                        }
+                    }
+            );
+        }
+
+
+    }
+}</pre>
+	<h2>显示地图</h2>
+	<h3>界面布局</h3>
+	<p>用于显示地图的界面面局，注意使用了 MapView 控件</p>
+	<pre class="code" data-type="xml" data-collapsed="false" title="activity_show_map.xml">&lt;?xml version="1.0" encoding="utf-8"?&gt;
+&lt;LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="lld.com.whereareyou.ShowMapActivity"&gt;
+
+    &lt;com.baidu.mapapi.map.MapView
+        android:id="@+id/bmapView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clickable="true" /&gt;
+&lt;/LinearLayout&gt;
+</pre>
+	<h3>ShowMapActivity.java</h3>
+	<p>知识点汇总如下：</p>
+	<ul>
+		<li>首先需要调用 SDKInitializer.initialize() 方法来进行初始化操作，该操作一定要放在 setContentView() 方法前调用，否则会出错。</li>
+		<li>重写 onResume()、onPause() 和 onDestroy() 3个方法，保证资源能够及时释放</li>
+		<li>使用 mapView.getMap() 获取 BaiduMap 对象。使用 BaiduMap 对象可以使用 zoomTo() 进行缩放，animateMapStatus() 进行定位</li>
+	</ul>
+	<pre class="code" data-type="java" data-collapsed="false" title="ShowMapActivity.java">package lld.com.whereareyou;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.View;
+
+import com.baidu.mapapi.SDKInitializer;
+import com.baidu.mapapi.map.BaiduMap;
+import com.baidu.mapapi.map.MapStatusUpdate;
+import com.baidu.mapapi.map.MapStatusUpdateFactory;
+import com.baidu.mapapi.map.MapView;
+import com.baidu.mapapi.map.MyLocationData;
+import com.baidu.mapapi.model.LatLng;
+
+public class ShowMapActivity extends AppCompatActivity {
+    private MapView mapView;
+    private BaiduMap baiduMap;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        SDKInitializer.initialize(getApplicationContext());
+        setContentView(R.layout.activity_show_map);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        Intent intent = getIntent();
+        double latitude = intent.getDoubleExtra("latitude", 0);
+        double longitude = intent.getDoubleExtra("longitude", 0);
+
+        mapView = (MapView) findViewById(R.id.bmapView);
+        baiduMap = mapView.getMap();
+        baiduMap.setMyLocationEnabled(true);
+        LatLng location = new LatLng(latitude, longitude);
+        MapStatusUpdate update = MapStatusUpdateFactory.newLatLng(location);
+        baiduMap.animateMapStatus(update);
+        update = MapStatusUpdateFactory.zoomTo(18);  //3-19
+        baiduMap.animateMapStatus(update);
+
+        MyLocationData.Builder locationBuilder = new MyLocationData.Builder();
+        locationBuilder.latitude(latitude);
+        locationBuilder.longitude(longitude);
+        MyLocationData locationData = locationBuilder.build();
+        baiduMap.setMyLocationData(locationData);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mapView.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mapView.onPause();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mapView.onDestroy();
+        baiduMap.setMyLocationEnabled(false);
+    }
+}
+</pre>
 </body>
 </html>
