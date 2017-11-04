@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+	<script type="text/javascript" src="../../mylib/js/css.js"></script>
+	<title>J2EE 练习题 - JSON HTTP Service</title>
+</head>
+
+<body>
+	<p id="title">J2EE 练习题 - JSON HTTP Service</p>
+	<h1>要求</h1>
+    <p>在 Tomcat 上布署一个 HTTP Service，使用 JSON 格式返回数据</p>
+    <h1>示例代码</h1>
+    <h2>Server 端</h2>
+	<p>基于 Maven 开发</p>
+	<ol>
+		<li>
+			<p>新建  Maven webapp 项目</p>
+		</li>
+		<li>
+			<p>修改 pom.xml 如下</p>
+			<pre class="code" data-type="xml" data-collapsed="false" title="pom.xml">&lt;project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd"&gt;
+    &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+    &lt;groupId&gt;lld&lt;/groupId&gt;
+    &lt;artifactId&gt;http.json.test.server&lt;/artifactId&gt;
+    &lt;packaging&gt;war&lt;/packaging&gt;
+    &lt;version&gt;0.0.1-SNAPSHOT&lt;/version&gt;
+    &lt;name&gt;http.json.test.server Maven Webapp&lt;/name&gt;
+    &lt;url&gt;http://maven.apache.org&lt;/url&gt;
+    &lt;properties&gt;
+        &lt;gson.version&gt;2.8.2&lt;/gson.version&gt;
+        &lt;tomcat.version&gt;6.0.53&lt;/tomcat.version&gt;
+    &lt;/properties&gt;
+    &lt;dependencies&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;com.google.code.gson&lt;/groupId&gt;
+            &lt;artifactId&gt;gson&lt;/artifactId&gt;
+            &lt;version&gt;${gson.version}&lt;/version&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.apache.tomcat&lt;/groupId&gt;
+            &lt;artifactId&gt;servlet-api&lt;/artifactId&gt;
+            &lt;version&gt;${tomcat.version}&lt;/version&gt;
+            &lt;scope&gt;provided&lt;/scope&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;junit&lt;/groupId&gt;
+            &lt;artifactId&gt;junit&lt;/artifactId&gt;
+            &lt;version&gt;3.8.1&lt;/version&gt;
+            &lt;scope&gt;test&lt;/scope&gt;
+        &lt;/dependency&gt;
+    &lt;/dependencies&gt;
+    &lt;build&gt;
+        &lt;finalName&gt;http.json.test.server&lt;/finalName&gt;
+    &lt;/build&gt;
+&lt;/project&gt;</pre>
+		</li>
+		<li>
+			<p>创建 POJO 类 User.java</p>
+			<pre class="code" data-type="java" data-collapsed="false" title="User.java">package http.json.test.server.model;
+
+public class User {
+    private String userId;
+    private String userName;
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+}
+</pre>
+		</li>
+		<li>
+			<p>创建 Servlet 类 UserServlet</p>
+			<pre class="code" data-type="java" data-collapsed="false" title="UserServlet.java">package http.json.test.server.servlet;
+
+import java.io.IOException;
+
+import javax.servlet.ServletException;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import com.google.gson.Gson;
+
+import http.json.test.server.model.User;
+
+public class UserServlet extends HttpServlet {
+
+    private static final long serialVersionUID = -2118394734647389638L;
+
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        this.doPost(req, resp);
+    }
+    
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        User user = new User();
+        String userId = req.getParameter("userId");
+        user.setUserId(userId);
+        user.setUserName("Lindong");
+        String jsonString = new Gson().toJson(user);
+        ServletOutputStream outputStream = resp.getOutputStream();
+        outputStream.print(jsonString);
+    }
+}
+</pre>
+		</li>
+		<li>
+			<p>修改 web.xml 如下所示</p>
+			<pre class="code" data-type="xml" data-collapsed="false" title="web.xml">&lt;!DOCTYPE web-app PUBLIC
+ "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+ "http://java.sun.com/dtd/web-app_2_3.dtd" &gt;
+
+&lt;web-app&gt;
+    &lt;display-name&gt;HTTP JSON Service Demo&lt;/display-name&gt;
+    &lt;servlet&gt;
+        &lt;servlet-name&gt;getUser&lt;/servlet-name&gt;
+        &lt;servlet-class&gt;http.json.test.server.servlet.UserServlet&lt;/servlet-class&gt;
+    &lt;/servlet&gt;
+
+    &lt;servlet-mapping&gt;
+        &lt;servlet-name&gt;getUser&lt;/servlet-name&gt;
+        &lt;url-pattern&gt;/getUser.do&lt;/url-pattern&gt;
+    &lt;/servlet-mapping&gt;
+&lt;/web-app&gt;
+</pre>
+		</li>
+		<li>
+			<p>编译并打包</p>
+			<pre class="code" data-type="sh">mvn clean package</pre>
+		</li>
+		<li>
+			<p>将生成的 war 包复制到 Tomcat webapps 目录并启动 Tomcat，打开浏览器输入 http://localhost:8080/http.json.test.server/getUser.do?userId=10001 后在浏览器中显示结果：</p>
+			<pre class="code" data-type="log">{"userId":"10001","userName":"Lindong"}</pre>
+		</li>
+	</ol>
+	<h2>客户端 - Java</h2>
+	<p>使用 Java 程序获取 Service 响应</p>
+	<ol>
+		<li>
+			<p>使用 Maven 创建 quickstart 程序</p>
+		</li>
+		<li>
+			<p>修改 pom.xml 如下</p>
+			<pre class="code" data-type="xml" data-collapsed="false" title="pom.xml">&lt;project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"&gt;
+    &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+
+    &lt;groupId&gt;lld&lt;/groupId&gt;
+    &lt;artifactId&gt;http.json.test.client&lt;/artifactId&gt;
+    &lt;version&gt;0.0.1-SNAPSHOT&lt;/version&gt;
+    &lt;packaging&gt;jar&lt;/packaging&gt;
+
+    &lt;name&gt;http.json.test.client&lt;/name&gt;
+    &lt;url&gt;http://maven.apache.org&lt;/url&gt;
+
+    &lt;properties&gt;
+        &lt;project.build.sourceEncoding&gt;UTF-8&lt;/project.build.sourceEncoding&gt;
+    &lt;/properties&gt;
+
+    &lt;dependencies&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.apache.httpcomponents&lt;/groupId&gt;
+            &lt;artifactId&gt;httpclient&lt;/artifactId&gt;
+            &lt;version&gt;4.5.2&lt;/version&gt;
+        &lt;/dependency&gt;
+    &lt;/dependencies&gt;
+&lt;/project&gt;</pre>
+		</li>
+		<li>
+			<p>创建工具类 HttpRequestUtil.java</p>
+			<pre class="code" data-type="java" data-collapsed="false" title="HttpRequestUtil.java">package lld.http.json.test.client.util;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.util.EntityUtils;
+
+public class HttpRequestUtil {
+    public static String callHttpService(String url, Map&lt;String, String&gt; parameters) throws ClientProtocolException, IOException {
+        return callHttpService(url, parameters, "utf-8");
+    }
+    
+    public static String callHttpService(String url, Map&lt;String, String&gt; parameters, String charset) throws ClientProtocolException, IOException {
+        String result = null;
+        HttpClientBuilder httpClientBuilder = HttpClientBuilder.create();
+        CloseableHttpClient httpClient = httpClientBuilder.build();
+        HttpPost httpPost = new HttpPost(url);
+
+        List&lt;NameValuePair&gt; list = new ArrayList&lt;NameValuePair&gt;();
+
+        if (parameters != null) {
+            Iterator&lt;Map.Entry&lt;String, String&gt;&gt; iterator = parameters.entrySet().iterator();
+
+            while (iterator.hasNext()) {
+                Entry&lt;String, String&gt; entry = (Entry&lt;String, String&gt;) iterator.next();
+                list.add(new BasicNameValuePair(entry.getKey(), entry.getValue()));
+            }
+        }
+
+        if (list.size() &gt; 0) {
+            UrlEncodedFormEntity entity = new UrlEncodedFormEntity(list, charset);
+            httpPost.setEntity(entity);
+        }
+        
+        HttpResponse response = httpClient.execute(httpPost);
+
+        if (response != null) {
+            HttpEntity responseEntity = response.getEntity();
+            
+            if (responseEntity != null) {
+                result = EntityUtils.toString(responseEntity);
+            }
+        }
+        
+        return result;
+    }
+}</pre>
+		</li>
+		<li>
+			<p>调用 Http Service 例程</p>
+			<pre class="code" data-type="java" data-collapsed="false" title="App.java">package lld.http.json.test.client;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.apache.http.client.ClientProtocolException;
+
+import lld.http.json.test.client.util.HttpRequestUtil;
+
+/**
+ * Hello world!
+ *
+ */
+public class App 
+{
+    public static void main( String[] args ) throws ClientProtocolException, IOException
+    {
+        String url = "http://localhost:8080/http.json.test.server/getUser.do";
+        Map<String, String> parameters = new HashMap<String, String>();
+        parameters.put("userId", "lld");
+        String result = HttpRequestUtil.callHttpService(url, parameters);
+        System.out.println("Result is: ");
+        System.out.println(result);        
+    }
+}
+</pre>
+	</ol>
+</body>
+</html>
