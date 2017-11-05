@@ -59,8 +59,12 @@ public class HelloImpl implements Hello {
 			<pre class="code" data-type="java" data-collapsed="false" title="TimeHandler.java">package lld.spring_test.hello;
 
 public class TimeHandler {
-    public void printTime() {
-        System.out.println("CurrentTime = " + System.currentTimeMillis());
+    public void beforeCall() {
+        System.out.println("Start CurrentTime: " + System.currentTimeMillis());
+    }
+
+    public void afterCall() {
+        System.out.println("End CurrentTime: " + System.currentTimeMillis());
     }
 }
 </pre>
@@ -71,17 +75,17 @@ public class TimeHandler {
 &lt;beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
     xmlns:tx="http://www.springframework.org/schema/tx"
     xsi:schemaLocation="http://www.springframework.org/schema/beans
-        http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
+        http://www.springframework.org/schema/beans/spring-beans.xsd
         http://www.springframework.org/schema/aop
-        http://www.springframework.org/schema/aop/spring-aop-4.3.xsd"&gt;
+        http://www.springframework.org/schema/aop/spring-aop.xsd"&gt;
     &lt;bean id="hello" class="lld.spring_test.hello.HelloImpl" /&gt;
     &lt;bean id="timeHandler" class="lld.spring_test.hello.TimeHandler" /&gt;
 
     &lt;aop:config&gt;
         &lt;aop:aspect id="time" ref="timeHandler"&gt;
             &lt;aop:pointcut id="addAllMethod" expression="execution(* lld.spring_test.hello.Hello.*(..))" /&gt;
-            &lt;aop:before method="printTime" pointcut-ref="addAllMethod" /&gt;
-            &lt;aop:after method="printTime" pointcut-ref="addAllMethod" /&gt;
+            &lt;aop:before method="beforeCall" pointcut-ref="addAllMethod" /&gt;
+            &lt;aop:after method="afterCall" pointcut-ref="addAllMethod" /&gt;
         &lt;/aop:aspect&gt;
     &lt;/aop:config&gt;
 &lt;/beans&gt;</pre>
