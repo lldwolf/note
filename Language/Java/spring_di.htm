@@ -171,5 +171,107 @@ public class AutoAssembleTest {
 			<td>@Inject</td>
 		</tr>
 	</table>
+    <h1>XML 装配</h1>
+    <h2>示例（构造函数装配）</h2>
+    <ol>
+        <li>
+            <p>定义 Service 接口和 Service 实现类</p>
+            <pre class="code" dat-type="java" data-collapsed="false" title="HelloService.java">package lld.spring_test.di.xml;
+public interface HelloService {
+    void sayHi(String name);
+}
+</pre>
+            <p></p>
+            <pre class="code" dat-type="java" data-collapsed="false" title="HelloServiceImpl.java">package lld.spring_test.di.xml;
+public class HelloServiceImpl implements HelloService {
+    @Override
+    public void sayHi(String name) {
+        System.out.println("Hi, " + name);
+    }
+}
+</pre>
+        </li>
+        <li>
+            <p>定义要装配的目标类</p>
+            <pre class="code" dat-type="java" data-collapsed="false" title="HelloServer.java">package lld.spring_test.di.xml;
+public class HelloServer {
+    private HelloService helloService;
+    
+    public HelloServer(HelloService helloService) {
+        this.helloService = helloService;
+    }
+    
+    public void sayHi(String name) {
+        helloService.sayHi(name);
+    }
+}
+</pre>
+        </li>
+        <li>
+            <p>XML 装配，通过构造函数注入</p>
+            <pre class="code" data-type="xml" data-collapsed="false" title="beans.xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;beans xmlns="http://www.springframework.org/schema/beans" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xmlns:context="http://www.springframework.org/schema/context"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd"&gt;
+    &lt;bean id="helloService" class="lld.spring_test.di.xml.HelloServiceImpl" /&gt;
+    
+    &lt;bean id="helloServer" class="lld.spring_test.di.xml.HelloServer"&gt;
+        &lt;constructor-arg ref="helloService" /&gt;
+    &lt;/bean&gt;
+    
+&lt;/beans&gt;</pre>
+        </li>
+        <li>
+            <p>测试</p>
+            <pre class="code" dat-type="java" data-collapsed="false" title="HelloClient.java">package lld.spring_test.di.xml;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+public class HelloClient {
+    public static void main(String[] args) {
+        ApplicationContext ctx = new ClassPathXmlApplicationContext("beans.xml");
+        HelloServer helloService = (HelloServer) ctx.getBean("helloServer");
+        helloService.sayHi("Lindong");
+        ((ConfigurableApplicationContext) ctx).close();
+    }
+}
+</pre>
+        </li>
+    </ol>
+    <h2>属性装配</h2>
+    <p>相比构造函数注入，我们使用属性注入的场景更多一些，毕竟把所有的 Bean 都放在构造函数里实在是丑了一点。对于属性注入，需要提供写方法，如下所示：</p>
+    <pre class="code" dat-type="java" data-collapsed="false" title="HelloServer.java">package lld.spring_test.di.xml;
+public class HelloServer {
+    private HelloService helloService;
+    public void setHelloService(HelloService helloService) {
+        this.helloService = helloService;
+    }
+    public void sayHi(String name) {
+        helloService.sayHi(name);
+    }
+}
+</pre>
+    <p>然后在配置文件中配置如下：</p>
+    <pre class="code" data-type="xml" data-collapsed="false" title="beans.xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;beans xmlns="http://www.springframework.org/schema/beans" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xmlns:context="http://www.springframework.org/schema/context"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd"&gt;
+    &lt;bean id="helloService" class="lld.spring_test.di.xml.HelloServiceImpl" /&gt;
+    
+    &lt;bean id="helloServer" class="lld.spring_test.di.xml.HelloServer"&gt;
+        &lt;property name="helloService" ref="helloService" /&gt;
+    &lt;/bean&gt;
+    
+&lt;/beans&gt;</pre>
+    <h2>其它</h2>
+    <p>初学者都会好奇 XML 配置文件一开始那堆声明是怎么写出来的。这个可以通过 Spring Tool Suite 创建，通过 File &rArr; New &rArr; Spring Bean Configuration File 菜单。</p>
 </body>
 </html>
