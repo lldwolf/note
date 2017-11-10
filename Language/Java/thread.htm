@@ -244,5 +244,203 @@ public class CallableTest {
 
 }
 </pre>
+    <h1>生产者/消费者实现</h1>
+    <h2>基于 Object.wait/notify</h2>
+    <p>Object 类中定义了如下几个方法用于并发支持</p>
+    <ul>
+        <li>wait: 让当前线程阻塞，并且当前线程必须拥有此对象的monitor（即锁）</li>
+        <li>notify: 唤醒一个正在等待这个对象的monitor的线程，如果有多个线程都在等待这个对象的monitor，则只能唤醒其中一个线程</li>
+        <li>notifyAll: 唤醒所有正在等待这个对象的monitor的线程</li>
+    </ul>
+    <p>实现如下</p>
+    <pre class="code" data-type="java" data-collapsed="false" title="Basic Producer/Consumer">
+package lld.test.thread;
+import java.util.PriorityQueue;
+import java.util.Random;
+public class ProducerConsumerBasic {
+	private final int MAX_SIZE = 10;
+	private PriorityQueue&lt;Integer&gt; queue = new PriorityQueue&lt;&gt;(MAX_SIZE);
+	private final Random random = new Random(System.currentTimeMillis());
+	public static void main(String[] args) {
+		ProducerConsumerBasic obj = new ProducerConsumerBasic();
+		Producer producer = obj.new Producer();
+		Consumer consumer = obj.new Consumer();
+		producer.start();
+		consumer.start();
+	}
+	class Consumer extends Thread {
+		@Override
+		public void run() {
+			consume();
+		}
+		private void consume() {
+			while (true) {
+				synchronized (queue) {
+					if (queue.size() == 0) {
+						System.out.println(&quot;Queue is empty!&quot;);
+						try {
+							queue.wait();
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
+					}
+					Integer value = queue.poll();
+					System.out.println(&quot;Consume &quot; + value);
+					queue.notify();
+					System.out.println(&quot;Queue left &quot; + queue.size());
+				}
+				try {
+					Thread.sleep(random.nextInt(100));
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+	class Producer extends Thread {
+		@Override
+		public void run() {
+			produce();
+		}
+		private void produce() {
+			while (true) {
+				synchronized (queue) {
+					if (queue.size() == MAX_SIZE) {
+						System.out.println(&quot;Queue is full!&quot;);
+						try {
+							queue.wait();
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
+					}
+					Integer value = random.nextInt(1000);
+					queue.offer(value);
+					System.out.println(&quot;Produce &quot; + value);
+					queue.notify();
+					System.out.println(&quot;Queue left &quot; + queue.size());
+				}
+				try {
+					Thread.sleep(random.nextInt(100));
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+}
+</pre>
+    <h2>基于 Condition 实现</h2>
+    <p>Condition 类是 Java 5 引用的用于线程间协作的新对象，用于取代传统的 Object 的 wait() 和 notify()。相比传统实现其更加安全和高效。</p>
+    <ul>
+        <li>await: 对应 Object.wait()</li>
+        <li>signal: 对应 Object.notify()</li>
+        <li>signalAll: 对应 Object.notifyAll()</li>
+    </ul>
+    <p>实现如下</p>
+    <pre class="code" data-type="java" data-collapsed="false" title="Condition Producer/Consumer">
+package lld.test.thread;
+
+import java.util.PriorityQueue;
+import java.util.Random;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.ReentrantLock;
+
+public class ProducerConsumerCondition {
+
+	private final int MAX_SIZE = 10;
+	private PriorityQueue&lt;Integer&gt; queue = new PriorityQueue&lt;&gt;(MAX_SIZE);
+    private ReentrantLock lock=new ReentrantLock();
+    private Condition notFull=lock.newCondition();
+    private Condition notEmpty=lock.newCondition();
+	private final Random random = new Random(System.currentTimeMillis());
+
+	public static void main(String[] args) {
+		ProducerConsumerCondition obj = new ProducerConsumerCondition();
+		Producer producer = obj.new Producer();
+		Consumer consumer = obj.new Consumer();
+		producer.start();
+		consumer.start();
+	}
+
+	class Consumer extends Thread {
+		@Override
+		public void run() {
+			consume();
+		}
+
+		private void consume() {
+			while (true) {
+				lock.lock();
+				
+				try {
+					if (queue.size() == 0) {
+						System.out.println(&quot;Queue is empty!&quot;);
+
+						try {
+							notEmpty.await();
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
+					}
+
+					Integer value = queue.poll();
+					System.out.println(&quot;Consume &quot; + value);
+					notFull.signal();
+					System.out.println(&quot;Queue left &quot; + queue.size());
+				} finally {
+					lock.unlock();
+				}
+
+				try {
+					Thread.sleep(random.nextInt(100));
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+
+			}
+		}
+	}
+
+	class Producer extends Thread {
+		@Override
+		public void run() {
+			produce();
+		}
+
+		private void produce() {
+			while (true) {
+				lock.lock();
+				
+				try {
+					if (queue.size() == MAX_SIZE) {
+						System.out.println(&quot;Queue is full!&quot;);
+
+						try {
+							notFull.await();
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
+					}
+
+					Integer value = random.nextInt(1000);
+					queue.offer(value);
+					System.out.println(&quot;Produce &quot; + value);
+					notEmpty.signal();
+					System.out.println(&quot;Queue left &quot; + queue.size());
+				} finally {
+					lock.unlock();
+				}
+
+				try {
+					Thread.sleep(random.nextInt(100));
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+
+			}
+		}
+	}
+}
+</pre>
 </body>
 </html>
