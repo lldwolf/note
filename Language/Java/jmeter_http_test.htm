@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+    <script type="text/javascript" src="../../mylib/js/css.js"></script>
+    <title>JMeter HTTP Test</title>
+</head>
+
+<body>
+    <p id="title">JMeter HTTP Test</p>
+    <h1>Overview</h1>
+    <p>本章讲述如何使用 JMeter 对 Http Service 进行测试</p>
+    <h1>准备工作</h1>
+    <p>我们需要先准备一个简单的 HTTP Service，具体请看<a href="ava-test-json-http-service.htm">JSON HTTP Service 示例</a></p>
+    <h1>基本 JMeter 测试步骤</h1>
+    <ol>
+        <li>
+            <p>可将根结点命名为 HelloTest</p>
+        </li>
+        <li>
+            <p>使用如下右键菜单项创建 Thread Group，如下图所示</p>
+            <p><img alt="" src="images/jmeter-new-threadgroup.png" /></p>
+        </li>
+        <li>
+            <p>默认设置为一个线程，为了压力测试我们可以将线程数调高，如下图所示设为 10</p>
+            <p><img alt="" src="images/jmeter-thread-group.png" /></p>
+        </li>
+        <li>
+            <p>在 Thread Group 菜单上使用如下右键菜单创建 HTTP Request</p>
+            <p><img alt="" src="images/jmeter-new-http-request.png" /></p>
+        </li>
+        <li>
+            <p>将 HTTP Request 设置如下，包括名称，server 地址及端口号，使用协议，调用路径，上传参数等</p>
+            <img alt="" src="images/jmeter-http-request.png" />
+        </li>
+        <li>
+            <p>在 HTTP Request 上使用如下右键菜单添加 "View Results in Table" 用于查看结果，如下图所示</p>
+            <img alt="" src="images/jmeter-new-view-result.png" />
+            <p>也可以使用 View Results Tree 以文本内容查看每次访问的发送值及返回结果。</p>
+        </li>
+        <li>
+            <p>现在可以按上面的 Start 按钮开始测试，在 View Results in Table 中显示如下：</p>
+            <img alt="" src="images/jmeter-http-request-result.png" />
+        </li>
+    </ol>
+</body>
+</html>
