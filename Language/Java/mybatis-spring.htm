@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+    <script type="text/javascript" src="../../mylib/js/css.js"></script>
+    <title>Java Note</title>
+</head>
+
+<body>
+    <p id="title">MyBatis Srping 集成</p>
+    <h1>Overview</h1>
+    <p>本章讲述如何将 MyBatis 与 Spring 集成，本例使用了 SQLite 数据库，数据库文件为 wru.db</p>
+    <h1>集成步骤</h1>
+    <ol>
+        <li>
+            <p>创建 Maven 项目，在 pom.xml 中引用 Spring, MyBatis 及 mybatis-spring 集成支持库，如下所示:</p>
+            <pre class="code" data-type="xml" data-collapsed="false" title="pom.xml">&lt;project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd"&gt;
+    &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+    &lt;groupId&gt;dll-xml&lt;/groupId&gt;
+    &lt;artifactId&gt;wru_service&lt;/artifactId&gt;
+    &lt;packaging&gt;jar&lt;/packaging&gt;
+    &lt;version&gt;0.0.1-SNAPSHOT&lt;/version&gt;
+    &lt;name&gt;wru_service Maven Webapp&lt;/name&gt;
+    &lt;url&gt;http://maven.apache.org&lt;/url&gt;
+    &lt;properties&gt;
+        &lt;project.build.sourceEncoding&gt;UTF-8&lt;/project.build.sourceEncoding&gt;
+        &lt;gson.version&gt;2.8.2&lt;/gson.version&gt;
+        &lt;junit.version&gt;4.12&lt;/junit.version&gt;
+        &lt;log4j.version&gt;2.8.1&lt;/log4j.version&gt;
+        &lt;mybatis.version&gt;3.4.5&lt;/mybatis.version&gt;
+        &lt;spring.version&gt;4.3.12.RELEASE&lt;/spring.version&gt;
+    &lt;/properties&gt;
+    &lt;dependencies&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.apache.logging.log4j&lt;/groupId&gt;
+            &lt;artifactId&gt;log4j-api&lt;/artifactId&gt;
+            &lt;version&gt;${log4j.version}&lt;/version&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.apache.logging.log4j&lt;/groupId&gt;
+            &lt;artifactId&gt;log4j-core&lt;/artifactId&gt;
+            &lt;version&gt;${log4j.version}&lt;/version&gt;
+        &lt;/dependency&gt;
+
+        &lt;dependency&gt;
+            &lt;groupId&gt;commons-io&lt;/groupId&gt;
+            &lt;artifactId&gt;commons-io&lt;/artifactId&gt;
+            &lt;version&gt;2.5&lt;/version&gt;
+        &lt;/dependency&gt;
+
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-context&lt;/artifactId&gt;
+            &lt;version&gt;${spring.version}&lt;/version&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-jdbc&lt;/artifactId&gt;
+            &lt;version&gt;${spring.version}&lt;/version&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-test&lt;/artifactId&gt;
+            &lt;version&gt;${spring.version}&lt;/version&gt;
+        &lt;/dependency&gt;
+
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.mybatis&lt;/groupId&gt;
+            &lt;artifactId&gt;mybatis-spring&lt;/artifactId&gt;
+            &lt;version&gt;1.3.1&lt;/version&gt;
+        &lt;/dependency&gt;
+
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.xerial&lt;/groupId&gt;
+            &lt;artifactId&gt;sqlite-jdbc&lt;/artifactId&gt;
+            &lt;version&gt;3.20.0&lt;/version&gt;
+        &lt;/dependency&gt;
+
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.mybatis&lt;/groupId&gt;
+            &lt;artifactId&gt;mybatis&lt;/artifactId&gt;
+            &lt;version&gt;${mybatis.version}&lt;/version&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.mybatis.generator&lt;/groupId&gt;
+            &lt;artifactId&gt;mybatis-generator-core&lt;/artifactId&gt;
+            &lt;version&gt;1.3.4&lt;/version&gt;
+        &lt;/dependency&gt;
+
+        &lt;dependency&gt;
+            &lt;groupId&gt;junit&lt;/groupId&gt;
+            &lt;artifactId&gt;junit&lt;/artifactId&gt;
+            &lt;version&gt;${junit.version}&lt;/version&gt;
+            &lt;scope&gt;test&lt;/scope&gt;
+        &lt;/dependency&gt;
+
+    &lt;/dependencies&gt;
+    &lt;build&gt;
+        &lt;finalName&gt;wru_service&lt;/finalName&gt;
+        &lt;plugins&gt;
+            &lt;plugin&gt;
+                &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;
+                &lt;artifactId&gt;maven-compiler-plugin&lt;/artifactId&gt;
+                &lt;version&gt;3.6.2&lt;/version&gt;
+                &lt;configuration&gt;
+                    &lt;source&gt;1.8&lt;/source&gt;
+                    &lt;target&gt;1.8&lt;/target&gt;
+                &lt;/configuration&gt;
+            &lt;/plugin&gt;
+        &lt;/plugins&gt;
+    &lt;/build&gt;
+&lt;/project&gt;
+</pre>
+        </li>
+        <li>
+            <p>创建 db.properties 用于存储据库连接信息</p>
+            <pre class="code" data-type="properties" data-collapsed="false" title="db.properties">jdbc.driver=org.sqlite.JDBC
+jdbc.url=jdbc:sqlite::resource:wru.db
+jdbc.username=
+jdbc.password=</pre>
+        </li>
+        <li>
+            <p>在数据库中创建 users 表，使用前面的例子使用 MyBatis Generator 自动生成 mapper 接口及 POJO 类，MyBatis 配置文件如下所示</p>
+            <pre class="code" data-type="xml" data-collapsed="false" title="mybatis-config.xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;!DOCTYPE configuration
+PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-config.dtd"&gt;
+&lt;configuration&gt;
+    &lt;settings&gt;
+        &lt;setting name="lazyLoadingEnabled" value="true" /&gt;
+        &lt;setting name="aggressiveLazyLoading" value="false" /&gt;
+        &lt;setting name="cacheEnabled" value="true" /&gt;
+    &lt;/settings&gt;
+
+    &lt;mappers&gt;
+        &lt;mapper resource="sqlmap/UsersMapper.xml" /&gt;
+    &lt;/mappers&gt;
+&lt;/configuration&gt;</pre>
+        </li>
+        <li>
+            <p>创建  Spring 配置文件如下所示</p>
+            <pre class="code" data-type="xml" data-collapsed="false" title="applicationContext.xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/tx   
+        http://www.springframework.org/schema/tx/spring-tx.xsd"&gt;
+    &lt;bean id="preferences" class="org.springframework.beans.factory.config.PreferencesPlaceholderConfigurer"&gt;
+        &lt;property name="location"&gt;
+            &lt;value&gt;/db.properties&lt;/value&gt;
+        &lt;/property&gt;
+    &lt;/bean&gt;
+    &lt;bean id="jdbcDataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource"&gt;
+        &lt;property name="driverClassName" value="${jdbc.driver}" /&gt;
+        &lt;property name="url" value="${jdbc.url}" /&gt;
+        &lt;property name="username" value="${jdbc.username}" /&gt;
+        &lt;property name="password" value="${jdbc.password}" /&gt;
+    &lt;/bean&gt;
+
+    &lt;bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean"&gt;
+        &lt;property name="dataSource" ref="jdbcDataSource" /&gt;
+        &lt;property name="configLocation" value="classpath:mybatis-config.xml"&gt;&lt;/property&gt;
+    &lt;/bean&gt;
+    &lt;bean id="userDao" class="org.mybatis.spring.mapper.MapperFactoryBean"&gt;
+        &lt;property name="mapperInterface" value="lld.wru.dao.UsersMapper"&gt;&lt;/property&gt;
+        &lt;property name="sqlSessionFactory" ref="sqlSessionFactory"&gt;&lt;/property&gt;
+    &lt;/bean&gt;
+
+&lt;/beans&gt;</pre>
+        </li>
+        <li>
+            <p>创建  Unit Test 如下所示：</p>
+            <pre class="code" data-type="java" data-collapsed="false" title="UserDaoTest.java">package wru_service;
+import java.io.IOException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.junit.Assert;
+import org.junit.Test;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+import lld.wru.dao.UsersMapper;
+import lld.wru.model.Users;
+public class UserDaoTest {
+    private static final Logger logger = LogManager.getLogger(UserDaoTest.class);
+    
+    @Test
+    public void firstTest() throws IOException {
+        ApplicationContext ctx = new ClassPathXmlApplicationContext("applicationContext.xml");
+        UsersMapper userDao = (UsersMapper) ctx.getBean("userDao");
+        Users user = userDao.selectByPrimaryKey("138-xxxx-xxxx");
+        Assert.assertNotNull(user);
+        logger.info(user.toString());
+        ((ConfigurableApplicationContext) ctx).close();
+    }
+}
+</pre>
+        </li>
+        
+    </ol>
+</body>
+</html>
