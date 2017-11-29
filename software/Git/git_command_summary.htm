@@ -1,30 +1,30 @@
 <html>
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
-	<script type="text/javascript" src="../../mylib/js/css.js"></script>
-	<title>Git Note</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+    <script type="text/javascript" src="../../mylib/js/css.js"></script>
+    <title>Git Note</title>
 </head>
 
 <body>
-	<p id="title">Git 命令汇总</p>
-	<h1>Git 的一些通用术语</h1>
-	<h2>Git 的几个区</h2>
-	<ul>
-		<li>worktree: 工作区</li>
-		<li>index/stage: 暂存区</li>
-		<li>commit: 本地 repository</li>
-		<li>stash: 备份区</li>
-	</ul>
-	<h2>如何标识 Git 的某次提交</h2>
-	<ul>
-		<li>用 SHA 码标识</li>
-		<li>HEAD，表示当前 repository 的最后一次提交</li>
-		<li>HEAD^，表示当前 repository 的前一次提交，加两个 ^ 就表示前两次提交</li>
-		<li>HEAD~4，表示当前 repository 的前4次提交</li>
-	</ul>
-	<h1>Git 配置</h1>
-	<h2>配置</h2>
-	<pre class="code" data-type="sh">
+    <p id="title">Git 命令汇总</p>
+    <h1>Git 的一些通用术语</h1>
+    <h2>Git 的几个区</h2>
+    <ul>
+        <li>worktree: 工作区</li>
+        <li>index/stage: 暂存区</li>
+        <li>commit: 本地 repository</li>
+        <li>stash: 备份区</li>
+    </ul>
+    <h2>如何标识 Git 的某次提交</h2>
+    <ul>
+        <li>用 SHA 码标识</li>
+        <li>HEAD，表示当前 repository 的最后一次提交</li>
+        <li>HEAD^，表示当前 repository 的前一次提交，加两个 ^ 就表示前两次提交</li>
+        <li>HEAD~4，表示当前 repository 的前4次提交</li>
+    </ul>
+    <h1>Git 配置</h1>
+    <h2>配置</h2>
+    <pre class="code" data-type="sh">
 # 设置本地用户信息
 git config --global user.name "ll52957"
 git config --global user.email lindong.liu@citi.com
@@ -43,17 +43,17 @@ git config --global core.autocrlf false
 
 # 设定 Notepad++ 为默认的文本编辑器，在提交时如未提供 comments，将自动弹出该文本编辑器
 git config --global core.editor '"C:\Program Files (x86)\Notepad++\notepad++.exe"'</pre>
-	<h2>读取配置</h2>
-	<p>可在 C:\Users\用户名\.gitconfig 文件中看到所有的酌置项。</p>
-	<p>或者使用命令行查看，与设置相似，不加最后的参数就行了</p>
-	<pre class="code" data-type="sh"># 读取本地用户信息
+    <h2>读取配置</h2>
+    <p>可在 C:\Users\用户名\.gitconfig 文件中看到所有的酌置项。</p>
+    <p>或者使用命令行查看，与设置相似，不加最后的参数就行了</p>
+    <pre class="code" data-type="sh"># 读取本地用户信息
 git config --global user.name</pre>
-	<h2>与 Beyond Compare 集成</h2>
-	<p>对于 3.0.13 版本，其 .gitconfig 如下所示</p>
-	<pre class="code">[diff]
+    <h2>与 Beyond Compare 集成</h2>
+    <p>对于 3.0.13 版本，其 .gitconfig 如下所示</p>
+    <pre class="code">[diff]
 	external = \"C:\\Program Files (x86)\\Beyond Compare 3\\BCompare.exe\"</pre>
-	<p>对于 3.3.5 版本，.gitconfig 如下所示</p>
-	<pre>[diff]
+    <p>对于 3.3.5 版本，.gitconfig 如下所示</p>
+    <pre>[diff]
 	tool = bc3
 [difftool]
 	prompt = false
@@ -65,26 +65,34 @@ git config --global user.name</pre>
 	prompt = false
 [mergetool "bc3"]
 	cmd = \"c:/program files/beyond compare 3/bcomp.exe\" "$LOCAL" "$REMOTE" "$BASE" "$MERGED"</pre>
-	<p>配置完成后，需使用 git difftool 命令代替 git diff, git mergetool 代替 git merge</p>
-	<h2>一些常用的配置项</h2>
-	<table style="width:80%">
-		<tr>
-			<th>配置项</th>
-			<th>说明</th>
-		</tr>
-		<tr>
-			<td>core.safecrlf</td>
-			<td>
-				<ul>
-					<li>false: 不做任何检查</li>
-					<li>warn: 在提交时检查并警告 (default)</li>
-					<li>true: 在提交时检查，如果发现混用则拒绝提交</li>
-				</ul>
-			</td>
-		</tr>
-	</table>
-	<h1>版本库信息</h1>
-	<pre class="code" data-type="sh">
+    <p>配置完成后，需使用 git difftool 命令代替 git diff, git mergetool 代替 git merge</p>
+    <h2>一些常用的配置项</h2>
+    <table style="width: 80%">
+        <tr>
+            <th>配置项</th>
+            <th>说明</th>
+        </tr>
+        <tr>
+            <td>core.safecrlf</td>
+            <td>
+                <ul>
+                    <li>false: 不做任何检查</li>
+                    <li>warn: 在提交时检查并警告 (default)</li>
+                    <li>true: 在提交时检查，如果发现混用则拒绝提交</li>
+                </ul>
+            </td>
+        </tr>
+    </table>
+    <h2>Alias 配置</h2>
+    <p>可以简化一些操作</p>
+    <pre class="code" data-type="sh">
+# 读取当前 alias 配置
+git config --get-regexp alias
+
+# 使用 git mylog 命令显示可读性较高的 log
+git config --global alias.mylog 'log --pretty=format:"%h - %an, %ad (%ar): %s" --date short'</pre>
+    <h1>版本库信息</h1>
+    <pre class="code" data-type="sh">
 # 获取远端 URL 信息 
 git remote -v
 
@@ -94,13 +102,16 @@ git remote show
 # 远看远端详细 branch 信息
 git remote show origin
 	</pre>
-	<h1>repository 管理</h1>
-	<pre class="code" data-type="sh">
+    <h1>repository 管理</h1>
+    <pre class="code" data-type="sh">
 # clone master repository
 git clone ssh://git@cedt-icg-bitbucketcli.nam.nsroot.net:7999/c153263/client.git
 
 # clone branch repository
 git clone -b develop/2016_07_bond_analytics ssh://git@cedt-icg-bitbucketcli.nam.nsroot.net:7999/c153263/client.git
+
+# clone 版本库到指定目录
+git clone [repository_url] [folder_name]
 
 # 新建版本库
 mkdir git_test
@@ -111,8 +122,8 @@ git init
 
 # 将当前目录加为 Git Repository
 git add .</pre>
-	<h1>branch 管理</h1>
-	<pre class="code" data-type="sh">
+    <h1>branch 管理</h1>
+    <pre class="code" data-type="sh">
 # 创建本地 branch
 git branch [branch_name]
 
@@ -152,9 +163,21 @@ git branch -d [branch_name]
 
 # 删除远程 branch
 git push origin --delete branch_name
+
+# 列出 branch 的最后一次 commit 信息
+git branch -v
+
+# 列出所有 merge 过的 branch
+git branch --merged
+        
+# 列出所有未 merge 过的 branch
+git branch --no-merged
+
+# branch 改名, 如果是改当前 branch 则 old_name 可省略
+git branch -m [old_name] [new_name]
 	</pre>
-	<h1>Tag 管理</h1>
-	<pre class="code" data-type="sh">
+    <h1>Tag 管理</h1>
+    <pre class="code" data-type="sh">
 # 查看所有的 tag
 git tag
 
@@ -163,10 +186,13 @@ git tag [tag_name]
 
 # 删除 tag
 git tag -d [tag_name]
-	</pre>
-	<h1>日志</h1>
-	<h2>查看修改日志</h2>
-<pre class="code" data-type="sh"># 查看所有提交记录
+
+# push 到远端
+git push origin [tag_name]
+</pre>
+    <h1>日志</h1>
+    <h2>查看修改日志</h2>
+    <pre class="code" data-type="sh"># 查看所有提交记录
 git log
 
 # 查看某文件的改动历史
@@ -208,6 +234,7 @@ git log -2
 # pretty=tformat: 可以定制要显示的记录格式，这样的输出便于后期编程提取分析
 # 下面列出了常用的格式占位符写法及其代表的意义。# #      
 # 选项# 说明# #     
+# %s      commit 时 -commets 中的说明# #  
 # %H      提交对象（commit）的完整哈希字串# #  
 # %h      提交对象的简短哈希字串# #  
 # %T      树对象（tree）的完整哈希字串# #      
@@ -222,10 +249,13 @@ git log -2
 # %ce     提交者的电子邮件地址    
 git log --pretty=format:"%h - %an, %ar : %s"
 
+# 查看某文件在所有 branch 上的提交
+gitk --all -- [path] &
+
 # 查看某个文件的相关提交改动记录
-git blame [path] --date short</pre>	
-	<h2>信息统计</h2>
-	<pre class="code" data-type="sh">
+git blame [path] --date short</pre>
+    <h2>信息统计</h2>
+    <pre class="code" data-type="sh">
 #--stat   显示每次更新的文件修改统计信息，会列出具体文件列表
 #--shortstat    统计每个commit 的文件修改行数，包括增加，删除，但不列出文件列表
 #--numstat   统计每个commit 的文件修改行数，包括增加，删除，并列出文件列表
@@ -242,15 +272,15 @@ git log --oneline | wc -l
 # 添加或修改的代码行数
 git log --stat | perl -ne 'END { print $c } $c += $1 if /(\d+) insertions/;'</pre>
 
-# 显示所有贡献者及其commit数
+    # 显示所有贡献者及其commit数
 git shortlog --numbered --summary
 	<h2>操作日志</h2>
-	<pre class="code" data-type="sh"># 查看自己做过的操作
+    <pre class="code" data-type="sh"># 查看自己做过的操作
 git reflog
 	</pre>
-	<h1>改动管理</h1>
-	<h2>信息查看</h2>
-	<pre class="code" data-type="sh"># 查看本地代码改动
+    <h1>改动管理</h1>
+    <h2>信息查看</h2>
+    <pre class="code" data-type="sh"># 查看本地代码改动
 git status
 
 # 查看本地代码改动 （简洁版）
@@ -263,9 +293,13 @@ git diff --name-only --diff-filter=U
 git show [commit]:[path]
 
 # 查看某被删除文件的内容
-git show HEAD^:[path]</pre>
-	<h2>工作区与暂存区(Index)互操作</h2>
-	<pre class="code" data-type="sh">
+git show HEAD^:[path]
+
+# 查看某文件在某 commit 与上次提交的差异
+git show [commit] [path]
+	</pre>
+    <h2>工作区与暂存区(Index)互操作</h2>
+    <pre class="code" data-type="sh">
 # 使用通配符将本地改动或新增文件放到暂存区
 git add '*.dll'
 
@@ -289,15 +323,15 @@ git add -p [path]
 
 # 将文件从暂存区恢复至工作区
 git reset HEAD [path]</pre>
-	<h2>提交代码</h2>
-	<pre class="code" data-type="sh">
+    <h2>提交代码</h2>
+    <pre class="code" data-type="sh">
 # 将晳存区的文件提交至本地 repository
 git commit -m comments
 
 # 将本地 repository 改动提交至远程，如果其他人已在远程进行过推送，需使用 pull 命令合并
 git push origin [branch]</pre>
-	<h2>Stash 管理</h2>
-	<pre class="code" data-type="sh"># 将本地所有改动文件标记为 stash 状态
+    <h2>Stash 管理</h2>
+    <pre class="code" data-type="sh"># 将本地所有改动文件标记为 stash 状态
 git stash
 # 完整的 stash 命令
 git stash save "comments"
@@ -319,9 +353,9 @@ $git stash clean
 
 # 删除某个 stash 进度
 $git stash drop [stash id]</pre>
-	<h2>比较</h2>
-	<h3>所有文件比较</h3>
-	<pre class="code" data-type="sh">
+    <h2>比较</h2>
+    <h3>所有文件比较</h3>
+    <pre class="code" data-type="sh">
 # 比较工作区和暂存区
 git diff
 
@@ -366,8 +400,8 @@ git diff --name-only [branch]
 # 比较不同 branch, branch1 为要较新的 branch，branch2 为较旧的 branch
 git diff --name-only branch1..branch2
 git diff branch1..branch2 -- [file path]</pre>
-	<h3>单个文件比较</h3>
-	<pre class="code" data-type="sh">
+    <h3>单个文件比较</h3>
+    <pre class="code" data-type="sh">
 # 比较指定文件在工作区与暂存区/本地 Repository 的差别
 # 如果暂存区有该文件则与暂存区比较，否则与本地 repository 比较
 git diff -- path
@@ -385,7 +419,7 @@ git diff --cached origin/master -- [path]
 # 比较文件工作区与某次提示的区别
 git diff [commit] -- [path]
 
-# 比较不同 commit, commit1 为要较新的 commit，commit2 为较旧的 commit
+# 比较不同 commit, commit1 为要较旧的 commit，commit2 为较新的 commit
 git diff commit1..commit2 -- [path]
 
 # 比较当前 branch 与其它 branch 
@@ -394,8 +428,8 @@ git diff --name-only [branch] -- [path]
 # 比较不同 branch, branch1 为要较新的 branch，branch2 为较旧的 branch
 git diff branch1..branch2 -- [path]</pre>
 
-	<h2>合并代码</h2>
-	<pre class="code" data-type="sh">
+    <h2>合并代码</h2>
+    <pre class="code" data-type="sh">
 # 从 dev1 branch 合并到当前 branch
 git merge dev1
 
@@ -412,15 +446,48 @@ git merge origin/master
 # 合并远端change的指定文件(同样适用于从其它 branch merge 到当前 branch)
 git checkout --patch origin/master [path]
 
+# 忽略远程修改，强行用本地代码覆盖远端文件
+git push -f origin master</pre>
+    <h3>冲突解决</h3>
+    <p>常规情况下，如果是两个人同时修改同一个文件引起的冲突。用文本编辑器查看会看到如下所示的内容</p>
+    <pre>This is the version 1
+<<<<<<< HEAD
+本地你的修改内容
+=======
+远程其他人提交的内容
+>>>>>>> SHA code</pre>
+    <p>需要在编辑器中合并完修改后，使用 git add 命令提交。</p>
+    <p>如果如同前文所示配置了 beyond compare 作为 merge 工具，可以使用命令</p>
+    <pre class="code" data-type="sh">git mergetool [file_name]</pre>
+    <p>合并完成后保存即可</p>
+    <p>使用 beyond compare，会自动在本地生成如下文件：</p>
+    <ul>
+        <li>[file_name].orig: 未合并前的原始文件</li>
+        <li>[file_name]_BACKUP_[SHA]: 未合并前的原始文件再备份, 以防你干蠢事</li>
+        <li>[file_name]_BASE_[SHA]: 本地代码库中未合并前的版本</li>
+        <li>[file_name]_LOCAL_[SHA]: 本地工作区中使用 beyond compare 合并完成后保存的版本</li>
+        <li>[file_name]_REMOTE_[SHA]: 远程版本</li>
+    </ul>
+    <p>也就是说, 合并完成后使用"另存为"功能将 [file_name]_LOCAL_[SHA] 替换当前文件即可. 默认情况下你看不到上面这些文件, 但如果使用 Ctrl + C 来结束命令的话这些文件将会被保留.</p>
+    <p>合并完成后可用如下文件快速删除临时文件</p>
+    <pre class="code" data-type="sh">git status -s | grep ?? | cut -d ' ' -f 2 | xargs rm</pre>
+    <h3>快速解决冲突的情况</h3>
+    <p>但有如下的情况，可以使用以下命令快速解决</p>
+    <pre class="code" data-type="sh">
 # 产生冲突时忽略远程修改，使用本地版本
 git checkout --ours [path]
+
 # 产生冲突时忽略本地修改，使用远程版本
 git checkout --theirs [path]
 
-# 忽略远程修改，强行用本地代码覆盖远端文件
-git push -f origin master</pre>
-	<h2>恢复代码</h2>
-	<pre class="code" data-type="sh">
+# 远端文件已删除
+git rm [path]</pre>
+    <h3>取消合并</h3>
+    <p>有时需要认怂, 放弃本次 merge, 可使用如下命令</p>
+    <pre class="code" data-type="sh">git merge --abort</pre>
+    <p>我们会发现 branch name 从 [branch]|MERGING 恢复成了 [branch]</p>
+    <h2>恢复代码</h2>
+    <pre class="code" data-type="sh">
 # 使用暂存区版本恢复到工作区
 git checkout -- [path]
 
@@ -444,10 +511,64 @@ git reset --hard HEAD^
 # 回滚到指定提交(包括回滚后悔了可以用 SHA 码前滚到原状态^_^)
 git reset --hard [commit]
 
-# 恢复删除后的文件
+# 恢复删除后未提交暂存区的文件
+git checkout -- [path]
+
+# 恢复删除后并已提交暂存区的文件
+git reset -- [path]
+git checkout -- [path]
+
+# 恢复删除后并已提交的文件
 # 获取最后一次提交信息
 git rev-list -n 1 HEAD -- [path]
 # 恢复
 git checkout [deleting_commit]^ -- [path]</pre>
+    <h1>场景演练</h1>
+    <h2>Rollback commit</h2>
+    <p>将 repository 回滚到以前的 commit</p>
+    <pre class="code" data-type="sh"># commit "version 1"
+# commit "version 2"
+# 现在想将 repository 回滚至 version 1
+
+# 将本地 repository 回滚至 commit 前的 add 状态
+git reset [commit for version 1]
+
+# 使用比较工具进行修后后再次提交
+git add .
+git commit -m "rollback"</pre>
+    <p>最后的分支树如下所示</p>
+    <p>
+        <img alt="" src="img/git-rollback01.png" /></p>
+    <h2>批量处理冲突</h2>
+    <p>有时因为回车换行符产生大量的文件冲突, 可使用如下命令解决</p>
+    <pre class="code" data-type="sh">git status -s | grep UU | cut -d ' ' -f 2 | xargs git checkout --theirs
+git status -s | grep UU | cut -d ' ' -f 2 | xargs git add </pre>
+    <h2>更新一个 project 下的所有 repositories</h2>
+    <pre class="code" data-type="sh">folders=$(ls)
+
+for f in ${folders}
+do
+        if [ -d ${f} ]; then
+                echo "processing " ${f}
+                cd  ${f}
+                git pull origin
+                cd ..
+        fi
+done</pre>
+    <h2>误 commit 大文件</h2>
+    <pre class="code" data-type="sh">
+git rm --cached giant_file
+git commit --amend -CHEAD
+git push origin</pre>
+    <h1>异常处理</h1>
+    <h2>fatal: Unable to create '***/.git/index.lock': File exists.</h2>
+    <p>完整异常信息如下所示</p>
+    <pre>fatal: Unable to create '***/.git/index.lock': File exists.
+
+If no other git process is currently running, this probably means a
+git process crashed in this repository earlier. Make sure no other git
+process is running and remove the file manually to continue.</pre>
+    <p>因为上一次 git 处理异常中断而引起，如果确认上次 git 操作已运行完，可以强制删除该 .lock 文件</p>
+    <pre class="code" data-type="sh">rm -f ***/.git/index.lock</pre>
 </body>
 </html>

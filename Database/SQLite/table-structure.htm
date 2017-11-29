@@ -13,6 +13,7 @@
 	<pre class="code" data-type="sql">create table test_table (
 	id integer primary key autoincrement,
 	col_int int,
+	col_datetime datetime,
 	col_string varchar(100))</pre>
 	<p>autoincrement 表示自增，常用于主键。可以使用 last_insert_rowid() 返回当前进程插入的最大值</p>
 	<pre class="code" data-type="sql">select last_insert_rowid() from test_table limit 1</pre>

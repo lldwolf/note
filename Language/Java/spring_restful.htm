@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>Spring - Restful Service</title>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+	<p id="title">Spring - Restful Service</p>
+	<h1>SpringBoot</h1>
+    <h2>Maven步骤</h2>
+    <p>本例参考了 Maven 官方教程 <a href="http://spring.io/guides/gs/rest-service/">Building a RESTful Web Service</a></p>
+    <ol>
+        <li>
+            <p>创建 Maven QuickApp project</p>
+        </li>
+        <li>
+            <p>pom.xml 如下</p>
+            <pre class="code" data-type="xml" data-collapsed="false" title="pom.xml">&lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+	xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;
+	&lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+
+	&lt;groupId&gt;lld&lt;/groupId&gt;
+	&lt;artifactId&gt;test.spring.restful&lt;/artifactId&gt;
+	&lt;version&gt;1.0&lt;/version&gt;
+	&lt;packaging&gt;jar&lt;/packaging&gt;
+
+	&lt;name&gt;test.spring.restful&lt;/name&gt;
+	&lt;url&gt;http://maven.apache.org&lt;/url&gt;
+	&lt;parent&gt;
+		&lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+		&lt;artifactId&gt;spring-boot-starter-parent&lt;/artifactId&gt;
+		&lt;version&gt;1.5.8.RELEASE&lt;/version&gt;
+	&lt;/parent&gt;
+
+	&lt;properties&gt;
+		&lt;project.build.sourceEncoding&gt;UTF-8&lt;/project.build.sourceEncoding&gt;
+		&lt;java.version&gt;1.8&lt;/java.version&gt;
+	&lt;/properties&gt;
+
+	&lt;dependencies&gt;
+		&lt;dependency&gt;
+			&lt;groupId&gt;com.google.code.gson&lt;/groupId&gt;
+			&lt;artifactId&gt;gson&lt;/artifactId&gt;
+		&lt;/dependency&gt;
+
+		&lt;dependency&gt;
+			&lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+			&lt;artifactId&gt;spring-boot-starter-web&lt;/artifactId&gt;
+		&lt;/dependency&gt;
+		&lt;dependency&gt;
+			&lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+			&lt;artifactId&gt;spring-boot-starter-test&lt;/artifactId&gt;
+			&lt;scope&gt;test&lt;/scope&gt;
+		&lt;/dependency&gt;
+		&lt;dependency&gt;
+			&lt;groupId&gt;com.jayway.jsonpath&lt;/groupId&gt;
+			&lt;artifactId&gt;json-path&lt;/artifactId&gt;
+		&lt;/dependency&gt;
+	&lt;/dependencies&gt;
+	&lt;build&gt;
+		&lt;plugins&gt;
+			&lt;plugin&gt;
+				&lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+				&lt;artifactId&gt;spring-boot-maven-plugin&lt;/artifactId&gt;
+			&lt;/plugin&gt;
+		&lt;/plugins&gt;
+	&lt;/build&gt;
+&lt;/project&gt;
+</pre>
+            <p>说明：使用了 spring-boot-maven-plugin 表示将使用 Spring Boot 启动</p>
+        </li>
+        <li>
+            <p>创建 Model 类</p>
+            <pre class="code" data-type="java" data-collapsed="false" title="User.java">package lld.test.spring.restful.model;
+
+public class User {
+	private int id;
+	private String name;
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	@Override
+	public String toString() {
+		return "User [id=" + id + ", name=" + name + "]";
+	}
+
+}
+</pre>
+        </li>
+        <li>
+            <p>创建 Controller 类</p>
+            <pre class="code" data-type="java" data-collapsed="false" title="UserController.java">package lld.test.spring.restful.controller;
+
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.jayway.jsonpath.spi.json.GsonJsonProvider;
+
+import lld.test.spring.restful.model.User;
+
+@RestController
+public class UserController {
+	@RequestMapping(&quot;/users&quot;)
+	public String listUsers() {
+		List&lt;User&gt; users = new ArrayList&lt;User&gt;();
+		
+		for (int i = 1; i &lt; 5; i++) {
+			User user = new User();
+			user.setId(i);
+			user.setName(&quot;User &quot; + i);
+			users.add(user);
+		}
+		
+		String result = new GsonJsonProvider().toJson(users);
+		return result;
+	}
+
+}
+</pre>
+            <p>RequestMapping Annotation 表示将处理所有方式的 /users URL 请求，可以加入 method=GET 来限制只接受 GET 请求</p>
+            <pre class="code" data-type="java">@RequestMapping(value = "/users", method = RequestMethod.GET)</pre>
+        </li>
+        <li>
+            <p>创建启动类</p>
+            <pre class="code" data-type="java" data-collapsed="false" title="App.java">package lld.test.spring.restful;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class App 
+{
+    public static void main( String[] args )
+    {
+        SpringApplication.run(App.class, args);
+        
+    }
+}
+</pre>
+            <p>@SpringBootApplication 可以理解成如下 Annotation 的集合</p>
+            <ul>
+                <li>@Configuration</li>
+                <li>@EnableAutoConfiguration</li>
+                <li>@ComponentScan, 这也意味着我们上面的 Controller 类要与入口启动类在同一个主 package 下</li>
+            </ul>
+        </li>
+        <li>
+            <p>编译</p>
+            <pre class="code" data-type="sh">mvn clean package -Dmaven.test.skip=true</pre>
+        </li>
+        <li>
+            <p>启动</p>
+            <pre class="code" data-type="sh">java -jar target/test.spring.restful-1.0.jar</pre>
+        </li>
+        <li>
+            <p>测试，在浏览器中输入：localhost:8080/users</p>
+            <p>将输出 JSON 字符串</p>
+        </li>
+    </ol>
+    <h1>Deploy SpringBoot App on Tomcat</h1>
+    <p>如果想把 SpringBoot 应用部署在现有的 Tomcat server 上，需要在上面的例子中做如下改动</p>
+    <ol>
+        <li>
+            <p>在 pom.xml 中把打包类型从 jar 改为 war</p>
+        </li>
+        <li>
+            <p>改动 App.java 如下所示，将其基类改为 SpringBootServletInitializer</p>
+            <pre class="code" data-type="java" data-collapsed="false" title="App.java">package lld.test.spring.restful;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.boot.web.support.SpringBootServletInitializer;
+
+@SpringBootApplication
+public class App extends SpringBootServletInitializer
+{
+	private final static Class&lt;?&gt; appClass = App.class; 
+	
+    public static void main( String[] args )
+    {
+        SpringApplication.run(appClass, args);
+    }
+    
+    @Override
+    protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
+    	return builder.sources(appClass);
+    }
+}
+</pre>
+        </li>
+    </ol>
+    <p>打包部署即可</p>
+    <p>而且，也仍然可以直接从命令行启动服务</p>
+    <pre class="code" data-type="sh">java -jar target/test.spring.restful-1.0.war</pre>
+</body>
+</html>

@@ -48,6 +48,21 @@
         <li>在此使用的路径为对应源代码路径的相对路径</li>
         <li>对于 exclude 的类，如果它被其它类引用了，exclude 将失效（maven 还是很聪明的）。所以需要将引用它的类一块儿放在 exclude 列表中才行。</li>
     </ul>
+    <h1>如何引用本地 jar 包</h1>
+    <p>对于不在仓库中的 jar 包引用，可以使用如下两种方法</p>
+    <p>注册 jar 包到本地仓库，然后就可以在 pom.xml 中正常引用，命令如下所示：</p>
+    <pre class="code" data-type="sh">mvn install:install-file -Dfile=[jar file path] -DgroupId=[group id] -DartifactId=[artifact id] -Dversion=[version] -Dpackaging=jar -DgeneratePom=true</pre>
+    <p>也可以在 pom.xml 直接使用绝对路径引用这些 jar 包并将其引用范围设为 system 如下所示：</p>
+    <pre class="code" data-type="xml">&lt;dependency&gt;
+	&lt;groupId&gt;com.roufid.tutorials&lt;/groupId&gt;
+	&lt;artifactId&gt;example-app&lt;/artifactId&gt;
+	&lt;version&gt;1.0&lt;/version&gt;
+	&lt;scope&gt;system&lt;/scope&gt;
+	&lt;systemPath&gt;${basedir}/lib/yourJar.jar&lt;/systemPath&gt;
+&lt;/dependency&gt;</pre>
+    <h1>如何手工指定 settings.xml 路径</h1>
+    <pre class="code" data-type="sh">mvn clean package -s settings.xml</pre>
+    <p>-s 是 --settings 的缩写</p>
     <h1>如何手工指定 src/resource 路径</h1>
     <p>resource 可指定多个路径，默认 src 路径只有一个</p>
     <pre class="code" data-type="xml">
@@ -143,6 +158,8 @@
     <p>使用如下命令编译并打包</p>
     <pre class="code" data-type="sh">mvn clean compile assembly:single</pre>
     <p>必须先 compile 否则你自己的代码不会在结果中</p>
+    <h1>如何指定其它 pom.xml</h1>
+    <pre class="code" data-type="sh">mvn -f otherPomFile.xml</pre>
     <h1>引用 Servlet</h1>
     <p>若需开发 servlet 应用，可使用如下方式引用 Tomcat 提供的 jar 包</p>
     <pre class="code" data-type="xml">
@@ -159,5 +176,65 @@
     &lt;scope&gt;provided&lt;/scope&gt;
 &lt;/dependency&gt;
 </pre>
+    <h1>Maven 有哪些内置属性</h1>
+    <table style="width: 800px">
+        <tr>
+            <th>属性</th>
+            <th>说明</th>
+        </tr>
+        <tr>
+            <td>${basedir}</td>
+            <td>项目的根目录，即包含pom.xml文件的目录</td>
+        </tr>
+        <tr>
+            <td>${version}</td>
+            <td>项目版本号</td>
+        </tr>
+        <tr>
+            <td>${project.basedir}</td>
+            <td>同 ${basedir}</td>
+        </tr>
+        <tr>
+            <td>${project.baseUri}</td>
+            <td>项目文件地址</td>
+        </tr>
+        <tr>
+            <td>${maven.build.timestamp}</td>
+            <td>项目构建时间</td>
+        </tr>
+        <tr>
+            <td>${maven.build.timestamp.format}</td>
+            <td>属性${maven.build.timestamp}的展示格式，默认值为yyyyMMdd-HHmm，可自定义格式，在 pom.xml 的 properties 中添加 maven.build.timestamp.format 指定</td>
+        </tr>
+        <tr>
+            <td>${project.build.directory}</td>
+            <td>主源码路径</td>
+        </tr>
+        <tr>
+            <td>${project.build.sourceEncoding}</td>
+            <td>主源码的编码格式</td>
+        </tr>
+        <tr>
+            <td>${project.build.sourceDirectory}</td>
+            <td>主源码的路径</td>
+        </tr>
+        <tr>
+            <td>${project.build.finalName}</td>
+            <td>输出文件名称</td>
+        </tr>
+        <tr>
+            <td>${project.vesion}</td>
+            <td>同 ${version}</td>
+        </tr>
+        <tr>
+            <td>${settings.localRepository}</td>
+            <td>本地仓库的地址</td>
+        </tr>
+        <tr>
+            <td>${env.JAVA_HOME}</td>
+            <td>JAVA_HOME环境变量的值</td>
+        </tr>
+    </table>
+    <p>可以使用mvn help:system命令可查看所有 env.* 环境变量</p>
 </body>
 </html>
