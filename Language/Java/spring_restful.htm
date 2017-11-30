@@ -213,5 +213,56 @@ public class App extends SpringBootServletInitializer
     <p>打包部署即可</p>
     <p>而且，也仍然可以直接从命令行启动服务</p>
     <pre class="code" data-type="sh">java -jar target/test.spring.restful-1.0.war</pre>
+	
+	<h1>修改端口号</h1>
+	<h2>实现 EmbeddedServletContainerCustomizer 接口</h2>
+	<p>将启动类修改如下，即可实现从 9021 启动内置 Tomcat</p>
+	<pre class="code" data-type="java" data-collapsed="false" title="App.java">
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.embedded.ConfigurableEmbeddedServletContainer;
+import org.springframework.boot.context.embedded.EmbeddedServletContainerCustomizer;
+
+@SpringBootApplication
+public class App implements EmbeddedServletContainerCustomizer {
+    public static void main(String[] args) {
+        SpringApplication.run(App.class, args);
+    }
+
+    public void customize(ConfigurableEmbeddedServletContainer container) {
+        container.setPort(9021);
+    }
+
+}</pre>
+	<h2>EmbeddedServletContainerFactory</h2>
+	<pre>import java.util.concurrent.TimeUnit;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.embedded.EmbeddedServletContainerFactory;
+import org.springframework.boot.context.embedded.tomcat.TomcatEmbeddedServletContainerFactory;
+import org.springframework.boot.web.servlet.ErrorPage;
+import org.springframework.context.annotation.Bean;
+import org.springframework.http.HttpStatus;
+
+@SpringBootApplication
+public class App {
+    public static void main(String[] args) {
+        SpringApplication.run(App.class, args);
+    }
+
+    @Bean
+    public EmbeddedServletContainerFactory servletContainer() {
+        TomcatEmbeddedServletContainerFactory factory = new TomcatEmbeddedServletContainerFactory();
+        factory.setPort(9021);
+        factory.setSessionTimeout(10, TimeUnit.MINUTES);
+        factory.addErrorPages(new ErrorPage(HttpStatus.NOT_FOUND, "/notfound.htm"));
+        return factory;
+    }
+
+}</pre>
+	<h2>application.properties</h2>
+	<p>Spring Boot默认配置文件为CLASSPATH下的application.properties</p>
+	<p>在application.properties中添加server.port=9021，可将tomcat默认端口号修改为8011</p>
 </body>
 </html>
