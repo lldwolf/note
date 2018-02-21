@@ -8,8 +8,9 @@
 
 <body>
 	<p id="title">Spring - Restful Service</p>
-	<h1>SpringBoot</h1>
-    <h2>Maven步骤</h2>
+	<h1>SpringBoot Service 实例</h1>
+    <p>本例将实现一个简单的 RESTful service，返回一个用户列表，并以 Json 格式返回</p>
+    <h2>Service 实现</h2>
     <p>本例参考了 Maven 官方教程 <a href="http://spring.io/guides/gs/rest-service/">Building a RESTful Web Service</a></p>
     <ol>
         <li>
@@ -17,8 +18,8 @@
         </li>
         <li>
             <p>pom.xml 如下</p>
-            <pre class="code" data-type="xml" data-collapsed="false" title="pom.xml">&lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
-	xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;
+            <pre class="code" data-type="xml" data-collapsed="false" title="pom.xml">&lt;project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"&gt;
 	&lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
 
 	&lt;groupId&gt;lld&lt;/groupId&gt;
@@ -105,8 +106,8 @@ public class User {
         </li>
         <li>
             <p>创建 Controller 类</p>
-            <pre class="code" data-type="java" data-collapsed="false" title="UserController.java">package lld.test.spring.restful.controller;
-
+            <pre class="code" data-type="java" data-collapsed="false" title="UserController.java">
+package lld.demo.service.controller;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -114,29 +115,27 @@ import java.util.List;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.jayway.jsonpath.spi.json.GsonJsonProvider;
+import com.google.gson.Gson;
 
-import lld.test.spring.restful.model.User;
+import lld.demo.service.model.User;
 
 @RestController
 public class UserController {
-	@RequestMapping(&quot;/users&quot;)
+	@RequestMapping("/users")
 	public String listUsers() {
-		List&lt;User&gt; users = new ArrayList&lt;User&gt;();
-		
+		List&lt;User&gt; users = new ArrayList&lt;&gt;();
+
 		for (int i = 1; i &lt; 5; i++) {
 			User user = new User();
 			user.setId(i);
-			user.setName(&quot;User &quot; + i);
+			user.setName("User " + i);
 			users.add(user);
 		}
-		
-		String result = new GsonJsonProvider().toJson(users);
-		return result;
+
+		return new Gson().toJson(users);
 	}
 
-}
-</pre>
+}</pre>
             <p>RequestMapping Annotation 表示将处理所有方式的 /users URL 请求，可以加入 method=GET 来限制只接受 GET 请求</p>
             <pre class="code" data-type="java">@RequestMapping(value = "/users", method = RequestMethod.GET)</pre>
         </li>
@@ -177,6 +176,222 @@ public class App
             <p>将输出 JSON 字符串</p>
         </li>
     </ol>
+    <h2>Unit Test</h2>
+    <p>本例演示了如何使用 Unit Test 来测试服务</p>
+    <p>本例同时演示了 ArrayList 类型如何从 JSON 字符串反序列化</p>
+    <pre class="code" data-type="java" data-collapsed="false" title="UserServiceTest.java">
+package lld.demo_service;
+
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.http.MediaType;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.util.Assert;
+
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import lld.demo.service.controller.UserController;
+import lld.demo.service.model.User;
+
+@RunWith(SpringJUnit4ClassRunner.class)
+public class UserServiceTest {
+
+	private MockMvc mvc;
+
+	@Before
+	public void setup() throws Exception {
+		mvc = MockMvcBuilders.standaloneSetup(new UserController()).build();
+	}
+
+	@Test
+	public void listUsers() throws Exception {
+		MvcResult result = mvc.perform(MockMvcRequestBuilders.get("/users").accept(MediaType.APPLICATION_JSON)).andReturn();
+		String resultString = result.getResponse().getContentAsString();
+		System.out.println("********************" + resultString);
+		Type listType = new TypeToken&lt;ArrayList&lt;User&gt;&gt;() {
+		}.getType();
+		ArrayList&lt;User&gt; users = new Gson().fromJson(resultString, listType);
+
+		for (User user : users) {
+			Assert.notNull(user, "user object should not be null!");
+			System.out.println(user);
+		}
+
+		mvc.perform(MockMvcRequestBuilders.get("/users").accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk())
+				.andExpect(content().string(notNullValue()));
+	}
+}
+</pre>
+    <h2>Client</h2>
+    <h3>Spring Cloud RestTemplate</h3>
+    <p>本例演示了如何使用 Spring Cloud RestTemplate 访问该服务, 步骤如下</p>
+    <ol>
+        <li>
+            <p>新建 Maven project, 使用 quick-start archetype</p>
+        </li>
+        <li>
+            <p>基于 Sping Boot 创建项目，pom.xml 如下所示</p>
+            <pre class="code" data-type="xml" data-collapsed="false" title="pom.xml">
+&lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+	xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;
+	&lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+
+	&lt;groupId&gt;lld&lt;/groupId&gt;
+	&lt;artifactId&gt;demo.client&lt;/artifactId&gt;
+	&lt;version&gt;0.0.1-SNAPSHOT&lt;/version&gt;
+	&lt;packaging&gt;jar&lt;/packaging&gt;
+
+	&lt;name&gt;demo.client&lt;/name&gt;
+	&lt;url&gt;http://maven.apache.org&lt;/url&gt;
+
+	&lt;parent&gt;
+		&lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+		&lt;artifactId&gt;spring-boot-starter-parent&lt;/artifactId&gt;
+		&lt;version&gt;1.5.4.RELEASE&lt;/version&gt;
+	&lt;/parent&gt;
+
+	&lt;properties&gt;
+		&lt;project.build.sourceEncoding&gt;UTF-8&lt;/project.build.sourceEncoding&gt;
+	&lt;/properties&gt;
+
+	&lt;dependencies&gt;
+		&lt;dependency&gt;
+			&lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+			&lt;artifactId&gt;spring-boot-starter-web&lt;/artifactId&gt;
+		&lt;/dependency&gt;
+	&lt;/dependencies&gt;
+&lt;/project&gt;
+</pre>
+        </li>
+        <li>
+            <p>代码如下：</p>
+            <pre class="code" data-type="java" data-collapsed="false" title="Client.java">
+private static void listUsersRestTemplate() {
+	try {
+		String url = &quot;http://localhost:45001/users&quot;;
+		RestTemplate restTemplate = new RestTemplate();
+		ResponseEntity&lt;String&gt; responseEntity = restTemplate.getForEntity(url, String.class);
+		String users = responseEntity.getBody();
+		logger.info(&quot;result: {}&quot;, users);
+	} catch (Exception e) {
+		logger.error(e.toString());
+	}
+}
+</pre>
+        </li>
+        <li>
+            <p></p>
+        </li>
+    </ol>
+    <h3>Java Core</h3>
+    <p>本例演示了如何使用 Java Core Code 访问该服务, 步骤如下</p>
+    <ol>
+        <li>
+            <p>新建 Maven project, 使用 quick-start archetype</p>
+        </li>
+        <li>
+            <p>pom.xml 不需要修改，如下所示：</p>
+            <pre class="code" data-type="xml" data-collapsed="false" title="pom.xml">
+&lt;project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"&gt;
+  &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+
+  &lt;groupId&gt;com.citi.credit.loans&lt;/groupId&gt;
+  &lt;artifactId&gt;demo.client&lt;/artifactId&gt;
+  &lt;version&gt;0.0.1-SNAPSHOT&lt;/version&gt;
+  &lt;packaging&gt;jar&lt;/packaging&gt;
+
+  &lt;name&gt;demo.client&lt;/name&gt;
+  &lt;url&gt;http://maven.apache.org&lt;/url&gt;
+
+  &lt;properties&gt;
+    &lt;project.build.sourceEncoding&gt;UTF-8&lt;/project.build.sourceEncoding&gt;
+  &lt;/properties&gt;
+
+  &lt;dependencies&gt;
+    &lt;dependency&gt;
+      &lt;groupId&gt;junit&lt;/groupId&gt;
+      &lt;artifactId&gt;junit&lt;/artifactId&gt;
+      &lt;version&gt;3.8.1&lt;/version&gt;
+      &lt;scope&gt;test&lt;/scope&gt;
+    &lt;/dependency&gt;
+  &lt;/dependencies&gt;
+&lt;/project&gt;
+</pre>
+        </li>
+        <li>
+            <p>建立访问 Service 的代理类</p>
+            <pre class="code" data-type="java" data-collapsed="false" title="ServiceProxy.java">
+package com.citi.credit.loans.demo.client.util;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
+public class ServiceProxy {
+	public static String get(String urlSrv) throws Exception {
+		URL url = new URL(urlSrv);
+		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+		conn.setRequestMethod("GET");
+		conn.setRequestProperty("Accept", "application/json");
+
+		if (conn.getResponseCode() != 200) {
+			throw new Exception("Failed : HTTP error code : " + conn.getResponseCode());
+		}
+
+		BufferedReader br = new BufferedReader(new InputStreamReader(
+				(conn.getInputStream())));
+
+		String output;
+		StringBuilder buffer = new StringBuilder();
+		
+		while ((output = br.readLine()) != null) {
+			buffer.append(output);
+		}
+
+		conn.disconnect();
+		
+		return buffer.toString();
+	}
+
+}
+</pre>
+        </li>
+        <li>
+            <p>访问 Service，如下所示：</p>
+            <pre class="code" data-type="java" data-collapsed="false" title="App.java">
+package com.citi.credit.loans.demo.client;
+
+import com.citi.credit.loans.demo.client.util.ServiceProxy;
+
+public class App {
+	public static void main(String[] args) {
+		try {
+			String users = ServiceProxy.get("http://localhost:45001/users");
+			System.out.println("result: " + users);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+}
+</pre>
+        </li>
+    </ol>
     <h1>Deploy SpringBoot App on Tomcat</h1>
     <p>如果想把 SpringBoot 应用部署在现有的 Tomcat server 上，需要在上面的例子中做如下改动</p>
     <ol>
@@ -213,9 +428,23 @@ public class App extends SpringBootServletInitializer
     <p>打包部署即可</p>
     <p>而且，也仍然可以直接从命令行启动服务</p>
     <pre class="code" data-type="sh">java -jar target/test.spring.restful-1.0.war</pre>
-	
-	<h1>修改端口号</h1>
-	<h2>实现 EmbeddedServletContainerCustomizer 接口</h2>
+	<h1>配置</h1>
+    <h2>Overview</h2>
+    <p>SpringBoot 支持如下的配置方式</p>
+    <ul>
+        <li>application.properties</li>
+        <li>application.yml</li>
+        <li>bootstrap.properties</li>
+        <li>bootstrap.yml</li>
+    </ul>
+    <p>bootstrap 配置会由 Spring ApplicationContext 的父类调用，因此先于 application 配置。现实中我们一般只需使用 application 配置即可。</p>
+    <p>配置文件置于 resources 根目录下</p>
+	<h2>修改端口号</h2>
+    <h3>配置文件</h3>
+    <p>这是最常用的配置方式，在 CLASSPATH 下的 application.properties/yml 中添加如下行，即可修改为指定的端口号</p>
+    <pre class="code" data-type="properties">server.port: 9021</pre>
+
+	<h3>实现 EmbeddedServletContainerCustomizer 接口</h3>
 	<p>将启动类修改如下，即可实现从 9021 启动内置 Tomcat</p>
 	<pre class="code" data-type="java" data-collapsed="false" title="App.java">
 import org.springframework.boot.SpringApplication;
@@ -234,8 +463,8 @@ public class App implements EmbeddedServletContainerCustomizer {
     }
 
 }</pre>
-	<h2>EmbeddedServletContainerFactory</h2>
-	<pre>import java.util.concurrent.TimeUnit;
+	<h3>EmbeddedServletContainerFactory</h3>
+	<pre class="code" data-type="java" data-collapsed="false" title="App.java">import java.util.concurrent.TimeUnit;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -261,8 +490,429 @@ public class App {
     }
 
 }</pre>
-	<h2>application.properties</h2>
-	<p>Spring Boot默认配置文件为CLASSPATH下的application.properties</p>
-	<p>在application.properties中添加server.port=9021，可将tomcat默认端口号修改为8011</p>
+    <a id="logback"></a>
+    <h2>日志配置</h2>
+    <p>基于 Logback 实现日志如下</p>
+    <ol>
+        <li>
+            <p>在 application.properties/yml 中设置如下：</p>
+            <pre class="code" data-type="properties">logging.config: classpath:logback.xml</pre>
+        </li>
+        <li>
+            <p>在同目录下配置 logback.xml 如下所示，将同时打印到日志文件和 console 屏幕</p>
+            <p>本例实现了常见的 log 配置，包括如下特性</p>
+            <ul>
+                <li>如使用文件记录 log</li>
+                <li>如何将 log 打印到默认终端 (console)</li>
+                <li>日志文件按天记录为不同的文件</li>
+                <li>日志文件最多保存 30 天且总大小不超过 3G</li>
+                <li>常见的日志格式配置</li>
+                <li>在终端打印日志时打印相对序号</li>
+            </ul>
+            <p><a href="https://logback.qos.ch/manual/appenders.html">更详细的 logback 配置教程</a></p>
+            <pre class="code" data-type="xml" data-collapsed="false" title="logback.xml">
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;configuration&gt;
+	&lt;include resource="org/springframework/boot/logging/logback/defaults.xml" /&gt;
+	&lt;include resource="org/springframework/boot/logging/logback/file-appender.xml" /&gt;
+	&lt;appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender"&gt;
+		&lt;file&gt;/tmp/demo_server.log&lt;/file&gt;
+		&lt;rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy"&gt;
+			&lt;!-- daily rollover --&gt;
+			&lt;fileNamePattern&gt;/tmp/demo_server.%d{yyyy-MM-dd}.log&lt;/fileNamePattern&gt;
+
+			&lt;!-- keep 30 days' worth of history capped at 3GB total size --&gt;
+			&lt;maxHistory&gt;30&lt;/maxHistory&gt;
+			&lt;totalSizeCap&gt;3GB&lt;/totalSizeCap&gt;
+		&lt;/rollingPolicy&gt;
+		&lt;append&gt;true&lt;/append&gt;
+		&lt;encoder&gt;
+			&lt;pattern&gt;%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n&lt;/pattern&gt;
+		&lt;/encoder&gt;
+	&lt;/appender&gt;
+
+	&lt;appender name="console" class="ch.qos.logback.core.ConsoleAppender"&gt;
+		&lt;encoder&gt;
+			&lt;pattern&gt;%-4relative [%thread] %-5level %logger{35} - %msg%n&lt;/pattern&gt;
+		&lt;/encoder&gt;
+	&lt;/appender&gt;
+	&lt;root level="INFO"&gt;
+		&lt;appender-ref ref="FILE" /&gt;
+		&lt;appender-ref ref="console" /&gt;
+	&lt;/root&gt;
+&lt;/configuration&gt;
+</pre>
+        </li>
+        <li>
+            <p>在 Java 中调用如下所示：</p>
+            <p>本例同时展示了如何使用占位符来增加日志信息的可读性</p>
+            <pre class="code" data-type="java" data-collapsed="false" title="UserController.java">
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+...
+
+static final Logger LOG = LoggerFactory.getLogger(UserController.class);
+...
+LOG.info("Start listUsers at {}", LocalDateTime.now());
+</pre>
+        </li>
+    </ol>
+    <a id="spring-profile-setup"></a>
+    <h2>profile 配置</h2>
+    <p>本例演示了如何为不同的环境进行不同的配置，例如为 DEV 环境(开发环境)设置不同的端口号，如下所示：</p>
+    <h3>单一配置文件</h3>
+    <p>下例说明了如何将所有的配置都放在同一配置文件中</p>
+    <pre class="code" data-type="properties" data-collapsed="false" title="applicaton.yml">
+server.port: 45001
+
+#### Specific Environment ####
+---
+spring.profiles: dev
+server.port: 45002
+---
+spring.profiles: uat
+server.port: 45003
+</pre>
+    <p>默认使用 45001 端口，如果启用  dev 环境，则使用如下命令启动：</p>
+    <pre class="code" data-type="sh">java -jar -Dspring.profiles.active=dev target\demo_service-0.0.1-SNAPSHOT.jar</pre>
+    <p class="note">注意：一定要先写 -Dspring.profiles.active  参数，不能放在 jar 文件后面，不小心就踩了一个坑。</p>
+    <h3>为不同环境设置不同配置文件</h3>
+    <p>文件名规范为 application-{profile}.yml</p>
+    <p>例如，创建  application-production.yml 如下</p>
+    <pre class="code" data-type="properties" data-collapsed="false" title="applicaton-production.yml">
+server.port: 45004
+</pre>
+    <p>则使用参数 -Dspring.profiles.active=production 启动后则会启动 45004 端口</p>
+    <h1>更多场景</h1>
+    <h2>使用 POJO 作为接口参数</h2>
+    <p>前面的例子我们使用了简单的 String 类型作为接口参数。借助 Spring MVC 我们可以使用 POJO 作为接口参数，如下所示：</p>
+    <h3>Controller</h3>
+    <pre class="code" data-type="java" data-collapsed="false" title="UserController.java">
+@RequestMapping("/update-user")
+public String updateUser(@RequestBody User user) {
+	user.setName("#" + user.getName() + "#");
+	return new Gson().toJson(user);
+}
+</pre>
+    <h3>Unit Test - JSON String</h3>
+    <pre class="code" data-type="java" data-collapsed="false" title="UserServiceTest.java">
+@Test
+public void updateUser() throws Exception {
+	User user = new User();
+	user.setId(1000);
+	user.setName("SB");
+		
+	MvcResult result = mvc.perform(MockMvcRequestBuilders.post("/update-user")
+			.contentType(MediaType.APPLICATION_JSON)
+			.content(new Gson().toJson(user))
+			.accept(MediaType.APPLICATION_JSON))
+			.andExpect(status().isOk())
+			.andReturn();
+	System.out.println("*******" + result.getResponse().getContentAsString());
+}
+</pre>
+    <h3>Unit Test - Bytes</h3>
+    <p>还可以使用 byte[] 传递对象，首先，定义一个工具类，能将对象转为 byte[]，如下所示：</p>
+    <pre class="code" data-type="java" data-collapsed="false" title="TestUtil.java">
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.http.MediaType;
+
+import java.io.IOException;
+import java.nio.charset.Charset;
+
+public class TestUtil {
+
+	public static final MediaType APPLICATION_JSON_UTF8 = new MediaType(MediaType.APPLICATION_JSON.getType(),
+			MediaType.APPLICATION_JSON.getSubtype(), Charset.forName("utf8"));
+
+	public static byte[] convertObjectToJsonBytes(Object object) throws IOException {
+		ObjectMapper mapper = new ObjectMapper();
+		mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+		return mapper.writeValueAsBytes(object);
+	}
+
+	public static String createStringWithLength(int length) {
+		StringBuilder builder = new StringBuilder();
+
+		for (int index = 0; index < length; index++) {
+			builder.append("a");
+		}
+
+		return builder.toString();
+	}
+}
+</pre>
+    <p>Unit Test 如下所示</p>
+    <pre class="code" data-type="java" data-collapsed="false" title="UserServiceTest.java">
+        	@Test
+	public void updateUser() throws Exception {
+		User user = new User();
+		user.setId(1000);
+		user.setName("SB");
+		
+		MvcResult result = mvc.perform(MockMvcRequestBuilders.post("/update-user")
+				.contentType(MediaType.APPLICATION_JSON_UTF8)
+				.content(TestUtil.convertObjectToJsonBytes(user))
+				.accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk())
+				.andReturn();
+		System.out.println("*******" + result.getResponse().getContentAsString());
+	}
+</pre>
+    <h3>Client</h3>
+    <p>为了适应更复杂的情况，在此将其改为 Spring Boot 应用</p>
+    <pre class="code" data-type="xml" data-collapsed="false" title="pom.xml">
+&lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+	xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;
+	&lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+
+	&lt;groupId&gt;lld&lt;/groupId&gt;
+	&lt;artifactId&gt;demo.client&lt;/artifactId&gt;
+	&lt;version&gt;0.0.1-SNAPSHOT&lt;/version&gt;
+	&lt;packaging&gt;jar&lt;/packaging&gt;
+
+	&lt;name&gt;demo.client&lt;/name&gt;
+	&lt;url&gt;http://maven.apache.org&lt;/url&gt;
+
+	&lt;parent&gt;
+		&lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+		&lt;artifactId&gt;spring-boot-starter-parent&lt;/artifactId&gt;
+		&lt;version&gt;1.5.4.RELEASE&lt;/version&gt;
+	&lt;/parent&gt;
+
+	&lt;properties&gt;
+		&lt;project.build.sourceEncoding&gt;UTF-8&lt;/project.build.sourceEncoding&gt;
+	&lt;/properties&gt;
+
+	&lt;dependencies&gt;
+		&lt;dependency&gt;
+			&lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+			&lt;artifactId&gt;spring-boot-starter&lt;/artifactId&gt;
+		&lt;/dependency&gt;
+		&lt;dependency&gt;
+			&lt;groupId&gt;org.apache.httpcomponents&lt;/groupId&gt;
+			&lt;artifactId&gt;httpclient&lt;/artifactId&gt;
+		&lt;/dependency&gt;
+		&lt;dependency&gt;
+			&lt;groupId&gt;com.google.code.gson&lt;/groupId&gt;
+			&lt;artifactId&gt;gson&lt;/artifactId&gt;
+		&lt;/dependency&gt;
+	&lt;/dependencies&gt;
+&lt;/project&gt;
+</pre>
+    <p>加入 log 支持</p>
+    <pre class="code" data-type="properties" data-collapsed="false" title="application.yml">
+logging.config: classpath:logback.xml
+</pre>
+    <p>logback.xml 抄 Server 端配置即可</p>
+    <h4>RestTemplate 实现</h4>
+    <p>使用 RestTemplate 在传递对象参数，需要使用 postForObject，如下所示:</p>
+    <pre class="code" data-type="java" data-collapsed="false" title="DemoClient.java">
+private static void updateUserRestTemplate() {
+	try {
+		User user = new User();
+		user.setId(1000);
+		user.setName("SB");
+
+		String url = "http://localhost:45001/update-user";
+		RestTemplate restTemplate = new RestTemplate();
+		String resultString = restTemplate.postForObject(url, user, String.class);
+		logger.info("update result: {}", resultString);
+	} catch (Exception e) {
+		logger.error(e.toString());
+	}
+}
+</pre>
+    <h4>HttpClient 实现</h4>
+    <p>使用 HttpClient 访问，如下所示：</p>
+    <pre class="code" data-type="java" data-collapsed="false" title="DemoClient.java">
+private static void updateUser() {
+	try {
+		User user = new User();
+		user.setId(1000);
+		user.setName("SB");
+
+		String url = "http://localhost:45001/update-user";
+		HttpPost proxy = new HttpPost(url);
+		HttpClient httpClient = HttpClientBuilder.create().build();
+		logger.info("Send message to url {}", url);
+		StringEntity params = new StringEntity(new Gson().toJson(user));
+		proxy.addHeader("content-type", "application/json");
+		proxy.setEntity(params);
+		HttpResponse response = httpClient.execute(proxy);
+		String resultString = EntityUtils.toString(response.getEntity());
+		logger.info("update result: {}", resultString);
+	} catch (Exception e) {
+		logger.error(e.toString());
+	}
+}
+</pre>
+    <h2>POJO 参数校验</h2>
+    <p>例如，需要对 User.name 校验不能为空，可进入如下调整</p>
+    <h3>POJO 修改</h3>
+    <p>在 User 类的 name 属性加入如下的 Annotation</p>\
+    <pre class="code" data-type="java" data-collapsed="false" title="User.java">
+@NotNull(message = "User name must not be null!")
+@NotEmpty(message = "User name must not be empty!")
+private String name;
+</pre>
+    <h3>Controller 修改</h3>
+    <p>在参数声明中加入 @Valid Annotation</p>
+    <pre class="code" data-type="java" data-collapsed="false" title="UserController.java">
+@RequestMapping("/update-user")
+public String updateUser(<span class="emphasis">@Valid</span> @RequestBody User user) {
+</pre>
+    <h3>Unit Test</h3>
+    <p>修改如下</p>
+    <pre class="code" data-type="java" data-collapsed="false" title="UserServiceTest.java">
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import org.junit.Test;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.util.Assert;
+
+...
+
+@Test
+public void updateUserValid() throws Exception {
+	User user = new User();
+	user.setId(1000);
+	user.setName("");
+		
+	MvcResult result = mvc.perform(post("/update-user")
+			.contentType(MediaType.APPLICATION_JSON_UTF8)
+			.content(new Gson().toJson(user)))
+			.andDo(print())
+			.andExpect(status().isBadRequest())
+			.andReturn();
+	Exception expectedException = result.getResolvedException();
+	Assert.notNull(expectedException, "Didn't get expected exception!");
+	System.out.println(expectedException.getMessage());
+	Assert.isTrue(expectedException.getMessage().contains("User name must not be empty!"), "Error message is wrong");
+}
+</pre>
+    <p class="note">注意使用了 andDo(print()) 来打印返回结果以帮助分析，结果如下所示：</p>
+    <pre class="code" data-type="log">MockHttpServletRequest:
+      HTTP Method = POST
+      Request URI = /update-user
+       Parameters = {}
+          Headers = {Content-Type=[application/json;charset=UTF-8]}
+
+Handler:
+             Type = lld.demo.service.controller.UserController
+           Method = public java.lang.String lld.demo.service.controller.UserController.updateUser(lld.demo.service.model.User)
+
+Async:
+    Async started = false
+     Async result = null
+
+Resolved Exception:
+             Type = org.springframework.web.bind.MethodArgumentNotValidException
+
+ModelAndView:
+        View name = null
+             View = null
+            Model = null
+
+FlashMap:
+       Attributes = null
+
+MockHttpServletResponse:
+           Status = 400
+    Error message = null
+          Headers = {}
+     Content type = null
+             Body = 
+    Forwarded URL = null
+   Redirected URL = null
+          Cookies = []
+</pre>
+    <h3>Client</h3>
+    <p>Client 端可以使用如下方式来解析错误</p>
+    <p>首先，我们可以试图查看返回的结果字符串，大概如下所示：</p>
+    <pre class="code" data-type="log">{
+  "timestamp" : 1515667644105,
+  "status" : 400,
+  "error" : "Bad Request",
+  "exception" : "org.springframework.web.bind.MethodArgumentNotValidException",
+  "errors" : [ {
+    "codes" : [ "NotEmpty.user.name", "NotEmpty.name", "NotEmpty.java.lang.String", "NotEmpty" ],
+    "arguments" : [ {
+      "codes" : [ "user.name", "name" ],
+      "arguments" : null,
+      "defaultMessage" : "name",
+      "code" : "name"
+    } ],
+    "defaultMessage" : "User name must not be empty!",
+    "objectName" : "user",
+    "field" : "name",
+    "rejectedValue" : "",
+    "bindingFailure" : false,
+    "code" : "NotEmpty"
+  } ],
+  "message" : "Validation failed for object='user'. Error count: 1",
+  "path" : "/update-user"
+}</pre>
+    <p>然后为了使用方便，我们添加 JSON 和 Map 的转换函数，如下所示：</p>
+    <pre class="code" data-type="java" data-collapsed="false" title="DemoClient.java">
+import java.io.IOException;
+import java.util.Map;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+...
+
+public static Map&lt;String, Object&gt; jsonToMap(String json) throws IOException {
+	ObjectMapper mapper = new ObjectMapper();
+
+	// convert JSON string to Map
+	Map&lt;String, Object&gt; map = mapper.readValue(json, new TypeReference&lt;Map&lt;String, Object&gt;&gt;() {
+	});
+
+	return map;
+}
+
+public static String mapToJson(Map&lt;String, Object&gt; map) throws JsonProcessingException {
+	ObjectMapper mapper = new ObjectMapper();
+	return mapper.writeValueAsString(map);
+}
+</pre>
+    <p>顺便说下，jackson 包可通过在 pom.xml 中添加 spring-boot-starter-web 引入</p>
+    <p>最后的 Client 程序如下所示，注意获取错误信息与 JSON 返回字符串的对应关系。</p>
+    <pre class="code" data-type="java" data-collapsed="false" title="DemoClient.java">
+@SuppressWarnings(&quot;unchecked&quot;)
+private static void updateUserValid() throws Exception {
+	User user = new User();
+	user.setId(1000);
+	user.setName(&quot;&quot;);
+
+	String url = &quot;http://localhost:45001/update-user&quot;;
+	HttpPost proxy = new HttpPost(url);
+	HttpClient httpClient = HttpClientBuilder.create().build();
+	logger.info(&quot;Send message to url {}&quot;, url);
+	StringEntity params = new StringEntity(new Gson().toJson(user));
+	proxy.addHeader(&quot;content-type&quot;, &quot;application/json&quot;);
+	proxy.setEntity(params);
+	HttpResponse response = httpClient.execute(proxy);
+	String resultString = EntityUtils.toString(response.getEntity());
+
+	Map&lt;String, Object&gt; map = toMap(resultString);
+
+	if (map.containsKey(&quot;status&quot;) &amp;&amp; !&quot;200&quot;.equals(map.get(&quot;status&quot;))) {
+		ArrayList&lt;Object&gt; errors = (ArrayList&lt;Object&gt;)map.get(&quot;errors&quot;);
+		HashMap&lt;String, Object&gt; errorMap = (HashMap&lt;String, Object&gt;)errors.get(0);
+		logger.error(&quot;ERROR!!!, {}&quot;, errorMap.get(&quot;defaultMessage&quot;));
+	} else {
+		logger.info(&quot;result: {}&quot;, resultString);
+	}
+}
+</pre>
 </body>
 </html>

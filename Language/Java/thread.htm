@@ -202,7 +202,8 @@ Thread[1] will set key as: 9
 	<p>我们可以看到不但线程间互相不受影响，而且每个线程独享一个计数器，其它线程的修改不影响当前线程的计数器。</p>
 	<p>ThreadLocal 个般声明为 final static 类型</p>
 
-    <h1>Callable &amp; Future</h1>	
+    <h1>Callable &amp; Future</h1>
+    <h2>简单示例</h2>
     <p>Thread 和 Runnable 都不支持返回值，Java 5 引入了新的多线程接口 Callable 和 Future，可以获取线程执行后的返回结果。</p>
     <pre class="code" data-type="java" data-collapsed="false" title="CallableTest.java">
 import java.util.Random;
@@ -244,6 +245,59 @@ public class CallableTest {
 
 }
 </pre>
+    <p>Runnable 与 Callable 不同点：</p>
+    <ol>
+        <li>
+            <p>Runnable不返回任务执行结果，Callable可返回任务执行结果</p>
+        </li>
+        <li>
+            <p>Callable在任务无法计算结果时抛出异常，而Runnable不能</p>
+        </li>
+        <li>
+            <p>Runnable任务可直接由Thread的start方法或ExecutorService的submit方法去执行</p>
+        </li>
+    </ol>
+    <h2>异常处理</h2>
+    <p>与常规异常处理相同，使用 try/catch 捕捉即可，值得注意的是捕捉点要针对 callable.get 方法而不是 executor.submit 方法</p>
+    <h2>任务调度</h2>
+    <h3>Wait All</h3>
+    <p>等待所有任务完成, 可以使用 ExecutorService.awaitTermination 方法, 基于上例代码, 在 executor.shutdown() 后添加如下内容</p>
+    <pre class="code" data-type="java" data-collapsed="false" title="CallableTest.java">
+System.out.println("main thread is working...");
+
+try {
+    // wait 1 minutes at max
+	executor.awaitTermination(1, TimeUnit.MINUTES);
+} catch (InterruptedException e) {
+	System.out.println("Task is interuptted!");
+	e.printStackTrace();
+}
+
+System.out.println("All task completed...");
+</pre>
+    <h2>Others</h2>
+    <h3>ThreadPool</h3>
+    <p>Executors 可使用如下的线程池策略</p>
+    <ul>
+        <li>
+            <p>newFixedThreadPool</p>
+            <p>固定线程数的线程池</p>
+        </li>
+        <li>
+            <p>newCachedThreadPool</p>
+            <p>按需创建线程的线程池, 线程完成任务后会被缓存一段时间(默认 60 秒), 如果有新任务则执行新任务, 否则会在缓存时间过后销毁.</p>
+        </li>
+        <li>
+            <p>newSingleThreadExecutor</p>
+            <p>单线程</p>
+        </li>
+        <li>
+            <p></p>
+        </li>
+        <li>
+            <p></p>
+        </li>
+    </ul>
     <h1>生产者/消费者实现</h1>
     <h2>基于 Object.wait/notify</h2>
     <p>Object 类中定义了如下几个方法用于并发支持</p>

@@ -2,27 +2,48 @@
 
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
-<title>Java 手册</title>
-<script type="text/javascript" src="../../mylib/js/css.js"></script>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+    <title>Java 手册</title>
+    <script type="text/javascript" src="../../mylib/js/css.js"></script>
 </head>
 
 <body>
-<p id="title">数据类型转换</p>
+    <p id="title">数据类型转换</p>
 
-<h1>格式化日期</h1>
-<p><a href="resource/DateFormat and SimpleDateFormat Examples.mht">使用DateFormat/SimpleDateFormat</a></p>
-    <p>示例如下：</p>
+    <h1>格式化日期</h1>
+    <p>对于 Java 8 以前, <a href="resource/DateFormat and SimpleDateFormat Examples.mht">使用DateFormat/SimpleDateFormat</a></p>
+    <p>Java 8 中，新添加了 java.time.format.DateTimeFormatter，请参考<a href="j8-datetime.htm#datetime_formatter">这里</a></p>
     <h1>字符串操作</h1>
     <h2>String.format</h2>
     <p>拼接字符串</p>
     <pre class="code" data-type="java">String str = String.format("Hello, %s", "Lindong");</pre>
-<h1>其它</h1>
-<p>数组与List</p>
+    <h2>与 byte[] 转换</h2>
+    <h3>base64</h3>
+    <pre class="code" data-type="java">
+private static String getBase64String(byte[] bytes) {
+	byte[] encodedBytes = Base64.getEncoder().encode(bytes);
+	return new String(encodedBytes);
+}
+	
+private static byte[] getByteFromBase64String(String base64String) {
+	return Base64.getDecoder().decode(base64String.getBytes());
+}
+</pre>
+    <h3>指定编码表（例如 UTF-8)</h3>
+    <pre class="code" data-type="java">
+//from string to byte[]
+String s = "some text here";
+byte[] b = s.getBytes("UTF-8");
+
+//from byte[] to string
+byte[] b = {(byte) 99, (byte)97, (byte)116};
+String s = new String(b, "US-ASCII");
+</pre>
+    <h1>其它</h1>
+    <p>数组与List</p>
 <pre class="code" data-type="java">Integer[] array = new Integer[] {1, 2, 3};
 List list = java.util.Arrays.asList(array);
 array = list.toArray(new Integer[list.size()]);</pre>
-<p>&nbsp;</p>
-
+    <p>&nbsp;</p>
 </body>
 </html>

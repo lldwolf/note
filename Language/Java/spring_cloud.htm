@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>Spring Cloud</title>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+	<p id="title">基于 Spring Cloud 实现微服务框架</p>
+    <h1>Overview</h1>
+    <p>基于微服务的调用如下图所示：</p>
+    <p><img alt="" src="images/spring-cloud-call-flow.svg" /></p>
+    <h1>准备工作</h1>
+    <p>测试服务采用上节使用的 <a href="spring_restful.htm">RESTful service</a></p>
+    <p>因为本章使用的所有例子都是基于 Spring Cloud 和 Maven 构建，为了精简配置，我将公共依赖 pom.xml 放在了一个专门目录下，内容如下：</p>
+    <pre class="code" data-type="xml" data-collapsed="false" title="pom.xml">
+&lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+	xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;
+	&lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+
+	&lt;groupId&gt;com.citi.credit.loans&lt;/groupId&gt;
+	&lt;artifactId&gt;loansqt.server.parent&lt;/artifactId&gt;
+	&lt;version&gt;1.0.0&lt;/version&gt;
+	&lt;packaging&gt;pom&lt;/packaging&gt;
+
+	&lt;name&gt;loansqt.server.parent&lt;/name&gt;
+	&lt;url&gt;http://maven.apache.org&lt;/url&gt;
+	&lt;description&gt;loansqt server parent&lt;/description&gt;
+
+	&lt;parent&gt;
+		&lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+		&lt;artifactId&gt;spring-boot-starter-parent&lt;/artifactId&gt;
+		&lt;version&gt;1.5.4.RELEASE&lt;/version&gt;
+		&lt;relativePath /&gt; &lt;!-- lookup parent from repository --&gt;
+	&lt;/parent&gt;
+
+	&lt;properties&gt;
+		&lt;project.build.sourceEncoding&gt;UTF-8&lt;/project.build.sourceEncoding&gt;
+	&lt;/properties&gt;
+
+	&lt;dependencyManagement&gt;
+		&lt;dependencies&gt;
+			&lt;dependency&gt;
+				&lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;
+				&lt;artifactId&gt;spring-cloud-dependencies&lt;/artifactId&gt;
+				&lt;version&gt;Edgware.RELEASE&lt;/version&gt;
+				&lt;type&gt;pom&lt;/type&gt;
+				&lt;scope&gt;import&lt;/scope&gt;
+			&lt;/dependency&gt;
+		&lt;/dependencies&gt;
+	&lt;/dependencyManagement&gt;
+
+	&lt;build&gt;
+		&lt;plugins&gt;
+			&lt;plugin&gt;
+				&lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+				&lt;artifactId&gt;spring-boot-maven-plugin&lt;/artifactId&gt;
+			&lt;/plugin&gt;
+		&lt;/plugins&gt;
+	&lt;/build&gt;
+
+&lt;/project&gt;
+</pre>
+    <p>后面所有的例子引用的 parent 即为该文件</p>
+    <a id="register_server"></a>
+    <h1>注册服务</h1>
+    <h2>Overview</h2>
+    <p>本例使用 Spring Cloud Eureka 构建注册服务器。</p>
+    <p>注册服务器可以理解为所有服务的字典。所有的服务均注册到该服务器，需要调用相应服务时，仅需通过 Eureka 服务器即可查找到需要的目标服务。</p>
+    <h2>创建 Eureka Server</h2>
+    <p>步骤如下所示</p>
+    <ol>
+        <li>
+            <p>创建 Maven 项目</p>
+        </li>
+        <li>
+            <p>pom.xml 如下所示</p>
+            <pre class="code" data-type="xml" data-collapsed="false" title="pom.xml">
+&lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+	xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;
+	&lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+	&lt;artifactId&gt;CloudCore-RegisterServer&lt;/artifactId&gt;
+	&lt;packaging&gt;jar&lt;/packaging&gt;
+
+	&lt;name&gt;CloudCore-RegisterServer&lt;/name&gt;
+	&lt;url&gt;http://maven.apache.org&lt;/url&gt;
+
+	&lt;parent&gt;
+		&lt;groupId&gt;com.citi.credit.loans&lt;/groupId&gt;
+		&lt;artifactId&gt;loansqt.server.parent&lt;/artifactId&gt;
+		&lt;version&gt;1.0.0&lt;/version&gt;
+		&lt;relativePath&gt;../loansqt.server.parent/pom.xml&lt;/relativePath&gt;
+	&lt;/parent&gt;
+
+	&lt;properties&gt;&lt;/properties&gt;
+
+	&lt;dependencies&gt;
+		&lt;dependency&gt;
+			&lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+			&lt;artifactId&gt;spring-boot-starter&lt;/artifactId&gt;
+		&lt;/dependency&gt;
+		&lt;dependency&gt;
+			&lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+			&lt;artifactId&gt;spring-boot-starter-aop&lt;/artifactId&gt;
+		&lt;/dependency&gt;
+		&lt;dependency&gt;
+			&lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+			&lt;artifactId&gt;spring-boot-starter-actuator&lt;/artifactId&gt;
+		&lt;/dependency&gt;
+		&lt;dependency&gt;
+			&lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;
+			&lt;artifactId&gt;spring-cloud-starter-eureka&lt;/artifactId&gt;
+		&lt;/dependency&gt;
+		&lt;dependency&gt;
+			&lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;
+			&lt;artifactId&gt;spring-cloud-starter-eureka-server&lt;/artifactId&gt;
+		&lt;/dependency&gt;
+		&lt;dependency&gt;
+			&lt;groupId&gt;org.springframework.retry&lt;/groupId&gt;
+			&lt;artifactId&gt;spring-retry&lt;/artifactId&gt;
+		&lt;/dependency&gt;
+	&lt;/dependencies&gt;
+&lt;/project&gt;
+</pre>
+        </li>
+        <li>
+            <p>入口类 RegisterApplication 如下所示</p>
+            <pre class="code" data-type="java" data-collapsed="false" title="RegisterApplication.java">
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
+import org.springframework.cloud.netflix.eureka.server.EnableEurekaServer;
+
+@EnableEurekaServer
+@SpringBootApplication
+@EnableEurekaClient
+public class RegisterApplication {
+	private static final Log logger = LogFactory.getLog(RegisterApplication.class);
+
+	public static void main(String[] args) {
+		logger.info("Register server start ...");
+		SpringApplication.run(RegisterApplication.class, args);
+	}
+}
+</pre>
+        </li>
+        <li>
+            <p>添加配置文件 application.yml</p>
+            <pre class="code" data-type="properties" data-collapsed="false" title="application.yml">
+server.port: 29011
+spring:
+  profiles.active: default
+  application.name: CloudCore-RegisterServer
+  
+management.security.enabled: false
+eureka.server.enable-self-preservation: false
+logging.config: classpath:logback.xml
+
+#### Specific Environment ####
+---
+spring:
+  profiles: default
+eureka:
+  instance.hostname: localhost
+  client:
+    register-with-eureka: true
+    fetch-registry: false
+    serviceUrl.defaultZone: http://localhost:29011/eureka/
+---
+spring:
+  profiles: dev
+eureka:
+  instance.hostname: localhost
+  client:
+    register-with-eureka: true
+    fetch-registry: false
+    serviceUrl.defaultZone: http://localhost:29011/eureka/
+---
+spring:
+  profiles: uat
+eureka:
+  instance.hostname: lnycrecmoap2u
+  client:
+    serviceUrl.defaultZone: http://localhost:29011/eureka/
+</pre>
+        </li>
+        <li>
+            <p>添加日志配置文件 logback.xml 如下所示：</p>
+            <pre class="code" data-type="xml" data-collapsed="false" title="logback.xml">
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;configuration&gt;
+	&lt;include resource=&quot;org/springframework/boot/logging/logback/defaults.xml&quot; /&gt;
+	&lt;property name=&quot;LOG_FILE&quot; value=&quot;/opt/loansqt/logs/cloud-core/cloudcore-register-server.log&quot; /&gt;
+	&lt;include resource=&quot;org/springframework/boot/logging/logback/file-appender.xml&quot; /&gt;
+	&lt;appender name=&quot;console&quot; class=&quot;ch.qos.logback.core.ConsoleAppender&quot;&gt;
+		&lt;encoder&gt;
+			&lt;pattern&gt;%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n
+			&lt;/pattern&gt;
+		&lt;/encoder&gt;
+	&lt;/appender&gt;
+	&lt;root level=&quot;INFO&quot;&gt;
+		&lt;appender-ref ref=&quot;FILE&quot; /&gt;
+		&lt;appender-ref ref=&quot;console&quot; /&gt;
+	&lt;/root&gt;
+&lt;/configuration&gt;</pre>
+        </li>
+        <li>
+            <p>启动并在浏览器中通过 URL http://localhost:29011 检查</p>
+        </li>
+    </ol>
+    <h2>用户服务注册</h2>
+    <p>使用以下步骤将用户服务注册到 Eureka</p>
+    <ol>
+        <li>
+            <p>在 pom.xml 中添加引用</p>
+            <pre class="code" data-type="xml" data-collapsed="false" title="pom.xml">
+&lt;dependency&gt;
+	&lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;
+	&lt;artifactId&gt;spring-cloud-starter-eureka&lt;/artifactId&gt;
+&lt;/dependency&gt;
+</pre>
+        </li>
+        <li>
+            <p>在配置文件中指定注册中心及注册的服务名</p>
+            <pre class="code" data-type="properties" data-collapsed="false" title="application.yml">
+eureka.client.serviceUrl.defaultZone: http://localhost:29011/eureka/
+spring:
+  application.name: demo-service
+</pre>
+        </li>
+        <li>
+            <p>在服务的入口类加上如下的 Annotation</p>
+            <pre class="code" data-type="java" data-collapsed="false" title="DemoServer.java">
+@SpringBootApplication
+@EnableDiscoveryClient
+@EnableEurekaClient
+public class DemoServer 
+{
+    public static void main( String[] args )
+    {
+        SpringApplication.run(DemoServer.class, args);
+        
+    }
+}
+</pre>
+        </li>
+        <li>
+            <p>重启服务，将会在 Eureka 面板中看到用户服务</p>
+        </li>
+    </ol>
+    <a id="register_https"></a>
+    <h2>注册 https 服务</h2>
+    <p>需在要注册的服务中加入如下配置：</p>
+    <pre class="code" data-type="properties">
+eureka.instance.status-page-url=https://${eureka.hostname}:50560/info
+eureka.instance.health-check-url=https://${eureka.hostname}:50560/health
+eureka.instance.home-page-url=https://${eureka.hostname}:50560/
+eureka.instance.non-secure-port-enabled=false
+eureka.instance.secure-port-enabled=true
+</pre>
+    <p>${eureka.hostname} 是系统变量，也可以使用 ${eureka.instance.hostName}，表示 Eureka 将通过这些链接来访问应用服务的状态等信息</p>
+    <p>详细可查看<a href="https://cloud.spring.io/spring-cloud-netflix/multi/multi__service_discovery_eureka_clients.html">这里</a></p>
+    <h1>Admin Server</h1>
+    <h2>Overview</h2>
+    <p>Admin Server 负责监控服务的状态</p>
+    <h2>构建 Admin Server</h2>
+    <p>步骤如下所示：</p>
+    <ol>
+        <li>
+            <p>创建 Maven 项目</p>
+        </li>
+        <li>
+            <p>pom.xml 如下所示</p>
+            <pre class="code" data-type="xml" data-collapsed="false" title="pom.xml">
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+	xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;
+	&lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+
+	&lt;artifactId&gt;CloudCore-AdminServer&lt;/artifactId&gt;
+	&lt;packaging&gt;jar&lt;/packaging&gt;
+
+	&lt;name&gt;CloudCore-AdminServer&lt;/name&gt;
+	&lt;description&gt;Admin Server for LoansQT RESTful&lt;/description&gt;
+
+	&lt;parent&gt;
+		&lt;groupId&gt;com.citi.credit.loans&lt;/groupId&gt;
+		&lt;artifactId&gt;loansqt.server.parent&lt;/artifactId&gt;
+		&lt;version&gt;1.0.0&lt;/version&gt;
+		&lt;relativePath&gt;../loansqt.server.parent/pom.xml&lt;/relativePath&gt;
+	&lt;/parent&gt;
+
+	&lt;properties&gt;
+		&lt;admin.version&gt;1.5.2&lt;/admin.version&gt;
+	&lt;/properties&gt;
+
+	&lt;dependencies&gt;
+		&lt;dependency&gt;
+			&lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+			&lt;artifactId&gt;spring-boot-starter&lt;/artifactId&gt;
+		&lt;/dependency&gt;
+
+		&lt;dependency&gt;
+			&lt;groupId&gt;org.jolokia&lt;/groupId&gt;
+			&lt;artifactId&gt;jolokia-core&lt;/artifactId&gt;
+			&lt;version&gt;1.3.6&lt;/version&gt;&lt;!--$NO-MVN-MAN-VER$ --&gt;
+		&lt;/dependency&gt;
+
+		&lt;dependency&gt;
+			&lt;groupId&gt;de.codecentric&lt;/groupId&gt;
+			&lt;artifactId&gt;spring-boot-admin-server&lt;/artifactId&gt;
+		&lt;/dependency&gt;
+		&lt;dependency&gt;
+			&lt;groupId&gt;de.codecentric&lt;/groupId&gt;
+			&lt;artifactId&gt;spring-boot-admin-server-ui&lt;/artifactId&gt;
+		&lt;/dependency&gt;
+		&lt;dependency&gt;
+			&lt;groupId&gt;de.codecentric&lt;/groupId&gt;
+			&lt;artifactId&gt;spring-boot-admin-server-ui-hystrix&lt;/artifactId&gt;
+		&lt;/dependency&gt;
+		&lt;dependency&gt;
+			&lt;groupId&gt;de.codecentric&lt;/groupId&gt;
+			&lt;artifactId&gt;spring-boot-admin-server-ui-turbine&lt;/artifactId&gt;
+		&lt;/dependency&gt;
+		&lt;dependency&gt;
+			&lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;
+			&lt;artifactId&gt;spring-cloud-starter-eureka&lt;/artifactId&gt;
+		&lt;/dependency&gt;
+		&lt;dependency&gt;
+			&lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+			&lt;artifactId&gt;spring-boot-devtools&lt;/artifactId&gt;
+		&lt;/dependency&gt;
+
+		&lt;dependency&gt;
+			&lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+			&lt;artifactId&gt;spring-boot-starter-test&lt;/artifactId&gt;
+			&lt;scope&gt;test&lt;/scope&gt;
+		&lt;/dependency&gt;
+	&lt;/dependencies&gt;
+	&lt;dependencyManagement&gt;
+		&lt;dependencies&gt;
+			&lt;dependency&gt;
+				&lt;groupId&gt;de.codecentric&lt;/groupId&gt;
+				&lt;artifactId&gt;spring-boot-admin-server&lt;/artifactId&gt;
+				&lt;version&gt;${admin.version}&lt;/version&gt;
+				&lt;type&gt;pom&lt;/type&gt;
+				&lt;scope&gt;import&lt;/scope&gt;
+			&lt;/dependency&gt;
+		&lt;/dependencies&gt;
+	&lt;/dependencyManagement&gt;
+&lt;/project&gt;
+</pre>
+        </li>
+        <li>
+            <p>入口类 AdminServerApplication</p>
+            <pre class="code" data-type="java" data-collapsed="false" title="AdminServerApplication.java">
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
+
+import de.codecentric.boot.admin.config.EnableAdminServer;
+
+@SpringBootApplication
+@EnableAdminServer
+@EnableDiscoveryClient
+@EnableEurekaClient
+public class AdminServerApplication {
+
+	public static void main(String[] args) {
+		SpringApplication.run(AdminServerApplication.class, args);
+	}
+}
+</pre>
+        </li>
+        <li>
+            <p>配置文件 application.yml</p>
+            <pre class="code" data-type="properties" data-collapsed="false" title="application.yml">
+#### Common #####
+server.port: 29001
+logging.config: classpath:logback.xml
+management.security.enabled: false
+
+#### Spring Cloud ####
+spring:
+  application.name: loansqt.adminserver
+  boot.admin.monitor:
+    read-timeout: 10000
+    connect-timeout: 10000
+    period: 2000
+    
+#### Specific Environment ####
+---
+spring.profiles: default
+eureka.client.serviceUrl.defaultZone: http://localhost:29011/eureka/
+---
+spring.profiles: dev
+eureka.client.serviceUrl.defaultZone: http://localhost:29011/eureka/
+---
+spring.profiles: uat
+eureka.client.serviceUrl.defaultZone: http://localhost:29011/eureka/,http://loansqt-cloud-uat4:29011/eureka/
+</pre>
+        </li>
+        <li>
+            <p>日志配置文件 logback.xml</p>
+            <pre class="code" data-type="xml" data-collapsed="false" title="logback.xml">
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;configuration&gt;
+	&lt;include resource=&quot;org/springframework/boot/logging/logback/defaults.xml&quot; /&gt;
+	&lt;property name=&quot;LOG_FILE&quot; value=&quot;/opt/loansqt/logs/cloud-core/cloudcore-admin-server.log&quot; /&gt;
+	&lt;include resource=&quot;org/springframework/boot/logging/logback/file-appender.xml&quot; /&gt;
+	&lt;appender name=&quot;console&quot; class=&quot;ch.qos.logback.core.ConsoleAppender&quot;&gt;
+		&lt;encoder&gt;
+			&lt;pattern&gt;%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n
+			&lt;/pattern&gt;
+		&lt;/encoder&gt;
+	&lt;/appender&gt;
+	&lt;root level=&quot;INFO&quot;&gt;
+		&lt;appender-ref ref=&quot;FILE&quot; /&gt;
+		&lt;!-- &lt;appender-ref ref=&quot;console&quot; /&gt; --&gt;
+	&lt;/root&gt;
+&lt;/configuration&gt;</pre>
+        </li>
+        <li>
+            <p>启动，在浏览器中使用 http://localhost:29001 访问</p>
+        </li>
+    </ol>
+    <h2>用户服务监控</h2>
+    <p>使用如下步骤将用户服务加入监控</p>
+    <ol>
+        <li>
+            <p>在 pom.xml 中添加引用</p>
+            <pre class="code" data-type="xml" data-collapsed="false" title="pom.xml">
+&lt;dependency&gt;
+    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+    &lt;artifactId&gt;spring-boot-starter-actuator&lt;/artifactId&gt;
+&lt;/dependency&gt;
+</pre>
+            <p>添加 atuator 后服务会提供诸如 /health 之类的服务，Admin 将通过这些服务来收集信息</p>
+        </li>
+        <li>
+            <p>在配置文件中指定 Admin 的监控配置</p>
+            <pre class="code" data-type="properties" data-collapsed="false" title="application.yml">
+eureka.client.serviceUrl.defaultZone: http://localhost:29011/eureka/
+
+
+#### Spring Cloud ####
+spring:
+  application.name: demo-service
+  boot.admin.monitor:
+    read-timeout: 10000
+    connect-timeout: 10000
+    period: 2000
+</pre>
+        </li>
+        <li>
+            <p>重启服务，将会在 Admin 面板中看到用户服务</p>
+        </li>
+    </ol>
+    <h2>监控 https 服务</h2>
+    <p>请参考 <a href="#register_https">Eureka https 服务注册部分</a>，配置相同，否则在 log 中会发现它试图访问 http 服务的 healthUrl 来获取信息。</p>
+    <h3>证书问题</h3>
+    <p>在本地测试时，因证书问题，一开始会有如下错误：</p>
+    <pre class="code" data-type="log">
+javax.net.ssl.SSLHandshakeException: sun.security.validator.ValidatorException: PKIX path building failed:
+sun.security.provider.certpath.SunCertPathBuilderException: unable to find valid certification path to requested target.
+</pre>
+    <p>使用如下步骤分析：</p>
+    <ol>
+        <li>
+            <p>在浏览器中查看根证书序列号</p>
+        </li>
+        <li>
+            <p>将本地 Java 证书库导出，查看是否包含根证书序列号，命令如下：</p>
+            <pre class="code" data-type="sh">keytool -list -v -keystore "%JAVA_HOME%\jre\lib\security\cacerts"  > c:\temp\java_cacerts.txt</pre>
+        </li>
+        <li>
+            <p>如果没有，在浏览器中导出该根证书(在浏览器地址栏前的图标中查看证书并导出)，然后使用如下命令导入：</p>
+            <pre class="code" data-type="sh">
+keytool -import -alias my_cert -keystore "%JAVA_HOME%\jre\lib\security\cacerts" -file c:\temp\my_cert.cer
+</pre>
+        </li>
+    </ol>
+    <p>中间需要输入密码均为：changeit</p>
+    <p>详情请查看 <a href="http://magicmonster.com/kb/prg/java/ssl/pkix_path_building_failed.html">SSLHandshakeException: PKIX: unable to find valid certification path to requested target</a></p>
+    <p>但问题并没有解决，异常信息变成了</p>
+    <pre class="code" data-type="log">
+INFO  d.c.b.admin.registry.StatusUpdater - Couldn't retrieve status for Application 
+    [id=0d65462f, name=MY-SERVICE, managementUrl=https://my_address:50560, healthUrl=https://my_address:50560/health, serviceUrl=https://my_address:50560]
+org.springframework.web.client.ResourceAccessException: I/O error on GET request for &quot;https://my_address:50560/health&quot;: 
+    Certificate for &lt;my_address&gt; doesn't match any of the subject alternative names: []; 
+    nested exception is javax.net.ssl.SSLPeerUnverifiedException: Certificate for &lt;my_address&gt; doesn't match any of the subject alternative names: []
+</pre>
+    <h1>服务路由</h1>
+    <h2>Overview</h2>
+    <p>通过服务路由，客户端可以不需要知道每个微服务的 URL，只需要知道路由服务器的地址即可。</p>
+    <p>本例使用 Spring Cloud Zuul 实现</p>
+    <h2>实现步骤</h2>
+    <ol>
+        <li>
+            <p>创建 Maven 项目</p>
+        </li>
+        <li>
+            <p>pom.xml 如下所示</p>
+            <pre class="code" data-type="xml" data-collapsed="false" title="pom.xml">
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+	xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;
+	&lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+
+	&lt;artifactId&gt;CloudCore-ApiProxy&lt;/artifactId&gt;
+	&lt;packaging&gt;jar&lt;/packaging&gt;
+
+	&lt;name&gt;CloudCore-ApiProxy&lt;/name&gt;
+	&lt;description&gt;API Proxy&lt;/description&gt;
+
+    &lt;parent&gt;
+        &lt;groupId&gt;com.citi.credit.loans&lt;/groupId&gt;
+        &lt;artifactId&gt;loansqt.server.parent&lt;/artifactId&gt;
+        &lt;version&gt;1.0.0&lt;/version&gt;
+        &lt;relativePath&gt;../loansqt.server.parent/pom.xml&lt;/relativePath&gt;
+    &lt;/parent&gt;
+
+	&lt;properties&gt;
+	&lt;/properties&gt;
+
+	&lt;dependencies&gt;
+		&lt;dependency&gt;
+			&lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;
+			&lt;artifactId&gt;spring-cloud-starter-zuul&lt;/artifactId&gt;
+		&lt;/dependency&gt;
+
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-cloud-starter-eureka&lt;/artifactId&gt;
+        &lt;/dependency&gt;
+		&lt;dependency&gt;
+			&lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+			&lt;artifactId&gt;spring-boot-starter-test&lt;/artifactId&gt;
+			&lt;scope&gt;test&lt;/scope&gt;
+		&lt;/dependency&gt;
+	&lt;/dependencies&gt;
+
+	&lt;dependencyManagement&gt;
+		&lt;dependencies&gt;
+		&lt;/dependencies&gt;
+	&lt;/dependencyManagement&gt;
+
+	&lt;build&gt;
+		&lt;plugins&gt;
+			&lt;plugin&gt;
+				&lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+				&lt;artifactId&gt;spring-boot-maven-plugin&lt;/artifactId&gt;
+			&lt;/plugin&gt;
+		&lt;/plugins&gt;
+	&lt;/build&gt;
+
+
+&lt;/project&gt;
+</pre>
+        </li>
+        <li>
+            <p>入口类 ApiGatewayApplication</p>
+            <pre class="code" data-type="java" data-collapsed="false" title="RegisterApplication.java">
+package citi.credit.loans.cloudcore.apiproxy;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.cloud.client.SpringCloudApplication;
+import org.springframework.cloud.netflix.zuul.EnableZuulProxy;
+
+@EnableZuulProxy
+@SpringCloudApplication
+public class ApiGatewayApplication {
+
+	public static void main(String[] args) {
+		SpringApplication.run(ApiGatewayApplication.class, args);
+	}
+}
+</pre>
+        </li>
+        <li>
+            <p>配置文件 application.yml</p>
+            <pre class="code" data-type="properties" data-collapsed="false" title="application.yml">
+#### Common #####
+server.port: 29051
+logging.config: classpath:logback.xml
+
+#### Spring Cloud ####
+spring:
+  application.name: loansqt.api-gateway
+  
+#### Zuul Proxy ####
+zuul.routes.api-demo-url.path: /demo-srv/**
+zuul.routes.api-demo-url.serviceId: demo-service
+    
+#### Specific Environment ####
+---
+spring.profiles: default
+eureka.client.serviceUrl.defaultZone: http://localhost:29011/eureka/
+---
+spring.profiles: dev
+eureka.client.serviceUrl.defaultZone: http://localhost:29011/eureka/
+---
+spring.profiles: uat
+eureka.client.serviceUrl.defaultZone: http://localhost:29011/eureka/,http://127.0.0.1:29011/eureka/
+</pre>
+        </li>
+        <li>
+            <p>日志配置文件 logback.xml 差不多，不再写了</p>
+        </li>
+        <li>
+            <p>启动，以前 demo service 需要使用 http://localhost:45001/users 来访问，现在使用 http://localhost:29051/demo-srv/users 即可访问</p>
+        </li>
+    </ol>
+</body>
+</html>

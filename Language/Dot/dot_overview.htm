@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+    <script type="text/javascript" src="../../mylib/js/css.js"></script>
+    <title>Dot Overview</title>
+</head>
+
+<body>
+    <p id="title">Dot Overview</p>
+    <h1>Dot Overview</h1>
+    <p>Dot 是一种图表定义语言</p>
+    <p>Dot 图表由下列元素组成</p>
+    <ul>
+        <li>node: 表示图表中的节点，默认使用椭圆</li>
+        <li>edge: 连接节点的线，默认为实线</li>
+        <li>graph: 表图表本身</li>
+    </ul>
+    <h1>渲染软件</h1>
+    <p><a href="https://zh.wikipedia.org/wiki/Graphviz">Graphviz</a></p>
+    <h2>命令</h2>
+    <pre class="code" data-type="sh">#生成 png 
+dot -Tpng c:\temp\1.dot > c:\temp\1.png
+
+#生成 svg
+dot -Tsvg c:\temp\1.dot > c:\temp\1.svg</pre>
+    <h1>示例</h1>
+    <h2>无向图</h2>
+    <p>Dot 文件 (1.dot)</p>
+    <pre class="code">graph graphname {
+     a -- b -- c;
+     b -- d;
+ }</pre>
+    <p>生成图片如下所示：</p>
+    <p>
+        <img alt="" src="img/dot_sample.png" /></p>
+    <h2>有向图</h2>
+    <pre class="code">digraph graphname {
+     a -> b -> c;
+     b -> d;
+ }</pre>
+    <p>生成图片如下所示：</p>
+    <p>
+        <img alt="" src="img/digraph_sample.png" /></p>
+        <h2>控制 Edge 长度</h2>
+    <pre class="code">digraph {
+     a -> b [minlen=2];
+     c -> d;
+}</pre>
+    <p>
+        <img alt="" src="img/edge_len.svg" /></p>
+    <h2>双向箭头</h2>
+    <p><img alt="" src="img/double-sided-arrow.svg" /></p>
+    <pre class="code">digraph graphName {
+    concentrate=true;
+    A->B;
+    B->A;
+}</pre>
+    <h2>水平方向生成</h2>
+    <pre class="code">digraph graphname {
+     <span class="emphasis">rankdir=LR;</span>
+     a -> b -> c;
+     b -> d;
+ }</pre>
+    <p>生成图片如下所示：</p>
+    <p>
+        <img alt="" src="img/digraph_lr.png" /></p>
+    <h2>控制标签位置</h2>
+    <pre class="code">digraph {
+	forcelabels=true;
+	0:sw -> 1:nw [ dir=forward, xlabel="  (1, 0)  "];
+    0 -> 1 [dir=none];
+    1:ne -> 0:se [ dir=backward, xlabel= "  (0, -1)  "];
+}</pre>
+    <p>要注意使用 xlabel</p>
+    <p>
+        <img alt="" src="img/label_position.png" /></p>
+    <p class="note">n: 北, s: 南, e: 东, w: 西</p>
+    <h2>属性示例</h2>
+    <pre class="code">graph graphname {
+     // This attribute applies to the graph itself
+     // 可声明大小，忽略则自动定义大小
+     size="1,1";
+     // The label attribute can be used to change the label of a node
+     a [label="Foo"];
+     // Here, the node shape is changed.
+     b [shape=box];
+     // These edges both have different line properties
+     a -- b -- c [color=blue];
+     b -- d [style=dotted];
+     // [style=invis] hides a node.
+}</pre>
+    <p>生成图片如下所示：</p>
+    <p>
+        <img alt="" src="img/graph_style_sample.png" /></p>
+    <h2>有向图标示及分层</h2>
+    <pre class="code">digraph g {
+	node [shape=plaintext];
+	A1 -> B1;
+	A2 -> B2;
+	A3 -> B3;
+	
+	A1 -> A2 [label=f];
+	A2 -> A3 [label=g];
+	B2 -> B3 [label="g'"];
+
+	{ rank=same; A1 A2 A3 }
+	{ rank=same; B1 B2 B3 } 
+}</pre>
+    <p>生成图片如下所示：</p>
+    <p>
+        <img alt="" src="img/digraph_label_sample.png" /></p>
+    <h2>字体</h2>
+    <p>使用 fontcolor 属性控制文本颜色</p>
+    <pre class="code">A [color=red, fontcolor=red];</pre>
+    <h2>样式</h2>
+    <pre class="code">digraph G {
+ main [shape=box]; /* this is a comment */
+ main -> parse [weight=8];
+ parse -> execute;
+ main -> init [style=dotted];
+ main -> cleanup;
+ execute -> { make_string; printf}
+ init -> make_string;
+ edge [color=red]; // so is this
+ main -> printf [style=bold,label="100 times"];
+ make_string [label="make a\nstring"];
+ node [shape=box,style=filled,color=".7 .3 1.0"];
+ execute -> compare;
+ }</pre>
+    <p>生成图片如下所示：</p>
+    <p>
+        <img alt="" src="img/adv_shape.png" /></p>
+    <h2>多边形</h2>
+    <pre class="code">digraph G {
+ a -> b -> c;
+ b -> d;
+ a [shape=polygon,sides=5,peripheries=3,color=lightblue,style=filled];
+ c [shape=polygon,sides=4,skew=.4,label="hello world"]
+ d [shape=invtriangle];
+ e [shape=polygon,sides=4,distortion=.7];
+ }</pre>
+    <p>
+        <img alt="" src="img/polygon.png" /></p>
+    <h2>HTML 标签</h2>
+    <pre class="code">digraph html {
+ abc [shape=none, margin=0, label=&lt;
+ &lt;TABLE BORDER=&quot;0&quot; CELLBORDER=&quot;1&quot; CELLSPACING=&quot;0&quot; CELLPADDING=&quot;4&quot;&gt;
+     &lt;TR&gt;
+        &lt;TD ROWSPAN=&quot;3&quot;&gt;&lt;FONT COLOR=&quot;red&quot;&gt;hello&lt;/FONT&gt;&lt;BR/&gt;world&lt;/TD&gt;
+        &lt;TD COLSPAN=&quot;3&quot;&gt;b&lt;/TD&gt;
+        &lt;TD ROWSPAN=&quot;3&quot; BGCOLOR=&quot;lightgrey&quot;&gt;g&lt;/TD&gt;
+        &lt;TD ROWSPAN=&quot;3&quot;&gt;h&lt;/TD&gt;
+     &lt;/TR&gt;
+     &lt;TR&gt;
+        &lt;TD&gt;c&lt;/TD&gt;
+        &lt;TD PORT=&quot;here&quot;&gt;d&lt;/TD&gt;
+        &lt;TD&gt;e&lt;/TD&gt;
+     &lt;/TR&gt;
+     &lt;TR&gt;
+        &lt;TD COLSPAN=&quot;3&quot;&gt;f&lt;/TD&gt;
+     &lt;/TR&gt;
+ &lt;/TABLE&gt;
+&gt;];
+ }</pre>
+    <p>生成图片如下所示：</p>
+    <p>
+        <img alt="" src="img/html_style.png" /></p>
+    <h2>Cluster</h2>
+    <h3>Standard Cluster</h3>
+    <pre class="code">digraph g {
+ node [shape = record,height=.1];
+ node0[label = &quot;&lt;f0&gt; |&lt;f1&gt; G|&lt;f2&gt; &quot;];
+ node1[label = &quot;&lt;f0&gt; |&lt;f1&gt; E|&lt;f2&gt; &quot;];
+ node2[label = &quot;&lt;f0&gt; |&lt;f1&gt; B|&lt;f2&gt; &quot;];
+ node3[label = &quot;&lt;f0&gt; |&lt;f1&gt; F|&lt;f2&gt; &quot;];
+ node4[label = &quot;&lt;f0&gt; |&lt;f1&gt; R|&lt;f2&gt; &quot;];
+ node5[label = &quot;&lt;f0&gt; |&lt;f1&gt; H|&lt;f2&gt; &quot;];
+ node6[label = &quot;&lt;f0&gt; |&lt;f1&gt; Y|&lt;f2&gt; &quot;];
+ node7[label = &quot;&lt;f0&gt; |&lt;f1&gt; A|&lt;f2&gt; &quot;];
+ node8[label = &quot;&lt;f0&gt; |&lt;f1&gt; C|&lt;f2&gt; &quot;];
+ &quot;node0&quot;:f2 -&gt; &quot;node4&quot;:f1;
+ &quot;node0&quot;:f0 -&gt; &quot;node1&quot;:f1;
+ &quot;node1&quot;:f0 -&gt; &quot;node2&quot;:f1;
+ &quot;node1&quot;:f2 -&gt; &quot;node3&quot;:f1;
+ &quot;node2&quot;:f2 -&gt; &quot;node8&quot;:f1;
+ &quot;node2&quot;:f0 -&gt; &quot;node7&quot;:f1;
+ &quot;node4&quot;:f2 -&gt; &quot;node6&quot;:f1;
+ &quot;node4&quot;:f0 -&gt; &quot;node5&quot;:f1;
+}</pre>
+    <p>生成图片如下所示：</p>
+    <p>
+        <img alt="" src="img/cluster.png" /></p>
+    <h3>Sub Cluster</h3>
+    <pre class="code">digraph structs {
+ node [shape=record];
+ struct1 [shape=record,label=&quot;&lt;f0&gt; left|&lt;f1&gt; middle|&lt;f2&gt; right&quot;];
+ struct2 [shape=record,label=&quot;&lt;f0&gt; one|&lt;f1&gt; two&quot;];
+ struct3 [shape=record,label=&quot;hello\nworld |{ b |{c|&lt;here&gt; d|e}| f}| g | h&quot;];
+ struct1:f1 -&gt; struct2:f0;
+ struct1:f2 -&gt; struct3:here;
+}</pre>
+    <p>
+        <img alt="" src="img/sub_cluster.png" /></p>
+
+    <h1>注释</h1>
+    <pre class="code"> // This is a single line comment.
+ /* This is a
+    multiple line
+    comment. */
+ # Lines like this are also ignored.</pre>
+    <h1>全启配置</h1>
+    <h2>设定默认图形</h2>
+    <p>设定默认图形为矩形</p>
+    <pre class="code">digraph g {
+	node [shape=box];
+	A1 -> B1;
+}</pre>
+    <h1>参考</h1>
+    <h2>node.shape</h2>
+    <table style="width: 800px">
+        <tr>
+            <th>shape</th>
+            <th>desc.</th>
+            <th>参数</th>
+        </tr>
+        <tr>
+            <td>ellipse/td>
+            <td>椭圆(默认值)</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>box</td>
+            <td>矩形</td>
+            <td>
+                <pre class="code">[shape=box]</pre>
+            </td>
+        </tr>
+        <tr>
+            <td>plaintext</td>
+            <td>无外框图形，只有文本</td>
+            <td>
+                <pre class="code">node [shape=plaintext]</pre>
+            </td>
+        </tr>
+        <tr>
+            <td>triangle</td>
+            <td>三角形</td>
+            <td>
+                <pre class="code">[shape=triangle]</pre>
+            </td>
+        </tr>
+        <tr>
+            <td>invtriangle</td>
+            <td>倒三角形</td>
+            <td>
+                <pre class="code">[shape=invtriangle]</pre>
+            </td>
+        </tr>
+        <tr>
+            <td>polygon</td>
+            <td>多边形</td>
+            <td>
+                <ul>
+                    <li>peripheries: 边线重复数，例如设为2则为双边线</li>
+                    <li>skew: 倾斜度(-1 - 1)，相对于正方形</li>
+                    <li>distortion: 扭曲度(-1 - 1)，相对于正方形</li>
+                </ul>
+                <pre class="code">#三线五边形
+a [shape=polygon,sides=5,peripheries=3];
+# 左倾平行4边形
+c [shape=polygon,sides=4,skew=-0.4]
+# 倒梯形
+e [shape=polygon,sides=4,distortion=0.7];</pre>
+            </td>
+        </tr>
+    </table>
+    <p><img alt="" src="img/node-shape.png" /></p>
+    <h2>node.style</h2>
+    <table style="width: 800px">
+        <tr>
+            <th>style</th>
+            <th>desc.</th>
+            <th>sample</th>
+        </tr>
+        <tr>
+            <td>filled</td>
+            <td>实心填充</td>
+            <td></td>
+        </tr>
+    </table>
+    <h2>edge.style</h2>
+    <table style="width: 800px">
+        <tr>
+            <th>style</th>
+            <th>desc.</th>
+            <th>sample</th>
+        </tr>
+        <tr>
+            <td>dotted</td>
+            <td>点虚线</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>dashed</td>
+            <td>虚线</td>
+            <td></td>
+        </tr>
+    </table>
+    <h2>color</h2>
+    <table style="width: 800px">
+        <tr>
+            <th>color</th>
+            <th>desc.</th>
+            <th>sample</th>
+        </tr>
+        <tr>
+            <td>颜色描述</td>
+            <td>使用色表，例如 red 表示红色</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>比例式RGB</td>
+            <td>RGB比例的3个数，取值为 0-1，用空格分隔</td>
+            <td><pre class="code">[color=".7 .3 1.0"]</pre></td>
+        </tr>
+    </table>
+    <h2>rankdir</h2>
+    <p id="rankdir">布局方式</p>
+    <table style="width: 800px">
+        <tr>
+            <th>rankdir</th>
+            <th>desc.</th>
+            <th>sample</th>
+        </tr>
+        <tr>
+            <td>LR</td>
+            <td>从左至右</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>RL</td>
+            <td>从右至左</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>TB</td>
+            <td>从上至下（默认）</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>BT</td>
+            <td>从下至上</td>
+            <td></td>
+        </tr>
+    </table>
+    <h1>完整的 DOT 教程</h1>
+    <p><a href="data/dotguide.pdf">教程</a></p>
+</body>
+</html>

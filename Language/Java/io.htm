@@ -65,11 +65,6 @@ public class TextReader
 		System.out.println(stringBuffer);
 	}
 }</pre>
-	<h3>Apache CommonsIO</h3>
-	<pre class="code" data-type="java">public static void replacePropertiesContent() throws Exception {
-	String str = FileUtils.readFileToString(new File("C:/1.txt"));
-	System.out.println(str);
-}</pre>
 	<h2>写入</h2>
 	<p>使用FileWriter，示例代码如下所示：</p>
 	<pre class="code" data-type="java">import java.io.FileWriter;
@@ -86,9 +81,90 @@ public class TextWriter
 		fw.close();
 	}
 }</pre>
-	<p>&nbsp;</p>
-	<p>&nbsp;</p>
-	<p>&nbsp;</p>
+    <h1>二进制文件</h1>
+    <p>二进制文件读写示例</p>
+    <pre class="code" data-type="java" data-collapsed="false" title="文本文件读取示例代码">
+package lld.test;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
+public class FileTest4Binary {
+	private static final String FILE_NAME = "C:\\Temp\\test.png";
+	private static final String OUTPUT_FILE_NAME = "C:\\Temp\\test_copy.png";
+
+	public static void main(String... aArgs) throws IOException {
+		FileTest4Binary binary = new FileTest4Binary();
+		byte[] bytes = binary.readSmallBinaryFile(FILE_NAME);
+		printBytes(bytes);
+		log("Small - size of file read in:" + bytes.length);
+		binary.writeSmallBinaryFile(bytes, OUTPUT_FILE_NAME);
+	}
+
+	public byte[] readSmallBinaryFile(String aFileName) throws IOException {
+		Path path = Paths.get(aFileName);
+		return Files.readAllBytes(path);
+	}
+
+	public void writeSmallBinaryFile(byte[] aBytes, String aFileName) throws IOException {
+		Path path = Paths.get(aFileName);
+		Files.write(path, aBytes); // creates, overwrites
+	}
+
+	private static void log(Object msg) {
+		System.out.println(msg);
+	}
+	
+	private static void printBytes(byte[] bytes) {
+		if (bytes == null) {
+			log("bytes is empty.");
+			return;
+		}
+		
+		int maxChar = 16 * 2;
+		int counter = 0;
+		StringBuilder buffer = new StringBuilder();
+		
+		for (byte b : bytes) {
+			buffer.append(String.format("%02X ", b));
+			counter++;
+			
+			if (counter % maxChar == 0) {
+				buffer.append("\n");
+			}
+		}
+		
+		log(buffer.toString());
+	}
+
+}
+</pre>
+
+    <h1>Appache Commons IO</h1>
+    <h2>简介</h2>
+    <p>官方网址 <a href="http://commons.apache.org/proper/commons-io/">http://commons.apache.org/proper/commons-io/</a>.</p>
+    <p>常用功能示例</p>
+    <table style="width:95%">
+        <tr>
+            <th>功能</th>
+            <th>示例代码</th>
+        </tr>
+        <tr>
+            <td>取文件的扩展名</td>
+            <td>
+                <pre class="code" data-type="java">import org.apache.commons.io.FilenameUtils;
+String ext = FilenameUtils.getExtension(fileName);</pre>
+            </td>
+        </tr>
+        <tr>
+            <td>读文本文件</td>
+            <td><pre class="code" data-type="java">public static void replacePropertiesContent() throws Exception {
+	String str = FileUtils.readFileToString(new File("C:/1.txt"));
+	System.out.println(str);
+}</pre></td>
+        </tr>
+    </table>
 </body>
 </html>

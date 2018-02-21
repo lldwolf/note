@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>Spring Cloud</title>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+	<p id="title">Spring Cloud FAQ</p>
+    <h1>启动参数</h1>
+    <h2>如何在命令行设定启动参数</h2>
+    <p>可以使用如下两种方式设定</p>
+    <pre class="code" data-type="sh">
+java -jar my.jar --spring.profiles.active=test
+
+java -Dspring.profiles.active=test -jar my.jar
+</pre>
+    <h2>如何指定启动环境</h2>
+    <p>例如 dev/test/prod 等</p>
+    <pre class="code" data-type="sh">
+java -jar my.jar --spring.profiles.active=test
+</pre>
+    <p>详细教程可参考<a href="spring_restful.htm#spring-profile-setup">profile 配置</a></p>
+    <h2>如何自定义配置文件路径</h2>
+    <pre class="code" data-type="sh">
+java -jar myproject.jar --spring.config.location=classpath:/default.properties,classpath:/override.properties
+</pre>
+    <p>也可以直接指定目录</p>
+    <h1>服务配置</h1>
+    <h2>https 服务</h2>
+    <p>步骤如下(Maven)：</p>
+    <ol>
+        <li>
+            <p>将证书放在 resources 目录中</p>
+        </li>
+        <li>
+            <p>在配置文件中加入</p>
+            <pre class="code" data-type="properties">
+server.ssl.key-store: classpath:keystore.jks
+server.ssl.key-store-password: ******
+</pre>
+        </li>
+    </ol>
+    <h1>服务调用</h1>
+    <h2>快速测试</h2>
+    <p>可使用如下方式：</p>
+    <ul>
+        <li>
+            <p>浏览器输入URL</p>
+        </li>
+        <li>
+            <p>Linux 命令</p>
+            <pre class="code" data-type="sh">
+curl [url]
+
+# 忽略证书错误
+curl -k [url]
+</pre>
+        </li>
+    </ul>
+    <h2>使用服务名</h2>
+    <p>借助 Eureka 注册中心，我们可以使用服务名进行调用，而无需 hard code 服务器 URL。可以使用两种方工</p>
+    <ul>
+        <li><a href="spring_cloud_ribbon.htm#ribbon">Ribbon</a></li>
+        <li><a href="spring_cloud_ribbon.htm#feign">Feign</a></li>
+    </ul>
+</body>
+</html>

@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>Spring Cloud</title>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+	<p id="title">Spring Cloud 服务发现与消费</p>
+    <h1>准备工作</h1>
+    <p>创建 <a href="spring_cloud.htm#register_server">Eureka Server</a> 作为注册中心</p>
+    <p>本例基于前面的示例 <a href="spring_restful.htm">Demo Service</a> 作为服务端，需在其配置文件 application.yml 中加入如下项将其注册为 demo-service</p>
+    <pre class="code" data-type="properties" data-collapsed="false" title="application.yml">
+spring.application.name: demo-service
+eureka.client.serviceUrl.defaultZone: http://localhost:29011/eureka/
+</pre>
+    <p>Spring Cloud 可以使用 Ribbon 或 Feign 方式进行服务间调用</p>
+    <a id="ribbon"></a>
+    <h1>Ribbon 方式</h1>
+    <ol>
+        <li>
+            <p>创建 Maven 程序</p>
+        </li>
+        <li>
+            <p>修改 pom.xml</p>
+            <pre class="code" data-type="xml" data-collapsed="false" title="pom.xml">
+&lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+	xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;
+	&lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+
+	&lt;groupId&gt;lld.test&lt;/groupId&gt;
+	&lt;artifactId&gt;cloud_ribbon_test&lt;/artifactId&gt;
+	&lt;version&gt;0.0.1-SNAPSHOT&lt;/version&gt;
+	&lt;packaging&gt;jar&lt;/packaging&gt;
+
+	&lt;name&gt;cloud_ribbon_test&lt;/name&gt;
+	&lt;url&gt;http://maven.apache.org&lt;/url&gt;
+	&lt;parent&gt;
+		&lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+		&lt;artifactId&gt;spring-boot-starter-parent&lt;/artifactId&gt;
+		&lt;version&gt;1.5.4.RELEASE&lt;/version&gt;
+	&lt;/parent&gt;
+
+	&lt;properties&gt;
+		&lt;project.build.sourceEncoding&gt;UTF-8&lt;/project.build.sourceEncoding&gt;
+	&lt;/properties&gt;
+
+	&lt;dependencies&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-boot-starter-web&lt;/artifactId&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-cloud-starter-eureka&lt;/artifactId&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-cloud-starter-ribbon&lt;/artifactId&gt;
+        &lt;/dependency&gt;
+	&lt;/dependencies&gt;
+    &lt;dependencyManagement&gt;
+        &lt;dependencies&gt;
+            &lt;dependency&gt;
+                &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;
+                &lt;artifactId&gt;spring-cloud-dependencies&lt;/artifactId&gt;
+                &lt;version&gt;Edgware.RELEASE&lt;/version&gt;
+                &lt;type&gt;pom&lt;/type&gt;
+                &lt;scope&gt;import&lt;/scope&gt;
+            &lt;/dependency&gt;
+        &lt;/dependencies&gt;
+    &lt;/dependencyManagement&gt;
+&lt;/project&gt;
+</pre>
+        </li>
+        <li>
+            <p>创建服务入口类 ConsumerApplication.java</p>
+            <pre class="code" data-type="java" data-collapsed="false" title="ConsumerApplication.java">
+package lld.test.cloud_ribbon_test;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.springframework.cloud.client.loadbalancer.LoadBalanced;
+import org.springframework.context.annotation.Bean;
+import org.springframework.web.client.RestTemplate;
+
+@SpringBootApplication
+@EnableDiscoveryClient
+public class ConsumerApplication 
+{
+	@Bean
+	@LoadBalanced
+	RestTemplate restTemplate() {
+		return new RestTemplate();
+	}
+
+	public static void main( String[] args )
+    {
+        SpringApplication.run(ConsumerApplication.class, args);
+    }
+}
+</pre>
+        </li>
+        <li>
+            <p>创建 ConsumerController 类作为 Demo Service 的消费者</p>
+            <pre class="code" data-type="java" data-collapsed="false" title="ConsumerController.java">
+package lld.test.cloud_ribbon_test;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
+
+@RestController
+public class ConsumerController {
+
+	@Autowired
+	RestTemplate restTemplate;
+
+	@RequestMapping("/get-users")
+	public String listUsers2() {
+		try {
+			return restTemplate.getForEntity("http://demo-service/users", String.class).getBody();
+		} catch (Exception e) {
+			return "error";
+		}
+	}
+}
+</pre>
+        </li>
+        <li>
+            <p>在配置文件中加入有关 Eureka 注册中心的配置项</p>
+            <pre class="code" data-type="properties" data-collapsed="false" title="application.yml">
+spring.application.name: ribbon-consumer
+server.port: 9001
+eureka.client.serviceUrl.defaultZone: http://localhost:29011/eureka/
+</pre>
+        </li>
+        <li>
+            <p>使用 URL http://localhost:9001/get-users 进行测试</p>
+        </li>
+.    </ol>
+    <a id="feign"></a>
+    <h1>Feign 方式</h1>
+    <ol>
+        <li>
+            <p>创建 Maven 程序</p>
+        </li>
+        <li>
+            <p>修改 pom.xml</p>
+            <pre class="code" data-type="xml" data-collapsed="false" title="pom.xml">
+&lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+	xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;
+	&lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+
+	&lt;groupId&gt;lld.test&lt;/groupId&gt;
+	&lt;artifactId&gt;cloud_feign_test&lt;/artifactId&gt;
+	&lt;version&gt;0.0.1-SNAPSHOT&lt;/version&gt;
+	&lt;packaging&gt;jar&lt;/packaging&gt;
+
+	&lt;name&gt;cloud_ribbon_test&lt;/name&gt;
+	&lt;url&gt;http://maven.apache.org&lt;/url&gt;
+	&lt;parent&gt;
+		&lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+		&lt;artifactId&gt;spring-boot-starter-parent&lt;/artifactId&gt;
+		&lt;version&gt;1.5.4.RELEASE&lt;/version&gt;
+	&lt;/parent&gt;
+
+	&lt;properties&gt;
+		&lt;project.build.sourceEncoding&gt;UTF-8&lt;/project.build.sourceEncoding&gt;
+	&lt;/properties&gt;
+
+	&lt;dependencies&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-boot-starter-web&lt;/artifactId&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-cloud-starter-eureka&lt;/artifactId&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-cloud-starter-feign&lt;/artifactId&gt;
+        &lt;/dependency&gt;
+	&lt;/dependencies&gt;
+    &lt;dependencyManagement&gt;
+        &lt;dependencies&gt;
+            &lt;dependency&gt;
+                &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;
+                &lt;artifactId&gt;spring-cloud-dependencies&lt;/artifactId&gt;
+                &lt;version&gt;Edgware.RELEASE&lt;/version&gt;
+                &lt;type&gt;pom&lt;/type&gt;
+                &lt;scope&gt;import&lt;/scope&gt;
+            &lt;/dependency&gt;
+        &lt;/dependencies&gt;
+    &lt;/dependencyManagement&gt;
+&lt;/project&gt;
+</pre>
+        </li>
+        <li>
+            <p>创建服务入口类 ConsumerApplication.java</p>
+            <pre class="code" data-type="java" data-collapsed="false" title="ConsumerApplication.java">
+package lld.test.cloud_feign_test;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.springframework.cloud.netflix.feign.EnableFeignClients;
+
+@EnableFeignClients
+@EnableDiscoveryClient
+@SpringBootApplication
+public class ConsumerApplication 
+{
+	public static void main( String[] args )
+    {
+        SpringApplication.run(ConsumerApplication.class, args);
+    }
+}
+</pre>
+        </li>
+        <li>
+            <p>此处将为访问远程服务创建接口，Feign 将会自动生成实现类。</p>
+            <pre class="code" data-type="java" data-collapsed="false" title="UserService.java">
+package lld.test.cloud_feign_test;
+
+import org.springframework.cloud.netflix.feign.FeignClient;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+@FeignClient("demo-service")
+public interface UserService {
+	@RequestMapping("/users")
+	String getUsers();
+}
+</pre>
+        </li>
+        <li>
+            <p>创建 ConsumerController 类作为 Demo Service 的消费者</p>
+            <pre class="code" data-type="java" data-collapsed="false" title="ConsumerController.java">
+package lld.test.cloud_feign_test;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+public class ConsumerController {
+	
+	@Autowired
+	UserService userService;
+	
+	@RequestMapping("/get-users")
+	public String listUsers2() {
+		try {
+			return userService.getUsers();
+		} catch (Exception e) {
+			return "error";
+		}
+	}
+
+}
+</pre>
+        </li>
+        <li>
+            <p>在配置文件中加入有关 Eureka 注册中心的配置项</p>
+            <pre class="code" data-type="properties" data-collapsed="false" title="application.yml">
+spring.application.name: ribbon-consumer
+server.port: 9002
+eureka.client.serviceUrl.defaultZone: http://localhost:29011/eureka/
+</pre>
+        </li>
+        <li>
+            <p>使用 URL http://localhost:9002/get-users 进行测试</p>
+        </li>
+        .
+    </ol>
+</body>
+</html>
