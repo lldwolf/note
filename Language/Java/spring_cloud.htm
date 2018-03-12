@@ -445,7 +445,7 @@ eureka.client.serviceUrl.defaultZone: http://localhost:29011/eureka/,http://loan
             <p>在配置文件中指定 Admin 的监控配置</p>
             <pre class="code" data-type="properties" data-collapsed="false" title="application.yml">
 eureka.client.serviceUrl.defaultZone: http://localhost:29011/eureka/
-
+management.security.enabled: false
 
 #### Spring Cloud ####
 spring:
@@ -454,6 +454,15 @@ spring:
     read-timeout: 10000
     connect-timeout: 10000
     period: 2000
+</pre>
+            <p>management.security.enabled 表示是否需要登录才能查看 metrics 信息，否则在访问 metrics 链接时会出现错误</p>
+            <pre class="code" data-type="log">
+Whitelabel Error Page
+This application has no explicit mapping for /error, so you are seeing this as a fallback.
+
+Wed Feb 28 15:37:43 CST 2018
+There was an unexpected error (type=Unauthorized, status=401).
+Full authentication is required to access this resource.
 </pre>
         </li>
         <li>
@@ -498,6 +507,15 @@ org.springframework.web.client.ResourceAccessException: I/O error on GET request
     <h2>Overview</h2>
     <p>通过服务路由，客户端可以不需要知道每个微服务的 URL，只需要知道路由服务器的地址即可。</p>
     <p>本例使用 Spring Cloud Zuul 实现</p>
+    <p>Zuul 请求的生命周期如下图所示：</p>
+    <p><img alt="" src="images/zuul-overview.png" /></p>
+    <p>Zuul大部分功能都是通过过滤器来实现的。Zuul中定义了四种标准过滤器类型，这些过滤器类型对应于请求的典型生命周期。</p>
+    <ol>
+        <li>PRE：这种过滤器在请求被路由之前调用。我们可利用这种过滤器实现身份验证、在集群中选择请求的微服务、记录调试信息等。</li>
+        <li>ROUTING：这种过滤器将请求路由到微服务。这种过滤器用于构建发送给微服务的请求，并使用Apache HttpClient或Netfilx Ribbon请求微服务。</li>
+        <li>POST：这种过滤器在路由到微服务以后执行。这种过滤器可用来为响应添加标准的HTTP Header、收集统计信息和指标、将响应从微服务发送给客户端等。</li>
+        <li>ERROR：在其他阶段发生错误时执行该过滤器。</li>
+    </ol>
     <h2>实现步骤</h2>
     <ol>
         <li>
@@ -615,5 +633,14 @@ eureka.client.serviceUrl.defaultZone: http://localhost:29011/eureka/,http://127.
             <p>启动，以前 demo service 需要使用 http://localhost:45001/users 来访问，现在使用 http://localhost:29051/demo-srv/users 即可访问</p>
         </li>
     </ol>
+    <h2>https 路由</h2>
+    <p>zuul 目前不支持 https 服务路由，路由时会报错：“https protocol is not supported”</p>
+    <p>可能是基于如下的考虑吧</p>
+    <ul>
+        <li>需要路由的应该都是内部服务</li>
+        <li>内部服务使用 https 除了降低效率没有啥好处</li>
+    </ul>
+    <p>这样内部服务间均使用 http 协议，统一通过 Zuul 向外提供服务，所以 Zuul 可以配置为 https 协议。</p>
+    <p>可参考<a href="spring_restful.htm#https-config">这里</a>查看如何将 Zuul 服务配置为 https 服务</p>
 </body>
 </html>

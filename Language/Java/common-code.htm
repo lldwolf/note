@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+    <title>常用工具方法</title>
+    <script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+    <p id="title">常用工具方法</p>
+    <h1>信息类</h1>
+    <h2>当前运行的方法名</h2>
+    <pre class="code" data-type="java" data-collapsed="false" title="method_name">
+public void givenObject_whenGetEnclosingMethod_thenFindMethod() {
+    String methodName = new Object() {}
+      .getClass()
+      .getEnclosingMethod()
+      .getName();
+        
+    assertEquals("givenObject_whenGetEnclosingMethod_thenFindMethod",
+      methodName);
+}
+
+public void givenThrowable_whenGetStacktrace_thenFindMethod() {
+    StackTraceElement[] stackTrace = new Throwable().getStackTrace();
+  
+    assertEquals(
+      "givenThrowable_whenGetStacktrace_thenFindMethod",
+      stackTrace[0].getMethodName());
+}
+
+public void givenCurrentThread_whenGetStackTrace_thenFindMethod() {
+    StackTraceElement[] stackTrace = Thread.currentThread()
+      .getStackTrace();
+  
+    assertEquals(
+      "givenCurrentThread_whenGetStackTrace_thenFindMethod",
+      stackTrace[1].getMethodName()); 
+}
+</pre>
+
+</body>
+</html>

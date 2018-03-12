@@ -10,60 +10,157 @@
 	<p id="title">HTTP Server FAQ</p>
     <h1>https 服务</h1>
     <h2>跳过证书验证</h2>
-    <pre class="code" data-type="java">
+    <pre class="code" data-type="java" data-collapsed="false" title="代码示例">
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URL;
 import java.net.URLConnection;
- 
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.X509Certificate;
+
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSession;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
-import java.security.cert.X509Certificate;
- 
+
 public class Example {
-    public static void main(String[] args) throws Exception {
-        // Create a trust manager that does not validate certificate chains
-        TrustManager[] trustAllCerts = new TrustManager[] {new X509TrustManager() {
-                public java.security.cert.X509Certificate[] getAcceptedIssuers() {
-                    return null;
-                }
-                public void checkClientTrusted(X509Certificate[] certs, String authType) {
-                }
-                public void checkServerTrusted(X509Certificate[] certs, String authType) {
-                }
-            }
-        };
- 
-        // Install the all-trusting trust manager
-        SSLContext sc = SSLContext.getInstance(&quot;SSL&quot;);
-        sc.init(null, trustAllCerts, new java.security.SecureRandom());
-        HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
- 
-        // Create all-trusting host name verifier
-        HostnameVerifier allHostsValid = new HostnameVerifier() {
-            public boolean verify(String hostname, SSLSession session) {
-                return true;
-            }
-        };
- 
-        // Install the all-trusting host verifier
-        HttpsURLConnection.setDefaultHostnameVerifier(allHostsValid);
- 
-        URL url = new URL(&quot;https://www.nakov.com:2083/&quot;);
-        URLConnection con = url.openConnection();
-        Reader reader = new InputStreamReader(con.getInputStream());
-        while (true) {
-            int ch = reader.read();
-            if (ch==-1) {
-                break;
-            }
-            System.out.print((char)ch);
-        }
-    }
+	public static void main(String[] args) throws Exception {
+		disableCertificateValidation();
+
+		URL url = new URL("https://www.nakov.com:2083/");
+		URLConnection con = url.openConnection();
+		Reader reader = new InputStreamReader(con.getInputStream());
+		while (true) {
+			int ch = reader.read();
+			if (ch == -1) {
+				break;
+			}
+			System.out.print((char) ch);
+		}
+	}
+
+	static void disableCertificateValidation() throws NoSuchAlgorithmException, KeyManagementException {
+		// Create a trust manager that does not validate certificate chains
+		TrustManager[] trustAllCerts = new TrustManager[] { new X509TrustManager() {
+			@Override
+			public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+				return null;
+			}
+
+			@Override
+			public void checkClientTrusted(X509Certificate[] certs, String authType) {
+				// do nothing
+			}
+
+			@Override
+			public void checkServerTrusted(X509Certificate[] certs, String authType) {
+				// do nothing
+			}
+		} };
+
+		// Install the all-trusting trust manager
+		SSLContext sc = SSLContext.getInstance("SSL");
+		sc.init(null, trustAllCerts, new java.security.SecureRandom());
+		HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+
+		// Create all-trusting host name verifier
+		HostnameVerifier allHostsValid = new HostnameVerifier() {
+			public boolean verify(String hostname, SSLSession session) {
+				return true;
+			}
+		};
+
+		// Install the all-trusting host verifier
+		HttpsURLConnection.setDefaultHostnameVerifier(allHostsValid);
+	}
+}
+</pre>
+    <h2>RestTemplate 跳过证书验证</h2>
+    <p>如果使用 Spring Boot 开发，推荐使用 RestTemplate 访问 HTTPS 服务同，可使用如下方式跳过证书验证</p>
+    <h3>方法一</h3>
+    <p>仍然使用上面的 disableCertificateValidation 方未能，如下所示：</p>
+    <pre class="code" data-type="java" data-collapsed="false" title="代码示例">
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.X509Certificate;
+
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.RestTemplate;
+
+public class DemoClient4Ssl {
+	static final Logger logger = LoggerFactory.getLogger(DemoClient4Ssl.class);
+
+	public static void main(String[] args) throws NoSuchAlgorithmException, KeyManagementException {
+		disableCertificateValidation();
+
+		String url = "https://localhost:45003/users";
+		RestTemplate restTemplate = new RestTemplate();
+		ResponseEntity&lt;String&gt; responseEntity = restTemplate.getForEntity(url, String.class);
+		String users = responseEntity.getBody();
+		logger.info("result: {}", users);
+	}
+
+	static void disableCertificateValidation() throws NoSuchAlgorithmException, KeyManagementException {
+        ...
+	}
+
+}
+</pre>
+    <h3>方法二</h3>
+    <pre class="code" data-type="java" data-collapsed="false" title="代码示例">
+import java.security.KeyManagementException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+
+import javax.net.ssl.SSLContext;
+
+import org.apache.http.conn.ssl.NoopHostnameVerifier;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.ssl.SSLContextBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
+import org.springframework.web.client.RestTemplate;
+
+public class DemoClient4Ssl2 {
+	static final Logger logger = LoggerFactory.getLogger(DemoClient4Ssl2.class);
+
+	public static void main(String[] args) throws Exception {
+		String url = "https://localhost:45003/users";
+		RestTemplate restTemplate = createRestTemplate();
+		ResponseEntity&lt;String&gt; responseEntity = restTemplate.getForEntity(url, String.class);
+		String users = responseEntity.getBody();
+		logger.info("result: {}", users);
+	}
+
+	public static RestTemplate createRestTemplate()
+			throws KeyStoreException, NoSuchAlgorithmException, KeyManagementException {
+		SSLContext sslContext = new SSLContextBuilder()
+				.loadTrustMaterial(null, (certificate, authType) -&gt; true).build();
+
+		CloseableHttpClient httpClient = HttpClients.custom()
+				.setSSLContext(sslContext)
+				.setSSLHostnameVerifier(new NoopHostnameVerifier())
+				.build();
+
+		HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory();
+		requestFactory.setHttpClient(httpClient);
+		return new RestTemplate(requestFactory);
+	}
 }
 </pre>
     <p>参考 <a href="http://www.nakov.com/blog/2009/07/16/disable-certificate-validation-in-java-ssl-connections/">这里</a></p>

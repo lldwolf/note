@@ -176,6 +176,7 @@ public class App
             <p>将输出 JSON 字符串</p>
         </li>
     </ol>
+    <a id="unit-test"></a>
     <h2>Unit Test</h2>
     <p>本例演示了如何使用 Unit Test 来测试服务</p>
     <p>本例同时演示了 ArrayList 类型如何从 JSON 字符串反序列化</p>
@@ -584,6 +585,62 @@ server.port: 45003
 server.port: 45004
 </pre>
     <p>则使用参数 -Dspring.profiles.active=production 启动后则会启动 45004 端口</p>
+    <a id="https-config"></a>
+    <h2>配置 https (SSL) 服务</h2>
+    <p>步骤如下(Maven)：</p>
+    <ol>
+        <li>
+            <p>将证书放在 resources 目录中</p>
+        </li>
+        <li>
+            <p>在配置文件中加入</p>
+            <pre class="code" data-type="properties">
+server.ssl.key-store: classpath:keystore.jks
+server.ssl.key-store-password: ******
+</pre>
+        </li>
+    </ol>
+    <p>可参考<a href="http-service-faq.htm">这里</a>查看如何调用 HTTPS 服务</p>
+    <h3>为 http 和 https 指定不同端口</h3>
+    <ol>
+        <li>
+            <p>在配置文件中加入端口号</p>
+            <pre class="code" data-type="properties">
+http:
+  port: 57050
+</pre>
+        </li>
+        <li>
+            <p>加入配置类</p>
+            <pre class="code" data-type="java" data-collapsed="false" title="TomcatConfig.java">
+import org.apache.catalina.connector.Connector;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.embedded.EmbeddedServletContainerCustomizer;
+import org.springframework.boot.context.embedded.tomcat.TomcatEmbeddedServletContainerFactory;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+public class TomcatConfig {
+	@Value(&quot;${http.port}&quot;)
+	private int httpPort;
+
+	@Bean
+	public EmbeddedServletContainerCustomizer containerCustomizer() {
+		return container -&gt; {
+			if (container instanceof TomcatEmbeddedServletContainerFactory) {
+				TomcatEmbeddedServletContainerFactory containerFactory = (TomcatEmbeddedServletContainerFactory) container;
+
+				Connector connector = new Connector(TomcatEmbeddedServletContainerFactory.DEFAULT_PROTOCOL);
+				connector.setPort(httpPort);
+				containerFactory.addAdditionalTomcatConnectors(connector);
+			}
+		};
+	}
+}
+</pre>
+        </li>
+    </ol>
     <h1>更多场景</h1>
     <h2>使用 POJO 作为接口参数</h2>
     <p>前面的例子我们使用了简单的 String 类型作为接口参数。借助 Spring MVC 我们可以使用 POJO 作为接口参数，如下所示：</p>

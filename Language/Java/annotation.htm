@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+    <script type="text/javascript" src="../../mylib/js/css.js"></script>
+    <title>Annotation</title>
+</head>
+
+<body class="index">
+    <p id="title">Annotation FAQ</p>
+    <h1>Annotation 语法</h1>
+    <h2>创建 Annotation</h2>
+    <pre class="code" data-type="java">public @interface AnnotationName {
+    boolean required() default true;
+
+	@AliasFor("locations")
+	String[] value() default {};
+}</pre>
+    <h2>数组参数赋值</h2>
+    <pre class="code" data-type="java">
+@AnnotationName(locations = { "1", "2" })
+</pre>
+</body>
+</html>

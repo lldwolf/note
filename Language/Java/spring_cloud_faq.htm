@@ -7,7 +7,7 @@
 </head>
 
 <body>
-	<p id="title">Spring Cloud FAQ</p>
+    <p id="title">Spring Cloud FAQ</p>
     <h1>启动参数</h1>
     <h2>如何在命令行设定启动参数</h2>
     <p>可以使用如下两种方式设定</p>
@@ -28,20 +28,6 @@ java -jar myproject.jar --spring.config.location=classpath:/default.properties,c
 </pre>
     <p>也可以直接指定目录</p>
     <h1>服务配置</h1>
-    <h2>https 服务</h2>
-    <p>步骤如下(Maven)：</p>
-    <ol>
-        <li>
-            <p>将证书放在 resources 目录中</p>
-        </li>
-        <li>
-            <p>在配置文件中加入</p>
-            <pre class="code" data-type="properties">
-server.ssl.key-store: classpath:keystore.jks
-server.ssl.key-store-password: ******
-</pre>
-        </li>
-    </ol>
     <h1>服务调用</h1>
     <h2>快速测试</h2>
     <p>可使用如下方式：</p>
@@ -65,5 +51,51 @@ curl -k [url]
         <li><a href="spring_cloud_ribbon.htm#ribbon">Ribbon</a></li>
         <li><a href="spring_cloud_ribbon.htm#feign">Feign</a></li>
     </ul>
+    <h1>Unit Test</h1>
+    <p>简单示例看<a href="spring_restful.htm#unit-test">这里</a></p>
+    <h2>设定 active profile</h2>
+    <pre class="code" data-type="java">@ActiveProfiles("dev")
+public class MyTest {
+    @Autowired
+    private Environment environment;
+
+    @Test
+    public void testActiveProfiles() {
+        assertArrayEquals(new String[] { "dev" }, environment.getActiveProfiles());
+    }
+}
+</pre>
+    <h2>设定配置文件</h2>
+    <pre class="code" data-type="java">
+@TestPropertySource(locations = { "classpath:folder1/application.properties", "classpath:folder1/application-dev.properties" })
+</pre>
+    <h1>Maven</h1>
+    <h2>打包为单一 jar</h2>
+    <p>使用 spring-boot-maven-plugin 将 Spring Boot 应用打包为单一 jar</p>
+    <pre class="code" data-type="xml">
+&lt;build&gt;
+    &lt;plugins&gt;
+        &lt;plugin&gt;
+            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-boot-maven-plugin&lt;/artifactId&gt;
+        &lt;/plugin&gt;
+    &lt;/plugins&gt;
+&lt;/build&gt;
+</pre>
+    <h2>指定入口类</h2>
+    <p>适用于项目中有多个入口类的情况</p>
+    <pre class="code" data-type="xml">
+&lt;build&gt;
+    &lt;plugins&gt;
+        &lt;plugin&gt;
+            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-boot-maven-plugin&lt;/artifactId&gt;
+            <span class="emphasis">&lt;configuration&gt;
+                &lt;mainClass&gt;lld.MainClass&lt;/mainClass&gt;
+            &lt;/configuration&gt;</span>
+        &lt;/plugin&gt;
+    &lt;/plugins&gt;
+&lt;/build&gt;
+</pre>
 </body>
 </html>
