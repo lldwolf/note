@@ -9,7 +9,7 @@
 <body>
 <p id="title">动态加载对象</p>
 
-<h1>N.1 Class 对象 </h1>
+<h1>Class 对象 </h1>
 <p>下面的代码展示了获取Class对象的方法:</p>
 <pre class="code" data-type="java">Class c = o.getClass();		//从现有对象获取
 c = VOID.TYPE;		//特殊的 'non-return-value' 对象
@@ -23,7 +23,7 @@ c = Class[][].class;
 
 c = Class.forName("java.util.ArrayList"); // 使用 forName 方法
 </pre>
-<h1>N.2 Relection on a Class</h1>
+<h1>Relection on a Class</h1>
 <p>下例展示了使用 Class 对象进行 Reflection 操作</p>
 <pre class="code" data-type="java">import java.lang.reflect.*;
 
@@ -62,7 +62,7 @@ catch(Exception e)
 {
 	...
 }</pre>
-<h1>  N.3 动态加载对象</h1>
+<h1>动态加载对象</h1>
 <p>Class 对象提供了动态创建对象的简单方法，更复杂的控制方法，需使用java.lang.ClassLoader对象，或使用java.net.URLClassLoader。这是很有用的技术，程序可以根据配置文件动态地加载对象，像现在流行的一些开源项目，如struts、 spring、Hibernate等，均以该技术为基础。</p>
 <pre class="code" data-type="java">String classname = config.getProperty("filterclass",		//the property name
 			"com.lld.test.Default");		//a default
@@ -89,12 +89,142 @@ catch(Exception e)
 	...
 }
 </pre>
-<h1>N.100 网络教程</h1>
+    <h1>操作字典</h1>
+    <table style="width: 95%">
+        <tr>
+            <th>归类</th>
+            <th>操作</th>
+            <th>示例代码</th>
+        </tr>
+        <tr>
+            <td>方法</td>
+            <td>取方法名</td>
+            <td>
+                <pre class="code" data-type="java">
+Method method = ...;
+System.out.println("method name: " + method.getName());
+</pre>
+            </td>
+        </tr>
+        <tr>
+            <td>方法</td>
+            <td>取参数个数</td>
+            <td>
+                <pre class="code" data-type="java">
+Method method = ...;
+System.out.println("parameter size: " + method.getParameters().length);
+</pre>
+            </td>
+        </tr>
+        <tr>
+            <td>方法</td>
+            <td>取参数类型</td>
+            <td>
+                <pre class="code" data-type="java">
+Method method = ...;
+System.out.println("parameter size: " + method.getParameterTypes().length);
+</pre>
+            </td>
+        </tr>
+        <tr>
+            <td>类</td>
+            <td>判断一个类是否是某接口实现或继承自某基类</td>
+            <td>
+                <pre class="code" data-type="java">
+boolean isList = List.class.isAssignableFrom(myClass);
+</pre>
+            </td>
+        </tr>
+        <tr>
+            <td>类</td>
+            <td>创建新对象</td>
+            <td>
+                <pre class="code" data-type="java">
+// 对于无参构造函数
+Class<?> c = ...;
+Object obj = c.newInstance();
+
+// 对于有参构造函数
+Constructor&lt;?&gt;[] constructors = c.getConstructors();
+Object[] params = new Object[paramTypes.length];
+Object obj = constructors[0].newInstance(params);
+</pre>
+                <p>更具体的用法看本章的工具函数</p>
+            </td>
+        </tr>
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+    </table>
+    <h1>常用工具函数</h1>
+    <h2>创建对象默认值</h2>
+    <p>常用于</p>
+    <pre class="code" data-type="java">
+private static Object getTestValue(Class&lt;?&gt; type) {
+    Object ret = null;
+
+    if (type.equals(String.class)) {
+        ret = &quot;test&quot;;
+    } else if (type.equals(Integer.class)) {
+        ret = new Integer(0);
+    } else if (type.equals(BigDecimal.class)) {
+        ret = new BigDecimal(0);
+    } else if (type.equals(Double.class)) {
+        ret = new Double(0);
+    } else if (type.equals(Boolean.class)) {
+        ret = new Boolean(true);
+    } else if (type.equals(java.util.Date.class)) {
+        ret = Calendar.getInstance().getTime();
+    } else if (type.equals(java.sql.Date.class)) {
+        ret = new java.sql.Date(System.currentTimeMillis());
+    } else {
+        ret = getInstance(type);
+    }
+
+    return ret;
+}
+
+private static Object getInstance(Class&lt;?&gt; class1) {
+    Constructor&lt;?&gt;[] constructors = class1.getConstructors();
+
+    for (Constructor&lt;?&gt; constructor : constructors) {
+        Class&lt;?&gt;[] paramTypes = constructor.getParameterTypes();
+
+        if (paramTypes != null &amp;&amp; paramTypes.length &gt; 0) {
+            System.out.println(paramTypes.length + &quot; constructor arguments required for &quot; + constructor.getName());
+            Object[] params = new Object[paramTypes.length];
+            int i = 0;
+
+            for (Class&lt;?&gt; paramType : paramTypes) {
+                System.out.println(paramType.getName());
+                params[i++] = getTestValue(paramType);
+            }
+
+            try {
+                return constructor.newInstance(params);
+            } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+                e.printStackTrace();
+            }
+        } else {
+            try {
+                return class1.newInstance();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
+
+    return null;
+}
+</pre>
+<h1>网络教程</h1>
 <p><a href="resource/JAVA反射.mht">JAVA反射</a></p>
 <p>&nbsp;</p>
 <p>&nbsp;</p>
 <p>&nbsp;</p>
 <p>&nbsp;</p>
-
 </body>
 </html>

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>JUnit</title>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+	<p id="title">JUnit</p>
+    <h1>Overview</h1>
+    <h2>Maven + JUnit</h2>
+    <p>创建带 JUnit 功能的 Maven 项目</p>
+    <ol>
+        <li>
+            <p>创建 Maven 项目, 默认的 unit test 路径为 src/test/java 和 src/test/resources</p>
+        </li>
+        <li>
+            <p>在 pom.xml 中加入 JUnit 依赖</p>
+            <pre class="code" data-type="xml">
+&lt;dependency&gt;
+	&lt;groupId&gt;junit&lt;/groupId&gt;
+	&lt;artifactId&gt;junit&lt;/artifactId&gt;
+	&lt;version&gt;4.12&lt;/version&gt;
+	&lt;scope&gt;test&lt;/scope&gt;
+&lt;/dependency&gt;
+</pre>
+        </li>
+        <li>
+            <p>写一个 Unit Test 程序，如下所示</p>
+            <pre class="code" data-type="java">
+import static org.junit.Assert.assertTrue;
+
+import org.junit.Test;
+
+public class AppTest {
+    @Test
+    public void testApp() {
+        assertTrue(true);
+    }
+}
+</pre>
+        </li>
+        <li>
+            <p>在 Eclipse 中使用右键菜单 Run As &rArr; JUnit Test 运行测式 （快捷键 Alt + Shift + X, T）</p>
+        </li>
+    </ol>
+    <p>或者使用如下的写法，可以省略所有 Unit Test 的 @Test Annotation</p>
+    <pre class="code" data-type="java">
+import junit.framework.Test;
+import junit.framework.TestCase;
+import junit.framework.TestSuite;
+
+public class AppTest extends TestCase {
+    public AppTest(String testName) {
+        super(testName);
+    }
+
+    public static Test suite() {
+        return new TestSuite(AppTest.class);
+    }
+
+    public void testApp() {
+        assertTrue(true);
+    }
+}
+</pre>
+    <h1>FAQ</h1>
+    <h2>注意点</h2>
+    <ol>
+        <li>
+            <p>对于 Spring 应用，需要手工使用 @ContextConfiguration 指定 Config 类，否则会报 ApplicationConext 加载失败</p>
+        </li>
+        <li>
+            <p>对于 Spring 应用，如果自定义了配置文件, 在 Unit Test 中需作如下配置</p>
+            <pre class="code" data-type="java">
+@TestPropertySource(locations = { "classpath:my-application.properties", "classpath:my-folder/application-dev.properties" })</pre>
+        </li>
+        <li>
+            <p>典型的 Spring Unit Test 获取 ApplicationContext 和 Bean</p>
+            <pre class="code" data-type="java">
+@ContextConfiguration(locations = "classpath:my_spring_config.xml")
+public class CoveredFundValidatorTest extends BaseTest {
+    @Autowired
+    private ApplicationContext ctx;
+
+    @Test
+    public void testValidate() throws ParserConfigurationException, SAXException, IOException {
+        MyBean myBean = (MyBean) ctx.getBean("my-bean");
+        ...
+    }
+}
+</pre>
+        </li>
+    </ol>
+</body>
+</html>

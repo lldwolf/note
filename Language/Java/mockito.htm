@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>Mockito</title>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+	<p id="title">Mockito</p>
+    <h1>Overview</h1>
+    <p>Mockito 是 Java 中用于 Mock 的一个开源项目。</p>
+    <p>Mock 用于如下目的</p>
+    <ul>
+        <li>如果依赖的外部系统在测试环境下不可用，使用 Mock 跳过外部系统调用并模拟返回结果</li>
+        <li>验证是否的确调用了 Mock 对象</li>
+    </ul>
+    <h1>Maven 项目初始化</h1>
+    <ol>
+        <li>
+            <p>创建 Maven Quick Start 项目</p>
+        </li>
+        <li>
+            <p>pom.xml 修改如下</p>
+            <pre class="code" data-type="java" data-collapsed="false" title="pom.xml">
+&lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+	xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;
+	&lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+
+	&lt;groupId&gt;com.lld&lt;/groupId&gt;
+	&lt;artifactId&gt;test.mockito&lt;/artifactId&gt;
+	&lt;version&gt;0.0.1-SNAPSHOT&lt;/version&gt;
+	&lt;packaging&gt;jar&lt;/packaging&gt;
+
+	&lt;name&gt;test.mockito&lt;/name&gt;
+	&lt;url&gt;http://maven.apache.org&lt;/url&gt;
+	&lt;parent&gt;
+		&lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+		&lt;artifactId&gt;spring-boot-starter-parent&lt;/artifactId&gt;
+		&lt;version&gt;1.5.4.RELEASE&lt;/version&gt;
+	&lt;/parent&gt;
+
+	&lt;properties&gt;
+		&lt;project.build.sourceEncoding&gt;UTF-8&lt;/project.build.sourceEncoding&gt;
+	&lt;/properties&gt;
+
+	&lt;dependencies&gt;
+		&lt;dependency&gt;
+			&lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+			&lt;artifactId&gt;spring-boot-starter&lt;/artifactId&gt;
+		&lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-boot-starter-test&lt;/artifactId&gt;
+        &lt;/dependency&gt;
+		&lt;dependency&gt;
+			&lt;groupId&gt;org.mockito&lt;/groupId&gt;
+			&lt;artifactId&gt;mockito-all&lt;/artifactId&gt;
+			&lt;version&gt;1.9.5&lt;/version&gt;
+			&lt;scope&gt;test&lt;/scope&gt;
+		&lt;/dependency&gt;
+	&lt;/dependencies&gt;
+	&lt;build&gt;
+		&lt;plugins&gt;
+			&lt;plugin&gt;
+				&lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+				&lt;artifactId&gt;spring-boot-maven-plugin&lt;/artifactId&gt;
+			&lt;/plugin&gt;
+		&lt;/plugins&gt;
+	&lt;/build&gt;
+&lt;/project&gt;
+</pre>
+        </li>
+    </ol>
+    <h1>示例</h1>
+    <h2>第一个示例</h2>
+    <p>我们先看如下代码</p>
+    <pre class="code" data-type="java">
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+
+import java.util.List;
+
+import org.junit.Test;
+
+public class FirstTest {
+
+    @Test
+    public void verifyBehavior() {
+        @SuppressWarnings("unchecked")
+        List&lt;Integer&gt; mock = mock(List.class);
+        mock.add(1);
+        mock.clear();
+        verify(mock).add(1);
+        verify(mock).clear();
+    }
+}
+</pre>
+    <p>作为第一个示例，我在此详细解释一下</p>
+    <p>首先，我们使用 Mockito.mock() 方来来生成 Mock 对象。这里我们需要注意两点：</p>
+    <ol>
+        <li>可以直接生成接口的 Mock 对象</li>
+        <li>范型对象 Mock</li>
+    </ol>
+    <p>然后我们调用了 Mock 对象的两个成员方法，在此我们需要更深刻地理解一下 Mock 对象的行为，如果我们在调用 add 方法后打印它的 size，我们会发现结果是 0 而不是 1。也就是说，Mock 对象只是拦截了所有对原始方法的调用并返回对应返回的类型的默认值，而不是真正地实现了这个接口或创建了对象实例。</p>
+    <p>然后是两个 verify 方法，表示验证 Mock 对象是否调用了对应的方法。注意验证 add 调用时，可以验证输入参数（本例为 1），如果不想验证，只需要确定是否调用，可以使用如下方式验证</p>
+    <pre class="code" data-type="java">
+import static org.mockito.Matchers.anyInt;
+...
+verify(mock).add(anyInt());</pre>
+    <h2>自动 Mock</h2>
+    <p>可以使用如下方式自动生成 Mock 对象</p>
+    <pre class="code" data-type="java">
+import org.junit.Before;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+...
+@Mock
+private List&lt;Integer&gt; mock;
+
+@Before
+public void setup() {
+    MockitoAnnotations.initMocks(this);
+}
+</pre>
+    <h2>Mock 返回值</h2>
+    <p>下例 mock一个Iterator类，预设当iterator调用next()时第一次返回hello，以后每次都返回world</p>
+    <pre class="code" data-type="java">
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
+import java.util.Iterator;
+import org.junit.Test;
+
+public class MockReturnTest {
+
+    @Test
+    public void verifyBehavior1() {
+        @SuppressWarnings("unchecked")
+        Iterator&lt;String&gt; iterator = mock(Iterator.class);
+        when(iterator.next()).thenReturn("hello").thenReturn("world");
+        String result = iterator.next() + " " + iterator.next() + " " + iterator.next();
+        assertEquals("hello world world", result);
+    }
+}
+</pre>
+    <h2>Mock 参数</h2>
+    <p>可以使用以下 Mockito 对象来模拟任意输入值</p>
+    <pre class="code" data-type="java">import static org.mockito.Matchers.any*</pre>
+    <p>例如 anyString, anyInteger, anyChar 等，也可以使用 any() 方法来生成任意对象，例如</p>
+    <pre class="code" data-type="java">
+List&lt;String&gt; mock = mock(List.class);
+mock.add(any(String.class));
+</pre>
+    <h2>自动注入 Mock 对象</h2>
+    <p>对于如下的情况，我们需要 Mock 某对象的内部方法，如下所示，我们需要 Mock MainServer 内部的 OtherService：</p>
+    <pre class="code" data-type="java" data-collapsed="false" title="MainService.java">
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+@Component
+public class MainService {
+    @Autowired
+    OtherService otherService;
+    
+    public void call() {
+        System.out.println("value is: " + otherService.getValue());
+    }
+}
+</pre>
+    <pre class="code" data-type="java" data-collapsed="false" title="OtherService.java">
+import org.springframework.stereotype.Component;
+
+@Component
+public class OtherService {
+    public String getValue() {
+        return "real value";
+    }
+}
+</pre>
+    <p>常规情况下，我们需要手工注入 Mock 对象，如下所示:</p>
+    <pre class="code" data-type="java" data-collapsed="false" title="AutoInjectTest.java">
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(classes = DemoConfig.class)
+public class AutoInjectTest {
+    @Autowired
+    MainService service;
+    
+    @Mock
+    OtherService otherService;
+    
+    @Test
+    public void manualInjectTest() {
+        otherService = mock(OtherService.class);
+        when(otherService.getValue()).thenReturn("mock value");
+        service.setOtherService(otherService);
+        service.call();
+    }
+}
+</pre>
+    <p>PS：需要在 MainService 类中添加 setOtherService() 方法以允许修改 otherService </p>
+    <p>其中 DemoConfig 是配置类，对于 Spring Boot 框架，Test 类不会自动注入 Autowired 对象，需要使用 Config 类指定加载类，内容如下：</p>
+    <pre class="code" data-type="java" data-collapsed="false" title="DemoConfig.java">
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+@ComponentScan({ "com.lld.test" })
+public class DemoConfig {
+
+}
+</pre>
+    <p>但更合理的方式是使用 @InjectMocks 注解来自动注入，如下所示</p>
+    <pre class="code" data-type="java" data-collapsed="false" title="AutoInjectTest.java">
+import static org.mockito.Mockito.when;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(classes = DemoConfig.class)
+public class AutoInjectTest {
+    @Autowired
+    @InjectMocks
+    MainService service;
+    
+    @Mock
+    OtherService otherService;
+    
+    @Before
+    public void setup() {
+        MockitoAnnotations.initMocks(this);
+        when(otherService.getValue()).thenReturn("mock value");
+    }
+    
+    @Test
+    public void autoInjectTest() {
+        service.call();
+    }
+}
+</pre>
+    <p>注意如下几点：</p>
+    <ul>
+        <li>在 @Before 方法中初始化 Mock 对象及自动注入</li>
+        <li>在需要自动注入成员的类上添加 @InjectMocks 注解</li>
+    </ul>
+    <p>另外值得注意的是，@InjectMocks 只会注入当前对象的成员，不会递归深度注入对象，例如，我们如果将 MainService 修改如下：</p>
+    <pre class="code" data-type="java" data-collapsed="false" title="MainService.java">
+@Component
+public class MainService {
+    @Autowired
+    MiddleService middleService;
+
+    public void callMiddle() {
+        System.out.println("value is: " + middleService.getValue());
+    }
+}
+</pre>
+    <p>添加 MiddleService 如下所示</p>
+    <pre class="code" data-type="java" data-collapsed="false" title="MiddleService.java">
+@Component
+public class MiddleService {
+    @Autowired
+    OtherService otherService;
+
+    public String getValue() {
+        return otherService.getValue();
+    }
+}
+</pre>
+    <p>这样的话，Unit Test 需要修改如下：</p>
+    <pre class="code" data-type="java" data-collapsed="false" title="AutoInjectTest.java">
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(classes = DemoConfig.class)
+public class AutoInjectTest {
+    @Autowired
+    MainService service;
+
+    @Mock
+    OtherService otherService;
+    
+    @Autowired
+    @InjectMocks
+    MiddleService middleService;
+
+    @Before
+    public void setup() {
+        MockitoAnnotations.initMocks(this);
+        when(otherService.getValue()).thenReturn("mock value");
+    }
+
+    @Test
+    public void autoInjectDeepTest() {
+        service.callMiddle();
+    }
+}
+</pre>
+    <h2>验证调用次数</h2>
+    <p>如下代码验证了 add 方法需要被调用两次</p>
+    <pre class="code" data-type="java">
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import java.util.List;
+import org.junit.Test;
+
+public class CallTimesTest {
+    @Test
+    public void verifyBehavior1() {
+        List&lt;Integer&gt; mock = mock(List.class);
+        mock.add(1);
+        mock.add(1);
+        verify(mock, times(2)).add(1);
+    }
+}
+</pre>
+    <h2>预设 Exception</h2>
+    <p>下面代码演示了预设 Exceptio 发生</p>
+    <pre class="code" data-type="java">
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
+import java.io.IOException;
+import java.io.OutputStream;
+import org.junit.Test;
+
+public class ExceptionTest {
+    @Test(expected = IOException.class)
+    public void when_thenThrow() throws IOException {
+        OutputStream outputStream = mock(OutputStream.class);
+        doThrow(new IOException()).when(outputStream).close();
+        outputStream.close();
+    }
+}
+</pre>
+    <p>代码说明如下：</p>
+    <ul>
+        <li>@Test(expected = IOException.class) 表示该测试需要有 IOException 抛出</li>
+        <li>doThrow 表示指定操作将抛出指定异常</li>
+    </ul>
+    <h2>Void Mock</h2>
+    <p>前面的 thenReturn 只适用于有返回值的方法，本例讲述如何 Mock void 方法</p>
+    <p>声明服务类如下</p>
+    <pre class="code" data-type="java">
+package com.lld.test.mockito;
+
+import org.springframework.stereotype.Component;
+
+@Component
+public class VoidService {
+    public void sayHi(String name) {
+        System.out.println("Hello, " + name);
+    }
+}
+</pre>
+    <p>测试类如下所示</p>
+    <pre class="code" data-type="java">
+package com.lld.test.mockito;
+
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(classes = DemoConfig.class)
+public class VoidTest {
+    @Mock
+    VoidService voidService;
+
+    @Before
+    public void setup() throws Exception {
+        MockitoAnnotations.initMocks(this);
+    }
+    
+    @Test
+    public void voidTest() {
+        doNothing().when(voidService).sayHi(anyString());
+        voidService.sayHi("Lindong");
+        verify(voidService, times(1)).sayHi(anyString());
+    }
+    
+    @Test
+    public void voidArgumentTest() {
+        ArgumentCaptor&lt;String&gt; argumentCaptor = ArgumentCaptor.forClass(String.class);
+        doNothing().when(voidService).sayHi(argumentCaptor.capture());
+        voidService.sayHi("Lindong");
+        assertEquals("Lindong", argumentCaptor.getValue());        
+    }
+
+    @Test
+    public void answerTest() {
+        doAnswer(answer -> {
+            String name = answer.getArgumentAt(0, String.class);
+            System.out.println("invoke VoidService with argument: " + name);
+            return null;
+        }).when(voidService).sayHi(anyString());
+        voidService.sayHi("Lindong");
+    }
+}
+</pre>
+    <p>代码说明如下</p>
+    <ul>
+        <li>voidTest 演示了如何简单地 Mock void 方法</li>
+        <li>voidArgumentTest 演示了如何获取 void 方法的参数</li>
+        <li>answerTest 演示了如何截获 void 调用</li>
+    </ul>
+    <h2>级联 Mock</h2>
+    <p>本例演示了如何自动 Mock 所有对象下的子对象</p>
+    <pre class="code" data-type="java">
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import org.junit.Test;
+
+public class DeepMockTest {
+    @Test
+    public void deepstubsAutoTest() {
+        Account account = mock(Account.class, RETURNS_DEEP_STUBS);
+        when(account.getRailwayTicket().getDestination()).thenReturn("Beijing");
+        account.getRailwayTicket().getDestination();
+        verify(account.getRailwayTicket()).getDestination();
+        assertEquals("Beijing", account.getRailwayTicket().getDestination());
+    }
+
+    @Test
+    public void deepstubsManualTest() {
+        Account account = mock(Account.class);
+        RailwayTicket railwayTicket = mock(RailwayTicket.class);
+        when(account.getRailwayTicket()).thenReturn(railwayTicket);
+        when(railwayTicket.getDestination()).thenReturn("Beijing");
+
+        account.getRailwayTicket().getDestination();
+        verify(account.getRailwayTicket()).getDestination();
+        assertEquals("Beijing", account.getRailwayTicket().getDestination());
+    }
+
+    public class RailwayTicket {
+        private String destination;
+
+        public String getDestination() {
+            return destination;
+        }
+
+        public void setDestination(String destination) {
+            this.destination = destination;
+        }
+    }
+
+    public class Account {
+        private RailwayTicket railwayTicket;
+
+        public RailwayTicket getRailwayTicket() {
+            return railwayTicket;
+        }
+
+        public void setRailwayTicket(RailwayTicket railwayTicket) {
+            this.railwayTicket = railwayTicket;
+        }
+    }
+}
+</pre>
+    <p>代码说明如下：</p>
+    <ul>
+        <li>deepstubsAutoTest 演示了自动创建子对象的 Mock (推荐)</li>
+        <li>deepstubsManualTest 演示了手动创建子对象的 Mock</li>
+    </ul>
+    <h2>部分 Mock</h2>
+    <p>如下例所示，我们需要使用 Mock 跳过 Exception</p>
+    <pre class="code" data-type="java">
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.spy;
+
+import org.junit.Test;
+
+public class PartialMockTest {
+
+    @Test
+    public void partialMockTest() throws Exception {
+        TestObj mockObj = spy(new TestObj());
+        doNothing().when(mockObj).m1();
+        mockObj.m3();
+    }
+    
+    class TestObj {
+        public void m1() throws Exception {
+            throw new Exception("exception");
+        }
+        
+        public void m2() {
+            System.out.println("m2 is invoked");
+        }
+        
+        public void m3() throws Exception {
+            m1();
+            m2();
+        }
+    }
+}
+</pre>
+    <p>我们使用了 spy 方法，它返回的对象是一个真实的对象，所有的方法调用也都是真的方法调用。但像例子中演示的，可以 Mock 掉指定的方法。如果有返回值，也可以和以前的例子一样使用 thenReturn。</p>
+    <h1>FAQ</h1>
+    <h2>注意点</h2>
+    <ol>
+        <li>
+            <p>对于 @Mock 标注，MockitoAnnotations.initMocks(this); 一定要放在第一行</p>
+        </li>
+        <li>
+            <p>Mock 对象的所有方法均为假方法，而不是默认实现</p>
+        </li>
+    </ol>
+</body>
+</html>

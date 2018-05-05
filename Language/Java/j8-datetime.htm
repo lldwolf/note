@@ -265,6 +265,9 @@ System.out.println(time);
 ZoneId defaultZone = TimeZone.getDefault().toZoneId();
 System.out.println(defaultZone);
 
+//LocalDate to Date
+Date date = Date.from(LocalDate.of(2018, 1, 1).atStartOfDay(ZoneId.systemDefault()).toInstant());
+
 // ZonedDateTime from specific Calendar
 ZonedDateTime gregorianCalendarDateTime = new GregorianCalendar().toZonedDateTime();
 System.out.println(gregorianCalendarDateTime);

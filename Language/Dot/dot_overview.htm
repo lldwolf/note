@@ -52,6 +52,10 @@ dot -Tsvg c:\temp\1.dot > c:\temp\1.svg</pre>
     <h2>双向箭头</h2>
     <p><img alt="" src="img/double-sided-arrow.svg" /></p>
     <pre class="code">digraph graphName {
+     a -> b [dir="both"];
+}</pre>
+    <p>或者</p>
+    <pre class="code">digraph graphName {
     concentrate=true;
     A->B;
     B->A;
@@ -65,6 +69,20 @@ dot -Tsvg c:\temp\1.dot > c:\temp\1.svg</pre>
     <p>生成图片如下所示：</p>
     <p>
         <img alt="" src="img/digraph_lr.png" /></p>
+    <h2>辐射方向生成</h2>
+    <pre class="code">
+digraph  lqt_external_system {
+	 layout=circo;
+	 0 -> 1;
+	 0 -> 2;
+	 0 -> 3;
+	 0 -> 4;
+	 0 -> 5;
+	 0 -> 6;
+}
+</pre>
+    <p>生成图片如下所示：</p>
+    <p><img alt="" src="img/diagraph_circo.svg" /></p>
     <h2>控制标签位置</h2>
     <pre class="code">digraph {
 	forcelabels=true;
@@ -112,8 +130,22 @@ dot -Tsvg c:\temp\1.dot > c:\temp\1.svg</pre>
         <img alt="" src="img/digraph_label_sample.png" /></p>
     <h2>字体</h2>
     <p>使用 fontcolor 属性控制文本颜色</p>
-    <pre class="code">A [color=red, fontcolor=red];</pre>
+    <p>使用 fontname 属性控制文本字体，加上 bold 表示粗体</p>
+    <pre class="code">A [color="red", fontcolor="red" fontname="times-bold"];</pre>
     <h2>样式</h2>
+    <p>分为结点 (node) 样式，连线 (edge) 样式等</p>
+    <h3>结点 (node) 样式</h3>
+    <ul>
+        <li>style="bold" 表示用粗线</li>
+        <li>color="blue" 表示用蓝线</li>
+        <li>shape="box" 表示用矩形</li>
+        <li>style="filled" 表示用边框色填充</li>
+    </ul>
+    <h3>连线 (edge) 样式</h3>
+    <ul>
+        <li>style="dotted" 表示用虚线</li>
+    </ul>
+    <h3>示例</h3>
     <pre class="code">digraph G {
  main [shape=box]; /* this is a comment */
  main -> parse [weight=8];
@@ -131,6 +163,12 @@ dot -Tsvg c:\temp\1.dot > c:\temp\1.svg</pre>
     <p>生成图片如下所示：</p>
     <p>
         <img alt="" src="img/adv_shape.png" /></p>
+    <p>说明</p>
+    <ul>
+        <li>中间加入 edge [color=red]; 表示之后的连线都为红色</li>
+        <li>中间加入 node [shape=box,style=filled,color=".7 .3 1.0"]; 表示之后的结点都要填充</li>
+        <li>execute -> { make_string; printf} 表示指向多个结点</li>
+    </ul>
     <h2>多边形</h2>
     <pre class="code">digraph G {
  a -> b -> c;
@@ -356,5 +394,6 @@ e [shape=polygon,sides=4,distortion=0.7];</pre>
     </table>
     <h1>完整的 DOT 教程</h1>
     <p><a href="data/dotguide.pdf">教程</a></p>
+    <p><a href="https://www.graphviz.org/doc/info/attrs.html">在线教程</a></p>
 </body>
 </html>

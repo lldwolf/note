@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+    <title>Apache Commons Projects</title>
+    <script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+<body>
+    <p id="title">Apache Commons Projects</p>
+    <h1>Overview</h1>
+    <p>Apache Commons包含了很多开源的工具，用于解决平时编程经常会遇到的问题，减少重复劳动。我选了一些比较常用的项目做简单介绍。文中用了很多网上现成的东西，我只是做了一个汇总整理。</p>
+    <h1>Commons BeanUtils</h1>
+    <br />
+    http://jakarta.apache.org/commons/beanutils/index.html<br />
+    <br />
+    说明：针对Bean的一个工具集。由于Bean往往是有一堆get和set组成，所以BeanUtils也是在此基础上进行一些包装。<br />
+    <br />
+    使用示例：功能有很多，网站上有详细介绍。一个比较常用的功能是Bean Copy，也就是copy bean的属性。如果做分层架构开发的话就会用到，比如从PO（Persistent Object）拷贝数据到VO（Value Object）。<br />
+    <br />
+    传统方法如下：<br />
+    <br />
+    //得到TeacherForm<br />
+    <br />
+    TeacherForm teacherForm=(TeacherForm)form;<br />
+    <br />
+    //构造Teacher对象<br />
+    <br />
+    Teacher teacher=new Teacher();<br />
+    <br />
+    //赋值<br />
+    teacher.setName(teacherForm.getName());<br />
+    teacher.setAge(teacherForm.getAge());<br />
+    teacher.setGender(teacherForm.getGender());<br />
+    teacher.setMajor(teacherForm.getMajor());<br />
+    teacher.setDepartment(teacherForm.getDepartment());<br />
+    <br />
+    //持久化Teacher对象到数据库<br />
+    HibernateDAO= ;<br />
+    HibernateDAO.save(teacher);<br />
+    <br />
+    使用BeanUtils后，代码就大大改观了，如下所示：<br />
+    <br />
+    //得到TeacherForm<br />
+    TeacherForm teacherForm=(TeacherForm)form;<br />
+    //构造Teacher对象<br />
+    Teacher teacher=new Teacher();<br />
+    <br />
+    //赋值<br />
+    BeanUtils.copyProperties(teacher,teacherForm);<br />
+    <br />
+    //持久化Teacher对象到数据库<br />
+    HibernateDAO= ;<br />
+    HibernateDAO.save(teacher);<br />
+    <br />
+    <h1>Commons CLI</h1>
+    <br />
+    http://jakarta.apache.org/commons/cli/index.html<br />
+    <br />
+    说明：这是一个处理命令的工具。比如main方法输入的string[]需要解析。你可以预先定义好参数的规则，然后就可以调用CLI来解析。<br />
+    <br />
+    使用示例：<br />
+    <br />
+    // create Options object<br />
+    Options options = new Options();<br />
+    // add t option, option is the command parameter, false indicates that<br />
+    // this parameter is not required.<br />
+    <br />
+    options.addOption(&ldquo;t&rdquo;, false, &ldquo;display current time&rdquo;);<br />
+    options.addOption("c", true, "country code");<br />
+    <br />
+    CommandLineParser parser = new PosixParser();<br />
+    CommandLine cmd = parser.parse( options, args);<br />
+    <br />
+    if(cmd.hasOption("t")) {<br />
+    // print the date and time<br />
+    }else {<br />
+    // print the date<br />
+    }<br />
+    <br />
+    // get c option value<br />
+    String countryCode = cmd.getOptionValue("c");<br />
+    <br />
+    if(countryCode == null) {<br />
+    // print default date<br />
+    }else {<br />
+    // print date for country specified by countryCode<br />
+    }<br />
+    <br />
+    <h1>Commons Codec</h1>
+    <br />
+    http://jakarta.apache.org/commons/codec/index.html<br />
+    <br />
+    说明：这个工具是用来编码和解码的，包括Base64，URL，Soundx等等。用这个工具的人应该很清楚这些，我就不多介绍了。<br />
+    <br />
+    <h1>Commons Collections</h1>
+    <br />
+    http://jakarta.apache.org/commons/collections/<br />
+    <br />
+    说明：你可以把这个工具看成是java.util的扩展。<br />
+    <br />
+    使用示例：举一个简单的例子<br />
+    <br />
+    OrderedMap map = new LinkedMap();<br />
+    map.put("FIVE", "5");<br />
+    map.put("SIX", "6");<br />
+    map.put("SEVEN", "7");<br />
+    map.firstKey(); // returns "FIVE"<br />
+    map.nextKey("FIVE"); // returns "SIX"<br />
+    map.nextKey("SIX"); // returns "SEVEN"&nbsp;
+        <br />
+    <h1>Commons Configuration</h1>
+    <br />
+    http://jakarta.apache.org/commons/configuration/<br />
+    <br />
+    说明：这个工具是用来帮助处理配置文件的，支持很多种存储方式<br />
+    <br />
+    1. Properties files<br />
+    2. XML documents<br />
+    3. Property list files (.plist)<br />
+    4. JNDI<br />
+    5. JDBC Datasource<br />
+    6. System properties<br />
+    7. Applet parameters<br />
+    8. Servlet parameters<br />
+    <br />
+    使用示例：举一个Properties的简单例子<br />
+    <br />
+    # usergui.properties, definining the GUI,<br />
+    colors.background = #FFFFFF<br />
+    colors.foreground = #000080<br />
+    window.width = 500<br />
+    window.height = 300<br />
+    <br />
+    PropertiesConfiguration config = new PropertiesConfiguration("usergui.properties");<br />
+    config.setProperty("colors.background", "#000000);<br />
+    config.save();<br />
+    <br />
+    config.save("usergui.backup.properties);//save a copy<br />
+    Integer integer = config.getInteger("window.width");<br />
+    <br />
+    <h1>Commons DBCP</h1>
+    <br />
+    http://jakarta.apache.org/commons/dbcp/<br />
+    <br />
+    例子：<br />
+    <br />
+    import java.sql.*;<br />
+    <br />
+    import com.gwnet.games.antiLord.util.*;<br />
+    <br />
+    import org.apache.commons.dbcp.ConnectionFactory;<br />
+    <br />
+    import org.apache.commons.dbcp.BasicDataSource;<br />
+    <br />
+    import org.apache.commons.dbcp.DataSourceConnectionFactory;<br />
+    <br />
+    private static BasicDataSource bds=new BasicDataSource();<br />
+    <br />
+    private static ConnectionFactory fac=null;<br />
+    <br />
+    //初始化连接池<br />
+    <br />
+    bds.setDriverClassName(&ldquo;org.postgresql.Driver&rdquo;); //数据库驱动程序<br />
+    <br />
+    bds.setUrl(&ldquo;jdbc:postgresql://localhost:5432/myDB&rdquo;); //数据库url<br />
+    <br />
+    bds.setUsername(&ldquo;postgres&rdquo;); //dba帐号<br />
+    <br />
+    bds.setPassword(&ldquo;XXXXXXXX&rdquo;); //密码<br />
+    <br />
+    bds.setInitialSize(100); //初始化连接数量<br />
+    <br />
+    bds.setMaxIdle(10); //最大idle数<br />
+    <br />
+    bds.setMaxWait(1000*60); //超时回收时间<br />
+    <br />
+    fac=new DataSourceConnectionFactory(bds); //得到连接工厂<br />
+    <br />
+    Connection conn=fac.createConnection(); //从池中获得连接<br />
+    <br />
+    conn.close(); //释放连接，回到池中<br />
+    <br />
+    //销毁连接池<br />
+    <br />
+    bds.close();<br />
+    bds=null;<br />
+    fac=null;<br />
+    <br />
+    <h1>Commons DbUtils</h1>
+    <br />
+    http://jakarta.apache.org/commons/dbutils/<br />
+    <br />
+    说明：我以前在写数据库程序的时候，往往把数据库操作单独做一个包。DbUtils就是这样一个工具，以后开发不用再重复这样的工作了。值得一体的是，这个工具并不是现在流行的OR-Mapping工具（比如Hibernate），只是简化数据库操作，比如<br />
+    <br />
+    QueryRunner run = new QueryRunner(dataSource);<br />
+    <br />
+    // Execute the query and get the results back from the handler<br />
+    Object[] result = (Object[]) run.query("SELECT * FROM Person WHERE name=?", "John Doe");<br />
+    <br />
+    <h1>Commons FileUpload</h1>
+    <br />
+    http://jakarta.apache.org/commons/fileupload/<br />
+    <br />
+    说明：jsp的上传文件功能怎么做呢？<br />
+    <br />
+    使用示例：<br />
+    <br />
+    // Create a factory for disk-based file items<br />
+    FileItemFactory factory = new DiskFileItemFactory();<br />
+    // Create a new file upload handler<br />
+    ServletFileUpload upload = new ServletFileUpload(factory);<br />
+    <br />
+    // Parse the request<br />
+    List /* FileItem */ items = upload.parseRequest(request);<br />
+    // Process the uploaded items<br />
+    Iterator iter = items.iterator();<br />
+    while (iter.hasNext()) {<br />
+    FileItem item = (FileItem) iter.next();<br />
+    if (item.isFormField()) {<br />
+    processFormField(item);<br />
+    } else {<br />
+    processUploadedFile(item);<br />
+    }<br />
+    }<br />
+    <br />
+    <h1>Commons HttpClient</h1>
+    <br />
+    http://jakarta.apache.org/commons/httpclient/<br />
+    <br />
+    说明：这个工具可以方便通过编程的方式去访问网站。<br />
+    <br />
+    使用示例：最简单的Get操作<br />
+    <br />
+    GetMethod get = new GetMethod("http://jakarta.apache.org");<br />
+    <br />
+    // execute method and handle any error responses.<br />
+    <br />
+    ...<br />
+    <br />
+    InputStream in = get.getResponseBodyAsStream();<br />
+    // Process the data from the input stream.<br />
+    get.releaseConnection();<br />
+    <br />
+    <h1>Commons IO</h1>
+    <br />
+    http://jakarta.apache.org/commons/io/<br />
+    <br />
+    说明：可以看成是java.io的扩展，我觉得用起来非常方便。<br />
+    <br />
+    使用示例：<br />
+    <br />
+    1．读取Stream<br />
+    <br />
+    标准代码：<br />
+    <br />
+    InputStream in = new URL( "http://jakarta.apache.org" ).openStream();<br />
+    try {<br />
+    InputStreamReader inR = new InputStreamReader( in );<br />
+    BufferedReader buf = new BufferedReader( inR );<br />
+    String line;<br />
+    while ( ( line = buf.readLine() ) != null ) {<br />
+    System.out.println( line );<br />
+    }<br />
+    } finally {<br />
+    in.close();<br />
+    }<br />
+    <br />
+    使用IOUtils<br />
+    <br />
+    InputStream in = new URL( "http://jakarta.apache.org" ).openStream();<br />
+    try {<br />
+    System.out.println( IOUtils.toString( in ) );<br />
+    } finally {<br />
+    IOUtils.closeQuietly(in);<br />
+    }<br />
+    <br />
+    2．读取文件<br />
+    <br />
+    File file = new File("/commons/io/project.properties");<br />
+    List lines = FileUtils.readLines(file, "UTF-8");<br />
+    <br />
+    3．察看剩余空间<br />
+    long freeSpace = FileSystemUtils.freeSpace("C:/");<br />
+    <br />
+    <h1>Commons JXPath</h1>
+    <br />
+    http://jakarta.apache.org/commons/jxpath/<br />
+    <br />
+    说明：Xpath你知道吧，那么JXpath就是基于Java对象的Xpath，也就是用Xpath对Java对象进行查询。这个东西还是很有想像力的。<br />
+    <br />
+    使用示例：<br />
+    Address address = (Address)JXPathContext.newContext(vendor).<br />
+    getValue("locations[address/zipCode='90210']/address");<br />
+    <br />
+    上述代码等同于<br />
+    Address address = null;<br />
+    Collection locations = vendor.getLocations();<br />
+    Iterator it = locations.iterator();<br />
+    while (it.hasNext()){<br />
+    Location location = (Location)it.next();<br />
+    String zipCode = location.getAddress().getZipCode();<br />
+    if (zipCode.equals("90210")){<br />
+    address = location.getAddress();<br />
+    break;<br />
+    }<br />
+    }<br />
+    <br />
+    <h1>Commons Lang</h1>
+    <br />
+    http://jakarta.apache.org/commons/lang/<br />
+    <br />
+    说明：这个工具包可以看成是对java.lang的扩展。提供了诸如StringUtils, StringEscapeUtils, RandomStringUtils, Tokenizer, WordUtils等工具类。</p>
+        <br />
+    <h1>Commons Logging</h1>
+    <br />
+    http://jakarta.apache.org/commons/logging/<br />
+    <br />
+    说明：你知道Log4j吗？<br />
+    <br />
+    <h1>Commons Math</h1>
+    <br />
+    http://jakarta.apache.org/commons/math/<br />
+    <br />
+    说明：看名字你就应该知道这个包是用来干嘛的了吧。这个包提供的功能有些和Commons Lang重复了，但是这个包更专注于做数学工具，功能更强大。<br />
+    <br />
+    <h1>Commons Net</h1>
+    <br />
+    http://jakarta.apache.org/commons/net/<br />
+    <br />
+    说明：这个包还是很实用的，封装了很多网络协议。<br />
+    <br />
+    1. FTP<br />
+    2. NNTP<br />
+    3. SMTP<br />
+    4. POP3<br />
+    5. Telnet<br />
+    6. TFTP<br />
+    7. Finger<br />
+    8. Whois<br />
+    9. rexec/rcmd/rlogin<br />
+    10. Time (rdate) and Daytime<br />
+    11. Echo<br />
+    12. Discard<br />
+    13. NTP/SNTP<br />
+    <br />
+    使用示例：<br />
+    TelnetClient telnet = new TelnetClient();<br />
+    telnet.connect( "192.168.1.99", 23 );<br />
+    InputStream in = telnet.getInputStream();<br />
+    PrintStream out = new PrintStream( telnet.getOutputStream() );<br />
+    ...<br />
+    telnet.close();<br />
+    <br />
+    <h1>Commons Validator</h1>
+    <br />
+    http://jakarta.apache.org/commons/validator/<br />
+    <br />
+    说明：用来帮助进行验证的工具。比如验证Email字符串，日期字符串等是否合法。<br />
+    <br />
+    使用示例：<br />
+    <br />
+    // Get the Date validator<br />
+    DateValidator validator = DateValidator.getInstance();<br />
+    // Validate/Convert the date<br />
+    Date fooDate = validator.validate(fooString, "dd/MM/yyyy");<br />
+    if (fooDate == null) {<br />
+    // error...not a valid date<br />
+    return;<br />
+    }&nbsp;
+        <br />
+    <h1>Commons Virtual File System</h1>
+    <br />
+    http://jakarta.apache.org/commons/vfs/<br />
+    <br />
+    说明：提供对各种资源的访问接口。支持的资源类型包括<br />
+    <br />
+    1. CIFS<br />
+    2. FTP<br />
+    3. Local Files<br />
+    4. HTTP and HTTPS<br />
+    5. SFTP<br />
+    6. Temporary Files<br />
+    7. WebDAV<br />
+    8. Zip, Jar and Tar (uncompressed, tgz or tbz2)<br />
+    9. gzip and bzip2<br />
+    10. res<br />
+    11. ram<br />
+    <br />
+    这个包的功能很强大，极大的简化了程序对资源的访问。<br />
+    <br />
+    使用示例：<br />
+    <br />
+    从jar中读取文件<br />
+    <br />
+    // Locate the Jar file<br />
+    FileSystemManager fsManager = VFS.getManager();<br />
+    FileObject jarFile = fsManager.resolveFile( "jar:lib/aJarFile.jar" );<br />
+    <br />
+    // List the children of the Jar file<br />
+    FileObject[] children = jarFile.getChildren();<br />
+    System.out.println( "Children of " + jarFile.getName().getURI() );<br />
+    for ( int i = 0; i &lt; children.length; i++ ){<br />
+    System.out.println( children[ i ].getName().getBaseName() );<br />
+    }<br />
+    <br />
+    从smb读取文件<br />
+    StaticUserAuthenticator auth = new StaticUserAuthenticator("username", "password", null);<br />
+    FileSystemOptions opts = new FileSystemOptions();<br />
+    DefaultFileSystemConfigBuilder.getInstance().setUserAuthenticator(opts, auth);<br />
+    FileObject fo = VFS.getManager().resolveFile("smb://host/anyshare/dir", opts);<br />
+    <br />
+    <h1>Commons-Email</h1>
+    <br />
+    commons-email是apache提供的一个开源的API，是对javamail的封装，因此在使用时要将javamail.jar加到 class path中，主要包括SimpleEmail,MultiPartEmail,HtmlEmail,EmailAttachment四个类。<br />
+    <br />
+    SimpleEmail:发送简单的email,不能添加附件<br />
+    MultiPartEmail:文本邮件，可以添加多个附件<br />
+    HtmlEmail:HTML格式邮件，同时具有MultiPartEmail类所有&ldquo;功能&rdquo;<br />
+    EmailAttchment:附件类，可以添加本地资源，也可以指定网络上资源，在发送时自动将网络上资源下载发送。<br />
+    <br />
+    发送基本文本格式邮件：<br />
+    ==============<br />
+    SimpleEmail email = new SimpleEmail();<br />
+    //smtp host<br />
+    email.setHostName("mail.test.com");<br />
+    //登陆邮件服务器的用户名和密码<br />
+    email.setAuthentication("test","testpassword");<br />
+    //接收人<br />
+    email.addTo("jdoe@somewhere.org", "John Doe");<br />
+    //发送人<br />
+    email.setFrom("me@apache.org", "Me");<br />
+    //标题<br />
+    email.setSubject("Test message");<br />
+    //邮件内容<br />
+    email.setMsg("This is a simple test of commons-email");<br />
+    //发送<br />
+    email.send();<br />
+    <br />
+    发送文本格式，带附件邮件：<br />
+    ==================<br />
+    //附件，可以定义多个附件对象<br />
+    EmailAttachment attachment = new EmailAttachment();<br />
+    attachment.setPath("e:\\1.pdf");<br />
+    attachment.setDisposition(EmailAttachment.ATTACHMENT);<br />
+    attachment.setDescription("Picture of John");<br />
+    //<br />
+    MultiPartEmail email = new MultiPartEmail();<br />
+    //smtp host<br />
+    email.setHostName("mail.test.com");<br />
+    //登陆邮件服务器的用户名和密码<br />
+    email.setAuthentication("test","testpassword");<br />
+    //接收人<br />
+    email.addTo("jdoe@somewhere.org", "John Doe");<br />
+    //发送人<br />
+    email.setFrom("me@apache.org", "Me");<br />
+    //标题<br />
+    email.setSubject("Test message");<br />
+    //邮件内容<br />
+    email.setMsg("This is a simple test of commons-email");<br />
+    //添加附件<br />
+    email.attach(attachment);<br />
+    //发送<br />
+    email.send();<br />
+    <br />
+    发送HTML格式带附件邮件：<br />
+    =================<br />
+    //附件，可以定义多个附件对象<br />
+    EmailAttachment attachment = new EmailAttachment();<br />
+    attachment.setPath("e:\\1.pdf");<br />
+    attachment.setDisposition(EmailAttachment.ATTACHMENT);<br />
+    attachment.setDescription("Picture of John");<br />
+    //<br />
+    HtmlEmail email = new HtmlEmail ();<br />
+    //smtp host<br />
+    email.setHostName("mail.test.com");<br />
+    //登陆邮件服务器的用户名和密码<br />
+    email.setAuthentication("test","testpassword");<br />
+    //接收人<br />
+    email.addTo("jdoe@somewhere.org", "John Doe");<br />
+    //发送人<br />
+    email.setFrom("me@apache.org", "Me");<br />
+    //标题<br />
+    email.setSubject("Test message");<br />
+    //邮件内容<br />
+    email.setHtmlMsg("This is a simple test of commons-email");<br />
+    //添加附件<br />
+    email.attach(attachment);<br />
+    //发送<br />
+    <br />
+    <h1>Commons Pool</h1>
+    <br />
+    使用Jakarta Commons Pool可以根据需要快速的实现自己的对象池，只需要实现PoolableObjectFactory或者 KeyedPoolableObjectFactory接口。KeyedPoolableObjectFactory和 PoolableObjectFactory的不同之处在于KeyedPoolableObjectFactory的每个方法都比 PoolableObjectFactory多了一个Object key的参数，使用这个参数可以使得对象池中的每个对象都有所不同。<br />
+    PoolableObjectFactory定义了五个方法（摘至Jakarta Commons Pool API文档）：<br />
+    <br />
+    1. makeObject is called whenever a new instance is needed.<br />
+    2. activateObject is invoked on every instance before it is returned from the pool.<br />
+    3. passivateObject is invoked on every instance when it is returned to the pool.<br />
+    4. destroyObject is invoked on every instance when it is being "dropped" from the pool (whether due to the response from validateObject, or for reasons specific to the pool implementation.)<br />
+    5. validateObject is invoked in an implementation-specific fashion to determine if an instance is still valid to be returned by the pool. It will only be invoked on an "activated" instance.<br />
+    <br />
+    <h1>Commons Digester</h1>
+    <br />
+    它能方便地将XML文档所定义的元素转化为JAVA对象，其实它的用法有点象栈(当然内在的原理就是那个古老的东西,只是提供了更高一层的封装)。<br />
+    <br />
+    //生成一个digester。主要需要引进commons-logging.jar、commons-collections.jar、commons- beanutils.jar<br />
+    Digester digester = new Digester();<br />
+    <br />
+    //设置对XML文档资料是否进行DTD验证<br />
+    digester.setValidating( false );<br />
+    <br />
+    //当遇见 catalog 元素的时候，产生一个Catalog对象<br />
+    digester.addObjectCreate( "catalog", Catalog.class );<br />
+    <br />
+    //当遇见 catalog 元素下面的book的时候，产生一个Book对象<br />
+    digester.addObjectCreate( "catalog/book", Book.class );<br />
+    // 当遇见 catalog 元素下面的book的author时候，调用author属性的Set方法<br />
+    digester.addBeanPropertySetter( "catalog/book/author", "author" );<br />
+    digester.addBeanPropertySetter( "catalog/book/title", "title" );<br />
+    //当再一次遇见 catalog 元素下面的book的时候，调用catalog类的addBook（）方法<br />
+    digester.addSetNext( "catalog/book", "addBook" );<br />
+    <br />
+    digester.addObjectCreate( "catalog/magazine", Magazine.class );<br />
+    digester.addBeanPropertySetter( "catalog/magazine/name", "name" );<br />
+    <br />
+    digester.addObjectCreate( "catalog/magazine/article", Article.class );<br />
+    //addSetProperties（）是将对应元素的属性赋值。<br />
+    digester.addSetProperties( "catalog/magazine/article", "page", "page" );<br />
+    digester.addBeanPropertySetter( "catalog/magazine/article/headline" );<br />
+    digester.addSetNext( "catalog/magazine/article", "addArticle" );<br />
+    <br />
+    digester.addSetNext( "catalog/magazine", "addMagazine" );<br />
+    //"F:\\Digester\\catalog.xml"为XML文档<br />
+    File input = new File( "F:\\Digester\\catalog.xml" );<br />
+    Catalog c = (Catalog)digester.parse( input );<br />
+    System.out.println( c.toString() );&nbsp;
+
+</body>
+</html>

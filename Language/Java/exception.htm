@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>Exception 处理</title>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+    <p id="title">Exception 处理</p>
+    <h1>RuntimeException</h1>
+    <p>RuntimeException 及其所有的子类都属于非检测异常，即如果不显式处理，编译器不会报错。</p>
+    <p>典型的例如 SQLException，可以这么理解，如果 SQL 有问题，这不属于在编码时应考虑的意外情况。这与 IOException 不同，我需要在编码时考虑如果文件不存在的情况，所以需要编译器提示处理。</p>
+    <p>RuntimeException 可以用来封装检测异常，降低层次耦合，如下所示代码，这里的 SQLException 污染到了上层调用代码，调用层需要显式的利用 try-catch 捕捉，或者向更上层次进一步抛出。</p>
+    <pre class="code" data-type="java">
+public Customer retrieveCustomerById(Long id) {
+     try{
+            //根据 ID 查询数据库
+     }catch(SQLException e){
+            //利用非检测异常封装检测异常，降低层次耦合
+            throw new RuntimeException(SQLErrorCode, e);
+     }finally{
+            //关闭连接，清理资源
+     }
+}
+</pre>
+    <h1>FAQ</h1>
+    <h2>Stack Trace</h2>
+    <p>如果只用 JDK，使用如下方式获得 StackTrace</p>
+    <pre class="code" data-type="java">
+public static String getStackTraceAsString(Throwable t) {
+    StringWriter sw = new StringWriter();
+    PrintWriter pw = new PrintWriter(sw);
+    pw.println(t.getMessage());
+    t.printStackTrace(pw);
+    pw.flush();
+    return sw.toString();
+}
+</pre>
+    <p>可以使用 org.apache.commons.lang.exception.ExceptionUtils 来简化</p>
+    <p>在 Maven 中引用如下</p>
+    <pre class="code" data-type="xml">
+&lt;dependency&gt;
+	&lt;groupId&gt;commons-lang&lt;/groupId&gt;
+	&lt;artifactId&gt;commons-lang&lt;/artifactId&gt;
+	&lt;version&gt;2.6&lt;/version&gt;
+&lt;/dependency&gt;
+</pre>
+    <p>代码如下</p>
+    <pre class="code" data-type="java">
+public static String getStackTraceAsString(Throwable t) {
+    return ExceptionUtils.getStackTrace(t);
+}
+</pre>
+    <p>在 log4j 或 logback 中，可以直接支持将 Exception stack trace 打印，例如</p>
+    <pre class="code" data-type="java">
+log.error("error raised!", e);
+</pre>
+</body>
+</html>

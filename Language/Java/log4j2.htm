@@ -84,5 +84,65 @@ public static void main(String[] args) throws IOException {
 }</pre>
         </li>
     </ol>
+    <h1>Binding with SLF4J</h1>
+    <ol>
+        <li>
+            <p>log配置：Log4j2 + Slf4j</p>
+            <pre class="code" data-type="xml">
+&lt;dependency&gt;
+    &lt;groupId&gt;org.apache.logging.log4j&lt;/groupId&gt;
+    &lt;artifactId&gt;log4j-api&lt;/artifactId&gt;
+    &lt;version&gt;2.2&lt;/version&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;org.apache.logging.log4j&lt;/groupId&gt;
+    &lt;artifactId&gt;log4j-core&lt;/artifactId&gt;
+    &lt;version&gt;2.2&lt;/version&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt; &lt;!-- ??:??Slf4j??Log4j2 --&gt;
+    &lt;groupId&gt;org.apache.logging.log4j&lt;/groupId&gt;
+    &lt;artifactId&gt;log4j-slf4j-impl&lt;/artifactId&gt;
+    &lt;version&gt;2.2&lt;/version&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt; &lt;!-- ??:??commons logging??Log4j2 --&gt;
+    &lt;groupId&gt;org.apache.logging.log4j&lt;/groupId&gt;
+    &lt;artifactId&gt;log4j-jcl&lt;/artifactId&gt;
+    &lt;version&gt;2.2&lt;/version&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;org.slf4j&lt;/groupId&gt;
+    &lt;artifactId&gt;slf4j-api&lt;/artifactId&gt;
+    &lt;version&gt;1.7.10&lt;/version&gt;
+&lt;/dependency&gt;
+</pre>
+        </li>
+        <li>
+            <p>代码中使用</p>
+            <pre class="code" data-type="java">
+@RunWith(SpringJUnit4ClassRunner.class)  //使用Spring Junit4进行测试  
+@ContextConfiguration ({"classpath:spring/applicationContext.xml"}) //加载配置文件
+public abstract class BaseJunit4Test {
+}
+
+import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+mport com.xjj.test.BaseJunit4Test; 
+public class Log4j2Test extends BaseJunit4Test {
+ static public Logger logger = LoggerFactory.getLogger(Log4j2Test.class); 
+
+   @Test
+   public void logTC1(){
+      logger.error("error");
+      logger.debug("debug");
+      logger.info("info");
+      logger.trace("trace");
+      logger.warn("warn");
+      logger.error("error {}", "param");
+ }
+}
+</pre>
+        </li>
+    </ol>
 </body>
 </html>

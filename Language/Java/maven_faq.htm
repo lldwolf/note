@@ -3,11 +3,23 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
     <script type="text/javascript" src="../../mylib/js/css.js"></script>
-    <title>Java Note</title>
+    <title>Maven FAQ</title>
 </head>
 
 <body>
     <p id="title">Maven FAQ</p>
+    <h1>使用命令行创建项目框架</h1>
+    <pre class="code" data-type="sh">
+# 使用 maven-archetype-quickstart 模板创建框架
+mvn archetype:generate -DinteractiveMode=false -DgroupId=com.lld -DartifactId=my-app -DarchetypeArtifactId=maven-archetype-quickstart
+
+# 使用交互方式创建项目框架
+mvn archetype:generate -DinteractiveMode=true
+</pre>
+    <h1>中央仓库为 SSL 网站</h1>
+<pre class="code" data-type="sh">
+mvn clean package -Djavax.net.ssl.trustStore=C:/data/maven -Djavax.net.ssl.trustStorePassword=changeit
+</pre>
     <h1>打包时如何打包 properties 或 XML 配置文件</h1>
     <p>推荐将这些文件放在 src/main/resources 目录下，这样 Maven 会自动打包</p>
     <p>或者在 pom.xml 中配置如下</p>
@@ -25,8 +37,6 @@
     &lt;/resources&gt;
 &lt;/build&gt;</pre>
     <h1>跳过指定步骤</h1>
-    <h2>如何跳过 test 阶段</h2>
-    <pre class="code" data-type="sh">mvn clean package -Dmaven.test.skip=true</pre>
     <h2>如何在 Windows 下跳过 RPM 阶段</h2>
     <p>使用 profile，仅在 Linux 环境下打包 RPM</p>
     <pre class="code" data-type="xml">
@@ -86,6 +96,7 @@
     <li>对于 exclude 的类，如果它被其它类引用了，exclude 将失效（maven 还是很聪明的）。所以需要将引用它的类一块儿放在 exclude 列表中才行。</li>
     </ul>
     <h1>如何引用本地 jar 包</h1>
+    <h2>引用 jar</h2>
     <p>对于不在仓库中的 jar 包引用，可以使用如下两种方法</p>
     <p>注册 jar 包到本地仓库，然后就可以在 pom.xml 中正常引用，命令如下所示：</p>
     <pre class="code" data-type="sh">mvn install:install-file -Dfile=[jar file path] -DgroupId=[group id] -DartifactId=[artifact id] -Dversion=[version] -Dpackaging=jar -DgeneratePom=true</pre>
@@ -97,9 +108,21 @@
 	&lt;scope&gt;system&lt;/scope&gt;
 	&lt;systemPath&gt;${basedir}/lib/yourJar.jar&lt;/systemPath&gt;
 &lt;/dependency&gt;</pre>
+    <h2>关联 Source Code</h2>
+    <p>如果是自己写的类库，那么将 source 也打成 jar 后，使用常规的 Eclipse attach source 在指定 xxxx-source.jar.</p>
+    <p>至于如何打包 source, 请参考 “如何打包源文件” 一节。</p>
     <h1>如何手工指定 settings.xml 路径</h1>
     <pre class="code" data-type="sh">mvn clean package -s settings.xml</pre>
     <p>-s 是 --settings 的缩写</p>
+    <h1>Source Code</h1>
+    <h2>手工指定 Source Code 目录</h2>
+    <p> src 路径只能指定一个</p>
+    <pre class="code" data-type="xml">
+&lt;build&gt;
+	&lt;sourceDirectory&gt;src&lt;/sourceDirectory&gt;
+	...
+&lt;/build&gt;
+</pre>
     <h1>Resources</h1>
     <h2>默认不创建 resources 目录</h2>
     <p>使用 maven quickapp architype 创建项目时，默认不创建 resources 目录，可使用如下方式创建并加到路径中</p>
@@ -127,6 +150,72 @@
 	&lt;/resource&gt;
 &lt;/resources&gt;
 </pre>
+    <h1>为不同的环境设定不同属性</h1>
+    <p>常见场景是本地测试时使用的路径格式为 Windows，而部署到服务器上使用 Linux 路径</p>
+    <ol>
+        <li>
+            <p>在 properties 文件中使用变量</p>
+            <pre class="code" data-type="properties">
+property.filename = ${log.folder}/my.log
+</pre>
+        </li>
+        <li>
+            <p>在 pom.xml 中定义 profile</p>
+            <pre class="code" data-type="xml">
+&lt;profiles&gt;
+    &lt;profile&gt;
+        &lt;id&gt;dev&lt;/id&gt;
+        &lt;properties&gt;
+            &lt;log.folder&gt;C:/tmp&lt;/log.folder&gt;
+        &lt;/properties&gt;
+    &lt;/profile&gt;
+    &lt;profile&gt;
+        &lt;id&gt;prod&lt;/id&gt;
+        &lt;properties&gt;
+            &lt;log.folder&gt;/tmp&lt;/log.folder&gt;
+        &lt;/properties&gt;
+    &lt;/profile&gt;
+&lt;/profiles&gt;
+</pre>
+        </li>
+        <li>
+            <p>在 pom.xml 中启用资源过滤</p>
+            <pre class="code" data-type="xml">
+&lt;resources&gt;
+	&lt;resource&gt;
+		&lt;directory&gt;src/main/resources&lt;/directory&gt;
+            &lt;filtering&gt;true&lt;/filtering&gt;
+	&lt;/resource&gt;
+&lt;/resources&gt;
+</pre>
+        </li>
+        <li>
+            <p>使用如下命令打包</p>
+            <pre class="code" data-type="sh">mvn package -Pdev</pre>
+        </li>
+    </ol>
+    <p>如果是 Tomcat 应用，需在 Eclipse 中设定如下：</p>
+    <p>Maven Active Profile 设置</p>
+    <p><img alt="" src="images/maven-profile-eclipse.png" /></p>
+    <p>在 Run As &rArr; Maven build 中将 maven goals 设为 <span class="emphasis">tomcat:run</span></p>
+    <p></p>
+    <h1>Unit Test</h1>
+    <h2>指定 Unit Test 的位置</h2>
+    <p>使用如下配置指定 unit test 的 source code 和 resource</p>
+    <pre class="code" data-type="xml">
+&lt;build&gt;
+    &lt;testSourceDirectory&gt;junit/src&lt;/testSourceDirectory&gt;
+    &lt;testResources&gt;
+        &lt;testResource&gt;
+            &lt;directory&gt;junit/config&lt;/directory&gt;
+        &lt;/testResource&gt;
+    &lt;/testResources&gt;
+&lt;/build&gt;
+</pre>
+    <h2>如何跳过 test 阶段</h2>
+    <pre class="code" data-type="sh">mvn clean package -Dmaven.test.skip=true</pre>
+    <h2>只运行指定的 Unit Test</h2>
+    <pre class="code" data-type="sh">mvn -Dtest=lld.MyTestClass#myTestMethod test</pre>
     <h1>打包问题</h1>
     <h2>如何打包源文件</h2>
     <p>配置如下</p>
@@ -153,6 +242,38 @@
     <p>如果想将源码一块儿打包进本他仓库，将上述配置放在主 pom.xml 中</p>
     <pre class="code" data-type="sh">mvn clean package</pre>
     <p>更详细的可以看<a href="https://maven.apache.org/plugins/maven-source-plugin/usage.html">Apache Source Plugin Usage</a></p>
+    <h2>如何同时生成多个 jar 包</h2>
+    <p>例如从部分 class 生成另外一个 jar 包</p>
+    <pre class="code" data-type="xml">
+&lt;build&gt;
+		&lt;plugin&gt;
+			&lt;artifactId&gt;maven-jar-plugin&lt;/artifactId&gt;
+			&lt;executions&gt;
+				&lt;execution&gt;
+					&lt;id&gt;sub-jar1&lt;/id&gt;
+					&lt;goals&gt;
+						&lt;goal&gt;jar&lt;/goal&gt;
+					&lt;/goals&gt;
+					&lt;phase&gt;package&lt;/phase&gt;
+					&lt;configuration&gt;
+						&lt;classifier&gt;sub-jar1-name&lt;/classifier&gt;
+						&lt;includes&gt;
+							&lt;include&gt;a/b/*.class&lt;/include&gt;
+							&lt;include&gt;a/c/**/*.class&lt;/include&gt;
+							&lt;include&gt;a/d/A.class&lt;/include&gt;
+						&lt;/includes&gt;
+						&lt;excludes&gt;
+							&lt;exclude&gt;a/b/B*.class&lt;/exclude&gt;
+						&lt;/excludes&gt;
+					&lt;/configuration&gt;
+				&lt;/execution&gt;
+				&lt;execution&gt;
+					&lt;id&gt;sub-jar2&lt;/id&gt;
+					...
+		&lt;/plugin&gt;
+	&lt;/plugins&gt;
+&lt;/build&gt;
+</pre>
     <h2>如何打 RPM 包</h2>
     <pre class="code" data-type="xml">
 &lt;rpm-install-location&gt;my-install-location&lt;/rpm-install-location&gt;
@@ -277,6 +398,24 @@
     <p>使用如下命令编译并打包</p>
     <pre class="code" data-type="sh">mvn clean compile assembly:single</pre>
     <p>必须先 compile 否则你自己的代码不会在结果中</p>
+    <h2>去掉某个 jar 包的默认依赖</h2>
+    <pre class="code" data-type="xml">
+&lt;dependency&gt;
+	&lt;groupId&gt;org.apache.thrift&lt;/groupId&gt;
+	&lt;artifactId&gt;libthrift&lt;/artifactId&gt;
+	&lt;version&gt;0.8.0&lt;/version&gt;
+	&lt;exclusions&gt;
+		&lt;exclusion&gt;
+			&lt;groupId&gt;org.apache.httpcomponents&lt;/groupId&gt;
+			&lt;artifactId&gt;httpcore&lt;/artifactId&gt;
+		&lt;/exclusion&gt;
+		&lt;exclusion&gt;
+			&lt;groupId&gt;org.apache.httpcomponents&lt;/groupId&gt;
+			&lt;artifactId&gt;httpclient&lt;/artifactId&gt;
+		&lt;/exclusion&gt;
+	&lt;/exclusions&gt;
+&lt;/dependency&gt;
+</pre>
     <h1>pom.xml</h1>
     <h2>如何指定其它 pom.xml</h2>
     <pre class="code" data-type="sh">mvn -f otherPomFile.xml</pre>
@@ -307,6 +446,38 @@
 &lt;properties&gt;
 &lt;/properties&gt;
 </pre>
+    <h1>Deploy</h1>
+    <h2>Deploy 到本地库</h2>
+    <pre class="code" data-type="sh">mvn clean install</pre>
+    <h2>Deploy 至中央库</h2>
+    <ol>
+        <li>
+            <p>settings.xml 中设置身份验证</p>
+            <pre class="code" data-type="xml">
+&lt;servers&gt;
+    &lt;server&gt;
+        &lt;username&gt;admin&lt;/username&gt;
+        &lt;password&gt;admin123&lt;/password&gt;
+        &lt;id&gt;nexus-3rd&lt;/id&gt;
+    &lt;/server&gt;
+&lt;/servers&gt;
+</pre>
+        </li>
+        <li>
+            <p>pom.xml 中添加 repository 引用</p>
+            <pre class="code" data-type="xml">
+&lt;distributionManagement&gt;
+    &lt;repository&gt;
+        &lt;id&gt;nexus-3rd&lt;/id&gt;
+        &lt;url&gt;http://localhost:8081/nexus/content/repositories/thirdparty/&lt;/url&gt;
+    &lt;/repository&gt;
+&lt;/distributionManagement&gt;
+</pre>
+        </li>
+        <li>
+            <pre class="code" data-type="sh">mvn clean deploy</pre>
+        </li>
+    </ol>
     <h1>引用 Servlet</h1>
     <p>若需开发 servlet 应用，可使用如下方式引用 Tomcat 提供的 jar 包</p>
     <pre class="code" data-type="xml">

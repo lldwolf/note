@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
-<title>Spring - AOP</title>
+<title>logback</title>
 <script type="text/javascript" src="../../mylib/js/css.js"></script>
 </head>
 
@@ -14,5 +14,14 @@
     <h1>FAQ</h1>
     <h2>通过命令行指定配置文件位置</h2>
     <pre class="code">-Dlogging.config=my_logback.xml</pre>
+    <h2>初始化 Logger 对象</h2>
+    <p>对于 static ，没办法只能 hard code 如下所示</p>
+    <pre class="code" data-type="java">
+static final Logger LOG = LoggerFactory.getLogger(MyClass.class);
+</pre>
+    <p>如果不是 static，可以采用如下的简单写法</p>
+    <pre class="code" data-type="java">
+final Logger LOG = LoggerFactory.getLogger(getClass());
+</pre>
 </body>
 </html>
