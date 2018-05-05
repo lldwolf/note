@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+	<script type="text/javascript" src="../../mylib/js/css.js"></script>
+	<title>Git 笔记</title>
+</head>
+
+<body>
+	<p id="title">Git 笔记</p>
+	<h1>准备工作</h1>
+	<h2>新建远程库</h2>
+	<p>GIT 是非集中式的版本控制系统，因此没有CVS或SVN那样的服务器。因此有如下特点：</p>
+	<ul>
+		<li>任何一个结点都可以作为服务器，也可以作为客户端</li>
+		<li>可以将任何目录建为 Repository</li>
+	</ul>
+	<p>可仿照如下步骤建立 Repository</p>
+	<pre class="code" data-type="sh"># 登录 lnycrecmoap1d.nam.nsroot.net
+$mkdir git_test
+$cd git_test
+		
+# 初始化 git 环境, 使用 bare 模式 
+$git init --bare
+
+# 将当前目录加为 Git Repository
+# $git add .</pre>
+	<p>然后就可以在本地用类似的命令 clone 了</p>
+	<h2>Server 端设置</h2>
+	<ol>
+		<li>
+			<p>需要开放 GITRoot 写权限</p>
+			<pre class="code" data-type="sh">$chmod -R 775 /opt/gollf/GITRoot</pre>
+		</li>
+		<li>
+			<p>将 repository 设为 bare 模式</p>
+			<pre class="code" data-type="sh">$cat /opt/gollf/GITRoot/gollf/.git/config
+
+[core]
+        repositoryformatversion = 0
+        filemode = true
+        <span class="emphasis">bare = true</span>
+        logallrefupdates = true</pre>
+		</li>
+		<li>
+			<p>加用户权限</p>
+			<pre class="code" data-type="sh">$cat /opt/gollf/GITRoot/gollf/.git/config
+
+[user]
+        name = xxxxx
+        name = ooooo
+</pre>
+		</li>
+	</ol>
+
+</body>
+</html>

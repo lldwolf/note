@@ -829,6 +829,20 @@ done</pre>
     <p class="note">在本例中没有使用上例的 for 循环，是因为如果文件路径中包括空格的话会出错</p>
     <h2>批量替换文件内容</h2>
     <pre class="code" data-type="sh">find . -type f -exec sed -i 's/old/new/g' {} +</pre>
+    <h2>生成包含所有 jar 的 classpath</h2>
+    <pre class="code" data-type="sh">
+full_path=''
+all_jar=$(ls *.jar)
+
+for f in ${all_jar}
+do
+	full_path=${full_path}:${f} 
+done
+
+full_path=${full_path:1}
+
+echo ${full_path}
+</pre>
 	<h1>附录</h1>
 	<h2>系统变量</h2>
 	<table style="width: 90%">
@@ -869,5 +883,12 @@ n&gt;&amp;-    #Close output file descriptor n.
 			</td>
 		</tr>
 	</table>
+    <h1>常犯错误</h1>
+    <ul>
+        <li>
+            <p>赋值 = 两边不能有空格（逼死格式强迫症），像下面这种写法是错误的</p>
+                <pre class="code" data-type="sh">a = 5</pre>
+        </li>
+    </ul>
 </body>
 </html>

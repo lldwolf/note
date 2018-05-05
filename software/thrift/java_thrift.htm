@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+	<script type="text/javascript" src="../../mylib/js/css.js"></script>
+	<title>Thrift for Java 示例</title>
+</head>
+
+<body>
+	<p id="title">Thrift for Java 示例</p>
+	<h1>Overview</h1>
+    <p>本例将提供一个简单的 User Service 来展示如何在 Java 中使用 Thrift</p>
+    <h1>user_service.thrift</h1>
+    <p>定义如下：</p>
+    <pre class="code" data-type="log">
+namespace * lld.test.thrift.service.interfaces
+
+/**
+*   User POJO
+*/
+struct User {
+ 1: i32 id,
+ 2: string name,
+}
+
+
+/**
+*   User Service
+*/
+service UserService {
+    User getUser (1: i32 userId)
+}
+</pre>
+    <h1>生成 Java 文件</h1>
+    <p>下载安装好 Thrift 后，使用如下命令生成 Java 文件</p>
+    <pre class="code" data-type="sh">thrift --gen java user_service.thrift</pre>
+    <p>生成的文件中有如下几个关键类</p>
+    <ul>
+        <li>UserService.Iface: 需要自己实现业务功能的接口</li>
+        <li>UserService.Processor: 自动生成的 Servant</li>
+        <li>UserService.Client: 自动生成的 Stub</li>
+    </ul>
+    <p>将生成的文件导入项目。</p>
+    <h1>Service 实现</h1>
+    <p>创建 UserService.Iface 的业务实现类 UserServiceImpl 如下所示</p>
+    <pre class="code" data-type="java" data-collapsed="false" title="UserServiceImpl.java">
+import org.apache.thrift.TException;
+
+import lld.test.thrift.service.interfaces.User;
+import lld.test.thrift.service.interfaces.UserService.Iface;
+
+public class UserServiceImpl implements Iface {
+	public User getUser(int userId) throws TException {
+		User user = new User();
+		user.setId(userId);
+		user.setName("User " + userId);
+		return user;
+	}
+}
+</pre>
+    <h1>启动 Server</h1>
+    <p>使用如下的代码启动 Thrift Server，监听端口为 8090</p>
+    <pre class="code" data-type="java" data-collapsed="false" title="UserServer.java">
+import org.apache.thrift.TProcessor;
+import org.apache.thrift.protocol.TBinaryProtocol;
+import org.apache.thrift.server.TServer;
+import org.apache.thrift.server.TSimpleServer;
+import org.apache.thrift.transport.TServerSocket;
+
+import lld.test.thrift.service.impl.UserServiceImpl;
+import lld.test.thrift.service.interfaces.UserService;
+import lld.test.thrift.service.interfaces.UserService.Iface;
+
+public class UserServer 
+{
+	public static final int SERVER_PORT = 8090;
+	 
+	public static void main(String[] args) {
+		startServer();
+	}
+
+public static void startServer() {
+		try {
+			System.out.println("HelloWorld TSimpleServer start ....");
+ 
+			TProcessor tprocessor = new UserService.Processor&lt;Iface&gt;(new UserServiceImpl());
+			TServerSocket serverTransport = new TServerSocket(SERVER_PORT);
+			TServer.Args tArgs = new TServer.Args(serverTransport);
+			tArgs.processor(tprocessor);
+			tArgs.protocolFactory(new TBinaryProtocol.Factory());
+			TServer server = new TSimpleServer(tArgs);
+			server.serve();
+ 
+		} catch (Exception e) {
+			System.out.println("Server start error!!!");
+			e.printStackTrace();
+		}
+	}
+ 
+}
+</pre>
+    <h1>访问服务</h1>
+    <p>客户端需使用与服务端相同的配置，如下所示：</p>
+    <pre class="code" data-type="java" data-collapsed="false" title="UserServer.java">
+import org.apache.thrift.TException;
+import org.apache.thrift.protocol.TBinaryProtocol;
+import org.apache.thrift.protocol.TProtocol;
+import org.apache.thrift.transport.TSocket;
+import org.apache.thrift.transport.TTransport;
+import org.apache.thrift.transport.TTransportException;
+
+import lld.test.thrift.service.interfaces.User;
+import lld.test.thrift.service.interfaces.UserService;
+
+public class UserClient {
+
+	public static void main(String[] args) {
+		getUser(10001);
+	}
+
+	public static final String SERVER_IP = "localhost";
+	public static final int SERVER_PORT = 8090;
+	public static final int TIMEOUT = 30000;
+
+	public static void getUser(int userId) {
+		TTransport transport = null;
+		try {
+			transport = new TSocket(SERVER_IP, SERVER_PORT, TIMEOUT);
+			TProtocol protocol = new TBinaryProtocol(transport);
+			UserService.Client client = new UserService.Client(protocol);
+			transport.open();
+			User result = client.getUser(userId);
+			System.out.println("Thrify client result =: " + result);
+		} catch (TTransportException e) {
+			e.printStackTrace();
+		} catch (TException e) {
+			e.printStackTrace();
+		} finally {
+			if (null != transport) {
+				transport.close();
+			}
+		}
+	}
+}
+</pre>
+</body>
+</html>

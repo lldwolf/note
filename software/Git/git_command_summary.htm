@@ -58,7 +58,7 @@ git config --global user.name</pre>
 [difftool]
 	prompt = false
 [difftool "bc3"]
-	cmd = \"c:/Program Files (x86)/beyond compare 3/bcomp.exe\" "$(cygpath -w $LOCAL)" "$REMOTE"
+	cmd = \"c:/Program Files (x86)/beyond compare 3/bcompare.exe\" "$(cygpath -w $LOCAL)" "$REMOTE"
 [merge]
 	tool = bc3
 [mergetool]
@@ -66,6 +66,8 @@ git config --global user.name</pre>
 [mergetool "bc3"]
 	cmd = \"c:/program files/beyond compare 3/bcomp.exe\" "$LOCAL" "$REMOTE" "$BASE" "$MERGED"</pre>
     <p>配置完成后，需使用 git difftool 命令代替 git diff, git mergetool 代替 git merge</p>
+    <p>使用如下命令可基于目录进行比较同时在 Beyond Compare 中显示所有的改动文件</p>
+    <pre class="code" data-typw="sh">git difftool -d</pre>
     <h2>一些常用的配置项</h2>
     <table style="width: 80%">
         <tr>
@@ -535,7 +537,11 @@ git reset [commit for version 1]
 
 # 使用比较工具进行修后后再次提交
 git add .
-git commit -m "rollback"</pre>
+git commit -m "rollback"
+
+# 或者忽略所有修改后强制提交
+git reset --hard [commit]
+git push -f origin [branch]</pre>
     <p>最后的分支树如下所示</p>
     <p>
         <img alt="" src="img/git-rollback01.png" /></p>

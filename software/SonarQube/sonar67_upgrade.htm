@@ -1,0 +1,87 @@
+﻿<!DOCTYPE html>
+
+<html lang="zh-cn" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta charset="utf-8" />
+	<script type="text/javascript" src="../../mylib/js/css.js"></script>
+	<title>SonarQube 6.7 升级手记</title>
+</head>
+<body>
+	<p id="title">SonarQube 6.7 升级手记</p>
+    <h1>FAQ</h1>
+    <h2>配置 6.4</h2>
+    <p>做了以下这些事儿</p>
+    <ol>
+        <li>
+            <p>备份原数据库</p>
+        </li>
+        <li>
+            <p>下载，解压</p>
+            <p>如果是本机测试，可修改 wrapper.conf 如下</p>
+            <pre class="code" data-type="properties">wrapper.java.command=C:/Program Files/Java/jdk1.8.0_71/bin/java</pre>
+        </li>
+        <li>
+            <p>因为使用的 Oracle 数据库，将 ojdbc6.jar 复制到了 extensions/jdbc-driver/oracle/ 目录</p>
+        </li>
+        <li>
+            <p>修改 conf/sonar.properties 的如下部分</p>
+            <pre class="code" data-type="properties">
+sonar.jdbc.username=****
+sonar.jdbc.password=****
+
+sonar.jdbc.url=jdbc:oracle:thin:@gfrdb1u.nam.nsroot.net:1534:GOLLFU4
+
+sonar.web.port=9000
+
+sonar.search.port=9005
+
+# HTTP proxy (default none)
+http.proxyHost=webproxy.wlb.nsroot.net
+http.proxyPort=8080
+# HTTPS proxy (defaults are values of http.proxyHost and http.proxyPort)
+https.proxyHost=webproxy.wlb2.nam.nsroot.net
+https.proxyPort=8092
+javax.net.ssl.keyStore=/home/zc37901/lnx.pfx
+javax.net.ssl.keyStorePassword=gollf1
+
+sonar.log.level.web=DEBUG
+
+#sonar.security.realm=LDAP
+ldap.url=ldaps://ds-uat-shared-01.nam.nsroot.net:6370
+ldap.bindDn=uid=gollf-153263-id,ou=funcids,o=citigroup,c=us
+ldap.bindPassword=7jkooJ80
+
+ldap.user.baseDn=ou=internal,o=citigroup,c=us
+ldap.user.request=(&(objectClass=inetOrgPerson)(uid={login}))
+ldap.user.realNameAttribute=cn
+ldap.user.emailAttribute=mail
+
+ldap.group.request=(&(objectClass=posixGroup)(memberUid={uid}))
+ldap.group.request=(&(objectClass=group)(member={dn}))
+ldap.group.idAttribute=sAMAccountName
+</pre>
+        </li>
+        <li>
+            <p>修改 conf/wrapper.conf 的如下部分</p>
+            <pre class="code" data-type="properties">
+wrapper.java.additional.2=-Djava.awt.headless=true -Djavax.net.ssl.keyStore=/home/zc37901/lnx.pfx -Djavax.net.ssl.keyStorePassword=gollf1
+
+wrapper.shutdown.timeout=3000
+wrapper.jvm_exit.timeout=3000
+</pre>
+        </li>
+        <li>
+            <p>在根目录下添加启动脚本如下：</p>
+            <pre class="code" data-type="sh">
+export JAVA_HOME=/opt/jdk/1.8.0_51l64
+export PATH=$PATH:$JAVA_HOME/bin
+
+sh /opt/gollf/sonar/sonarqube-6.7.3/bin/linux-x86-64/sonar.sh start &
+</pre>
+        </li>
+        <li>
+            <p>启动服务并访问 /setup 升级数据库</p>
+        </li>
+    </ol>
+</body>
+</html>
