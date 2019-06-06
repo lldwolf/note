@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+	<title>Java 8 Try with resources</title>
+	<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+	<p id="title">Java 8 Try with resources</p>
+	<h1>Overview</h1>
+	<p>用于简化原先使用 finally 释放资源的方式。</p>
+    <p>原方式</p>
+    <pre class="code" data-type="java">
+BufferedReader br = new BufferedReader(new FileReader(path));
+
+try {
+    return br.readLine();
+} catch (Exception e) {
+    ...
+} finally {
+    br.close();
+}
+</pre>
+    <p>JDK8 推荐方式</p>
+    <pre class="code" data-type="java">
+try (BufferedReader br = new BufferedReader(new FileReader(path))) {
+    return br.readLine();
+}
+</pre>
+    <p>也可以在 try 中写多个 resources，如下所示：</p>
+    <pre class="code" data-type="java">
+try (
+    java.util.zip.ZipFile zf = new java.util.zip.ZipFile(zipFileName);
+    java.io.BufferedWriter writer =  java.nio.file.Files.newBufferedWriter(outputFilePath, charset)) {
+    // Enumerate each entry
+    for (java.util.Enumeration entries = zf.entries(); entries.hasMoreElements();) {
+        // Get the entry name and write it to the output file
+        String newLine = System.getProperty("line.separator");
+        String zipEntryName = ((java.util.zip.ZipEntry)entries.nextElement()).getName() + newLine;
+        writer.write(zipEntryName, 0, zipEntryName.length());
+    }
+}
+</pre>
+</body>
+</html>

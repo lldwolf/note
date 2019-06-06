@@ -200,7 +200,7 @@ Thread[1] will set key as: 9
 }
 </pre>
 	<p>我们可以看到不但线程间互相不受影响，而且每个线程独享一个计数器，其它线程的修改不影响当前线程的计数器。</p>
-	<p>ThreadLocal 个般声明为 final static 类型</p>
+	<p>ThreadLocal 一般声明为 final static 类型</p>
 
     <h1>Callable &amp; Future</h1>
     <h2>简单示例</h2>
@@ -227,17 +227,17 @@ public class CallableTest {
 		// Don't accept new tasks
 		executor.shutdown();
 
-		System.out.println(&quot;main thread is working...&quot;);
-		System.out.println(&quot;result 1: &quot; + result1.get());
-		System.out.println(&quot;result 2: &quot; + result2.get());
-		System.out.println(&quot;Done.&quot;);
+		System.out.println("main thread is working...");
+		System.out.println("result 1: " + result1.get());
+		System.out.println("result 2: " + result2.get());
+		System.out.println("Done.");
 	}
 
 	private static class Task implements Callable&lt;Integer&gt; {
 		@Override
 		public Integer call() throws Exception {
 			int waitingTime = 1000 + random.nextInt(1000);
-			System.out.println(String.format(&quot;sub task will working %s ms.&quot;, waitingTime));
+			System.out.println(String.format("sub task will working %s ms.", waitingTime));
 			Thread.sleep(waitingTime);
 			return waitingTime;
 		}
@@ -291,12 +291,6 @@ System.out.println("All task completed...");
             <p>newSingleThreadExecutor</p>
             <p>单线程</p>
         </li>
-        <li>
-            <p></p>
-        </li>
-        <li>
-            <p></p>
-        </li>
     </ul>
     <h1>生产者/消费者实现</h1>
     <h2>基于 Object.wait/notify</h2>
@@ -331,7 +325,7 @@ public class ProducerConsumerBasic {
 			while (true) {
 				synchronized (queue) {
 					if (queue.size() == 0) {
-						System.out.println(&quot;Queue is empty!&quot;);
+						System.out.println("Queue is empty!");
 						try {
 							queue.wait();
 						} catch (InterruptedException e) {
@@ -339,9 +333,9 @@ public class ProducerConsumerBasic {
 						}
 					}
 					Integer value = queue.poll();
-					System.out.println(&quot;Consume &quot; + value);
+					System.out.println("Consume " + value);
 					queue.notify();
-					System.out.println(&quot;Queue left &quot; + queue.size());
+					System.out.println("Queue left " + queue.size());
 				}
 				try {
 					Thread.sleep(random.nextInt(100));
@@ -360,7 +354,7 @@ public class ProducerConsumerBasic {
 			while (true) {
 				synchronized (queue) {
 					if (queue.size() == MAX_SIZE) {
-						System.out.println(&quot;Queue is full!&quot;);
+						System.out.println("Queue is full!");
 						try {
 							queue.wait();
 						} catch (InterruptedException e) {
@@ -369,9 +363,9 @@ public class ProducerConsumerBasic {
 					}
 					Integer value = random.nextInt(1000);
 					queue.offer(value);
-					System.out.println(&quot;Produce &quot; + value);
+					System.out.println("Produce " + value);
 					queue.notify();
-					System.out.println(&quot;Queue left &quot; + queue.size());
+					System.out.println("Queue left " + queue.size());
 				}
 				try {
 					Thread.sleep(random.nextInt(100));
@@ -428,7 +422,7 @@ public class ProducerConsumerCondition {
 				
 				try {
 					if (queue.size() == 0) {
-						System.out.println(&quot;Queue is empty!&quot;);
+						System.out.println("Queue is empty!");
 
 						try {
 							notEmpty.await();
@@ -438,9 +432,9 @@ public class ProducerConsumerCondition {
 					}
 
 					Integer value = queue.poll();
-					System.out.println(&quot;Consume &quot; + value);
+					System.out.println("Consume " + value);
 					notFull.signal();
-					System.out.println(&quot;Queue left &quot; + queue.size());
+					System.out.println("Queue left " + queue.size());
 				} finally {
 					lock.unlock();
 				}
@@ -467,7 +461,7 @@ public class ProducerConsumerCondition {
 				
 				try {
 					if (queue.size() == MAX_SIZE) {
-						System.out.println(&quot;Queue is full!&quot;);
+						System.out.println("Queue is full!");
 
 						try {
 							notFull.await();
@@ -478,9 +472,9 @@ public class ProducerConsumerCondition {
 
 					Integer value = random.nextInt(1000);
 					queue.offer(value);
-					System.out.println(&quot;Produce &quot; + value);
+					System.out.println("Produce " + value);
 					notEmpty.signal();
-					System.out.println(&quot;Queue left &quot; + queue.size());
+					System.out.println("Queue left " + queue.size());
 				} finally {
 					lock.unlock();
 				}
@@ -496,6 +490,73 @@ public class ProducerConsumerCondition {
 	}
 }
 </pre>
+    <h2>基于 Blocking Queue 实现</h2>
+    <p>阻塞队列实现生产者消费者模式超级简单，它提供开箱即用支持阻塞的方法put()和take()，开发者不需要写困惑的wait-nofity代码去实现通信。</p>
+    <pre class="code" data-type="java" data-collapsed="false" title="ProducerConsumerWithBlockingQueue"> 
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+public class ProducerConsumerWithBlockingQueue {
+
+    public static void main(String[] args) {
+        // Creating shared object
+
+        BlockingQueue&lt;Object&gt; sharedQueue = new LinkedBlockingQueue&lt;&gt;();
+
+        // Creating Producer and Consumer Thread
+        Thread prodThread = new Thread(new Producer(sharedQueue));
+        Thread consThread = new Thread(new Consumer(sharedQueue));
+
+        // Starting producer and Consumer thread
+        prodThread.start();
+        consThread.start();
+    }
+
+    private static class Producer implements Runnable {
+
+        private final BlockingQueue&lt;Object&gt; sharedQueue;
+
+        public Producer(BlockingQueue&lt;Object&gt; sharedQueue) {
+            this.sharedQueue = sharedQueue;
+        }
+
+        @Override
+        public void run() {
+            for (int i = 0; i &lt; 10; i++) {
+                try {
+                    System.out.println("Produced: " + i);
+                    sharedQueue.put(new Integer(i));
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(Producer.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+
+    }
+
+    private static class Consumer implements Runnable {
+        private final BlockingQueue&lt;Object&gt; sharedQueue;
+
+        public Consumer(BlockingQueue&lt;Object&gt; sharedQueue) {
+            this.sharedQueue = sharedQueue;
+        }
+
+        @Override
+        public void run() {
+            while (true) {
+                try {
+                    System.out.println("Consumed: " + sharedQueue.take());
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(Consumer.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+
+    }
+}
+</pre>
     <h1>FAQ</h1>
     <h2>等待</h2>
     <pre class="code" data-type="java">
@@ -509,17 +570,17 @@ try {
 </pre>
     <p>也可以使用 wait() 方法，wait 方法和 sleep 方法有如下区别：</p>
     <ol>
-        <li>
-            <p>leep()使当前线程进入停滞状态（阻塞当前线程），让出CUP的使用、目的是不让当前线程独自霸占该进程所获的CPU资源，以留一定时间给其他线程执行的机会;</p>
-            <p>sleep()是Thread类的Static(静态)的方法；因此他不能改变对象的机锁，所以当在一个Synchronized块中调用Sleep()方法是，线程虽然休眠了，但是对象的机锁并木有被释放，其他线程无法访问这个对象（即使睡着也持有对象锁）。</p>
-            <p>在sleep()休眠时间期满后，该线程不一定会立即执行，这是因为其它线程可能正在运行而且没有被调度为放弃执行，除非此线程具有更高的优先级。 </p>
+    <li>
+    <p>sleep()使当前线程进入停滞状态（阻塞当前线程），让出CUP的使用、目的是不让当前线程独自霸占该进程所获的CPU资源，以留一定时间给其他线程执行的机会;</p>
+    <p>sleep()是Thread类的Static(静态)的方法；因此他不能改变对象的机锁，所以当在一个Synchronized块中调用Sleep()方法是，线程虽然休眠了，但是对象的机锁并木有被释放，其他线程无法访问这个对象（即使睡着也持有对象锁）。</p>
+    <p>在sleep()休眠时间期满后，该线程不一定会立即执行，这是因为其它线程可能正在运行而且没有被调度为放弃执行，除非此线程具有更高的优先级。 </p>
         </li>
-        <li>
-            <p>
+    <li>
+    <p>
                 wait()方法是Object类里的方法；当一个线程执行到wait()方法时，它就进入到一个和该对象相关的等待池中，同时失去（释放）了对象的机锁（暂时失去机锁，wait(long timeout)超时时间到后还需要返还对象锁）；其他线程可以访问；
             </p>
-            <p>wait()使用notify或者notifyAlll或者指定睡眠时间来唤醒当前等待池中的线程。</p>
-            <p>wiat()必须放在synchronized block中，否则会在program runtime时扔出”java.lang.IllegalMonitorStateException“异常。</p>
+    <p>wait()使用notify或者notifyAlll或者指定睡眠时间来唤醒当前等待池中的线程。</p>
+    <p>wiat()必须放在synchronized block中，否则会在program runtime时扔出”java.lang.IllegalMonitorStateException“异常。</p>
         </li>
     </ol>
     <p>所以sleep()和wait()方法的最大区别是：sleep()睡眠时，保持对象锁，仍然占有该锁；而wait()睡眠时，释放对象锁。</p>
@@ -532,14 +593,12 @@ try {
  */
 public class ThreadTest implements Runnable {
     int number = 10;
-
     public void firstMethod() throws Exception {
         synchronized (this) {
             number += 100;
             System.out.println(number);
         }
     }
-
     public void secondMethod() throws Exception {
         synchronized (this) {
             /**
@@ -552,7 +611,6 @@ public class ThreadTest implements Runnable {
             number *= 200;
         }
     }
-
     @Override
     public void run() {
         try {
@@ -561,7 +619,6 @@ public class ThreadTest implements Runnable {
             e.printStackTrace();
         }
     }
-
     public static void main(String[] args) throws Exception {
         ThreadTest threadTest = new ThreadTest();
         Thread thread = new Thread(threadTest);

@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+	<script type="text/javascript" src="../../mylib/js/css.js"></script>
+	<title>压缩</title>
+</head>
+
+<body>
+	<p id="title">压缩</p>
+    <h1>压缩算法分析</h1>
+    <p>本文参考自 <a href="https://mp.weixin.qq.com/s/df1y0KbMShZveTKNBJ3aPA">Java 不同压缩算法的性能比较</a></p>
+    <p>有如下可用的压缩算法选项</p>
+    <ul>
+        <li>
+            <p>DK GZIP ——这是一个压缩比高的慢速算法，压缩后的数据适合长期使用。JDK中的java.util.zip.GZIPInputStream / GZIPOutputStream便是这个算法的实现。</p>
+        </li>
+        <li>
+            <p>JDK deflate ——这是JDK中的又一个算法（zip文件用的就是这一算法）。它与gzip的不同之处在于，你可以指定算法的压缩级别，这样你可以在压缩时间和输出文件大小上进行平衡。可选的级别有0（不压缩），以及1(快速压缩)到9（慢速压缩）。它的实现是java.util.zip.DeflaterOutputStream / InflaterInputStream。</p>
+        </li>
+        <li>
+            <p>LZ4压缩算法的Java实现——这是本文介绍的算法中压缩速度最快的一个，与最快速的deflate相比，它的压缩的结果要略微差一点</p>
+        </li>
+        <li>
+            <p>Snappy——这是Google开发的一个非常流行的压缩算法，它旨在提供速度与压缩比都相对较优的压缩算法。</p>
+        </li>
+    </ul>
+    <p>考虑到压缩效率及IO速度，LZ4算法推荐用于网络传输。经过测试其中大多数实现的效率是非常低的：在Xeon E5-2650处理器上，高级别的deflate大约是23Ｍb/秒，即使是GZIP也就只有33Mb/秒，这大概很难令人满意。同时，最快的defalte算法大概能到75Mb/秒,Snappy是150Mb/秒，而LZ4(快速，JNI实现)能达到难以置信的320Mb/秒!</p>
+    <h1>使用的工具方法</h1>
+    <h2>生成大文件</h2>
+    <p>将某个目录下的所有文件写到了一个文件</p>
+    <pre class="code" data-type="java">
+public class InputGenerator {
+    private static final String JAVADOC_PATH = "your_path_to_JDK/docs";
+    public static final File FILE_PATH = new File( "your_output_file_path" );
+ 
+    static
+    {
+        try {
+            if ( !FILE_PATH.exists() )
+                makeJavadocFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+ 
+    private static void makeJavadocFile() throws IOException {
+        try( OutputStream os = new BufferedOutputStream( new FileOutputStream( FILE_PATH ), 65536 ) )
+        {
+            appendDir(os, new File( JAVADOC_PATH ));
+        }
+        System.out.println( "Javadoc file created" );
+    }
+ 
+    private static void appendDir( final OutputStream os, final File root ) throws IOException {
+        for ( File f : root.listFiles() )
+        {
+            if ( f.isDirectory() )
+                appendDir( os, f );
+            else
+                Files.copy(f.toPath(), os);
+        }
+    }
+}
+</pre>
+    <h2>用于测试性能的基类</h2>
+    <p>用的测试框架是JMH, 文件在预热阶段会被操作系统加载到缓存中（在预热阶段会先压缩两次）, 将内容压缩到ByteArrayOutputStream流中.</p>
+    <p>所有的测试不同的地方都只在于压缩的输出流的实现不同，因此可以复用这个测试基类，只需从StreamFactory实现中生成一个流就好了.</p>
+    <pre class="code" data-type="java">
+@OutputTimeUnit(TimeUnit.MILLISECONDS)
+@State(Scope.Thread)
+@Fork(1)
+@Warmup(iterations = 2)
+@Measurement(iterations = 3)
+@BenchmarkMode(Mode.SingleShotTime)
+public class TestParent {
+    protected Path m_inputFile;
+ 
+    @Setup
+    public void setup()
+    {
+        m_inputFile = InputGenerator.FILE_PATH.toPath();
+    }
+ 
+    interface StreamFactory
+    {
+        public OutputStream getStream( final OutputStream underlyingStream ) throws IOException;
+    }
+ 
+    public int baseBenchmark( final StreamFactory factory ) throws IOException
+    {
+        try ( ByteArrayOutputStream bos = new ByteArrayOutputStream((int) m_inputFile.toFile().length());
+              OutputStream os = factory.getStream( bos ) )
+        {
+            Files.copy(m_inputFile, os);
+            os.flush();
+            return bos.size();
+        }
+    }
+}
+</pre>
+    <h2>JDK defalte 测试类</h2>
+    <pre class="code" data-type="java">
+public class JdkDeflateTest extends TestParent {
+    @Param({"1", "2", "3", "4", "5", "6", "7", "8", "9"})
+    public int m_lvl;
+ 
+    @Benchmark
+    public int deflate() throws IOException
+    {
+        return baseBenchmark(new StreamFactory() {
+            @Override
+            public OutputStream getStream(OutputStream underlyingStream) throws IOException {
+                final Deflater deflater = new Deflater( m_lvl, true );
+                return new DeflaterOutputStream( underlyingStream, deflater, 512 );
+            }
+        });
+    }
+}
+</pre>
+    <h1>常用功能</h1>
+    <p>包括压缩/解压缩等操作</p>
+    <pre class="code" data-type="java" data-collapsed="false" title="compress util">
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.List;
+import java.util.zip.DataFormatException;
+import java.util.zip.Deflater;
+import java.util.zip.Inflater;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
+import java.util.zip.ZipOutputStream;
+
+import org.apache.commons.io.FileUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+public class ZipUtil {
+    private static final Logger logger = LoggerFactory.getLogger(ZipUtil.class);
+
+    private ZipUtil() {
+
+    }
+
+    private static final int KB = 1024;
+    private static final int MB = KB * KB;
+
+    public static byte[] compress(byte[] data) throws IOException {
+        Deflater deflater = new Deflater();
+        deflater.setInput(data);
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream(data.length);
+        deflater.finish();
+        byte[] buffer = new byte[MB];
+
+        while (!deflater.finished()) {
+            int count = deflater.deflate(buffer); // returns the generated code... index
+            outputStream.write(buffer, 0, count);
+        }
+
+        outputStream.close();
+        byte[] output = outputStream.toByteArray();
+        logger.debug("Original: {} Kb", data.length / KB);
+        logger.debug("Compressed to : {} Kb", output.length / KB);
+        return output;
+    }
+
+    public static byte[] decompress(byte[] data) throws IOException, DataFormatException {
+        Inflater inflater = new Inflater();
+        inflater.setInput(data);
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream(data.length);
+        byte[] buffer = new byte[MB];
+
+        while (!inflater.finished()) {
+            int count = inflater.inflate(buffer);
+            outputStream.write(buffer, 0, count);
+        }
+
+        outputStream.close();
+        byte[] output = outputStream.toByteArray();
+        logger.debug("Original: {}", data.length);
+        logger.debug("Compressed: {}", output.length);
+        return output;
+    }
+
+    public static void unzipFile(String zipFile, String destPath) throws LoadTestException {
+        try {
+            File destDir = new File(destPath);
+            FileUtils.forceMkdir(destDir);
+            byte[] buffer = new byte[MB];
+
+            try (ZipInputStream zis = new ZipInputStream(new FileInputStream(zipFile))) {
+                ZipEntry zipEntry = zis.getNextEntry();
+
+                while (zipEntry != null) {
+                    File newFile = newFile(destDir, zipEntry);
+
+                    if (zipEntry.getName().endsWith("/")) {
+                        newFile.mkdirs();
+                    } else {
+                        try (FileOutputStream fos = new FileOutputStream(newFile)) {
+                            int len;
+                            while ((len = zis.read(buffer)) &gt; 0) {
+                                fos.write(buffer, 0, len);
+                            }
+                        }
+                    }
+
+                    zipEntry = zis.getNextEntry();
+                }
+
+                zis.closeEntry();
+            }
+        } catch (IOException e) {
+            String errMsg = String.format("Failed to uncompress %s to %s!", zipFile, destPath);
+            logger.error(errMsg, e);
+            throw new LoadTestException(errMsg, e);
+        }
+    }
+
+    private static File newFile(File destinationDir, ZipEntry zipEntry) throws IOException {
+        File destFile = new File(destinationDir, zipEntry.getName());
+        String destDirPath = destinationDir.getCanonicalPath();
+        String destFilePath = destFile.getCanonicalPath();
+
+        if (!destFilePath.startsWith(destDirPath + File.separator)) {
+            throw new IOException("Entry is outside of the target dir: " + zipEntry.getName());
+        }
+
+        return destFile;
+    }
+
+    public static void zipFile(String sourceFile, String objectFile) throws IOException {
+        FileOutputStream fos = new FileOutputStream(objectFile);
+
+        try (ZipOutputStream zipOut = new ZipOutputStream(fos)) {
+            File fileToZip = new File(sourceFile);
+
+            try (FileInputStream fis = new FileInputStream(fileToZip)) {
+                ZipEntry zipEntry = new ZipEntry(fileToZip.getName());
+                zipOut.putNextEntry(zipEntry);
+                byte[] bytes = new byte[MB];
+                int length;
+                
+                while ((length = fis.read(bytes)) &gt;= 0) {
+                    zipOut.write(bytes, 0, length);
+                }
+            }
+        }
+
+        fos.close();
+    }
+
+    public static void zipFolder(String sourceFile, String objectFile) throws IOException {
+        FileOutputStream fos = new FileOutputStream(objectFile);
+        ZipOutputStream zipOut = new ZipOutputStream(fos);
+        File fileToZip = new File(sourceFile);
+
+        zipFile(fileToZip, fileToZip.getName(), zipOut);
+        zipOut.close();
+        fos.close();
+    }
+
+    private static void zipFile(File fileToZip, String fileName, ZipOutputStream zipOut) throws IOException {
+        if (fileToZip.isHidden()) {
+            return;
+        }
+
+        if (fileToZip.isDirectory()) {
+            if (fileName.endsWith("/")) {
+                zipOut.putNextEntry(new ZipEntry(fileName));
+                zipOut.closeEntry();
+            } else {
+                zipOut.putNextEntry(new ZipEntry(fileName + "/"));
+                zipOut.closeEntry();
+            }
+            File[] children = fileToZip.listFiles();
+            for (File childFile : children) {
+                zipFile(childFile, fileName + "/" + childFile.getName(), zipOut);
+            }
+            return;
+        }
+
+        try (FileInputStream fis = new FileInputStream(fileToZip)) {
+            ZipEntry zipEntry = new ZipEntry(fileName);
+            zipOut.putNextEntry(zipEntry);
+            byte[] bytes = new byte[MB];
+            int length;
+            
+            while ((length = fis.read(bytes)) &gt;= 0) {
+                zipOut.write(bytes, 0, length);
+            }
+        }
+    }
+
+    public static void zipFiles(List&lt;String&gt; srcFiles, String objectFile) throws IOException {
+        FileOutputStream fos = new FileOutputStream(objectFile);
+
+        try (ZipOutputStream zipOut = new ZipOutputStream(fos)) {
+            for (String srcFile : srcFiles) {
+                File fileToZip = new File(srcFile);
+
+                try (FileInputStream fis = new FileInputStream(fileToZip)) {
+                    ZipEntry zipEntry = new ZipEntry(fileToZip.getName());
+                    zipOut.putNextEntry(zipEntry);
+
+                    byte[] bytes = new byte[MB];
+                    int length;
+                    while ((length = fis.read(bytes)) &gt;= 0) {
+                        zipOut.write(bytes, 0, length);
+                    }
+                }
+            }
+        }
+
+        fos.close();
+    }
+
+}
+</pre>
+    <h1>源码下载</h1>
+    <p><a href="example/compress_src.zip">compress_src.zip</a></p>
+</body>
+</html>

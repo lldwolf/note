@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+    <title>SpringBoot Web Project</title>
+    <script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+    <p id="title">SpringBoot Web Project</p>
+    <h1>Overview</h1>
+    <p>本章讲述如何使用 SpringBoot 创建一个 Web 项目。</p>
+    <p>SpringBoot 不再推荐使用 JSP 作为模板引擎。默认引擎是 Thymeleaf，也可以通过配置使用 Freemarker, Velocity 等。本章使用默认的 Thymeleaf 引擎。</p>
+    <h1>创建 Hello world project </h1>
+    <ol>
+        <li>
+            <header>创建项目</header>
+            <p>可使用 STS plugin 或 <a href="https://start.spring.io/">https://start.spring.io/</a>，依赖 Web, Thymeleaf, DevTools.</p>
+            <p>并加入一些简单的文件，最终目录结构如下：</p>
+            <p><img alt="" src="images/springboot02.png" /></p>
+            <p>说明如下：</p>
+            <ul>
+                <li>
+                    <header>WebTemplateApplication.java</header>
+                    <p>自动生成的启动类</p>
+                </li>
+                <li>
+                    <header>MainController.java</header>
+                    <p>手工创建的 Controller 类，后面会说明</p>
+                </li>
+                <li>
+                    <header>resources/static</header>
+                    <p>自动创建的目录，负责存放静态资源</p>
+                </li>
+                <li>
+                    <header>resources/templates</header>
+                    <p>自动创建的目录，负责存放 Thymeleaf 模板</p>
+                </li>
+            </ul>
+        </li>
+        <li>
+            <header>pom.xml</header>
+            <pre class="code" data-type="xml" data-collapsed="false" title="pom.xml">
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;
+    &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+    &lt;parent&gt;
+        &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+        &lt;artifactId&gt;spring-boot-starter-parent&lt;/artifactId&gt;
+        &lt;version&gt;2.1.1.RELEASE&lt;/version&gt;
+        &lt;relativePath /&gt; &lt;!-- lookup parent from repository --&gt;
+    &lt;/parent&gt;
+    &lt;groupId&gt;lld&lt;/groupId&gt;
+    &lt;artifactId&gt;web-template&lt;/artifactId&gt;
+    &lt;version&gt;0.0.1-SNAPSHOT&lt;/version&gt;
+    &lt;name&gt;web-template&lt;/name&gt;
+    &lt;description&gt;test&lt;/description&gt;
+
+    &lt;properties&gt;
+        &lt;java.version&gt;1.8&lt;/java.version&gt;
+    &lt;/properties&gt;
+
+    &lt;dependencies&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-boot-starter-thymeleaf&lt;/artifactId&gt;
+        &lt;/dependency&gt;
+
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-boot-starter-web&lt;/artifactId&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-boot-devtools&lt;/artifactId&gt;
+            &lt;scope&gt;runtime&lt;/scope&gt;
+        &lt;/dependency&gt;
+
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-boot-starter-test&lt;/artifactId&gt;
+            &lt;scope&gt;test&lt;/scope&gt;
+        &lt;/dependency&gt;
+    &lt;/dependencies&gt;
+
+    &lt;build&gt;
+        &lt;plugins&gt;
+            &lt;plugin&gt;
+                &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+                &lt;artifactId&gt;spring-boot-maven-plugin&lt;/artifactId&gt;
+            &lt;/plugin&gt;
+        &lt;/plugins&gt;
+    &lt;/build&gt;
+
+&lt;/project&gt;
+</pre>
+        </li>
+        <li>
+            <header>index.html</header>
+            <pre class="code" data-type="html" data-collapsed="false" title="pom.xml">
+&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot; xmlns:th=&quot;http://www.thymeleaf.org&quot;&gt;
+&lt;head&gt;
+&lt;title&gt;Hello&lt;/title&gt;
+&lt;/head&gt;
+
+&lt;body&gt;
+    &lt;p&gt;Hello, world&lt;/p&gt;
+&lt;/body&gt;
+</pre>
+        </li>
+        <li>
+            <header>error.html</header>
+            <p>如果出错会自动导航到当前页面</p>
+            <pre class="code" data-type="html" data-collapsed="false" title="pom.xml">
+&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot; xmlns:th=&quot;http://www.thymeleaf.org&quot;&gt;
+&lt;head&gt;
+&lt;title&gt;Insert title here&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;p&gt;
+        &lt;img alt=&quot;&quot; src=&quot;/images/logo.png&quot; /&gt;
+    &lt;/p&gt;
+    &lt;p&gt;Boy, you're wrong!&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</pre>
+        </li>
+        <li>
+            <header>MainController.java</header>
+            <p>控制 URL 的处理及跳转, 注意如下几点：</p>
+            <ul>
+                <li>返回字符串会自动定位到  *.html，所以不需要加后缀</li>
+                <li>不需要前导字符 '/'，否则出现 Eclipse 中启动正常，打成 jar 包后就找不到路径的情况</li>
+            </ul>
+            <pre class="code" data-type="java" data-collapsed="false" title="MainController.java">
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
+
+@Controller
+@RequestMapping("/")
+public class MainController {
+    @RequestMapping("/")
+    public ModelAndView index(){
+        ModelAndView modelAndView = new ModelAndView("index");
+        return modelAndView;
+    }
+}
+
+</pre>
+        </li>
+        <li>
+            <header>在 Eclipse 中测试</header>
+            <p>直接运行 WebTemplateApplication.java</p>
+            <p>然后在浏览器中验证 localhost:8080</p>
+        </li>
+        <li>
+            <header>打成 jar 测试</header>
+            <p>使用 Maven 打包后运行，然后在浏览器中验证</p>
+        </li>
+    </ol>
+</body>
+</html>

@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+    <title>Quartz Overview</title>
+    <script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+<body>
+    <p id="title">Quartz Overview</p>
+    <h1>Quartz可以用来做什么？</h1>
+    <p>Quartz是一个任务调度框架。比如你遇到这样的问题</p>
+    <ul>
+        <li>想每月25号，信用卡自动还款</li>
+        <li>想每年4月1日自己给当年暗恋女神发一封匿名贺卡</li>
+        <li>想每隔1小时，备份一下自己的爱情动作片 学习笔记到云盘</li>
+    </ul>
+    <p>这些问题总结起来就是：在某一个有规律的时间点干某件事。并且时间的触发的条件可以非常复杂（比如每月最后一个工作日的17:50），复杂到需要一个专门的框架来干这个事。 Quartz就是来干这样的事，你给它一个触发条件的定义，它负责到了时间点，触发相应的Job起来干活。</p>
+    <h1>一个简单的示例</h1>
+    <p>这里面的所有例子都是基于Quartz 2.2.1</p>
+    <pre class="code" data-type="java" data-collapsed="false" title="QuartzTest.java">
+package com.test.quartz;
+import static org.quartz.JobBuilder.newJob;
+import static org.quartz.SimpleScheduleBuilder.simpleSchedule;
+import static org.quartz.TriggerBuilder.newTrigger;
+import org.quartz.JobDetail;
+import org.quartz.Scheduler;
+import org.quartz.Trigger;
+import org.quartz.impl.StdSchedulerFactory;
+public class QuartzTest {
+    public static void main(String[] args) {
+        try {
+            // 创建scheduler
+            Scheduler scheduler = StdSchedulerFactory.getDefaultScheduler();
+            // 定义一个Trigger
+            Trigger trigger = newTrigger().withIdentity(&quot;trigger1&quot;, &quot;group1&quot;) // 定义name/group
+                    .startNow()// 一旦加入scheduler，立即生效
+                    .withSchedule(simpleSchedule() // 使用SimpleTrigger
+                            .withIntervalInSeconds(1) // 每隔一秒执行一次
+                            .repeatForever()) // 一直执行，奔腾到老不停歇
+                    .build();
+            // 定义一个JobDetail
+            JobDetail job = newJob(HelloQuartz.class) // 定义Job类为HelloQuartz类，这是真正的执行逻辑所在
+                    .withIdentity(&quot;job1&quot;, &quot;group1&quot;) // 定义name/group
+                    .usingJobData(&quot;name&quot;, &quot;quartz&quot;) // 定义属性
+                    .build();
+            // 加入这个调度
+            scheduler.scheduleJob(job, trigger);
+            // 启动之
+            scheduler.start();
+            // 运行一段时间后关闭
+            Thread.sleep(10000);
+            scheduler.shutdown(true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}
+</pre>
+    <p></p>
+    <pre class="code" data-type="java" data-collapsed="false" title="HelloQuartz.java">
+package com.test.quartz;
+import java.util.Date;
+import org.quartz.Job;
+import org.quartz.JobDetail;
+import org.quartz.JobExecutionContext;
+import org.quartz.JobExecutionException;
+public class HelloQuartz implements Job {
+    public void execute(JobExecutionContext context) throws JobExecutionException {
+        JobDetail detail = context.getJobDetail();
+        String name = detail.getJobDataMap().getString("name");
+        System.out.println("say hello to " + name + " at " + new Date());
+    }
+}
+</pre>
+
+    <p>这个例子很好的覆盖了Quartz最重要的3个基本要素：</p>
+    <ul>
+        <li>Scheduler：调度器。所有的调度都是由它控制。</li>
+        <li>Trigger： 定义触发的条件。例子中，它的类型是SimpleTrigger，每隔1秒中执行一次（什么是SimpleTrigger下面会有详述）。</li>
+        <li>JobDetail &amp; Job： JobDetail 定义的是任务数据，而真正的执行逻辑是在Job中，例子中是HelloQuartz。 为什么设计成JobDetail + Job，不直接使用Job？这是因为任务是有可能并发执行，如果Scheduler直接使用Job，就会存在对同一个Job实例并发访问的问题。而JobDetail &amp; Job 方式，sheduler每次执行，都会根据JobDetail创建一个新的Job实例，这样就可以规避并发访问的问题。</li>
+    </ul>
+    <h1>Quartz API</h1>
+    <p>Quartz的API的风格在2.x以后，采用的是DSL风格（通常意味着fluent interface风格），就是示例中newTrigger()那一段东西。它是通过Builder实现的，就是以下几个。（** 下面大部分代码都要引用这些Builder ** )</p>
+    <pre class="code" data-type="java">
+//job相关的builder
+import static org.quartz.JobBuilder.*;
+//trigger相关的builder
+import static org.quartz.TriggerBuilder.*;
+import static org.quartz.SimpleScheduleBuilder.*;
+import static org.quartz.CronScheduleBuilder.*;
+import static org.quartz.DailyTimeIntervalScheduleBuilder.*;
+import static org.quartz.CalendarIntervalScheduleBuilder.*;
+//日期相关的builder
+import static org.quartz.DateBuilder.*;
+</pre>
+
+    <p>DSL风格写起来会更加连贯，畅快，而且由于不是使用setter的风格，语义上会更容易理解一些。对比一下：</p>
+    <pre class="code" data-type="java">
+JobDetail jobDetail=new JobDetailImpl("jobDetail1","group1",HelloQuartz.class);
+jobDetail.getJobDataMap().put("name", "quartz");
+SimpleTriggerImpl trigger=new SimpleTriggerImpl("trigger1","group1");
+trigger.setStartTime(new Date());
+trigger.setRepeatInterval(1);
+trigger.setRepeatCount(-1);
+</pre>
+
+    <h1>关于name和group</h1>
+    <p>JobDetail和Trigger都有name和group。</p>
+    <p>name是它们在这个sheduler里面的唯一标识。如果我们要更新一个JobDetail定义，只需要设置一个name相同的JobDetail实例即可。</p>
+    <p>group是一个组织单元，sheduler会提供一些对整组操作的API，比如 scheduler.resumeJobs()。</p>
+    <h1>Trigger</h1>
+    <p>在开始详解每一种Trigger之前，需要先了解一下Trigger的一些共性。</p>
+    <h3>StartTime &amp; EndTime</h3>
+    <p>startTime和endTime指定的Trigger会被触发的时间区间。在这个区间之外，Trigger是不会被触发的。</p>
+    <p>** 所有Trigger都会包含这两个属性 **</p>
+    <h3>优先级（Priority）</h3>
+    <p>当scheduler比较繁忙的时候，可能在同一个时刻，有多个Trigger被触发了，但资源不足（比如线程池不足）。那么这个时候比剪刀石头布更好的方式，就是设置优先级。优先级高的先执行。</p>
+    <p>需要注意的是，优先级只有在同一时刻执行的Trigger之间才会起作用，如果一个Trigger是9:00，另一个Trigger是9:30。那么无论后一个优先级多高，前一个都是先执行。</p>
+    <p>优先级的值默认是5，当为负数时使用默认值。最大值似乎没有指定，但建议遵循Java的标准，使用1-10，不然鬼才知道看到【优先级为10】是时，上头还有没有更大的值。</p>
+    <h3>Misfire(错失触发）策略</h3>
+    <p>类似的Scheduler资源不足的时候，或者机器崩溃重启等，有可能某一些Trigger在应该触发的时间点没有被触发，也就是Miss Fire了。这个时候Trigger需要一个策略来处理这种情况。每种Trigger可选的策略各不相同。</p>
+    <p>这里有两个点需要重点注意：</p>
+    <ul>
+        <li>MisFire的触发是有一个阀值，这个阀值是配置在JobStore的。比RAMJobStore是org.quartz.jobStore.misfireThreshold。只有超过这个阀值，才会算MisFire。小于这个阀值，Quartz是会全部重新触发。</li>
+    </ul>
+    <p>所有MisFire的策略实际上都是解答两个问题：</p>
+    <ol>
+        <li>已经MisFire的任务还要重新触发吗？</li>
+        <li>如果发生MisFire，要调整现有的调度时间吗？</li>
+    </ol>
+    <p>比如SimpleTrigger的MisFire策略有：</p>
+    <ul>
+        <li>
+            <p>MISFIRE_INSTRUCTION_IGNORE_MISFIRE_POLICY</p>
+            <p>这个不是忽略已经错失的触发的意思，而是说忽略MisFire策略。它会在资源合适的时候，重新触发所有的MisFire任务，并且不会影响现有的调度时间。</p>
+            <p>比如，SimpleTrigger每15秒执行一次，而中间有5分钟时间它都MisFire了，一共错失了20个，5分钟后，假设资源充足了，并且任务允许并发，它会被一次性触发。</p>
+            <p>这个属性是所有Trigger都适用。</p>
+        </li>
+        <li>
+            <p>MISFIRE_INSTRUCTION_FIRE_NOW</p>
+            <p>忽略已经MisFire的任务，并且立即执行调度。这通常只适用于只执行一次的任务。</p>
+        </li>
+        <li>
+            <p>MISFIRE_INSTRUCTION_RESCHEDULE_NOW_WITH_EXISTING_REPEAT_COUNT</p>
+            <p>将startTime设置当前时间，立即重新调度任务，包括的MisFire的</p>
+        </li>
+        <li>
+            <p>MISFIRE_INSTRUCTION_RESCHEDULE_NOW_WITH_REMAINING_REPEAT_COUNT</p>
+            <p>类似MISFIRE_INSTRUCTION_RESCHEDULE_NOW_WITH_EXISTING_REPEAT_COUNT，区别在于会忽略已经MisFire的任务</p>
+        </li>
+        <li>
+            <p>MISFIRE_INSTRUCTION_RESCHEDULE_NEXT_WITH_EXISTING_COUNT</p>
+            <p>在下一次调度时间点，重新开始调度任务，包括的MisFire的</p>
+        </li>
+        <li>
+            <p>MISFIRE_INSTRUCTION_RESCHEDULE_NEXT_WITH_REMAINING_COUNT</p>
+            <p>类似于MISFIRE_INSTRUCTION_RESCHEDULE_NEXT_WITH_EXISTING_COUNT，区别在于会忽略已经MisFire的任务。</p>
+        </li>
+        <li>
+            <p>MISFIRE_INSTRUCTION_SMART_POLICY</p>
+            <p>所有的Trigger的MisFire默认值都是这个，大致意思是"把处理逻辑交给聪明的Quartz去决定"。基本策略是，</p>
+            <ol>
+                <li>如果是只执行一次的调度，使用MISFIRE_INSTRUCTION_FIRE_NOW</li>
+                <li>如果是无限次的调度(repeatCount是无限的)，使用MISFIRE_INSTRUCTION_RESCHEDULE_NEXT_WITH_REMAINING_COUNT</li>
+                <li>否则，使用MISFIRE_INSTRUCTION_RESCHEDULE_NOW_WITH_EXISTING_REPEAT_COUNT</li>
+            </ol>
+        </li>
+    </ul>
+    <p>MisFire的东西挺繁杂的，可以参考<a href="http://java.dzone.com/articles/quartz-scheduler-misfire">这篇</a></p>
+    <h3>Calendar</h3>
+    <p>这里的Calendar不是jdk的java.util.Calendar，不是为了计算日期的。它的作用是在于补充Trigger的时间。可以排除或加入某一些特定的时间点。</p>
+    <p>以"每月25日零点自动还卡债"为例，我们想排除掉每年的2月25号零点这个时间点（因为有2.14，所以2月一定会破产）。这个时间，就可以用Calendar来实现。</p>
+    <p>例子：</p>
+    <pre class="code" data-type="java">
+AnnualCalendar cal = new AnnualCalendar(); //定义一个每年执行Calendar，精度为天，即不能定义到2.25号下午2:00
+java.util.Calendar excludeDay = new GregorianCalendar();
+excludeDay.setTime(newDate().inMonthOnDay(2, 25).build());
+cal.setDayExcluded(excludeDay, true);  //设置排除2.25这个日期
+scheduler.addCalendar("FebCal", cal, false, false); //scheduler加入这个Calendar
+//定义一个Trigger
+Trigger trigger = newTrigger().withIdentity("trigger1", "group1") 
+        .startNow()//一旦加入scheduler，立即生效
+        .modifiedByCalendar("FebCal") //使用Calendar !!
+        .withSchedule(simpleSchedule()
+        .withIntervalInSeconds(1) 
+        .repeatForever()) 
+        .build();
+</pre>
+    
+    <p>Quartz体贴地为我们提供以下几种Calendar，注意，所有的Calendar既可以是排除，也可以是包含，取决于：</p>
+    <ul>
+        <li>HolidayCalendar。指定特定的日期，比如20140613。精度到天。</li>
+        <li>DailyCalendar。指定每天的时间段（rangeStartingTime, rangeEndingTime)，格式是HH:MM[:SS[:mmm]]。也就是最大精度可以到毫秒。</li>
+        <li>WeeklyCalendar。指定每星期的星期几，可选值比如为java.util.Calendar.SUNDAY。精度是天。</li>
+        <li>MonthlyCalendar。指定每月的几号。可选值为1-31。精度是天</li>
+        <li>AnnualCalendar。 指定每年的哪一天。使用方式如上例。精度是天。</li>
+        <li>CronCalendar。指定Cron表达式。精度取决于Cron表达式，也就是最大精度可以到秒。</li>
+    </ul>
+    <h1>Trigger实现类</h1>
+    <p>Quartz有以下几种Trigger实现:</p>
+    <h3>SimpleTrigger</h3>
+    <p>指定从某一个时间开始，以一定的时间间隔（单位是毫秒）执行的任务。</p>
+    <p>它适合的任务类似于：9:00 开始，每隔1小时，执行一次。</p>
+    <p>它的属性有：</p>
+    <ul>
+        <li>repeatInterval 重复间隔</li>
+        <li>repeatCount 重复次数。实际执行次数是 repeatCount+1。因为在startTime的时候一定会执行一次。** 下面有关repeatCount 属性的都是同理。　**</li>
+    </ul>
+    <p>例子：</p>
+    <pre class="code" data-type="java">
+simpleSchedule()
+        .withIntervalInHours(1) //每小时执行一次
+        .repeatForever() //次数不限
+        .build();
+simpleSchedule()
+        .withIntervalInMinutes(1) //每分钟执行一次
+        .withRepeatCount(10) //次数为10次
+        .build();
+</pre>
+    
+    <h3>CalendarIntervalTrigger</h3>
+    <p>类似于SimpleTrigger，指定从某一个时间开始，以一定的时间间隔执行的任务。 但是不同的是SimpleTrigger指定的时间间隔为<strong>毫秒</strong>，没办法指定每隔一个月执行一次（每月的时间间隔不是固定值），而CalendarIntervalTrigger支持的间隔单位有<strong>秒，分钟，小时，天，月，年，星期</strong>。</p>
+    <p>相较于SimpleTrigger有两个优势：1、更方便，比如每隔1小时执行，你不用自己去计算1小时等于多少毫秒。 2、支持不是固定长度的间隔，比如间隔为月和年。但劣势是精度只能到秒。</p>
+    <p>它适合的任务类似于：9:00 开始执行，并且以后每周 9:00 执行一次</p>
+    <p>它的属性有:</p>
+    <ul>
+        <li>interval 执行间隔</li>
+        <li>intervalUnit 执行间隔的单位（秒，分钟，小时，天，月，年，星期）</li>
+    </ul>
+    <p>例子:</p>
+    <pre class="code" data-type="java">
+calendarIntervalSchedule()
+        .withIntervalInDays(1) //每天执行一次
+        .build();
+calendarIntervalSchedule()
+        .withIntervalInWeeks(1) //每周执行一次
+        .build();
+</pre>
+    
+    <h3>DailyTimeIntervalTrigger</h3>
+    <p>指定每天的某个时间段内，以一定的时间间隔执行任务。并且它可以支持指定星期。</p>
+    <p>它适合的任务类似于：指定每天9:00 至 18:00 ，每隔70秒执行一次，并且只要周一至周五执行。</p>
+    <p>它的属性有:</p>
+    <ul>
+    <li>startTimeOfDay 每天开始时间</li>
+    <li>endTimeOfDay 每天结束时间</li>
+    <li>daysOfWeek 需要执行的星期</li>
+    <li>interval 执行间隔</li>
+    <li>intervalUnit 执行间隔的单位（秒，分钟，小时，天，月，年，星期）</li>
+    <li>repeatCount 重复次数</li>
+    </ul>
+    <p>例子:</p>
+    <pre class="code" data-type="java">
+dailyTimeIntervalSchedule()
+    .startingDailyAt(TimeOfDay.hourAndMinuteOfDay(9, 0)) //第天9：00开始
+    .endingDailyAt(TimeOfDay.hourAndMinuteOfDay(16, 0)) //16：00 结束 
+    .onDaysOfTheWeek(MONDAY,TUESDAY,WEDNESDAY,THURSDAY,FRIDAY) //周一至周五执行
+    .withIntervalInHours(1) //每间隔1小时执行一次
+    .withRepeatCount(100) //最多重复100次（实际执行100+1次）
+    .build();
+dailyTimeIntervalSchedule()
+    .startingDailyAt(TimeOfDay.hourAndMinuteOfDay(9, 0)) //第天9：00开始
+    .endingDailyAfterCount(10) //每天执行10次，这个方法实际上根据 startTimeOfDay+interval*count 算出 endTimeOfDay
+    .onDaysOfTheWeek(MONDAY,TUESDAY,WEDNESDAY,THURSDAY,FRIDAY) //周一至周五执行
+    .withIntervalInHours(1) //每间隔1小时执行一次
+    .build();
+</pre>
+    
+    <h3>CronTrigger</h3>
+    <p>适合于更复杂的任务，它支持类型于Linux Cron的语法（并且更强大）。基本上它覆盖了以上三个Trigger的绝大部分能力（但不是全部）&mdash;&mdash; 当然，也更难理解。</p>
+    <p>它适合的任务类似于：每天0:00,9:00,18:00各执行一次。</p>
+    <p>它的属性只有:</p>
+    <ul>
+    <li>Cron表达式。但这个表示式本身就够复杂了。下面会有说明。</li>
+    </ul>
+    <p>例子：</p>
+    <pre class="code" data-type="java">
+cronSchedule("0 0/2 8-17 * * ?") // 每天8:00-17:00，每隔2分钟执行一次
+    .build();
+cronSchedule("0 30 9 ? * MON") // 每周一，9:30执行一次
+.build();
+weeklyOnDayAndHourAndMinute(MONDAY,9, 30) //等同于 0 30 9 ? * MON 
+    .build();
+</pre>
+    
+    <h4>Cron表达式</h4>
+    <table>
+    <thead>
+    <tr><th>位置</th><th>时间域</th><th>允许值</th><th>特殊值</th></tr>
+        </thead>
+    <tbody>
+    <tr>
+    <td>1</td>
+    <td>秒</td>
+    <td>0-59</td>
+    <td>, - * /</td>
+            </tr>
+    <tr>
+    <td>2</td>
+    <td>分钟</td>
+    <td>0-59</td>
+    <td>, - * /</td>
+            </tr>
+    <tr>
+    <td>3</td>
+    <td>小时</td>
+    <td>0-23</td>
+    <td>, - * /</td>
+            </tr>
+    <tr>
+    <td>4</td>
+    <td>日期</td>
+    <td>1-31</td>
+    <td>, - * ? / L W C</td>
+            </tr>
+    <tr>
+    <td>5</td>
+    <td>月份</td>
+    <td>1-12</td>
+    <td>, - * /</td>
+            </tr>
+    <tr>
+    <td>6</td>
+    <td>星期</td>
+    <td>1-7</td>
+    <td>, - * ? / L C #</td>
+            </tr>
+    <tr>
+    <td>7</td>
+    <td>年份（可选）</td>
+    <td>1-31</td>
+    <td>, - * /</td>
+            </tr>
+        </tbody>
+    </table>
+    <p>星号(<em>)：可用在所有字段中，表示对应时间域的每一个时刻，例如，</em> 在分钟字段时，表示"每分钟"；</p>
+    <p>问号（?）：该字符只在日期和星期字段中使用，它通常指定为"无意义的值"，相当于点位符；</p>
+    <p>减号(-)：表达一个范围，如在小时字段中使用"10-12"，则表示从10到12点，即10,11,12；</p>
+    <p>逗号(,)：表达一个列表值，如在星期字段中使用"MON,WED,FRI"，则表示星期一，星期三和星期五；</p>
+    <p>斜杠(/)：x/y表达一个等步长序列，x为起始值，y为增量步长值。如在分钟字段中使用0/15，则表示为0,15,30和45秒，而5/15在分钟字段中表示5,20,35,50，你也可以使用*/y，它等同于0/y；</p>
+    <p>L：该字符只在日期和星期字段中使用，代表"Last"的意思，但它在两个字段中意思不同。L在日期字段中，表示这个月份的最后一天，如一月的31号，非闰年二月的28号；如果L用在星期中，则表示星期六，等同于7。但是，如果L出现在星期字段里，而且在前面有一个数值X，则表示"这个月的最后X天"，例如，6L表示该月的最后星期五；</p>
+    <p>W：该字符只能出现在日期字段里，是对前导日期的修饰，表示离该日期最近的工作日。例如15W表示离该月15号最近的工作日，如果该月15号是星期六，则匹配14号星期五；如果15日是星期日，则匹配16号星期一；如果15号是星期二，那结果就是15号星期二。但必须注意关联的匹配日期不能够跨月，如你指定1W，如果1号是星期六，结果匹配的是3号星期一，而非上个月最后的那天。W字符串只能指定单一日期，而不能指定日期范围；</p>
+    <p>LW组合：在日期字段可以组合使用LW，它的意思是当月的最后一个工作日；</p>
+    <p>井号(#)：该字符只能在星期字段中使用，表示当月某个工作日。如6#3表示当月的第三个星期五(6表示星期五，#3表示当前的第三个)，而4#5表示当月的第五个星期三，假设当月没有第五个星期三，忽略不触发；</p>
+    <p>C：该字符只在日期和星期字段中使用，代表"Calendar"的意思。它的意思是计划所关联的日期，如果日期没有被关联，则相当于日历中所有日期。例如5C在日期字段中就相当于日历5日以后的第一天。1C在星期字段中相当于星期日后的第一天。</p>
+    <p>Cron表达式对特殊字符的大小写不敏感，对代表星期的缩写英文大小写也不敏感。</p>
+    <p>一些例子：</p>
+    <table>
+    <thead>
+    <tr><th>表示式</th><th>说明</th></tr>
+        </thead>
+    <tbody>
+    <tr>
+    <td>0 0 12 * * ?</td>
+    <td>每天12点运行</td>
+            </tr>
+    <tr>
+    <td>0 15 10 ? * *</td>
+    <td>每天10:15运行</td>
+            </tr>
+    <tr>
+    <td>0 15 10 * * ?</td>
+    <td>每天10:15运行</td>
+            </tr>
+    <tr>
+    <td>0 15 10 * * ? *</td>
+    <td>每天10:15运行</td>
+            </tr>
+    <tr>
+    <td>0 15 10 * * ? 2008</td>
+    <td>在2008年的每天10：15运行</td>
+            </tr>
+    <tr>
+    <td>0 * 14 * * ?</td>
+    <td>每天14点到15点之间每分钟运行一次，开始于14:00，结束于14:59。</td>
+            </tr>
+    <tr>
+    <td>0 0/5 14 * * ?</td>
+    <td>每天14点到15点每5分钟运行一次，开始于14:00，结束于14:55。</td>
+            </tr>
+    <tr>
+    <td>0 0/5 14,18 * * ?</td>
+    <td>每天14点到15点每5分钟运行一次，此外每天18点到19点每5钟也运行一次。</td>
+            </tr>
+    <tr>
+    <td>0 0-5 14 * * ?</td>
+    <td>每天14:00点到14:05，每分钟运行一次。</td>
+            </tr>
+    <tr>
+    <td>0 10,44 14 ? 3 WED</td>
+    <td>3月每周三的14:10分到14:44，每分钟运行一次。</td>
+            </tr>
+    <tr>
+    <td>0 15 10 ? * MON-FRI</td>
+    <td>每周一，二，三，四，五的10:15分运行。</td>
+            </tr>
+    <tr>
+    <td>0 15 10 15 * ?</td>
+    <td>每月15日10:15分运行。</td>
+            </tr>
+    <tr>
+    <td>0 15 10 L * ?</td>
+    <td>每月最后一天10:15分运行。</td>
+            </tr>
+    <tr>
+    <td>0 15 10 ? * 6L</td>
+    <td>每月最后一个星期五10:15分运行。</td>
+            </tr>
+    <tr>
+    <td>0 15 10 ? * 6L 2007-2009</td>
+    <td>在2007,2008,2009年每个月的最后一个星期五的10:15分运行。</td>
+            </tr>
+    <tr>
+    <td>0 15 10 ? * 6#3</td>
+    <td>每月第三个星期五的10:15分运行。</td>
+            </tr>
+        </tbody>
+    </table>
+    <h1>JobDetail &amp; Job</h1>
+    <p>JobDetail是任务的定义，而Job是任务的执行逻辑。在JobDetail里会引用一个Job Class定义。一个最简单的例子</p>
+    <pre class="code" data-type="java">
+public class JobTest {
+    public static void main(String[] args) throws SchedulerException, IOException {
+        JobDetail job = newJob()
+                .ofType(DoNothingJob.class) // 引用Job Class
+                .withIdentity("job1", "group1") // 设置name/group
+                .withDescription("this is a test job") // 设置描述
+                .usingJobData("age", 18) // 加入属性到ageJobDataMap
+                .build();
+        job.getJobDataMap().put("name", "quertz"); // 加入属性name到JobDataMap
+        // 定义一个每秒执行一次的SimpleTrigger
+        Trigger trigger = newTrigger()
+                .startNow()
+                .withIdentity("trigger1")
+                .withSchedule(simpleSchedule()
+                        .withIntervalInSeconds(1)
+                        .repeatForever())
+                .build();
+        Scheduler sche = StdSchedulerFactory.getDefaultScheduler();
+        sche.scheduleJob(job, trigger);
+        sche.start();
+        System.in.read();
+        sche.shutdown();
+    }
+}
+
+public class DoNothingJob implements Job {
+    public void execute(JobExecutionContext context) throws JobExecutionException {
+        System.out.println("do nothing");
+    }
+}
+</pre>
+    
+    <p>从上例我们可以看出，要定义一个任务，需要干几件事：</p>
+    <ol>
+    <li>创建一个org.quartz.Job的实现类，并实现实现自己的业务逻辑。比如上面的DoNothingJob。</li>
+    <li>定义一个JobDetail，引用这个实现类</li>
+    <li>加入scheduleJob</li>
+    </ol>
+    <p>Quartz调度一次任务，会干如下的事：</p>
+    <ol>
+    <li>JobClass jobClass=JobDetail.getJobClass()</li>
+    <li>Job jobInstance=jobClass.newInstance()。所以Job实现类，必须有一个public的无参构建方法。</li>
+    <li>jobInstance.execute(JobExecutionContext context)。JobExecutionContext是Job运行的上下文，可以获得Trigger、Scheduler、JobDetail的信息。</li>
+    </ol>
+    <p>也就是说，每次调度都会创建一个新的Job实例，这样的好处是有些任务并发执行的时候，不存在对临界资源的访问问题&mdash;&mdash;当然，如果需要共享JobDataMap的时候，还是存在临界资源的并发访问的问题。</p>
+    <h3>JobDataMap</h3>
+    <p>Job都次都是newInstance的实例，那我怎么传值给它？ 比如我现在有两个发送邮件的任务，一个是发给"liLei",一个发给"hanmeimei",不能说我要写两个Job实现类LiLeiSendEmailJob和HanMeiMeiSendEmailJob。实现的办法是通过JobDataMap。</p>
+    <p>每一个JobDetail都会有一个JobDataMap。JobDataMap本质就是一个Map的扩展类，只是提供了一些更便捷的方法，比如getString()之类的。</p>
+    <p>我们可以在定义JobDetail，加入属性值，方式有二：</p>
+    <pre class="code" data-type="java">
+newJob().usingJobData("age", 18) //加入属性到ageJobDataMap
+
+// or
+job.getJobDataMap().put("name", "quertz"); //加入属性name到JobDataMap
+</pre>
+    
+    <p>然后在Job中可以获取这个JobDataMap的值，方式同样有二：</p>
+    <pre class="code" data-type="java">
+public class HelloQuartz implements Job {
+    private String name;
+
+    public void execute(JobExecutionContext context) throws JobExecutionException {
+        JobDetail detail = context.getJobDetail();
+        JobDataMap map = detail.getJobDataMap(); // 方法一：获得JobDataMap
+        System.out.println("say hello to " + name + "[" + map.getInt("age") + "]" + " at "
+                + new Date());
+    }
+
+    // 方法二：属性的setter方法，会将JobDataMap的属性自动注入
+    public void setName(String name) {
+        this.name = name;
+    }
+}
+</pre>
+    
+    <p>对于同一个JobDetail实例，执行的多个Job实例，是共享同样的JobDataMap，也就是说，如果你在任务里修改了里面的值，会对其他Job实例（并发的或者后续的）造成影响。</p>
+    <p>除了JobDetail，Trigger同样有一个JobDataMap，共享范围是所有使用这个Trigger的Job实例。</p>
+    <h3>Job并发</h3>
+    <p>Job是有可能并发执行的，比如一个任务要执行10秒中，而调度算法是每秒中触发1次，那么就有可能多个任务被并发执行。</p>
+    <p>有时候我们并不想任务并发执行，比如这个任务要去"获得数据库中所有未发送邮件的名单"，如果是并发执行，就需要一个数据库锁去避免一个数据被多次处理。这个时候一个@DisallowConcurrentExecution解决这个问题。</p>
+    <p>就是这样</p>
+    <pre class="code" data-type="java">
+public class DoNothingJob implements Job {
+    @DisallowConcurrentExecution
+    public void execute(JobExecutionContext context) throws JobExecutionException {
+        System.out.println("do nothing");
+    }
+}
+</pre>
+    
+    <p>注意，@DisallowConcurrentExecution是对JobDetail实例生效，也就是如果你定义两个JobDetail，引用同一个Job类，是可以并发执行的。</p>
+    <h3>JobExecutionException</h3>
+    <p>Job.execute()方法是不允许抛出除JobExecutionException之外的所有异常的（包括RuntimeException)，所以编码的时候，最好是try-catch住所有的Throwable，小心处理。</p>
+    <h3>其他属性</h3>
+    <ul>
+    <li>
+    <p>Durability(耐久性？)</p>
+    <p>如果一个任务不是durable，那么当没有Trigger关联它的时候，它就会被自动删除。</p>
+        </li>
+    <li>
+    <p>RequestsRecovery</p>
+    <p>如果一个任务是"requests recovery"，那么当任务运行过程非正常退出时（比如进程崩溃，机器断电，但不包括抛出异常这种情况），Quartz再次启动时，会重新运行一次这个任务实例。</p>
+    <p>可以通过JobExecutionContext.isRecovering()查询任务是否是被恢复的。</p>
+        </li>
+    </ul>
+    <h1>Scheduler</h1>
+    <p>Scheduler就是Quartz的大脑，所有任务都是由它来设施。</p>
+    <p>Schduelr包含一个两个重要组件: JobStore和ThreadPool。</p>
+    <p>JobStore是会来存储运行时信息的，包括Trigger,Schduler,JobDetail，业务锁等。它有多种实现RAMJob(内存实现)，JobStoreTX(JDBC，事务由Quartz管理），JobStoreCMT(JDBC，使用容器事务)，ClusteredJobStore(集群实现)、TerracottaJobStore(<a href="http://yale.iteye.com/blog/1541612">什么是Terractta</a>)。</p>
+    <p>ThreadPool就是线程池，Quartz有自己的线程池实现。所有任务的都会由线程池执行。</p>
+    <h3>SchedulerFactory</h3>
+    <p>SchdulerFactory，顾名思义就是来用创建Schduler了，有两个实现：DirectSchedulerFactory和 StdSchdulerFactory。前者可以用来在代码里定制你自己的Schduler参数。后者是直接读取classpath下的quartz.properties（不存在就都使用默认值）配置来实例化Schduler。通常来讲，我们使用StdSchdulerFactory也就足够了。</p>
+    <p>SchdulerFactory本身是支持创建RMI stub的，可以用来管理远程的Scheduler，功能与本地一样，可以远程提交个Job什么的。</p>
+    <p>DirectSchedulerFactory的创建接口</p>
+    <pre class="code" data-type="java">
+/**
+    * Same as
+    * {@link DirectSchedulerFactory#createScheduler(ThreadPool threadPool, JobStore jobStore)},
+    * with the addition of specifying the scheduler name and instance ID. This
+    * scheduler can only be retrieved via
+    * {@link DirectSchedulerFactory#getScheduler(String)}
+    *
+    * @param schedulerName
+    *          The name for the scheduler.
+    * @param schedulerInstanceId
+    *          The instance ID for the scheduler.
+    * @param threadPool
+    *          The thread pool for executing jobs
+    * @param jobStore
+    *          The type of job store
+    * @throws SchedulerException
+    *           if initialization failed
+    */
+public void createScheduler(String schedulerName, String schedulerInstanceId, ThreadPool threadPool, JobStore jobStore) throws SchedulerException;
+</pre>
+    
+    <p>StdSchdulerFactory的配置例子， 更多配置，参考<a href="http://quartz-scheduler.org/documentation/quartz-2.2.x/configuration/">Quartz配置指南</a>：</p>
+    
+    <h1>这里未讲的稍微高级的主题</h1>
+    <ul>
+    <li>JobStore <a href="http://quartz-scheduler.org/documentation/quartz-2.2.x/tutorials/tutorial-lesson-09">介绍</a>、<a href="http://quartz-scheduler.org/documentation/quartz-2.2.x/configuration/">配置</a></li>
+    <li>集群: <a href="http://quartz-scheduler.org/documentation/quartz-2.2.x/tutorials/tutorial-lesson-11">介绍</a>、<a href="http://quartz-scheduler.org/documentation/quartz-2.2.x/configuration/ConfigJDBCJobStoreClustering">配置</a></li>
+    <li>RMI</li>
+    <li>监听器 <a href="http://quartz-scheduler.org/documentation/quartz-2.2.x/tutorials/tutorial-lesson-07">TriggerListeners and JobListeners</a>、<a href="http://quartz-scheduler.org/documentation/quartz-2.2.x/tutorials/tutorial-lesson-08">SchedulerListeners</a></li>
+    <li>插件</li>
+    </ul>
+    <h1>参考</h1>
+    <ul>
+    <li>主要的资料来自<a href="http://quartz-scheduler.org/documentation/quartz-2.2.x/tutorials/">官方文档</a>，这里有教程，例子，配置等，非常详细</li>
+    <li>Cron表达式的说明，大段引用自<a href="http://www.blogjava.net/baoyaer/articles/155645.html">这里</a></li>
+    <li>中文文档，虽然版本比较旧，但是很多东西还是没过时的，比如插件、RMI，<a href="http://vdisk.weibo.com/s/Ca_zRC6PBQeh8">Quartz_Job_Scheduling_Framework_CN_V1.0.0</a></li>
+    </ul></div><div id="MySignature"></div>
+    <div class="clear"></div>
+</body>
+</html>

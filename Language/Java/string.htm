@@ -1,0 +1,23 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+    <script type="text/javascript" src="../../mylib/js/css.js"></script>
+	<title>Java String</title>
+</head>
+
+<body>
+	<p id="title">Java String</p>
+    <h1>FAQ</h1>
+    <h2>ASCII</h2>
+    <p>如下函数可以将非英文字符替换为类似的英文字符，例如将 "orčpžsíáýd" 替换为 "orcpzsiayd"</p>
+    <pre class="code" data-type="java">
+String string = Normalizer.normalize(string, Normalizer.Form.NFD);
+</pre>
+    <p>如下代码可以将所有的非标准 ASCII 字符删除</p>
+    <pre class="code" data-type="Java">
+string = string.replaceAll("[^\\p{ASCII}]", "");
+</pre>
+
+</body>
+</html>

@@ -10,6 +10,12 @@
 	<p id="title">Jar</p>
 	<h1>Make Jar Package</h1>
     <pre class="code" data-type="sh">jar -cf [jar-file-name.jar] [source-folder]</pre>
+    <h2>示例：把某个 jar 中的 class 单独打包为一个 jar</h2>
+    <p>下面的例子将 spring-context.jar 中的 org.springframework.remoting.rmi.RmiInvocationWrapper_Stub 类单独打为 spring-2.5.6-rmi-compatibility.jar</p>
+    <pre class="code" data-type="sh">
+jar -xvf spring-context.jar org/springframework/remoting/rmi/RmiInvocationWrapper_Stub.class
+jar -cvf spring-2.5.6-rmi-compatibility.jar org/springframework/remoting/rmi
+</pre>
     <h1>Run Jar</h1>
     <p>调用默认入口</p>
     <pre class="code" data-type="sh">java -jar [jar-file-name.jar]</pre>

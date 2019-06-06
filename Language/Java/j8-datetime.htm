@@ -161,6 +161,21 @@ System.out.println("Specific Time = " + specificTime);
 Duration thirtyDay = Duration.ofDays(30);
 System.out.println(thirtyDay);
 </pre>
+    <h2>Duration/Period</h2>
+    <p>用于表示时间范围</p>
+    <pre class="code" data-type="java">
+long startTicks = System.currentTimeMillis();
+...
+long currTicks = System.currentTimeMillis();
+Duration duration = Duration.ofMillis(currTicks - startTicks);
+System.out.println(duration.getSeconds());
+</pre>
+    <h2>ZonedDateTime</h2>
+    <p>带用时区的 DateTime</p>
+    <pre class="code" data-type="java">
+// 西五区
+ZonedDateTime dateTime = ZonedDateTime.of(LocalDateTime.now(), ZoneId.of("UTC-5"));
+</pre>
 	<h2>日期时间工具类/函数</h2>
 	<p>例如：日期的运算，日期的比较之类，示例如下:</p>
 	<pre class="code" data-type="java" data-collapsed="false" title="日期处理示例">
@@ -223,6 +238,9 @@ Instant timestamp = Instant.now();
 // default format
 System.out.println("Default format of Instant=" + timestamp);
 
+// year_month_day_hour_min_seconds
+System.out.println(LocalDateTime.now().format(DateTimeFormatter.ofPattern("y_M_d_H_m_s"));
+
 // Parse examples
 LocalDateTime dt = LocalDateTime.parse("27::Apr::2014 21::39::48",
 		DateTimeFormatter.ofPattern("d::MMM::uuuu HH::mm::ss"));
@@ -236,8 +254,10 @@ Default format of LocalDateTime=2017-10-14T16:48:16.573
 14::Oct::2017 16::48::16
 20171014
 Default format of Instant=2017-10-14T08:48:16.573Z
+2017_10_14_14_10_26
 Default format after parsing = 2014-04-27T21:39:48
 </pre>
+    <p><a href="https://docs.oracle.com/javase/8/docs/api/java/time/format/DateTimeFormatter.html">完整的模式字符串</a></p>
 	<h1>对原日期时间类型的兼容</h1>
 	<p>下例展示了如何与原日期时间类型的相互转换</p>
 	<pre class="code" data-type="java" data-collapsed="false" title="日期兼容示例">
@@ -281,6 +301,8 @@ System.out.println(tz);
 
 GregorianCalendar gc = GregorianCalendar.from(gregorianCalendarDateTime);
 System.out.println(gc);
+
+long milliSeconds = LocalDateTime.now().toInstant(ZoneOffset.UTC).getEpochSecond()
 </pre>
 </body>
 </html>

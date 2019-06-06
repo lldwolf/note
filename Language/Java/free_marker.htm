@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+    <script type="text/javascript" src="../../mylib/js/css.js"></script>
+    <title>FreeMarker</title>
+</head>
+
+<body>
+    <p id="title">FreeMarker</p>
+    <h1>Overview</h1>
+    <p>FreeMarker 是一个模板引擎，其理念为: 模板 + 数据 &rArr; 输出</p>
+    <p>本节内容参考了官网示例：<a href="https://freemarker.apache.org/docs/index.html">https://freemarker.apache.org/docs/index.html</a></p>
+    <h1>简单模板示例</h1>
+    <p>本示例将演示如何根据一个最简单的模板生成结果内容。</p>
+    <h2>项目结构</h2>
+    <p>新建 Maven 项目，pom.xml 如下所示：</p>
+    <pre class="code" data-type="xml" data-collapsed="false" title="pom.xml">
+&lt;project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"&gt;
+    &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+
+    &lt;groupId&gt;com.lld&lt;/groupId&gt;
+    &lt;artifactId&gt;test.freemarker&lt;/artifactId&gt;
+    &lt;version&gt;1.0.0&lt;/version&gt;
+    &lt;packaging&gt;jar&lt;/packaging&gt;
+
+    &lt;name&gt;test.freemarker&lt;/name&gt;
+
+    &lt;properties&gt;
+        &lt;project.build.sourceEncoding&gt;UTF-8&lt;/project.build.sourceEncoding&gt;
+    &lt;/properties&gt;
+
+    &lt;dependencies&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.freemarker&lt;/groupId&gt;
+            &lt;artifactId&gt;freemarker&lt;/artifactId&gt;
+            &lt;version&gt;2.3.28&lt;/version&gt;
+        &lt;/dependency&gt;
+    &lt;/dependencies&gt;
+&lt;/project&gt;
+</pre>
+    <h2>Template</h2>
+    <p>模板文件如下所示，我将其放在了 resources 目录下</p>
+    <pre class="code" data-type="html" data-collapsed="false" title="simple_template.htm">
+&lt;html&gt;
+&lt;head&gt;
+  &lt;title&gt;Welcome!&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;h1&gt;Welcome ${user}!&lt;/h1&gt;
+  &lt;p&gt;Our latest product:
+  &lt;a href="${latestProduct.url}"&gt;${latestProduct.name}&lt;/a&gt;!
+&lt;/body&gt;
+&lt;/html&gt;
+</pre>
+    <h2>POJO</h2>
+    <p>从模板中可以看出，lastProduct 为一个对象，创建 Product 类如下：</p>
+    <pre class="code" data-type="java" data-collapsed="false" title="Product.java">
+package com.lld.test.freemarker.pojo;
+
+public class Product {
+
+    private String url;
+    private String name;
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+}
+</pre>
+    <h2>根据模板生成结果</h2>
+    <p>代码如下</p>
+    <pre class="code" data-type="java" data-collapsed="false" title="ReportEngine.java">
+package com.lld.test.freemarker;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+import java.util.HashMap;
+import java.util.Map;
+
+import com.lld.test.freemarker.pojo.Product;
+
+import freemarker.template.Configuration;
+import freemarker.template.Template;
+import freemarker.template.TemplateException;
+import freemarker.template.TemplateExceptionHandler;
+
+public class ReportEngine {
+
+    public static void main(String[] args) throws IOException, TemplateException {
+        // Create your Configuration instance, and specify if up to what FreeMarker
+        // version (here 2.3.27) do you want to apply the fixes that are not 100%
+        // backward-compatible. See the Configuration JavaDoc for details.
+        Configuration cfg = new Configuration(Configuration.VERSION_2_3_28);
+
+        // Specify the source where the template files come from. Here I set a
+        // plain directory for it, but non-file-system sources are possible too:
+        String templateDir = new File(ReportEngine.class.getClassLoader().getResource("simple_template.htm").getPath()).getParent();
+        cfg.setDirectoryForTemplateLoading(new File(templateDir));
+
+        // Set the preferred charset template files are stored in. UTF-8 is
+        // a good choice in most applications:
+        cfg.setDefaultEncoding("UTF-8");
+
+        // Sets how errors will appear.
+        // During web page *development* TemplateExceptionHandler.HTML_DEBUG_HANDLER is better.
+        cfg.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
+
+        // Don't log exceptions inside FreeMarker that it will thrown at you anyway:
+        cfg.setLogTemplateExceptions(false);
+
+        // Wrap unchecked exceptions thrown during template processing into TemplateException-s.
+        cfg.setWrapUncheckedExceptions(true);
+
+        Map&lt;String, Object&gt; root = new HashMap&lt;&gt;();
+
+        // Put string "user" into the root
+        root.put("user", "Big Joe");
+
+        // Create the "latestProduct" hash. We use a JavaBean here, but it could be a Map too.
+        Product latest = new Product();
+        latest.setUrl("products/greenmouse.html");
+        latest.setName("green mouse");
+        // and put it into the root
+        root.put("latestProduct", latest);
+
+        Template temp = cfg.getTemplate("simple_template.htm");
+        Writer out = new OutputStreamWriter(System.out);
+        temp.process(root, out);
+    }
+}
+</pre>
+    <p>运行后输出如下：</p>
+    <pre class="code" data-type="html">
+&lt;html&gt;
+&lt;head&gt;
+  &lt;title&gt;Welcome!&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;h1&gt;Welcome Big Joe!&lt;/h1&gt;
+  &lt;p&gt;Our latest product:
+  &lt;a href="products/greenmouse.html"&gt;green mouse&lt;/a&gt;!
+&lt;/body&gt;
+&lt;/html&gt;
+</pre>
+    <h1>条件模板</h1>
+    <p>该模板表示模板中的部分内容根据条件显示或不显示。</p>
+    <h2>工具方法</h2>
+    <p>为了方便以后的代码演示，我将 FreeMarker 的模板引擎抽象为如下方法</p>
+    <pre class="code" data-type="java" data-collapsed="false" title="ReportEngine.java">
+package com.lld.test.freemarker;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+import java.util.Map;
+
+import freemarker.template.Configuration;
+import freemarker.template.Template;
+import freemarker.template.TemplateException;
+import freemarker.template.TemplateExceptionHandler;
+
+public class ReportEngine {
+
+    public static void generateReport(Map&lt;String, Object&gt; map, String templatePath) throws IOException, TemplateException {
+        // Create your Configuration instance, and specify if up to what FreeMarker
+        // version (here 2.3.27) do you want to apply the fixes that are not 100%
+        // backward-compatible. See the Configuration JavaDoc for details.
+        Configuration cfg = new Configuration(Configuration.VERSION_2_3_28);
+
+        // Specify the source where the template files come from. Here I set a
+        // plain directory for it, but non-file-system sources are possible too:
+        cfg.setDirectoryForTemplateLoading(new File(templatePath).getParentFile());
+
+        // Set the preferred charset template files are stored in. UTF-8 is
+        // a good choice in most applications:
+        cfg.setDefaultEncoding("UTF-8");
+
+        // Sets how errors will appear.
+        // During web page *development* TemplateExceptionHandler.HTML_DEBUG_HANDLER is better.
+        cfg.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
+
+        // Don't log exceptions inside FreeMarker that it will thrown at you anyway:
+        cfg.setLogTemplateExceptions(false);
+
+        // Wrap unchecked exceptions thrown during template processing into TemplateException-s.
+        cfg.setWrapUncheckedExceptions(true);
+
+        Template temp = cfg.getTemplate(new File(templatePath).getName());
+        Writer out = new OutputStreamWriter(System.out);
+        temp.process(map, out);
+    }
+
+}
+</pre>
+    <h2>Template</h2>
+    <p>模板如下所示</p>
+    <pre class="code" data-type="html" data-collapsed="false" title="condition_template.htm">
+&lt;html&gt;
+&lt;head&gt;
+  &lt;title&gt;Welcome!&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;h1&gt;Welcome ${user}!&lt;/h1&gt;
+  &lt;#if user == "Big Joe"&gt;
+  &lt;p&gt;(Except for you)&lt;/p&gt;
+  &lt;#else&gt;
+  &lt;p&gt;Welcome again!&lt;/p&gt;
+  &lt;/#if&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</pre>
+    <h2>示例</h2>
+    <p>使用条件模板的示例如下：</p>
+    <pre class="code" data-type="java" data-collapsed="false" title="ConditionReport.java">
+package com.lld.test.freemarker;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
+import freemarker.template.TemplateException;
+
+public class ConditionReport {
+
+    public static void main(String[] args) throws IOException, TemplateException {
+        String templatePath = ConditionReport.class.getClassLoader().getResource("condition_template.htm").getPath();
+        Map&lt;String, Object&gt; root = new HashMap&lt;&gt;();
+        root.put("user", "Big Joe");
+        ReportEngine.generateReport(root, templatePath);
+        root.put("user", "Lindong Liu");
+        ReportEngine.generateReport(root, templatePath);
+    }
+
+}
+</pre>
+    <h1>列表模板</h1>
+    <p>列表模板是指生成　List 内容</p>
+    <h2>Template</h2>
+    <p>模板如下所示：</p>
+    <pre class="code" data-type="html" data-collapsed="false" title="list_template.htm">
+&lt;html&gt;
+&lt;head&gt;
+  &lt;title&gt;Welcome!&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;h1&gt;Welcome ${user}!&lt;/h1&gt;
+  &lt;p&gt;Our products are:&lt;/p&gt;
+  &lt;ul&gt;
+      &lt;#list products as product&gt;
+        &lt;li&gt;&lt;a href="${product.url}"&gt;${product.name}&lt;/a&gt;&lt;/li&gt;
+      &lt;/#list&gt;
+  &lt;/ul&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</pre>
+    <h2>示例</h2>
+    <p>使用列表模板的 Java 示例如下：</p>
+    <pre class="code" data-type="java" data-collapsed="false" title="ListReport.java">
+package com.lld.test.freemarker;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import com.lld.test.freemarker.pojo.Product;
+
+import freemarker.template.TemplateException;
+
+public class ListReport {
+
+    public static void main(String[] args) throws IOException, TemplateException {
+        Map&lt;String, Object&gt; root = new HashMap&lt;&gt;();
+
+        // Put string "user" into the root
+        root.put("user", "Big Joe");
+
+        // Create the "latestProduct" hash. We use a JavaBean here, but it could be a Map too.
+        List&lt;Product&gt; products = new ArrayList&lt;&gt;();
+
+        Product product = new Product();
+        product.setName("green mouse");
+        product.setUrl("products/greenmouse.html");
+        products.add(product);
+
+        product = new Product();
+        product.setName("white mouse");
+        product.setUrl("products/whitemouse.html");
+        products.add(product);
+
+        root.put("products", products);
+
+        String templatePath = ListReport.class.getClassLoader().getResource("list_template.htm").getPath();
+        ReportEngine.generateReport(root, templatePath);
+    }
+
+}
+</pre>
+    <p>结果如下所示：</p>
+    <pre class="code" data-type="html" data-collapsed="false" title="list_result.htm">
+&lt;html&gt;
+&lt;head&gt;
+  &lt;title&gt;Welcome!&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;h1&gt;Welcome Big Joe!&lt;/h1&gt;
+  &lt;p&gt;Our products are:&lt;/p&gt;
+  &lt;ul&gt;
+        &lt;li&gt;&lt;a href="products/greenmouse.html"&gt;green mouse&lt;/a&gt;&lt;/li&gt;
+        &lt;li&gt;&lt;a href="products/whitemouse.html"&gt;white mouse&lt;/a&gt;&lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</pre>
+    <h1>Freemarker 控制语句</h1>
+    <h2>"空/非空"判断</h2>
+    <p>判断是否为空</p>
+    <pre class="code" data-type="xml">
+&lt;#if object.attribute??&gt;&lt;/#if&gt;
+</pre>
+    <p>判断是否不为空</p>
+    <pre class="code" data-type="xml">
+&lt;#if (object.attribute)??&gt;&lt;/#if&gt;
+</pre>
+    <h1>FAQ</h1>
+    <h2>Template 在 jar 包中怎么加载</h2>
+    <p>使用 SpringBoot 开发程序时，经常把所有的模板都打包在 jar 中了，载入方式如下（MS 更简单了）：</p>
+    <pre class="code" data-type="java">
+Configuration cfg = new Configuration(Configuration.VERSION_2_3_28);
+cfg.setClassForTemplateLoading(this.getClass(), "/report");
+// 不需要再调用 cfg.setDirectoryForTemplateLoading 了
+...
+Template template = cfg.getTemplate("my_template.ftl");
+</pre>
+    <p>在 jar 包中，report/my_template.ftl 就是放在了 classes 目录下。</p>
+</body>
+</html>

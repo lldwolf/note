@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+    <script type="text/javascript" src="../../mylib/js/css.js"></script>
+    <title>Java Mail</title>
+</head>
+
+<body>
+    <p id="title">Java Mail</p>
+    <h1>示例</h1>
+    <p>如果 Linux 已安装邮件服务</p>
+    <ol>
+        <li>
+            <p>pom.xml 引用</p>
+            <pre class="code" data-type="xml">
+&lt;properties&gt;
+  &lt;sun.version&gt;1.5.2&lt;/sun.version&gt;
+&lt;/properties&gt;
+...
+&lt;dependency&gt;
+    &lt;groupId&gt;com.sun.mail&lt;/groupId&gt;
+    &lt;artifactId&gt;mailapi&lt;/artifactId&gt;
+    &lt;version&gt;${sun.version}&lt;/version&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;com.sun.mail&lt;/groupId&gt;
+    &lt;artifactId&gt;imap&lt;/artifactId&gt;
+    &lt;version&gt;${sun.version}&lt;/version&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;com.sun.mail&lt;/groupId&gt;
+    &lt;artifactId&gt;dsn&lt;/artifactId&gt;
+    &lt;version&gt;${sun.version}&lt;/version&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;com.sun.mail&lt;/groupId&gt;
+    &lt;artifactId&gt;pop3&lt;/artifactId&gt;
+    &lt;version&gt;${sun.version}&lt;/version&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;com.sun.mail&lt;/groupId&gt;
+    &lt;artifactId&gt;smtp&lt;/artifactId&gt;
+    &lt;version&gt;${sun.version}&lt;/version&gt;
+&lt;/dependency&gt;
+</pre>
+        </li>
+        <li>
+            <p>发送邮件的工具函数</p>
+            <pre class="code" data-type="java" data-collapsed="false" title="MailUtil.java">
+import java.io.File;
+import java.util.Date;
+import java.util.List;
+import java.util.Properties;
+
+import javax.activation.DataHandler;
+import javax.activation.FileDataSource;
+import javax.mail.Message;
+import javax.mail.Multipart;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
+
+public class Mail21 {
+    public boolean sendMail(String from, String to, String cc, String subject, String message, String format, 
+            List&lt;String&gt; attachedFiles, List&lt;String&gt; attachFileNames, String fromDisplayName, boolean needEnvInfo) {
+        String smtpHost = "localhost";
+
+        try {
+            // Create properties, get Session
+            Properties props = new Properties();
+
+            // put mail host
+            props.put("mail.smtp.host", smtpHost);
+
+            // create session
+            Session session = Session.getInstance(props);
+
+            // Instantiate a message
+            Message msg = new MimeMessage(session);
+
+            // Set message attributes
+            if (null != fromDisplayName) {
+                msg.setFrom(new InternetAddress(from, fromDisplayName));
+            } else {
+                msg.setFrom(new InternetAddress(from));
+            }
+
+            // covert mail address
+            InternetAddress[] toAddress = new InternetAddress[] { new InternetAddress(to) };
+            InternetAddress[] ccAddress = new InternetAddress[] { new InternetAddress(cc) };
+
+            // set the to address and cc address
+            msg.setRecipients(Message.RecipientType.TO, toAddress);
+            msg.setRecipients(Message.RecipientType.CC, ccAddress);
+
+            Multipart mp = new MimeMultipart();
+            // Add message body
+            MimeBodyPart bp = new MimeBodyPart();
+            bp.setContent(message, format);
+            mp.addBodyPart(bp);
+
+            // Add message attachment
+            if (attachedFiles != null &amp;&amp; !attachedFiles.isEmpty()) {
+                int index;
+                String filename;
+                String fileFullName;
+                for (index = 0; index &lt; attachedFiles.size(); index++) {
+                    MimeBodyPart mbp = new MimeBodyPart();
+                    fileFullName = String.valueOf(attachedFiles.get(index));
+                    FileDataSource dataSource = new FileDataSource(fileFullName);
+
+                    mbp.setDataHandler(new DataHandler(dataSource));
+                    if (attachFileNames == null) {
+                        filename = (new File(fileFullName)).getName();
+                    } else {
+                        filename = String.valueOf(attachFileNames.get(index));
+                    }
+                    mbp.setFileName(filename);
+                    mp.addBodyPart(mbp);
+                }
+            }
+
+            msg.setContent(mp);
+
+            msg.setSubject(subject);
+
+            // set mail date
+            msg.setSentDate(new Date());
+
+            // send mail
+            Transport.send(msg);
+        } catch (Exception e) {
+            return false;
+        }
+
+        return true;
+    }
+
+}
+</pre>
+        </li>
+    </ol>
+</body>
+</html>

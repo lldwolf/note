@@ -11,7 +11,8 @@
 
 <h1>Class 对象 </h1>
 <p>下面的代码展示了获取Class对象的方法:</p>
-<pre class="code" data-type="java">Class c = o.getClass();		//从现有对象获取
+<pre class="code" data-type="java">
+Class c = o.getClass();		//从现有对象获取
 c = VOID.TYPE;		//特殊的 'non-return-value' 对象
 c = Byte.TYPE;		//表示一个字节，用于取得 Primitive 类型
 c = Integer.TYPE;
@@ -152,11 +153,6 @@ Object obj = constructors[0].newInstance(params);
                 <p>更具体的用法看本章的工具函数</p>
             </td>
         </tr>
-        <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
     </table>
     <h1>常用工具函数</h1>
     <h2>创建对象默认值</h2>
@@ -166,7 +162,7 @@ private static Object getTestValue(Class&lt;?&gt; type) {
     Object ret = null;
 
     if (type.equals(String.class)) {
-        ret = &quot;test&quot;;
+        ret = "test";
     } else if (type.equals(Integer.class)) {
         ret = new Integer(0);
     } else if (type.equals(BigDecimal.class)) {
@@ -193,7 +189,7 @@ private static Object getInstance(Class&lt;?&gt; class1) {
         Class&lt;?&gt;[] paramTypes = constructor.getParameterTypes();
 
         if (paramTypes != null &amp;&amp; paramTypes.length &gt; 0) {
-            System.out.println(paramTypes.length + &quot; constructor arguments required for &quot; + constructor.getName());
+            System.out.println(paramTypes.length + " constructor arguments required for " + constructor.getName());
             Object[] params = new Object[paramTypes.length];
             int i = 0;
 
@@ -220,11 +216,86 @@ private static Object getInstance(Class&lt;?&gt; class1) {
     return null;
 }
 </pre>
+    <h1>FAQ</h1>
+    <h2>动态加入 classpath</h2>
+    <h3>使用 ClassLoader</h3>
+    <pre class="code" data-type="java">
+URLClassLoader classLoader = SystemUtil.addClassPaths(new String[] {"C:/temp/test.jar"}));
+Thread.currentThread().setContextClassLoader(classLoader);
+entryClass = Class.forName("com.lld.SimpleObject", true, classLoader);
+...
+
+public static URLClassLoader addClassPaths(String[] paths) throws MyException {
+    try {
+        URL[] urls = new URL[paths.length];
+
+        for (int i = 0; i < paths.length; i++) {
+            urls[i] = new File(paths[i]).toURI().toURL();
+        }
+
+        return new URLClassLoader(urls, ClassLoader.getSystemClassLoader());
+    } catch (Exception e) {
+        String errMsg = "Failed to add new classpath!";
+        logger.error(errMsg, e);
+        throw new MyException(errMsg, e);
+    }
+}
+</pre>
+    <h3>通过反射调用保护方法</h3>
+    <p>动态将某个 jar 加入 classpath 并创建其中的对象</p>
+    <pre class="code" data-type="java">
+import java.io.File;
+import java.lang.reflect.Method;
+import java.net.URL;
+import java.net.URLClassLoader;
+
+public class ClassPathDemo {
+    public static void main(String[] args) throws Exception {
+        addClassPath("C:/temp/test.jar");
+        System.out.println("classpath changed.");
+        Class&lt;?&gt; class1 = Class.forName("com.lld.SimpleObject");
+        Object object = class1.newInstance();
+        System.out.println("Create instance of " + object.getClass().getName());
+        Method method = class1.getMethod("sayHi", String.class);
+        method.invoke(object, "Lindong");
+    }
+
+    private static void addClassPath(String path) throws Exception {
+        File programRootDir = new File(path);
+        URLClassLoader classLoader = (URLClassLoader) ClassLoader.getSystemClassLoader();
+        Method add = URLClassLoader.class.getDeclaredMethod("addURL", new Class[] { URL.class });
+        add.setAccessible(true);
+        add.invoke(classLoader, programRootDir.toURI().toURL());
+    }
+}
+</pre>
+    <h2>调用 static 方法，参数为简单的 int</h2>
+    <pre class="code" data-type="java">
+private static void testStaticMethod() throws Exception {
+    int a = 10;
+    System.out.println(Integer.toString(a));
+    Method method = Integer.class.getMethod("toString", Integer.TYPE);
+    System.out.println(method.invoke(null, a));
+}
+</pre>
+    <h2>取得当前正在被调用的函数名</h2>
+    <p>可以使用这个功能简化很多 log 日志</p>
+    <pre class="code" data-type="java">
+private String getCallingMethod() {
+    StackTraceElement[] trarceArray = Thread.currentThread().getStackTrace();
+
+    for (StackTraceElement trace : trarceArray) {
+        String methodName = trace.getMethodName();
+
+        if (!"getStackTrace".equals(methodName) && !"getCallingMethod".equals(methodName)) {
+            return methodName;
+        }
+    }
+
+    return "unknown method";
+}
+</pre>
 <h1>网络教程</h1>
 <p><a href="resource/JAVA反射.mht">JAVA反射</a></p>
-<p>&nbsp;</p>
-<p>&nbsp;</p>
-<p>&nbsp;</p>
-<p>&nbsp;</p>
 </body>
 </html>

@@ -642,5 +642,26 @@ eureka.client.serviceUrl.defaultZone: http://localhost:29011/eureka/,http://127.
     </ul>
     <p>这样内部服务间均使用 http 协议，统一通过 Zuul 向外提供服务，所以 Zuul 可以配置为 https 协议。</p>
     <p>可参考<a href="spring_restful.htm#https-config">这里</a>查看如何将 Zuul 服务配置为 https 服务</p>
+    <h2>time out configuration</h2>
+    <p>通过 zuul 访问一个较耗时的服务，Zuul 这边会报 500 警告，如下所示</p>
+    <pre class="code" data-type="log">
+WARN  o.s.c.n.z.f.post.SendErrorFilter - Error during filtering
+com.netflix.zuul.exception.ZuulException: Forwarding error
+ ...
+Caused by: com.netflix.hystrix.exception.HystrixRuntimeException: allocation-service timed-out and no fallback available.
+ ...
+Caused by: java.util.concurrent.TimeoutException: null
+ ...
+</pre>
+    <p>可以看到只是一个 WARN，访问仍然会被成功路由，可以通过如下配置关装这个警告</p>
+    <pre class="code" data-type="properties">
+hystrix.command.default.execution.timeout.enabled: false
+
+ribbon:
+  ReadTimeout: 60000
+  ConnectTimeout: 60000
+</pre>
+    <p>该方案参考自 <a href="https://github.com/spring-cloud/spring-cloud-netflix/issues/321">https://github.com/spring-cloud/spring-cloud-netflix/issues/321</a></p>
+
 </body>
 </html>

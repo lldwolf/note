@@ -10,7 +10,33 @@
 <body>
 <p id="title">匿名类 </p>
 <h1>Overview</h1>
-<p>常使用匿名类来简化代码，避免为一些单一的功能声明太多的类。如果使用 Java 8 以上的版本，可使用 Lamba 表达式使得代码更加简洁，示例请看<a href="lamba-expression.htm">这里</a></p>
+    <p>示例：</p>
+    <pre class="code" data-type="java">
+public void sayHello() {
+    HelloWorld helloWorld = new HelloWorld() {
+        @Override
+        public void greet() {
+            System.out.println("I love you!");
+        }
+    };
+        
+    helloWorld.greet();
+}
+    
+
+interface HelloWorld {
+    public void greet();
+}
+</pre>
+    <p>常使用匿名类来简化代码，避免为一些单一的功能声明太多的类</p>
+    <p>适用场景</p>
+    <ul>
+        <li>实现部分很短</li>
+        <li>马上用</li>
+        <li>就用一次</li>
+        <li>也不太好起名</li>
+    </ul>
+    <p>如果使用 Java 8 以上的版本，可使用 Lamba 表达式使得代码更加简洁，示例请看<a href="lamba-expression.htm">这里</a></p>
 <h1>示例</h1>
 <h2>排序</h2>
 <p>如果想对一个 List&lt;String&gt; 进行逆排序，常规写法如下所示：</p>

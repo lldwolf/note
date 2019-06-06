@@ -8,6 +8,9 @@
 
 <body>
     <p id="title">Spring Cloud FAQ</p>
+    <h1>基础知识</h1>
+    <h2>如何创建项目模板</h2>
+    <p>访问 <a href="https://start.spring.io/">https://start.spring.io/</a> 创建并自动下载。</p>
     <h1>启动参数</h1>
     <h2>如何在命令行设定启动参数</h2>
     <p>可以使用如下两种方式设定</p>
@@ -22,12 +25,40 @@ java -Dspring.profiles.active=test -jar my.jar
 java -jar my.jar --spring.profiles.active=test
 </pre>
     <p>详细教程可参考<a href="spring_restful.htm#spring-profile-setup">profile 配置</a></p>
+    <h2>如何获取当前运行的 profile</h2>
+    <pre class="code" data-type="java">
+@Autowired
+private Environment environment;
+
+@Test
+public void listApplicationProps() {
+    String[] envs = environment.getActiveProfiles();
+        
+    for (String env : envs) {
+        System.out.println(env);
+    }
+}
+</pre>
     <h2>如何自定义配置文件路径</h2>
     <pre class="code" data-type="sh">
 java -jar myproject.jar --spring.config.location=classpath:/default.properties,classpath:/override.properties
 </pre>
     <p>也可以直接指定目录</p>
     <h1>服务配置</h1>
+    <h2>不使用 Eureka</h2>
+    <p>如果我们有时只是想做一个简单的 Spring Boot 应用进行测试，默认情况下它仍然会试图连接 Eureka server，然后不停地报错（只是在日志中，表面没影响）：</p>
+    <pre class="code" data-type="log">
+ERROR com.netflix.discovery.shared.transport.TransportException: Cannot execute request on any known server
+...
+ERROR c.netflix.discovery.DiscoveryClient - DiscoveryClient_UNKNOWN/... - was unable to refresh its cache! status = Cannot execute request on any known server
+</pre>
+    <p>可使用如下配置关闭 Eureka</p>
+    <pre class="code" data-type="log">
+eureka:
+  client:
+    register-with-eureka: false
+    fetch-registry: false
+</pre>
     <h1>服务调用</h1>
     <h2>快速测试</h2>
     <p>可使用如下方式：</p>
@@ -97,5 +128,70 @@ public class MyTest {
     &lt;/plugins&gt;
 &lt;/build&gt;
 </pre>
+    <h1>Web 项目</h1>
+    <h2>项目结构</h2>
+    <p>对于 Web 页面(例如 JSP, html, css, js 之类),如果打成 war 包，则项目默认路径为 src/main/webapp，例如： </p>
+    <p><img alt="" src="images/springboot01.png" /></p>
+    <p>如果打成直接运行的 jar 包，则为 resources/static (静态资源)和 resources/templates (动态资源，如 Thymleaf Page)，如下所示：</p>
+    <p><img alt="" src="images/springboot02.png" /></p>
+    <h2>使用 JSP 作为模板引擎</h2>
+    <p>虽然默认不推荐，但如果非要用的话，需引入如下依赖：</p>
+    <pre class="code" data-type="xml">
+&lt;dependency&gt;
+    &lt;groupId&gt;javax.servlet&lt;/groupId&gt;
+    &lt;artifactId&gt;javax.servlet-api&lt;/artifactId&gt;
+    &lt;scope&gt;provided&lt;/scope&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;javax.servlet&lt;/groupId&gt;
+    &lt;artifactId&gt;jstl&lt;/artifactId&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+    &lt;artifactId&gt;spring-boot-starter-tomcat&lt;/artifactId&gt;
+    &lt;scope&gt;provided&lt;/scope&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;org.apache.tomcat.embed&lt;/groupId&gt;
+    &lt;artifactId&gt;tomcat-embed-jasper&lt;/artifactId&gt;
+&lt;/dependency&gt;
+</pre>
+    <p>并有如下注意点：</p>
+    <ul>
+        <li>去掉对 Thymeleaf 的引用</li>
+        <li>将 webapp (包括 WEB-INF，JSP 等) 置于 src/main 目录下</li>
+        <li>在 Eclipse 中可以直接启动，但只能以 war 方式发布，不支持 jar 形式发布</li>
+    </ul>
+    <h1>Others</h1>
+    <h2>同步启动其它服务</h2>
+    <p>例如，启动服务时顺便启动一个定时任务</p>
+    <p>可以直接在 @SpringBootApplication 中调用，但更好的办法是使用 org.springframework.boot.CommandLineRunner 接口，凡是该接口的实现类均会在启动 Spring Boot 应用时被自动调用</p>
+    <pre class="code" data-type="java">
+@Component
+public class ScheduleStarter implements CommandLineRunner  {
+    @Override
+    public void run(String... args) throws Exception {
+        logger.info("starting schedule tasks...");
+        ...
+    }
+}
+</pre>
+    <h2>Log</h2>
+    <h3>LOG_PATH_IS_UNDEFINED</h3>
+    <p>使用 logback 作为 Log Engine 时，启动后会自动在运行目录下生成一个空的 LOG_PATH_IS_UNDEFINED 文件。</p>
+    <p>解决方案如下：</p>
+    <ol>
+        <li>
+            <p>将配置文件 logback.xml 改名为 logback-spring.xml</p>
+        </li>
+        <li>
+            <p>将日志有关的配置移到 bootstrap.yml 中（原先在 application.yml 中）</p>
+            <pre class="code" data-type="properties">
+logging:
+  config: classpath:logback-spring.xml
+  path: /tmp/
+</pre>
+        </li>
+    </ol>
 </body>
 </html>

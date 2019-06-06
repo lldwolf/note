@@ -11,7 +11,56 @@
     <h1>Overview</h1>
     <p>logback 是 log4j 的作者觉得原先的坑不好填，所以重新挖了个:)</p>
     <p>一个简单的实例可以看<a href="spring_restful.htm#logback">这里</a></p>
+    <h1>Maven 配置</h1>
+    <pre class="code" data-type="xml">
+&lt;dependencies&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;org.slf4j&lt;/groupId&gt;
+        &lt;artifactId&gt;slf4j-api&lt;/artifactId&gt;
+        &lt;version&gt;1.7.26&lt;/version&gt;
+    &lt;/dependency&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;ch.qos.logback&lt;/groupId&gt;
+        &lt;artifactId&gt;logback-classic&lt;/artifactId&gt;
+        &lt;version&gt;1.2.3&lt;/version&gt;
+    &lt;/dependency&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;junit&lt;/groupId&gt;
+        &lt;artifactId&gt;junit&lt;/artifactId&gt;
+        &lt;version&gt;4.12&lt;/version&gt;
+        &lt;scope&gt;test&lt;/scope&gt;
+    &lt;/dependency&gt;
+&lt;/dependencies&gt;
+</pre>
+    <p>加入 slf4j-simple 依赖后会自动加载 logback.xml 配置文件。</p>
     <h1>FAQ</h1>
+    <h2>几个常见库的说明</h2>
+    <table style="width: 90%">
+        <tr>
+            <th>Library</th>
+            <th>Desc.</th>
+        </tr>
+        <tr>
+            <td>slf4j-api</td>
+            <td>接口定义类，如果是对外提供的 jar 包，只需引用该类库</td>
+        </tr>
+        <tr>
+            <td>slf4j-simple</td>
+            <td>slf4j-api 的一个简单实现</td>
+        </tr>
+        <tr>
+            <td>logback-core</td>
+            <td>logback 的基础类库，不带具体实现</td>
+        </tr>
+        <tr>
+            <td>logback-classic</td>
+            <td>基于 logback-core 构建的 slf4j-api 实现类，如果使用 logback 需引用该库。</td>
+        </tr>
+        <tr>
+            <td>logback-access</td>
+            <td>基于 logback-core 构建的 slf4j-api 实现类，集成了 Servlet 容器支持（例如 Tomcat 或 Jetty），提供了 HTTP 访问功能。</td>
+        </tr>
+    </table>
     <h2>通过命令行指定配置文件位置</h2>
     <pre class="code">-Dlogging.config=my_logback.xml</pre>
     <h2>初始化 Logger 对象</h2>
@@ -22,6 +71,48 @@ static final Logger LOG = LoggerFactory.getLogger(MyClass.class);
     <p>如果不是 static，可以采用如下的简单写法</p>
     <pre class="code" data-type="java">
 final Logger LOG = LoggerFactory.getLogger(getClass());
+</pre>
+    <h2>异步写日志</h2>
+    <pre class="code" data-type="xml">
+&lt;?xml version="1.0" encoding="UTF-8" ?&gt;
+&lt;configuration scan="false" scanPeriod="60000" debug="false"&gt;
+ 
+    &lt;appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender"&gt;
+        &lt;encoder&gt;
+            &lt;pattern&gt;%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger - %msg%n&lt;/pattern&gt;
+        &lt;/encoder&gt;
+    &lt;/appender&gt;
+     
+    &lt;appender name="ROLLING-FILE-1" class="ch.qos.logback.core.rolling.RollingFileAppender"&gt;   
+        &lt;rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy"&gt;   
+              &lt;fileNamePattern&gt;D:/rolling-file-%d{yyyy-MM-dd}.log&lt;/fileNamePattern&gt;   
+              &lt;maxHistory&gt;30&lt;/maxHistory&gt;    
+        &lt;/rollingPolicy&gt;   
+        &lt;encoder&gt;
+              &lt;pattern&gt;%-4relative [%thread] %-5level %lo{35} - %msg%n&lt;/pattern&gt;   
+        &lt;/encoder&gt;   
+    &lt;/appender&gt;
+     
+    &lt;!-- 异步输出 --&gt;  
+    &lt;appender name ="ASYNC" class= "ch.qos.logback.classic.AsyncAppender"&gt;  
+        &lt;!-- 不丢失日志.默认的,如果队列的80%已满,则会丢弃TRACT、DEBUG、INFO级别的日志 --&gt;  
+        &lt;discardingThreshold&gt;0&lt;/discardingThreshold&gt;  
+        &lt;!-- 更改默认的队列的深度,该值会影响性能.默认值为256 --&gt;  
+        &lt;queueSize&gt;256&lt;/queueSize&gt;  
+        &lt;!-- 添加附加的appender,最多只能添加一个 --&gt;  
+        &lt;appender-ref ref ="ROLLING-FILE-1"/&gt;  
+    &lt;/appender&gt;
+     
+    &lt;logger name="java" additivity="false" /&gt;
+    &lt;logger name="java.lang" level="DEBUG"&gt;
+        &lt;appender-ref ref="ASYNC" /&gt;
+    &lt;/logger&gt;
+     
+    &lt;root level="INFO"&gt;
+        &lt;appender-ref ref="STDOUT" /&gt;
+    &lt;/root&gt;
+     
+&lt;/configuration&gt;
 </pre>
 </body>
 </html>

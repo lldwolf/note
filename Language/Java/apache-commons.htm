@@ -107,7 +107,7 @@
     map.firstKey(); // returns "FIVE"<br />
     map.nextKey("FIVE"); // returns "SIX"<br />
     map.nextKey("SIX"); // returns "SEVEN"&nbsp;
-        <br />
+    <br />
     <h1>Commons Configuration</h1>
     <br />
     http://jakarta.apache.org/commons/configuration/<br />
@@ -310,7 +310,7 @@
     http://jakarta.apache.org/commons/lang/<br />
     <br />
     说明：这个工具包可以看成是对java.lang的扩展。提供了诸如StringUtils, StringEscapeUtils, RandomStringUtils, Tokenizer, WordUtils等工具类。</p>
-        <br />
+    <br />
     <h1>Commons Logging</h1>
     <br />
     http://jakarta.apache.org/commons/logging/<br />
@@ -367,7 +367,7 @@
     // error...not a valid date<br />
     return;<br />
     }&nbsp;
-        <br />
+    <br />
     <h1>Commons Virtual File System</h1>
     <br />
     http://jakarta.apache.org/commons/vfs/<br />
@@ -487,17 +487,156 @@
     email.attach(attachment);<br />
     //发送<br />
     <br />
+    <a id="commons_pool"></a>
     <h1>Commons Pool</h1>
-    <br />
-    使用Jakarta Commons Pool可以根据需要快速的实现自己的对象池，只需要实现PoolableObjectFactory或者 KeyedPoolableObjectFactory接口。KeyedPoolableObjectFactory和 PoolableObjectFactory的不同之处在于KeyedPoolableObjectFactory的每个方法都比 PoolableObjectFactory多了一个Object key的参数，使用这个参数可以使得对象池中的每个对象都有所不同。<br />
-    PoolableObjectFactory定义了五个方法（摘至Jakarta Commons Pool API文档）：<br />
-    <br />
-    1. makeObject is called whenever a new instance is needed.<br />
-    2. activateObject is invoked on every instance before it is returned from the pool.<br />
-    3. passivateObject is invoked on every instance when it is returned to the pool.<br />
-    4. destroyObject is invoked on every instance when it is being "dropped" from the pool (whether due to the response from validateObject, or for reasons specific to the pool implementation.)<br />
-    5. validateObject is invoked in an implementation-specific fashion to determine if an instance is still valid to be returned by the pool. It will only be invoked on an "activated" instance.<br />
-    <br />
+    <h2>Overview</h2>
+    <p>
+        使用Jakarta Commons Pool可以根据需要快速的实现自己的对象池，只需要实现 BasePooledObjectFactory 或者 BaseKeyedPooledObjectFactory 接口。BasePooledObjectFactory 和 BaseKeyedPooledObjectFactory 的不同之处在于 BaseKeyedPooledObjectFactory 的每个方法都比 PoolableObjectFactory多了一个 Object key 的参数，使用这个参数可以使得对象池中的每个对象都有所不同。
+    </p>
+    <p>参考 <a href="db_basic.htm#max_connection">Oracle 最大连接数测试</a>，我在此实现一个简单的数据库连接池。</p>
+    <h2>ConnectionFactory 实现</h2>
+    <p>在此实现 BasePooledObjectFactory 如下所示</p>
+    <pre class="code" data-type="java" data-collapsed="false" title="ConnectionFactory.java">
+import java.sql.Connection;
+import java.sql.DriverManager;
+import org.apache.commons.pool2.BasePooledObjectFactory;
+import org.apache.commons.pool2.PooledObject;
+import org.apache.commons.pool2.impl.DefaultPooledObject;
+public class ConnectionFactory extends BasePooledObjectFactory&lt;Connection&gt; {
+    @Override
+    public Connection create() throws Exception {
+        Connection con = DriverManager.getConnection("jdbc:oracle:thin:@db_host_url:port:SID", "user_name", "password");
+        return con;
+    }
+    @Override
+    public PooledObject&lt;Connection&gt; wrap(Connection connection) {
+        return new DefaultPooledObject&lt;Connection&gt;(connection);
+    }
+    
+    @Override
+    public void destroyObject(PooledObject&lt;Connection&gt; p) throws Exception {
+        p.getObject().close();
+        System.out.println("Connection is closed.");
+        super.destroyObject(p);
+    }
+}
+</pre>
+    <p>代码说明如下：</p>
+    <ul>
+        <li>
+            <p>需重载 create 方法来实现如何创建新的 Oracle 连接对象</p>
+        </li>
+        <li>
+            <p>重载 destroyObject 方法在销毁 Connection 时关闭连接</p>
+        </li>
+        <li>
+            <p>这里重载 wrap 方法可以作为通用实现，表示把用户对象封装成了 pooled 对象</p>
+        </li>
+    </ul>
+    <h2>创建对象池</h2>
+    <p>在org.apache.commons.pool2.impl中预设了三个可以直接使用的对象池：GenericObjectPool、GenericKeyedObjectPool和SoftReferenceObjectPool。</p>
+
+    <p>通常使用GenericObjectPool来创建对象池，如果是对象池是Keyed的，那么可以使用GenericKeyedObjectPool来创建对象池。这两个类都提供了丰富的配置选项。这两个对象池的特点是可以设置对象池中的对象特征，包括LIFO方式、最大空闲数、最小空闲数、是否有效性检查等等。两者的区别如前面所述，后者支持Keyed。</p>
+
+    <p>而SoftReferenceObjectPool对象池，它利用一个java.util.ArrayList对象来保存对象池里的对象。不过它并不在对象池里直接保存对象本身，而是保存它们的“软引用”（Soft Reference）。这种对象池的特色是：可以保存任意多个对象，不会有容量已满的情况发生;在对象池已空的时候，调用它的borrowObject方法，会自动返回新创建的实例;可以在初始化同时，在池内预先创建一定量的对象;当内存不足的时候，池中的对象可以被Java虚拟机回收。</p>
+    <p>我创建 Oracle Connection Pool 的代码如下：</p>
+    <pre class="code" data-type="java" data-collapsed="false" title="Connection Pool">
+GenericObjectPoolConfig config = new GenericObjectPoolConfig();
+config.setMaxTotal(100);
+config.setMinIdle(5);
+GenericObjectPool&lt;Connection&gt; connectionPool = new GenericObjectPool<>(new ConnectionFactory(), config);
+</pre>
+    <h2>使用连接池</h2>
+    <p>最终使用连接池的代码如下所示：</p>
+    <pre class="code" data-type="java" data-collapsed="false" title="ConnectionPoolTest.java">
+import java.sql.Connection;
+import java.sql.Statement;
+
+import org.apache.commons.pool2.impl.GenericObjectPool;
+import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
+
+public class ConnectionPoolTest {
+    private static volatile int connCount = 0;
+    private static GenericObjectPool&lt;Connection&gt; connectionPool;
+
+    public static void main(String[] args) throws Exception {
+        GenericObjectPoolConfig config = new GenericObjectPoolConfig();
+        config.setMaxTotal(100);
+        config.setMinIdle(5);
+        connectionPool = new GenericObjectPool&lt;&gt;(new ConnectionFactory(), config);
+        connectionPool.preparePool();
+
+        for (int i = 0; i &lt; 500; i++) {
+            new Thread(() -&gt; {
+                runSql();
+            }).start();
+        }
+
+        Thread.sleep(10000);
+        System.out.println("Borrowed Count: " + connectionPool.getBorrowedCount() + ", Created Count: " + connectionPool.getCreatedCount() + ", Num Active: "
+                + connectionPool.getNumActive() + ", Destoryed Count: " + connectionPool.getDestroyedCount() + ", Return Count: " + connectionPool.getReturnedCount()
+                + ", Idle Count: " + connectionPool.getNumIdle());
+    }
+
+    private static void runSql() {
+        int id = ++connCount;
+        Connection con = null;
+
+        try {
+            con = connectionPool.borrowObject();
+            System.out.println("Borrowed Count: " + connectionPool.getBorrowedCount() + ", Created Count: " + connectionPool.getCreatedCount() + ", Num Active: "
+                    + connectionPool.getNumActive() + ", Destoryed Count: " + connectionPool.getDestroyedCount() + ", Return Count: " + connectionPool.getReturnedCount()
+                    + ", Idle Count: " + connectionPool.getNumIdle());
+            System.out.println("Current connection count: " + id);
+            Statement st = con.createStatement();
+            String sql = "select * from my_table";
+            st.executeQuery(sql);
+            System.out.println("completed task id: " + id);
+        } catch (Exception ex) {
+            System.err.println("Failed task id: " + id);
+            ex.printStackTrace();
+        } finally {
+            if (con != null) {
+                connectionPool.returnObject(con);
+            }
+        }
+    }
+}
+</pre>
+    <p>代码说明如下：</p>
+    <ul>
+        <li>
+            <p>使用 GenericObjectPoolConfig 来配置了最大连接数 100，至少有 5 个空闲连接。不过优先满足最大连接需求，例如 100 个连接都在使用也是允许的。</p>
+        </li>
+        <li>
+            <p>borrowObject 从 pool 中取出连接，returnObject 将使用完毕的连接放回 pool。</p>
+        </li>
+        <li>
+            <p>pool 运行时信息：</p>
+            <ul>
+                <li>getCreatedCount(): 共有多少对象曾被创建</li>
+                <li>getBorrowedCount(): 共有多少对象曾从 pool 内取出</li>
+                <li>getNumActive(): 当前正在被使用的对数象，该数字小于等于 GenericObjectPoolConfig.setMaxTotal() 配置数</li>
+                <li>getDestroyedCount()：已销毁的对象数，小于等于 getCreatedCount()</li>
+                <li>getReturnedCount(): 共有多少对象放回池内</li>
+                <li>getNumIdle()：共有多少对象空闲</li>
+            </ul>
+            <p>其中 active + destoryed + idle = created</p>
+            <p>其中 return + idle = borrow</p>
+        </li>
+        <li>
+            <p>preparePool()，用户初始化 pool，例如可以初始化设定的5个空闲连接。</p>
+        </li>
+        <li>
+            <p>clear()，清空 pool。</p>
+        </li>
+    </ul>
+    <p>中间的显示结果可能如下所示：</p>
+    <pre class="code" data-type="log">Borrowed Count: 386, Created Count: 100, Num Active: 46, Destoryed Count: 48, Return Count: 340, Idle Count: 6</pre>
+    <p>等全部线程结束后结果可能如下所示：</p>
+    <pre class="code" data-type="log">Borrowed Count: 500, Created Count: 100, Num Active: 0, Destoryed Count: 92, Return Count: 500, Idle Count: 8</pre>
+    <p>如果调用 clear() 后，结果如下所示：</p>
+    <pre class="code" data-type="log">Borrowed Count: 500, Created Count: 100, Num Active: 0, Destoryed Count: 100, Return Count: 500, Idle Count: 0</pre>
     <h1>Commons Digester</h1>
     <br />
     它能方便地将XML文档所定义的元素转化为JAVA对象，其实它的用法有点象栈(当然内在的原理就是那个古老的东西,只是提供了更高一层的封装)。<br />

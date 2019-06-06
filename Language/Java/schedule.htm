@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+    <script type="text/javascript" src="../../mylib/js/css.js"></script>
+    <title>定时任务</title>
+</head>
+
+<body>
+    <p id="title">定时任务</p>
+    <h1>示例</h1>
+    <p>可使用 Timer 或 更新的 ScheduledExecutorService，如下所示</p>
+    <pre class="code" data-type="java">
+ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+scheduler.scheduleAtFixedRate(() -&gt; System.out.println("invoked"), 1, 1, TimeUnit.HOURS);
+</pre>
+    <h1>References</h1>
+    <p><a href="https://www.baeldung.com/java-timer-and-timertask">Java Timer</a></p>
+</body>
+</html>

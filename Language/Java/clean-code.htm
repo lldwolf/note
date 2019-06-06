@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+    <title>Clean Code</title>
+    <script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+    <p id="title">Clean Code</p>
+    <h1>列表</h1>
+    <table style="width:90%">
+        <tr>
+            <th>Compliant</th>
+            <th>Non-compliant</th>
+        </tr>
+        <tr>
+            <td>
+                <pre class="code" data-type="java">
+if (List.size() == 0)
+                </pre>
+            </td>
+            <td>
+                <pre class="code" data-type="java">
+if (List.isEmpty())
+                </pre>
+            </td>
+        </tr>
+        <tr>
+            <td>
+StringBuffer
+            </td>
+            <td>
+StringBuilder
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <pre class="code" data-type="java">
+String str = "user name: " + userName;
+                </pre>
+            </td>
+            <td>
+                <pre class="code" data-type="java">
+String str = String.format("user name: %s", userName);
+                </pre>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <pre class="code" data-type="java">
+                </pre>
+            </td>
+            <td>
+                <pre class="code" data-type="java">
+                </pre>
+            </td>
+        </tr>
+    </table>
+    <h1>大量拼接字符串</h1>
+    <p>常见于生成 email, report 等处，可使用 <a href="free_marker.htm">FreeMarker</a> 来优化代码可读性。</p>
+    <h1>大量的 if else</h1>
+    <p>常见于主入口处，可使用 Strategy 模式优化，如下所示：</p>
+    <pre class="code" data-type="java" data-collapsed="false" title="Strategy 模式示例">
+public class Demo {
+
+    public static void main(String[] args) {
+        badWay(&quot;delete&quot;);
+        goodWay(&quot;insert&quot;);
+    }
+    
+    private static void badWay(String action) {
+        if (&quot;delete&quot;.equals(action)) {
+            System.out.println(&quot;execute deleting operation...&quot;);
+        } else if (&quot;insert&quot;.equals(action)) {
+            System.out.println(&quot;execute insert operation...&quot;);
+        } else {
+            System.out.println(&quot;no such action&quot;);
+        }
+    }
+    
+    private static void goodWay(String action) {
+        HashMap&lt;String, IAction&gt; actionsMap = new HashMap&lt;&gt;();
+        actionsMap.put(&quot;delete&quot;, new DeleteAction());
+        actionsMap.put(&quot;insert&quot;, new InsertAction());
+        
+        if (actionsMap.containsKey(action)) {
+            actionsMap.get(action).run();
+        } else {
+            System.out.println(&quot;no such action&quot;);
+        }
+    }
+
+    private interface IAction {
+        void run();
+    }
+    
+    private static class DeleteAction implements IAction {
+        @Override
+        public void run() {
+            System.out.println(&quot;execute deleting operation...&quot;);
+        }
+    }
+
+    private static class InsertAction implements IAction {
+        @Override
+        public void run() {
+            System.out.println(&quot;execute inserting operation...&quot;);
+        }
+    }
+}
+</pre>
+</body>
+</html>

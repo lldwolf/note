@@ -153,6 +153,20 @@ public class MockReturnTest {
 List&lt;String&gt; mock = mock(List.class);
 mock.add(any(String.class));
 </pre>
+    <p>或者使用更简单的 Mockito.any(), 如下所示</p>
+    <pre class="code" data-type="java">
+import static org.mockito.ArgumentMatchers.any;
+
+List&lt;String&gt; mock = mock(List.class);
+mock.add(any());
+</pre>
+    <p>上面是针对参数为对象的情况，如果是 primitive 参数，可使用 eq 如下所示</p>
+    <pre class="code" data-type="java">
+import static org.mockito.ArgumentMatchers.eq;
+
+someMethod(eq(false));
+</pre>
+
     <h2>自动注入 Mock 对象</h2>
     <p>对于如下的情况，我们需要 Mock 某对象的内部方法，如下所示，我们需要 Mock MainServer 内部的 OtherService：</p>
     <pre class="code" data-type="java" data-collapsed="false" title="MainService.java">
@@ -355,6 +369,7 @@ public class ExceptionTest {
         <li>@Test(expected = IOException.class) 表示该测试需要有 IOException 抛出</li>
         <li>doThrow 表示指定操作将抛出指定异常</li>
     </ul>
+    <p class="note">注意：仅能抛出方法签名中指定的 Exception，否则测试时会得到错误：“Checked exception is invalid for this method!”。如果非要强制抛出异常，可以抛出 RuntimeException。</p>
     <h2>Void Mock</h2>
     <p>前面的 thenReturn 只适用于有返回值的方法，本例讲述如何 Mock void 方法</p>
     <p>声明服务类如下</p>
@@ -540,5 +555,9 @@ public class PartialMockTest {
             <p>Mock 对象的所有方法均为假方法，而不是默认实现</p>
         </li>
     </ol>
+    <h1>References</h1>
+    <p><a href="http://static.javadoc.io/org.mockito/mockito-core/1.10.19/org/mockito/Mockito.html">Mockito 1.x</a></p>
+    <p><a href="http://static.javadoc.io/org.mockito/mockito-core/2.23.4/org/mockito/Mockito.html">Mockito 2.x</a></p>
+    <p><a href="https://javacodehouse.com/blog/mockito-tutorial/">How to mock with Mockito</a></p>
 </body>
 </html>

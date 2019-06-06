@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+	<script type="text/javascript" src="../../../mylib/js/css.js"></script>
+	<title>C#.net使用手册</title>
+</head>
+<body>
+	<p id="title">WPF FAQ</p>
+    <h1>控件使用</h1>
+    <h2>TextBox 只允许输入数字</h2>
+    <p>不得不使用 TextChanged 事件</p>
+    <pre class="code" data-type="csharp">
+private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
+{
+    TextBox textBox = sender as TextBox;
+    TextChange[] change = new TextChange[e.Changes.Count];
+    e.Changes.CopyTo(change, 0);
+
+    int offset = change[0].Offset;
+    if (change[0].AddedLength > 0)
+    {
+        int num = 0;
+        if (!int.TryParse(textBox.Text, out num))
+        {
+            textBox.Text = textBox.Text.Remove(offset, change[0].AddedLength);
+            textBox.Select(offset, 0);
+        }
+    }
+}
+</pre>
+    <h2>使用静态资源作为 ComboBox 数据源</h2>
+    <pre class="code" data-type="xml">
+&lt;Window.Resources&gt;
+    &lt;x:Array x:Key=&quot;prizes&quot;
+             Type=&quot;sys:Int32&quot;&gt;
+        &lt;sys:Int32&gt;1&lt;/sys:Int32&gt;
+        &lt;sys:Int32&gt;2&lt;/sys:Int32&gt;
+        &lt;sys:Int32&gt;3&lt;/sys:Int32&gt;
+    &lt;/x:Array&gt;
+&lt;/Window.Resources&gt;
+&lt;Grid&gt;
+    &lt;ComboBox ItemsSource=&quot;{Binding prizes}&quot;&gt;&lt;/ComboBox&gt;
+&lt;/Grid&gt;
+</pre>
+    <h2>ComboBox 使用对象集合作为数据源的使用</h2>
+    <p>注意以下属性</p>
+    <ul>
+        <li>
+            <header>ItemsSource</header>
+            <p>绑定的集合，通常为 ObservableCollection</p>
+        </li>
+        <li>
+            <header>DisplayMemberPath</header>
+            <p>显示集合对象的哪个属性</p>
+        </li>
+        <li>
+            <header>SelectedValuePath</header>
+            <p>如果选中，返回集合对象的哪个属性</p>
+        </li>
+        <li>
+            <header>SelectedValue</header>
+            <p>用于数据绑定，选中值与 ViewModel 中的哪个值绑定</p>
+        </li>
+    </ul>
+    <h2>以卡片方式显示 ListBox 条目</h2>
+    <p>使用 DataTemplate 实现如下：</p>
+    <ul>
+        <li>ScrollViewer.HorizontalScrollBarVisibility 设为 Disabled 表示不要出现水平滚动条，不然会单行显示</li>
+        <li>可参考后面的“翻转效果”一节实现每个卡片的动画</li>
+    </ul>
+    <pre class="code" data-type="xml" data-collapsed="false" title="XAML">
+&lt;ListBox Background=&quot;Transparent&quot;
+         Width=&quot;850&quot;
+         Height=&quot;700&quot;
+         Margin=&quot;5&quot;
+         BorderBrush=&quot;Transparent&quot;
+         HorizontalContentAlignment=&quot;Center&quot;
+         VerticalContentAlignment=&quot;Center&quot;
+         ScrollViewer.HorizontalScrollBarVisibility=&quot;Disabled&quot;
+         ItemsSource=&quot;{Binding Luckers}&quot;&gt;
+    &lt;ListBox.ItemContainerStyle&gt;
+        &lt;Style TargetType=&quot;ListBoxItem&quot;&gt;
+            &lt;Setter Property=&quot;Padding&quot;
+                    Value=&quot;0&quot; /&gt;
+            &lt;Setter Property=&quot;Margin&quot;
+                    Value=&quot;6&quot; /&gt;
+        &lt;/Style&gt;
+    &lt;/ListBox.ItemContainerStyle&gt;
+    &lt;ListBox.ItemsPanel&gt;
+        &lt;ItemsPanelTemplate&gt;
+            &lt;WrapPanel HorizontalAlignment=&quot;Center&quot;
+                       VerticalAlignment=&quot;Center&quot; /&gt;
+        &lt;/ItemsPanelTemplate&gt;
+    &lt;/ListBox.ItemsPanel&gt;
+    &lt;ListBox.ItemTemplate&gt;
+        &lt;DataTemplate&gt;
+            &lt;Grid Width=&quot;260&quot;
+                  Background=&quot;White&quot;&gt;
+                &lt;!-- Grid 具体布局在此省略 --&gt;
+            &lt;/Grid&gt;
+        &lt;/DataTemplate&gt;
+    &lt;/ListBox.ItemTemplate&gt;
+&lt;/ListBox&gt;
+</pre>
+    <h1>控件样式</h1>
+    <h2>使用 Style 统一控件显示</h2>
+    <pre class="code" data-type="xml">
+&lt;UserControl.Resources&gt;
+    &lt;Style x:Key=&quot;luckerTxt&quot;
+           TargetType=&quot;TextBlock&quot;&gt;
+        &lt;Setter Property=&quot;VerticalAlignment&quot;
+                Value=&quot;Center&quot; /&gt;
+        &lt;Setter Property=&quot;FontFamily&quot;
+                Value=&quot;Courier New&quot; /&gt;
+        &lt;Setter Property=&quot;FontSize&quot;
+                Value=&quot;30&quot; /&gt;
+        &lt;Setter Property=&quot;FontWeight&quot;
+                Value=&quot;Bold&quot; /&gt;
+    &lt;/Style&gt;
+
+&lt;/UserControl.Resources&gt;
+&lt;Grid&gt;
+  &lt;TextBlock Style=&quot;{StaticResource luckerTxt}&quot; /&gt;
+&lt;/Grid&gt;
+</pre>
+    <h2>绘制边框及背景</h2>
+    <p>使用 Border，Border 可作为任意控件的根对象，即它可以作为 Window 或 UserControl 下的根对象</p>
+    <p>下面演示了如何使用渐变色绘制边框</p>
+    <pre class="code" data-type="xml" data-collapsed="false" title="XAML">
+&lt;Border BorderThickness=&quot;3,0&quot;
+        Margin=&quot;0&quot;&gt;
+    &lt;!-- 绘制背景，两端黑，中间白，渐变 --&gt;
+    &lt;Border.Background&gt;
+        &lt;LinearGradientBrush EndPoint=&quot;0.5,1&quot;
+                             StartPoint=&quot;0.5,0&quot;&gt;
+            &lt;GradientStop Color=&quot;Black&quot;
+                          Offset=&quot;0&quot; /&gt;
+            &lt;GradientStop Color=&quot;#FFFFFF&quot;
+                          Offset=&quot;0.5&quot; /&gt;
+            &lt;GradientStop Color=&quot;#000000&quot;
+                          Offset=&quot;1&quot; /&gt;
+        &lt;/LinearGradientBrush&gt;
+    &lt;/Border.Background&gt;
+    &lt;!-- 绘制边框 --&gt;
+    &lt;Border.BorderBrush&gt;
+        &lt;LinearGradientBrush EndPoint=&quot;0.5,1&quot;
+                             StartPoint=&quot;0.5,0&quot;&gt;
+            &lt;GradientStop Color=&quot;#B83F31&quot;
+                          Offset=&quot;0&quot; /&gt;
+            &lt;GradientStop Color=&quot;#E39F6B&quot;
+                          Offset=&quot;0.5&quot; /&gt;
+            &lt;GradientStop Color=&quot;#B83F31&quot;
+                          Offset=&quot;1&quot; /&gt;
+        &lt;/LinearGradientBrush&gt;
+    &lt;/Border.BorderBrush&gt;
+    &lt;Canvas Background=&quot;Transparent&quot;
+            ClipToBounds=&quot;True&quot;&gt;
+        &lt;!-- 省略 --&gt;
+    &lt;/Canvas&gt;
+&lt;/Border&gt;
+</pre>
+    <h1>图形</h1>
+    <h2>窗体图片背景</h2>
+    <p>使用如下 XAML 将图片设为背景</p>
+    <pre class="code" data-type="xml">
+&lt;Window.Background&gt;
+    &lt;ImageBrush ImageSource=&quot;/images/background.png&quot;&gt;&lt;/ImageBrush&gt;
+&lt;/Window.Background&gt;
+</pre>
+    <p>或者用程序实现</p>
+    <pre class="code" data-type="csharp">
+ImageBrush brush = new ImageBrush(new BitmapImage(new Uri(BaseUriHelper.GetBaseUri(this), "/images/background.png")));
+this.Background = brush;
+</pre>
+    <h2>图形按钮</h2>
+    <p>以图片作为按钮，使用按下时图片变下显示按下效果，通过设置不透明度来实现 Enable/Disable 效果</p>
+    <pre class="code" data-type="xml" data-collapsed="false" title="XAML">
+&lt;Style TargetType=&quot;Button&quot;
+       x:Key=&quot;PaintButton&quot;&gt;
+    &lt;Setter Property=&quot;Template&quot;&gt;
+        &lt;Setter.Value&gt;
+            &lt;ControlTemplate TargetType=&quot;Button&quot;&gt;
+                &lt;Grid&gt;
+                    &lt;Image Source=&quot;{TemplateBinding Button.Content}&quot;&gt;
+                        &lt;Image.Style&gt;
+                            &lt;Style TargetType=&quot;Image&quot;&gt;
+                                &lt;!-- Disable 效果 --&gt;
+                                &lt;Style.Triggers&gt;
+                                    &lt;Trigger Property=&quot;IsEnabled&quot;
+                                             Value=&quot;False&quot;&gt;
+                                        &lt;Setter Property=&quot;Opacity&quot;
+                                                Value=&quot;0.5&quot; /&gt;
+                                    &lt;/Trigger&gt;
+                                &lt;/Style.Triggers&gt;
+                            &lt;/Style&gt;
+                        &lt;/Image.Style&gt;
+                    &lt;/Image&gt;
+                &lt;/Grid&gt;
+                &lt;ControlTemplate.Triggers&gt;
+                    &lt;!-- 按压效果 --&gt;
+                    &lt;Trigger Property=&quot;IsPressed&quot;
+                             Value=&quot;True&quot;&gt;
+                        &lt;Setter Property=&quot;RenderTransform&quot;&gt;
+                            &lt;Setter.Value&gt;
+                                &lt;ScaleTransform ScaleX=&quot;0.9&quot;
+                                                ScaleY=&quot;0.9&quot; /&gt;
+                            &lt;/Setter.Value&gt;
+                        &lt;/Setter&gt;
+                    &lt;/Trigger&gt;
+                &lt;/ControlTemplate.Triggers&gt;
+            &lt;/ControlTemplate&gt;
+        &lt;/Setter.Value&gt;
+    &lt;/Setter&gt;
+&lt;/Style&gt;
+
+&lt;Button Style=&quot;{StaticResource PaintButton}&quot;
+        Width=&quot;50&quot;
+        Height=&quot;50&quot;
+        Margin=&quot;5&quot;
+        ToolTip=&quot;Config&quot;
+        IsEnabled=&quot;{Binding CanConfig}&quot;
+        Command=&quot;{Binding Path=SetupCommand}&quot;&gt;
+    &lt;BitmapImage UriSource=&quot;/images/button_setup.png&quot; /&gt;
+&lt;/Button&gt;
+</pre>
+    <h1>动画</h1>
+    <h2>缩放效果</h2>
+    <h3>代码实现</h3>
+    <p>对一个 TextBlock 文本从小放到大，XAML 如下</p>
+    <pre class="code" data-type="xml">
+&lt;TextBlock FontFamily=&quot;Courier New&quot;
+           FontSize=&quot;{Binding FontSize}&quot;
+           FontWeight=&quot;Bold&quot;
+           Foreground=&quot;Black&quot;
+           Background=&quot;White&quot;
+           Opacity=&quot;0.618&quot;
+           RenderTransformOrigin=&quot;0.5, 0.5&quot;
+           HorizontalAlignment=&quot;Center&quot;
+           VerticalAlignment=&quot;Center&quot;
+           Text=&quot;{Binding LuckerList}&quot;&gt;
+    &lt;TextBlock.RenderTransform&gt;
+        &lt;ScaleTransform x:Name=&quot;sizeTransform&quot;&gt;&lt;/ScaleTransform&gt;
+    &lt;/TextBlock.RenderTransform&gt;
+&lt;/TextBlock&gt;
+</pre>
+    <p>设置 RenderTransformOrigin 为 (0.5, 0.5) 表示从中间开始放大，否则会从左上角开始</p>
+    <p>代码如下，可以放在 Loaded 事件或其它事件中</p>
+    <pre class="code" data-type="csharp">
+DoubleAnimation scaleX = new DoubleAnimation();
+DoubleAnimation scaleY = new DoubleAnimation();
+
+scaleX.From = 0.1;
+scaleY.From = 0.1;
+
+scaleX.To = 1.0;
+scaleY.To = 1.0;
+
+Duration duration = new Duration(TimeSpan.FromSeconds(1));
+scaleX.Duration = duration;
+scaleY.Duration = duration;
+this.sizeTransform.BeginAnimation(ScaleTransform.ScaleXProperty, scaleX);
+this.sizeTransform.BeginAnimation(ScaleTransform.ScaleYProperty, scaleY);
+</pre>
+    <h2>翻转效果</h2>
+    <p>使用 XAML 实现 Grid 的以中心为轴的水平旋转</p>
+    <pre class="code" data-type="xml">
+&lt;Grid Width=&quot;260&quot;
+        Background=&quot;White&quot;
+        RenderTransformOrigin=&quot;0.5, 0.5&quot;&gt;
+      &lt;!-- Grid 布局，在此省略 --&gt;
+      &lt;Grid.Triggers&gt;
+          &lt;EventTrigger RoutedEvent=&quot;Grid.Loaded&quot;&gt;
+              &lt;BeginStoryboard x:Name=&quot;rotateAction&quot;&gt;
+                  &lt;Storyboard&gt;
+                      &lt;DoubleAnimation Storyboard.TargetName=&quot;sizeTransform&quot;
+                                       Storyboard.TargetProperty=&quot;ScaleX&quot;
+                                       From=&quot;-1.0&quot;
+                                       To=&quot;1.0&quot;
+                                       Duration=&quot;0:0:0.75&quot;
+                                       AutoReverse=&quot;False&quot;&gt;
+                      &lt;/DoubleAnimation&gt;
+                  &lt;/Storyboard&gt;
+              &lt;/BeginStoryboard&gt;
+          &lt;/EventTrigger&gt;
+      &lt;/Grid.Triggers&gt;
+      &lt;Grid.RenderTransform&gt;
+          &lt;ScaleTransform x:Name=&quot;sizeTransform&quot;&gt;&lt;/ScaleTransform&gt;
+      &lt;/Grid.RenderTransform&gt;
+  &lt;/Grid&gt;
+</pre>
+    <h2>文字滚动效果</h2>
+    <p>在一个 TextBlock 中放入多行文本，然后快速向上循环滚动（类似抽奖）</p>
+    <p>XAML 如下：</p>
+    <pre class="code" data-type="xml">
+&lt;Canvas x:Name=&quot;canvasMain&quot;
+        Background=&quot;Transparent&quot;
+        ClipToBounds=&quot;True&quot;&gt;
+    &lt;TextBlock x:Name=&quot;text1&quot;
+               FontFamily=&quot;Courier New&quot;
+               FontSize=&quot;50&quot;
+               Text=&quot;LL52957&quot;
+               FontWeight=&quot;Bold&quot;
+               Foreground=&quot;White&quot;
+               Background=&quot;Transparent&quot;
+               HorizontalAlignment=&quot;Center&quot;
+               VerticalAlignment=&quot;Center&quot;
+               Margin=&quot;10&quot;&gt;
+        &lt;TextBlock.RenderTransform&gt;
+            &lt;TranslateTransform x:Name=&quot;animation1&quot; /&gt;
+        &lt;/TextBlock.RenderTransform&gt;
+    &lt;/TextBlock&gt;
+&lt;/Canvas&gt;
+</pre>
+    <p>C# 代码如下：</p>
+    <pre class="code" data-type="csharp">
+DoubleAnimation daY = new DoubleAnimation();
+daY.RepeatBehavior = RepeatBehavior.Forever;
+
+daY.From = 0;
+daY.To = -60000;
+
+daY.Duration = new Duration(TimeSpan.FromSeconds(50));
+this.animation1.BeginAnimation(TranslateTransform.YProperty, daY);
+</pre>
+    <h2>旋转效果</h2>
+    <p>一个旋转的太极图</p>
+    <pre class="code" data-type="xml" data-collapsed="false" title="XAML">
+&lt;Viewbox&gt;
+    &lt;Canvas x:Name=&quot;taijiCanvas&quot;
+            Width=&quot;100&quot;
+            Height=&quot;100&quot;
+            Background=&quot;Transparent&quot;
+            RenderTransformOrigin=&quot;0.5, 0.5&quot;&gt;
+        &lt;Canvas.RenderTransform&gt;
+            &lt;RotateTransform x:Name=&quot;transformer&quot;
+                             Angle=&quot;0&quot; /&gt;
+        &lt;/Canvas.RenderTransform&gt;
+        &lt;Canvas.Triggers&gt;
+            &lt;EventTrigger RoutedEvent=&quot;Loaded&quot;&gt;
+                &lt;BeginStoryboard x:Name=&quot;rotateAction&quot;&gt;
+                    &lt;Storyboard&gt;
+                        &lt;DoubleAnimation Storyboard.TargetName=&quot;transformer&quot;
+                                         Storyboard.TargetProperty=&quot;Angle&quot;
+                                         From=&quot;0&quot;
+                                         To=&quot;360&quot;
+                                         SpeedRatio=&quot;0.5&quot;
+                                         AutoReverse=&quot;False&quot;
+                                         RepeatBehavior=&quot;Forever&quot;&gt;&lt;/DoubleAnimation&gt;
+                    &lt;/Storyboard&gt;
+                &lt;/BeginStoryboard&gt;
+            &lt;/EventTrigger&gt;
+            &lt;EventTrigger RoutedEvent=&quot;Unloaded&quot;&gt;
+                &lt;StopStoryboard BeginStoryboardName=&quot;rotateAction&quot; /&gt;
+            &lt;/EventTrigger&gt;
+        &lt;/Canvas.Triggers&gt;
+        &lt;Path Fill=&quot;Pink&quot;
+              Stroke=&quot;Pink&quot;
+              StrokeThickness=&quot;1&quot;&gt;
+            &lt;Path.Data&gt;
+                &lt;GeometryGroup&gt;
+                    &lt;PathGeometry&gt;
+                        &lt;PathFigure StartPoint=&quot;0, 50&quot;
+                                    IsClosed=&quot;False&quot;&gt;
+                            &lt;ArcSegment Point=&quot;100, 50&quot;
+                                        Size=&quot;25, 25&quot;
+                                        SweepDirection=&quot;Clockwise&quot; /&gt;
+                        &lt;/PathFigure&gt;
+                        &lt;PathFigure StartPoint=&quot;0, 50&quot;
+                                    IsClosed=&quot;False&quot;&gt;
+                            &lt;ArcSegment Point=&quot;50, 50&quot;
+                                        Size=&quot;25, 25&quot;
+                                        SweepDirection=&quot;Clockwise&quot; /&gt;
+                        &lt;/PathFigure&gt;
+                        &lt;PathFigure StartPoint=&quot;50, 50&quot;
+                                    IsClosed=&quot;False&quot;&gt;
+                            &lt;ArcSegment Point=&quot;100, 50&quot;
+                                        Size=&quot;25, 25&quot;
+                                        SweepDirection=&quot;Counterclockwise&quot; /&gt;
+                        &lt;/PathFigure&gt;
+                    &lt;/PathGeometry&gt;
+                &lt;/GeometryGroup&gt;
+            &lt;/Path.Data&gt;
+        &lt;/Path&gt;
+        &lt;Path Fill=&quot;White&quot;
+              Stroke=&quot;Pink&quot;
+              StrokeThickness=&quot;1&quot;&gt;
+            &lt;Path.Data&gt;
+                &lt;GeometryGroup&gt;
+                    &lt;PathGeometry&gt;
+                        &lt;PathFigure StartPoint=&quot;0, 50&quot;
+                                    IsClosed=&quot;False&quot;&gt;
+                            &lt;ArcSegment Point=&quot;100, 50&quot;
+                                        Size=&quot;25, 25&quot;
+                                        SweepDirection=&quot;Counterclockwise&quot; /&gt;
+                        &lt;/PathFigure&gt;
+                        &lt;PathFigure StartPoint=&quot;100, 50&quot;
+                                    IsClosed=&quot;False&quot;&gt;
+                            &lt;ArcSegment Point=&quot;50, 50&quot;
+                                        Size=&quot;25, 25&quot;
+                                        SweepDirection=&quot;Clockwise&quot; /&gt;
+                        &lt;/PathFigure&gt;
+                        &lt;PathFigure StartPoint=&quot;50, 50&quot;
+                                    IsClosed=&quot;False&quot;&gt;
+                            &lt;ArcSegment Point=&quot;0, 50&quot;
+                                        Size=&quot;25, 25&quot;
+                                        SweepDirection=&quot;Counterclockwise&quot; /&gt;
+                        &lt;/PathFigure&gt;
+                    &lt;/PathGeometry&gt;
+                &lt;/GeometryGroup&gt;
+            &lt;/Path.Data&gt;
+        &lt;/Path&gt;
+        &lt;Path Fill=&quot;Pink&quot;&gt;
+            &lt;Path.Data&gt;
+                &lt;EllipseGeometry Center=&quot;25, 50&quot;
+                                 RadiusX=&quot;5&quot;
+                                 RadiusY=&quot;5&quot; /&gt;
+            &lt;/Path.Data&gt;
+        &lt;/Path&gt;
+        &lt;Path Fill=&quot;White&quot;&gt;
+            &lt;Path.Data&gt;
+                &lt;EllipseGeometry Center=&quot;75, 50&quot;
+                                 RadiusX=&quot;5&quot;
+                                 RadiusY=&quot;5&quot; /&gt;
+            &lt;/Path.Data&gt;
+        &lt;/Path&gt;
+    &lt;/Canvas&gt;
+&lt;/Viewbox&gt;
+</pre>
+    <h2>组合效果</h2>
+    <p>可以同时使用多个动画，配置如下：</p>
+    <pre class="code" data-type="xml">
+&lt;TextBlock.RenderTransform&gt;
+    &lt;TransformGroup&gt;
+        &lt;TranslateTransform x:Name=&quot;translateTransform&quot; /&gt;
+        &lt;ScaleTransform x:Name=&quot;scaleTransform&quot; /&gt;
+    &lt;/TransformGroup&gt;
+&lt;/TextBlock.RenderTransform&gt;
+</pre>
+</body>
+</html>

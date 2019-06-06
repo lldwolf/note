@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+    <script type="text/javascript" src="../../mylib/js/css.js"></script>
+    <title>Java Note - protobuf</title>
+</head>
+
+<body>
+    <p id="title">protobuf</p>
+    <h1>Overview</h1>
+    <p>Protobuf 提供了不同语言平台以字节流传输对象的解决方案，效率通常高于基于文本的 HTTP 或 SOAP 协议。</p>
+    <p>其原理如下所示：</p>
+    <!--
+    digraph protobuf {
+         rankdir=BT;
+         file -> proto [label="compile"]
+         proto -> java [style="dashed"];
+         proto -> csharp [style="dashed"];
+         java -> csharp [dir="both" label="byte[]" minlen=4];
+         file [label="*.proto" color="green"];
+         proto [label="protobuf" color="blue"];
+         java [label="Java Object" shape="box"];
+         csharp [label="C# Object" shape="box"];
+         { rank=same; java csharp }
+     }
+        -->
+    <p><img alt="" src="images/protobuf01.svg" /></p>
+    <h1>使用示例</h1>
+    <h2>环境配置</h2>
+    <p>请安装 Eclipse 插件 protobuf-dt 来提供 proto 文件的显示增强功能</p>
+    <p><img alt="" src="images/protobuf01.png" /></p>
+    <h2>示例项目</h2>
+    <p>步骤如下：</p>
+    <ol>
+        <li>
+            <p>新建 Maven 项目，使用简单的 Quick App 模板即可</p>
+        </li>
+        <li>
+            <p>定义 person.proto 文件如下所示：</p>
+            <pre class="code" data-type="java" data-collapsed="false" title="person.proto">
+syntax = "proto3";
+option java_package = "com.lld.test.protobuf.pojo";
+option java_outer_classname = "PersonModel";
+ 
+message Person {
+     int32 id = 1;
+     string name = 2;
+     string email = 3;
+}
+</pre>
+            <p>说明如下：</p>
+            <ul>
+                <li>proto3 表示我们将使用 protobuf 3 使用的协议</li>
+                <li>PersonModel 将会是最终的聚合类名</li>
+                <li>Person 将是 Pojo 类名，但属于内部类，在本例中最终将以 PersonModel.Person 引用 </li>
+            </ul>
+        </li>
+        <li>
+            <p>在此我专门写了一个 pom-compile-proto.xml 用于将 person.proto 文件编译为目标，如下所示</p>
+            <pre class="code" data-type="xml" data-collapsed="false" title="pom-compile-proto.xml">
+&lt;project xmlns="http://maven.apache.org/POM/4.0.0" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"&gt;
+    &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+
+    &lt;groupId&gt;com.lld&lt;/groupId&gt;
+    &lt;artifactId&gt;test.proto&lt;/artifactId&gt;
+    &lt;version&gt;0.0.1-SNAPSHOT&lt;/version&gt;
+    &lt;packaging&gt;jar&lt;/packaging&gt;
+
+    &lt;name&gt;test.proto&lt;/name&gt;
+    &lt;url&gt;http://maven.apache.org&lt;/url&gt;
+
+    &lt;properties&gt;
+        &lt;project.build.sourceEncoding&gt;UTF-8&lt;/project.build.sourceEncoding&gt;
+        &lt;!-- protobuf paths --&gt;
+        &lt;protobuf.input.directory&gt;${project.basedir}/src/main/java/com/lld/test/protobuf/proto&lt;/protobuf.input.directory&gt;
+        &lt;protobuf.output.directory&gt;${project.build.directory}/generated-sources&lt;/protobuf.output.directory&gt;
+
+        &lt;!-- library versions --&gt;
+        &lt;maven-antrun-plugin.version&gt;1.8&lt;/maven-antrun-plugin.version&gt;
+        &lt;maven-dependency-plugin.version&gt;3.1.1&lt;/maven-dependency-plugin.version&gt;
+        &lt;maven-shade-plugin.version&gt;3.1.1&lt;/maven-shade-plugin.version&gt;
+        &lt;os-maven-plugin.version&gt;1.5.0.Final&lt;/os-maven-plugin.version&gt;
+        &lt;protobuf.version&gt;3.5.0&lt;/protobuf.version&gt;
+    &lt;/properties&gt;
+
+    &lt;dependencies&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;com.google.protobuf&lt;/groupId&gt;
+            &lt;artifactId&gt;protobuf-java&lt;/artifactId&gt;
+            &lt;version&gt;${protobuf.version}&lt;/version&gt;
+        &lt;/dependency&gt;
+    &lt;/dependencies&gt;
+    &lt;build&gt;
+        &lt;extensions&gt;
+            &lt;extension&gt;
+                &lt;groupId&gt;kr.motd.maven&lt;/groupId&gt;
+                &lt;artifactId&gt;os-maven-plugin&lt;/artifactId&gt;
+                &lt;version&gt;${os-maven-plugin.version}&lt;/version&gt;
+            &lt;/extension&gt;
+        &lt;/extensions&gt;
+        &lt;plugins&gt;
+            &lt;plugin&gt;
+                &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;
+                &lt;artifactId&gt;maven-dependency-plugin&lt;/artifactId&gt;
+                &lt;version&gt;${maven-dependency-plugin.version}&lt;/version&gt;
+                &lt;executions&gt;
+                    &lt;execution&gt;
+                        &lt;id&gt;copy-protoc&lt;/id&gt;
+                        &lt;phase&gt;generate-sources&lt;/phase&gt;
+                        &lt;goals&gt;
+                            &lt;goal&gt;copy&lt;/goal&gt;
+                        &lt;/goals&gt;
+                        &lt;configuration&gt;
+                            &lt;artifactItems&gt;
+                                &lt;artifactItem&gt;
+                                    &lt;groupId&gt;com.google.protobuf&lt;/groupId&gt;
+                                    &lt;artifactId&gt;protoc&lt;/artifactId&gt;
+                                    &lt;version&gt;${protobuf.version}&lt;/version&gt;
+                                    &lt;classifier&gt;${os.detected.classifier}&lt;/classifier&gt;
+                                    &lt;type&gt;exe&lt;/type&gt;
+                                    &lt;overWrite&gt;true&lt;/overWrite&gt;
+                                    &lt;outputDirectory&gt;${project.build.directory}&lt;/outputDirectory&gt;
+                                &lt;/artifactItem&gt;
+                            &lt;/artifactItems&gt;
+                        &lt;/configuration&gt;
+                    &lt;/execution&gt;
+                &lt;/executions&gt;
+            &lt;/plugin&gt;
+            &lt;!-- compile proto buffer files using copied protoc binary --&gt;
+            &lt;plugin&gt;
+                &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;
+                &lt;artifactId&gt;maven-antrun-plugin&lt;/artifactId&gt;
+                &lt;version&gt;${maven-antrun-plugin.version}&lt;/version&gt;
+                &lt;executions&gt;
+                    &lt;execution&gt;
+                        &lt;id&gt;exec-protoc&lt;/id&gt;
+                        &lt;phase&gt;generate-sources&lt;/phase&gt;
+                        &lt;configuration&gt;
+                            &lt;target&gt;
+                                &lt;property name="protoc.filename" value="protoc-${protobuf.version}-${os.detected.classifier}.exe" /&gt;
+                                &lt;property name="protoc.filepath" value="${project.build.directory}/${protoc.filename}" /&gt;
+                                &lt;chmod file="${protoc.filepath}" perm="ugo+rx" /&gt;
+                                &lt;mkdir dir="${protobuf.output.directory}" /&gt;
+                                &lt;path id="protobuf.input.filepaths.path"&gt;
+                                    &lt;fileset dir="${protobuf.input.directory}"&gt;
+                                        &lt;include name="**/*.proto" /&gt;
+                                    &lt;/fileset&gt;
+                                &lt;/path&gt;
+                                &lt;pathconvert pathsep=" " property="protobuf.input.filepaths" refid="protobuf.input.filepaths.path" /&gt;
+                                &lt;exec executable="${protoc.filepath}" failonerror="true"&gt;
+                                    &lt;arg value="-I" /&gt;
+                                    &lt;arg value="${protobuf.input.directory}" /&gt;
+                                    &lt;arg value="--java_out" /&gt;
+                                    &lt;arg value="${protobuf.output.directory}" /&gt;
+                                    &lt;arg line="${protobuf.input.filepaths}" /&gt;
+                                &lt;/exec&gt;
+                            &lt;/target&gt;
+                        &lt;/configuration&gt;
+                        &lt;goals&gt;
+                            &lt;goal&gt;run&lt;/goal&gt;
+                        &lt;/goals&gt;
+                    &lt;/execution&gt;
+                &lt;/executions&gt;
+            &lt;/plugin&gt;
+        &lt;/plugins&gt;
+    &lt;/build&gt;
+&lt;/project&gt;
+</pre>
+            <p>然后可以运行如下命令将 person.proto 文件编译为 java 文件，通过上面的配置，结果文件将放在 target/generated-sources 目录下。</p>
+            <pre class="code" data-type="sh">
+mvn -f pom-compile-proto.xml clean generate-sources
+</pre>
+        </li>
+        <li>
+            <p>专用于项目的 pom.xml 如下所示</p>
+            <pre class="code" data-type="xml" data-collapsed="false" title="pom-compile-proto.xml">
+&lt;project xmlns="http://maven.apache.org/POM/4.0.0" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"&gt;
+    &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+
+    &lt;groupId&gt;com.lld&lt;/groupId&gt;
+    &lt;artifactId&gt;test.proto&lt;/artifactId&gt;
+    &lt;version&gt;0.0.1-SNAPSHOT&lt;/version&gt;
+    &lt;packaging&gt;jar&lt;/packaging&gt;
+
+    &lt;name&gt;test.proto&lt;/name&gt;
+    &lt;url&gt;http://maven.apache.org&lt;/url&gt;
+
+    &lt;properties&gt;
+        &lt;project.build.sourceEncoding&gt;UTF-8&lt;/project.build.sourceEncoding&gt;
+        &lt;protobuf.version&gt;3.5.0&lt;/protobuf.version&gt;
+    &lt;/properties&gt;
+
+    &lt;dependencies&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;com.google.protobuf&lt;/groupId&gt;
+            &lt;artifactId&gt;protobuf-java&lt;/artifactId&gt;
+            &lt;version&gt;${protobuf.version}&lt;/version&gt;
+        &lt;/dependency&gt;
+    &lt;/dependencies&gt;
+&lt;/project&gt;
+</pre>
+        </li>
+        <li>
+            <p>将生成的 PersonModel.java 放到相应的 source 目录下，使用如下代码测试 Java 对象和字节流间的转换</p>
+            <pre class="code" data-type="java" data-collapsed="false" title="App.java">
+package com.lld.test.protobuf;
+
+import com.google.protobuf.InvalidProtocolBufferException;
+import com.lld.test.protobuf.pojo.PersonModel;
+
+public class App 
+{
+    public static void main( String[] args ) throws InvalidProtocolBufferException
+    {
+        PersonModel.Person.Builder builder = PersonModel.Person.newBuilder();
+        builder.setId(1);
+        builder.setName("Lindong");
+        builder.setEmail("lindong@163.com");
+
+        PersonModel.Person person = builder.build();
+        System.out.println("before:" + person);
+
+        System.out.println("===Person Byte:");
+        for (byte b : person.toByteArray()) {
+            System.out.print(b);
+        }
+        System.out.println("================");
+
+        byte[] byteArray = person.toByteArray();
+        PersonModel.Person p2 = PersonModel.Person.parseFrom(byteArray);
+        System.out.println("after id:" + p2.getId());
+        System.out.println("after name:" + p2.getName());
+        System.out.println("after email:" + p2.getEmail());
+    }
+}
+</pre>
+        </li>
+        <li>
+            <p>然后可以运行如下命令编译</p>
+            <pre class="code" data-type="sh">
+mvn clean package
+</pre>
+        </li>
+    </ol>
+    <h1>增强</h1>
+    <h2>使用 maven-shade-plugin 解决 protobuf 版本冲突</h2>
+    <p>默认的 package 是不包含 protobuf 的 jar 包的。对于这种情况，我们推荐将 protobuf jar 一块儿打进我们的包，目的是：</p>
+    <ul>
+        <li>对用户透明，无须用户自己去配置 probobuf jar</li>
+        <li>万一用户配置了自己不同版本的 protobuf，不会引发冲突</li>
+    </ul>
+    <p>pom.xml 中添加如下配置</p>
+    <pre class="code" data-type="xml" data-collapsed="false" title="pom.xml">
+&lt;properties&gt;
+    &lt;maven-shade-plugin.version&gt;3.1.1&lt;/maven-shade-plugin.version&gt;
+&lt;/properties&gt;
+&lt;build&gt;
+    &lt;plugins&gt;
+        &lt;!--  shade protobuf to avoid version conflicts --&gt;
+        &lt;plugin&gt;
+            &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;
+            &lt;artifactId&gt;maven-shade-plugin&lt;/artifactId&gt;
+            &lt;version&gt;${maven-shade-plugin.version}&lt;/version&gt;
+            &lt;executions&gt;
+                &lt;execution&gt;
+                    &lt;phase&gt;package&lt;/phase&gt;
+                    &lt;goals&gt;
+                        &lt;goal&gt;shade&lt;/goal&gt;
+                    &lt;/goals&gt;
+                    &lt;configuration&gt;
+                        &lt;relocations&gt;
+                            &lt;relocation&gt;
+                                &lt;pattern&gt;com.google.protobuf&lt;/pattern&gt;
+                                &lt;shadedPattern&gt;${project.groupId}.${project.artifactId}.shaded.protobuf&lt;/shadedPattern&gt;
+                            &lt;/relocation&gt;
+                        &lt;/relocations&gt;
+                    &lt;/configuration&gt;
+                &lt;/execution&gt;
+            &lt;/executions&gt;
+        &lt;/plugin&gt;
+    &lt;/plugins&gt;
+&lt;/build&gt;
+</pre>
+    <p>这样打包后 protobuf 所有的依赖类将会被打包，且所有的 namespace 引用都会从原始的 com.google.protobuf.* 变成了 groupId.artifactId.shaded.protobuf.*。可通过反编译工具查看。</p>
+</body>
+</html>

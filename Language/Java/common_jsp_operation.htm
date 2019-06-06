@@ -2,18 +2,19 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
-<title>JSP常用操作</title>
+<title>JSP 常用操作</title>
 <script type="text/javascript" src="../../mylib/js/css.js"></script>
 </head>
 
 <body>
-<p id="title">JSP常用操作</p>
+<p id="title">JSP 常用操作</p>
 
-<h1>N.1 下载</h1>
-<pre>String name = new String();
-name = &quot;report.xls&quot;;
-response.setContentType(&quot;unknown&quot;);
-response.addHeader(&quot;Content-Disposition&quot;, &quot;attachment;filename=\&quot;&quot; + name + &quot;\&quot;&quot;);
+<h1>下载</h1>
+<pre class="code" data-type="java">
+String name = new String();
+name = "report.xls";
+response.setContentType("unknown");
+response.addHeader("Content-Disposition", "attachment;filename=\"" + name + "\"");
 
 try
 {

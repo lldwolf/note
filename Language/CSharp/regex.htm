@@ -621,6 +621,11 @@ while (true)
     
 }
 Console.Read();</pre>
+    <h2>换行符处理</h2>
+    <p>正常情况下，会按行来进行表达式匹配，即 .* 不会匹配换行符，如果我们想让其也匹配换行符，使用如下方式创建 Regex 对象</p>
+    <pre class="code" data-type="csharp">
+new Regex(condition, RegexOptions.Singleline)
+</pre>
     <h1>示例</h1>
     <h2>常用正则表达式</h2>
     <p><a href="../regex/regex-sample.htm">正则表达式示例</a></p>

@@ -15,14 +15,21 @@ Collections.sort(testList);
 // List 反序
 Collections.reverse(testList);
     </pre>
-	<h1>比较</h1>
-	<h2>Objects.equals</h2>
+	<h1>工具类</h1>
+    <h2>Objects</h2>
+    <p>Objects 提供了许多工具方法，例如比较字符串内容，获取 hash code 等，因为这些方法均支持 null 参数，所以可以简化我们的代码。</p>
+	<h3>Objects.equals</h3>
 	<pre class="code" data-type="java">
 String s1 = "hello";
 Object s2 = "hello";
 
 final boolean isEqual = Objects.equals(s1, s2);
 System.out.println(isEqual);
+</pre>
+    <h3>Objects.hashCode</h3>
+	<pre class="code" data-type="java">
+String s1 = "hello";
+System.out.println(Objects.hashCode(s1));
 </pre>
 </body>
 </html>

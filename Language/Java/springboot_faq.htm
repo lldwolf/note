@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>Spring Cloud</title>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+    <p id="title">SpringBoot FAQ</p>
+    <h1>如何不启动 Tomcat</h1>
+    <p>默认情况下，SpringBoot 使用 Tomcat 作为内嵌服务器，使用如下 Maven 配置不启动默认的 Tomcat 服务器</p>
+    <pre class="code" data-type="xml">
+&lt;dependency&gt;
+    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+    &lt;artifactId&gt;spring-boot-starter-web&lt;/artifactId&gt;
+    &lt;exclusions&gt;
+        &lt;exclusion&gt;
+            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-boot-starter-tomcat&lt;/artifactId&gt;
+        &lt;/exclusion&gt;
+    &lt;/exclusions&gt;
+&lt;/dependency&gt;
+</pre>
+    <h1>系统路径</h1>
+    <h2>user.dir</h2>
+    <p>在 Eclipse 中启动 SprintBoot Application， user.dir 是项目根目录（pom.xml 所在目录）</p>
+    <p>使用编译后的 jar 启动，user.dir 是 jar 所在目录</p>
+    <h2>java.class.path</h2>
+    <p>在 Eclipse 中是所有引用的 jar 位置，与项目相关的是 classes 目录，如果是 unit test 还要加上 test-classes 目录</p>
+    <p>在使用打好的 jar 包启动时，class path 就只是打好的 jar 包路径。</p>
+    <h2>如何修改 class path</h2>
+    <p>使用 java -jar 启动 SpringBoot 应用时，-cp 参数会被忽略。如果要使用额外的 class path 启动 SpringBoot 应用，方式如下：</p>
+    <p>本例中，我有一些额外的 Spring Bean configuration XML 文件需要导入</p>
+    <pre class="code" data-type="sh">
+# my.SpringBootApp 是 SprintBoot 入口
+JAVA_OPTS="$JAVA_OPTS -Dloader.main=my.SpringBootApp"
+
+# 额外的 classpath 路径和应用 jar 包
+CLASS_PAHT=/my_additional_cp_folder/:mySpringBootAppService.jar
+
+# 必须以 PropertiesLauncher 启动
+java -cp ${CLASS_PATH} -${JAVA_OPTS} org.springframework.boot.loader.PropertiesLauncher
+</pre>
+    <p>然后在应用程序中就可以使用如下方式引入这些配置文件</p>
+    <pre class="code" data-type="java">
+@ImportResource("classpath*:my-config*.xml")
+</pre>
+    <p>可以放在入口类上，也可以单如建个配置类，例如：</p>
+    <pre class="code" data-type="java">
+@Configuration
+@ImportResource("classpath*:my-config*.xml")
+public class XmlConfiguration {
+
+}
+</pre>
+    <h1>Annotation</h1>
+    <h2>如何扫描多个 package 来组装 bean</h2>
+    <p>默认情况下，只会扫描 @SpringBootApplication 所在的 package 及子 package，使用如下方式扫描多个 package</p>
+    <pre class="code" data-type="java">
+@ComponentScan({ "package1", "package2" })
+</pre>
+    <h1>打包</h1>
+    <h2>将 System 引用 jar 包也打进来</h2>
+    <p>pom.xml 示例</p>
+    <pre class="code" data-type="xml">
+&lt;dependencies&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;my-group&lt;/groupId&gt;
+        &lt;artifactId&gt;my-artifact&lt;/artifactId&gt;
+        &lt;version&gt;1.0&lt;/version&gt;
+        &lt;scope&gt;system&lt;/scope&gt;
+        &lt;systemPath&gt;${project.basedir}/src/main/resources/lib/my-local-1.0.jar&lt;/systemPath&gt;
+    &lt;/dependency&gt;
+&lt;/dependencies&gt;
+&lt;build&gt;
+    &lt;resources&gt;
+        &lt;resource&gt;
+            &lt;targetPath&gt;BOOT-INF/lib&lt;/targetPath&gt;
+            &lt;directory&gt;src/main/resources/lib&lt;/directory&gt;
+            &lt;includes&gt;
+                &lt;include&gt;**/*.jar&lt;/include&gt;
+            &lt;/includes&gt;
+            &lt;filtering&gt;false&lt;/filtering&gt;
+        &lt;/resource&gt;
+        &lt;resource&gt;
+            &lt;directory&gt;etc/&lt;/directory&gt;
+        &lt;/resource&gt;
+    &lt;/resources&gt;
+&lt;/build&gt;
+</pre>
+</body>
+</html>

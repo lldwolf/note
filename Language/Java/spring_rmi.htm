@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>Spring RMI</title>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+	<p id="title">Spring RMI</p>
+    <h1>Key Points</h1>
+    <p>本例只用于演示如何使用 Spring RMI，在实操时需要做以下改变</p>
+    <ul>
+        <li>
+            <p>把公用的类定义成单独的项目并分别在 pom.xml 中引用</p>
+        </li>
+    </ul>
+    <h1>Steps</h1>
+    <ol>
+        <li>
+            <header>pom.xml (for both server and client)</header>
+            <p>
+                <pre class="code" data-type="xml" data-collapsed="false" title="pom.xml">
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;
+    &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+    &lt;parent&gt;
+        &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+        &lt;artifactId&gt;spring-boot-starter-parent&lt;/artifactId&gt;
+        &lt;version&gt;2.0.3.RELEASE&lt;/version&gt;
+        &lt;relativePath /&gt; &lt;!-- lookup parent from repository --&gt;
+    &lt;/parent&gt;
+    &lt;groupId&gt;com.lld&lt;/groupId&gt;
+    &lt;artifactId&gt;spring.rmi.test&lt;/artifactId&gt;
+    &lt;version&gt;0.0.1-SNAPSHOT&lt;/version&gt;
+    &lt;name&gt;spring.rmi.test&lt;/name&gt;
+    &lt;description&gt;Demo project for Spring Boot&lt;/description&gt;
+
+    &lt;properties&gt;
+        &lt;java.version&gt;1.8&lt;/java.version&gt;
+    &lt;/properties&gt;
+
+    &lt;dependencies&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-boot-starter-web&lt;/artifactId&gt;
+            &lt;exclusions&gt;
+                &lt;exclusion&gt;
+                    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+                    &lt;artifactId&gt;spring-boot-starter-tomcat&lt;/artifactId&gt;
+                &lt;/exclusion&gt;
+            &lt;/exclusions&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-boot-starter-test&lt;/artifactId&gt;
+            &lt;scope&gt;test&lt;/scope&gt;
+        &lt;/dependency&gt;
+    &lt;/dependencies&gt;
+
+    &lt;build&gt;
+        &lt;plugins&gt;
+            &lt;plugin&gt;
+                &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+                &lt;artifactId&gt;spring-boot-maven-plugin&lt;/artifactId&gt;
+            &lt;/plugin&gt;
+        &lt;/plugins&gt;
+    &lt;/build&gt;
+
+&lt;/project&gt;
+</pre>
+            </p>
+        </li>
+        <li>
+            <header>Server Application</header>
+            <p>Service Interface</p>
+            <pre class="code" data-type="java">
+package com.lld.spring.rmi.test.server;
+
+public interface HelloService {
+    String sayHi(String name);
+}
+</pre>
+            <p>Service Implementation</p>
+            <pre class="code" data-type="java">
+package com.lld.spring.rmi.test.server;
+
+public class HelloServiceImpl implements HelloService {
+
+    @Override
+    public String sayHi(String name) {
+        return "Hello, " + name;
+    }
+}
+</pre>
+            <p>Expose the RMI Service</p>
+            <pre class="code" data-type="java">
+package com.lld.spring.rmi.test.server;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
+import org.springframework.remoting.rmi.RmiServiceExporter;
+
+@SpringBootApplication
+public class RmiServer {
+    @Bean
+    HelloService bookingService() {
+        return new HelloServiceImpl();
+    }
+
+    @Bean
+    RmiServiceExporter exporter(HelloService implementation) {
+        Class&lt;HelloService&gt; serviceInterface = HelloService.class;
+        RmiServiceExporter exporter = new RmiServiceExporter();
+        exporter.setServiceInterface(serviceInterface);
+        exporter.setService(implementation);
+        exporter.setServiceName(serviceInterface.getSimpleName());
+        exporter.setRegistryPort(1099);
+        return exporter;
+    }
+
+    public static void main(String[] args) {
+        SpringApplication.run(RmiServer.class, args);
+    }
+
+}
+</pre>
+        </li>
+        <li>
+            <header>RMI Client</header>
+            <pre class="code" data-type="java">
+package com.lld.spring.rmi.test.client;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.context.annotation.Bean;
+import org.springframework.remoting.rmi.RmiProxyFactoryBean;
+
+import com.lld.spring.rmi.test.server.HelloService;
+
+public class RmiClient {
+    @Bean
+    RmiProxyFactoryBean service() {
+        RmiProxyFactoryBean rmiProxyFactory = new RmiProxyFactoryBean();
+        rmiProxyFactory.setServiceUrl("rmi://localhost:1099/HelloService");
+        rmiProxyFactory.setServiceInterface(HelloService.class);
+        return rmiProxyFactory;
+    }
+    
+    public static void main(String[] args) {
+        HelloService service = SpringApplication.run(RmiClient.class, args).getBean(HelloService.class);
+        String bookingOutcome = service.sayHi("Lindong");
+        System.out.println(bookingOutcome);
+    }
+}
+</pre>
+        </li>
+    </ol>
+    <h1>兼容 Spring 2.x RMI service</h1>
+    <p>如果 RMI Service client (stub)的提供者是基于 Spring 2.x (例如 2.5.6) 开发的，那么在 Spring 升级到 3.X 以后，会报错找不到 org.springframework.remoting.rmi.RmiInvocationWrapper_Stub 类，因为该类在 3.x 版本后被删掉了，为了兼容才的服务，可以将该类单独打为 jar 包并在项目中引用。</p>
+    <pre class="code" data-type="sh">
+jar -xvf spring-context.jar org/springframework/remoting/rmi/RmiInvocationWrapper_Stub.class
+jar -cvf spring-2.5.6-rmi-compatibility.jar org/springframework/remoting/rmi
+</pre>
+    <h1>References</h1>
+    <ul>
+        <li><a href="https://www.baeldung.com/spring-remoting-rmi">Baeldung - Spring Remoting with RMI</a></li>
+    </ul>
+</body>
+</html>

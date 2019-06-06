@@ -9,11 +9,11 @@
 <body>
 <p id="title">Java语言基础</p>
 
-<h1>N.1 数据类型</h1>
+<h1>数据类型</h1>
 <p>基本类型(Primitive Data Types)和引用类型(Reference Types)。</p>
 <p>基本类型包括：boolean, char, byte, short, int, long, float, double，其中int的字长为32位</p>
 <p>引用类型为对象类型，即类，其中Object是所有类的基类，注意，基本类型的数组也是引用类型，如int[]也是Object的子类。</p>
-<h1>N.2 运算符 </h1>
+<h1>运算符 </h1>
 <table width="90%"  border="0" cellspacing="0" cellpadding="0">
   <tr>
     <th width="20%">操作符</th>
@@ -34,16 +34,16 @@
   <tr>
     <td>instanceof</td>
     <td>判断是否是某类的实例，也可以用来判断数组的
-	<pre>Object o = new int[]{1, 2, 3};
+	<pre class="code" data-type="java">Object o = new int[] { 1, 2, 3 };
 o instanceof int[]	//True
 o instanceof byte[]	//False
 o instanceof Object	//True</pre></td>
   </tr>
 </table>
-<h1>N.3 程序控制语句</h1>
-<h2>N.3.1 分支控制</h2>
-<pre>if ... else ...</pre>
-<pre>switch(expr)
+<h1>程序控制语句</h1>
+<h2>分支控制</h2>
+<pre class="code" data-type="java">if ... else ...</pre>
+<pre class="code" data-type="java">switch(expr)
 {
 	case expr:
 	case expr:
@@ -53,13 +53,13 @@ o instanceof Object	//True</pre></td>
 		...
 		break;
 } </pre>
-<h2>N.3.2 循环控制 </h2>
+<h2>循环控制 </h2>
 <p>while</p>
 <p>do ... while</p>
 <p>for</p>
-<h2>N.3.3 同步控制</h2>
+<h2>同步控制</h2>
 <p>使用synchronized关键字，如下所示</p>
-<pre>public static Sort(int[] a)
+<pre class="code" data-type="java">public static Sort(int[] a)
 {
 	synchronized(a)
 	{
@@ -67,17 +67,30 @@ o instanceof Object	//True</pre></td>
 	}
 }</pre>
 <p>这样，我们就不用担心在排序的时候会有其它进程改变数组a的内容。因为a是按引用传递的，所以有可能在排序时，有其它进程改变数组a的内容。</p>
-<h1>N.4 类 </h1>
+<h1>类 </h1>
 <p>除了int、double、</p>
-<h1>N.5 包(Package) </h1>
-<h2>N.5.1 引用其它的包</h2>
-<h3>N.5.1.1 引用一个类</h3>
-<pre>import java.util.ArrayList;</pre>
-<h3>N.5.1.2 引用整个包</h3>
+<h1>包(Package) </h1>
+<h2>引用其它的包</h2>
+<h3>引用一个类</h3>
+<pre class="code" data-type="java">import java.util.ArrayList;</pre>
+<h3>引用整个包</h3>
 <p>import java.util.*;  </p>
-<p>&nbsp;</p>
-<p>&nbsp; </p>
-<p>&nbsp; </p>
-
+<h1>关键字</h1>
+    <ul>
+        <li>
+            <header>synchronized</header>
+            <p>方法加同步锁</p>
+        </li>
+        <li>
+            <header>transient</header>
+            <p>transient field</p>
+            <p>表示该成员亦量不需要序列化</p>
+        </li>
+        <li>
+            <header>volatile</header>
+            <p>volatile field</p>
+            <p>表示该成员在使用时会强制刷新 CPU 缓存以保证并发访问情况下的数据一致性。</p>
+        </li>
+    </ul>
 </body>
 </html>

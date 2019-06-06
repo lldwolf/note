@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+    <script type="text/javascript" src="../../mylib/js/css.js"></script>
+    <title>Moq</title>
+</head>
+
+<body>
+    <p id="title">Moq</p>
+    <h1>My Cases</h1>
+    <h2>简单入门</h2>
+    <pre class="code" data-type="csharp">
+// 假定我有一个 MyFactory 用来创建 MyInterface 实例
+// 创建 MyFactory 的 Mock 对象
+var mockFactory = new Mock&lt;MyFactory&gt;();
+
+// 创建 MyInterface 的 Mock 实例
+var mockInstance = new Mock&lt;MyInterface&gt;();
+
+// 使用 Moq 实现如果调用 MyInstance.DoSomething(bool) 方法无论传入参数为何值一概抛出 MyException 异常
+mockInstance.Setup(c =&gt; c.DoSomething(It.IsAny&lt;bool&gt;()))
+    .Throws(new MyException("my exception message"));
+
+// 使用 Moq 实现 MyFactory 的 Mock 实例第一次调用 CreateInstance(string) 方法时返回 MyInterface 的 Mock 实例
+// 第二次及以后调用则返回真正的 MyInstance 实例
+mockFactory.SetupSequence(f =&gt; f.CreateInstance(It.IsAny&lt;string&gt;()))
+    .Returns(mockInstance.Object)
+    .Returns(new MyInstance("real object"));
+
+client.Factory = mockFactory.Object;
+</pre>
+    <h1>Reference</h1>
+    <p>Please refer to <a href="https://github.com/Moq/moq4/wiki/Quickstart">Moq Quickstart</a></p>
+    <p>Moq is intended to be simple to use, strongly typed (no magic strings!, and therefore full compiler-verified and refactoring-friendly) and minimalistic (while still fully functional!).</p>
+    <h2>Methods</h2>
+    <pre class="code" data-type="csharp" data-collapsed="false" title="Methods Mock">
+using Moq;
+
+// Assumptions:
+
+public interface IFoo
+{
+    Bar Bar { get; set; }
+    string Name { get; set; }
+    int Value { get; set; }
+    bool DoSomething(string value);
+    bool DoSomething(int number, string value);
+    string DoSomethingStringy(string value);
+    bool TryParse(string value, out string outputValue);
+    bool Submit(ref Bar bar);
+    int GetCount();
+    bool Add(int value);
+}
+
+public class Bar 
+{
+    public virtual Baz Baz { get; set; }
+    public virtual bool Submit() { return false; }
+}
+
+public class Baz
+{
+    public virtual string Name { get; set; }
+}
+
+
+var mock = new Mock&lt;IFoo&gt;();
+mock.Setup(foo =&gt; foo.DoSomething("ping")).Returns(true);
+
+
+// out arguments
+var outString = "ack";
+// TryParse will return true, and the out argument will return "ack", lazy evaluated
+mock.Setup(foo =&gt; foo.TryParse("ping", out outString)).Returns(true);
+
+
+// ref arguments
+var instance = new Bar();
+// Only matches if the ref argument to the invocation is the same instance
+mock.Setup(foo =&gt; foo.Submit(ref instance)).Returns(true);
+
+
+// access invocation arguments when returning a value
+mock.Setup(x =&gt; x.DoSomethingStringy(It.IsAny&lt;string&gt;()))
+		.Returns((string s) =&gt; s.ToLower());
+// Multiple parameters overloads available
+
+
+// throwing when invoked with specific parameters
+mock.Setup(foo =&gt; foo.DoSomething("reset")).Throws&lt;InvalidOperationException&gt;();
+mock.Setup(foo =&gt; foo.DoSomething("")).Throws(new ArgumentException("command"));
+
+
+// lazy evaluating return value
+var count = 1;
+mock.Setup(foo =&gt; foo.GetCount()).Returns(() =&gt; count);
+
+
+// returning different values on each invocation
+var mock = new Mock&lt;IFoo&gt;();
+var calls = 0;
+mock.Setup(foo =&gt; foo.GetCount())
+	.Returns(() =&gt; calls)
+	.Callback(() =&gt; calls++);
+// returns 0 on first invocation, 1 on the next, and so on
+Console.WriteLine(mock.Object.GetCount());
+</pre>
+    <h2>Matching Arguments</h2>
+    <pre class="code" data-type="csharp" data-collapsed="false" title="Arguments Mock">
+// any value
+mock.Setup(foo =&gt; foo.DoSomething(It.IsAny&lt;string&gt;())).Returns(true);
+
+
+// any value passed in a `ref` parameter (requires Moq 4.8 or later):
+mock.Setup(foo =&gt; foo.Submit(ref It.Ref&lt;Bar&gt;.IsAny)).Returns(true);
+
+
+// matching Func&lt;int&gt;, lazy evaluated
+mock.Setup(foo =&gt; foo.Add(It.Is&lt;int&gt;(i =&gt; i % 2 == 0))).Returns(true); 
+
+
+// matching ranges
+mock.Setup(foo =&gt; foo.Add(It.IsInRange&lt;int&gt;(0, 10, Range.Inclusive))).Returns(true); 
+
+
+// matching regex
+mock.Setup(x =&gt; x.DoSomethingStringy(It.IsRegex("[a-d]+", RegexOptions.IgnoreCase))).Returns("foo");
+</pre>
+    <h2>Properties</h2>
+    <ul>
+        <li>
+            <p>Common</p>
+    <pre class="code" data-type="csharp" data-collapsed="false" title="Arguments Mock">
+mock.Setup(foo =&gt; foo.Name).Returns("bar");
+
+
+// auto-mocking hierarchies (a.k.a. recursive mocks)
+mock.Setup(foo =&gt; foo.Bar.Baz.Name).Returns("baz");
+
+// expects an invocation to set the value to "foo"
+mock.SetupSet(foo =&gt; foo.Name = "foo");
+
+// or verify the setter directly
+mock.VerifySet(foo =&gt; foo.Name = "foo");
+</pre>
+        </li>
+        <li>
+    <p>Setup a property so that it will automatically start tracking its value (also known as Stub)</p>
+    <pre class="code" data-type="csharp" data-collapsed="false" title="Arguments Mock">
+// start "tracking" sets/gets to this property
+mock.SetupProperty(f =&gt; f.Name);
+
+// alternatively, provide a default value for the stubbed property
+mock.SetupProperty(f =&gt; f.Name, "foo");
+
+
+// Now you can do:
+
+IFoo foo = mock.Object;
+// Initial value was stored
+Assert.Equal("foo", foo.Name);
+
+// New value set which changes the initial value
+foo.Name = "bar";
+Assert.Equal("bar", foo.Name);
+</pre>
+        </li>
+        <li>
+            <p>Stub all properties on a mock (not available on Silverlight)</p>
+            <pre class="code" data-type="csharp">
+mock.SetupAllProperties();
+</pre>
+        </li>
+    </ul>
+    <h2>Events</h2>
+    <pre class="code" data-type="csharp" data-collapsed="false" title="Events Mock">
+// Raising an event on the mock
+mock.Raise(m =&gt; m.FooEvent += null, new FooEventArgs(fooValue));
+
+// Raising an event on the mock that has sender in handler parameters
+mock.Raise(m =&gt; m.FooEvent += null, this, new FooEventArgs(fooValue));
+
+// Raising an event on a descendant down the hierarchy
+mock.Raise(m =&gt; m.Child.First.FooEvent += null, new FooEventArgs(fooValue));
+
+// Causing an event to raise automatically when Submit is invoked
+mock.Setup(foo =&gt; foo.Submit()).Raises(f =&gt; f.Sent += null, EventArgs.Empty);
+// The raised event would trigger behavior on the object under test, which 
+// you would make assertions about later (how its state changed as a consequence, typically)
+
+// Raising a custom event which does not adhere to the EventHandler pattern
+public delegate void MyEventHandler(int i, bool b);
+public interface IFoo
+{
+  event MyEventHandler MyEvent; 
+}
+
+var mock = new Mock&lt;IFoo&gt;();
+...
+// Raise passing the custom arguments expected by the event delegate
+mock.Raise(foo =&gt; foo.MyEvent += null, 25, true);
+</pre>
+    <h2>Callbacks</h2>
+    <pre class="code" data-type="csharp" data-collapsed="false" title="Mock Callback">
+var mock = new Mock&lt;IFoo&gt;();
+var calls = 0;
+var callArgs = new List&lt;string&gt;();
+
+mock.Setup(foo =&gt; foo.DoSomething("ping"))
+    .Returns(true)
+    .Callback(() =&gt; calls++);
+
+// access invocation arguments
+mock.Setup(foo =&gt; foo.DoSomething(It.IsAny&lt;string&gt;()))
+    .Returns(true)
+    .Callback((string s) =&gt; callArgs.Add(s));
+
+// alternate equivalent generic method syntax
+mock.Setup(foo =&gt; foo.DoSomething(It.IsAny&lt;string&gt;()))
+    .Returns(true)
+    .Callback&lt;string&gt;(s =&gt; callArgs.Add(s));
+
+// access arguments for methods with multiple parameters
+mock.Setup(foo =&gt; foo.DoSomething(It.IsAny&lt;int&gt;(), It.IsAny&lt;string&gt;()))
+    .Returns(true)
+    .Callback&lt;int, string&gt;((i, s) =&gt; callArgs.Add(s));
+
+// callbacks can be specified before and after invocation
+mock.Setup(foo =&gt; foo.DoSomething("ping"))
+    .Callback(() =&gt; Console.WriteLine("Before returns"))
+    .Returns(true)
+    .Callback(() =&gt; Console.WriteLine("After returns"));
+
+// callbacks for methods with `ref` / `out` parameters are possible but require some work (and Moq 4.8 or later):
+delegate void SubmitCallback(ref Bar bar);
+
+mock.Setup(foo =&gt; foo.Submit(ref It.Ref&lt;Bar&gt;.IsAny)
+    .Callback(new SubmitCallback((ref Bar bar) =&gt; Console.WriteLine("Submitting a Bar!"));
+</pre>
+    <h2>Verification</h2>
+    <pre class="code" data-type="csharp" data-collapsed="false" title="Mock Verification">
+mock.Verify(foo =&gt; foo.DoSomething("ping"));
+
+// Verify with custom error message for failure
+mock.Verify(foo =&gt; foo.DoSomething("ping"), "When doing operation X, the service should be pinged always");
+
+// Method should never be called
+mock.Verify(foo =&gt; foo.DoSomething("ping"), Times.Never());
+
+// Called at least once
+mock.Verify(foo =&gt; foo.DoSomething("ping"), Times.AtLeastOnce());
+
+// Verify getter invocation, regardless of value.
+mock.VerifyGet(foo =&gt; foo.Name);
+
+// Verify setter invocation, regardless of value.
+mock.VerifySet(foo =&gt; foo.Name);
+
+// Verify setter called with specific value
+mock.VerifySet(foo =&gt; foo.Name ="foo");
+
+// Verify setter with an argument matcher
+mock.VerifySet(foo =&gt; foo.Value = It.IsInRange(1, 5, Range.Inclusive));
+
+// Verify that no other invocations were made other than those already verified (requires Moq 4.8 or later)
+mock.VerifyNoOtherCalls();
+</pre>
+    <h2>Customizing Mock Behavior</h2>
+    <ul>
+        <li>
+            <p>Make mock behave like a "true Mock", raising exceptions for anything that doesn't have a corresponding expectation: in Moq slang a "Strict" mock; default behavior is "Loose" mock, which never throws and returns default values or empty arrays, enumerables, etc. if no expectation is set for a member</p>
+            <pre class="code" data-type="csharp">
+var mock = new Mock&lt;IFoo&gt;(MockBehavior.Strict);
+</pre>
+        </li>
+        <li>
+            <p>Invoke base class implementation if no expectation overrides the member (a.k.a. "Partial Mocks" in Rhino Mocks): default is false. (this is required if you are mocking Web/Html controls in System.Web!)</p>
+            <pre class="code" data-type="csharp">
+var mock = new Mock&lt;IFoo&gt; { CallBase = true };
+</pre>
+        </li>
+        <li>
+            <p>Make an automatic recursive mock: a mock that will return a new mock for every member that doesn't have an expectation and whose return value can be mocked (i.e. it is not a value type)</p>
+            <pre class="code" data-type="csharp">
+var mock = new Mock&lt;IFoo&gt; { DefaultValue = DefaultValue.Mock };
+// default is DefaultValue.Empty
+
+// this property access would return a new mock of Bar as it's "mock-able"
+Bar value = mock.Object.Bar;
+
+// the returned mock is reused, so further accesses to the property return 
+// the same mock instance. this allows us to also use this instance to 
+// set further expectations on it if we want
+var barMock = Mock.Get(value);
+barMock.Setup(b =&gt; b.Submit()).Returns(true);
+</pre>
+        </li>
+        <li>
+            <p>Centralizing mock instance creation and management: you can create and verify all mocks in a single place by using a MockRepository, which allows setting the MockBehavior, its CallBase and DefaultValue consistently</p>
+            <pre class="code" data-type="csharp">
+var repository = new MockRepository(MockBehavior.Strict) { DefaultValue = DefaultValue.Mock };
+
+// Create a mock using the repository settings
+var fooMock = repository.Create&lt;IFoo&gt;();
+
+// Create a mock overriding the repository settings
+var barMock = repository.Create&lt;Bar&gt;(MockBehavior.Loose);
+
+// Verify all verifiable expectations on all mocks created through the repository
+repository.Verify();
+</pre>
+        </li>
+    </ul>
+    <h2>Miscellaneous</h2>
+    <ul>
+        <li>
+            <p>Setting up a member to return different values / throw exceptions on sequential calls:</p>
+            <pre class="code" data-type="csharp">
+var mock = new Mock&lt;IFoo&gt;();
+mock.SetupSequence(f =&gt; f.GetCount())
+    .Returns(3)  // will be returned on 1st invocation
+    .Returns(2)  // will be returned on 2nd invocation
+    .Returns(1)  // will be returned on 3rd invocation
+    .Returns(0)  // will be returned on 4th invocation
+    .Throws(new InvalidOperationException());  // will be thrown on 5th invocation
+</pre>
+        </li>
+        <li>
+            <p>Setting expectations for protected members (you can't get IntelliSense for these, so you access them using the member name as a string):</p>
+            <pre class="code" data-type="csharp">
+// at the top of the test fixture
+using Moq.Protected;
+
+// in the test
+var mock = new Mock&lt;CommandBase&gt;();
+mock.Protected()
+     .Setup&lt;int&gt;("Execute")
+     .Returns(5);
+
+// if you need argument matching, you MUST use ItExpr rather than It
+// planning on improving this for vNext (see below for an alternative in Moq 4.8)
+mock.Protected()
+    .Setup&lt;bool&gt;("Execute",
+        ItExpr.IsAny&lt;string&gt;())
+    .Returns(true);
+</pre>
+        </li>
+        <li>
+            <p>Moq 4.8 and later allows you to set up protected members through a completely unrelated type that has the same members and thus provides the type information necessary for IntelliSense to work. You can also use this interface to set up protected generic methods and those having by-ref parameters:</p>
+            <pre class="code" data-type="csharp">
+interface CommandBaseProtectedMembers
+{
+    bool Execute(string arg);
+}
+
+mock.Protected().As&lt;CommandBaseProtectedMembers&gt;()
+    .Setup(m =&gt; m.Execute(It.IsAny&lt;string&gt;()))  // will set up CommandBase.Execute
+    .Returns(true);
+</pre>
+        </li>
+    </ul>
+    <h2>Advanced Features</h2>
+    <ul>
+        <li>
+            <p>Common</p>
+            <pre class="code" data-type="csharp">
+// get mock from a mocked instance
+IFoo foo = // get mock instance somehow
+var fooMock = Mock.Get(foo);
+fooMock.Setup(f =&gt; f.GetCount()).Returns(42);
+
+
+// implementing multiple interfaces in mock
+var mock = new Mock&lt;IFoo&gt;();
+var disposableFoo = mock.As&lt;IDisposable&gt;();
+// now the IFoo mock also implements IDisposable :)
+disposableFoo.Setup(disposable =&gt; disposable.Dispose());
+
+// implementing multiple interfaces in single mock
+var mock = new Mock&lt;IFoo&gt;();
+mock.Setup(foo =&gt; foo.Name).Returns("Fred");
+mock.As&lt;IDisposable&gt;().Setup(disposable =&gt; disposable.Dispose());
+
+
+// custom matchers
+mock.Setup(foo =&gt; foo.DoSomething(IsLarge())).Throws&lt;ArgumentException&gt;();
+...
+public string IsLarge() 
+{ 
+  return Match.Create&lt;string&gt;(s =&gt; !String.IsNullOrEmpty(s) &amp;&amp; s.Length &gt; 100);
+}
+</pre>
+        </li>
+        <li>
+            <p>Mocking internal types: Add either of the following custom attributes (typically in AssemblyInfo.cs) to the project containing the internal types — which one you need depends on whether your own project is strong-named or not:</p>
+            <pre class="code" data-type="csharp">
+// This assembly is the default dynamic assembly generated by Castle DynamicProxy, 
+// used by Moq. If your assembly is strong-named, paste the following in a single line:
+[assembly:InternalsVisibleTo("DynamicProxyGenAssembly2,PublicKey=00...cc7")]
+
+// Or, if your own assembly is not strong-named, omit the public key:
+[assembly:InternalsVisibleTo("DynamicProxyGenAssembly2")]
+</pre>
+        </li>
+        <li>
+            <p>Starting in Moq 4.8, you can create your own custom default value generation strategies (besides DefaultValue.Empty and DefaultValue.Mock) by subclassing DefaultValueProvider, or, if you want some more convenience, LookupOrFallbackDefaultValueProvider:</p>
+            <pre class="code" data-type="csharp">
+class MyEmptyDefaultValueProvider : LookupOrFallbackDefaultValueProvider
+{
+    public MyEmptyDefaultValueProvider()
+    {
+        base.Register(typeof(string), (type, mock) =&gt; "?");
+        base.Register(typeof(List&lt;&gt;), (type, mock) =&gt; Activator.CreateInstance(type));
+    }
+}
+
+var mock = new Mock&lt;IFoo&gt; { DefaultValueProvider = new MyEmptyDefaultValueProvider() };
+var name = mock.Object.Name;  // =&gt; "?"
+</pre>
+            <p class="note">Note: When you pass the mock for consumption, you must pass mock.Object, not mock itself.</p>
+        </li>
+    </ul>
+    <h2>LINQ to Mocks</h2>
+    <p>Moq is the one and only mocking framework that allows specifying mock behavior via declarative specification queries. You can think of LINQ to Mocks as:</p>
+    <p>Keep that query form in mind when reading the specifications:</p>
+    <pre class="code" data-type="csharp">
+var services = Mock.Of&lt;IServiceProvider&gt;(sp =&gt;
+    sp.GetService(typeof(IRepository)) == Mock.Of&lt;IRepository&gt;(r =&gt; r.IsAuthenticated == true) &amp;&amp;
+    sp.GetService(typeof(IAuthentication)) == Mock.Of&lt;IAuthentication&gt;(a =&gt; a.AuthenticationType == "OAuth"));
+
+// Multiple setups on a single mock and its recursive mocks
+ControllerContext context = Mock.Of&lt;ControllerContext&gt;(ctx =&gt;
+     ctx.HttpContext.User.Identity.Name == "kzu" &amp;&amp;
+     ctx.HttpContext.Request.IsAuthenticated == true &amp;&amp;
+     ctx.HttpContext.Request.Url == new Uri("http://moqthis.com") &amp;&amp;
+     ctx.HttpContext.Response.ContentType == "application/xml");
+
+// Setting up multiple chained mocks:
+var context = Mock.Of&lt;ControllerContext&gt;(ctx =&gt;
+     ctx.HttpContext.Request.Url == new Uri("http://moqthis.me") &amp;&amp;
+     ctx.HttpContext.Response.ContentType == "application/xml" &amp;&amp;
+     // Chained mock specification
+     ctx.HttpContext.GetSection("server") == Mock.Of&lt;ServerSection&gt;(config =&gt;
+         config.Server.ServerUrl == new Uri("http://moqthis.com/api"));
+</pre>
+    <p>LINQ to Mocks is great for quickly stubbing out dependencies that typically don't need further verification. If you do need to verify later some invocation on those mocks, you can easily retrieve them with Mock.Get(instance).</p>
+    <h1>FAQ</h1>
+    <h2>static class/method</h2>
+    <p>Moq 不支持对静态类或方法的 mock. 作为变通，可以使用实例方法来调用静态方法，再去 mock 实例方法。</p>
+</body>
+</html>

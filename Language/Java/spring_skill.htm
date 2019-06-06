@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>Spring Skills</title>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+	<p id="title">Spring Skills</p>
+    <h1>构告/注入</h1>
+    <h2>@PostConstruct</h2>
+    <p>Spring 在构造对象时的执行顺序是：</p>
+    <ol>
+        <li>
+            <p>执行直接初始化的类成员，例如</p>
+            <pre class="code" data-type="java">
+private int intValue = 1;
+</pre>
+        </li>
+        <li>执行构造函数</li>
+        <li>执行注入，例如使用 @Autowired 修饰的成员</li>
+    </ol>
+    <p>这样带来一个问题，那就是如果我在构造函数时需要使用那些被注入的成员怎么办，在构造函数执行时它们尚未被初始化。</p>
+    <p>推荐方案是使用 @PostConstruct 注解，使用该注解的函数将会在注入完成后自动执行，如下所示：</p>
+    <pre class="code" data-type="java">
+@PostConstruct
+private void init() {
+    //init
+}
+</pre>
+    <p>init 函数将会在所有的注入完成的自动执行。</p>
+    <p class="note">注意： 使用 @PostConstruct 注解的函数只会在注入完成后，这意味着它只会执行一次，这意味着你如果使用构造函数多次 new 这个对象时不会自动执行这个初始化函数。所以如果你的这个函数中没有引用任何需要注入的类成员，建议放在构造函数中直接执行而不是使用 @PostConstruct 完成对象初始化。</p>
+    <h2>从属性文件中注入成员变量</h2>
+    <p>使用 @Value 注解可以直接将属性文件（properties 或 yml）中的配置注入到类成员，如下所示：</p>
+    <p>在 application.yml 中有如下配置：</p>
+    <pre class="code" data-type="properties">
+db.location: /tmp/sqlite.db
+</pre>
+    <p>在类中这可以这样注入：</p>
+    <pre class="code" data-type="java">
+@Value("${db.location}")
+private String dbLocation;
+</pre>
+    <p>令人惊奇的是，这个属性也包括操作系统变量或命令，例如这样可以直接注入当前机器名（在 Linux 下）</p>
+    <pre class="code" data-type="java">
+@Value("${hostname}")
+private String hostname;
+</pre>
+    <p>而且这个优先级要高于属性文件中的配置，这意味着有时会有副作用。所以在属性文件中定义属性时注意不要使用与操作系统同名的名称。</p>
+    <h2>Bean 参数自动注入</h2>
+    <p>注意下面的 DataSource Bean，如果 MyConfiguration 也是一个 Bean 的话（例如被 @Configuration 注解过），则在初始化时会自动注入。</p>
+    <pre class="code" data-type="java">
+@Configuration
+public class DbConfig {
+    @Bean
+    public DataSource dataSource(MyConfiguration configuration) {
+        final DriverManagerDataSource dataSource = new DriverManagerDataSource();
+        dataSource.setDriverClassName("org.sqlite.JDBC");
+        dataSource.setUrl("jdbc:sqlite:" + configuration.getDbLocation());
+        return dataSource;
+    }
+}
+</pre>
+    <h1>@Component/@Service/@Repository/@Controller/@Configuration 区别</h1>
+    <p>简而言之，@Service/@Repository/@Controller/@Configuration 都是 @Comonent 的一种，@Service/@Controller/@Configuration 顾名思义一下就好，@Repository 是表示这是 DAO 层。分开用可以增加可读性。可能还有些其它高科技，但似乎一般也用不到。不知道用啥时直接用 @Component 没问题。</p>
+    <h1>Properties</h1>
+    <h2>在 bean-config.xml 中使用 properties 变量 (placeholder)</h2>
+    <p>下面讲述如何在 bean-config.xml 中使用定义在 properties 文件中的变量</p>
+    <ol>
+        <li>
+            <header>Testing Bean Class</header>
+            <pre class="code" data-type="java" data-collapsed="false" title="PlaceholderPojo.java">
+package com.lld.pojo;
+
+public class PlaceholderPojo {
+    private String name;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+}
+</pre>
+        </li>
+        <li>
+            <header>properties 文件示例</header>
+            <pre class="code" data-type="properties" data-collapsed="false" title="placeholder.properties">
+placeholder_test=test_value
+</pre>
+        </li>
+        <li>
+            <header>bean-config.xml</header>
+            <pre class="code" data-type="xml" data-collapsed="false" title="placeholder-bean-config.xml">
+&lt;beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans-2.5.xsd"&gt;
+
+    &lt;bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        &lt;property name="location"&gt;
+            &lt;value&gt;placeholder.properties&lt;/value&gt;
+        &lt;/property&gt;
+    &lt;/bean&gt;
+
+    &lt;bean id="placeholderPojo" class="com.lld.pojo.PlaceholderPojo"&gt;
+        &lt;property name="name" value="${placeholder_test}" /&gt;
+    &lt;/bean&gt;
+
+&lt;/beans&gt;
+</pre>
+        </li>
+        <li>
+            <header>Unit Test</header>
+            <pre class="code" data-type="java">
+import static org.junit.Assert.assertTrue;
+
+import java.io.IOException;
+import java.util.Properties;
+
+import org.junit.Test;
+import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+public class PropertiesUtilTest {
+    @Test
+    public void placeholderTest() throws IOException {
+        Properties properties = new Properties();
+        properties.load(PropertiesUtilTest.class.getClassLoader().getResourceAsStream("placeholder.properties"));
+        String testValue = properties.getProperty("placeholder_test");
+        properties.put("placeholder_test", testValue);
+        ApplicationContext applicationContext = new ClassPathXmlApplicationContext("placeholder-bean-config.xml");
+        PlaceholderPojo pojo = (PlaceholderPojo) applicationContext.getBean("placeholderPojo");
+        ((ConfigurableApplicationContext) applicationContext).close();
+        assertTrue(testValue.equals(pojo.getName()));
+    }
+}
+</pre>
+        </li>
+    </ol>
+</body>
+</html>

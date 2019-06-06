@@ -56,18 +56,18 @@ Connection con = DriverManager.getConnection("连接字符串", "用户名", "口令");</p
     <pre class="code" data-type="java">import java.sql.Connection;
 import java.sql.DriverManager;
 ...
-Class.forName(&quot;com.microsoft.jdbc.sqlserver.SQLServerDriver&quot;).newInstance();
+Class.forName("com.microsoft.jdbc.sqlserver.SQLServerDriver").newInstance();
 Connection con = DriverManager.getConnection(
-	&quot;jdbc:microsoft:sqlserver://127.0.0.1:1433;DatabaseName=pubs;SelectMethod=cursor&quot;, 
-	&quot;sa&quot;, 
-	&quot;sa&quot;);</pre>
+	"jdbc:microsoft:sqlserver://127.0.0.1:1433;DatabaseName=pubs;SelectMethod=cursor", 
+	"sa", 
+	"sa");</pre>
     <h2>SQL Server</h2>
     <p>如果要使用Windows 身份验证方式连接SQL Server，使用微软的开发包我还没找出来，使用jTDS的话，连接字符串可以这样写：</p>
     <pre class="code" data-type="java">Connection connection = 
 	DriverManager.getConnection(
-		&quot;jdbc:jtds:sqlserver://localhost:1433/pubs;domain=a&quot;, 
-		&quot;administrator&quot;, 
-		&quot;liulindong&quot;);</pre>
+		"jdbc:jtds:sqlserver://localhost:1433/pubs;domain=a", 
+		"administrator", 
+		"liulindong");</pre>
     <p>因为我的电脑不在域中，所在domain我是随便写的，但不能为空，后面两个参数是windows的用户名和口令，呵呵。</p>
     <h2>Sybase</h2>
     <p>在此使用 jconn4.jar 作为驱动</p>
@@ -114,19 +114,19 @@ public class Test {
 	
 	public static void main(String[] args) throws Exception
 	{
-		Class.forName(&quot;com.microsoft.jdbc.sqlserver.SQLServerDriver&quot;).newInstance();
+		Class.forName("com.microsoft.jdbc.sqlserver.SQLServerDriver").newInstance();
 		Connection con = DriverManager.getConnection(
-			&quot;jdbc:microsoft:sqlserver://127.0.0.1:1433;DatabaseName=pubs;SelectMethod=cursor&quot;, 
-			&quot;sa&quot;, 
-			&quot;sa&quot;);
+			"jdbc:microsoft:sqlserver://127.0.0.1:1433;DatabaseName=pubs;SelectMethod=cursor", 
+			"sa", 
+			"sa");
 		Statement st = con.createStatement();
-		String sql = &quot;select * from authors&quot;;
+		String sql = "select * from authors";
 		ResultSet rs = st.executeQuery(sql);
 		ResultSetMetaData meta_data = rs.getMetaData();
 		
 		for(int i_col = 1; i_col &lt;= meta_data.getColumnCount(); i_col++)
 		{
-			System.out.print(meta_data.getColumnLabel(i_col) + &quot;\t\t&quot;);
+			System.out.print(meta_data.getColumnLabel(i_col) + "\t\t");
 		}
 		System.out.println();
 		
@@ -134,7 +134,7 @@ public class Test {
 		{
 			for(int i_col = 1; i_col &lt;= meta_data.getColumnCount(); i_col++)
 			{
-				System.out.print(rs.getString(i_col) + &quot;\t\t&quot;);
+				System.out.print(rs.getString(i_col) + "\t\t");
 			}
 			System.out.println();
 		}
@@ -368,6 +368,56 @@ fw.flush();
 fw.close();
 outStream.close();</pre>
     <h1>示例程序</h1>
+    <a id="max_connection"></a>
+    <h2>Oracle 最大连接数测试</h2>
+    <pre class="code" data-type="java" data-collapsed="false" title="Oracle Max Connection Test">
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
+
+public class App {
+    private static volatile int connCount = 0;
+    private static List&lt;Connection&gt; connections = new ArrayList&lt;&gt;();
+
+    public static void main(String[] args) throws Exception {
+        for (int i = 0; i &lt; 500; i++) {
+            new Thread(() -&gt; {
+                runSql();
+            }).start();
+        }
+    }
+
+    private static void runSql() {
+        int id = ++connCount;
+        try {
+            Connection con = DriverManager.getConnection("jdbc:oracle:thin:@db_url:port:SID", "user_name", "password");
+            System.out.println("Current connection count: " + id);
+            connections.add(con);
+            Statement st = con.createStatement();
+            String sql = "select * from my_table";
+            st.executeQuery(sql);
+            System.out.println("completed task id: " + id);
+        } catch (Exception ex) {
+            System.err.println("Failed task id: " + id);
+            ex.printStackTrace();
+
+            for (Connection connection : connections) {
+                try {
+                    connection.close();
+                } catch (SQLException e) {
+                    System.err.println("Failed close connection!");
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+}</pre>
+    <p>可以通过 <a href="../../Database/Oracle/system_info.htm#max_connection">Oracle 最大支持连接</a> 查看 Oracle 配置</p>
+    <p>可通过自定义连接池来解决这个问题，可参考 <a href="apache-commons.htm#commons_pool">Commons Pool 示例</a></p>
+    <h2>Others</h2>
     <p><a href="example/SqlServerTest.zip">SQL SERVER 连接示例(Eclipse项目)</a></p>
     <p><a href="example/OracleTest.zip">Oracle 连接示例</a></p>
     <p><a href="example/ODBCTest.zip">ODBC 连接示例</a> </p>

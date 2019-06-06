@@ -1,63 +1,55 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
-<title>DataGridView</title>
-<script type="text/javascript" src="../../mylib/js/css.js"></script>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+    <title>DataGridView</title>
+    <script type="text/javascript" src="../../mylib/js/css.js"></script>
 </head>
 
 <body>
-<p id="title">DataGridView</p>
+    <p id="title">DataGridView</p>
 
-<p>DataGridView做为开发中最常见的表格控件，我在这里单独拿出一章来讲述它。该控件是在.net 2.0中新增的控件，在.net 1.1中为DataGrid。</p>
-<h1>简介</h1>
-<h2>最简单的用法</h2>
-<p>最简单的用法是直接将一个DataTable对象赋给DataGridView.DataSource属性，DataGridView会自动创建表列并显示数据。</p>
-<h2>常用的属性</h2>
-<table style="width:900" >
-  <tr>
-    <th width="300">属性</th>
-    <th>用途</th>
-  </tr>
-  <tr>
-    <td>AllowUserToAddRows</td>
-    <td>允许用户添加新行，默认为true。如果为true，则DataGridView最后是一个空行，前面的行首指示块显示“*”</td>
-  </tr>
-  <tr>
-    <td>AllowUserToResizeColumns</td>
-    <td>是否允许用户调整列宽, 但设置AutoSizeColumnsMode为自动调整后该属性失效</td>
-  </tr>
-  <tr>
-    <td>AutoSizeColumnsMode</td>
-    <td>设定列宽的自动设置方式</td>
-  </tr>
-  <tr>
-    <td>Columns[i].DefaultCellStyle.Alignment</td>
-    <td>设定某列的对齐方式</td>
-  </tr>
-  <tr>
-    <td>DataSource</td>
-    <td>数据源</td>
-  </tr>
-  <tr>
-    <td>ReadOnly</td>
-    <td>只读</td>
-  </tr>
-  <tr>
-    <td>SelectionMode</td>
-    <td>设定选取方式, 例如按单元格, 整行, 整列等 </td>
-  </tr>
-  <tr>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-  </tr>
-  <tr>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-  </tr>
-</table>
-<h1>如何添加下拉框列</h1>
-<p>添加下拉框列不难，难的是对惯坏了的Windows程序员，一旦使用下拉框列，就无法使用指定DataSource的方式来自动显示数据了，而是需要手工添加每个单元格的内容。示例代码如下所示：</p>
+    <p>DataGridView做为开发中最常见的表格控件，我在这里单独拿出一章来讲述它。该控件是在.net 2.0中新增的控件，在.net 1.1中为DataGrid。</p>
+    <h1>简介</h1>
+    <h2>最简单的用法</h2>
+    <p>最简单的用法是直接将一个DataTable对象赋给DataGridView.DataSource属性，DataGridView会自动创建表列并显示数据。</p>
+    <h2>常用的属性</h2>
+    <table style="width:900">
+        <tr>
+            <th width="300">属性</th>
+            <th>用途</th>
+        </tr>
+        <tr>
+            <td>AllowUserToAddRows</td>
+            <td>允许用户添加新行，默认为true。如果为true，则DataGridView最后是一个空行，前面的行首指示块显示“*”</td>
+        </tr>
+        <tr>
+            <td>AllowUserToResizeColumns</td>
+            <td>是否允许用户调整列宽, 但设置AutoSizeColumnsMode为自动调整后该属性失效</td>
+        </tr>
+        <tr>
+            <td>AutoSizeColumnsMode</td>
+            <td>设定列宽的自动设置方式</td>
+        </tr>
+        <tr>
+            <td>Columns[i].DefaultCellStyle.Alignment</td>
+            <td>设定某列的对齐方式</td>
+        </tr>
+        <tr>
+            <td>DataSource</td>
+            <td>数据源</td>
+        </tr>
+        <tr>
+            <td>ReadOnly</td>
+            <td>只读</td>
+        </tr>
+        <tr>
+            <td>SelectionMode</td>
+            <td>设定选取方式, 例如按单元格, 整行, 整列等 </td>
+        </tr>
+    </table>
+    <h1>如何添加下拉框列</h1>
+    <p>添加下拉框列不难，难的是对惯坏了的Windows程序员，一旦使用下拉框列，就无法使用指定DataSource的方式来自动显示数据了，而是需要手工添加每个单元格的内容。示例代码如下所示：</p>
 <pre class="code" data-type="csharp">DataGridViewComboBoxColumn col_min_bend_uom = new DataGridViewComboBoxColumn();
 col_min_bend_uom.HeaderText = &quot;Min. Bend UOM&quot;;
 col_min_bend_uom.DataSource = tb_min_bend_uom;
@@ -65,22 +57,20 @@ col_min_bend_uom.DisplayMember = &quot;uom_name&quot;;
 col_min_bend_uom.ValueMember = &quot;uom_id&quot;;
 col_min_bend_uom.DisplayStyle = DataGridViewComboBoxDisplayStyle.Nothing;
 this.datagridView1.Columns.Insert(13, col_min_bend_uom);</pre>
-<p>其中将DisplayStyle属性设为DataGridViewComboBoxDisplayStyle.Nothing是去掉下拉框后面的下拉箭头。</p>
-<h1>自定义排序 </h1>
-<p><img src="images/custom_sort.jpg" width="244" height="274" /></p>
-<p>你上图这种表格，需要使用自定义排序，第一、第二列需按数字排序，而不是字符串，当然，这个也可以使用DataGridView自己的列单元格属性来解决；第二、合计行不能参与排序，这一点最要命，除了自定义排序，没有其它好的解决办法。</p>
-<p>对于使用自定义排序的DataGridView，不能使用DataTable之类的数据集对象作为DataSource，而是需要手工填写每个单元格，在此我写了一个将DataTable的内容填写到DataGridView中的工具函数，如下所示：</p>
+    <p>其中将DisplayStyle属性设为DataGridViewComboBoxDisplayStyle.Nothing是去掉下拉框后面的下拉箭头。</p>
+    <h1>自定义排序 </h1>
+    <p><img src="images/custom_sort.jpg" width="244" height="274" /></p>
+    <p>你上图这种表格，需要使用自定义排序，第一、第二列需按数字排序，而不是字符串，当然，这个也可以使用DataGridView自己的列单元格属性来解决；第二、合计行不能参与排序，这一点最要命，除了自定义排序，没有其它好的解决办法。</p>
+    <p>对于使用自定义排序的DataGridView，不能使用DataTable之类的数据集对象作为DataSource，而是需要手工填写每个单元格，在此我写了一个将DataTable的内容填写到DataGridView中的工具函数，如下所示：</p>
 <pre class="code" data-type="csharp">private void SetDataGridViewSource(DataGridView grid, DataTable table)
 {
 	grid.Columns.Clear();
-
 	for (int iCol = 0; iCol < table.Columns.Count; iCol++)
 	{
 		DataGridViewTextBoxColumn col = new DataGridViewTextBoxColumn();
 		col.HeaderText = table.Columns[iCol].ColumnName;
 		grid.Columns.Add(col);
 	}
-
 	for (int iRow = 0; iRow < table.Rows.Count; iRow++)
 	{
 		object[] values = new object[table.Columns.Count];
@@ -89,44 +79,38 @@ this.datagridView1.Columns.Insert(13, col_min_bend_uom);</pre>
 		grid.Rows.Add(values);
 	}
 }</pre>
-<p>如要使用自定义排序，需要将使用自定义排序列的 SortMode 属性设为 DataGridViewColumnSortMode.Programmatic。在其 ColumnHeaderMouseClick 中填写排序代码如下：</p>
+    <p>如要使用自定义排序，需要将使用自定义排序列的 SortMode 属性设为 DataGridViewColumnSortMode.Programmatic。在其 ColumnHeaderMouseClick 中填写排序代码如下：</p>
 <pre class="code" data-type="csharp">private void dataGridView1_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
 {
 	SortOrder order = SortOrder.Ascending;
 	if (this.SortedColumnIndex == e.ColumnIndex && this.IsAscending)
 		order = SortOrder.Descending;
 	this.dataGridView1.Sort(new RowComparer(e.ColumnIndex, order, this.NumberCols));
-
 	for (int iCol = 0; iCol < this.dataGridView1.Columns.Count; iCol++)
 		this.dataGridView1.Columns[iCol].HeaderCell.SortGlyphDirection = SortOrder.None;
-
 	this.dataGridView1.Columns[e.ColumnIndex].HeaderCell.SortGlyphDirection = order;
-
 	this.SortedColumnIndex = e.ColumnIndex;
 	this.IsAscending = order == SortOrder.Ascending;
 }</pre>
-<p>其中定义了如下3个变量保存自定义排序的信息</p>
+    <p>其中定义了如下3个变量保存自定义排序的信息</p>
 <pre class="code" data-type="csharp">/// &lt;summary&gt;
 /// 当前排序列
 /// &lt;/summary&gt;
 private int SortedColumnIndex = -1;
-
 /// &lt;summary&gt;
 /// 是否升序
 /// &lt;/summary&gt;
 private bool IsAscending = false;
-
 /// &lt;summary&gt;
 /// 需按数字格式进行排序的列
 /// &lt;/summary&gt;
 private int[] NumberCols = new int[] { 1 };</pre>
-<p>调用DataGridView.Sort进行排序，其参数为System.Collections.IComparer接口的实现类，如下所示：</p>
+    <p>调用DataGridView.Sort进行排序，其参数为System.Collections.IComparer接口的实现类，如下所示：</p>
 <pre class="code" data-type="csharp">public class RowComparer : IComparer
 {
 	private static int ComparedColumnIndex;
 	private static int OrderType;
 	private int[] num_cols;
-
 	public RowComparer(int column_index, SortOrder sort_order, int[] num_cols)
 	{
 		this.num_cols = num_cols;
@@ -136,33 +120,24 @@ private int[] NumberCols = new int[] { 1 };</pre>
 		else
 			OrderType = 1;
 	}
-
 	public int Compare(object x, object y)
 	{
 		DataGridViewRow row1 = x as DataGridViewRow;
 		DataGridViewRow row2 = y as DataGridViewRow;
 		int title_col = 0;
-
 		if (Convert.ToString(row1.Cells[title_col].Value) == &quot;合计&quot;)
 			return 1;
-
 		if (Convert.ToString(row2.Cells[title_col].Value) == &quot;合计&quot;)
 			return -1;
-
 		if (row1.Cells[ComparedColumnIndex].Value == DBNull.Value &amp;&amp; row2.Cells[ComparedColumnIndex].Value == DBNull.Value)
 			return 0;
-
 		if (row1.Cells[ComparedColumnIndex].Value == DBNull.Value)
 			return -1 * OrderType;
-
 		if (row2.Cells[ComparedColumnIndex].Value == DBNull.Value)
 			return 1 * OrderType;
-
-
 		List&lt;int&gt; num_col_list = new List&lt;int&gt;();
 		foreach (int col_no in this.num_cols)
 			num_col_list.Add(col_no);
-
 		int comp_result;
 		if (num_col_list.Contains(ComparedColumnIndex))
 		{
@@ -181,14 +156,20 @@ private int[] NumberCols = new int[] { 1 };</pre>
 				Convert.ToString(row1.Cells[ComparedColumnIndex].Value),
 				Convert.ToString(row2.Cells[ComparedColumnIndex].Value));
 		}
-
 		comp_result *= OrderType;
-
 		return comp_result;
 	}
 }</pre>
-<p><a href="demo/DataGridViewSort.zip">示例代码下载</a></p>
-<p>&nbsp;</p>
-
+    <p><a href="demo/DataGridViewSort.zip">示例代码下载</a></p>
+    <p>&nbsp;</p>
+    <h1>使用技巧</h1>
+    <h2>取当前行绑定的对象</h2>
+    <pre class="code" data-type="csharp">
+private void dataGridView1_CellMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
+{
+    MyBindingObject object = this.dataGridView1.CurrentRow.DataBoundItem as MyBindingObject;
+    ...
+}
+</pre>
 </body>
 </html>

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>PowerMock</title>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+	<p id="title">PowerMock</p>
+    <h1>Overview</h1>
+    <p>PowerMock 用来支持 Mockito 不支持的情况，例如 mock 静态方法，私有方法，构造函数等。</p>
+    <h1>初始化</h1>
+    <p>具体可看附录，我使用了 JUnit 4.x + Mockito 1.x，则 Maven pom.xml 引用如下：</p>
+    <pre class="code" data-type="xml">
+&lt;dependency&gt;
+    &lt;groupId&gt;org.powermock&lt;/groupId&gt;
+    &lt;artifactId&gt;powermock-module-junit4&lt;/artifactId&gt;
+    &lt;version&gt;1.7.4&lt;/version&gt;
+    &lt;scope&gt;test&lt;/scope&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;org.powermock&lt;/groupId&gt;
+    &lt;artifactId&gt;powermock-api-mockito&lt;/artifactId&gt;
+    &lt;version&gt;1.7.4&lt;/version&gt;
+    &lt;scope&gt;test&lt;/scope&gt;
+&lt;/dependency&gt;
+</pre>
+    <h2>知识点</h2>
+    <ul>
+        <li>
+            <p>使用 PowerMock 后要以 PowerMockRunner 作为 RunWith 注解参数</p>
+            <pre class="code" data-type="java">
+@RunWith(PowerMockRunner.class)
+</pre>
+        </li>
+        <li>
+            <p>如果使用 SpringBoot 测试服务</p>
+            <pre class="code" data-type="java">
+@RunWith(PowerMockRunner.class)
+@PowerMockRunnerDelegate(SpringRunner.class)
+</pre>
+        </li>
+        <li>
+            <p>添加要 PowerMock 要 Mock 的类</p>
+            <pre class="code" data-type="java">
+// 单个类
+@PrepareForTest(StaticDemo.class)
+
+// 多个类
+@PrepareForTest({ StaticDemo1.class, StaticDemo2.class })
+</pre>
+        </li>
+    </ul>
+    <h1>示例</h1>
+    <h2>Mock Static Meothod</h2>
+    <pre class="code" data-type="java">
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.when;
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
+
+@RunWith(PowerMockRunner.class)
+@PrepareForTest({ StaticDemo.class })
+public class PowerMockTest {
+
+    @Test
+    public void testStatic() {
+        PowerMockito.mockStatic(StaticDemo.class);
+        when(StaticDemo.sayHi(any())).thenReturn("dummy");
+        String result = StaticDemo.sayHi("Tom");
+        System.out.println(result);
+    }
+
+}
+</pre>
+    <h2>Mock Private Method</h2>
+    <pre class="code" data-type="java">
+public class MyObject {
+    private void processError(Exception e) {
+        System.out.println("get exception!");
+    }
+
+    private void doSth() throws Exception {
+        System.out.println("do something...");
+    }
+
+    public void serve() {
+        try {
+            doSth();
+        } catch (Exception e) {
+            processError(e);
+        }
+    }
+}
+
+@RunWith(PowerMockRunner.class)
+@PrepareForTest(MyObject.class)
+public class MyTest {
+    @Test
+    public void test() throws Exception {
+        MyObject mockObj = PowerMockito.spy(new MyObject());
+        PowerMockito.doThrow(new Exception("dummy exception"))
+                    .when(mockObj, "doSth");
+        mockObj.serve();
+    }
+}
+</pre>
+    <h1>坑</h1>
+    <ul>
+        <li>
+            <p>如果　xml/properties 之类的资源被打入 jar 包且被使用的话，则兼容性有问题。使用 PowerMock 后会加载不到这些资源。</p>
+            <p>例如我引用了 hbase-client.jar，启动测试时总是说 hbase-default.xml 有问题，使用 SpringRunner 时则没这问题。</p>
+        </li>
+        <li>
+            <p>PowerMock 1.X 与 Mockito 2.x 有兼容问题，需使用 PowerMock 2.x 版本</p>
+        </li>
+    </ul>
+    <h1>References</h1>
+    <p><a href="https://github.com/powermock/powermock/wiki/Mockito">Using PowerMock with Mockito</a></p>
+</body>
+</html>

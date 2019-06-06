@@ -19,20 +19,30 @@
 			<th>Level</th>
 			<th>Desc.</th>
 		</tr>
-		<tr>
-			<td>TestClass</td>
-			<td>Class</td>
-			<td>表示这是一个 Test Suite</td>
-		</tr>
+        <tr>
+            <td>AssemblyInitialize/AssemblyCleanup</td>
+            <td>Assembly</td>
+            <td>在 Assembly 加载/卸载时调用，必须为静态方法，整个 Assembly 只能出现一次。可以用来作系统级的初始化，例如 log 框架初始化，Database Connection Pool 初始化之类。</td>
+        </tr>
+        <tr>
+            <td>TestClass</td>
+            <td>Class</td>
+            <td>表示这是一个 Test Suite</td>
+        </tr>
+        <tr>
+            <td>ClassInitialize/ClassCleanup</td>
+            <td>Class</td>
+            <td>在 Unit Test Class 加载/卸载时调用，必须为静态方法，整个 Class 只能出现一次。</td>
+        </tr>
 		<tr>
 			<td>TestInitialize</td>
 			<td>Method</td>
-			<td>在所有的 Test Cases 开始之前调用</td>
+			<td>在每一个 Test Cases 开始之前调用</td>
 		</tr>
 		<tr>
 			<td>TestCleanup</td>
 			<td>Method</td>
-			<td>在所有的 Test Cases 结束之后调用</td>
+			<td>在每一个 Test Cases 结束之后调用</td>
 		</tr>
 		<tr>
 			<td>TestMethod</td>
@@ -73,5 +83,51 @@ namespace MyTest
 	<h2>运行</h2>
 	<p>Open the window: TEST &rarr; Windows &rarr; Test Explorer</p>
 	<p>在选定的方法上使用右键菜单 Run Tests (Ctrl + R,T)</p>
+<h1>FAQ</h1>
+<h2>初始化 log4net</h2>
+<pre class="code" data-type="csharp">
+[TestClass]
+public static class StartupUnitTest
+{
+    [AssemblyInitialize]
+    public static void Configure(TestContext tc)
+    {
+        log4net.Config.XmlConfigurator.Configure();
+    }
+}
+</pre>
+    <h2>强制 Fail</h2>
+    <pre class="code" data-type="csharp">
+Assert.Fail("Didn't get exception. Authentication check failed!");
+</pre>
+    <p class="note">Assert.Fail 将会抛出 AsserFail 异常，所以会被 try...catch 捕获</p>
+    <h2>在每个 Unit Test Method 进入/退出时打印日志</h2>
+    <p>如下声明 TestContext, MSTest 会自动注入.</p>
+    <pre class="code" data-type="csharp">
+private TestContext testContextInstance;
+
+public TestContext TestContext
+{
+    get
+    {
+        return testContextInstance;
+    }
+    set
+    {
+        testContextInstance = value;
+    }
+}
+
+[TestInitialize]
+public void InitEachTest()
+{
+    logger.Info(string.Format("Enter unit test for: {0}", TestContext.TestName));
+}
+</pre>
+    <h2>App.config</h2>
+    <p>有些功能需要依赖主项目的 app.config 配置，可以在编译设置中将其 copy 过来，例如在 Build Events &rArr; Pre-build event command line 中加入</p>
+    <pre class="code" data-type="sh">
+copy $(ProjectDir)..\MyProject\App.config $(ProjectDir)
+</pre>
 </body>
 </html>

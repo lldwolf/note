@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+    <script type="text/javascript" src="../../mylib/js/css.js"></script>
+    <title>Java 序列化</title>
+</head>
+
+<body>
+    <p id="title">序列化</p>
+    <h1>Json</h1>
+    <p>使用 gson 库，pom.xml 中引用如下：</p>
+    <pre class="code" data-type="xml">
+&lt;dependency&gt;
+    &lt;groupId&gt;com.google.code.gson&lt;/groupId&gt;
+    &lt;artifactId&gt;gson&lt;/artifactId&gt;
+    &lt;version&gt;2.8.2&lt;/version&gt;
+&lt;/dependency&gt;
+</pre>
+    <h2>常规序列化/反序列化</h2>
+    <pre class="code" data-type="xml">
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
+public static String serializeObject2Json(Object object) {
+    return new GsonBuilder().setPrettyPrinting().create().toJson(object);
+}
+
+public static &lt;T&gt; T deserializeObjectFromJson(String json, Class&lt;T&gt; classType) {
+    return new Gson().fromJson(json, classType);
+}
+</pre>
+    <h2>技巧</h2>
+    <h3>反序列化 ArrayList</h3>
+    <pre class="code" data-type="java">
+Type listType = new TypeToken&lt;ArrayList&lt;MyObject&gt;&gt;() {}.getType();
+List&lt;MyObject&gt; records = new Gson().fromJson(jsonString, listType);
+</pre>
+</body>
+</html>

@@ -1,20 +1,22 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
-<title>系统变量</title>
-<script type="text/javascript" src="../../mylib/js/css.js"></script>
-<style>
-	.useful {color:blue;}
-</style>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+    <title>系统变量</title>
+    <script type="text/javascript" src="../../mylib/js/css.js"></script>
+    <style>
+        .useful {
+            color: blue;
+        }
+    </style>
 </head>
 
 <body>
-<p id="title">系统变量</p>
+    <p id="title">系统变量</p>
 
-<h1>N.1 打印现有的系统变量</h1>
-<pre>import java.util.*;
-
+    <h1>打印现有的系统变量</h1>
+<pre class="code" data-type="java">
+import java.util.*;
 public static void main(String[] args) throws Exception
 {
 	Properties env = System.getProperties();
@@ -23,66 +25,68 @@ public static void main(String[] args) throws Exception
 	{
 		env.list(System.out);
 	}
-}</pre> 
-<p>打印结果如下所示:</p>
-<pre>52
+}</pre>
+    <p>打印结果如下所示:</p>
+<pre class="code" data-type="log">
+56
 -- listing properties --
 java.runtime.name=Java(TM) SE Runtime Environment
-sun.boot.library.path=D:\java\jdk1_6_0\jre\bin
-java.vm.version=1.6.0-b105
-java.vm.vendor=Sun Microsystems Inc.
-java.vendor.url=http://java.sun.com/
+sun.boot.library.path=C:\Program Files\Java\jdk1.8.0_71\jre...
+java.vm.version=25.71-b15
+java.vm.vendor=Oracle Corporation
+java.vendor.url=http://java.oracle.com/
 path.separator=;
-java.vm.name=Java HotSpot(TM) Client VM
+java.vm.name=Java HotSpot(TM) 64-Bit Server VM
 file.encoding.pkg=sun.io
-<span class="useful">user.country=CN</span>
+user.script=
+user.country=US
 sun.java.launcher=SUN_STANDARD
-sun.os.patch.level=Service Pack 4
+sun.os.patch.level=Service Pack 1
 java.vm.specification.name=Java Virtual Machine Specification
-<span class="useful">user.dir=D:\Work\Java\JNDITest</span>
-java.runtime.version=1.6.0-b105
+user.dir=C:\workspace\core_service\gxs_core\te...
+java.runtime.version=1.8.0_71-b15
 java.awt.graphicsenv=sun.awt.Win32GraphicsEnvironment
-java.endorsed.dirs=D:\java\jdk1_6_0\jre\lib\endorsed
-os.arch=x86
-<span class="useful">java.io.tmpdir=C:\DOCUME~1\ADMINI~1\LOCALS~1\Temp\</span>
+java.endorsed.dirs=C:\Program Files\Java\jdk1.8.0_71\jre...
+os.arch=amd64
+java.io.tmpdir=C:\Users\ll52957\AppData\Local\Temp\
 line.separator=
 
-java.vm.specification.vendor=Sun Microsystems Inc.
+java.vm.specification.vendor=Oracle Corporation
 user.variant=
-<span class="useful">os.name=Windows 2000</span>
-sun.jnu.encoding=GBK
-java.library.path=D:\java\jdk1_6_0\bin;.;C:\WINNT\Sun\J...
+os.name=Windows 7
+sun.jnu.encoding=Cp1252
+java.library.path=C:\Program Files\Java\jdk1.8.0_71\bin...
+javax.net.ssl.trustStore=C:/data/maven
 java.specification.name=Java Platform API Specification
-java.class.version=50.0
-sun.management.compiler=HotSpot Client Compiler
-os.version=5.0
-user.home=C:\Documents and Settings\Administrator
+java.class.version=52.0
+sun.management.compiler=HotSpot 64-Bit Tiered Compilers
+os.version=6.1
+user.home=C:\Users\ll52957
 user.timezone=
 java.awt.printerjob=sun.awt.windows.WPrinterJob
-<span class="useful">file.encoding=GBK</span>
-java.specification.version=1.6
-<span class="useful">user.name=Administrator</span>
-java.class.path=D:\Work\Java\JNDITest\bin;D:\Work\Jav...
-java.vm.specification.version=1.0
-sun.arch.data.model=32
-java.home=D:\java\jdk1_6_0\jre
-java.specification.vendor=Sun Microsystems Inc.
-<span class="useful">user.language=zh</span>
+file.encoding=Cp1252
+java.specification.version=1.8
+user.name=ll52957
+java.class.path=C:\Program Files\Java\jdk1.8.0_71\jre...
+java.vm.specification.version=1.8
+sun.arch.data.model=64
+java.home=C:\Program Files\Java\jdk1.8.0_71\jre
+sun.java.command=lld.test.PropertiesTest
+java.specification.vendor=Oracle Corporation
+user.language=en
 awt.toolkit=sun.awt.windows.WToolkit
-java.vm.info=mixed mode, sharing
-<span class="useful">java.version=1.6.0</span>
-java.ext.dirs=D:\java\jdk1_6_0\jre\lib\ext;C:\WINNT...
-sun.boot.class.path=D:\java\jdk1_6_0\jre\lib\resources.ja...
-java.vendor=Sun Microsystems Inc.
+java.vm.info=mixed mode
+java.version=1.8.0_71
+java.ext.dirs=C:\Program Files\Java\jdk1.8.0_71\jre...
+sun.boot.class.path=C:\Program Files\Java\jdk1.8.0_71\jre...
+java.vendor=Oracle Corporation
 file.separator=\
-java.vendor.url.bug=http://java.sun.com/cgi-bin/bugreport...
+java.vendor.url.bug=http://bugreport.sun.com/bugreport/
 sun.cpu.endian=little
 sun.io.unicode.encoding=UnicodeLittle
+javax.net.ssl.trustStorePassword=changeit
 sun.desktop=windows
-sun.cpu.isalist=pentium_pro+mmx pentium_pro pentium+m...</pre>
-<p>&nbsp;</p>
-<p>&nbsp;</p>
-<p>&nbsp;</p>
-
+sun.cpu.isalist=amd64
+</pre>
 </body>
 </html>

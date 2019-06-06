@@ -8,8 +8,65 @@
 
 <body>
 	<p id="title">JUnit</p>
-    <h1>Overview</h1>
-    <h2>Maven + JUnit</h2>
+    <h1>常用功能</h1>
+    <h2>示例</h2>
+    <p>功能类如下所示</p>
+    <pre class="code" data-type="java" data-collapsed="false" title="StringUtil.java">
+public class StringUtil {
+
+    static final Logger logger = LoggerFactory.getLogger(StringUtil.class);
+
+    public static Integer convert2Int(String str) {
+        try {
+            return Integer.parseInt(str);
+        } catch (NumberFormatException e) {
+            logger.error("wrong format", e);
+            throw new NumberFormatException("wrong format number string: " + str);
+        }
+    }
+}
+</pre>
+    <p>对其使用如下的 Unit Test 类</p>
+
+    <pre class="code" data-type="java" data-collapsed="false" title="StringUtilTest.java">
+import static org.junit.Assert.assertTrue;
+
+import org.hamcrest.CoreMatchers;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.ExpectedException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+public class StringUtilTest extends BaseTest {
+
+    private final Logger logger = LoggerFactory.getLogger(getClass());
+
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
+
+    //基本测试
+    @Test
+    public void test_convert2Int() {
+        String str = "123";
+        Integer number = StringUtil.convert2Int(str);
+        logger.info("string {} to number {}", str, number);
+        assertTrue(number.equals(123));
+    }
+
+    //Exception 测试
+    @Test
+    public void test_convert2IntException() {
+        String str = "abc";
+        thrown.expect(NumberFormatException.class);
+        //thrown.expectMessage("wrong format");
+        thrown.expectMessage(CoreMatchers.containsString("wrong format"));
+        Integer number = StringUtil.convert2Int(str);
+        fail("Didn't capture the expected exception!");
+    }
+}
+</pre>
+    <h1>Maven + JUnit</h1>
     <p>创建带 JUnit 功能的 Maven 项目</p>
     <ol>
         <li>
@@ -65,8 +122,69 @@ public class AppTest extends TestCase {
     }
 }
 </pre>
-    <h1>FAQ</h1>
-    <h2>注意点</h2>
+    <h1>Annotations</h1>
+    <h2>Annotations for Method</h2>
+    <table style="width:800px">
+        <tr>
+            <th>Annotation</th>
+            <th>Desc</th>
+            <th>Accessible</th>
+        </tr>
+        <tr>
+            <td>@BeforeClass</td>
+            <td>Run before the test suite</td>
+            <td>public static</td>
+        </tr>
+        <tr>
+            <td>@BeforeClass</td>
+            <td>Run before the test suite</td>
+            <td>public static</td>
+        </tr>
+        <tr>
+            <td>@Before</td>
+            <td>Run before each test method</td>
+            <td>public</td>
+        </tr>
+        <tr>
+            <td>@After</td>
+            <td>Run after each test method</td>
+            <td>public</td>
+        </tr>
+        <tr>
+            <td>@Test</td>
+            <td>test method</td>
+            <td>public</td>
+        </tr>
+    </table>
+    <h2>Annotations for Class</h2>
+    <table style="width:95%">
+        <tr>
+            <th>Annotation</th>
+            <th>Desc</th>
+            <th>Comments</th>
+        </tr>
+        <tr>
+            <td>@RunWith</td>
+            <td>指定 Unit Test 容器类</td>
+            <td>
+                <pre class="code" data-type="java">
+// 使用 Spring 框架时
+@RunWith(SpringRunner.class)
+</pre>
+            </td>
+        </tr>
+        <tr>
+            <td>@FixMethodOrder</td>
+            <td>按指定顺序执行测试</td>
+            <td>
+                <pre class="code" data-type="java">
+//按 method name 顺序执行
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
+</pre>
+            </td>
+        </tr>
+    </table>
+    <h1>注意点</h1>
     <ol>
         <li>
             <p>对于 Spring 应用，需要手工使用 @ContextConfiguration 指定 Config 类，否则会报 ApplicationConext 加载失败</p>
@@ -93,5 +211,10 @@ public class CoveredFundValidatorTest extends BaseTest {
 </pre>
         </li>
     </ol>
+    <h1>FAQ</h1>
+    <h2>Expect Exception</h2>
+    <pre class="code" data-type="java">
+@Test(expected = Exception.class)
+</pre>
 </body>
 </html>

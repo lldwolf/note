@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>Spring - JDBC</title>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+	<p id="title">Spring - JDBC</p>
+    <h1>JDBC 示例</h1>
+    <ol>
+        <li>
+            <p>如何初始化 JdbcTemplate</p>
+            <pre class="code" data-type="java" data-collapsed="false" title="DbConfig.java">
+import javax.sql.DataSource;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.datasource.DriverManagerDataSource;
+
+@Configuration
+public class DbConfig {
+
+    @Bean
+    public DataSource dataSource() {
+        final DriverManagerDataSource dataSource = new DriverManagerDataSource();
+        dataSource.setDriverClassName("org.sqlite.JDBC");
+        dataSource.setUrl("jdbc:sqlite:c:\temp\my.db");
+        return dataSource;
+    }
+
+    @Bean
+    public JdbcTemplate jdbcTemplate(DataSource dataSource) {
+        return new JdbcTemplate(dataSource);
+    }
+}
+</pre>
+        </li>
+        <li>
+            <p>使用 JdbcTemplate 执行 SQL，以查询示例：</p>
+            <pre class="code" data-type="java">
+@Autowired
+private JdbcTemplate jdbcTemplate;
+
+String sql = "select id, name from my_table where id &gt;= ?";
+List&lt;Map&lt;String, Object&gt;&gt; queryResult = jdbcTemplate.queryForList(sql, csiId);
+
+for (Map&lt;String, Object&gt; row : queryResult) {
+    System.out.println(row.get("id") + ": " + row.get("name"));
+}
+
+</pre>
+        </li>
+    </ol>
+</body>
+</html>

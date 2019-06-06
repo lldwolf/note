@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>JMH - Java Microbenchmark Harness</title>
+<script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+	<p id="title">JMH - Java Microbenchmark Harness</p>
+    <h1>Overview</h1>
+    <p>我们以前怎么做基准测试呢？可能是像下面这样子吧：</p>
+    <p>写一个 Unit Test，调用需要测试的功能(有时可能还需要循环个 1000 次，调用前后各调用一次 System.nanoTime()(或者更粗粒度的 System.currentTimeMillis()！)，然再算出执行时间。</p>
+    <p>但这种测试是不精确的，因为它没有考虑到 JVM 的以下特性：</p>
+    <p>JVM 会在运行期进行动态优化，例如调整执行顺序，清除无用代码，将频繁调用的代码变成机器码之类。</p>
+    <p>换言之，Benchmark Testing 是需要预热的。</p>
+    <p>JMH 为此提供了一种解决方案，让我们可以很方便地写出 Benchmark Testing 。</p>
+    <h1>第一个例子</h1>
+    <ol>
+        <li>
+            <p>使用如下命令生成 Benchmark Testing 的 Maven 项目框架</p>
+            <pre class="code" data-type="sh">
+mvn archetype:generate
+    -DinteractiveMode=false
+    -DarchetypeGroupId=org.openjdk.jmh
+    -DarchetypeArtifactId=jmh-java-benchmark-archetype
+    -DgroupId=com.jenkov
+    -DartifactId=first-benchmark
+    -Dversion=1.19
+</pre>
+        </li>
+        <li>
+            <p>生成的 pom.xml 会有一些冗余，我最后修改后的版本如下：</p>
+            <pre class="code" data-type="xml" data-collapsed="false" title="pom.xml">
+&lt;project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"&gt;
+    &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+
+    &lt;groupId&gt;com.jenkov&lt;/groupId&gt;
+    &lt;artifactId&gt;first-benchmark&lt;/artifactId&gt;
+    &lt;version&gt;1.0&lt;/version&gt;
+    &lt;packaging&gt;jar&lt;/packaging&gt;
+
+    &lt;name&gt;Auto-generated JMH benchmark&lt;/name&gt;
+
+    &lt;dependencies&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.openjdk.jmh&lt;/groupId&gt;
+            &lt;artifactId&gt;jmh-core&lt;/artifactId&gt;
+            &lt;version&gt;1.19&lt;/version&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.openjdk.jmh&lt;/groupId&gt;
+            &lt;artifactId&gt;jmh-generator-annprocess&lt;/artifactId&gt;
+            &lt;version&gt;1.19&lt;/version&gt;
+            &lt;scope&gt;provided&lt;/scope&gt;
+        &lt;/dependency&gt;
+    &lt;/dependencies&gt;
+
+    &lt;properties&gt;
+        &lt;project.build.sourceEncoding&gt;UTF-8&lt;/project.build.sourceEncoding&gt;
+    &lt;/properties&gt;
+
+    &lt;build&gt;
+        &lt;plugins&gt;
+            &lt;plugin&gt;
+                &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;
+                &lt;artifactId&gt;maven-shade-plugin&lt;/artifactId&gt;
+                &lt;version&gt;2.2&lt;/version&gt;
+                &lt;executions&gt;
+                    &lt;execution&gt;
+                        &lt;phase&gt;package&lt;/phase&gt;
+                        &lt;goals&gt;
+                            &lt;goal&gt;shade&lt;/goal&gt;
+                        &lt;/goals&gt;
+                        &lt;configuration&gt;
+                            &lt;finalName&gt;microbenchmarks&lt;/finalName&gt;
+                            &lt;transformers&gt;
+                                &lt;transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer"&gt;
+                                    &lt;mainClass&gt;org.openjdk.jmh.Main&lt;/mainClass&gt;
+                                &lt;/transformer&gt;
+                            &lt;/transformers&gt;
+                        &lt;/configuration&gt;
+                    &lt;/execution&gt;
+                &lt;/executions&gt;
+            &lt;/plugin&gt;
+        &lt;/plugins&gt;
+    &lt;/build&gt;
+
+&lt;/project&gt;
+</pre>
+        </li>
+        <li>
+            <p>写一个类用于调用要测试性能的方法，并配置 @Benchmark 如下所示</p>
+            <pre class="code" data-type="java" data-collapsed="false" title="MyBenchmark">
+import org.openjdk.jmh.annotations.Benchmark;
+
+public class MyBenchmark {
+
+    @Benchmark
+    public void testMethod() {
+        // This is a demo/sample template for building your JMH benchmarks. Edit as needed.
+        // Put your benchmark code here.
+
+        int a = 1;
+        int b = 2;
+        int sum = a + b;
+    }
+}
+</pre>
+            <p class="note">注意：在需要进行 benchmark testing 的方法上加上 @Benchmark Annotation</p>
+        </li>
+        <li>
+            <p>编译打包</p>
+            <pre class="code" data-type="sh">mvn clean package</pre>
+        </li>
+        <li>
+            <p>注意，除了 first-benchmark-1.0.jar 外，还生成了一个 microbenchmarks.jar，这就是我们在 pom.xml 中配置的，集成了 benchmark testing 功能的 jar 包。</p>
+            <p>运行如下命令</p>
+            <pre class="code" data-type="sh">
+java -jar target/microbenchmarks.jar
+</pre>
+        </li>
+        <li>
+            <p>可得到如下结果：</p>
+            <pre class="code" data-type="log">
+# Run progress: 90.00% complete, ETA 00:00:40
+# Fork: 10 of 10
+# Warmup Iteration   1: 2160009712.096 ops/s
+...
+# Warmup Iteration  20: 2154337738.759 ops/s
+Iteration   1: 2174397934.978 ops/s
+...
+Iteration  20: 2164380703.310 ops/s
+
+Result "com.jenkov.MyBenchmark.testMethod":
+  2160952232.258 ±(99.9%) 4446098.786 ops/s [Average]
+  (min, avg, max) = (2069109927.532, 2160952232.258, 2187064998.803), stdev = 18825060.661
+  CI (99.9%): [2156506133.472, 2165398331.044] (assumes normal distribution)
+</pre>
+            <p>从上面结果中我们可以得到如下信息：</p>
+            <ul>
+                <li>它启动了 10 次不同的进程来测试 (Fork: 10 of 10)</li>
+                <li>每次测试它先预热了20次 (Warmup Iteration  20)</li>
+                <li>每次预热后它又运行了20轮测试 (Iteration  20)</li>
+                <li>运行情况是每秒运行 2160952232.258 ±(99.9%) 4446098.786 次(ops/s)</li>
+                <li>最低/平均/最高每秒运行次数 (2069109927.532, 2160952232.258, 2187064998.803)</li>
+                <li>标准方差：18825060.661</li>
+                <li>假定为正态分布的话，99.9%的置信区间是 [2156506133.472, 2165398331.044]</li>
+            </ul>
+        </li>
+    </ol>
+    <h1>常见用途</h1>
+    <h2>性能比较</h2>
+    <p>例如，我们如果想确认一下 String 的三个类似方法 indexOf(char), indexOf(String), contains 三个方法的性能，我们可以这样写</p>
+    <pre class="code" data-type="java" data-collapsed="false" title="CompareBenchmark.java"> 
+@BenchmarkMode(Mode.AverageTime)
+@OutputTimeUnit(TimeUnit.NANOSECONDS)
+@Warmup(iterations = 2)
+@Measurement(iterations = 3)
+@Fork(5)
+public class CompareBenchmark {
+    @State(Scope.Thread)
+    public static class SearchState {
+          public String text = "abcdefghijklmnopqrstuvwxyz";
+          public String search = "l";
+          public char searchChar = 'l';
+    }
+
+    @Benchmark
+    public int testIndexOf(SearchState state) {
+          return state.text.indexOf(state.search);
+    }
+
+    @Benchmark
+    public int testIndexOfChar(SearchState state) {
+          return state.text.indexOf(state.searchChar);
+    }
+
+    @Benchmark
+    public boolean testContains(SearchState state) {
+          return state.text.contains(state.search);
+    }
+}
+</pre>
+    <p>运行后的结果如下所示：</p>
+    <pre class="code" data-type="log">
+...
+# Benchmark: com.jenkov.MyBenchmark.testContains
+...
+Result "com.jenkov.MyBenchmark.testContains":
+  18.118 ±(99.9%) 0.147 ns/op [Average]
+  (min, avg, max) = (17.937, 18.118, 18.412), stdev = 0.138
+  CI (99.9%): [17.970, 18.265] (assumes normal distribution)
+...
+# Benchmark: com.jenkov.MyBenchmark.testIndexOf
+...
+Result "com.jenkov.MyBenchmark.testIndexOf":
+  16.739 ±(99.9%) 0.039 ns/op [Average]
+  (min, avg, max) = (16.679, 16.739, 16.817), stdev = 0.036
+  CI (99.9%): [16.700, 16.778] (assumes normal distribution)
+
+...
+# Benchmark: com.jenkov.MyBenchmark.testIndexOfChar
+...
+Result "com.jenkov.MyBenchmark.testIndexOfChar":
+  11.503 ±(99.9%) 0.044 ns/op [Average]
+  (min, avg, max) = (11.450, 11.503, 11.577), stdev = 0.041
+  CI (99.9%): [11.459, 11.547] (assumes normal distribution)
+
+
+# Run complete. Total time: 00:01:19
+
+Benchmark                    Mode  Cnt   Score   Error  Units
+MyBenchmark.testContains     avgt   15  18.118 ± 0.147  ns/op
+MyBenchmark.testIndexOf      avgt   15  16.739 ± 0.039  ns/op
+MyBenchmark.testIndexOfChar  avgt   15  11.503 ± 0.044  ns/op
+</pre>
+    <p>从结果看 testIndexOfChar 的效率最高，平均执行时间是 11.503 ns</p>
+    <p>结果中每列的含义为：</p>
+    <ul>
+        <li>
+            <p>Mode: 测试模式，这里 avgt 表示 Average Time</p>
+        </li>
+        <li>
+            <p>Cnt： Count, 运行的次数，等于 measurement * fork</p>
+        </li>
+        <li>
+            <p>Error: 误差</p>
+        </li>
+    </ul>
+    <p>这里解释下每个 Annotation 含义</p>
+    <table style="width:90%">
+        <tr>
+            <th>Annotation</th>
+            <th>Desc</th>
+        </tr>
+        <tr>
+            <td>@BenchmarkMode</td>
+            <td>
+                <p>测试目标，可分为如下几类</p>
+                <ul>
+                    <li>Throughput - 测试单位时间内的执行次数</li>
+                    <li>Average Time - 测试平均执行时间</li>
+                    <li>Sample Time - 测式完成基准测试的时间，包括最长/最短时间</li>
+                    <li>Single Shot Time - 测试单次执行的时间，这可以让我们知道在没有预热(Warm up)下的执行情况</li>
+                    <li>All - 执行所有上面的测试目标</li>
+                </ul>
+            </td>
+        </tr>
+        <tr>
+            <td>@OutputTimeUnit</td>
+            <td>
+                <p>在输出结果时使用的时间单位，有如下选项</p>
+                <ul>
+                    <li>NANOSECONDS - 纳秒 (ns)</li>
+                    <li>MICROSECONDS - 微秒 (us)</li>
+                    <li>MILLISECONDS - 毫秒 (ms)</li>
+                    <li>SECONDS - 秒</li>
+                    <li>MINUTES</li>
+                    <li>HOURS</li>
+                    <li>DAYS</li>
+                </ul>
+            </td>
+        </tr>
+        <tr>
+            <td>@Warmup</td>
+            <td>预热次数</td>
+        </tr>
+        <tr>
+            <td>@Measurement</td>
+            <td>测试次数</td>
+        </tr>
+        <tr>
+            <td>@Fork</td>
+            <td>启动次数（使用不同进程），结合 @Measurement 就是每次启动新进程时测试 @Measurement 次</td>
+        </tr>
+        <tr>
+            <td>@State</td>
+            <td>
+                <p>使用了该注解后，用于 @Benchmark 的基准测试方法均可传入一个 state 参数（即实 @State 注解的类自动生成的实例）</p>
+                <p>像上例中，我们使用了 @State 以简化代码，否则必须在每个测试方法中写相同的代码以保证使用的测试用例都是相同的。</p>
+            </td>
+        </tr>
+    </table>
+    <h1>与 JUnit 集成</h1>
+    <p>如果我们需要对 Benchmark Testing Result 有要求，例如执行时间不得低于多少之类，可借助 JUnit 进行测试</p>
+    <ol>
+        <li>
+            <p>在 pom.xml 加入如下依赖</p>
+            <pre class="code" data-type="xml">
+&lt;dependency&gt;
+    &lt;groupId&gt;org.openjdk.jmh&lt;/groupId&gt;
+    &lt;artifactId&gt;jmh-core&lt;/artifactId&gt;
+    &lt;version&gt;1.19&lt;/version&gt;
+    &lt;scope&gt;test&lt;/scope&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;org.openjdk.jmh&lt;/groupId&gt;
+    &lt;artifactId&gt;jmh-generator-annprocess&lt;/artifactId&gt;
+    &lt;version&gt;1.19&lt;/version&gt;
+    &lt;scope&gt;test&lt;/scope&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;junit&lt;/groupId&gt;
+    &lt;artifactId&gt;junit&lt;/artifactId&gt;
+    &lt;version&gt;4.12&lt;/version&gt;
+    &lt;scope&gt;test&lt;/scope&gt;
+&lt;/dependency&gt;
+</pre>
+        </li>
+        <li>
+            <p>编写需要 Benchmark Testing 的启动类</p>
+            <pre class="code" data-type="java">
+@BenchmarkMode(Mode.Throughput)
+public class JmhBenchmark {
+
+       @Benchmark
+       @Fork(3)
+       public static double benchmarkPerformanceCriticalComponent() {
+             return PerformanceCriticalComponent.performanceCriticalMethod();
+       }
+}
+</pre>
+        </li>
+        <li>
+            <p>编写 JUnit Test Case，这里需要借助 JMH’s Runner 对象，该对象会执行 Benchmark Testing 并返回结果</p>
+            <pre class="code" data-type="java" data-collapsed="false" title="JmhBenchmarkTest.java">
+public class JmhBenchmarkTest {
+
+       private static DecimalFormat df = new DecimalFormat("0.000");
+       private static final double REFERENCE_SCORE = 37.132;
+
+       @Test
+       public void runJmhBenchmark() throws RunnerException {
+             Options opt = new OptionsBuilder()
+                          .include(JmhBenchmark.class.getSimpleName())
+                          .build();
+             Collection&lt;RunResult&gt; runResults = new Runner(opt).run();
+             assertFalse(runResults.isEmpty());
+             for(RunResult runResult : runResults) {
+                    assertDeviationWithin(runResult, REFERENCE_SCORE, 0.05);
+             }
+       }
+
+       private static void assertDeviationWithin(RunResult result, double referenceScore, double maxDeviation) {
+             double score = result.getPrimaryResult().getScore();
+             double deviation = Math.abs(score/referenceScore - 1);
+             String deviationString = df.format(deviation * 100) + "%";
+             String maxDeviationString = df.format(maxDeviation * 100) + "%";
+             String errorMessage = "Deviation " + deviationString + " exceeds maximum allowed deviation " + maxDeviationString;
+             assertTrue(errorMessage, deviation &lt; maxDeviation);
+       }
+}
+</pre>
+        </li>
+        <li>
+            <p>现在可以通过命令启动 unit test 了</p>
+            <pre class="code" data-type="sh">mvn clean test</pre>
+            <p class="note">注意: 如果在 IDE (Eclipse) 中启动时, 会碰到如下异常:</p>
+            <pre class="code" data-type="log">
+java.lang.RuntimeException: ERROR: Unable to find the resource: /META-INF/BenchmarkList
+</pre>
+            <p>这是因为需要 JMH Annotation Processor 来解析 JMH 的注解. 使用命令行时 JMH Annotation Processor 会自动启动, 换言之, 你如果先从命令行运行一下, 然后就可以从 IDE 中运行这个 Unit Test 了. 但一是这样有点不方便, 而且如果 JMH Annotation 改了, 例如 Warmup 次数变了, Benchmark Testing 也不会自动修改.</p>
+            <p>据说可以 IDE 中配置 JMH Annotation Processor, 但我还没找到怎么做 =_=</p>
+        </li>
+    </ol>
+    <h1>FAQ</h1>
+    <h2>只运行指定的 Benchmark Testing</h2>
+    <p>以上面我们测试 indexOf/contains 性能的代码为例</p>
+    <pre class="code" data-type="sh">
+# 只运行 MyBenchmark 下的测试
+java -jar target/microbenchmarks.jar MyBenchmark
+
+# 只运行 testContains
+java -jar target/microbenchmarks.jar MyBenchmark.testContains
+
+# 只运行包含 testIndexOf 的测试，支持正则表达式 
+java -jar target/microbenchmarks.jar MyBenchmark.testIndexOf*
+</pre>
+    <h1>References</h1>
+    <p><a href="http://tutorials.jenkov.com/java-performance/jmh.html">JMH - Java Microbenchmark Harness</a></p>
+    <p><a href="https://www.retit.de/continuous-benchmarking-with-jmh-and-junit-2/">Continuous Benchmarking with JMH and JUnit</a></p>
+</body>
+</html>

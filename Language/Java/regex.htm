@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+    <title>正则表达式</title>
+    <script type="text/javascript" src="../../mylib/js/css.js"></script>
+</head>
+
+<body>
+    <p id="title">正则表达式</p>
+    <h1>示例</h1>
+    <p>下例包括如下演示</p>
+    <ul>
+        <li>
+            <p>如何使用 Regex 验证是否匹配</p>
+        </li>
+        <li>
+            <p>如何使用 .* 包含换行符</p>
+        </li>
+        <li>
+            <p>如何使用正则表达式分组</p>
+        </li>
+        <li>
+            <p>如何使用正则表达式替换</p>
+        </li>
+    </ul>
+    <pre class="code" data-type="java">
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+public class RegexTest {
+
+	public static void main(String[] args) {
+	    matchNewLineTest();
+		replaceTest();
+		matchTest();
+	}
+	
+	private static void matchNewLineTest() {
+	    String str = "a\nde\ngh\nb";
+	    String pattern = "a\nde.*b";
+	    Pattern regex = Pattern.compile(pattern, Pattern.DOTALL);
+	    Matcher matcher = regex.matcher(str);
+	    System.out.println("New line matching result: " + matcher.find());
+	}
+	
+	private static void matchTest() {
+		String string = "243${s.s}sfsf${ab.cd.ef}sfsf";
+		String patternStr = "\\$\\{[^\\}]+\\}";
+
+		Pattern regex = Pattern.compile(patternStr);
+		
+		Matcher matcher = regex.matcher(string);
+		List<String> matches = new ArrayList<String>();
+		
+		while (matcher.find()) {
+			matches.add(matcher.group(0));
+		}
+		
+		for (String matchItem : matches) {
+			System.err.println(matchItem.substring(2, matchItem.length() - 1));
+		}
+	}
+	
+	private static void replaceTest() {
+		String string = "b,\"aa,bb\",e";
+		String patternStr = "(\\\"\\w*),(\\w*\\\")";
+		
+		String result = string.replaceAll(patternStr, "$1!!$2");
+		System.out.println(result);
+	}
+
+}
+
+</pre>
+</body>
+</html>
